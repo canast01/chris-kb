@@ -4389,3 +4389,243 @@ def virt_std_vm():
 
     lines.append('└' + '─' * W2 + '┘')
     return lines
+
+
+@kb_diagram(
+    'nsx-architecture-how-it-works',
+    'docs/virtualization/vmware/nsx/architecture/how-it-works/index.md',
+    'NSX Architecture — how data flows through control plane, overlay, DFW, and Edge Nodes',
+)
+def nsx_architecture_how_it_works():
+    """NSX How It Works — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'NSX Architecture — How It Works'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'NSX separates control, management, and data planes; overlay runs on each ESXi host')))
+    lines.append(R(bMid(IV_L, IV_R, 'Control plane: NSX Manager (3-node cluster) pushes config to Transport Nodes via RPC')))
+    lines.append(R(bMid(IV_L, IV_R, 'Data plane: DLR runs on each host; Geneve encapsulates E-W traffic between TEPs')))
+    lines.append(R(bMid(IV_L, IV_R, 'North-South: SR on Edge Node routes to physical; BGP peers with ToR switches')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  NSX Manager config → Transport Node kernel modules → Geneve overlay → Edge SR → physical'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Control Plane'), bMid(B2_L, B2_R, 'Data Plane (E-W)'), bMid(B3_L, B3_R, 'Edge (N-S)'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'NSX Manager × 3'), bMid(B2_L, B2_R, 'DLR on each host'), bMid(B3_L, B3_R, 'Service Router'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Config RPC push'), bMid(B2_L, B2_R, 'Geneve VNI tag'), bMid(B3_L, B3_R, 'BGP to ToR'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'TEP pool assign'), bMid(B2_L, B2_R, 'TEP src/dst'), bMid(B3_L, B3_R, 'SNAT / DNAT'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'DFW rule push'), bMid(B2_L, B2_R, 'DFW at vNIC'), bMid(B3_L, B3_R, 'LB service'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Segment create'), bMid(B2_L, B2_R, 'BUM replication'), bMid(B3_L, B3_R, 'GRE/IPsec VPN'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  VM-to-VM same host: no Geneve; DFW filters and DLR forwards in-kernel directly'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Traffic type', 'Entry point', 'Path', 'Exit point', 'Protocol'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['E-W same host', 'VM vNIC', 'DFW → DLR', 'Target VM', 'None/in-kernel'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['E-W diff host', 'VM vNIC', 'DFW→TEP', 'TEP→DFW→VM', 'Geneve/UDP 6081'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['N-S outbound', 'VM → T1 DR', 'T1 SR → T0 SR', 'ToR→upstream', 'BGP ECMP'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['N-S inbound', 'ToR → T0 SR', 'T0 → T1 SR', 'DNAT → VM', 'BGP + SNAT'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: ESXi hosts · N-VDS/VDS with TEP vmknic · Edge VMs on bare-metal or VM form'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  DLR           = Distributed Logical Router; runs as kernel module on every ESXi host'))
+    lines.append(txt_row('  SR            = Service Router; runs on Edge Node; handles stateful N-S services'))
+    lines.append(txt_row('  TEP           = Tunnel End Point; vmknic IP used as Geneve encap src/dst per host'))
+    lines.append(txt_row('  Geneve        = Generic Network Virtualization Encapsulation; NSX overlay protocol'))
+    lines.append(txt_row('  VNI           = Virtual Network Identifier; 24-bit segment ID in Geneve header'))
+    lines.append(txt_row('  DFW           = Distributed Firewall; stateful L4-L7 kernel-level filter at each vNIC'))
+    lines.append(txt_row('  BUM           = Broadcast/Unknown-unicast/Multicast; replicated via head-end or multicast'))
+    lines.append(txt_row('  T0 gateway    = Tier-0 Logical Router; provider-level; BGP peers with physical fabric'))
+    lines.append(txt_row('  T1 gateway    = Tier-1 Logical Router; tenant-level; connects segments to T0'))
+    lines.append(txt_row('  BGP ECMP      = T0 uses ECMP over multiple Edge uplinks for active-active North-South'))
+    lines.append(txt_row('  N-VDS         = NSX-managed vSwitch; hosts TEP vmknic and overlay traffic'))
+    lines.append(txt_row('  ToR           = Top-of-Rack physical switch; BGP peer for T0 gateway uplinks'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'nsx-architecture-design-standards',
+    'docs/virtualization/vmware/nsx/architecture/design-standards/index.md',
+    'NSX Architecture Design Standards — transport zones, Edge sizing, T0/T1 design, IP pools',
+)
+def nsx_architecture_design_standards():
+    """NSX Architecture Design Standards — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'NSX Architecture — Design Standards'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'NSX design standards: transport zones, T0/T1 gateway tiers, Edge sizing, IP pools')))
+    lines.append(R(bMid(IV_L, IV_R, 'Two transport zones: VLAN TZ (N-S Edge uplinks) + Overlay TZ (E-W tenant segments)')))
+    lines.append(R(bMid(IV_L, IV_R, 'T0 per environment (provider); T1 per tenant or application group (consumer)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Edge clusters: min 2 Edge Nodes for HA; bare-metal for high-throughput workloads')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Transport Zone design → Gateway tier → Edge cluster → IP pool → segment naming'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Transport Zones'), bMid(B2_L, B2_R, 'Gateway Design'), bMid(B3_L, B3_R, 'Edge Sizing'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Overlay TZ'), bMid(B2_L, B2_R, 'T0: provider'), bMid(B3_L, B3_R, 'Small: 2vCPU'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'VLAN TZ'), bMid(B2_L, B2_R, 'T1: per tenant'), bMid(B3_L, B3_R, 'Medium: 4vCPU'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No cross-TZ'), bMid(B2_L, B2_R, 'T0 BGP ECMP'), bMid(B3_L, B3_R, 'Large: 8vCPU'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Host TZ attach'), bMid(B2_L, B2_R, 'T1 static/OSPF'), bMid(B3_L, B3_R, 'Bare-metal max'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Multi-TZ Edge'), bMid(B2_L, B2_R, 'NAT on T1 SR'), bMid(B3_L, B3_R, 'Min 2 per site'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  TEP pool: /24 minimum; no overlap with VM or management networks; MTU 1600+ on pNIC'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Design area', 'Standard', 'Why', 'Verify', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['TEP pool', '/24 non-overlap', 'No routing', 'Ping TEPs', 'MTU 1600'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Edge HA', '2 nodes min', 'SR failover', 'BFD state', 'A/S or A/A'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['T0 uplinks', '2 per Edge', 'ECMP / HA', 'BGP peers', 'VLAN TZ'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Seg naming', '<env>-<app>', 'Readability', 'Audit', 'No spaces'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: pNIC MTU ≥ 1600 for Geneve · dedicated TEP VLAN · ToR BGP peer config'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Overlay TZ    = Transport Zone spanning all hosts; carries Geneve-encapsulated E-W traffic'))
+    lines.append(txt_row('  VLAN TZ       = Transport Zone for Edge uplinks; carries native VLAN traffic to physical'))
+    lines.append(txt_row('  TEP pool      = IP pool assigned to hosts for Geneve src/dst; one IP per host TEP vmknic'))
+    lines.append(txt_row('  T0 gateway    = Provider Logical Router; BGP to physical; ECMP over multiple Edge uplinks'))
+    lines.append(txt_row('  T1 gateway    = Tenant Logical Router; connects segments upstream to T0'))
+    lines.append(txt_row('  Edge cluster  = Group of Edge Nodes hosting Service Routers; provides N-S HA'))
+    lines.append(txt_row('  BFD           = Bidirectional Forwarding Detection; fast failover between Edge uplinks'))
+    lines.append(txt_row('  ECMP          = Equal-Cost Multi-Path; distributes N-S traffic across multiple Edge uplinks'))
+    lines.append(txt_row('  Active/Standby = SR runs on one Edge; fails to standby if primary fails'))
+    lines.append(txt_row('  Active/Active  = Two SRs active; stateless traffic only; requires external LB for SPI'))
+    lines.append(txt_row('  MTU 1600      = Minimum pNIC MTU for Geneve (50-byte overhead) + standard 1500 payload'))
+    lines.append(txt_row('  Seg naming    = Consistent segment naming prevents confusion in large environments'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'nsx-architecture-integrations',
+    'docs/virtualization/vmware/nsx/architecture/integrations/index.md',
+    'NSX Integrations — vCenter, Aria suite, Active Directory IDFW, third-party tools',
+)
+def nsx_architecture_integrations():
+    """NSX Architecture Integrations — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'NSX Architecture — Integrations'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'NSX integrations: vCenter, Aria suite, Active Directory IDFW, and third-party tools')))
+    lines.append(R(bMid(IV_L, IV_R, 'vCenter: registers NSX Manager as plugin; VM tag sync via Compute Manager')))
+    lines.append(R(bMid(IV_L, IV_R, 'IDFW: AD group membership drives DFW rules per user; key for VDI environments')))
+    lines.append(R(bMid(IV_L, IV_R, 'Aria Network Insight: flow-level visibility; Aria Operations: health and alert')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  vCenter sync → VM tagging → dynamic groups → DFW auto-update → policy enforcement'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'VMware Stack'), bMid(B2_L, B2_R, 'Identity / AD'), bMid(B3_L, B3_R, 'Third-Party'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'vCenter plug-in'), bMid(B2_L, B2_R, 'LDAP/AD join'), bMid(B3_L, B3_R, 'Partner LB'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'VM tag sync'), bMid(B2_L, B2_R, 'IDFW rules'), bMid(B3_L, B3_R, 'IDS/IPS feed'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Aria Operations'), bMid(B2_L, B2_R, 'User → VM map'), bMid(B3_L, B3_R, 'ServiceNow'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Aria Net.Insight'), bMid(B2_L, B2_R, 'Group member'), bMid(B3_L, B3_R, 'Ansible/Terraform'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Tanzu / TKG'), bMid(B2_L, B2_R, 'Policy auto'), bMid(B3_L, B3_R, 'Panorama/FMC'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Compute Manager (vCenter) registration is prerequisite for VM-tag dynamic group policy'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Integration', 'Protocol', 'NSX feature', 'Benefit', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['vCenter', 'REST API', 'Tag sync', 'Dyn. groups', 'Comp. Mgr'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['AD / LDAP', 'LDAPS', 'IDFW rules', 'User-based FW', 'VDI use'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Aria NI', 'Flow export', 'Visibility', 'Flow map', 'IPFIX parse'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Terraform', 'NSX provider', 'IaC deploy', 'Repeatability', 'VCS pipeline'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: vCenter API access from NSX Manager · AD reachable via management network'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Compute Manager = vCenter registered in NSX Manager; source of VM inventory and tags'))
+    lines.append(txt_row('  VM tag          = vSphere tag applied to VM; synced to NSX for dynamic group membership'))
+    lines.append(txt_row('  Dynamic group   = NSX group whose membership auto-updates based on tag, OS, or name'))
+    lines.append(txt_row('  IDFW            = Identity Firewall; maps AD user to VM for user-based DFW policy'))
+    lines.append(txt_row('  LDAP            = AD integration; NSX reads group membership to build IDFW mappings'))
+    lines.append(txt_row('  Aria Net.Insight = VMware flow analytics; parses NSX IPFIX/sFlow; builds flow map'))
+    lines.append(txt_row('  Aria Operations = VMware monitoring; NSX plugin shows gateway health and DFW stats'))
+    lines.append(txt_row('  Tanzu / TKG     = Kubernetes integration; NSX provides pod networking via NCP plugin'))
+    lines.append(txt_row('  NCP             = NSX Container Plugin; syncs K8s namespace/pod state to NSX segments'))
+    lines.append(txt_row('  Terraform NSX   = VMware NSX Terraform provider; declare segments, rules, gateways as HCL'))
+    lines.append(txt_row('  Partner LB      = Third-party LB (F5, Citrix) inserted into NSX via service chain'))
+    lines.append(txt_row('  Panorama/FMC    = Palo Alto/Cisco FMC; integrates with NSX for micro-seg enforcement'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines

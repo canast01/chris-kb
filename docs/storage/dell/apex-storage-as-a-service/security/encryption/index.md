@@ -1,5 +1,59 @@
 # APEX Storage as a Service — Encryption
 
+```
+┌──────────────────────────────────── Dell Apex STaaS — Encryption ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          Apex encryption: AES-256 at rest on all arrays; TLS 1.2+ for portal and API          │   │
+│   │         At rest: self-encrypting drives (SED); AES-256-XTS; always on, no user config         │   │
+│   │          In transit: iSCSI CHAP session auth; NFS sec=krb5; HTTPS/TLS for management          │   │
+│   │             Key management: Dell-managed by default; customer KMIP server optional            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Write → SED encrypts inline → AES-256 stored → read → SED decrypts → host receives                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           At Rest           │  │          In Transit         │  │           Key Mgmt          │   │
+│   │         AES-256-XTS         │  │           TLS 1.2+          │  │         Dell managed        │   │
+│   │          SED drives         │  │          iSCSI CHAP         │  │        KMIP optional        │   │
+│   │          Always on          │  │         NFS Kerberos        │  │         Key rotation        │   │
+│   │        No perf impact       │  │         HTTPS portal        │  │          FIPS 140-2         │   │
+│   │        Drive destruct       │  │        Cipher TLS 1.3       │  │          Audit keys         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    SED: cryptographic erase on drive decommission; no data recovery risk when drive replaced          │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Layer       │    Algorithm     │     Enabled by    │      Verify      │      Notes       │   │
+│   │     At rest      │   AES-256-XTS    │      Default      │   Console view   │   SED hardware   │   │
+│   │     iSCSI tx     │    CHAP auth     │      Per host     │   CHAP secret    │   Not payload    │   │
+│   │      NFS tx      │     Kerberos     │    Mount option   │     sec=krb5     │    KDC needed    │   │
+│   │     Mgmt tx      │     TLS 1.2+     │     Always on     │     TLS cert     │    Portal/API    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: SED drives in array · iSCSI network switch (not inspecting payload) · KDC server         │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SED            = Self-Encrypting Drive; AES-256 hardware encryption on-chip; no CPU overhead       │
+│    AES-256-XTS    = XEX-based tweaked codebook mode; NIST-approved for storage encryption             │
+│    Always on      = Apex SED encryption cannot be disabled; all data encrypted at write               │
+│    Crypto erase   = Reset SED encryption key; instantly renders all data unreadable                   │
+│    KMIP           = Key Management Interoperability Protocol; customer-managed key server             │
+│    FIPS 140-2     = US encryption standard; Apex optionally runs FIPS-validated mode                  │
+│    CHAP           = iSCSI host authentication only; does NOT encrypt I/O payload                      │
+│    Kerberos       = NFS data integrity/confidentiality; sec=krb5i adds integrity signing              │
+│    TLS 1.2+       = Minimum TLS version for Apex Console and REST API endpoints                       │
+│    Key rotation   = Periodic re-encryption of SED keys; Dell-managed on schedule                      │
+│    FIPS 140-2 L2  = Validated cryptographic modules in Apex arrays; regulatory compliance             │
+│    Drive destruct = Physical destruction of retired SEDs; crypto erase is equivalent                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 > Part of the [APEX Storage as a Service](../../) reference.
 
 ---

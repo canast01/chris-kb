@@ -1,5 +1,59 @@
 # CloudIQ — Install & Upgrade
 
+```
+┌──────────────────────────────── Dell CloudIQ — Install and Onboarding ────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    CloudIQ onboarding: deploy SCG, register to CloudIQ tenant, add arrays, configure alerts   │   │
+│   │   Prerequisites: Dell support account with CloudIQ entitlement, array management credentials  │   │
+│   │    SCG deployed as VMware OVA (or physical appliance) on management network per datacenter    │   │
+│   │   After registration CloudIQ pulls telemetry within 15 minutes; health scores appear in 1 h   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Prerequisites → SCG deploy → portal setup → array registration → alert config → validation         │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Prerequisites        │  │        SCG Deployment       │  │         Portal Setup        │   │
+│   │      Dell support acct      │  │         Download OVA        │  │          Create org         │   │
+│   │       CloudIQ license       │  │       Deploy on VMware      │  │         Invite users        │   │
+│   │       Array mgmt creds      │  │      Configure network      │  │       Configure alerts      │   │
+│   │      Outbound 443 open      │  │      Register to cloud      │  │          Add arrays         │   │
+│   │        DNS resolution       │  │       Verify telemetry      │  │        Verify scores        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Upgrade SCG via CloudIQ portal: Settings > SCG > Update; zero-downtime rolling update              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Phase       │       Step       │        Tool       │      Owner       │ Success Criteria │   │
+│   │     Planning     │   Size SCG VM    │     Spec sheet    │    Infra team    │    VM created    │   │
+│   │    Deployment    │    Deploy OVA    │      vSphere      │   Storage eng.   │    SCG online    │   │
+│   │   Registration   │    Add arrays    │       SCG UI      │   Storage eng.   │Telemetry flowing │   │
+│   │    Validation    │   Check scores   │   CloudIQ portal  │   Storage lead   │   Score >= 80    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: SCG OVA on vSphere management cluster · mgmt VLAN · NTP synced · 443 outbound            │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    OVA            = Open Virtualization Archive; SCG VM image downloaded from Dell support portal     │
+│    Entitlement    = CloudIQ license tied to support contract; required before portal access           │
+│    Tenant / org   = CloudIQ logical container for all sites and arrays under one customer account     │
+│    Array registration = Providing array management IP and credentials to SCG so it can collect data   │
+│    Telemetry      = Performance counters, capacity stats, events collected from arrays via SCG        │
+│    Health score   = Appears within ~1 hour of first telemetry; reflects array-wide health 0-100       │
+│    Proxy config   = Configure on SCG if direct outbound 443 is blocked; HTTP/HTTPS proxy supported    │
+│    Upgrade path   = CloudIQ initiates SCG update remotely; no manual download required                │
+│    Management IP  = Dedicated array management interface IP; used by SCG not data-path IPs            │
+│    Alert policy   = Set after arrays appear; defines thresholds for email or webhook notifications    │
+│    NTP sync       = Required on SCG VM; clock skew over 5 minutes causes telemetry rejection          │
+│    Rolling update = SCG update completes without interrupting telemetry collection pipeline           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 > Part of the [CloudIQ](../../) reference.
 
 ---

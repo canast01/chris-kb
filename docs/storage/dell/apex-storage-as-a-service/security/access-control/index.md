@@ -1,5 +1,59 @@
 # APEX Storage as a Service — Access Control
 
+```
+┌────────────────────────────────── Dell Apex STaaS — Access Control ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Apex access control: RBAC roles, SSO, API tokens, IP allowlists, Dell support         │   │
+│   │       Three portal roles: Account Admin, Storage Admin, Reader; assign via Apex Console       │   │
+│   │          API access: OAuth 2.0 tokens scoped to read or read-write; rotate quarterly          │   │
+│   │        IP allowlist: restrict Apex Console access to corporate IP ranges or VPN egress        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SSO login → RBAC role check → console or API access → action logged → audit reviewed               │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Portal Roles        │  │          API Access         │  │         Restrictions        │   │
+│   │        Account Admin        │  │       OAuth 2.0 token       │  │         IP allowlist        │   │
+│   │        Storage Admin        │  │         Scoped r/rw         │  │         MFA enforce         │   │
+│   │            Reader           │  │        Token rotation       │  │         SSO required        │   │
+│   │       Least privilege       │  │        API audit log        │  │       Dell break-glass      │   │
+│   │       Review quarterly      │  │         Revoke stale        │  │      Customer approves      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Review user list quarterly; revoke inactive accounts and rotate API tokens                         │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Role       │      Can do      │     Cannot do     │    Assign via    │      Notes       │   │
+│   │    Acct Admin    │  Users/billing   │    Storage ops    │   Apex Console   │  Separate duty   │   │
+│   │  Storage Admin   │    Vols/snaps    │   Billing/users   │   Apex Console   │    Day-2 ops     │   │
+│   │      Reader      │   View metrics   │     Any change    │   Apex Console   │  Audit/reports   │   │
+│   │    API token     │    Automation    │    Portal login   │     Apex API     │  Rotate 90 days  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: corporate IdP reachable by Apex Console · VPN for IP allowlist enforcement               │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Account Admin  = Top-level Apex Console role; manages subscriptions, billing, and users            │
+│    Storage Admin  = Day-to-day storage ops; cannot modify billing or create users                     │
+│    Reader         = View-only; suitable for monitoring, auditing, and management review               │
+│    Least privilege = Assign minimum role required for job function; review access regularly           │
+│    OAuth 2.0      = Token issued by Apex for API clients; set shortest practical expiry               │
+│    Token rotation = Replace API tokens quarterly; revoke old token immediately after                  │
+│    IP allowlist   = Apex Console setting to permit logins from specified IP ranges only               │
+│    MFA enforce    = Require second factor for all console logins; hardware or TOTP                    │
+│    Break-glass    = Dell emergency access; customer must grant in Apex Console; audited               │
+│    Separation     = Account Admin and Storage Admin roles should be different people                  │
+│    Stale tokens   = API tokens from departed staff or unused integrations; revoke promptly            │
+│    Quarterly review = Check all active users and API tokens; remove unneeded access                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 > Part of the [APEX Storage as a Service](../../) reference.
 
 ---
