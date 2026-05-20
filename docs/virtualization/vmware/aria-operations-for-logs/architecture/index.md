@@ -25,16 +25,60 @@ Minimum for production HA: **3 nodes** (1 master + 2 workers) on separate ESXi h
 
 ## Log Pipeline Architecture
 
-```mermaid
-graph TB
-  SRC1(["ESXi / vCenter syslog"]) & SRC2(["NSX / VMs syslog"]) & SRC3(["Linux / Windows agent"]) --> VRLI["Aria Operations for Logs\n(Log Intelligence cluster)"]
-  VRLI --> IDX[("Log Index\nhot + warm retention")]
-  VRLI --> ALERTS["Alert Rules & Notifications"]
-  ADMIN(["Operator"]) -->|"browser"| VRLI
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class VRLI ctrl
-  class IDX store
-  class SRC1,SRC2,SRC3,ADMIN host
+```
+┌────────────────────────────────────── Aria Logs — Architecture ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Aria Operations for Logs (formerly vRealize Log Insight) — master node + worker nodes HA cluste│   │
+│   │   vRLI agents on Windows/Linux hosts; syslog TCP/UDP ingestion from network devices and ESXi  │   │
+│   │   VLQL structured queries for interactive analytics; alert pipelines to vROps/email/webhook   │   │
+│   │     Content packs provide structured field extraction and dashboards for known log sources    │   │
+│   │   Log forwarder exports filtered streams to SIEM; retention enforced by disk policy per node  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works defines cluster mechanics · integrations connect log sources · standards govern retent│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         How It Works        │  │         Integrations        │  │       Design Standards      │   │
+│   │     Master + workers HA     │  │      vROps integration      │  │      3-node HA cluster      │   │
+│   │         vRLI agents         │  │          NSX syslog         │  │      Log retention pol      │   │
+│   │        Syslog TCP/UDP       │  │         ESXi syslog         │  │       Agent deployment      │   │
+│   │         VLQL queries        │  │        Windows agent        │  │       Alert thresholds      │   │
+│   │       Alert pipelines       │  │        Syslog sources       │  │       Content pack org      │   │
+│   │        Content packs        │  │       SIEM forwarding       │  │         Disk sizing         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works covers cluster and ingestion · integrations connect sources · standards enforce retent│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   How It Works   │   Integrations   │    Design Stds    │    Deployment    │     Key Stds     │   │
+│   │  Master+workers  │    vROps intg    │   3-node cluster  │   Single node    │  Retention pol   │   │
+│   │   vRLI agents    │    NSX syslog    │   Log retention   │    HA cluster    │   Alert thresh   │   │
+│   │  Syslog TCP/UDP  │   ESXi syslog    │    Agent deploy   │    Forwarder     │   Disk sizing    │   │
+│   │   VLQL queries   │   SIEM forward   │    Alert config   │    Multi-site    │  Content packs   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 VMs (master + workers) · RAM DIMMs · Network NICs · High-capacity storage (log disk) · Syslog sou│
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master node        = Aria Logs cluster leader; hosts UI, API, and coordinates ingestion across worker│
+│  Worker node        = Additional cluster member; shares ingestion load and stores log partitions      │
+│  vRLI agent         = Lightweight agent on Windows/Linux; forwards structured log events to cluster   │
+│  Syslog ingestion   = UDP/TCP syslog receiver on port 514/6514; accepts RFC3164/5424 formatted logs   │
+│  VLQL               = vRLI Query Language; structured query syntax for filtering and aggregating logs │
+│  Content pack       = Pre-built dashboards and field extractors for a specific log source (NSX, vSpher│
+│  Alert pipeline     = Rule triggering notifications or forwarding to vROps/email/webhook on log match │
+│  Log forwarder      = Cluster feature streaming filtered log events to an external SIEM destination   │
+│  Structured parsing = Field extraction from raw log text using content pack or custom regex rules     │
+│  Log retention      = Disk-based policy deleting oldest log partitions when capacity threshold reached│
+│  HA cluster         = Master + 2+ worker nodes with integrated load balancer virtual IP for ingestion │
+│  Interactive analytics = UI-based VLQL query workspace for ad-hoc log investigation and charting      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

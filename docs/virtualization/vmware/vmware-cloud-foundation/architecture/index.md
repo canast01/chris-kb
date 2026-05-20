@@ -25,22 +25,60 @@ VMware Cloud Foundation (VCF) is a full-stack SDDC platform. SDDC Manager orches
 
 ## SDDC Stack Architecture
 
-```mermaid
-graph TB
-  SDDC["SDDC Manager\n(VCF orchestration)"] --> MGMT["Management Domain\nvCenter · NSX · vSAN"]
-  SDDC --> WL1["Workload Domain I\n(VI workloads)"]
-  SDDC --> WL2["Workload Domain II\n(VVF cloud workloads)"]
-  MGMT --> EMH["ESXi Mgmt Hosts\n(4 minimum)"]
-  WL1 --> EWH["ESXi Workload Hosts"]
-  SDDC --> CLOUD["VMware Cloud\n(optional hybrid)"]
-
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-
-  class SDDC mgmt
-  class MGMT,WL1,WL2 ctrl
-  class EMH,EWH host
-  class CLOUD cloud
+```
+┌───────────────────────────────────────── VCF — Architecture ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ VMware Cloud Foundation = SDDC Manager + Cloud Builder + vSphere + vSAN + NSX bundled together│   │
+│   │ Workload domains isolate workloads; BOM ensures component compatibility across the full stack │   │
+│   │ Automated bring-up via Cloud Builder; Management domain deployed first, VI domains added after│   │
+│   │    SDDC Manager orchestrates lifecycle: patching, password rotation, certificate management   │   │
+│   │     NSX per domain provides overlay networking; vCenter per domain for workload management    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works defines domain architecture · integrations connect stack components · standards govern│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         How It Works        │  │         Integrations        │  │       Design Standards      │   │
+│   │       SDDC Manager UI       │  │       vSphere+vSAN+NSX      │  │      Mgmt domain first      │   │
+│   │    Cloud Builder: deploy    │  │       Aria Suite intg       │  │     VI domains: isolated    │   │
+│   │       Workload domains      │  │      vCenter per domain     │  │        NSX per domain       │   │
+│   │       BOM: version set      │  │        NSX per domain       │  │       SDDC user roles       │   │
+│   │     VI domain: workload     │  │       Identity Manager      │  │      BOM compat matrix      │   │
+│   │      Mgmt domain: core      │  │         SIEM syslog         │  │      Subscription model     │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works covers domain model · integrations connect stack and identity · standards enforce VCF │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   How It Works   │   Integrations   │    Design Stds    │    Deployment    │     Key Stds     │   │
+│   │   SDDC Manager   │   vSphere+vSAN   │  Mgmt domain 1st  │  Cloud Builder   │    BOM matrix    │   │
+│   │ Workload domains │  NSX per domain  │     VI domains    │ Automated deploy │  Domain naming   │   │
+│   │  BOM lifecycle   │ Aria Suite intg  │     SDDC RBAC     │  Pre-check reqs  │    SDDC roles    │   │
+│   │  Cloud Builder   │   Identity Mgr   │    NSX overlay    │ Post-deploy val  │   Password std   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 servers · PCIe NICs · ToR switches · SAN/vSAN storage · OOB management network                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SDDC Manager  = VCF control plane; orchestrates domain lifecycle, LCM upgrades, password rotation    │
+│  Cloud Builder = Automated bring-up appliance; validates prerequisites and deploys Management domain  │
+│  Workload domain = Isolated vSphere+vSAN+NSX unit; separate vCenter, NSX Manager, and cluster         │
+│  Management domain = First VCF domain; hosts SDDC Manager, vCenter, and shared infrastructure         │
+│  VI domain     = Virtual Infrastructure workload domain; runs production VMs separate from management │
+│  BOM (Bill of Materials) = Validated version matrix for all VCF components; ensures stack compatibilit│
+│  SDDC bring-up = Cloud Builder automated deployment of Management domain from JSON spec               │
+│  NSX per domain = Each VCF workload domain gets its own NSX Manager cluster for isolation             │
+│  vCenter per domain = Each VCF domain has a dedicated vCenter for workload management and HA/DRS      │
+│  LCM (Lifecycle Manager) = SDDC Manager component for orchestrating upgrades across VCF stack         │
+│  SoS tool      = Support and Serviceability tool; runs health checks across all VCF components        │
+│  VCF subscription = Licensing model for VCF; covers all included components under one SKU             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

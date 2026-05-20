@@ -1,26 +1,61 @@
 # Aria Automation — Operations
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│         Aria Automation Operations Overview                 │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  Day-to-Day Tasks                                           │
-│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐ │
-│  │ Health       │ │ Procedures   │ │ CLI Reference        │ │
-│  │ Checks       │ │ service acct │ │ vracli / kubectl     │ │
-│  │ pods / cloud │ │ rotation     │ │ REST API             │ │
-│  │ accounts     │ │ stale deploy │ │                      │ │
-│  └──────────────┘ └──────────────┘ └──────────────────────┘ │
-│                                                             │
-│  Lifecycle                                                  │
-│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐ │
-│  │ Install /    │ │ Backup /     │ │ Scripts              │ │
-│  │ Upgrade      │ │ Restore      │ │ PowerShell / REST    │ │
-│  │ LCM / VAMI / │ │ NFS/SFTP     │ │ deployment audit     │ │
-│  │ PAK file     │ │ passphrase   │ │ cloud acct check     │ │
-│  └──────────────┘ └──────────────┘ └──────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────── Aria Automation — Operations ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Blueprint lifecycle management; request monitoring for failed deployments; catalog item health│   │
+│   │  Subscription and event broker management; pipeline status monitoring; ABX function execution │   │
+│   │ Daily: review failed requests, check cloud account connectivity, verify ABX timeout thresholds│   │
+│   │    Lifecycle: Automation upgrade with pre-upgrade snapshot; embedded vRO and plugin updates   │   │
+│   │        Automation: vRA REST API, ABX Python/Node, Terraform integration, vRO workflows        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Daily ops catch request failures · lifecycle keeps Automation current · automation scales delivery │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Daily Ops          │  │          Lifecycle          │  │          Automation         │   │
+│   │      Request monitoring     │  │      Automation upgrade     │  │         vRA REST API        │   │
+│   │        Failed deploys       │  │       Pre-upg snapshot      │  │       ABX: Python/Node      │   │
+│   │        Catalog health       │  │         Embedded vRO        │  │        Terraform intg       │   │
+│   │         Sub. events         │  │       ABX FaaS update       │  │        vRO workflows        │   │
+│   │       Pipeline status       │  │        Plugin updates       │  │        PowerShell ABX       │   │
+│   │       ABX timeout chk       │  │        API compat chk       │  │         API Explorer        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Daily ops monitor request health · lifecycle upgrades safely with snapshot · automation enables at-│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     CLI Ref      │    Health Chk    │     Procedures    │    Install/Up    │   Backup/Rest    │   │
+│   │   vRA REST API   │   Requests: ok   │   Blueprint ver   │   Pre-upg snap   │  Config export   │   │
+│   │   ABX function   │  Catalog: items  │    Deploy test    │  Automation upg  │  Policy backup   │   │
+│   │  Terraform CLI   │  Cloud accts ok  │      ABX test     │    API compat    │  Blueprint bkp   │   │
+│   │   API Explorer   │  Pipelines: ok   │    Entitlement    │   Post-upg val   │  Restore redep   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 VM (Automation appliance) · RAM DIMMs · Network NICs · Cloud provider connectivity               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Blueprint     = IaC template; versioned in Aria Automation; deploy, update, and destroy lifecycle    │
+│  Request       = User-initiated catalog item deployment; tracked in Service Broker with status and log│
+│  Catalog item  = Published blueprint or workflow in Service Broker; versioned and entitlement-controll│
+│  ABX action    = FaaS function (Python/Node/PowerShell) triggered by events or directly from blueprint│
+│  Subscription  = Event broker rule mapping a lifecycle event to an ABX action or Orchestrator workflow│
+│  Event broker  = Aria Automation event bus; publishes compute/network/storage events to subscriptions │
+│  Cloud account = Aria connection to vCenter/AWS/Azure/GCP; health check ensures connectivity          │
+│  Approval policy = Required sign-off before request fulfillment; configurable per catalog item        │
+│  Orchestrator workflow = vRO workflow embedded in Aria Automation; runs complex multi-step tasks      │
+│  vRA REST API  = Primary Aria Automation programmatic interface; used for requests, blueprints, catalo│
+│  Terraform provider = Aria Automation Terraform provider for IaC-driven provisioning workflows        │
+│  Entitlement   = Service Broker policy granting project members access to specific catalog items      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">

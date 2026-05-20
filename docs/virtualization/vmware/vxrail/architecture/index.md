@@ -28,21 +28,60 @@ Dell VxRail is an HCI appliance built on vSphere and vSAN. VxRail Manager orches
 
 ## Architecture Overview
 
-```mermaid
-graph TB
-  VXM["VxRail Manager\n(VM on first node)"]
-  VXM --> VC["vCenter Server"]
-  VC --> CL["vSphere Cluster"]
-  CL --> N1["Node 1\nESXi + vSAN Disk Groups"]
-  CL --> N2["Node 2\nESXi + vSAN Disk Groups"]
-  CL --> N3["Node 3\nESXi + vSAN Disk Groups"]
-  N1 --> DS["vSAN Datastore\n(distributed across all nodes)"]
-  N2 --> DS
-  N3 --> DS
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef node fill:#15803d,stroke:#166534,color:#fff
-  classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
-  class VXM,VC ctrl
-  class N1,N2,N3 node
-  class DS storage
+```
+┌──────────────────────────────────────── VxRail — Architecture ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        VxRail = Dell EMC HCI appliance running VMware ESXi + vSAN + vCenter (embedded)        │   │
+│   │    VxRail Manager provides unified lifecycle management via REST API and plugin in vCenter    │   │
+│   │    Node families: P-series (general), E-series (entry), V-series (vSAN ESA), G-series (GPU)   │   │
+│   │     Supports stretched clusters and VCF integration for full software-defined data centre     │   │
+│   │  LCM bundles upgrade FW + ESXi + vSAN together per node; VxRail Manager orchestrates sequence │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works defines HCI mechanics · integrations connect vCenter and Dell tools · standards govern│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         How It Works        │  │         Integrations        │  │       Design Standards      │   │
+│   │     HCI: ESXi+vSAN+vCtr     │  │        vCenter plugin       │  │      Cluster 3-64 nodes     │   │
+│   │        VxRail Mgr API       │  │          Dell OMIVV         │  │        VMk VLAN plan        │   │
+│   │       LCM unified upg       │  │        iDRAC hardware       │  │        iDRAC OOB VLAN       │   │
+│   │    Node families P/E/V/G    │  │       Aria Ops adapter      │  │       LCM bundle match      │   │
+│   │        vSAN stretched       │  │        SupportAssist        │  │          FTT policy         │   │
+│   │        VxRail on VCF        │  │      CloudIQ monitoring     │  │        Witness sizing       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works covers HCI stack · integrations connect Dell and VMware tools · standards enforce clus│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   How It Works   │   Integrations   │    Design Stds    │    Deployment    │     Key Stds     │   │
+│   │  VxRail Mgr API  │  vCenter plugin  │     3-64 nodes    │  3-node starter  │    VLAN plan     │   │
+│   │  LCM lifecycle   │    Dell OMIVV    │     VMk VLANs     │   4+ stretched   │    FTT policy    │   │
+│   │  Node families   │     iDRAC HW     │     iDRAC OOB     │    VCF ready     │  Witness sizing  │   │
+│   │  vSAN stretched  │     Aria Ops     │     LCM bundle    │    Scale-out     │    BOM match     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Dell PowerEdge servers · NVMe/SSD/HDD drives · 25GbE NICs · iDRAC OOB · ToR switches                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VxRail Manager    = Embedded VM on the cluster; provides REST API and vCenter plugin for HCI manageme│
+│  OMIVV             = OpenManage Integration for VMware vCenter; surfaces Dell hardware alerts in vCent│
+│  LCM               = Lifecycle Manager; orchestrates FW + ESXi + vSAN upgrade as a single bundle opera│
+│  HCI               = Hyperconverged Infrastructure; compute, storage, and networking in a single appli│
+│  iDRAC             = Integrated Dell Remote Access Controller; OOB management for hardware health and │
+│  SupportAssist     = Dell proactive support service; auto-creates cases on hardware alert detection   │
+│  CloudIQ           = Dell SaaS monitoring platform; capacity, performance, and health tracking for VxR│
+│  VxRail bundle     = Signed LCM package containing matched FW, ESXi, and vSAN component versions      │
+│  FTT               = Failures to Tolerate; vSAN policy defining how many host/disk failures data can s│
+│  P/E/V/G-series    = VxRail node families: P=general, E=entry, V=vSAN ESA NVMe, G=GPU-accelerated     │
+│  Stretched cluster = VxRail cluster spanning two sites with a witness VM for quorum and zero RPO      │
+│  VCF on VxRail     = VMware Cloud Foundation deployed on VxRail hardware using Dell-managed LCM       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

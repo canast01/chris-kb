@@ -1,25 +1,61 @@
 # Aria Operations — Troubleshooting
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│       Aria Operations Troubleshooting Decision Tree         │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  Problem                                                    │
-│      │                                                      │
-│      ├──► Adapter / data issue  ──► Common Issues           │
-│      │    Node offline / slow UI                            │
-│      │    LDAP login failure                                │
-│      │                                                      │
-│      ├──► Need logs / bundle    ──► Diagnostics             │
-│      │    Support bundle                                    │
-│      │    Log file paths                                    │
-│      │    Capacity planning                                 │
-│      │                                                      │
-│      └──► Cannot resolve        ──► Escalation              │
-│           Broadcom TAC                                      │
-│           P1–P4 SLA tiers                                   │
-└─────────────────────────────────────────────────────────────┘
+┌────────────────────────────────── Aria Operations — Troubleshooting ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Adapter collection failures: verify credentials, firewall paths, and adapter version compatibil│   │
+│   │    Alert noise and false positives: tune symptom thresholds; check adapter collection gaps    │   │
+│   │  Missing metric data: confirm remote collector reachability; check collector group assignment │   │
+│   │       Dashboard errors: verify data source adapter health; check widget metric mappings       │   │
+│   │        support.zip bundle collects all cluster logs; attach to GSS case for escalation        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Common issues guide triage · diagnostics isolate adapter or cluster root cause · escalation bundles│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Common Issues        │  │         Diagnostics         │  │          Escalation         │   │
+│   │      Adapter coll fail      │  │     Cluster diagnostics     │  │         Support.zip         │   │
+│   │         Alert noise         │  │         Adapter log         │  │        GSS case open        │   │
+│   │         Missing data        │  │         Support.zip         │  │        Skyline health       │   │
+│   │       Dashboard error       │  │        REST API debug       │  │        TAM escalation       │   │
+│   │       Remote coll down      │  │       Log Insight intg      │  │          Log bundle         │   │
+│   │        Capacity wrong       │  │       Metric explorer       │  │        Version compat       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Common issues triage adapter and cluster faults · diagnostics use logs and metric explorer · escala│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Issues      │   Diagnostics    │     Log Paths     │    Escalation    │     Recovery     │   │
+│   │   Adapter fail   │   Adapter log    │   /var/log/vrops  │   support.zip    │ Re-auth adapter  │   │
+│   │   Alert noise    │ Metric explorer  │    Cluster diag   │   GSS P1 case    │    Tune alert    │   │
+│   │   Missing data   │  REST API debug  │   /var/log/casa   │   TAM escalate   │    Re-collect    │   │
+│   │  Collector down  │   Support.zip    │   /var/log/coll   │  Skyline health  │   Restart coll   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 VMs (cluster nodes + collectors) · RAM DIMMs · Network NICs · vCenter/cloud connectivity         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Adapter collection = Periodic metric pull by an adapter instance; fails on auth or network errors    │
+│  Remote collector   = Site-local VM forwarding metrics; offline if unreachable or out of resources    │
+│  Alert noise        = Excessive or false-positive alerts caused by overly sensitive symptom thresholds│
+│  Metric gap         = Missing data points in a metric time series; caused by collection or node failur│
+│  Support.zip bundle = Full diagnostic archive from Aria Ops cluster; submitted to GSS for analysis    │
+│  Cluster diagnostics = Built-in health tool validating node connectivity, services, and disk usage    │
+│  Metric explorer    = UI tool for querying raw metric time series to identify gaps or anomalies       │
+│  Capacity calculation = Engine consuming metric history to project resource exhaustion dates          │
+│  Skyline Health     = VMware proactive support tool that validates cluster health against best practic│
+│  REST API           = Aria Ops API for querying metrics, alerts, recommendations programmatically     │
+│  Log Insight intg   = Aria Logs integration forwarding Aria Ops cluster logs for structured search    │
+│  False positive alert = Alert firing when no real problem exists; tuned via symptom threshold change  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">

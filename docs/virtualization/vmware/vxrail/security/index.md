@@ -1,33 +1,61 @@
 # VxRail — Security
 
 ```
-┌───────────────────── VxRail Security Layers ───────────────────────────────────┐
-│                                                                                 │
-│  ┌─────────────────────────────────────────────────────────────────────────┐    │
-│  │  iDRAC (Hardware OOB)                                                   │    │
-│  │  root/Calvin changed │ LDAP/AD │ OOB VLAN only │ Secure Boot │ FW via LCM│   │
-│  └─────────────────────────────────────────────────────────────────────────┘    │
-│                                    │                                            │
-│  ┌─────────────────────────────────▼───────────────────────────────────────┐    │
-│  │  ESXi Host                                                              │    │
-│  │  Lockdown Mode (Normal) │ SSH/Shell disabled │ Host Profiles compliant  │    │
-│  └─────────────────────────────────────────────────────────────────────────┘    │
-│                                    │                                            │
-│  ┌─────────────────────────────────▼───────────────────────────────────────┐    │
-│  │  vSAN                                                                   │    │
-│  │  Data-at-rest encryption (KMS/NKP) │ In-transit encryption (AES-NI)    │     │
-│  └─────────────────────────────────────────────────────────────────────────┘    │
-│                                    │                                            │
-│  ┌─────────────────────────────────▼───────────────────────────────────────┐    │
-│  │  VxRail Manager                                                         │    │
-│  │  mystic password rotated │ LDAP ► AD groups ► roles │ API on jump hosts │    │
-│  └─────────────────────────────────────────────────────────────────────────┘    │
-│                                    │                                            │
-│  ┌─────────────────────────────────▼───────────────────────────────────────┐    │
-│  │  Network                                                                │    │
-│  │  Mgmt / vSAN / vMotion / iDRAC on separate VLANs │ NSX DFW (optional)  │     │
-│  └─────────────────────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────── VxRail — Security ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         iDRAC LDAP/AD authentication with OOB-only VLAN access for hardware management        │   │
+│   │      ESXi lockdown mode (normal) with host profiles enforcement across all cluster nodes      │   │
+│   │     vCenter SSO for all management plane access; VxRail Manager TLS certificates enforced     │   │
+│   │      vSAN data-at-rest encryption with KMIP-compatible KMS integration for key management     │   │
+│   │      Secure Boot on all nodes; STIG alignment via host profiles; syslog forwarded to SIEM     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Authentication gates hardware access · access control limits management scope · encryption protects│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Authentication       │  │        Access Control       │  │          Encryption         │   │
+│   │        iDRAC LDAP/AD        │  │       RBAC via vCenter      │  │      vSAN data-at-rest      │   │
+│   │      ESXi lockdown mode     │  │       iDRAC user roles      │  │       iDRAC HTTPS only      │   │
+│   │         vCenter SSO         │  │       VxRail Mgr roles      │  │       Secure Boot ESXi      │   │
+│   │       VxRail Mgr local      │  │         LCM op roles        │  │        VxRail Mgr TLS       │   │
+│   │          iDRAC 2FA          │  │       Least privilege       │  │        iDRAC SSL cert       │   │
+│   │       Svc acct policy       │  │         Audit events        │  │          Syslog TLS         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Auth controls who accesses hardware · RBAC scopes management · encryption protects data and transpo│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Auth       │   Access Ctrl    │     Encryption    │    Hardening     │      Audit       │   │
+│   │    iDRAC LDAP    │   vCenter RBAC   │    vSAN encrypt   │   Secure Boot    │  vCenter events  │   │
+│   │  ESXi lockdown   │   iDRAC roles    │    iDRAC HTTPS    │   SSH disabled   │   iDRAC audit    │   │
+│   │   vCenter SSO    │   VxRail roles   │     VxRail TLS    │  Host profiles   │  Syslog to SIEM  │   │
+│   │    iDRAC 2FA     │ Least privilege  │   Cert rotation   │    STIG align    │  LCM log audit   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Dell PowerEdge servers · TPM 2.0 · NVMe/SSD/HDD · iDRAC OOB network · CA infrastructure              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  iDRAC             = Integrated Dell Remote Access Controller; LDAP/AD auth; OOB-only VLAN access     │
+│  Lockdown mode     = ESXi host setting preventing direct SSH/DCUI; all management via vCenter only    │
+│  vSAN encryption   = Data-at-rest encryption on vSAN datastore; keys managed by external KMIP KMS     │
+│  KMS/KMIP          = Key Management Server / protocol; external key store for vSAN and VM encryption  │
+│  Secure Boot       = UEFI feature verifying ESXi VIB signatures on all VxRail nodes at boot time      │
+│  Host Profile      = vCenter config template enforcing lockdown, NTP, syslog, and security settings   │
+│  VxRail Manager TLS = TLS certificate on VxRail Manager VM; used for API and plugin communications    │
+│  STIG alignment    = Defense Information Systems Agency hardening guide applied via host profiles     │
+│  OOB VLAN          = Out-of-band management VLAN restricted to iDRAC access only; no VM traffic       │
+│  LDAP/AD integration = iDRAC and vCenter authenticate against Active Directory for role mapping       │
+│  RBAC              = Role-Based Access Control; vCenter roles applied to VxRail management operations │
+│  2FA on iDRAC      = Two-factor authentication on iDRAC console; reduces OOB access risk              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Security Model Overview

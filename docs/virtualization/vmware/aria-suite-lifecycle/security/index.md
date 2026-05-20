@@ -1,20 +1,61 @@
 # Aria Suite Lifecycle — Security
 
 ```
-  LCM Security Layers
-┌──────────────────────────────────────────────────────────────┐
-│  Identity               Access Control     Encryption         │
-│  ┌──────────────────┐   ┌──────────────┐   ┌──────────────┐  │
-│  │ VIDM (primary)   │   │ LCM Admin    │   │ Locker:      │  │
-│  │  SAML/OAuth2     │   │  deploy/     │   │  certs +     │  │
-│  │  AD via LDAPS    │   │  upgrade/    │   │  passwords   │  │
-│  │                  │   │  Locker      │   │  encrypted   │  │
-│  │ admin@local      │   │ Content Dev  │   │  w/ Master PW│  │
-│  │  break-glass     │   │  read + CLM  │   │ TLS 1.2+ on  │  │
-│  │  only            │   │ Viewer       │   │  all APIs    │  │
-│  │                  │   │  read-only   │   │              │  │
-│  └──────────────────┘   └──────────────┘   └──────────────┘  │
-└──────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────── Aria LCM — Security ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   vIDM/Workspace ONE for SSO; environment-level RBAC (admin/operator/viewer) for LCM access   │   │
+│   │   Password Locker encrypts credentials at rest; Certificate Locker manages product TLS certs  │   │
+│   │   All API over HTTPS; audit log for all LCM operations including Locker access and upgrades   │   │
+│   │     Break-glass local admin account; session timeout enforcement; API key with TTL policy     │   │
+│   │  Least privilege: operator role limited to day-2 tasks; viewer role read-only for dashboards  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Authentication gates LCM access · RBAC scopes environment permissions · Locker encryption protects │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Authentication       │  │        Access Control       │  │          Encryption         │   │
+│   │         vIDM/WS1 SSO        │  │        LCM admin role       │  │           LCM TLS           │   │
+│   │         LDAP/AD auth        │  │        Operator role        │  │     Locker encr at rest     │   │
+│   │         Local admin         │  │         Viewer role         │  │           vIDM TLS          │   │
+│   │         LCM API key         │  │        Env-level acc        │  │       Cert management       │   │
+│   │         Break-glass         │  │      Locker read/write      │  │        HTTPS only API       │   │
+│   │       Session timeout       │  │       Request approve       │  │        Log encryption       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Auth gates LCM access · RBAC scopes per-environment permissions · Locker and TLS protect credential│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Auth       │   Access Ctrl    │     Encryption    │    Hardening     │      Audit       │   │
+│   │     vIDM/WS1     │    Admin role    │    TLS enforced   │  Cert rotation   │  LCM event log   │   │
+│   │     LDAP/AD      │  Operator role   │    Locker encr    │   API key TTL    │   Request log    │   │
+│   │     API keys     │   Viewer role    │      vIDM TLS     │ Session timeout  │   Cert changes   │   │
+│   │   Break-glass    │    Env access    │     HTTPS only    │ Min permissions  │    Role audit    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 VM (LCM appliance) · RAM DIMMs · Network NICs · Identity provider (vIDM/AD) · CA infrastructure  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vIDM              = VMware Identity Manager embedded in LCM; provides SSO across all managed Aria pro│
+│  Workspace ONE     = VMware identity platform; alternative to embedded vIDM for enterprise SSO integra│
+│  LCM RBAC          = Role-based access control in LCM; scoped per Environment; admin/operator/viewer r│
+│  Admin role        = Full LCM access; can install/upgrade products, manage Lockers, and configure Envi│
+│  Operator role     = Day-2 access in LCM; can run cert/password rotation and monitoring; no install ri│
+│  Viewer role       = Read-only LCM access; can view Environment health and Locker inventory; no write │
+│  Password Locker encryption = AES encryption of all credentials stored in LCM Password Locker at rest │
+│  Certificate Locker = LCM store for TLS certificates; supports rotation workflows and CA-signed cert u│
+│  API key           = Bearer token for LCM REST API access; subject to TTL and minimum privilege policy│
+│  HTTPS enforcement = All LCM API and UI traffic requires TLS; HTTP redirected or blocked by policy    │
+│  Session timeout   = LCM UI session automatically expires after idle period; configurable per security│
+│  Audit event log   = LCM audit trail recording all user actions: logins, upgrades, Locker access, role│
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">

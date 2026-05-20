@@ -21,20 +21,60 @@ Kubernetes-based microservices platform for infrastructure self-service automati
 
 ## Cluster Topology
 
-```mermaid
-graph TB
-  CAT["Service Catalog\n(consumer portal)"] --> ORCH["Aria Automation Orchestrator\n(workflow engine)"]
-  ORCH --> IAAS["IaaS Service\n(compute engine)"]
-  IAAS --> VCTR["vCenter\n(VM provisioning)"]
-  IAAS --> NSX_T["NSX\n(network provisioning)"]
-  IAAS --> CLOUDS["Public Cloud\nAWS · Azure · GCP"]
-  ADMIN(["Cloud Admin"]) -->|"UI / API"| CAT
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  class CAT,ORCH,IAAS ctrl
-  class VCTR,NSX_T mgmt
-  class ADMIN host
-  class CLOUDS cloud
+```
+┌─────────────────────────────────── Aria Automation — Architecture ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Aria Automation = Automation appliance + Service Broker + Assembler + Extensibility (ABX + Orch│   │
+│   │      Service Broker provides self-service catalog with entitlements and approval policies     │   │
+│   │   Assembler manages blueprints, cloud accounts, and cloud zones for multi-cloud provisioning  │   │
+│   │  ABX actions and embedded Orchestrator extend automation with custom functions and workflows  │   │
+│   │ Connects to cloud accounts: vCenter, AWS, Azure, GCP; cloud proxy for on-premises connectivity│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works defines platform components · integrations connect cloud accounts · standards govern d│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         How It Works        │  │         Integrations        │  │       Design Standards      │   │
+│   │     Automation appliance    │  │      vCenter cloud acct     │  │       Org/project RBAC      │   │
+│   │   Service Broker: catalog   │  │      GitHub/GitLab: IaC     │  │     Blueprint versioning    │   │
+│   │    Assembler: blueprints    │  │       ServiceNow ITSM       │  │       Naming standards      │   │
+│   │      ABX: extensibility     │  │         AD/LDAP auth        │  │      ABX action limits      │   │
+│   │     Orchestrator: embed     │  │       Terraform plugin      │  │      Approval policies      │   │
+│   │        Cloud accounts       │  │      Slack/Teams notify     │  │         Cloud zones         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works covers platform components · integrations connect cloud and ITSM · standards enforce p│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   How It Works   │   Integrations   │    Design Stds    │    Deployment    │     Key Stds     │   │
+│   │  Service Broker  │   vCenter acct   │   Org/proj RBAC   │   Single-node    │  Blueprint std   │   │
+│   │    Assembler     │    GitHub IaC    │   Blueprint ver   │    HA cluster    │   Naming conv    │   │
+│   │   ABX actions    │    ServiceNow    │  Approval policy  │   Cloud proxy    │    ABX limits    │   │
+│   │   Orchestrator   │    Terraform     │    Cloud zones    │   Multi-cloud    │  Secret policy   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 VM (Automation appliance) · RAM DIMMs · Network NICs · vCenter/cloud provider targets            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Service Broker = Aria Automation self-service catalog; manages entitlements and approval workflows   │
+│  Assembler     = Aria Automation design surface; creates blueprints and manages cloud accounts/zones  │
+│  ABX (Action Based Extensibility) = FaaS runtime for Python/Node/PowerShell custom actions            │
+│  Orchestrator  = vRO embedded in Aria Automation; runs complex multi-step workflows                   │
+│  Blueprint     = IaC template in Aria YAML; defines cloud-agnostic infrastructure topology            │
+│  Cloud account = Aria connection to a cloud endpoint: vCenter, AWS, Azure, or GCP                     │
+│  Cloud zone    = Subset of a cloud account resources (clusters, regions) available for provisioning   │
+│  Catalog item  = Published blueprint or Orchestrator workflow available in Service Broker             │
+│  Entitlement   = Policy granting a project/user access to specific catalog items in Service Broker    │
+│  Approval policy = Workflow requiring approver sign-off before catalog item request is fulfilled      │
+│  Cloud proxy   = Lightweight VM deployed on-premises; routes Aria SaaS traffic to vCenter             │
+│  Organization/Project = Org is top-level tenant; Project scopes users, cloud zones, and policies      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

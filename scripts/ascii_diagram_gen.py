@@ -7779,6 +7779,7227 @@ def vsphere_replication_stack():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
+def esxi_architecture():
+    """ESXi Architecture sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'ESXi — Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VMware ESXi — Type-1 bare-metal hypervisor; VMkernel OS runs directly on server hardware')))
+    lines.append(R(bMid(IV_L, IV_R, 'Deployed standalone, in vSphere cluster, vSAN cluster (HCI), or stretched cluster across sites')))
+    lines.append(R(bMid(IV_L, IV_R, 'VMkernel ports isolate traffic: management, vMotion, vSAN, NFC, replication — one VMk per role')))
+    lines.append(R(bMid(IV_L, IV_R, 'Storage: VMFS on SAN (FC/iSCSI/NVMe-oF), NFS datastores, or vSAN — accessed via HBAs + PSPs')))
+    lines.append(R(bMid(IV_L, IV_R, 'Networking: vSS per host or vDS cluster-wide; port groups per workload; NIC teaming for HA')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines VMkernel internals · integrations connect vCenter and storage · standards enforce baseline'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'How It Works'),
+        bMid(B2_L, B2_R, 'Integrations'),
+        bMid(B3_L, B3_R, 'Design Standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VMkernel: CPU/RAM sched'),
+        bMid(B2_L, B2_R, 'vCenter: mgmt + HA/DRS'),
+        bMid(B3_L, B3_R, 'Host naming std'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vSwitch/vDS port groups'),
+        bMid(B2_L, B2_R, 'SAN/NAS/vSAN storage'),
+        bMid(B3_L, B3_R, 'BIOS/UEFI baseline'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'HBAs: FC/iSCSI/NVMe'),
+        bMid(B2_L, B2_R, 'Backup: VADP via NBD'),
+        bMid(B3_L, B3_R, 'VMkernel IP layout'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'NIC teaming: active/stby'),
+        bMid(B2_L, B2_R, 'Monitoring: Aria Ops'),
+        bMid(B3_L, B3_R, 'NTP: 2 sources required'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cluster: HA/DRS/vSAN'),
+        bMid(B2_L, B2_R, 'Identity: vCenter SSO'),
+        bMid(B3_L, B3_R, 'VIB acceptance policy'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works covers VMkernel · integrations connect storage and monitoring · standards enforce host baseline'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['How It Works', 'Integrations', 'Design Stds', 'Deployment', 'Key Stds'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['VMkernel sched', 'vCenter plugin', 'Standalone host', 'Single ESXi', 'Naming std'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vSwitch/vDS', 'SAN/NAS/vSAN', 'vSphere cluster', '3+ hosts HA', 'BIOS baseline'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['HBA multipath', 'VADP backup', 'vSAN cluster', '3+ HCI hosts', 'VMk IP plan'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['HA/DRS model', 'Aria Ops intg', 'Stretched clstr', '4+ 2-per-site', 'VIB policy'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 server · CPUs (Intel/AMD) · RAM DIMMs · PCIe HBAs/NICs · SAS/NVMe disks · Power & Cooling'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('VMkernel      = ESXi micro-kernel OS; schedules CPU/memory and handles I/O for all VMs on the host'))
+    lines.append(txt_row('vSS           = vSphere Standard Switch; per-host virtual switch; port groups define VM networks'))
+    lines.append(txt_row('vDS           = vSphere Distributed Switch; cluster-wide switch managed centrally by vCenter'))
+    lines.append(txt_row('VMkernel port = VMk NIC for host services: management, vMotion, vSAN, NFC, or replication'))
+    lines.append(txt_row('VMFS          = VM File System; cluster-aware filesystem on shared block storage for VMDK files'))
+    lines.append(txt_row('HBA           = Host Bus Adapter; PCIe card connecting ESXi to FC SAN or iSCSI/NVMe storage'))
+    lines.append(txt_row('PSP           = Path Selection Policy; multipathing algorithm: MRU, Fixed, or Round Robin per LUN'))
+    lines.append(txt_row('HA            = vSphere High Availability; restarts VMs on surviving hosts after a host failure'))
+    lines.append(txt_row('DRS           = Distributed Resource Scheduler; load-balances VMs across cluster hosts via vMotion'))
+    lines.append(txt_row('vSAN          = Virtual SAN; pools local flash/HDD from ESXi hosts into a shared HCI datastore'))
+    lines.append(txt_row('VADP          = vStorage APIs for Data Protection; backup vendor interface for consistent VM backup'))
+    lines.append(txt_row('VIB           = vSphere Installation Bundle; ESXi software package; acceptance level governs install'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def esxi_operations():
+    """ESXi Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'ESXi — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'ESXi day-to-day operations: CLI commands, health checks, procedures, and lifecycle management')))
+    lines.append(R(bMid(IV_L, IV_R, 'Daily: review host alarms in vCenter, check storage paths, confirm NTP sync and hardware health')))
+    lines.append(R(bMid(IV_L, IV_R, 'Lifecycle: patch via VUM/LCM baselines; apply host profiles; update ESXi image in cluster')))
+    lines.append(R(bMid(IV_L, IV_R, 'Backup: no built-in VM backup; use VADP-based solutions; host config backed up via host profiles')))
+    lines.append(R(bMid(IV_L, IV_R, 'Automation: esxcli scripting, PowerCLI, REST API, Ansible VMware modules for at-scale changes')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  CLI gives direct host access · lifecycle keeps hosts patched · automation scales daily operations'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Lifecycle'),
+        bMid(B3_L, B3_R, 'Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Host alarms: vCenter'),
+        bMid(B2_L, B2_R, 'VUM/LCM: baseline'),
+        bMid(B3_L, B3_R, 'esxcli: namespaces'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Storage paths: esxcli'),
+        bMid(B2_L, B2_R, 'Host profile: apply'),
+        bMid(B3_L, B3_R, 'PowerCLI: host cmds'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'NTP drift: check sync'),
+        bMid(B2_L, B2_R, 'Patch: remediate task'),
+        bMid(B3_L, B3_R, 'Ansible: VMware mods'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Hardware: iDRAC/iLO'),
+        bMid(B2_L, B2_R, 'Update planner tool'),
+        bMid(B3_L, B3_R, 'REST API: host ops'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'esxtop: perf monitor'),
+        bMid(B2_L, B2_R, 'Boot bank: validate'),
+        bMid(B3_L, B3_R, 'vSphere SDK scripts'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops catch drift early · lifecycle keeps hosts secure and current · automation reduces toil'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CLI Ref', 'Health Chk', 'Procedures', 'Install/Up', 'Backup/Rest'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['esxcli system', 'Host: green?', 'Maint mode', 'VUM baseline', 'No native bkp'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['esxcli network', 'vSAN: resync', 'DRS evacuate', 'Image profile', 'VADP-based sol'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['esxcli storage', 'NTP: in sync', 'Host profile', 'Pre/post check', 'Host profile bk'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vim-cmd vmsvc', 'HW: iDRAC ok', 'Patch remediate', 'Boot bank ok', 'Restore: redep'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 server · CPUs · RAM DIMMs · PCIe HBAs/NICs · SAS/NVMe disks · iDRAC/iLO OOB management'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('esxcli        = ESXi CLI framework; namespaces: system, network, storage, vm, software, hardware'))
+    lines.append(txt_row('esxtop        = ESXi real-time performance monitor; displays CPU/memory/disk/network per VM'))
+    lines.append(txt_row('VUM           = vSphere Update Manager; baseline-based patching; scans, stages, and remediates'))
+    lines.append(txt_row('LCM           = Lifecycle Manager; image-based ESXi patching integrated into vCenter 7+'))
+    lines.append(txt_row('Host Profile  = Saved configuration template; applied to hosts to enforce configuration consistency'))
+    lines.append(txt_row('Maintenance mode = Host state that migrates VMs away before patching or hardware maintenance'))
+    lines.append(txt_row('Boot bank     = ESXi dual-bank boot; active and standby banks; rollback to standby if needed'))
+    lines.append(txt_row('VADP          = vStorage APIs for Data Protection; backup vendor interface for quiesced VM snapshots'))
+    lines.append(txt_row('vim-cmd       = ESXi CLI for VM operations: power on/off, snapshot, register, unregister'))
+    lines.append(txt_row('vmkfstools    = ESXi CLI for VMDK operations: clone, resize, inflate, import/export'))
+    lines.append(txt_row('iDRAC/iLO     = Out-of-band management; provides console access and hardware health independent of OS'))
+    lines.append(txt_row('PowerCLI      = VMware PowerShell module for at-scale vSphere automation and reporting'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def esxi_security():
+    """ESXi Security sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'ESXi — Security'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'ESXi security layers: authentication, access control, encryption, and host hardening')))
+    lines.append(R(bMid(IV_L, IV_R, 'Authentication: all management via vCenter SSO; direct host login via DCUI for break-glass only')))
+    lines.append(R(bMid(IV_L, IV_R, 'Access: lockdown mode (normal/strict) restricts direct access; RBAC inherited from vCenter')))
+    lines.append(R(bMid(IV_L, IV_R, 'Encryption: VM encryption via vSAN/storage policy; vMotion encrypted; vTPM per VM supported')))
+    lines.append(R(bMid(IV_L, IV_R, 'Hardening: DISA STIG / VMware Security Guide baseline; SSH disabled; secure boot enabled')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication gates access · lockdown mode enforces vCenter-only management · encryption protects VM data'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Authentication'),
+        bMid(B2_L, B2_R, 'Access Control'),
+        bMid(B3_L, B3_R, 'Encryption'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vCenter SSO: primary'),
+        bMid(B2_L, B2_R, 'Lockdown: normal/strict'),
+        bMid(B3_L, B3_R, 'VM encrypt: KMS/KMIP'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'DCUI: break-glass only'),
+        bMid(B2_L, B2_R, 'RBAC from vCenter'),
+        bMid(B3_L, B3_R, 'vMotion: encrypted'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Local root: min 1 acct'),
+        bMid(B2_L, B2_R, 'Firewall: service rules'),
+        bMid(B3_L, B3_R, 'vTPM: per-VM chip'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SSH: disabled by std'),
+        bMid(B2_L, B2_R, 'Shell: time-limited'),
+        bMid(B3_L, B3_R, 'Secure boot: UEFI'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'MFA: via vCenter SSO'),
+        bMid(B2_L, B2_R, 'Syslog: to vRLI/SIEM'),
+        bMid(B3_L, B3_R, 'vSAN encrypt: at rest'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication controls who logs in · access control limits what they can do · encryption protects data'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Auth', 'Access Ctrl', 'Encryption', 'Hardening', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vCenter SSO', 'Lockdown mode', 'VM encryption', 'SSH disabled', 'Syslog to SIEM'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['DCUI breakglass', 'RBAC inherit', 'vMotion encr', 'Secure boot on', 'vCenter events'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Local root: 1', 'Host FW rules', 'vTPM per VM', 'Shell: timed', 'Firewall audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SSH key auth', 'Shell access log', 'KMS/KMIP keys', 'DISA STIG align', 'Host log review'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 server · TPM 2.0 chip · UEFI firmware · iDRAC/iLO OOB management · Physical access controls'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Lockdown mode  = Host setting preventing direct access; all management must go through vCenter'))
+    lines.append(txt_row('DCUI           = Direct Console User Interface; physical/IPMI console on ESXi host; break-glass access'))
+    lines.append(txt_row('vTPM           = Virtual Trusted Platform Module; per-VM emulated TPM 2.0 for BitLocker and attestation'))
+    lines.append(txt_row('KMS            = Key Management Server; external KMIP-compatible server for VM encryption keys'))
+    lines.append(txt_row('KMIP           = Key Management Interoperability Protocol; standard API for KMS integration'))
+    lines.append(txt_row('Secure Boot    = UEFI feature verifying ESXi VIB signatures; prevents loading unsigned modules'))
+    lines.append(txt_row('vMotion encrypt = AES-256 encryption of vMotion traffic between ESXi hosts in vCenter 6.5+'))
+    lines.append(txt_row('SSH            = Secure Shell; direct host CLI access; should be disabled per security baseline'))
+    lines.append(txt_row('ESXi firewall  = Host-based firewall; rules control which services/IPs can reach VMkernel ports'))
+    lines.append(txt_row('DISA STIG      = Defense Information Systems Agency Security Technical Implementation Guide for ESXi'))
+    lines.append(txt_row('Host profile   = Configuration template that enforces security settings consistently across all hosts'))
+    lines.append(txt_row('Syslog         = ESXi log forwarding to vRLI or external SIEM; configured via esxcli or host profile'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def esxi_troubleshooting():
+    """ESXi Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'ESXi — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'ESXi troubleshooting: common failure patterns, diagnostic commands, and escalation process')))
+    lines.append(R(bMid(IV_L, IV_R, 'Common issues: PSOD (purple screen), host disconnect from vCenter, storage path loss, vMotion fail')))
+    lines.append(R(bMid(IV_L, IV_R, 'Diagnostics: esxcli for live state, esxtop for real-time perf, vmkernel.log for kernel events')))
+    lines.append(R(bMid(IV_L, IV_R, 'Log collection: vm-support bundle collects all host logs; attach to GSS support case')))
+    lines.append(R(bMid(IV_L, IV_R, 'Escalation: P1 for production VMs down; TAM escalation for critical/sustained incidents')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues define the triage path · diagnostics isolate root cause · escalation engages VMware support'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Common Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'PSOD: kernel panic'),
+        bMid(B2_L, B2_R, 'esxtop: live perf'),
+        bMid(B3_L, B3_R, 'vm-support bundle'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Host disconnect vCtr'),
+        bMid(B2_L, B2_R, 'vmkernel.log events'),
+        bMid(B3_L, B3_R, 'GSS: P1/P2 case'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Storage path failure'),
+        bMid(B2_L, B2_R, 'esxcli storage list'),
+        bMid(B3_L, B3_R, 'TAM escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vMotion fail: VMk IP'),
+        bMid(B2_L, B2_R, 'esxcli network cmd'),
+        bMid(B3_L, B3_R, 'vmx + log bundle'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'HA agent restart'),
+        bMid(B2_L, B2_R, '/var/log/vmkernel'),
+        bMid(B3_L, B3_R, 'HCL / BOM match'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues guide triage · diagnostics pinpoint root cause · escalation gets vendor support engaged'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Issues', 'Diagnostics', 'Log Paths', 'Escalation', 'Recovery'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['PSOD / panic', 'esxtop -b -n5', '/var/log/vmk', 'vm-support.tgz', 'reboot host'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Host disconnect', 'esxcli storage', '/var/log/hostd', 'GSS P1 case', 'restart hostd'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Path APD/PDL', 'esxcli network', '/var/log/vpxa', 'TAM escalate', 'rescan HBAs'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vMotion fail', '/var/log/vmkw', '/var/log/syslog', 'HCL validate', 'HA restart VM'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 server · CPUs · RAM DIMMs · PCIe HBAs/NICs · SAS/NVMe disks · iDRAC/iLO OOB console'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('PSOD          = Purple Screen of Death; ESXi kernel panic; check /var/log/vmkernel for root cause'))
+    lines.append(txt_row('APD           = All Paths Down; storage device unreachable; all paths to LUN failed simultaneously'))
+    lines.append(txt_row('PDL           = Permanent Device Loss; storage reports device gone; triggers VM failover if HA enabled'))
+    lines.append(txt_row('vm-support    = ESXi log bundle collector; generates .tgz with all host logs for GSS cases'))
+    lines.append(txt_row('hostd         = ESXi host agent; handles vCenter communication; restart if host shows disconnected'))
+    lines.append(txt_row('vpxa          = vCenter agent on ESXi; proxies vCenter management; restart to fix vCenter disconnect'))
+    lines.append(txt_row('esxtop        = ESXi real-time monitor; -b batch mode; -n iteration count; CSV output for analysis'))
+    lines.append(txt_row('GSS           = Global Support Services; VMware/Broadcom support; P1=production down, P2=degraded'))
+    lines.append(txt_row('TAM           = Technical Account Manager; named support resource; escalation for critical incidents'))
+    lines.append(txt_row('HCL           = Hardware Compatibility List; validates server/driver/firmware combinations for ESXi'))
+    lines.append(txt_row('BOM           = Bill of Materials; version matrix for ESXi, FW, and driver compatibility'))
+    lines.append(txt_row('vmkfstools    = ESXi VMDK utility: clone, inflate, check, convert disk formats'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def nsx_architecture():
+    """NSX Architecture sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'NSX — Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VMware NSX — software-defined networking; overlay fabric via GENEVE encapsulation on ESXi hosts')))
+    lines.append(R(bMid(IV_L, IV_R, 'Manager cluster (3 nodes active/active) controls the control plane and policy API')))
+    lines.append(R(bMid(IV_L, IV_R, 'Transport nodes: ESXi/KVM hosts and Edge nodes form the GENEVE overlay data plane')))
+    lines.append(R(bMid(IV_L, IV_R, 'Tier-0 provides BGP/static routing to the physical network; Tier-1 connects tenant segments')))
+    lines.append(R(bMid(IV_L, IV_R, 'Distributed Firewall (DFW) enforces microsegmentation at the vNIC level on every host')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines overlay mechanics · integrations connect physical network · standards govern sizing'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'How It Works'),
+        bMid(B2_L, B2_R, 'Integrations'),
+        bMid(B3_L, B3_R, 'Design Standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Manager: 3-node AAA'),
+        bMid(B2_L, B2_R, 'vCenter: plugin'),
+        bMid(B3_L, B3_R, 'Manager: L sizing'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Transport: ESXi/KVM'),
+        bMid(B2_L, B2_R, 'BGP: ToR peers'),
+        bMid(B3_L, B3_R, 'Edge: L/XL sizing'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Edge: routing + FW'),
+        bMid(B2_L, B2_R, 'AD/LDAP for auth'),
+        bMid(B3_L, B3_R, 'MTU: ≥1600 overlay'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'T0: physical BGP'),
+        bMid(B2_L, B2_R, 'vSAN: storage intg'),
+        bMid(B3_L, B3_R, 'BFD: keepalives'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'DFW: per-vNIC rules'),
+        bMid(B2_L, B2_R, 'SIEM: syslog API'),
+        bMid(B3_L, B3_R, 'IP plan: overlay/T0'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines overlay and routing · integrations connect physical fabric · standards enforce sizing'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['How It Works', 'Integrations', 'Design Stds', 'Deployment', 'Key Stds'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['GENEVE overlay', 'vCenter plugin', 'Manager 3-node', 'Greenfield', 'MTU ≥1600'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['T0/T1 routing', 'BGP ToR peers', 'Edge cluster HA', 'Brownfield', 'BFD timers'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['DFW vNIC rules', 'AD/LDAP auth', 'ECMP uplinks', 'Multi-site', 'IP addr plan'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Edge cluster', 'SIEM syslog', 'Overlay TZ', 'Federation', 'VLAN trunk std'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 servers (ESXi hosts) · ToR switches (BGP peers) · Physical NICs (uplinks) · Network fabric'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('GENEVE        = Generic Network Virtualization Encapsulation; NSX overlay protocol; encapsulates L2 in UDP'))
+    lines.append(txt_row('Transport node = ESXi host or Edge VM prepared for NSX; carries overlay traffic via GENEVE'))
+    lines.append(txt_row('Manager cluster = 3-node NSX Manager in active/active/active; hosts control plane and Policy API'))
+    lines.append(txt_row('Tier-0 (T0)   = NSX logical router with physical connectivity; BGP/static to ToR switches'))
+    lines.append(txt_row('Tier-1 (T1)   = NSX logical router for tenant segments; connected to T0 for north-south routing'))
+    lines.append(txt_row('DFW           = Distributed Firewall; stateful L4 firewall enforced at vNIC on every ESXi host'))
+    lines.append(txt_row('Edge cluster  = Pool of NSX Edge nodes providing services: routing, NAT, load balancing, VPN'))
+    lines.append(txt_row('TEP           = Tunnel End Point; VMkernel port on each transport node used for GENEVE encapsulation'))
+    lines.append(txt_row('BFD           = Bidirectional Forwarding Detection; fast failure detection for BGP keepalives'))
+    lines.append(txt_row('ECMP          = Equal-Cost Multi-Path; load-balances T0 uplinks across multiple ToR switch paths'))
+    lines.append(txt_row('Microsegmentation = DFW policies that restrict lateral VM-to-VM traffic within the same VLAN/segment'))
+    lines.append(txt_row('Transport Zone = NSX scope definition for overlay or VLAN segments; limits which hosts can connect'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def nsx_operations():
+    """NSX Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'NSX — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'NSX operations: CLI commands, health checks, upgrade procedures, and automation')))
+    lines.append(R(bMid(IV_L, IV_R, 'Daily: check Manager cluster health, Edge cluster state, transport node status, BGP peer state')))
+    lines.append(R(bMid(IV_L, IV_R, 'Health: verify DFW rule sync on all hosts; confirm MPA connectivity; review alarm dashboard')))
+    lines.append(R(bMid(IV_L, IV_R, 'Lifecycle: upgrade via NSX coordinator (Manager → Edge → host transport nodes in sequence)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Automation: NSX Policy REST API, Terraform NSX provider, PowerCLI NSX, Ansible modules')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily checks catch control plane drift · lifecycle upgrades in sequence · automation scales NSX management'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Lifecycle'),
+        bMid(B3_L, B3_R, 'Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Manager: cluster ok'),
+        bMid(B2_L, B2_R, 'NSX coordinator'),
+        bMid(B3_L, B3_R, 'Policy REST API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Edge: cluster state'),
+        bMid(B2_L, B2_R, 'Manager upgrade 1st'),
+        bMid(B3_L, B3_R, 'Terraform NSX'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Transport: node state'),
+        bMid(B2_L, B2_R, 'Edge upgrade 2nd'),
+        bMid(B3_L, B3_R, 'PowerCLI NSX mod'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'BGP: peer up/active'),
+        bMid(B2_L, B2_R, 'Host TN upgrade 3rd'),
+        bMid(B3_L, B3_R, 'Ansible: NSX role'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'DFW: rule count sync'),
+        bMid(B2_L, B2_R, 'Version compat check'),
+        bMid(B3_L, B3_R, 'nsxcli on edge'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops catch issues early · upgrade sequence prevents mismatch · automation handles at-scale changes'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CLI Ref', 'Health Chk', 'Procedures', 'Install/Up', 'Backup/Rest'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['nsxcli on edge', 'Manager: green', 'Add TN: prep', 'Coordinator', 'Config export'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['get routes', 'Edge: cluster ok', 'BGP peer add', 'Mgr upgrade 1st', 'Policy API bkp'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['get logical-routers', 'TN: state ok', 'Segment create', 'Edge upg 2nd', 'Restore: redep'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['set debug-level', 'BGP: peer up', 'DFW rule add', 'Host TN upg 3rd', 'Config backup'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 ESXi hosts · Edge VM nodes · ToR switches (BGP peers) · Physical NICs (TEP uplinks)'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('nsxcli        = NSX Edge CLI; access via SSH or console; commands: get, set, debug namespaces'))
+    lines.append(txt_row('NSX coordinator = Upgrade orchestrator built into NSX Manager; manages upgrade sequence and pre-checks'))
+    lines.append(txt_row('MPA           = Management Plane Agent; runs on each transport node; communicates with Manager'))
+    lines.append(txt_row('Transport node = ESXi host or Edge VM enrolled in NSX; carries GENEVE overlay traffic'))
+    lines.append(txt_row('BGP peer      = ToR switch NSX peers with for T0 uplink routing; BFD tracks peer state'))
+    lines.append(txt_row('DFW rule sync = Verification that all hosts have the same distributed firewall rule count and policy'))
+    lines.append(txt_row('Policy API    = NSX primary REST API (preferred over deprecated Manager API); intent-based config'))
+    lines.append(txt_row('Terraform NSX = HashiCorp Terraform provider for NSX-T; automates segment, DFW, and routing config'))
+    lines.append(txt_row('Edge cluster  = Group of Edge nodes providing routing/NAT/LB; HA active/standby or ECMP'))
+    lines.append(txt_row('Config backup = NSX Manager periodic backup to SFTP; restores Manager config not data plane state'))
+    lines.append(txt_row('Version compat = NSX and vSphere/vCenter version compatibility matrix; check before upgrade'))
+    lines.append(txt_row('Ansible NSX   = VMware Ansible collection modules for NSX policy, segments, DFW, and routing'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def nsx_security():
+    """NSX Security sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'NSX — Security'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'NSX security: distributed firewall, microsegmentation, IDPS, URL filtering, and TLS inspection')))
+    lines.append(R(bMid(IV_L, IV_R, 'Authentication: AD/LDAP integration; NSX admin roles; API token auth; vIDM/Workspace ONE SSO')))
+    lines.append(R(bMid(IV_L, IV_R, 'Access control: RBAC roles (Enterprise Admin, Security Admin, Auditor); object-level permissions')))
+    lines.append(R(bMid(IV_L, IV_R, 'DFW microsegmentation: stateful L4 rules enforced at vNIC; east-west traffic control per VM')))
+    lines.append(R(bMid(IV_L, IV_R, 'Advanced security: IDPS signatures, Gateway FW, URL filtering, TLS inspection on Edge')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication controls who manages NSX · RBAC limits scope · DFW enforces east-west microsegmentation'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Authentication'),
+        bMid(B2_L, B2_R, 'Access Control'),
+        bMid(B3_L, B3_R, 'Encryption'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'AD/LDAP: roles'),
+        bMid(B2_L, B2_R, 'Enterprise Admin'),
+        bMid(B3_L, B3_R, 'IDPS: L7 sigs'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vIDM SSO: optional'),
+        bMid(B2_L, B2_R, 'Security Admin'),
+        bMid(B3_L, B3_R, 'Gateway FW: edge'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'API token: bearer'),
+        bMid(B2_L, B2_R, 'Auditor: read-only'),
+        bMid(B3_L, B3_R, 'URL filtering'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cert-based API auth'),
+        bMid(B2_L, B2_R, 'Object-level perms'),
+        bMid(B3_L, B3_R, 'TLS inspection'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Audit log: all events'),
+        bMid(B2_L, B2_R, 'Least privilege std'),
+        bMid(B3_L, B3_R, 'DFW microseg rules'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Auth gates NSX access · RBAC scopes permissions · DFW and IDPS enforce east-west security policy'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Auth', 'Access Ctrl', 'DFW/Security', 'Hardening', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['AD/LDAP roles', 'Enterprise Adm', 'DFW: L4 rules', 'TLS on API', 'Syslog export'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vIDM SSO', 'Security Admin', 'IDPS: L7 sigs', 'Cert rotation', 'Event audit log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['API tokens', 'Auditor role', 'URL filtering', 'Default deny DFW', 'Role reviews'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Cert-based auth', 'Object-level', 'TLS inspection', 'Min-perm API', 'SIEM forward'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 ESXi hosts · Edge VM nodes · ToR switches · Physical NICs · Out-of-band network management'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('DFW           = Distributed Firewall; stateful L4 rules enforced at VM vNIC on every ESXi host'))
+    lines.append(txt_row('IDPS          = Intrusion Detection and Prevention System; L7 signature-based; runs on Edge nodes'))
+    lines.append(txt_row('Gateway FW    = Stateful firewall on T0/T1 Edge; enforces north-south and inter-segment policy'))
+    lines.append(txt_row('TLS inspection = NSX Edge decrypts and inspects HTTPS traffic; re-encrypts after inspection'))
+    lines.append(txt_row('URL filtering  = Edge service blocking or categorizing HTTP/HTTPS URLs via category lookup'))
+    lines.append(txt_row('Enterprise Admin = Full NSX RBAC role; manage all objects and system config'))
+    lines.append(txt_row('Security Admin  = NSX role for managing DFW and security policy; no system config access'))
+    lines.append(txt_row('Auditor        = Read-only NSX role; view all objects and logs; no write access'))
+    lines.append(txt_row('vIDM           = VMware Identity Manager (Workspace ONE Access); provides SSO for NSX Manager UI'))
+    lines.append(txt_row('Microsegmentation = Zero-trust approach using DFW to restrict lateral VM-to-VM communication'))
+    lines.append(txt_row('API token      = Bearer token for REST API auth; generated per user/service; scoped to role'))
+    lines.append(txt_row('Default deny   = DFW policy posture where all traffic is denied unless explicitly allowed by a rule'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def nsx_troubleshooting():
+    """NSX Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'NSX — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'NSX troubleshooting: transport node failures, routing issues, DFW drops, and escalation process')))
+    lines.append(R(bMid(IV_L, IV_R, 'Common issues: TN prep failure, BGP peer down, DFW asymmetric drop, Manager unreachable')))
+    lines.append(R(bMid(IV_L, IV_R, 'Diagnostics: nsxcli on Edge for routing state; connectivity checker; flow analysis API')))
+    lines.append(R(bMid(IV_L, IV_R, 'Log collection: get-tech-support on Manager and Edge; attach bundle to GSS case')))
+    lines.append(R(bMid(IV_L, IV_R, 'Escalation: NSX support bundle; TAM for P1; verify vSphere and NSX version compatibility')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues define the triage path · diagnostics isolate the layer · escalation engages VMware support'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Common Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'TN prep failure'),
+        bMid(B2_L, B2_R, 'nsxcli get routes'),
+        bMid(B3_L, B3_R, 'get-tech-support'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'BGP peer down'),
+        bMid(B2_L, B2_R, 'Connectivity chkr'),
+        bMid(B3_L, B3_R, 'GSS P1/P2 case'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'DFW asymm drop'),
+        bMid(B2_L, B2_R, 'Flow analysis API'),
+        bMid(B3_L, B3_R, 'TAM escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Manager unreachable'),
+        bMid(B2_L, B2_R, 'Packet capture edge'),
+        bMid(B3_L, B3_R, 'Version compat chk'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'MTU mismatch drop'),
+        bMid(B2_L, B2_R, '/var/log/syslog'),
+        bMid(B3_L, B3_R, 'Core dump collect'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues guide triage · diagnostics use nsxcli and flow analysis · escalation bundles logs for GSS'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Issues', 'Diagnostics', 'Log Paths', 'Escalation', 'Recovery'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['TN prep fail', 'nsxcli routes', '/var/log/syslog', 'get-tech-supp', 'Re-prep TN'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['BGP peer down', 'Conn. checker', '/image/logs/', 'GSS P1 case', 'BGP re-peer'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['DFW drop asym', 'Flow analysis', 'Manager syslog', 'TAM escalate', 'Rule reorder'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['MTU black hole', 'Pkt capture', 'Edge var/log', 'Compat matrix', 'MTU fix ToR'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 ESXi hosts · Edge VM nodes · ToR switches (BGP) · Physical NICs (TEP uplinks) · OOB mgmt'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('TN prep failure = Transport node preparation failed; check ESXi version compat and network config'))
+    lines.append(txt_row('BGP peer down  = T0 BGP session to ToR dropped; check BFD timers, interface IP, and AS numbers'))
+    lines.append(txt_row('DFW asymmetric = Stateful DFW receives return traffic on different host with no state; causes drops'))
+    lines.append(txt_row('MTU mismatch   = GENEVE requires MTU ≥1600; lower ToR MTU causes silent packet drops in overlay'))
+    lines.append(txt_row('Connectivity checker = NSX built-in tool; tests L2/L3 connectivity between two endpoints in overlay'))
+    lines.append(txt_row('Flow analysis  = NSX API that queries per-VM traffic flows; identifies which DFW rule applied'))
+    lines.append(txt_row('get-tech-support = NSX CLI command on Manager/Edge; collects full support bundle for GSS'))
+    lines.append(txt_row('nsxcli         = NSX Edge CLI; namespaces: get (read), set (write), debug (packet capture)'))
+    lines.append(txt_row('TEP            = Tunnel End Point; VMkernel port on ESXi/Edge; source/dest of GENEVE packets'))
+    lines.append(txt_row('MPA            = Management Plane Agent on transport nodes; if offline, node appears disconnected'))
+    lines.append(txt_row('Core dump      = NSX Manager/Edge crash dump; required for P1 escalation analysis by support'))
+    lines.append(txt_row('Version compat = NSX to vSphere version compatibility; mismatch can cause TN prep or upgrade failures'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vsan_architecture():
+    """vSAN Architecture sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSAN — Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VMware vSAN — HCI storage pooling local NVMe/SSD/HDD from ESXi hosts into a shared datastore')))
+    lines.append(R(bMid(IV_L, IV_R, 'FTT policies (RAID-1 mirroring, RAID-5/6 erasure coding) protect objects across hosts/domains')))
+    lines.append(R(bMid(IV_L, IV_R, 'Dedup and compression available in all-flash OSA; OSA (original) vs ESA (express) architecture')))
+    lines.append(R(bMid(IV_L, IV_R, 'vSAN ESA uses single-tier NVMe with compression-first; no separate cache/capacity disk groups')))
+    lines.append(R(bMid(IV_L, IV_R, 'Stretched cluster spans two sites with a witness host; SPBM storage policies enforce per-VM rules')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines HCI storage pooling · integrations connect vSphere and management · standards set design'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'How It Works'),
+        bMid(B2_L, B2_R, 'Integrations'),
+        bMid(B3_L, B3_R, 'Design Standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Disk groups (OSA)'),
+        bMid(B2_L, B2_R, 'vCenter: native UI'),
+        bMid(B3_L, B3_R, 'Min 3 nodes OSA'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'FTT/RAID policies'),
+        bMid(B2_L, B2_R, 'vSphere HA/DRS'),
+        bMid(B3_L, B3_R, 'Min 4 nodes ESA'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Witness: stretch HA'),
+        bMid(B2_L, B2_R, 'NSX: microseg'),
+        bMid(B3_L, B3_R, 'FTT=1 default'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Dedup+compress'),
+        bMid(B2_L, B2_R, 'File services: NFS'),
+        bMid(B3_L, B3_R, 'Cache ≥10% OSA'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vSAN ESA: NVMe'),
+        bMid(B2_L, B2_R, 'HCL: hw compat'),
+        bMid(B3_L, B3_R, 'Witness: tiny VM'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SPBM per-VM policy'),
+        bMid(B2_L, B2_R, 'Aria Ops adapter'),
+        bMid(B3_L, B3_R, '25% headroom'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works covers pooling and policies · integrations connect vCenter and NSX · standards enforce design'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['How It Works', 'Integrations', 'Design Stds', 'Deployment', 'Key Stds'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Disk groups', 'vCenter native', 'Min 3 nodes', 'All-flash', 'FTT policy'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['FTT/RAID tiers', 'HA/DRS intg', 'Min 4 (ESA)', 'Hybrid OSA', 'Cache 10%'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Dedup/compress', 'NSX microseg', 'Witness host', 'Stretched', 'HCL required'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SPBM policies', 'Aria Ops intg', '25% headroom', 'HCI design', 'SPBM std'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 servers with NVMe/SSD/HDD · RAM DIMMs · 25GbE NICs · Witness host VM · ToR switches'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('OSA           = Original Storage Architecture; vSAN disk groups with separate cache and capacity tiers'))
+    lines.append(txt_row('ESA           = Express Storage Architecture; single-tier NVMe; compression-first; vSAN 8.0+'))
+    lines.append(txt_row('FTT           = Failures To Tolerate; number of host/disk failures a vSAN object can survive'))
+    lines.append(txt_row('RAID-5/6      = Erasure coding in vSAN; RAID-5 requires 4 hosts (1 FTT); RAID-6 needs 6 hosts (2 FTT)'))
+    lines.append(txt_row('Disk group    = OSA unit of storage; one cache disk + 1-7 capacity disks per ESXi host'))
+    lines.append(txt_row('SPBM          = Storage Policy-Based Management; per-VM policy defines FTT, RAID, IOPs limits'))
+    lines.append(txt_row('Witness       = Lightweight VM in stretched cluster; holds metadata tie-breaker; no VM data stored'))
+    lines.append(txt_row('Dedup+compress = All-flash OSA feature reducing capacity footprint; applied per disk group'))
+    lines.append(txt_row('vSAN health   = Built-in health service in vCenter; checks HCL, network, disk, and capacity'))
+    lines.append(txt_row('HCL           = Hardware Compatibility List; vSAN requires HCL-certified disks, NICs, and servers'))
+    lines.append(txt_row('Stretched cluster = vSAN spanning two fault domains with a witness; tolerates full site failure'))
+    lines.append(txt_row('PFTT          = Primary Failures To Tolerate; site-level FTT setting in stretched cluster policy'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vsan_operations():
+    """vSAN Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSAN — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'vSAN health service provides proactive monitoring of disk, network, HCL, and capacity status')))
+    lines.append(R(bMid(IV_L, IV_R, 'Daily: review disk group state, resync operations (target zero), capacity headroom (<70% used)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Lifecycle: LCM upgrades ESXi and vSAN together; pre-check health before node-by-node upgrade')))
+    lines.append(R(bMid(IV_L, IV_R, 'Post-expansion: rebalance cluster after adding nodes; validate HCL compliance for new hardware')))
+    lines.append(R(bMid(IV_L, IV_R, 'Automation: vSAN REST API, RVC commands, PowerCLI vSAN module, esxcli vsan namespace')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops catch drift · lifecycle keeps vSAN current · automation scales vSAN management tasks'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Lifecycle'),
+        bMid(B3_L, B3_R, 'Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vSAN health svc'),
+        bMid(B2_L, B2_R, 'LCM + ESXi together'),
+        bMid(B3_L, B3_R, 'vSAN REST API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Disk group: state'),
+        bMid(B2_L, B2_R, 'Pre-check health'),
+        bMid(B3_L, B3_R, 'RVC commands'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Resync: 0 ideal'),
+        bMid(B2_L, B2_R, 'Node-by-node upg'),
+        bMid(B3_L, B3_R, 'PowerCLI vSAN'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Capacity: <70%'),
+        bMid(B2_L, B2_R, 'Rebalance post-add'),
+        bMid(B3_L, B3_R, 'esxcli vsan'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Policy compliance'),
+        bMid(B2_L, B2_R, 'HCL validate'),
+        bMid(B3_L, B3_R, 'Capacity report'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Alarms review'),
+        bMid(B2_L, B2_R, 'Post-check'),
+        bMid(B3_L, B3_R, 'SPBM API'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops catch resync and capacity issues · lifecycle upgrades node-by-node · automation handles reporting'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CLI Ref', 'Health Chk', 'Procedures', 'Install/Up', 'Backup/Rest'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['esxcli vsan', 'Health UI green', 'Maint mode', 'LCM bundle', 'vSAN no native'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['RVC vsan.*', 'Resync = 0', 'Add disk grp', 'Pre-check run', 'VM backup VADP'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vSAN API', 'Capacity <70%', 'Expand cluster', 'Node upg order', 'Rep policy chk'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['PowerCLI vSAN', 'HCL compliant', 'Rebalance run', 'Post-upg chk', 'Witness backup'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 servers with NVMe/SSD/HDD · RAM DIMMs · 25GbE NICs (vSAN network) · Witness host · ToR switches'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('vSAN health   = Built-in vCenter health service; checks HCL, network, disk, and capacity proactively'))
+    lines.append(txt_row('Disk group    = OSA unit: one cache disk + up to 7 capacity disks; state must be healthy'))
+    lines.append(txt_row('FTT           = Failures To Tolerate; objects rebuild when a host enters maintenance mode'))
+    lines.append(txt_row('Resync        = Rebuild or rebalance of vSAN objects; high resync indicates degraded protection'))
+    lines.append(txt_row('Rebalance     = vSAN redistributes data across nodes after adding capacity to equalize usage'))
+    lines.append(txt_row('RVC           = Ruby vSphere Console; CLI tool with vSAN-specific commands for diagnostics'))
+    lines.append(txt_row('SPBM          = Storage Policy-Based Management; policy compliance check ensures FTT is satisfied'))
+    lines.append(txt_row('LCM           = Lifecycle Manager; image-based ESXi + vSAN upgrade integrated in vCenter 7+'))
+    lines.append(txt_row('HCL           = Hardware Compatibility List; vSAN requires certified disks and NICs at all times'))
+    lines.append(txt_row('Witness       = Tie-breaker node in stretched cluster; must be reachable from both data sites'))
+    lines.append(txt_row('OSA           = Original Storage Architecture; disk-group-based; cache+capacity tier design'))
+    lines.append(txt_row('ESA           = Express Storage Architecture; NVMe-only single-tier; vSAN 8.0+ required'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vsan_security():
+    """vSAN Security sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSAN — Security'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'vSAN data-at-rest encryption via external KMS (KMIP); key rotation without data re-encryption')))
+    lines.append(R(bMid(IV_L, IV_R, 'Host Trust Authority provides TPM-based attestation; ensures only trusted hosts join the cluster')))
+    lines.append(R(bMid(IV_L, IV_R, 'vSAN stretched cluster requires authentication between sites; network isolation per segment')))
+    lines.append(R(bMid(IV_L, IV_R, 'SPBM security policies enforce encryption and FTT compliance; audit via vCenter events')))
+    lines.append(R(bMid(IV_L, IV_R, 'RBAC inherited from vCenter SSO; AD groups map to roles; in-transit encryption on vSAN ESA')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication controls cluster access · access control enforces RBAC · encryption protects stored data'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Authentication'),
+        bMid(B2_L, B2_R, 'Access Control'),
+        bMid(B3_L, B3_R, 'Encryption'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vCenter SSO auth'),
+        bMid(B2_L, B2_R, 'vCenter RBAC'),
+        bMid(B3_L, B3_R, 'Data-at-rest enc'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'KMS/KMIP intg'),
+        bMid(B2_L, B2_R, 'Datastore perms'),
+        bMid(B3_L, B3_R, 'KMS provider cfg'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Host trust auth'),
+        bMid(B2_L, B2_R, 'Cluster-level acc'),
+        bMid(B3_L, B3_R, 'Key rotation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'AD group RBAC'),
+        bMid(B2_L, B2_R, 'Admin role: vCenter'),
+        bMid(B3_L, B3_R, 'In-transit encr'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cert management'),
+        bMid(B2_L, B2_R, 'Policy RBAC'),
+        bMid(B3_L, B3_R, 'vSAN ESA native'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vSAN stretch auth'),
+        bMid(B2_L, B2_R, 'Audit events'),
+        bMid(B3_L, B3_R, 'TPM attestation'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Auth gates cluster membership · RBAC scopes access · encryption and attestation protect data at rest'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Auth', 'Access Ctrl', 'Encryption', 'Hardening', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vCenter SSO', 'RBAC inherit', 'Data-at-rest', 'KMIP KMS', 'vCenter events'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['KMS/KMIP', 'Datastore perm', 'KMS key rotate', 'TLS vSAN net', 'Policy audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Host trust auth', 'Admin role', 'In-transit enc', 'TPM attest', 'HCL audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['AD group RBAC', 'Least privilege', 'ESA native enc', 'Cert rotation', 'SIEM forward'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 servers with NVMe/SSD/HDD · TPM 2.0 chip · RAM DIMMs · 25GbE NICs · Key Management Server'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('KMS           = Key Management Server; external KMIP-compatible server holding vSAN encryption keys'))
+    lines.append(txt_row('KMIP          = Key Management Interoperability Protocol; standard API for integrating external KMS'))
+    lines.append(txt_row('Data-at-rest  = vSAN encryption of disk data; enabled cluster-wide; keys held by external KMS'))
+    lines.append(txt_row('Host Trust Authority = vSphere service using TPM attestation to verify host integrity before joining'))
+    lines.append(txt_row('TPM           = Trusted Platform Module; chip providing hardware root of trust for host attestation'))
+    lines.append(txt_row('vSAN stretched = Two-site cluster; auth and network isolation between sites required for security'))
+    lines.append(txt_row('SPBM          = Storage Policy-Based Management; policies can enforce encryption compliance per VM'))
+    lines.append(txt_row('FTT           = Failures To Tolerate; security-relevant as it controls data redundancy level'))
+    lines.append(txt_row('Erasure coding = RAID-5/6 in vSAN; distributes parity across hosts; efficient redundancy method'))
+    lines.append(txt_row('Key rotation  = Replacing encryption keys without re-encrypting data; shallow vs deep rekey options'))
+    lines.append(txt_row('In-transit    = vSAN ESA encrypts data in flight between hosts on the vSAN network layer'))
+    lines.append(txt_row('vCenter RBAC  = Role-based access control inherited by vSAN; all datastore access managed via vCenter'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vsan_troubleshooting():
+    """vSAN Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSAN — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'vSAN object health issues: degraded, absent, or non-compliant components cause VM risk')))
+    lines.append(R(bMid(IV_L, IV_R, 'Resync stalls indicate disk group failures, network issues, or hosts in maintenance mode')))
+    lines.append(R(bMid(IV_L, IV_R, 'Disk group failures remove capacity; witness connectivity loss affects stretched cluster HA')))
+    lines.append(R(bMid(IV_L, IV_R, 'Capacity alarms at 70%/80% thresholds; address before hitting the 100% hard limit')))
+    lines.append(R(bMid(IV_L, IV_R, 'RVC and esxcli vsan provide CLI diagnostics; vm-support bundle for GSS escalation')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues define the triage path · diagnostics isolate root cause · escalation engages VMware support'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Common Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Object degraded'),
+        bMid(B2_L, B2_R, 'RVC vsan.check'),
+        bMid(B3_L, B3_R, 'vSAN Skyline'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Resync stuck'),
+        bMid(B2_L, B2_R, 'vSAN health UI'),
+        bMid(B3_L, B3_R, 'GSS log bundle'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Disk group fail'),
+        bMid(B2_L, B2_R, 'esxcli vsan list'),
+        bMid(B3_L, B3_R, 'HCL validate'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Witness offline'),
+        bMid(B2_L, B2_R, 'vsantop perf'),
+        bMid(B3_L, B3_R, 'Stretched log'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Capacity alarm'),
+        bMid(B2_L, B2_R, 'Support bundle'),
+        bMid(B3_L, B3_R, 'ESXi host log'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Component absent'),
+        bMid(B2_L, B2_R, 'Policy violations'),
+        bMid(B3_L, B3_R, 'Core analysis'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues guide triage · diagnostics pinpoint root cause · escalation gets vendor support engaged'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Issues', 'Diagnostics', 'Log Paths', 'Escalation', 'Recovery'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Object degraded', 'RVC vsan.chk', '/var/log/vmk', 'vm-support.tgz', 'Re-add disk'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Resync stuck', 'esxcli vsan', 'vCenter tasks', 'GSS P1 case', 'Maint + remove'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Disk group fail', 'vSAN health UI', '/var/log/hostd', 'HCL validate', 'Disk replace'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Witness offline', 'vsantop cmd', 'Witness /logs', 'TAM escalate', 'Re-sync wait'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 servers with NVMe/SSD/HDD · RAM DIMMs · 25GbE NICs · Witness host · ToR switches'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Object health = vSAN object state: healthy, degraded, absent, or non-compliant per SPBM policy'))
+    lines.append(txt_row('Resync        = Rebuild or sync of vSAN object components; stalls indicate disk or network issues'))
+    lines.append(txt_row('Disk group    = OSA storage unit; single disk group failure removes all its capacity from the pool'))
+    lines.append(txt_row('Witness       = Stretched cluster tie-breaker; if offline, vSAN cannot vote on site partition'))
+    lines.append(txt_row('Component     = Individual piece of a vSAN object; absent components reduce FTT protection'))
+    lines.append(txt_row('APD           = All Paths Down; storage network path loss; triggers vSAN network partition'))
+    lines.append(txt_row('PDL           = Permanent Device Loss; disk reports fatal error; data on that disk is inaccessible'))
+    lines.append(txt_row('RVC           = Ruby vSphere Console; vsan.check_state and vsan.vm_object_info are key commands'))
+    lines.append(txt_row('esxcli vsan   = vSAN CLI namespace; storage list, cluster info, and network diagnostics'))
+    lines.append(txt_row('Proactive rebalance = Manual or automatic redistribution of data to equalize disk usage'))
+    lines.append(txt_row('Capacity alarm = vSAN threshold alert at 70% (warning) and 80% (critical) utilization'))
+    lines.append(txt_row('vSAN Skyline  = Proactive health analytics service; identifies issues before they cause outages'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vcenter_architecture():
+    """vCenter Architecture sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vCenter — Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VCSA — virtual appliance (Linux-based); PSC embedded since vCenter 7.0; no external PSC needed')))
+    lines.append(R(bMid(IV_L, IV_R, 'SSO domain provides identity federation; AD/LDAP identity sources for enterprise authentication')))
+    lines.append(R(bMid(IV_L, IV_R, 'Inventory hierarchy: Datacenter > Cluster > Host > VM; permissions inherited down the tree')))
+    lines.append(R(bMid(IV_L, IV_R, 'vCenter HA: 3-node active/passive/witness; protects VCSA from host failure; same-site only')))
+    lines.append(R(bMid(IV_L, IV_R, 'VAMI (port 5480) manages appliance: network, time, backup, update, and service control')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines VCSA internals · integrations connect identity and tools · standards govern sizing'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'How It Works'),
+        bMid(B2_L, B2_R, 'Integrations'),
+        bMid(B3_L, B3_R, 'Design Standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VCSA appliance VM'),
+        bMid(B2_L, B2_R, 'AD/LDAP identity'),
+        bMid(B3_L, B3_R, 'VCSA sizing L/XL'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SSO domain: IdP'),
+        bMid(B2_L, B2_R, 'NSX-T: plugin'),
+        bMid(B3_L, B3_R, 'HA 3-node prod'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Inventory: DC>Clst'),
+        bMid(B2_L, B2_R, 'Aria Ops: adapter'),
+        bMid(B3_L, B3_R, 'Backup: daily'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vCenter HA: 3-node'),
+        bMid(B2_L, B2_R, 'LCM: built-in'),
+        bMid(B3_L, B3_R, 'NTP: 2 sources'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'PSC embedded'),
+        bMid(B2_L, B2_R, 'Backup: SFTP/NFS'),
+        bMid(B3_L, B3_R, 'Cert: VMCA/custom'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VAMI: web mgmt'),
+        bMid(B2_L, B2_R, 'Aria Auto: cloud'),
+        bMid(B3_L, B3_R, 'SSO single domain'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines VCSA and SSO · integrations connect identity and tools · standards enforce deployment'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['How It Works', 'Integrations', 'Design Stds', 'Deployment', 'Key Stds'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['VCSA appliance', 'AD/LDAP IdP', 'VCSA L sizing', 'Single vCenter', 'NTP 2 sources'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SSO domain', 'NSX-T plugin', 'HA 3-node', 'Linked mode', 'Cert policy'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Inventory hier', 'Aria Ops adapter', 'Daily backup', 'Multi-site', 'RBAC std'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vCenter HA', 'Backup SFTP', 'VMCA/custom', 'Multi-vCenter', 'SSO domain std'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 server (VCSA VM target) · RAM DIMMs · Network NICs · Shared datastore · OOB management'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('VCSA          = vCenter Server Appliance; Linux-based OVA deployed as a VM; single management plane'))
+    lines.append(txt_row('SSO domain    = Single Sign-On domain (vsphere.local by default); identity hub for vSphere auth'))
+    lines.append(txt_row('PSC           = Platform Services Controller; embedded in VCSA 7.0+; manages SSO, certs, licensing'))
+    lines.append(txt_row('VMCA          = VMware Certificate Authority; built-in CA signing VCSA and host certificates'))
+    lines.append(txt_row('vCenter HA    = 3-node VCSA cluster: active, passive, witness; automatic failover on host failure'))
+    lines.append(txt_row('VAMI          = vCenter Appliance Management Interface; web UI on port 5480 for appliance operations'))
+    lines.append(txt_row('Linked Mode   = Multiple vCenters sharing SSO domain; unified inventory view across instances'))
+    lines.append(txt_row('RBAC          = Role-Based Access Control; permissions set at inventory objects and inherited down'))
+    lines.append(txt_row('Inventory hierarchy = DC > Cluster > Host > VM; permissions and policies propagate downward'))
+    lines.append(txt_row('AD/LDAP       = Active Directory or LDAP identity source added to SSO for enterprise user auth'))
+    lines.append(txt_row('File-based backup = VCSA periodic backup to SFTP or NFS; restores full appliance configuration'))
+    lines.append(txt_row('Update Planner = vCenter tool that checks interoperability and schedules upgrade order'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vcenter_operations():
+    """vCenter Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vCenter — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VCSA service health monitoring via VAMI; check all services green on start of each day')))
+    lines.append(R(bMid(IV_L, IV_R, 'Certificate lifecycle management: monitor expiry in VAMI; renew via VMCA or custom CA')))
+    lines.append(R(bMid(IV_L, IV_R, 'File-based backup to SFTP or NFS: schedule daily; retention of 3-7 restore points minimum')))
+    lines.append(R(bMid(IV_L, IV_R, 'Update Planner checks compatibility and schedules upgrade; snapshot VCSA before upgrade')))
+    lines.append(R(bMid(IV_L, IV_R, 'Automation: PowerCLI for vCenter management, REST API explorer, tag and attribute API')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops monitor VCSA health · lifecycle keeps vCenter current · automation scales management tasks'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Lifecycle'),
+        bMid(B3_L, B3_R, 'Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VCSA services ok'),
+        bMid(B2_L, B2_R, 'Update appliance'),
+        bMid(B3_L, B3_R, 'REST API explorer'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cert expiry chk'),
+        bMid(B2_L, B2_R, 'Pre-check health'),
+        bMid(B3_L, B3_R, 'PowerCLI vCenter'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Alarm review'),
+        bMid(B2_L, B2_R, 'Snapshot pre-upg'),
+        bMid(B3_L, B3_R, 'Tag/attr API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Storage tasks'),
+        bMid(B2_L, B2_R, 'Cert renewal'),
+        bMid(B3_L, B3_R, 'Automation scripts'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'HA cluster state'),
+        bMid(B2_L, B2_R, 'LCM integration'),
+        bMid(B3_L, B3_R, 'vCenter CLI'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'DB size check'),
+        bMid(B2_L, B2_R, 'PSC sync chk'),
+        bMid(B3_L, B3_R, 'API token auth'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops catch service drift · lifecycle upgrades vCenter safely · automation handles at-scale tasks'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CLI Ref', 'Health Chk', 'Procedures', 'Install/Up', 'Backup/Rest'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['REST API', 'Services green', 'Cert renewal', 'Update Planner', 'File-based bkp'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['PowerCLI conn', 'HA state ok', 'RBAC review', 'Pre-check run', 'SFTP/NFS target'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Tag API calls', 'Backup: success', 'Add host', 'Snapshot pre', 'Restore: VCSA'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Event API', 'Cert: 60d+', 'Add cluster', 'Post-upg chk', 'Config backup'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 server (VCSA VM) · RAM DIMMs · Network NICs · Shared datastore (vSAN or SAN) · OOB management'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('VCSA          = vCenter Server Appliance; Linux-based VM; all vSphere management runs here'))
+    lines.append(txt_row('VAMI          = vCenter Appliance Management Interface; port 5480; monitors services and backup'))
+    lines.append(txt_row('File-based backup = Scheduled VCSA backup to SFTP or NFS; restores full appliance config and inventory'))
+    lines.append(txt_row('Update Planner = vCenter tool checking compatibility matrix before scheduling an upgrade'))
+    lines.append(txt_row('PowerCLI      = VMware PowerShell module; connects to vCenter REST API for at-scale automation'))
+    lines.append(txt_row('REST API      = vCenter REST API (api/); supports hosts, VMs, tags, policies, and content library'))
+    lines.append(txt_row('Certificate lifecycle = VCSA certificate expiry monitored in VAMI; renew via VMCA or custom CA'))
+    lines.append(txt_row('VMCA          = VMware Certificate Authority; built-in CA for VCSA and ESXi host certificates'))
+    lines.append(txt_row('LCM           = Lifecycle Manager; integrated in vCenter for ESXi image-based upgrade management'))
+    lines.append(txt_row('vCenter HA    = Active/passive/witness VCSA cluster; failover automatic on host or network failure'))
+    lines.append(txt_row('SSO           = Single Sign-On; vSphere identity service; local and AD/LDAP sources'))
+    lines.append(txt_row('PSC           = Platform Services Controller; embedded 7.0+; handles SSO tokens and certificates'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vcenter_security():
+    """vCenter Security sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vCenter — Security'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'SSO domain with AD/LDAP identity provider; enterprise users map to vCenter RBAC roles')))
+    lines.append(R(bMid(IV_L, IV_R, 'RBAC: built-in roles (Admin, Read-only, No-access) and custom roles with granular privileges')))
+    lines.append(R(bMid(IV_L, IV_R, 'Certificate management: VMCA issues machine certs; custom CA for enterprise PKI integration')))
+    lines.append(R(bMid(IV_L, IV_R, 'Audit event export to SIEM via syslog; vCenter events capture all inventory and auth actions')))
+    lines.append(R(bMid(IV_L, IV_R, '2FA via SSO plugin (RSA SecurID or RADIUS); API over TLS; VCSA disk encryption optional')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication gates vCenter access · RBAC scopes permissions · encryption and audit enforce compliance'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Authentication'),
+        bMid(B2_L, B2_R, 'Access Control'),
+        bMid(B3_L, B3_R, 'Encryption'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SSO domain config'),
+        bMid(B2_L, B2_R, 'RBAC: built-in'),
+        bMid(B3_L, B3_R, 'API over TLS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'AD/LDAP provider'),
+        bMid(B2_L, B2_R, 'Custom roles'),
+        bMid(B3_L, B3_R, 'VMCA cert mgmt'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, '2FA via SSO'),
+        bMid(B2_L, B2_R, 'Object-level perm'),
+        bMid(B3_L, B3_R, 'Custom CA intg'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Admin acct policy'),
+        bMid(B2_L, B2_R, 'Tag-based access'),
+        bMid(B3_L, B3_R, 'Cert lifecycle'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Service accounts'),
+        bMid(B2_L, B2_R, 'Least privilege'),
+        bMid(B3_L, B3_R, 'Audit syslog TLS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'IdP federation'),
+        bMid(B2_L, B2_R, 'Audit export'),
+        bMid(B3_L, B3_R, 'VCSA disk encr'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Auth gates vCenter login · RBAC scopes object access · TLS and certs protect management traffic'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Auth', 'Access Ctrl', 'Encryption', 'Hardening', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SSO domain', 'RBAC roles', 'TLS API', 'Cert rotation', 'vCenter events'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['AD/LDAP IdP', 'Custom roles', 'VMCA/custom', '2FA enforce', 'Syslog export'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['2FA via SSO', 'Object perms', 'TLS syslog', 'Min password', 'Audit log review'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Service accts', 'Least privilege', 'Cert auto-renew', 'STIG align', 'Role review'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 server (VCSA VM) · RAM DIMMs · Network NICs · Shared datastore · Trusted CA infrastructure'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('SSO domain    = vSphere identity hub; authenticates all UI and API logins to vCenter'))
+    lines.append(txt_row('VMCA          = VMware Certificate Authority; built-in CA; issues certs to VCSA and ESXi hosts'))
+    lines.append(txt_row('Custom CA     = Enterprise PKI CA replacing VMCA; certs signed by corporate root for compliance'))
+    lines.append(txt_row('RBAC          = Role-Based Access Control; grants privileges on inventory objects; inherited down'))
+    lines.append(txt_row('Object-level permission = Permission set at specific VM, cluster, or folder; overrides parent'))
+    lines.append(txt_row('2FA           = Two-Factor Authentication via SSO plugin: RSA SecurID or RADIUS integration'))
+    lines.append(txt_row('vCenter audit = All inventory and auth events logged in vCenter; export via syslog to SIEM'))
+    lines.append(txt_row('Service account = Non-interactive account for automation; scope to minimum required privileges'))
+    lines.append(txt_row('Identity source = AD, LDAP, or OpenLDAP added to SSO; maps enterprise users to vCenter roles'))
+    lines.append(txt_row('Certificate lifecycle = Monitor cert expiry in VAMI; renew before 60-day warning threshold'))
+    lines.append(txt_row('Least privilege = RBAC principle: grant only the permissions needed for a specific role or task'))
+    lines.append(txt_row('Tag-based access = vCenter tags used to scope RBAC; assign roles on tag categories for flexibility'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vcenter_troubleshooting():
+    """vCenter Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vCenter — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'SSO login failures: expired certs, clock skew, or identity source misconfiguration most common')))
+    lines.append(R(bMid(IV_L, IV_R, 'Certificate expiry cascade: expired VMCA root causes all host and service cert failures at once')))
+    lines.append(R(bMid(IV_L, IV_R, 'VCSA service failures: vpxd process restart for vCenter main service; check VAMI health tab')))
+    lines.append(R(bMid(IV_L, IV_R, 'vCenter HA split-brain: both active and passive claim active role; check witness connectivity')))
+    lines.append(R(bMid(IV_L, IV_R, 'VCSA shell and vcsa-check script for diagnostics; PSC sync issues resolved by SSO repair tool')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues guide triage · diagnostics isolate the service layer · escalation engages VMware support'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Common Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SSO login fail'),
+        bMid(B2_L, B2_R, 'VCSA shell cmds'),
+        bMid(B3_L, B3_R, 'VCSA support bndl'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cert expired'),
+        bMid(B2_L, B2_R, '/var/log/vmware'),
+        bMid(B3_L, B3_R, 'GSS P1/P2 case'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VCSA svc down'),
+        bMid(B2_L, B2_R, 'VAMI health'),
+        bMid(B3_L, B3_R, 'Cert reset steps'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'HA split-brain'),
+        bMid(B2_L, B2_R, 'API debug mode'),
+        bMid(B3_L, B3_R, 'RCA template'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'LCM task stuck'),
+        bMid(B2_L, B2_R, 'SSO health chk'),
+        bMid(B3_L, B3_R, 'TAM escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'NSX plugin error'),
+        bMid(B2_L, B2_R, 'vcsa-check script'),
+        bMid(B3_L, B3_R, 'Log archive'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues guide triage · diagnostics use VCSA shell and logs · escalation bundles logs for GSS'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Issues', 'Diagnostics', 'Log Paths', 'Escalation', 'Recovery'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SSO login fail', 'VCSA shell', '/var/log/sso', 'VCSA bndl.tgz', 'Restart SSO'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Cert expired', 'VAMI health', '/var/log/vmware', 'GSS P1 case', 'Cert re-issue'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['VCSA svc down', 'API debug', '/var/log/vpxd', 'TAM escalate', 'Restart service'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['HA split-brain', 'vcsa-check', '/var/log/vmsvc', 'RCA template', 'HA re-init'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 server (VCSA VM) · RAM DIMMs · Network NICs · Shared datastore · OOB management'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('SSO           = Single Sign-On; vSphere identity service; login failures from cert or clock issues'))
+    lines.append(txt_row('VCSA shell    = Bash shell on VCSA; enabled via VAMI or SSH; run service-control and log review'))
+    lines.append(txt_row('VAMI          = vCenter Appliance Management Interface; port 5480; shows service and health status'))
+    lines.append(txt_row('vpxd          = Main vCenter process (VMware vCenter Server daemon); restart to recover vCenter UI'))
+    lines.append(txt_row('/var/log/vmware = VCSA log directory; vpxd.log, sso/vmware-sts*.log, vapi-endpoint.log'))
+    lines.append(txt_row('vcsa-check    = VMware script validating VCSA service and configuration health pre/post upgrade'))
+    lines.append(txt_row('vCenter HA split-brain = Both active and passive nodes active; isolate passive and re-init HA'))
+    lines.append(txt_row('VCSA support bundle = Full log archive generated via VAMI or CLI; attach to GSS support case'))
+    lines.append(txt_row('PSC           = Platform Services Controller; embedded 7.0+; SSO token and certificate management'))
+    lines.append(txt_row('LCM task      = Lifecycle Manager upgrade task; if stuck, check vpxd.log and LCM log for errors'))
+    lines.append(txt_row('Certificate cascade = Expired VMCA root invalidates all child certs simultaneously across cluster'))
+    lines.append(txt_row('RCA           = Root Cause Analysis; post-incident document capturing timeline, cause, and fix'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vcf_architecture():
+    """VCF Architecture sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VCF — Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VMware Cloud Foundation = SDDC Manager + Cloud Builder + vSphere + vSAN + NSX bundled together')))
+    lines.append(R(bMid(IV_L, IV_R, 'Workload domains isolate workloads; BOM ensures component compatibility across the full stack')))
+    lines.append(R(bMid(IV_L, IV_R, 'Automated bring-up via Cloud Builder; Management domain deployed first, VI domains added after')))
+    lines.append(R(bMid(IV_L, IV_R, 'SDDC Manager orchestrates lifecycle: patching, password rotation, certificate management')))
+    lines.append(R(bMid(IV_L, IV_R, 'NSX per domain provides overlay networking; vCenter per domain for workload management')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines domain architecture · integrations connect stack components · standards govern VCF design'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'How It Works'),
+        bMid(B2_L, B2_R, 'Integrations'),
+        bMid(B3_L, B3_R, 'Design Standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SDDC Manager UI'),
+        bMid(B2_L, B2_R, 'vSphere+vSAN+NSX'),
+        bMid(B3_L, B3_R, 'Mgmt domain first'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cloud Builder: deploy'),
+        bMid(B2_L, B2_R, 'Aria Suite intg'),
+        bMid(B3_L, B3_R, 'VI domains: isolated'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Workload domains'),
+        bMid(B2_L, B2_R, 'vCenter per domain'),
+        bMid(B3_L, B3_R, 'NSX per domain'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'BOM: version set'),
+        bMid(B2_L, B2_R, 'NSX per domain'),
+        bMid(B3_L, B3_R, 'SDDC user roles'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VI domain: workload'),
+        bMid(B2_L, B2_R, 'Identity Manager'),
+        bMid(B3_L, B3_R, 'BOM compat matrix'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Mgmt domain: core'),
+        bMid(B2_L, B2_R, 'SIEM syslog'),
+        bMid(B3_L, B3_R, 'Subscription model'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works covers domain model · integrations connect stack and identity · standards enforce VCF baseline'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['How It Works', 'Integrations', 'Design Stds', 'Deployment', 'Key Stds'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SDDC Manager', 'vSphere+vSAN', 'Mgmt domain 1st', 'Cloud Builder', 'BOM matrix'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Workload domains', 'NSX per domain', 'VI domains', 'Automated deploy', 'Domain naming'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['BOM lifecycle', 'Aria Suite intg', 'SDDC RBAC', 'Pre-check reqs', 'SDDC roles'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Cloud Builder', 'Identity Mgr', 'NSX overlay', 'Post-deploy val', 'Password std'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 servers · PCIe NICs · ToR switches · SAN/vSAN storage · OOB management network'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('SDDC Manager  = VCF control plane; orchestrates domain lifecycle, LCM upgrades, password rotation'))
+    lines.append(txt_row('Cloud Builder = Automated bring-up appliance; validates prerequisites and deploys Management domain'))
+    lines.append(txt_row('Workload domain = Isolated vSphere+vSAN+NSX unit; separate vCenter, NSX Manager, and cluster'))
+    lines.append(txt_row('Management domain = First VCF domain; hosts SDDC Manager, vCenter, and shared infrastructure'))
+    lines.append(txt_row('VI domain     = Virtual Infrastructure workload domain; runs production VMs separate from management'))
+    lines.append(txt_row('BOM (Bill of Materials) = Validated version matrix for all VCF components; ensures stack compatibility'))
+    lines.append(txt_row('SDDC bring-up = Cloud Builder automated deployment of Management domain from JSON spec'))
+    lines.append(txt_row('NSX per domain = Each VCF workload domain gets its own NSX Manager cluster for isolation'))
+    lines.append(txt_row('vCenter per domain = Each VCF domain has a dedicated vCenter for workload management and HA/DRS'))
+    lines.append(txt_row('LCM (Lifecycle Manager) = SDDC Manager component for orchestrating upgrades across VCF stack'))
+    lines.append(txt_row('SoS tool      = Support and Serviceability tool; runs health checks across all VCF components'))
+    lines.append(txt_row('VCF subscription = Licensing model for VCF; covers all included components under one SKU'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vcf_operations():
+    """VCF Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VCF — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'SDDC Manager dashboard for domain health; LCM upgrade orchestration across all components')))
+    lines.append(R(bMid(IV_L, IV_R, 'SoS health check tool validates VCF component state; reports failures per domain and service')))
+    lines.append(R(bMid(IV_L, IV_R, 'Password rotation for all components via SDDC Manager; certificate status monitoring across domains')))
+    lines.append(R(bMid(IV_L, IV_R, 'LCM upgrade sequence: Management domain first; VI domains staged after; pre-checks mandatory')))
+    lines.append(R(bMid(IV_L, IV_R, 'Automation: SDDC REST API, LCM API, PowerCLI VCF, Terraform VCF provider')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops catch drift · lifecycle orchestrates upgrades safely · automation scales VCF management'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Lifecycle'),
+        bMid(B3_L, B3_R, 'Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SDDC dashboard'),
+        bMid(B2_L, B2_R, 'SDDC LCM upgrade'),
+        bMid(B3_L, B3_R, 'SDDC REST API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Domain health chk'),
+        bMid(B2_L, B2_R, 'Bundle download'),
+        bMid(B3_L, B3_R, 'LCM API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'LCM status'),
+        bMid(B2_L, B2_R, 'Pre-check run'),
+        bMid(B3_L, B3_R, 'PowerCLI VCF'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Password rotation'),
+        bMid(B2_L, B2_R, 'Upg: mgmt first'),
+        bMid(B3_L, B3_R, 'Terraform VCF'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cert status'),
+        bMid(B2_L, B2_R, 'Aria upgrades'),
+        bMid(B3_L, B3_R, 'Cloud Builder API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SoS tool run'),
+        bMid(B2_L, B2_R, 'BOM update'),
+        bMid(B3_L, B3_R, 'Tag-based policy'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops keep domains healthy · lifecycle upgrades safely in sequence · automation reduces manual toil'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CLI Ref', 'Health Chk', 'Procedures', 'Install/Up', 'Backup/Rest'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SDDC REST API', 'Domain: healthy', 'Add VI domain', 'LCM bundle dl', 'Config backup'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SoS tool cmds', 'LCM: current', 'Add host', 'Pre-check run', 'SFTP target'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['PowerCLI VCF', 'Certs: valid', 'Add cluster', 'Mgmt upg 1st', 'SDDC restore'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LCM API', 'Passwords: ok', 'Expand domain', 'Post-upg val', 'Domain backup'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 servers (mgmt + workload) · PCIe NICs · ToR switches · vSAN/SAN · OOB management'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('SDDC Manager  = VCF control plane; dashboard shows domain health, alerts, and LCM upgrade status'))
+    lines.append(txt_row('LCM           = Lifecycle Manager; orchestrates upgrades for vSphere, vSAN, NSX, and SDDC Manager'))
+    lines.append(txt_row('SoS (Support and Service Guidance tool) = Health check CLI; validates all VCF component states'))
+    lines.append(txt_row('Workload domain = Isolated VCF unit; add hosts, clusters, or expand via SDDC Manager workflow'))
+    lines.append(txt_row('BOM           = Bill of Materials; defines validated component versions for each VCF release'))
+    lines.append(txt_row('Cloud Builder = Bring-up appliance used for initial Management domain deployment; retired post-deploy'))
+    lines.append(txt_row('SDDC REST API = VCF programmatic interface; manage domains, hosts, clusters, and lifecycle tasks'))
+    lines.append(txt_row('Password rotation = SDDC Manager rotates credentials for vCenter, NSX, ESXi, and SDDC components'))
+    lines.append(txt_row('vCenter per domain = Dedicated vCenter in each domain; upgraded as part of LCM domain upgrade'))
+    lines.append(txt_row('NSX per domain = NSX Manager cluster per VCF domain; upgraded after vCenter in LCM sequence'))
+    lines.append(txt_row('Certificate rotation = SDDC Manager renews certificates for all VCF components on schedule'))
+    lines.append(txt_row('VCF upgrade sequence = Mgmt domain first; VI domains after; never upgrade VI before Management'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vcf_security():
+    """VCF Security sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VCF — Security'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'SDDC Manager RBAC with admin/viewer roles; Identity Manager SSO across all domains')))
+    lines.append(R(bMid(IV_L, IV_R, 'Component password policy via SoS; audit events logged in SDDC Manager activity log')))
+    lines.append(R(bMid(IV_L, IV_R, 'vSAN encryption per domain with KMS; NSX TLS fabric for all inter-component traffic')))
+    lines.append(R(bMid(IV_L, IV_R, 'Certificate management: SDDC Manager rotates certs for vCenter, NSX, and SDDC components')))
+    lines.append(R(bMid(IV_L, IV_R, 'Break-glass admin account for emergency access; credential vault for service account storage')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication gates VCF access · RBAC scopes management · encryption protects domain data at rest'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Authentication'),
+        bMid(B2_L, B2_R, 'Access Control'),
+        bMid(B3_L, B3_R, 'Encryption'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Identity Mgr SSO'),
+        bMid(B2_L, B2_R, 'SDDC roles: admin'),
+        bMid(B3_L, B3_R, 'vSAN encr/domain'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'AD/LDAP intg'),
+        bMid(B2_L, B2_R, 'SDDC roles: viewer'),
+        bMid(B3_L, B3_R, 'NSX TLS fabric'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'API token auth'),
+        bMid(B2_L, B2_R, 'NSX+vCtr RBAC'),
+        bMid(B3_L, B3_R, 'vCtr cert mgmt'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Break-glass admin'),
+        bMid(B2_L, B2_R, 'Domain-level acc'),
+        bMid(B3_L, B3_R, 'SDDC cert rotate'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'User management'),
+        bMid(B2_L, B2_R, 'Audit events'),
+        bMid(B3_L, B3_R, 'Credential vault'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SDDC Manager auth'),
+        bMid(B2_L, B2_R, 'Password policy'),
+        bMid(B3_L, B3_R, 'KMS config'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Auth controls who accesses VCF · RBAC limits domain scope · encryption protects data and credentials'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Auth', 'Access Ctrl', 'Encryption', 'Hardening', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Identity Mgr', 'SDDC admin', 'vSAN encrypt', 'Cert rotation', 'SDDC events'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['AD/LDAP', 'SDDC viewer', 'NSX TLS', 'Password policy', 'NSX audit log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['API tokens', 'Domain access', 'vCenter cert', 'KMS config', 'vCenter events'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Break-glass', 'Least privilege', 'SDDC cert', 'SoS scan', 'SIEM forward'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 servers · TPM 2.0 · NVMe/SSD (vSAN) · PCIe NICs · Key Management Server · OOB network'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('SDDC Manager RBAC = Admin and Viewer roles in SDDC Manager; controls domain and lifecycle access'))
+    lines.append(txt_row('Identity Manager  = VMware vIDM provides SSO across VCF vCenter, NSX, and SDDC Manager UIs'))
+    lines.append(txt_row('Workload domain isolation = Each domain has independent vCenter, NSX, and access control boundaries'))
+    lines.append(txt_row('SoS password rotation = SDDC Manager rotates all component passwords via SoS on schedule'))
+    lines.append(txt_row('vSAN encryption   = Per-domain data-at-rest encryption using KMS-managed keys; enabled per policy'))
+    lines.append(txt_row('NSX TLS           = All NSX management plane traffic encrypted with TLS; cert managed by SDDC Mgr'))
+    lines.append(txt_row('Certificate rotation = SDDC Manager renews certificates for all VCF components automatically'))
+    lines.append(txt_row('API token         = SDDC Manager REST API bearer token; scoped to user role and domain'))
+    lines.append(txt_row('Break-glass account = Emergency local admin in SDDC Manager; used when SSO is unavailable'))
+    lines.append(txt_row('KMS/KMIP          = External Key Management Server; manages vSAN and VM encryption keys via KMIP'))
+    lines.append(txt_row('Audit events      = SDDC Manager logs all user and system actions for compliance review'))
+    lines.append(txt_row('Credential vault  = SDDC Manager stores all component service account passwords securely'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vcf_troubleshooting():
+    """VCF Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VCF — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'SoS health check failures; workload domain deployment errors; LCM upgrade stalls')))
+    lines.append(R(bMid(IV_L, IV_R, 'NSX host prep failures in VCF; SDDC Manager service issues; password rotation errors')))
+    lines.append(R(bMid(IV_L, IV_R, 'Diagnostics: SoS tool output, SDDC Manager logs, SDDC REST API debug, NSX prep log')))
+    lines.append(R(bMid(IV_L, IV_R, 'Log collection: VCF support bundle via SDDC Manager; attach to GSS case for analysis')))
+    lines.append(R(bMid(IV_L, IV_R, 'Escalation: TAM/GSS for P1; BOM mismatch validation; Skyline proactive diagnostics')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues define the triage path · diagnostics isolate root cause · escalation engages VCF support'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Common Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SoS health fail'),
+        bMid(B2_L, B2_R, 'SoS tool output'),
+        bMid(B3_L, B3_R, 'VCF support bndl'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Workload dom err'),
+        bMid(B2_L, B2_R, 'SDDC Mgr logs'),
+        bMid(B3_L, B3_R, 'GSS/TAM escalate'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'LCM stall'),
+        bMid(B2_L, B2_R, 'API debug'),
+        bMid(B3_L, B3_R, 'BOM mismatch'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'NSX prep fail'),
+        bMid(B2_L, B2_R, 'Domain health'),
+        bMid(B3_L, B3_R, 'Core analysis'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SDDC svc down'),
+        bMid(B2_L, B2_R, 'NSX prep log'),
+        bMid(B3_L, B3_R, 'Skyline'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Password rot err'),
+        bMid(B2_L, B2_R, 'vSAN health'),
+        bMid(B3_L, B3_R, 'P1 process'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues guide triage · diagnostics pinpoint root cause · escalation gets vendor support engaged'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Issues', 'Diagnostics', 'Log Paths', 'Escalation', 'Recovery'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SoS fail', 'SoS tool run', '/var/log/vmware', 'VCF bndl.tgz', 'Re-run SoS'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Domain err', 'SDDC API debug', 'SDDC Mgr logs', 'GSS P1 case', 'Redeploy dom'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LCM stall', 'NSX prep log', '/var/log/nsx', 'TAM escalate', 'LCM retry'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['NSX prep fail', 'vSAN health UI', '/var/log/vsan', 'BOM validate', 'Re-prep NSX'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 servers · PCIe NICs · ToR switches · vSAN/SAN · OOB management network'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('SoS tool      = Support and Serviceability; CLI tool that validates all VCF component health states'))
+    lines.append(txt_row('LCM stall     = Lifecycle Manager upgrade task stuck; check SDDC Manager logs and retry via API'))
+    lines.append(txt_row('NSX host prep = VCF NSX transport node preparation; fails if ESXi version or network config mismatch'))
+    lines.append(txt_row('SDDC Manager service = Core VCF service; restart via systemctl if dashboard is unresponsive'))
+    lines.append(txt_row('Workload domain error = Domain add/expand task failure; review SDDC Manager task log for detail'))
+    lines.append(txt_row('BOM mismatch  = Component versions outside validated BOM; must resolve before LCM can proceed'))
+    lines.append(txt_row('VCF support bundle = Downloaded from SDDC Manager; contains logs for all VCF components'))
+    lines.append(txt_row('Password rotation failure = SoS rotation error; check component connectivity and account lockout'))
+    lines.append(txt_row('Skyline Health = VMware proactive diagnostics; collects and analyzes VCF telemetry for known issues'))
+    lines.append(txt_row('TAM escalation = Technical Account Manager engagement for critical VCF production incidents'))
+    lines.append(txt_row('GSS P1/P2     = Global Support Services priority; P1=production down, P2=significant degradation'))
+    lines.append(txt_row('Cloud Builder deployment = Initial bring-up failures; review JSON spec and network pre-check output'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_automation_architecture():
+    """Aria Automation Architecture sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Automation — Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Aria Automation = Automation appliance + Service Broker + Assembler + Extensibility (ABX + Orchestrator)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Service Broker provides self-service catalog with entitlements and approval policies')))
+    lines.append(R(bMid(IV_L, IV_R, 'Assembler manages blueprints, cloud accounts, and cloud zones for multi-cloud provisioning')))
+    lines.append(R(bMid(IV_L, IV_R, 'ABX actions and embedded Orchestrator extend automation with custom functions and workflows')))
+    lines.append(R(bMid(IV_L, IV_R, 'Connects to cloud accounts: vCenter, AWS, Azure, GCP; cloud proxy for on-premises connectivity')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines platform components · integrations connect cloud accounts · standards govern design'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'How It Works'),
+        bMid(B2_L, B2_R, 'Integrations'),
+        bMid(B3_L, B3_R, 'Design Standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Automation appliance'),
+        bMid(B2_L, B2_R, 'vCenter cloud acct'),
+        bMid(B3_L, B3_R, 'Org/project RBAC'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Service Broker: catalog'),
+        bMid(B2_L, B2_R, 'GitHub/GitLab: IaC'),
+        bMid(B3_L, B3_R, 'Blueprint versioning'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Assembler: blueprints'),
+        bMid(B2_L, B2_R, 'ServiceNow ITSM'),
+        bMid(B3_L, B3_R, 'Naming standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'ABX: extensibility'),
+        bMid(B2_L, B2_R, 'AD/LDAP auth'),
+        bMid(B3_L, B3_R, 'ABX action limits'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Orchestrator: embed'),
+        bMid(B2_L, B2_R, 'Terraform plugin'),
+        bMid(B3_L, B3_R, 'Approval policies'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cloud accounts'),
+        bMid(B2_L, B2_R, 'Slack/Teams notify'),
+        bMid(B3_L, B3_R, 'Cloud zones'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works covers platform components · integrations connect cloud and ITSM · standards enforce policy'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['How It Works', 'Integrations', 'Design Stds', 'Deployment', 'Key Stds'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Service Broker', 'vCenter acct', 'Org/proj RBAC', 'Single-node', 'Blueprint std'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Assembler', 'GitHub IaC', 'Blueprint ver', 'HA cluster', 'Naming conv'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['ABX actions', 'ServiceNow', 'Approval policy', 'Cloud proxy', 'ABX limits'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Orchestrator', 'Terraform', 'Cloud zones', 'Multi-cloud', 'Secret policy'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VM (Automation appliance) · RAM DIMMs · Network NICs · vCenter/cloud provider targets'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Service Broker = Aria Automation self-service catalog; manages entitlements and approval workflows'))
+    lines.append(txt_row('Assembler     = Aria Automation design surface; creates blueprints and manages cloud accounts/zones'))
+    lines.append(txt_row('ABX (Action Based Extensibility) = FaaS runtime for Python/Node/PowerShell custom actions'))
+    lines.append(txt_row('Orchestrator  = vRO embedded in Aria Automation; runs complex multi-step workflows'))
+    lines.append(txt_row('Blueprint     = IaC template in Aria YAML; defines cloud-agnostic infrastructure topology'))
+    lines.append(txt_row('Cloud account = Aria connection to a cloud endpoint: vCenter, AWS, Azure, or GCP'))
+    lines.append(txt_row('Cloud zone    = Subset of a cloud account resources (clusters, regions) available for provisioning'))
+    lines.append(txt_row('Catalog item  = Published blueprint or Orchestrator workflow available in Service Broker'))
+    lines.append(txt_row('Entitlement   = Policy granting a project/user access to specific catalog items in Service Broker'))
+    lines.append(txt_row('Approval policy = Workflow requiring approver sign-off before catalog item request is fulfilled'))
+    lines.append(txt_row('Cloud proxy   = Lightweight VM deployed on-premises; routes Aria SaaS traffic to vCenter'))
+    lines.append(txt_row('Organization/Project = Org is top-level tenant; Project scopes users, cloud zones, and policies'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_automation_operations():
+    """Aria Automation Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Automation — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Blueprint lifecycle management; request monitoring for failed deployments; catalog item health')))
+    lines.append(R(bMid(IV_L, IV_R, 'Subscription and event broker management; pipeline status monitoring; ABX function execution')))
+    lines.append(R(bMid(IV_L, IV_R, 'Daily: review failed requests, check cloud account connectivity, verify ABX timeout thresholds')))
+    lines.append(R(bMid(IV_L, IV_R, 'Lifecycle: Automation upgrade with pre-upgrade snapshot; embedded vRO and plugin updates')))
+    lines.append(R(bMid(IV_L, IV_R, 'Automation: vRA REST API, ABX Python/Node, Terraform integration, vRO workflows')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops catch request failures · lifecycle keeps Automation current · automation scales delivery'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Lifecycle'),
+        bMid(B3_L, B3_R, 'Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Request monitoring'),
+        bMid(B2_L, B2_R, 'Automation upgrade'),
+        bMid(B3_L, B3_R, 'vRA REST API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Failed deploys'),
+        bMid(B2_L, B2_R, 'Pre-upg snapshot'),
+        bMid(B3_L, B3_R, 'ABX: Python/Node'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Catalog health'),
+        bMid(B2_L, B2_R, 'Embedded vRO'),
+        bMid(B3_L, B3_R, 'Terraform intg'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Sub. events'),
+        bMid(B2_L, B2_R, 'ABX FaaS update'),
+        bMid(B3_L, B3_R, 'vRO workflows'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Pipeline status'),
+        bMid(B2_L, B2_R, 'Plugin updates'),
+        bMid(B3_L, B3_R, 'PowerShell ABX'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'ABX timeout chk'),
+        bMid(B2_L, B2_R, 'API compat chk'),
+        bMid(B3_L, B3_R, 'API Explorer'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops monitor request health · lifecycle upgrades safely with snapshot · automation enables at-scale'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CLI Ref', 'Health Chk', 'Procedures', 'Install/Up', 'Backup/Rest'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vRA REST API', 'Requests: ok', 'Blueprint ver', 'Pre-upg snap', 'Config export'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['ABX function', 'Catalog: items', 'Deploy test', 'Automation upg', 'Policy backup'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Terraform CLI', 'Cloud accts ok', 'ABX test', 'API compat', 'Blueprint bkp'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['API Explorer', 'Pipelines: ok', 'Entitlement', 'Post-upg val', 'Restore redep'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VM (Automation appliance) · RAM DIMMs · Network NICs · Cloud provider connectivity'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Blueprint     = IaC template; versioned in Aria Automation; deploy, update, and destroy lifecycle'))
+    lines.append(txt_row('Request       = User-initiated catalog item deployment; tracked in Service Broker with status and logs'))
+    lines.append(txt_row('Catalog item  = Published blueprint or workflow in Service Broker; versioned and entitlement-controlled'))
+    lines.append(txt_row('ABX action    = FaaS function (Python/Node/PowerShell) triggered by events or directly from blueprint'))
+    lines.append(txt_row('Subscription  = Event broker rule mapping a lifecycle event to an ABX action or Orchestrator workflow'))
+    lines.append(txt_row('Event broker  = Aria Automation event bus; publishes compute/network/storage events to subscriptions'))
+    lines.append(txt_row('Cloud account = Aria connection to vCenter/AWS/Azure/GCP; health check ensures connectivity'))
+    lines.append(txt_row('Approval policy = Required sign-off before request fulfillment; configurable per catalog item'))
+    lines.append(txt_row('Orchestrator workflow = vRO workflow embedded in Aria Automation; runs complex multi-step tasks'))
+    lines.append(txt_row('vRA REST API  = Primary Aria Automation programmatic interface; used for requests, blueprints, catalog'))
+    lines.append(txt_row('Terraform provider = Aria Automation Terraform provider for IaC-driven provisioning workflows'))
+    lines.append(txt_row('Entitlement   = Service Broker policy granting project members access to specific catalog items'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_automation_security():
+    """Aria Automation Security sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Automation — Security'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Workspace ONE/vIDM for SSO; org/project RBAC for catalog and blueprint access control')))
+    lines.append(R(bMid(IV_L, IV_R, 'API token management with TTL; approval policies for deployment governance and compliance')))
+    lines.append(R(bMid(IV_L, IV_R, 'Secret references for credential storage; Password Locker replaces plaintext in blueprints')))
+    lines.append(R(bMid(IV_L, IV_R, 'TLS enforced on all endpoints; cloud account credentials stored encrypted; HTTPS API only')))
+    lines.append(R(bMid(IV_L, IV_R, 'Audit log captures all request, catalog, and ABX events for compliance review')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication gates Aria access · RBAC scopes catalog and blueprints · secrets protect credentials'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Authentication'),
+        bMid(B2_L, B2_R, 'Access Control'),
+        bMid(B3_L, B3_R, 'Encryption'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'WS1/vIDM SSO'),
+        bMid(B2_L, B2_R, 'Org/proj roles'),
+        bMid(B3_L, B3_R, 'TLS all endpoints'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'AD/LDAP intg'),
+        bMid(B2_L, B2_R, 'Custom roles'),
+        bMid(B3_L, B3_R, 'Secrets at rest'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'API token auth'),
+        bMid(B2_L, B2_R, 'Resource-level'),
+        bMid(B3_L, B3_R, 'Password Locker'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'OAuth 2.0'),
+        bMid(B2_L, B2_R, 'Approval policy'),
+        bMid(B3_L, B3_R, 'Cert management'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Project member'),
+        bMid(B2_L, B2_R, 'Catalog entitle'),
+        bMid(B3_L, B3_R, 'HTTPS API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Break-glass admin'),
+        bMid(B2_L, B2_R, 'Cloud zone acc'),
+        bMid(B3_L, B3_R, 'Secret refs'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Auth controls who uses Aria · RBAC limits catalog and blueprint scope · secrets protect cloud credentials'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Auth', 'Access Ctrl', 'Encryption', 'Hardening', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vIDM/WS1 SSO', 'Org admin', 'TLS enforced', 'API token TTL', 'Request audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['AD/LDAP', 'Project roles', 'Secrets encr', 'Min permissions', 'Catalog events'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['API tokens', 'Custom roles', 'Password Locker', 'Cert rotation', 'ABX log audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['OAuth 2.0', 'Approval policy', 'HTTPS only', 'Secret refs', 'Org event log'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VM (Automation appliance) · RAM DIMMs · Network NICs · Identity provider infrastructure'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('vIDM (Identity Manager) = VMware Identity Manager; provides SSO for Aria Automation via SAML/OAuth'))
+    lines.append(txt_row('Workspace ONE = Broadcom unified endpoint and identity platform; SSO source for Aria Automation'))
+    lines.append(txt_row('Organization  = Top-level Aria Automation tenant; all projects and users belong to an organization'))
+    lines.append(txt_row('Project       = Aria Automation grouping; scopes cloud zones, members, and catalog entitlements'))
+    lines.append(txt_row('RBAC          = Role-based access control; org/project roles control blueprint and catalog access'))
+    lines.append(txt_row('API token     = Bearer token for Aria REST API; has configurable TTL; scoped to user role'))
+    lines.append(txt_row('Approval policy = Deployment governance requiring approver action before request proceeds'))
+    lines.append(txt_row('Entitlement   = Service Broker policy controlling which projects can consume which catalog items'))
+    lines.append(txt_row('Password Locker = Aria Automation encrypted credential store; replaces plaintext blueprint passwords'))
+    lines.append(txt_row('Secret reference = Blueprint reference to Password Locker entry; keeps credentials out of IaC code'))
+    lines.append(txt_row('Cloud account credentials = Encrypted vCenter/cloud API keys stored in Aria Automation'))
+    lines.append(txt_row('OAuth 2.0     = Token-based authorization protocol; used for Aria API and third-party integrations'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_automation_troubleshooting():
+    """Aria Automation Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Automation — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Blueprint deploy failures; ABX action errors; cloud account connectivity issues')))
+    lines.append(R(bMid(IV_L, IV_R, 'Catalog item errors; pipeline failures; API debug for root cause analysis')))
+    lines.append(R(bMid(IV_L, IV_R, 'Event broker subscription troubleshooting; lease expiry and approval stuck scenarios')))
+    lines.append(R(bMid(IV_L, IV_R, 'Diagnostics: vRA API debug, ABX function logs, vRO log files, request detail view')))
+    lines.append(R(bMid(IV_L, IV_R, 'Escalation: vRA log bundle export; GSS case; TAM for P1; support compatibility matrix')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues define the triage path · diagnostics isolate root cause · escalation engages Aria support'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Common Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Blueprint fail'),
+        bMid(B2_L, B2_R, 'vRA API debug'),
+        bMid(B3_L, B3_R, 'vRA log bundle'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'ABX action err'),
+        bMid(B2_L, B2_R, 'ABX function log'),
+        bMid(B3_L, B3_R, 'GSS case open'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cloud acct conn'),
+        bMid(B2_L, B2_R, 'vRO log files'),
+        bMid(B3_L, B3_R, 'ABX debug mode'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Catalog item err'),
+        bMid(B2_L, B2_R, 'Request details'),
+        bMid(B3_L, B3_R, 'API trace'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Lease expiry'),
+        bMid(B2_L, B2_R, 'Event broker log'),
+        bMid(B3_L, B3_R, 'Support matrix'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Approval stuck'),
+        bMid(B2_L, B2_R, 'ABX FaaS console'),
+        bMid(B3_L, B3_R, 'Log export'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues guide triage · diagnostics use API and logs · escalation bundles evidence for GSS'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Issues', 'Diagnostics', 'Log Paths', 'Escalation', 'Recovery'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Blueprint fail', 'vRA API debug', '/var/log/vra', 'vRA log bundle', 'Re-deploy'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['ABX error', 'ABX func logs', '/var/log/abx', 'GSS P1 case', 'Fix + retry'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Cloud acct err', 'vRO logs', '/var/log/vro', 'TAM escalate', 'Re-auth acct'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Approval stuck', 'Event broker', '/var/log/event', 'Support matrix', 'Clear + retry'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VM (Automation appliance) · RAM DIMMs · Network NICs · Cloud provider APIs'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Blueprint deployment = End-to-end request from Service Broker through Assembler to cloud provider'))
+    lines.append(txt_row('ABX action    = FaaS function failure; check ABX console logs and timeout configuration'))
+    lines.append(txt_row('Cloud account = vCenter/AWS/Azure connection; re-validate credentials and proxy connectivity'))
+    lines.append(txt_row('Catalog item  = Service Broker published item; errors traced via request detail and event log'))
+    lines.append(txt_row('Approval policy = Stuck approval due to missing approver; check policy config and user assignment'))
+    lines.append(txt_row('Event broker  = Aria Automation event bus; subscription failures visible in event broker log'))
+    lines.append(txt_row('Subscription  = Event-to-action mapping; failed subscriptions appear in event broker error log'))
+    lines.append(txt_row('Lease expiry  = Deployment TTL reached; check reclaim notification config and project lease policy'))
+    lines.append(txt_row('vRO (Orchestrator) = Embedded workflow engine; logs at /var/log/vro for workflow execution debug'))
+    lines.append(txt_row('API debug     = Aria REST API with ?debug=true parameter; returns detailed provisioning trace'))
+    lines.append(txt_row('Request lifecycle = Created → Pending Approval → In Progress → Successful/Failed states'))
+    lines.append(txt_row('Pipeline stage = Aria Automation Pipelines stage failure; review stage log for task error detail'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_operations_architecture():
+    """Aria Operations Architecture sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Operations — Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Aria Operations (formerly vROps) — analytics cluster: primary + replica + data nodes per site')))
+    lines.append(R(bMid(IV_L, IV_R, 'Remote collectors deployed per site collect metrics without exposing firewall paths to the cluster')))
+    lines.append(R(bMid(IV_L, IV_R, 'Adapter instances per integration: vSphere, NSX-T, storage, ServiceNow, SIEM, email/SNMP')))
+    lines.append(R(bMid(IV_L, IV_R, 'Dashboards and alerts surface health, risk, efficiency badges across vSphere, NSX, storage, cloud')))
+    lines.append(R(bMid(IV_L, IV_R, 'Capacity management and optimization actions right-size VMs and forecast resource exhaustion')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines the cluster internals · integrations connect adapters · standards govern sizing'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'How It Works'),
+        bMid(B2_L, B2_R, 'Integrations'),
+        bMid(B3_L, B3_R, 'Design Standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Analytics cluster'),
+        bMid(B2_L, B2_R, 'vSphere adapter'),
+        bMid(B3_L, B3_R, 'Cluster L/XL sizing'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Remote collectors'),
+        bMid(B2_L, B2_R, 'NSX-T adapter'),
+        bMid(B3_L, B3_R, 'Remote coll/site'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Adapter instances'),
+        bMid(B2_L, B2_R, 'Storage adapters'),
+        bMid(B3_L, B3_R, 'Adapter config std'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Collector groups'),
+        bMid(B2_L, B2_R, 'ServiceNow ITSM'),
+        bMid(B3_L, B3_R, 'Data retain 6 mo'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Dashboards+alerts'),
+        bMid(B2_L, B2_R, 'SIEM/Kafka'),
+        bMid(B3_L, B3_R, 'Alert policy'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Capacity mgmt'),
+        bMid(B2_L, B2_R, 'Email/SNMP alert'),
+        bMid(B3_L, B3_R, 'Custom dash std'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works covers cluster nodes · integrations connect adapters and ITSM · standards enforce sizing'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['How It Works', 'Integrations', 'Design Stds', 'Deployment', 'Key Stds'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Analytics cluster', 'vSphere adapter', 'Cluster sizing', 'Single node', 'Alert policy'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Remote collectors', 'NSX-T adapter', 'Remote coll', 'Small cluster', 'Dashboard std'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Adapter instances', 'Storage adapters', 'Data retention', 'HA cluster', 'Naming conv'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Collector groups', 'ServiceNow intg', 'Custom policies', 'Multi-cloud', 'RBAC std'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (cluster nodes + remote collectors) · RAM DIMMs · Network NICs · vCenter/cloud targets'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Analytics cluster  = Primary + replica + data nodes forming the Aria Ops processing engine'))
+    lines.append(txt_row('Primary node       = Cluster leader; hosts the UI, API, and coordinates analytics workload'))
+    lines.append(txt_row('Replica node       = Standby for primary; takes over if primary fails; participates in analytics'))
+    lines.append(txt_row('Data node          = Additional analytics capacity node; scales metric ingestion and retention'))
+    lines.append(txt_row('Remote collector   = Lightweight VM per site; collects adapter data and forwards to cluster'))
+    lines.append(txt_row('Adapter instance   = Configured connection to a monitored product: vSphere, NSX, storage, cloud'))
+    lines.append(txt_row('Collector group    = Named group of remote collectors assigned to adapter instances for load sharing'))
+    lines.append(txt_row('Dashboard          = Customizable view of metrics, badges, and alerts for a resource group'))
+    lines.append(txt_row('Alert definition   = Rule triggering notification when a metric crosses a threshold or symptom fires'))
+    lines.append(txt_row('Capacity analytics = Forecasting engine projecting resource exhaustion based on trend analysis'))
+    lines.append(txt_row('Optimization action = Recommended change (right-size, power off, migrate) to improve efficiency'))
+    lines.append(txt_row('Badge              = Health/risk/efficiency score (0-100) summarising object state at a glance'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_operations_operations():
+    """Aria Operations Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Operations — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Alert management and noise reduction: tune thresholds, suppress flapping, cancel false positives')))
+    lines.append(R(bMid(IV_L, IV_R, 'Capacity optimization: review right-sizing recommendations; act on workload placement advice')))
+    lines.append(R(bMid(IV_L, IV_R, 'Report scheduling: cost management integration; automated PDF/CSV delivery to stakeholders')))
+    lines.append(R(bMid(IV_L, IV_R, 'Cluster node health monitoring: verify all nodes stable; check adapter collection intervals')))
+    lines.append(R(bMid(IV_L, IV_R, 'Lifecycle: upgrade wizard sequences node upgrades; pre-upgrade health check mandatory')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops review alerts and capacity · lifecycle keeps cluster current · automation scales operations'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Lifecycle'),
+        bMid(B3_L, B3_R, 'Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Alert management'),
+        bMid(B2_L, B2_R, 'Upgrade planner'),
+        bMid(B3_L, B3_R, 'REST API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Capacity overview'),
+        bMid(B2_L, B2_R, 'Pre-upg health'),
+        bMid(B3_L, B3_R, 'PowerCLI vROps'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Optim. actions'),
+        bMid(B2_L, B2_R, 'Node upg order'),
+        bMid(B3_L, B3_R, 'Alert API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Workload place'),
+        bMid(B2_L, B2_R, 'Adapter compat'),
+        bMid(B3_L, B3_R, 'Capacity API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Badge status'),
+        bMid(B2_L, B2_R, 'CMDB sync'),
+        bMid(B3_L, B3_R, 'Dashboard API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Report schedule'),
+        bMid(B2_L, B2_R, 'Cert renew'),
+        bMid(B3_L, B3_R, 'Report API'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops catch alert noise · lifecycle upgrades nodes in sequence · automation reduces manual toil'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CLI Ref', 'Health Chk', 'Procedures', 'Install/Up', 'Backup/Rest'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['REST API calls', 'Cluster: green', 'Alert triage', 'Upgrade wizard', 'Config export'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['PowerCLI vROps', 'Nodes: healthy', 'Capacity rpt', 'Pre-chk health', 'Support.zip'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Alert API', 'Adapters: ok', 'Add remote coll', 'Node upg order', 'Restore config'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Capacity API', 'Collectors: up', 'Dashboard add', 'Post-upg val', 'Metric data bk'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (primary/replica/data/collector) · RAM DIMMs · Network NICs · vCenter/cloud connectivity'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Analytics cluster  = Primary + replica + data nodes; all must be healthy for full functionality'))
+    lines.append(txt_row('Remote collector   = Lightweight VM per site forwarding adapter metrics to the analytics cluster'))
+    lines.append(txt_row('Adapter instance   = Configured integration to a monitored product; collection interval configurable'))
+    lines.append(txt_row('Alert definition   = Symptom-based rule firing notifications on threshold breach or anomaly'))
+    lines.append(txt_row('Capacity engine    = Forecasting subsystem projecting time-to-exhaustion for CPU, RAM, storage'))
+    lines.append(txt_row('Optimization action = Right-size, power-off, or migrate recommendation generated by analytics'))
+    lines.append(txt_row('Workload placement = DRS-aligned recommendation for optimal VM-to-host assignment'))
+    lines.append(txt_row('Badge score        = 0-100 health/risk/efficiency score assigned to every monitored object'))
+    lines.append(txt_row('Right-sizing       = Reducing oversized vCPU/RAM allocations based on observed peak utilisation'))
+    lines.append(txt_row('Cost driver        = Resource consumer identified as a top contributor to capacity or cost usage'))
+    lines.append(txt_row('Upgrade planner    = Built-in wizard validating compatibility and sequencing node upgrade steps'))
+    lines.append(txt_row('support.zip bundle = Diagnostic package collected from Aria Ops for GSS case submission'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_operations_security():
+    """Aria Operations Security sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Operations — Security'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'vIDM/Active Directory integration for SSO; RBAC roles (admin/user/viewer) for object-level access')))
+    lines.append(R(bMid(IV_L, IV_R, 'Certificate management: cluster and adapter TLS certificates rotated on schedule')))
+    lines.append(R(bMid(IV_L, IV_R, 'API token authentication: scoped bearer tokens for REST API integrations and automation')))
+    lines.append(R(bMid(IV_L, IV_R, 'All REST API communication over TLS; encrypted passwords stored in credential vault')))
+    lines.append(R(bMid(IV_L, IV_R, 'Audit event log captures all admin actions; syslog forwarding to SIEM over TLS')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication gates access · RBAC scopes permissions · encryption and audit enforce compliance'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Authentication'),
+        bMid(B2_L, B2_R, 'Access Control'),
+        bMid(B3_L, B3_R, 'Encryption'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vIDM/AD auth'),
+        bMid(B2_L, B2_R, 'Admin: full access'),
+        bMid(B3_L, B3_R, 'REST over TLS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'LDAP/AD groups'),
+        bMid(B2_L, B2_R, 'User: dashboards'),
+        bMid(B3_L, B3_R, 'Cert management'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Local admin'),
+        bMid(B2_L, B2_R, 'Viewer: read-only'),
+        bMid(B3_L, B3_R, 'Encrypted passwords'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cert-based auth'),
+        bMid(B2_L, B2_R, 'Object-level acc'),
+        bMid(B3_L, B3_R, 'Syslog over TLS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'API token'),
+        bMid(B2_L, B2_R, 'Custom roles'),
+        bMid(B3_L, B3_R, 'Data encryption'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Audit log'),
+        bMid(B2_L, B2_R, 'Content share'),
+        bMid(B3_L, B3_R, 'FIPS mode'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Auth controls who logs in · access control limits scope · encryption and audit enforce compliance'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Auth', 'Access Ctrl', 'Encryption', 'Hardening', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vIDM/AD SSO', 'Admin role', 'TLS enforced', 'Cert rotation', 'Event audit log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LDAP groups', 'User role', 'Pwd encrypted', 'API token TTL', 'Adapter log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['API tokens', 'Viewer role', 'Syslog TLS', 'RBAC review', 'Alert log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Cert-based', 'Object access', 'FIPS mode', 'Min-perm API', 'Config changes'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (cluster) · RAM DIMMs · Network NICs · Identity provider (AD/LDAP) · CA infrastructure'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('vIDM               = VMware Identity Manager; provides SSO and group-based role assignment to Aria Ops'))
+    lines.append(txt_row('Active Directory    = LDAP-compatible directory; groups mapped to Aria Ops roles for user access'))
+    lines.append(txt_row('RBAC               = Role-Based Access Control; admin/user/viewer roles scoped to object groups'))
+    lines.append(txt_row('Admin role         = Full access: manage adapters, alerts, dashboards, users, and system config'))
+    lines.append(txt_row('User role          = Dashboard and alert access; can create content but not manage system config'))
+    lines.append(txt_row('Viewer role        = Read-only access to dashboards and alerts; cannot create or modify content'))
+    lines.append(txt_row('Object-level access = Permissions scoped to specific resource groups or monitored object sets'))
+    lines.append(txt_row('API token          = Bearer token for REST API auth; scoped to user role; configurable TTL'))
+    lines.append(txt_row('TLS                = Transport Layer Security; all API and UI communication encrypted in transit'))
+    lines.append(txt_row('FIPS mode          = Federal Information Processing Standard 140-2 compliant cryptography mode'))
+    lines.append(txt_row('Certificate management = Rotate cluster TLS and adapter certs via admin UI or REST API'))
+    lines.append(txt_row('Audit event log    = Immutable record of all admin actions: login, config change, user management'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_operations_troubleshooting():
+    """Aria Operations Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Operations — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Adapter collection failures: verify credentials, firewall paths, and adapter version compatibility')))
+    lines.append(R(bMid(IV_L, IV_R, 'Alert noise and false positives: tune symptom thresholds; check adapter collection gaps')))
+    lines.append(R(bMid(IV_L, IV_R, 'Missing metric data: confirm remote collector reachability; check collector group assignment')))
+    lines.append(R(bMid(IV_L, IV_R, 'Dashboard errors: verify data source adapter health; check widget metric mappings')))
+    lines.append(R(bMid(IV_L, IV_R, 'support.zip bundle collects all cluster logs; attach to GSS case for escalation')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues guide triage · diagnostics isolate adapter or cluster root cause · escalation bundles logs'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Common Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Adapter coll fail'),
+        bMid(B2_L, B2_R, 'Cluster diagnostics'),
+        bMid(B3_L, B3_R, 'Support.zip'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Alert noise'),
+        bMid(B2_L, B2_R, 'Adapter log'),
+        bMid(B3_L, B3_R, 'GSS case open'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Missing data'),
+        bMid(B2_L, B2_R, 'Support.zip'),
+        bMid(B3_L, B3_R, 'Skyline health'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Dashboard error'),
+        bMid(B2_L, B2_R, 'REST API debug'),
+        bMid(B3_L, B3_R, 'TAM escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Remote coll down'),
+        bMid(B2_L, B2_R, 'Log Insight intg'),
+        bMid(B3_L, B3_R, 'Log bundle'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Capacity wrong'),
+        bMid(B2_L, B2_R, 'Metric explorer'),
+        bMid(B3_L, B3_R, 'Version compat'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues triage adapter and cluster faults · diagnostics use logs and metric explorer · escalate via GSS'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Issues', 'Diagnostics', 'Log Paths', 'Escalation', 'Recovery'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Adapter fail', 'Adapter log', '/var/log/vrops', 'support.zip', 'Re-auth adapter'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Alert noise', 'Metric explorer', 'Cluster diag', 'GSS P1 case', 'Tune alert'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Missing data', 'REST API debug', '/var/log/casa', 'TAM escalate', 'Re-collect'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Collector down', 'Support.zip', '/var/log/coll', 'Skyline health', 'Restart coll'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (cluster nodes + collectors) · RAM DIMMs · Network NICs · vCenter/cloud connectivity'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Adapter collection = Periodic metric pull by an adapter instance; fails on auth or network errors'))
+    lines.append(txt_row('Remote collector   = Site-local VM forwarding metrics; offline if unreachable or out of resources'))
+    lines.append(txt_row('Alert noise        = Excessive or false-positive alerts caused by overly sensitive symptom thresholds'))
+    lines.append(txt_row('Metric gap         = Missing data points in a metric time series; caused by collection or node failure'))
+    lines.append(txt_row('Support.zip bundle = Full diagnostic archive from Aria Ops cluster; submitted to GSS for analysis'))
+    lines.append(txt_row('Cluster diagnostics = Built-in health tool validating node connectivity, services, and disk usage'))
+    lines.append(txt_row('Metric explorer    = UI tool for querying raw metric time series to identify gaps or anomalies'))
+    lines.append(txt_row('Capacity calculation = Engine consuming metric history to project resource exhaustion dates'))
+    lines.append(txt_row('Skyline Health     = VMware proactive support tool that validates cluster health against best practices'))
+    lines.append(txt_row('REST API           = Aria Ops API for querying metrics, alerts, recommendations programmatically'))
+    lines.append(txt_row('Log Insight intg   = Aria Logs integration forwarding Aria Ops cluster logs for structured search'))
+    lines.append(txt_row('False positive alert = Alert firing when no real problem exists; tuned via symptom threshold change'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_logs_architecture():
+    """Aria Logs Architecture sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Logs — Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Aria Operations for Logs (formerly vRealize Log Insight) — master node + worker nodes HA cluster')))
+    lines.append(R(bMid(IV_L, IV_R, 'vRLI agents on Windows/Linux hosts; syslog TCP/UDP ingestion from network devices and ESXi')))
+    lines.append(R(bMid(IV_L, IV_R, 'VLQL structured queries for interactive analytics; alert pipelines to vROps/email/webhook')))
+    lines.append(R(bMid(IV_L, IV_R, 'Content packs provide structured field extraction and dashboards for known log sources')))
+    lines.append(R(bMid(IV_L, IV_R, 'Log forwarder exports filtered streams to SIEM; retention enforced by disk policy per node')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines cluster mechanics · integrations connect log sources · standards govern retention'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'How It Works'),
+        bMid(B2_L, B2_R, 'Integrations'),
+        bMid(B3_L, B3_R, 'Design Standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Master + workers HA'),
+        bMid(B2_L, B2_R, 'vROps integration'),
+        bMid(B3_L, B3_R, '3-node HA cluster'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vRLI agents'),
+        bMid(B2_L, B2_R, 'NSX syslog'),
+        bMid(B3_L, B3_R, 'Log retention pol'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Syslog TCP/UDP'),
+        bMid(B2_L, B2_R, 'ESXi syslog'),
+        bMid(B3_L, B3_R, 'Agent deployment'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VLQL queries'),
+        bMid(B2_L, B2_R, 'Windows agent'),
+        bMid(B3_L, B3_R, 'Alert thresholds'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Alert pipelines'),
+        bMid(B2_L, B2_R, 'Syslog sources'),
+        bMid(B3_L, B3_R, 'Content pack org'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Content packs'),
+        bMid(B2_L, B2_R, 'SIEM forwarding'),
+        bMid(B3_L, B3_R, 'Disk sizing'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works covers cluster and ingestion · integrations connect sources · standards enforce retention'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['How It Works', 'Integrations', 'Design Stds', 'Deployment', 'Key Stds'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Master+workers', 'vROps intg', '3-node cluster', 'Single node', 'Retention pol'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vRLI agents', 'NSX syslog', 'Log retention', 'HA cluster', 'Alert thresh'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Syslog TCP/UDP', 'ESXi syslog', 'Agent deploy', 'Forwarder', 'Disk sizing'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['VLQL queries', 'SIEM forward', 'Alert config', 'Multi-site', 'Content packs'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (master + workers) · RAM DIMMs · Network NICs · High-capacity storage (log disk) · Syslog sources'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Master node        = Aria Logs cluster leader; hosts UI, API, and coordinates ingestion across workers'))
+    lines.append(txt_row('Worker node        = Additional cluster member; shares ingestion load and stores log partitions'))
+    lines.append(txt_row('vRLI agent         = Lightweight agent on Windows/Linux; forwards structured log events to cluster'))
+    lines.append(txt_row('Syslog ingestion   = UDP/TCP syslog receiver on port 514/6514; accepts RFC3164/5424 formatted logs'))
+    lines.append(txt_row('VLQL               = vRLI Query Language; structured query syntax for filtering and aggregating logs'))
+    lines.append(txt_row('Content pack       = Pre-built dashboards and field extractors for a specific log source (NSX, vSphere)'))
+    lines.append(txt_row('Alert pipeline     = Rule triggering notifications or forwarding to vROps/email/webhook on log match'))
+    lines.append(txt_row('Log forwarder      = Cluster feature streaming filtered log events to an external SIEM destination'))
+    lines.append(txt_row('Structured parsing = Field extraction from raw log text using content pack or custom regex rules'))
+    lines.append(txt_row('Log retention      = Disk-based policy deleting oldest log partitions when capacity threshold reached'))
+    lines.append(txt_row('HA cluster         = Master + 2+ worker nodes with integrated load balancer virtual IP for ingestion'))
+    lines.append(txt_row('Interactive analytics = UI-based VLQL query workspace for ad-hoc log investigation and charting'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_logs_operations():
+    """Aria Logs Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Logs — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Alert management and dashboard queries; agent health monitoring across all forwarding hosts')))
+    lines.append(R(bMid(IV_L, IV_R, 'Disk usage and retention enforcement: monitor partition fill rate; expand disks proactively')))
+    lines.append(R(bMid(IV_L, IV_R, 'Content pack management: import, update, and validate packs for new log source onboarding')))
+    lines.append(R(bMid(IV_L, IV_R, 'Forwarder configuration for SIEM integration: filter, tag, and stream log events externally')))
+    lines.append(R(bMid(IV_L, IV_R, 'vRLI upgrade sequence: backup config, upgrade nodes in order, validate post-upgrade health')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops review alerts and agents · lifecycle upgrades nodes safely · automation scales log management'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Lifecycle'),
+        bMid(B3_L, B3_R, 'Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Alert review'),
+        bMid(B2_L, B2_R, 'vRLI upgrades'),
+        bMid(B3_L, B3_R, 'vRLI REST API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Dashboard query'),
+        bMid(B2_L, B2_R, 'Pre-chk backup'),
+        bMid(B3_L, B3_R, 'Content pk import'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Agent health'),
+        bMid(B2_L, B2_R, 'Node upg order'),
+        bMid(B3_L, B3_R, 'Agent config API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Disk usage'),
+        bMid(B2_L, B2_R, 'Agent upgrade'),
+        bMid(B3_L, B3_R, 'Alert API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Source health'),
+        bMid(B2_L, B2_R, 'Content pk update'),
+        bMid(B3_L, B3_R, 'Query API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Content pk status'),
+        bMid(B2_L, B2_R, 'Cert renew'),
+        bMid(B3_L, B3_R, 'VLQL scripted'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops monitor agents and disk · lifecycle upgrades safely · automation handles source onboarding'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CLI Ref', 'Health Chk', 'Procedures', 'Install/Up', 'Backup/Rest'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['REST API calls', 'Cluster: green', 'Alert tune', 'Upgrade node', 'Config export'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['VLQL queries', 'Agents: sending', 'Add log source', 'Agent update', 'Content bkp'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Alert API', 'Disk: <80%', 'Forwarder cfg', 'Content pk upg', 'Restore config'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Content pk API', 'Sources: active', 'Retention chk', 'Post-upg val', 'Log archive'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (master + workers) · RAM DIMMs · Network NICs · High-capacity log storage · Syslog network'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Content pack       = Pre-built field extractors and dashboards; imported via UI or REST API'))
+    lines.append(txt_row('vRLI agent         = Host-based log forwarder; reports sending state visible in admin sources page'))
+    lines.append(txt_row('Alert pipeline     = Log-match rule triggering email, webhook, or vROps notification on condition'))
+    lines.append(txt_row('VLQL query         = vRLI Query Language statement for filtering, grouping, and charting log events'))
+    lines.append(txt_row('Log forwarder      = Cluster feature streaming matched events to SIEM via syslog or REST endpoint'))
+    lines.append(txt_row('Disk retention     = Automatic deletion of oldest log partitions when disk reaches configured threshold'))
+    lines.append(txt_row('HA cluster upgrade = Sequenced upgrade: master node last; workers upgraded first to preserve ingestion'))
+    lines.append(txt_row('Source health      = Admin UI view showing per-source event rate and last-received timestamp'))
+    lines.append(txt_row('REST API           = vRLI API for querying events, managing alerts, sources, and content packs'))
+    lines.append(txt_row('Interactive analytics = VLQL query workspace for ad-hoc investigation with chart and table views'))
+    lines.append(txt_row('Log ingestion rate = Events-per-second metric; baseline for disk capacity planning and alerting'))
+    lines.append(txt_row('Content pack version = Versioned pack release; update to get new dashboards and field extractors'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_logs_security():
+    """Aria Logs Security sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Logs — Security'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Active Directory/LDAP for SSO; role-based access for dashboards and alerts per user group')))
+    lines.append(R(bMid(IV_L, IV_R, 'TLS for agent connections and syslog TCP/TLS; REST API served over HTTPS only')))
+    lines.append(R(bMid(IV_L, IV_R, 'FIPS 140-2 mode available; encrypted passwords at rest in credential store')))
+    lines.append(R(bMid(IV_L, IV_R, 'Audit trail captures all admin actions: login events, config changes, source additions')))
+    lines.append(R(bMid(IV_L, IV_R, 'Certificate rotation for agent TLS, cluster UI cert, and syslog TLS endpoints')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication gates access · role-based access scopes dashboards · encryption secures all log transit'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Authentication'),
+        bMid(B2_L, B2_R, 'Access Control'),
+        bMid(B3_L, B3_R, 'Encryption'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'AD/LDAP auth'),
+        bMid(B2_L, B2_R, 'Admin: full'),
+        bMid(B3_L, B3_R, 'Agent TLS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'LDAP integration'),
+        bMid(B2_L, B2_R, 'User: dashboards'),
+        bMid(B3_L, B3_R, 'Syslog TCP/TLS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Local admin'),
+        bMid(B2_L, B2_R, 'Dashboard roles'),
+        bMid(B3_L, B3_R, 'REST over HTTPS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Role-based'),
+        bMid(B2_L, B2_R, 'Source access'),
+        bMid(B3_L, B3_R, 'Cert management'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'API token'),
+        bMid(B2_L, B2_R, 'Alert mgmt'),
+        bMid(B3_L, B3_R, 'FIPS mode'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SAML support'),
+        bMid(B2_L, B2_R, 'Content pk admin'),
+        bMid(B3_L, B3_R, 'Pwd encrypted'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Auth controls who logs in · access control scopes dashboards · encryption secures all log paths'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Auth', 'Access Ctrl', 'Encryption', 'Hardening', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['AD/LDAP SSO', 'Admin role', 'Agent TLS', 'Cert rotation', 'Admin events'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['API tokens', 'User role', 'Syslog TLS', 'FIPS mode', 'Query log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SAML support', 'Dashboard role', 'HTTPS REST', 'Pwd policy', 'Alert audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Local admin', 'Source access', 'Cert mgmt', 'Min-perm API', 'Config changes'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (cluster) · RAM DIMMs · Network NICs · AD/LDAP server · CA infrastructure'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('AD/LDAP            = Active Directory/LDAP; group membership mapped to Aria Logs roles'))
+    lines.append(txt_row('SAML               = Security Assertion Markup Language; federated SSO for Aria Logs UI login'))
+    lines.append(txt_row('Role-based access   = Admin/user/viewer roles; scoped to dashboard sets and log source access'))
+    lines.append(txt_row('Admin role         = Full Aria Logs access: manage sources, alerts, content packs, and users'))
+    lines.append(txt_row('User role          = Dashboard view and query access; cannot manage sources or system config'))
+    lines.append(txt_row('TLS agent connection = Encrypted channel between vRLI agent and cluster ingestion endpoint'))
+    lines.append(txt_row('Syslog over TLS    = RFC5425 TLS-wrapped syslog on port 6514; encrypts log transit from sources'))
+    lines.append(txt_row('FIPS 140-2         = Federal cryptographic standard; enabled at cluster level for compliance'))
+    lines.append(txt_row('Certificate management = Rotate UI, agent, and syslog TLS certificates via admin settings'))
+    lines.append(txt_row('API token          = Bearer token for REST API calls; scoped to authenticated user role'))
+    lines.append(txt_row('Audit trail        = Immutable log of admin actions: logins, config changes, source management'))
+    lines.append(txt_row('Encrypted credentials = Passwords and secrets stored encrypted in cluster credential vault'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_logs_troubleshooting():
+    """Aria Logs Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Logs — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Agents not sending logs: check agent connectivity, firewall rules, and agent configuration')))
+    lines.append(R(bMid(IV_L, IV_R, 'Missing log sources: verify syslog UDP/TCP port reachability and source IP configuration')))
+    lines.append(R(bMid(IV_L, IV_R, 'Disk full blocking ingestion: expand disk or reduce retention; clear oldest partitions')))
+    lines.append(R(bMid(IV_L, IV_R, 'Alert not firing: validate field extraction in content pack; check query match logic')))
+    lines.append(R(bMid(IV_L, IV_R, 'vRLI support bundle collects cluster and agent logs; attach to GSS case for escalation')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues triage agent and source faults · diagnostics use logs and API · escalation bundles for GSS'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Common Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Agent not sending'),
+        bMid(B2_L, B2_R, 'Admin UI sources'),
+        bMid(B3_L, B3_R, 'vRLI support bndl'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Source missing'),
+        bMid(B2_L, B2_R, 'Agent log files'),
+        bMid(B3_L, B3_R, 'GSS case open'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Disk full'),
+        bMid(B2_L, B2_R, '/var/log/loginsight'),
+        bMid(B3_L, B3_R, 'Agent config exp'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Alert not fire'),
+        bMid(B2_L, B2_R, 'REST API debug'),
+        bMid(B3_L, B3_R, 'Log sample coll'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Query empty'),
+        bMid(B2_L, B2_R, 'Source status'),
+        bMid(B3_L, B3_R, 'TAM escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Forwarder err'),
+        bMid(B2_L, B2_R, 'Content pk test'),
+        bMid(B3_L, B3_R, 'Version matrix'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues guide triage · diagnostics use source admin and log paths · escalation collects bundles'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Issues', 'Diagnostics', 'Log Paths', 'Escalation', 'Recovery'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Agent silent', 'Agent log file', '/var/log/loginsight', 'vRLI bundle', 'Restart agent'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Disk full', 'Source status', '/var/log/li-server', 'GSS P1 case', 'Expand disk'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Alert not fire', 'REST API dbg', '/var/log/agent', 'TAM escalate', 'Retune alert'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Query empty', 'Content pk test', '/var/log/server', 'Version matrix', 'Fix time range'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (cluster) · RAM DIMMs · Network NICs · Log storage · Syslog source hosts'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('vRLI agent         = Host-based log forwarder; check agent service status and firewall on port 9000'))
+    lines.append(txt_row('Syslog source      = Network device or host sending UDP/TCP syslog; verify source IP is allowed'))
+    lines.append(txt_row('Disk retention     = Policy deleting oldest partitions at threshold; full disk blocks all ingestion'))
+    lines.append(txt_row('Alert pipeline     = Log-match rule; fails silently if field extraction is incorrect in content pack'))
+    lines.append(txt_row('VLQL query         = Query returning empty if time range, field name, or syntax is incorrect'))
+    lines.append(txt_row('Content pack       = Field extractor and dashboard bundle; test via UI to validate regex patterns'))
+    lines.append(txt_row('Log forwarder      = SIEM stream; errors if destination unreachable or certificate mismatch'))
+    lines.append(txt_row('Ingestion rate     = Events-per-second; drop to zero indicates cluster issue or source problem'))
+    lines.append(txt_row('Cluster node health = Admin dashboard showing master and worker node status and disk usage'))
+    lines.append(txt_row('REST API debug     = Query the vRLI API directly to bypass UI and validate field extraction'))
+    lines.append(txt_row('Support bundle     = Full diagnostic archive: cluster logs, config, and event data for GSS review'))
+    lines.append(txt_row('Agent configuration = JSON config file on host specifying cluster address, port, and log paths'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_networks_architecture():
+    """Aria Networks Architecture sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Networks — Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Aria Operations for Networks (formerly vRealize Network Insight) = Platform VM + Collector VMs per site')))
+    lines.append(R(bMid(IV_L, IV_R, 'Ingests VMware (NSX/vCenter) and physical switch data (SNMP) for full-stack network visibility')))
+    lines.append(R(bMid(IV_L, IV_R, 'Provides network topology, path tracing, flow analysis, and security group auditing capabilities')))
+    lines.append(R(bMid(IV_L, IV_R, 'Collector VMs deployed per site forward data to the central Platform VM for correlation')))
+    lines.append(R(bMid(IV_L, IV_R, 'Data sources: NSX-T/V, vCenter, physical switches (SNMP v3), AWS/Azure VPC flow logs, IPAM')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines data collection mechanics · integrations connect all data sources · standards govern deployment'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'How It Works'),
+        bMid(B2_L, B2_R, 'Integrations'),
+        bMid(B3_L, B3_R, 'Design Standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Platform VM: central'),
+        bMid(B2_L, B2_R, 'NSX-T/V source'),
+        bMid(B3_L, B3_R, 'Collector per site'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Collector VMs: sites'),
+        bMid(B2_L, B2_R, 'vCenter source'),
+        bMid(B3_L, B3_R, 'Platform sizing'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'NSX data source'),
+        bMid(B2_L, B2_R, 'Physical switch'),
+        bMid(B3_L, B3_R, 'Data src creds'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Physical SNMP'),
+        bMid(B2_L, B2_R, 'AWS/Azure VPC'),
+        bMid(B3_L, B3_R, 'SNMP v3 config'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Path trace engine'),
+        bMid(B2_L, B2_R, 'IPAM integration'),
+        bMid(B3_L, B3_R, 'Collection interval'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Flow analysis'),
+        bMid(B2_L, B2_R, 'Log Insight fwd'),
+        bMid(B3_L, B3_R, 'Retention policy'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works covers data ingestion · integrations bring in all network sources · standards enforce consistency'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['How It Works', 'Integrations', 'Design Stds', 'Deployment', 'Key Stds'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Platform VM', 'NSX-T source', 'Collector sizing', 'Single platform', 'SNMP v3'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Collector VMs', 'vCenter source', 'Platform size', 'Multi-site', 'Cred rotation'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Path trace', 'Physical SNMP', 'Retention pol', 'AWS/Azure', 'Collection intv'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Flow analysis', 'IPAM intg', 'Cred mgmt', 'Enterprise', 'Alert thresh'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (Platform + Collector) · RAM DIMMs · Network NICs · Physical switches (SNMP) · NSX/vCenter'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Platform VM       = Central Aria Networks appliance; receives data from all Collectors; hosts the UI and analytics'))
+    lines.append(txt_row('Collector VM      = Per-site VM that collects data from local data sources and forwards to Platform VM'))
+    lines.append(txt_row('Data source       = Configured connection to NSX, vCenter, physical switch, or cloud for data ingestion'))
+    lines.append(txt_row('Path tracing      = End-to-end network path visualization from source VM to destination across overlay/underlay'))
+    lines.append(txt_row('Flow analysis     = Query interface for historical and real-time network flow data from all data sources'))
+    lines.append(txt_row('SNMP v3           = SNMPv3 protocol for physical switch collection; provides auth and encryption'))
+    lines.append(txt_row('NSX-T data source = Aria Networks integration that ingests NSX topology, DFW rules, and flow data'))
+    lines.append(txt_row('Physical topology = Network map that includes physical switches alongside virtual overlay components'))
+    lines.append(txt_row('VPC flow logs     = AWS/Azure network flow records ingested by Aria Networks for hybrid visibility'))
+    lines.append(txt_row('Network intent check = Policy verification that compares actual traffic flows against defined network intent'))
+    lines.append(txt_row('Security group audit = Review of NSX/cloud security group membership and rule coverage for compliance'))
+    lines.append(txt_row('Collection interval = Frequency at which Collector VMs poll each data source; configurable per source type'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_networks_operations():
+    """Aria Networks Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Networks — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Network intent checks for policy compliance; flow analysis queries for traffic patterns per workload')))
+    lines.append(R(bMid(IV_L, IV_R, 'Path trace for troubleshooting connectivity issues between any two endpoints in the environment')))
+    lines.append(R(bMid(IV_L, IV_R, 'Alert review for topology changes; security group auditing for microsegmentation drift detection')))
+    lines.append(R(bMid(IV_L, IV_R, 'Lifecycle: vRNI upgrades via Platform UI; upgrade Platform first then Collector VMs at each site')))
+    lines.append(R(bMid(IV_L, IV_R, 'Automation: REST API for path trace, flow query, alert management, and scheduled report generation')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops verify network intent · lifecycle keeps platform current · automation scales queries and reporting'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Lifecycle'),
+        bMid(B3_L, B3_R, 'Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Intent checks'),
+        bMid(B2_L, B2_R, 'vRNI upgrades'),
+        bMid(B3_L, B3_R, 'vRNI REST API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Alert review'),
+        bMid(B2_L, B2_R, 'Platform+coll upg'),
+        bMid(B3_L, B3_R, 'Path trace API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Flow analysis'),
+        bMid(B2_L, B2_R, 'Data src re-auth'),
+        bMid(B3_L, B3_R, 'Flow query API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Sec grp audit'),
+        bMid(B2_L, B2_R, 'SNMP compat'),
+        bMid(B3_L, B3_R, 'Alert API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Path trace'),
+        bMid(B2_L, B2_R, 'Cert renew'),
+        bMid(B3_L, B3_R, 'Report API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Dashboard review'),
+        bMid(B2_L, B2_R, 'Config backup'),
+        bMid(B3_L, B3_R, 'Python SDK'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops catch policy drift · lifecycle upgrades Platform before Collectors · automation scales operations'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CLI Ref', 'Health Chk', 'Procedures', 'Install/Up', 'Backup/Rest'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['REST API calls', 'Platform: ok', 'Intent check', 'Upgrade plat', 'Config export'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Flow query API', 'Collectors: up', 'Path trace', 'Coll upgrade', 'API config bk'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Alert API', 'Data srcs: ok', 'Sec grp audit', 'Data src auth', 'Restore config'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Python SDK', 'Alerts: none', 'Flow report', 'Post-upg val', 'Log archive'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (Platform + Collectors) · RAM DIMMs · Network NICs · NSX/vCenter/Physical switches'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Network intent    = Defined policy for how traffic should flow between workloads; verified against actual flows'))
+    lines.append(txt_row('Path trace        = On-demand trace of the actual network path between two endpoints in the environment'))
+    lines.append(txt_row('Flow analysis     = Query of historical flow data to identify communication patterns and anomalies'))
+    lines.append(txt_row('Security group audit = Comparison of current security group membership against expected baseline policy'))
+    lines.append(txt_row('Data source       = Configured NSX/vCenter/switch/cloud connection; requires re-auth after cred rotation'))
+    lines.append(txt_row('Collector health  = Status of each site Collector VM; must show connected and collecting for valid data'))
+    lines.append(txt_row('REST API          = Aria Networks REST API; supports path trace, flow query, alert, and report operations'))
+    lines.append(txt_row('Platform upgrade  = Upgrade Platform VM first using built-in UI wizard before upgrading any Collector VMs'))
+    lines.append(txt_row('Collector upgrade = Per-site upgrade of Collector VMs after Platform VM upgrade is validated'))
+    lines.append(txt_row('SNMP v3           = SNMPv3 credentials for physical switch collection; compat check needed at upgrade'))
+    lines.append(txt_row('VPC flow logs     = Cloud provider flow logs from AWS/Azure ingested for hybrid network visibility'))
+    lines.append(txt_row('Alert threshold   = Configurable metric limit that triggers an Aria Networks alert for topology changes'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_networks_security():
+    """Aria Networks Security sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Networks — Security'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'AD/LDAP auth for user access; data source service accounts for NSX/vCenter/switch collection')))
+    lines.append(R(bMid(IV_L, IV_R, 'API key management for REST API access; SNMP v3 credentials for physical switch collection')))
+    lines.append(R(bMid(IV_L, IV_R, 'REST API over TLS; role-based access for data visibility; SAML support for SSO integration')))
+    lines.append(R(bMid(IV_L, IV_R, 'Roles: Admin (full), Member (view), Auditor (read-only); scoped to data source visibility')))
+    lines.append(R(bMid(IV_L, IV_R, 'Credential rotation policy for data source service accounts; API key TTL enforcement')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication gates platform access · RBAC limits data visibility · encryption protects all API traffic'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Authentication'),
+        bMid(B2_L, B2_R, 'Access Control'),
+        bMid(B3_L, B3_R, 'Encryption'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'AD/LDAP auth'),
+        bMid(B2_L, B2_R, 'Admin: full'),
+        bMid(B3_L, B3_R, 'REST API TLS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Local admin'),
+        bMid(B2_L, B2_R, 'Member: view'),
+        bMid(B3_L, B3_R, 'Collector TLS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Data src svc acct'),
+        bMid(B2_L, B2_R, 'Auditor: read'),
+        bMid(B3_L, B3_R, 'Data at rest'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'API key mgmt'),
+        bMid(B2_L, B2_R, 'Data src access'),
+        bMid(B3_L, B3_R, 'Cert mgmt'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SAML support'),
+        bMid(B2_L, B2_R, 'Report share'),
+        bMid(B3_L, B3_R, 'SNMP v3 auth'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Role-based'),
+        bMid(B2_L, B2_R, 'Alert mgmt'),
+        bMid(B3_L, B3_R, 'Pwd storage'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Auth controls user access · RBAC scopes data visibility · TLS and SNMP v3 protect data in transit'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Auth', 'Access Ctrl', 'Encryption', 'Hardening', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['AD/LDAP auth', 'Admin role', 'REST TLS', 'Cred rotation', 'Event log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['API keys', 'Member role', 'Collector TLS', 'SNMP v3', 'Data src log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Data src accts', 'Auditor role', 'Data encr', 'Cert rotation', 'Alert audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SAML support', 'Report share', 'Pwd storage', 'API key TTL', 'Config changes'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (Platform + Collectors) · RAM DIMMs · Network NICs · AD/LDAP · CA infrastructure'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('AD/LDAP           = Active Directory or LDAP integration for user authentication to Aria Networks platform'))
+    lines.append(txt_row('API key           = Authentication token for REST API access; scoped to user role; subject to TTL policy'))
+    lines.append(txt_row('Data source credential = Service account used by Aria Networks to connect to NSX, vCenter, or switches'))
+    lines.append(txt_row('SNMP v3           = SNMPv3 credentials for physical switch collection; provides authentication and privacy'))
+    lines.append(txt_row('Service account   = Dedicated non-interactive account used for data source authentication and collection'))
+    lines.append(txt_row('Admin role        = Full access role in Aria Networks; can configure data sources, users, and all settings'))
+    lines.append(txt_row('Member role       = Standard access role; can view topology, run queries, and use path trace features'))
+    lines.append(txt_row('Auditor role      = Read-only role; can view all data and reports but cannot make configuration changes'))
+    lines.append(txt_row('TLS encryption    = Transport Layer Security enforced on all REST API and Collector-to-Platform communication'))
+    lines.append(txt_row('Certificate management = Platform and Collector TLS cert lifecycle including rotation and CA trust config'))
+    lines.append(txt_row('Credential rotation = Periodic renewal of data source service account passwords and API keys per policy'))
+    lines.append(txt_row('Role-based access = RBAC model limiting which data sources and features each user role can access'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_networks_troubleshooting():
+    """Aria Networks Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria Networks — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Collector offline and not collecting data; missing flow data gaps in platform analytics')))
+    lines.append(R(bMid(IV_L, IV_R, 'Path trace errors for connectivity troubleshooting; NSX data source stale after credential change')))
+    lines.append(R(bMid(IV_L, IV_R, 'Physical switch collection gaps due to SNMP misconfiguration or firewall blocking SNMP')))
+    lines.append(R(bMid(IV_L, IV_R, 'Alert not firing for topology changes; platform UI unresponsive or API returning errors')))
+    lines.append(R(bMid(IV_L, IV_R, 'Escalation: support bundle export from Platform UI; GSS case with logs and API debug output')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues define the triage path · diagnostics isolate data source or platform layer · escalation engages support'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Common Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Collector offline'),
+        bMid(B2_L, B2_R, 'Support bundle'),
+        bMid(B3_L, B3_R, 'Bundle export'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Flow data gap'),
+        bMid(B2_L, B2_R, 'Collector logs'),
+        bMid(B3_L, B3_R, 'GSS case open'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Path trace err'),
+        bMid(B2_L, B2_R, 'Data src status'),
+        bMid(B3_L, B3_R, 'Cred reset'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'NSX src stale'),
+        bMid(B2_L, B2_R, 'API debug mode'),
+        bMid(B3_L, B3_R, 'TAM escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Phys sw gap'),
+        bMid(B2_L, B2_R, 'Flow query dbg'),
+        bMid(B3_L, B3_R, 'Version matrix'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Alert not fire'),
+        bMid(B2_L, B2_R, 'SNMP test'),
+        bMid(B3_L, B3_R, 'Log collect'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues guide triage · diagnostics isolate data source or network layer · escalation bundles logs for GSS'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Issues', 'Diagnostics', 'Log Paths', 'Escalation', 'Recovery'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Collector down', 'Coll log file', '/var/log/coll', 'Bundle export', 'Restart coll'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Flow data gap', 'Data src status', '/var/log/platform', 'GSS P1 case', 'Re-auth src'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Path trace err', 'API debug', '/var/log/api', 'TAM escalate', 'Fix routing'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['NSX src stale', 'SNMP test', '/var/log/nsx-ds', 'Cred rotation', 'Re-sync src'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (Platform + Collectors) · RAM DIMMs · Network NICs · NSX/vCenter/switches'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Collector offline      = Collector VM not reachable or service stopped; no data flows to Platform VM'))
+    lines.append(txt_row('Flow data gap         = Missing time range in flow analytics; caused by Collector outage or data source issue'))
+    lines.append(txt_row('Path trace engine     = Aria Networks component that computes end-to-end path using topology and flow data'))
+    lines.append(txt_row('NSX data source       = Configured NSX connection; becomes stale if credentials change without re-authentication'))
+    lines.append(txt_row('SNMP collection       = Physical switch polling via SNMP; gaps caused by cred mismatch or firewall block'))
+    lines.append(txt_row('Support bundle        = Diagnostic archive generated from Platform UI; contains logs and configuration data'))
+    lines.append(txt_row('API debug mode        = Verbose logging mode for REST API requests; helps diagnose query and auth failures'))
+    lines.append(txt_row('Data source re-authentication = Process of re-entering credentials for a stale NSX/vCenter data source'))
+    lines.append(txt_row('Platform restart      = Service or VM restart of the Platform appliance to recover from unresponsive state'))
+    lines.append(txt_row('Credential rotation   = Update of service account passwords requiring re-auth of all affected data sources'))
+    lines.append(txt_row('Version compatibility  = Aria Networks to NSX/vCenter version matrix; mismatch can cause collection failures'))
+    lines.append(txt_row('Stale topology        = Outdated network map caused by data source not syncing; resolve by re-authenticating'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_lcm_architecture():
+    """Aria LCM Architecture sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria LCM — Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Aria Suite Lifecycle (formerly vRealize Suite LCM) = LCM appliance with embedded vIDM identity')))
+    lines.append(R(bMid(IV_L, IV_R, 'Manages lifecycle of Aria products (vRA/vROps/vRLI/vRNI) grouped into named Environments')))
+    lines.append(R(bMid(IV_L, IV_R, 'Password Locker stores and encrypts credentials at rest; Certificate Locker manages product certs')))
+    lines.append(R(bMid(IV_L, IV_R, 'Install/upgrade wizard orchestrates product deployment order and pre-check validation')))
+    lines.append(R(bMid(IV_L, IV_R, 'DR replication between LCM instances; My VMware integration for product binary downloads')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines LCM appliance role · integrations connect identity and deployment targets · standards govern sizing'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'How It Works'),
+        bMid(B2_L, B2_R, 'Integrations'),
+        bMid(B3_L, B3_R, 'Design Standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'LCM appliance'),
+        bMid(B2_L, B2_R, 'WS1/vIDM SSO'),
+        bMid(B3_L, B3_R, 'LCM sizing 4vCPU'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Environments'),
+        bMid(B2_L, B2_R, 'vCenter deploy tgt'),
+        bMid(B3_L, B3_R, 'Env naming std'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Password Locker'),
+        bMid(B2_L, B2_R, 'My VMware DL'),
+        bMid(B3_L, B3_R, 'Pwd Locker policy'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cert Locker'),
+        bMid(B2_L, B2_R, 'LDAP directory'),
+        bMid(B3_L, B3_R, 'Cert Locker std'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Install/upgrade'),
+        bMid(B2_L, B2_R, 'NSX placement'),
+        bMid(B3_L, B3_R, 'Product compat'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'DR replication'),
+        bMid(B2_L, B2_R, 'NTP/DNS config'),
+        bMid(B3_L, B3_R, 'DR replication'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works covers LCM appliance and Lockers · integrations connect identity and vCenter · standards enforce sizing'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['How It Works', 'Integrations', 'Design Stds', 'Deployment', 'Key Stds'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LCM appliance', 'vIDM/WS1 SSO', 'LCM sizing', 'Single LCM', 'Env naming'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Environments', 'vCenter deploy', 'Env naming', 'DR pair', 'Pwd policy'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Password Locker', 'My VMware DL', 'Cert policy', 'Multi-env', 'Compat matrix'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Cert Locker', 'LDAP directory', 'DR replica', 'Enterprise', 'Locker std'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VM (LCM appliance) · RAM DIMMs · Network NICs · vCenter (deployment target) · Identity provider'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('LCM appliance     = Aria Suite Lifecycle virtual appliance; central orchestrator for all Aria product installs'))
+    lines.append(txt_row('Environment       = Logical grouping in LCM containing related Aria products sharing the same vIDM instance'))
+    lines.append(txt_row('Password Locker   = Encrypted credential store in LCM; holds passwords for all products and infrastructure'))
+    lines.append(txt_row('Certificate Locker = LCM certificate store; manages TLS certs for Aria products; supports CA-signed certs'))
+    lines.append(txt_row('vIDM (Identity Manager) = Embedded identity provider in LCM; provides SSO across all managed Aria products'))
+    lines.append(txt_row('Product BOM       = Bill of Materials; version matrix listing compatible Aria product versions per release'))
+    lines.append(txt_row('Install wizard    = LCM UI workflow for deploying a new Aria product into an existing Environment'))
+    lines.append(txt_row('Upgrade wizard    = LCM UI workflow for upgrading Aria products in dependency order with pre-check validation'))
+    lines.append(txt_row('Day-2 operations  = Post-install operations in LCM: cert rotation, password rotation, content management'))
+    lines.append(txt_row('DR replication    = LCM appliance replication to a secondary site for disaster recovery failover'))
+    lines.append(txt_row('My VMware         = Broadcom/VMware portal integration; LCM downloads product binaries directly from portal'))
+    lines.append(txt_row('Workspace ONE     = VMware identity and access management platform; can replace embedded vIDM in LCM'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_lcm_operations():
+    """Aria LCM Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria LCM — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Environment health dashboard for all Aria products; upgrade wizard for orchestrated upgrades')))
+    lines.append(R(bMid(IV_L, IV_R, 'Certificate rotation via Certificate Locker; password rotation via Password Locker workflows')))
+    lines.append(R(bMid(IV_L, IV_R, 'Content management for environments; request monitoring for all LCM background jobs')))
+    lines.append(R(bMid(IV_L, IV_R, 'Upgrade wizard validates BOM compatibility and runs pre-checks before any product upgrade')))
+    lines.append(R(bMid(IV_L, IV_R, 'LCM REST API for day-2 automation; vIDM integration API for identity and SSO management')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops monitor all Aria products · lifecycle wizard orchestrates upgrades · automation scales day-2 tasks'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Lifecycle'),
+        bMid(B3_L, B3_R, 'Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Env health dash'),
+        bMid(B2_L, B2_R, 'Upgrade wizard'),
+        bMid(B3_L, B3_R, 'LCM REST API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Product versions'),
+        bMid(B2_L, B2_R, 'Pre-chk validate'),
+        bMid(B3_L, B3_R, 'Day-2 actions'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cert expiry'),
+        bMid(B2_L, B2_R, 'BOM compat chk'),
+        bMid(B3_L, B3_R, 'Cert API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Request status'),
+        bMid(B2_L, B2_R, 'Product upg order'),
+        bMid(B3_L, B3_R, 'Pwd Locker API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Locker inventory'),
+        bMid(B2_L, B2_R, 'Post-upg val'),
+        bMid(B3_L, B3_R, 'Content mgmt'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Download catalog'),
+        bMid(B2_L, B2_R, 'Cert rotation'),
+        bMid(B3_L, B3_R, 'vIDM intg API'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops catch cert expiry and version drift · upgrade wizard enforces order · API enables day-2 automation'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CLI Ref', 'Health Chk', 'Procedures', 'Install/Up', 'Backup/Rest'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LCM REST API', 'Env: healthy', 'Cert rotation', 'Upgrade wizard', 'Config export'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Day-2 API', 'Products: ok', 'Pwd rotation', 'Pre-chk run', 'Locker backup'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Cert API', 'Certs: valid', 'Add product', 'BOM compat', 'Restore LCM'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Pwd Locker API', 'Downloads ok', 'Env snapshot', 'Post-upg val', 'DR failover'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VM (LCM appliance) · RAM DIMMs · Network NICs · vCenter (deploy target) · Internet (My VMware)'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Upgrade wizard    = LCM UI workflow that orchestrates Aria product upgrades in correct dependency sequence'))
+    lines.append(txt_row('Pre-check validation = Automated checks run before upgrade; verifies disk space, connectivity, and compat'))
+    lines.append(txt_row('Certificate Locker = LCM component for managing TLS certificates; used for cert rotation workflows'))
+    lines.append(txt_row('Password Locker   = LCM encrypted credential store; used for password rotation day-2 operations'))
+    lines.append(txt_row('BOM compatibility = Verification that all Aria products in an Environment are on a supported version set'))
+    lines.append(txt_row('Day-2 operations  = Post-install LCM tasks: cert rotation, password rotation, environment snapshots'))
+    lines.append(txt_row('Environment health = Dashboard view showing status of all Aria products in each LCM Environment'))
+    lines.append(txt_row('Product version   = Currently installed Aria product version tracked by LCM in each Environment'))
+    lines.append(txt_row('Request monitoring = LCM job tracker for all background operations; shows progress and error details'))
+    lines.append(txt_row('DR replication    = LCM configuration backup replicated to DR site for failover capability'))
+    lines.append(txt_row('Content management = LCM workflow for managing Aria Automation content packs and blueprints'))
+    lines.append(txt_row('LCM REST API      = REST API for automating LCM day-2 operations: cert rotation, upgrades, locker access'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_lcm_security():
+    """Aria LCM Security sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria LCM — Security'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'vIDM/Workspace ONE for SSO; environment-level RBAC (admin/operator/viewer) for LCM access')))
+    lines.append(R(bMid(IV_L, IV_R, 'Password Locker encrypts credentials at rest; Certificate Locker manages product TLS certs')))
+    lines.append(R(bMid(IV_L, IV_R, 'All API over HTTPS; audit log for all LCM operations including Locker access and upgrades')))
+    lines.append(R(bMid(IV_L, IV_R, 'Break-glass local admin account; session timeout enforcement; API key with TTL policy')))
+    lines.append(R(bMid(IV_L, IV_R, 'Least privilege: operator role limited to day-2 tasks; viewer role read-only for dashboards')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication gates LCM access · RBAC scopes environment permissions · Locker encryption protects credentials'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Authentication'),
+        bMid(B2_L, B2_R, 'Access Control'),
+        bMid(B3_L, B3_R, 'Encryption'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vIDM/WS1 SSO'),
+        bMid(B2_L, B2_R, 'LCM admin role'),
+        bMid(B3_L, B3_R, 'LCM TLS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'LDAP/AD auth'),
+        bMid(B2_L, B2_R, 'Operator role'),
+        bMid(B3_L, B3_R, 'Locker encr at rest'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Local admin'),
+        bMid(B2_L, B2_R, 'Viewer role'),
+        bMid(B3_L, B3_R, 'vIDM TLS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'LCM API key'),
+        bMid(B2_L, B2_R, 'Env-level acc'),
+        bMid(B3_L, B3_R, 'Cert management'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Break-glass'),
+        bMid(B2_L, B2_R, 'Locker read/write'),
+        bMid(B3_L, B3_R, 'HTTPS only API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Session timeout'),
+        bMid(B2_L, B2_R, 'Request approve'),
+        bMid(B3_L, B3_R, 'Log encryption'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Auth gates LCM access · RBAC scopes per-environment permissions · Locker and TLS protect credentials'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Auth', 'Access Ctrl', 'Encryption', 'Hardening', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vIDM/WS1', 'Admin role', 'TLS enforced', 'Cert rotation', 'LCM event log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LDAP/AD', 'Operator role', 'Locker encr', 'API key TTL', 'Request log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['API keys', 'Viewer role', 'vIDM TLS', 'Session timeout', 'Cert changes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Break-glass', 'Env access', 'HTTPS only', 'Min permissions', 'Role audit'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VM (LCM appliance) · RAM DIMMs · Network NICs · Identity provider (vIDM/AD) · CA infrastructure'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('vIDM              = VMware Identity Manager embedded in LCM; provides SSO across all managed Aria products'))
+    lines.append(txt_row('Workspace ONE     = VMware identity platform; alternative to embedded vIDM for enterprise SSO integration'))
+    lines.append(txt_row('LCM RBAC          = Role-based access control in LCM; scoped per Environment; admin/operator/viewer roles'))
+    lines.append(txt_row('Admin role        = Full LCM access; can install/upgrade products, manage Lockers, and configure Environments'))
+    lines.append(txt_row('Operator role     = Day-2 access in LCM; can run cert/password rotation and monitoring; no install rights'))
+    lines.append(txt_row('Viewer role       = Read-only LCM access; can view Environment health and Locker inventory; no write access'))
+    lines.append(txt_row('Password Locker encryption = AES encryption of all credentials stored in LCM Password Locker at rest'))
+    lines.append(txt_row('Certificate Locker = LCM store for TLS certificates; supports rotation workflows and CA-signed cert upload'))
+    lines.append(txt_row('API key           = Bearer token for LCM REST API access; subject to TTL and minimum privilege policy'))
+    lines.append(txt_row('HTTPS enforcement = All LCM API and UI traffic requires TLS; HTTP redirected or blocked by policy'))
+    lines.append(txt_row('Session timeout   = LCM UI session automatically expires after idle period; configurable per security policy'))
+    lines.append(txt_row('Audit event log   = LCM audit trail recording all user actions: logins, upgrades, Locker access, role changes'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def aria_lcm_troubleshooting():
+    """Aria LCM Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Aria LCM — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Environment install failures; upgrade stall mid-way through product deployment sequence')))
+    lines.append(R(bMid(IV_L, IV_R, 'Certificate mismatch between LCM and managed products; vIDM connectivity issues for SSO')))
+    lines.append(R(bMid(IV_L, IV_R, 'Disk space on LCM appliance blocking upgrades; API errors for day-2 operations')))
+    lines.append(R(bMid(IV_L, IV_R, 'Diagnostics: LCM UI request logs, /var/log/vlcm, vIDM diagnostics, REST API debug mode')))
+    lines.append(R(bMid(IV_L, IV_R, 'Escalation: LCM support bundle export from UI; pre-check report; TAM escalation for P1')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues define the triage path · diagnostics isolate LCM or product layer · escalation engages support'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Common Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Env install fail'),
+        bMid(B2_L, B2_R, 'LCM UI req logs'),
+        bMid(B3_L, B3_R, 'LCM support bndl'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Upgrade stall'),
+        bMid(B2_L, B2_R, '/var/log/vlcm'),
+        bMid(B3_L, B3_R, 'GSS case open'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cert mismatch'),
+        bMid(B2_L, B2_R, 'vIDM diagnostics'),
+        bMid(B3_L, B3_R, 'Pre-chk report'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vIDM offline'),
+        bMid(B2_L, B2_R, 'REST API debug'),
+        bMid(B3_L, B3_R, 'TAM escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Disk space'),
+        bMid(B2_L, B2_R, 'Pre-chk output'),
+        bMid(B3_L, B3_R, 'Version matrix'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'API errors'),
+        bMid(B2_L, B2_R, 'Product logs'),
+        bMid(B3_L, B3_R, 'Log export'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues guide triage · diagnostics use LCM logs and pre-check output · escalation bundles for GSS'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Issues', 'Diagnostics', 'Log Paths', 'Escalation', 'Recovery'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Install fail', 'LCM UI logs', '/var/log/vlcm', 'LCM bundle', 'Retry install'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Upgrade stall', 'REST API debug', '/var/log/vra', 'GSS P1 case', 'Resume upg'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Cert mismatch', 'Pre-chk output', '/var/log/vro', 'TAM escalate', 'Re-issue cert'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vIDM offline', 'vIDM diag', '/var/log/vidm', 'Version matrix', 'Restart vIDM'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VM (LCM appliance) · RAM DIMMs · Network NICs · vCenter · vIDM/Workspace ONE'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Environment installation = LCM workflow deploying Aria products into a new or existing named Environment'))
+    lines.append(txt_row('Upgrade orchestration = LCM upgrade wizard that sequences product upgrades to maintain compatibility'))
+    lines.append(txt_row('Certificate mismatch  = TLS cert on LCM or product does not match expected CA or SAN; causes auth failure'))
+    lines.append(txt_row('vIDM connectivity     = LCM requires vIDM to be reachable for SSO; vIDM failure breaks all product logins'))
+    lines.append(txt_row('Disk space threshold  = LCM appliance disk usage limit; upgrade aborts if insufficient space detected'))
+    lines.append(txt_row('Pre-check validation  = Automated checks before install/upgrade; catches misconfig before deployment starts'))
+    lines.append(txt_row('LCM support bundle    = Diagnostic archive from LCM UI; contains vlcm logs and request history for GSS'))
+    lines.append(txt_row('Day-2 operation       = Post-install LCM task such as cert rotation, password rotation, or content deploy'))
+    lines.append(txt_row('API debug             = Verbose REST API logging mode in LCM; shows detailed request and response data'))
+    lines.append(txt_row('BOM version mismatch  = Aria products in an Environment on incompatible versions; blocks LCM upgrade wizard'))
+    lines.append(txt_row('TAM escalation        = Escalation to Technical Account Manager for critical LCM P1 upgrade or install failure'))
+    lines.append(txt_row('Product log collection = Gathering logs from individual Aria products (vRA/vROps/vRLI) to diagnose failures'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def horizon_architecture():
+    """Horizon Architecture sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Horizon — Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VMware Horizon = Connection Servers (HA pair+) + Unified Access Gateway (UAG) in DMZ')))
+    lines.append(R(bMid(IV_L, IV_R, 'Desktop pools: instant clone (fast refresh) or full clone; RDS for published applications')))
+    lines.append(R(bMid(IV_L, IV_R, 'App Volumes delivers applications on-demand; Dynamic Environment Manager controls user settings')))
+    lines.append(R(bMid(IV_L, IV_R, 'UAG in DMZ proxies Blast Extreme and PCoIP protocols; Connection Server authenticates users')))
+    lines.append(R(bMid(IV_L, IV_R, 'vGPU (NVIDIA) profiles attached to pools for 3D/graphics workloads; vCenter manages ESXi pools')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines broker and pool mechanics · integrations connect directory and vCenter · standards govern sizing'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'How It Works'),
+        bMid(B2_L, B2_R, 'Integrations'),
+        bMid(B3_L, B3_R, 'Design Standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Connection Server HA'),
+        bMid(B2_L, B2_R, 'vCenter/ESXi pools'),
+        bMid(B3_L, B3_R, '≥2 CS per pod'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'UAG: DMZ proxy'),
+        bMid(B2_L, B2_R, 'Active Directory'),
+        bMid(B3_L, B3_R, 'UAG in DMZ'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Desktop pools'),
+        bMid(B2_L, B2_R, 'WS1 Access SSO'),
+        bMid(B3_L, B3_R, 'vGPU profile size'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'RDS: pub apps'),
+        bMid(B2_L, B2_R, 'NSX microseg'),
+        bMid(B3_L, B3_R, 'Pool quota'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'App Volumes'),
+        bMid(B2_L, B2_R, 'vGPU (NVIDIA)'),
+        bMid(B3_L, B3_R, 'Image mgmt std'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Dyn Env Mgr'),
+        bMid(B2_L, B2_R, 'Horizon Cloud'),
+        bMid(B3_L, B3_R, 'RDS session lim'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works covers broker and pools · integrations connect vCenter and directory · standards enforce pod design'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['How It Works', 'Integrations', 'Design Stds', 'Deployment', 'Key Stds'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Connection Svr', 'vCenter pools', '≥2 CS per pod', 'Single pod', 'CS sizing'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['UAG reverse proxy', 'Active Directory', 'UAG in DMZ', 'Multi-pod', 'Pool quota'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Instant clone', 'WS1 Access', 'vGPU profiles', 'Cloud pod', 'Image std'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['App Volumes', 'NSX microseg', 'RDS limits', 'Enterprise', 'Session limit'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 ESXi hosts · GPU cards (NVIDIA) · RAM DIMMs · Network NICs · UAG appliance VMs · vCenter'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Connection Server  = Horizon broker VM; authenticates users, entitles desktops, manages sessions'))
+    lines.append(txt_row('UAG (Unified Access Gateway) = DMZ reverse proxy for Blast/PCoIP; replaces Security Server'))
+    lines.append(txt_row('Instant clone      = Desktop provisioning method; child VMs forked from parent snapshot at login'))
+    lines.append(txt_row('Full clone         = Independent desktop VM cloned from template; persists independently'))
+    lines.append(txt_row('RDS (Remote Desktop Services) = Windows Server role publishing apps or desktops via Horizon'))
+    lines.append(txt_row('App Volumes        = On-demand application delivery using AppStacks mounted at login'))
+    lines.append(txt_row('Dynamic Environment Manager = Per-user Windows settings and policy management for Horizon desktops'))
+    lines.append(txt_row('Blast Extreme      = VMware display protocol; optimized for LAN and WAN; supports H.264/H.265'))
+    lines.append(txt_row('PCoIP              = PC-over-IP protocol; Teradici-based display protocol supported by Horizon'))
+    lines.append(txt_row('vGPU               = NVIDIA virtual GPU; shared GPU profile assigned to desktop pool VMs'))
+    lines.append(txt_row('Cloud Pod Architecture = Horizon feature linking multiple pods for global entitlements across sites'))
+    lines.append(txt_row('Entitlement        = Assignment of a user or group to a Horizon desktop or application pool'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def horizon_operations():
+    """Horizon Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Horizon — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Connection Server health monitoring; active session count and session management daily')))
+    lines.append(R(bMid(IV_L, IV_R, 'Desktop pool provisioning and recompose; image management and push to instant clone pools')))
+    lines.append(R(bMid(IV_L, IV_R, 'App Volumes assignment per user or group; log review and event DB monitoring for errors')))
+    lines.append(R(bMid(IV_L, IV_R, 'Lifecycle: upgrade Connection Server first, then UAG, then push agent via pool recompose')))
+    lines.append(R(bMid(IV_L, IV_R, 'Automation: PowerCLI Horizon module, REST API, Provisioning API for at-scale pool management')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops track sessions and pool health · lifecycle upgrades CS first · automation scales management'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Lifecycle'),
+        bMid(B3_L, B3_R, 'Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'CS health check'),
+        bMid(B2_L, B2_R, 'Horizon upgrades'),
+        bMid(B3_L, B3_R, 'PowerCLI Horizon'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Active sessions'),
+        bMid(B2_L, B2_R, 'CS upgrade 1st'),
+        bMid(B3_L, B3_R, 'REST API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Pool provision'),
+        bMid(B2_L, B2_R, 'UAG upgrade'),
+        bMid(B3_L, B3_R, 'Provisioning API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Composer status'),
+        bMid(B2_L, B2_R, 'Agent via recomp'),
+        bMid(B3_L, B3_R, 'Connection API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Image push'),
+        bMid(B2_L, B2_R, 'App Vol upgrade'),
+        bMid(B3_L, B3_R, 'LDAP query'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Log review'),
+        bMid(B2_L, B2_R, 'Add new CS'),
+        bMid(B3_L, B3_R, 'Dashboard API'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops catch session and pool issues · lifecycle upgrades in order · automation reduces manual toil'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CLI Ref', 'Health Chk', 'Procedures', 'Install/Up', 'Backup/Rest'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['REST API', 'CS: running', 'Pool recompose', 'CS upgrade 1st', 'Event DB bkp'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['PowerCLI Hor', 'Sessions: ok', 'Image push', 'UAG upgrade', 'Config export'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LDAP query', 'UAG: healthy', 'App Vol assign', 'Agent recomp', 'CS config bk'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Event DB query', 'Pool: ready', 'User reset', 'Post-upg val', 'Restore config'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 ESXi hosts · GPU cards · RAM DIMMs · Network NICs · UAG VMs · vCenter · AD domain'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Connection Server  = Horizon broker; health monitored via vCenter plugin and Horizon Admin console'))
+    lines.append(txt_row('UAG                = Unified Access Gateway; DMZ proxy; upgrade after Connection Server upgrade'))
+    lines.append(txt_row('Desktop pool       = Group of Horizon desktops provisioned from a parent image or template'))
+    lines.append(txt_row('Recompose          = Horizon operation pushing a new parent image to all instant clone pool desktops'))
+    lines.append(txt_row('Instant clone      = Pool type where desktops are forked from a live parent VM snapshot'))
+    lines.append(txt_row('App Volumes        = Application delivery layer; AppStacks assigned per user, group, or OU'))
+    lines.append(txt_row('Dynamic Environment Manager = User environment and settings roaming for Horizon virtual desktops'))
+    lines.append(txt_row('vGPU profile       = NVIDIA vGPU slice assigned to a VM; profile determines VRAM allocation'))
+    lines.append(txt_row('Event database     = Horizon SQL database logging all session, admin, and provisioning events'))
+    lines.append(txt_row('REST API           = Horizon REST API for pool, session, and entitlement management at scale'))
+    lines.append(txt_row('Horizon agent      = Software installed in guest OS; communicates with Connection Server'))
+    lines.append(txt_row('Image management   = Process of updating parent VM, taking snapshot, and recomposing pool'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def horizon_security():
+    """Horizon Security sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Horizon — Security'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Active Directory authentication; MFA via RSA SecurID/RADIUS or SAML with Workspace ONE')))
+    lines.append(R(bMid(IV_L, IV_R, 'Certificate management for Connection Servers and UAG; Horizon RBAC for entitlements')))
+    lines.append(R(bMid(IV_L, IV_R, 'Blast Extreme and PCoIP traffic encrypted with TLS 1.2+; smart card auth supported')))
+    lines.append(R(bMid(IV_L, IV_R, 'UAG performs certificate passthrough; Connection Server validates AD credentials and MFA')))
+    lines.append(R(bMid(IV_L, IV_R, 'App Volumes and DEM file encryption; USB policy enforces device restriction per pool')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication gates user access · RBAC controls entitlements · encryption protects all protocol traffic'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Authentication'),
+        bMid(B2_L, B2_R, 'Access Control'),
+        bMid(B3_L, B3_R, 'Encryption'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'AD auth primary'),
+        bMid(B2_L, B2_R, 'Horizon RBAC'),
+        bMid(B3_L, B3_R, 'Blast TLS 1.2+'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'RSA/RADIUS MFA'),
+        bMid(B2_L, B2_R, 'AD group entitle'),
+        bMid(B3_L, B3_R, 'PCoIP TLS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SAML/WS1 SSO'),
+        bMid(B2_L, B2_R, 'Pool permissions'),
+        bMid(B3_L, B3_R, 'Cert CS/UAG'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Smart card auth'),
+        bMid(B2_L, B2_R, 'Global admin role'),
+        bMid(B3_L, B3_R, 'App Vol cert'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cert-based auth'),
+        bMid(B2_L, B2_R, 'Help desk role'),
+        bMid(B3_L, B3_R, 'DEM file encr'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'UAG passthrough'),
+        bMid(B2_L, B2_R, 'Audit events'),
+        bMid(B3_L, B3_R, 'USB policy'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Auth controls who connects · access control limits entitlements · encryption secures all display traffic'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Auth', 'Access Ctrl', 'Encryption', 'Hardening', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['AD auth', 'RBAC entitle', 'Blast TLS', 'Cert rotation', 'CS event log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['RSA MFA', 'Pool access', 'PCoIP TLS', 'MFA enforce', 'Session audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SAML/WS1', 'Admin role', 'CS/UAG cert', 'Smart card', 'UAG access log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Smart card', 'Help desk role', 'App Vol cert', 'Lockout policy', 'Entitle audit'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 ESXi hosts · GPU cards · RAM DIMMs · Network NICs · UAG VMs · RSA/MFA server · AD domain'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Blast Extreme      = VMware display protocol; encrypted with TLS 1.2+; supports H.264 and H.265'))
+    lines.append(txt_row('PCoIP              = PC-over-IP display protocol; TLS-encrypted tunnel between client and UAG'))
+    lines.append(txt_row('UAG (Unified Access Gateway) = DMZ proxy performing cert passthrough and MFA pre-authentication'))
+    lines.append(txt_row('RSA SecurID        = RADIUS-based MFA token server integrated with Connection Server'))
+    lines.append(txt_row('SAML               = Security Assertion Markup Language; enables WS1 Access SSO for Horizon'))
+    lines.append(txt_row('Smart card auth    = PIV/CAC card authentication via Connection Server or UAG'))
+    lines.append(txt_row('Connection Server certificate = TLS cert on CS for Blast/PCoIP and admin UI; must be CA-signed'))
+    lines.append(txt_row('Entitlement        = Assignment of AD user or group to a Horizon desktop or application pool'))
+    lines.append(txt_row('RBAC               = Role-Based Access Control in Horizon Admin console; admin, helpdesk, auditor'))
+    lines.append(txt_row('Help desk role     = Horizon RBAC role allowing session management without pool administration'))
+    lines.append(txt_row('DEM (Dynamic Environment Manager) = User settings manager; supports file encryption for profiles'))
+    lines.append(txt_row('Session audit      = Horizon event DB records all session start, disconnect, and logoff events'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def horizon_troubleshooting():
+    """Horizon Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Horizon — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Connection Server failures; desktop not starting or stuck in provisioning state')))
+    lines.append(R(bMid(IV_L, IV_R, 'Blast/PCoIP protocol latency; session disconnects; pool provisioning errors')))
+    lines.append(R(bMid(IV_L, IV_R, 'UAG certificate issues; vGPU driver issues; App Volumes mount failures')))
+    lines.append(R(bMid(IV_L, IV_R, 'Diagnostics: Horizon events DB, /opt/vmware/hzn logs, UAG admin UI, esxtop for vGPU')))
+    lines.append(R(bMid(IV_L, IV_R, 'Escalation: collect Horizon log bundle and UAG support bundle; open GSS case with TAM')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues define the triage path · diagnostics isolate the layer · escalation engages VMware support'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Common Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'CS fail/down'),
+        bMid(B2_L, B2_R, 'Horizon events DB'),
+        bMid(B3_L, B3_R, 'Horizon log bndl'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Desktop stuck'),
+        bMid(B2_L, B2_R, '/opt/vmware/hzn'),
+        bMid(B3_L, B3_R, 'UAG support bndl'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Blast/PCoIP lag'),
+        bMid(B2_L, B2_R, 'UAG admin UI'),
+        bMid(B3_L, B3_R, 'GSS case open'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Session disconn'),
+        bMid(B2_L, B2_R, 'esxtop vGPU'),
+        bMid(B3_L, B3_R, 'TAM escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Pool prov err'),
+        bMid(B2_L, B2_R, 'App Vol log'),
+        bMid(B3_L, B3_R, 'Event DB query'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'UAG cert err'),
+        bMid(B2_L, B2_R, 'DCT tool'),
+        bMid(B3_L, B3_R, 'RCA template'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues guide triage · diagnostics pinpoint root cause · escalation gets vendor support engaged'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Issues', 'Diagnostics', 'Log Paths', 'Escalation', 'Recovery'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CS down', 'Events DB', '/opt/vmware/hzn', 'Horizon bundle', 'Restart CS'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Desktop stuck', 'UAG admin UI', '/var/log/vmware', 'GSS P1 case', 'Recompose pool'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Blast/PCoIP lag', 'esxtop vGPU', 'UAG /var/log', 'TAM escalate', 'Check MTU/QoS'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Pool prov err', 'DCT tool', 'App Vol logs', 'Event DB query', 'Re-prov pool'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 ESXi hosts · GPU cards · RAM DIMMs · Network NICs · UAG VMs · vCenter · AD domain'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Connection Server  = Horizon broker; if down no new sessions; check Windows service and event log'))
+    lines.append(txt_row('UAG                = Unified Access Gateway; cert issues cause client connection failures'))
+    lines.append(txt_row('Desktop pool       = Group of desktops; stuck provisioning may indicate snapshot or vCenter error'))
+    lines.append(txt_row('Instant clone provisioning = Fork operation from parent VM; fails if parent snapshot is stale'))
+    lines.append(txt_row('Blast Extreme      = Display protocol; lag indicates MTU, QoS, or bandwidth constraint'))
+    lines.append(txt_row('PCoIP              = Display protocol; session drops often tied to UDP port blockage or MTU'))
+    lines.append(txt_row('vGPU               = NVIDIA virtual GPU; driver mismatch causes display or performance failures'))
+    lines.append(txt_row('DCT (Desktop Connectivity Tool) = Horizon diagnostic tool for end-to-end session connectivity'))
+    lines.append(txt_row('Horizon events database = SQL DB logging all session and admin events; query for error codes'))
+    lines.append(txt_row('Recompose          = Operation to push new image to pool desktops; resolves stuck provisioning'))
+    lines.append(txt_row('Log bundle         = Horizon diagnostic package collected from Connection Server for GSS'))
+    lines.append(txt_row('TAM escalation     = Technical Account Manager escalation for critical production incidents'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def srm_architecture():
+    """SRM Architecture sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'SRM — Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Site Recovery Manager = SRM server pair (one per site) + protection groups (VM sets)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Recovery plans are ordered runbooks: test / planned migration / failover workflows')))
+    lines.append(R(bMid(IV_L, IV_R, 'Uses vSphere Replication or array-based replication for data movement between sites')))
+    lines.append(R(bMid(IV_L, IV_R, 'Inventory mappings connect protected site resources to recovery site equivalents')))
+    lines.append(R(bMid(IV_L, IV_R, 'NSX network remapping automates IP customization during failover or planned migration')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines replication and runbooks · integrations connect vCenter and storage · standards set RPO'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'How It Works'),
+        bMid(B2_L, B2_R, 'Integrations'),
+        bMid(B3_L, B3_R, 'Design Standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SRM server pair'),
+        bMid(B2_L, B2_R, 'vCenter pair sites'),
+        bMid(B3_L, B3_R, 'RTO/RPO per VM'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Protection groups'),
+        bMid(B2_L, B2_R, 'NSX: net remap'),
+        bMid(B3_L, B3_R, 'PG granularity'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Recovery plans'),
+        bMid(B2_L, B2_R, 'vSAN+SAN replic'),
+        bMid(B3_L, B3_R, 'Net mapping'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Test failover'),
+        bMid(B2_L, B2_R, 'AD auth'),
+        bMid(B3_L, B3_R, 'DS mapping'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Planned migration'),
+        bMid(B2_L, B2_R, 'Aria Ops monitor'),
+        bMid(B3_L, B3_R, 'IP customization'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Inventory maps'),
+        bMid(B2_L, B2_R, 'Array API'),
+        bMid(B3_L, B3_R, 'Test schedule'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works covers replication and recovery plans · integrations connect sites · standards enforce RPO/RTO'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['How It Works', 'Integrations', 'Design Stds', 'Deployment', 'Key Stds'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SRM server pair', 'vCenter pair', 'RTO/RPO tiers', '2-site setup', 'PG naming'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Protection grps', 'NSX net remap', 'PG granularity', 'Bi-directional', 'RPO policy'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Recovery plans', 'vSAN/SAN replic', 'Net mapping', 'Active-passive', 'IP custom std'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Test failover', 'Array API', 'IP customization', 'Active-active', 'Test schedule'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 servers (SRM VMs both sites) · Shared storage or vSAN · Network uplinks · WAN/DCI link'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('SRM server         = Site Recovery Manager appliance; one per site; paired across protected and recovery site'))
+    lines.append(txt_row('Protection group   = Logical set of VMs grouped for replication and recovery together'))
+    lines.append(txt_row('Recovery plan      = Ordered runbook of steps executed during test, migration, or failover'))
+    lines.append(txt_row('Test failover      = Non-disruptive recovery validation in an isolated network; production unaffected'))
+    lines.append(txt_row('Planned migration  = Controlled workload move from protected to recovery site; no data loss'))
+    lines.append(txt_row('Failover           = Emergency activation of recovery site after protected site failure'))
+    lines.append(txt_row('Reprotect          = Reverses replication direction after failover to enable failback'))
+    lines.append(txt_row('Inventory mapping  = Maps protected site resource (network, folder, pool) to recovery site equivalent'))
+    lines.append(txt_row('Network mapping    = SRM mapping of protected site port group to recovery site port group'))
+    lines.append(txt_row('Datastore mapping  = Maps protected datastore to recovery site datastore for VM registration'))
+    lines.append(txt_row('IP customization   = SRM rules that change VM IP/gateway/DNS during failover to recovery network'))
+    lines.append(txt_row('RPO (Recovery Point Objective) = Maximum acceptable data loss; drives replication frequency'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def srm_operations():
+    """SRM Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'SRM — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Replication status and RPO compliance monitoring; protection group health checks daily')))
+    lines.append(R(bMid(IV_L, IV_R, 'Test failover on schedule; recovery plan validation; planned migration for maintenance')))
+    lines.append(R(bMid(IV_L, IV_R, 'Reprotect after failover to restore replication in reverse direction for failback')))
+    lines.append(R(bMid(IV_L, IV_R, 'Lifecycle: upgrade SRM on both sites; run pre-checks; validate partner compatibility')))
+    lines.append(R(bMid(IV_L, IV_R, 'Automation: SRM REST API, PowerCLI SRM, PG API, Recovery plan API for at-scale ops')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops monitor RPO and PG health · lifecycle upgrades both sites · automation handles plan management'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Lifecycle'),
+        bMid(B3_L, B3_R, 'Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Replication status'),
+        bMid(B2_L, B2_R, 'SRM upgrades both'),
+        bMid(B3_L, B3_R, 'SRM REST API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'RPO compliance'),
+        bMid(B2_L, B2_R, 'Appliance mode'),
+        bMid(B3_L, B3_R, 'PowerCLI SRM'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'PG health'),
+        bMid(B2_L, B2_R, 'Pre-check run'),
+        bMid(B3_L, B3_R, 'PG API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Recovery plan'),
+        bMid(B2_L, B2_R, 'Partner compat'),
+        bMid(B3_L, B3_R, 'Recovery plan API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Test schedule'),
+        bMid(B2_L, B2_R, 'Test post-upg'),
+        bMid(B3_L, B3_R, 'Test API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Alert review'),
+        bMid(B2_L, B2_R, 'HBCR agent upg'),
+        bMid(B3_L, B3_R, 'Inventory map API'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops catch RPO breaches early · lifecycle upgrades both sites together · automation scales DR ops'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CLI Ref', 'Health Chk', 'Procedures', 'Install/Up', 'Backup/Rest'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SRM REST API', 'Replic: ok', 'Test failover', 'SRM upg both', 'SRM config bk'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['PowerCLI SRM', 'RPO: compliant', 'Planned migr', 'HBCR upg', 'Recovery plan'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['PG API', 'PG: healthy', 'Reprotect', 'Pre-check run', 'Mapping backup'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Recovery API', 'Test: passed', 'IP custom', 'Post-upg val', 'Restore config'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 servers (SRM VMs both sites) · vSAN/SAN storage · WAN/DCI link · Network connectivity'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Protection group   = Set of VMs replicated and recovered together; health monitored daily'))
+    lines.append(txt_row('Recovery plan      = Ordered runbook; validated by test failover before a real event'))
+    lines.append(txt_row('Test failover      = Isolated recovery validation; confirms plan works without impacting production'))
+    lines.append(txt_row('Planned migration  = Zero-RPO controlled site move for scheduled maintenance or evacuation'))
+    lines.append(txt_row('Failover           = Emergency activation of recovery site; may have data loss up to RPO'))
+    lines.append(txt_row('Reprotect          = Post-failover operation that reverses replication to enable failback'))
+    lines.append(txt_row('RPO compliance     = Monitoring that replication lag stays within the configured RPO threshold'))
+    lines.append(txt_row('HBCR (Host-Based Changed Block Replication) = vSphere Replication agent on ESXi hosts'))
+    lines.append(txt_row('SRM REST API       = REST interface for automating protection group and recovery plan operations'))
+    lines.append(txt_row('PowerCLI SRM       = PowerShell cmdlets for SRM automation: plan execution, PG management'))
+    lines.append(txt_row('Inventory mapping  = Config object linking protected site resources to recovery site equivalents'))
+    lines.append(txt_row('Partner site       = The paired remote site in an SRM configuration; protected or recovery role'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def srm_security():
+    """SRM Security sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'SRM — Security'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'vCenter SSO for SRM authentication; site pair credentials for cross-site trust')))
+    lines.append(R(bMid(IV_L, IV_R, 'RBAC roles: admin / recovery execute / test operator / read-only for least privilege')))
+    lines.append(R(bMid(IV_L, IV_R, 'Certificate management for SRM servers; array replication auth; audit log for all ops')))
+    lines.append(R(bMid(IV_L, IV_R, 'Replication traffic encrypted with TLS; vSAN encryption at rest for DR datastores')))
+    lines.append(R(bMid(IV_L, IV_R, 'Test isolation network prevents recovery test VMs from reaching production systems')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication controls SRM access · RBAC scopes recovery roles · encryption protects replication data'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Authentication'),
+        bMid(B2_L, B2_R, 'Access Control'),
+        bMid(B3_L, B3_R, 'Encryption'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vCenter SSO auth'),
+        bMid(B2_L, B2_R, 'SRM admin: full'),
+        bMid(B3_L, B3_R, 'Replic TLS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'AD integration'),
+        bMid(B2_L, B2_R, 'Recovery exec'),
+        bMid(B3_L, B3_R, 'Array replic auth'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SRM admin role'),
+        bMid(B2_L, B2_R, 'Test exec only'),
+        bMid(B3_L, B3_R, 'SRM cert mgmt'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Site pair creds'),
+        bMid(B2_L, B2_R, 'Read-only audit'),
+        bMid(B3_L, B3_R, 'Test isolation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Array creds'),
+        bMid(B2_L, B2_R, 'Custom roles'),
+        bMid(B3_L, B3_R, 'vSAN encr DR'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cert management'),
+        bMid(B2_L, B2_R, 'vCenter RBAC'),
+        bMid(B3_L, B3_R, 'Audit log TLS'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Auth controls who uses SRM · RBAC limits recovery execution · encryption secures replication and audit data'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Auth', 'Access Ctrl', 'Encryption', 'Hardening', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vCenter SSO', 'SRM admin', 'Replic TLS', 'Cert rotation', 'Recovery audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['AD integration', 'Recovery exec', 'Array auth', 'Site pair cert', 'Test log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Site pair creds', 'Test exec', 'SRM cert', 'Least privilege', 'Plan changes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Array creds', 'Read-only', 'vSAN encr', 'Isolation net', 'GSS audit trail'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 servers (SRM VMs both sites) · vSAN/SAN · WAN link · AD domain · CA infrastructure'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('vCenter SSO        = Single Sign-On; SRM authenticates all users via vCenter SSO domain'))
+    lines.append(txt_row('Site pair          = Trusted connection between two SRM servers across protected and recovery sites'))
+    lines.append(txt_row('Array-based replication = Storage array replicates LUNs/volumes; SRM integrates via SRA adapter'))
+    lines.append(txt_row('vSphere Replication = Host-based replication using HBCR agent; RPO minimum 5 minutes'))
+    lines.append(txt_row('SRM RBAC           = Role-Based Access Control in SRM; roles: admin, recovery exec, test, read-only'))
+    lines.append(txt_row('Recovery admin     = SRM role with full recovery plan and protection group management'))
+    lines.append(txt_row('Recovery user      = SRM role that can execute recovery plans but not modify them'))
+    lines.append(txt_row('Test operator      = SRM role that can run test failovers only; cannot run real failover'))
+    lines.append(txt_row('Certificate management = SRM server TLS cert lifecycle; must be CA-signed for site pair trust'))
+    lines.append(txt_row('Audit log          = SRM records all recovery, test, reprotect, and admin operations'))
+    lines.append(txt_row('Test isolation network = Isolated port group used during test failover; blocks production access'))
+    lines.append(txt_row('Least privilege    = Principle of assigning minimum SRM role needed for each operator function'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def srm_troubleshooting():
+    """SRM Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'SRM — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Site pair connectivity failures; replication lag and RPO breaches; PG config errors')))
+    lines.append(R(bMid(IV_L, IV_R, 'Recovery plan execution failures; array API connectivity issues; HBCR agent failures')))
+    lines.append(R(bMid(IV_L, IV_R, 'Diagnostics: SRM log files, VR appliance log, array API test, RPO dashboard review')))
+    lines.append(R(bMid(IV_L, IV_R, 'Recovery plan test identifies misconfigurations before a real failover event occurs')))
+    lines.append(R(bMid(IV_L, IV_R, 'Escalation: collect SRM bundles from both sites; engage array vendor; contact TAM for P1')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues define triage path · diagnostics isolate replication or plan layer · escalation bundles logs'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Common Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Site pair conn'),
+        bMid(B2_L, B2_R, 'SRM log files'),
+        bMid(B3_L, B3_R, 'SRM bndl both'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Replic lag/RPO'),
+        bMid(B2_L, B2_R, 'VR appliance log'),
+        bMid(B3_L, B3_R, 'GSS P1 case'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'PG config err'),
+        bMid(B2_L, B2_R, 'Array API test'),
+        bMid(B3_L, B3_R, 'Both site logs'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Recovery plan fail'),
+        bMid(B2_L, B2_R, 'Recovery plan test'),
+        bMid(B3_L, B3_R, 'Array vendor esc'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Array API err'),
+        bMid(B2_L, B2_R, 'RPO dashboard'),
+        bMid(B3_L, B3_R, 'TAM contact'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'HBCR agent fail'),
+        bMid(B2_L, B2_R, 'Support bundle'),
+        bMid(B3_L, B3_R, 'P1 process'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues guide triage · diagnostics use logs and RPO dashboard · escalation gathers bundles for GSS'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Issues', 'Diagnostics', 'Log Paths', 'Escalation', 'Recovery'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Site pair fail', 'SRM log files', '/var/log/vmware/srm', 'SRM bundle', 'Re-pair sites'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Replic lag', 'RPO dashboard', 'VR app /logs', 'GSS P1 case', 'Resync data'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['PG config err', 'Recovery test', '/var/log/hms', 'Array vendor', 'Fix PG config'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Recovery fail', 'Array API test', '/var/log/vr', 'TAM contact', 'Plan dry run'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 servers (both sites) · vSAN/SAN · WAN/DCI link · Array storage · AD domain'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Site pair          = Trusted link between SRM servers; failure blocks all SRM operations cross-site'))
+    lines.append(txt_row('RPO breach         = Replication lag exceeds configured RPO threshold; alerts in SRM dashboard'))
+    lines.append(txt_row('Protection group   = VM set in SRM; config error prevents inclusion in recovery plans'))
+    lines.append(txt_row('Recovery plan      = Ordered failover runbook; execution failures logged with step-level detail'))
+    lines.append(txt_row('HBCR agent         = Host-Based Changed Block Replication agent; failure stops vSphere Replication'))
+    lines.append(txt_row('Array-based replication = Array LUN replication via SRA; API errors block SRM inventory sync'))
+    lines.append(txt_row('SRM support bundle = Log package from SRM appliance; collected from both sites for GSS cases'))
+    lines.append(txt_row('VR appliance log   = vSphere Replication appliance logs; diagnose HBCR and replication failures'))
+    lines.append(txt_row('TAM escalation     = Technical Account Manager escalation for P1 DR incidents'))
+    lines.append(txt_row('Test failover      = Non-disruptive test; use to validate plan config before real event'))
+    lines.append(txt_row('Reprotect          = Post-failover step; reverses replication; required before failback'))
+    lines.append(txt_row('Recovery time      = Actual elapsed time of recovery plan execution; compare against RTO target'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def tanzu_architecture():
+    """Tanzu Architecture sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VMware Tanzu — Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Tanzu portfolio: TKGs (Supervisor Cluster on vSphere) + TKGm (standalone management cluster)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Supervisor Cluster: vSphere control plane enabling Kubernetes namespaces on ESXi hosts')))
+    lines.append(R(bMid(IV_L, IV_R, 'Workload clusters: Tanzu Kubernetes clusters provisioned via Cluster API on vSphere')))
+    lines.append(R(bMid(IV_L, IV_R, 'NSX-T or VDS networking: pod networking, load balancing via NSX Advanced LB (Avi)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Tanzu Mission Control: multi-cluster governance, policy, and lifecycle management plane')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines supervisor and workload clusters · integrations connect NSX and storage · standards govern sizing'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'How It Works'),
+        bMid(B2_L, B2_R, 'Integrations'),
+        bMid(B3_L, B3_R, 'Design Standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Supervisor cluster'),
+        bMid(B2_L, B2_R, 'NSX-T networking'),
+        bMid(B3_L, B3_R, 'Namespace sizing'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Workload clusters'),
+        bMid(B2_L, B2_R, 'Avi load balancer'),
+        bMid(B3_L, B3_R, 'Cluster profiles'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vSphere namespaces'),
+        bMid(B2_L, B2_R, 'vSAN storage'),
+        bMid(B3_L, B3_R, 'Image policy'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cluster API'),
+        bMid(B2_L, B2_R, 'Harbor registry'),
+        bMid(B3_L, B3_R, 'Network config'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'TKG node pools'),
+        bMid(B2_L, B2_R, 'TMC governance'),
+        bMid(B3_L, B3_R, 'RBAC namespaces'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Control plane HA'),
+        bMid(B2_L, B2_R, 'vCenter auth'),
+        bMid(B3_L, B3_R, 'Resource quota'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works covers supervisor + workload clusters · integrations connect NSX and Harbor · standards enforce policy'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['How It Works', 'Integrations', 'Design Stds', 'Deployment', 'Key Stds'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Supervisor cluster', 'NSX-T network', 'Namespace sizing', 'Single cluster', 'Namespace policy'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Workload clusters', 'Avi LB', 'Cluster profile', 'HA control plane', 'Image policy'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vSphere namespace', 'vSAN storage', 'RBAC namespaces', 'Multi-cluster', 'Quota policy'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Cluster API', 'Harbor registry', 'Resource quota', 'TMC governed', 'Network config'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('ESXi hosts · RAM DIMMs · Network NICs · vSAN or NFS storage · NSX-T or VDS virtual switch fabric'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Supervisor Cluster  = vSphere control plane running Kubernetes API server on ESXi host kernel'))
+    lines.append(txt_row('TKGs               = Tanzu Kubernetes Grid Service; provisions workload clusters via Supervisor'))
+    lines.append(txt_row('TKGm               = Tanzu Kubernetes Grid multicloud; standalone management cluster on any infra'))
+    lines.append(txt_row('vSphere namespace   = Kubernetes namespace mapped to vSphere resource pool, storage policy, and network'))
+    lines.append(txt_row('Workload cluster   = Tanzu Kubernetes cluster provisioned in a namespace via Cluster API'))
+    lines.append(txt_row('Cluster API        = Kubernetes-native API for declarative lifecycle management of workload clusters'))
+    lines.append(txt_row('Node pool          = Group of identically sized worker nodes within a Tanzu Kubernetes cluster'))
+    lines.append(txt_row('Control plane HA   = 3 control plane nodes per cluster across ESXi hosts for Kubernetes API HA'))
+    lines.append(txt_row('Avi Load Balancer  = NSX Advanced LB (Avi); provides L4/L7 load balancing for Tanzu services'))
+    lines.append(txt_row('Harbor             = VMware container registry; private image registry integrated with Tanzu'))
+    lines.append(txt_row('Tanzu Mission Ctrl = SaaS management plane for multi-cluster policy, RBAC, and lifecycle governance'))
+    lines.append(txt_row('Resource quota     = vSphere namespace CPU, memory, storage limits enforced across all cluster workloads'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def tanzu_operations():
+    """Tanzu Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VMware Tanzu — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Cluster lifecycle: provision, scale, and upgrade workload clusters via kubectl or Tanzu CLI')))
+    lines.append(R(bMid(IV_L, IV_R, 'Node pool management: add/remove workers; drain nodes before maintenance operations')))
+    lines.append(R(bMid(IV_L, IV_R, 'Supervisor health: check vCenter Workload Management status; validate namespace quotas')))
+    lines.append(R(bMid(IV_L, IV_R, 'Image management: scan and promote images in Harbor; enforce OPA/admission policies')))
+    lines.append(R(bMid(IV_L, IV_R, 'Tanzu CLI: tanzu cluster create/delete/upgrade/scale; kubeconfig context management')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops manage cluster state · lifecycle upgrades Kubernetes versions · automation scales node pools'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Lifecycle'),
+        bMid(B3_L, B3_R, 'Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cluster status'),
+        bMid(B2_L, B2_R, 'Cluster upgrade'),
+        bMid(B3_L, B3_R, 'Tanzu CLI'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Node pool scale'),
+        bMid(B2_L, B2_R, 'K8s version bump'),
+        bMid(B3_L, B3_R, 'kubectl apply'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Namespace quotas'),
+        bMid(B2_L, B2_R, 'Node drain/cordon'),
+        bMid(B3_L, B3_R, 'GitOps pipelines'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Image scanning'),
+        bMid(B2_L, B2_R, 'Supervisor upg'),
+        bMid(B3_L, B3_R, 'TMC automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Harbor registry'),
+        bMid(B2_L, B2_R, 'OVA bundle upg'),
+        bMid(B3_L, B3_R, 'Cluster API CR'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'kubeconfig mgmt'),
+        bMid(B2_L, B2_R, 'Cert rotation'),
+        bMid(B3_L, B3_R, 'Helm deploys'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops check cluster and node health · lifecycle upgrades Kubernetes safely · automation uses Tanzu CLI'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CLI Ref', 'Health Chk', 'Procedures', 'Install/Up', 'Backup/Rest'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['tanzu cluster', 'Cluster: Running', 'Scale workers', 'Cluster upgrade', 'kubeconfig bkp'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['kubectl apply', 'Nodes: Ready', 'Add namespace', 'Supervisor upg', 'ETCD snapshot'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['kubectl drain', 'Quotas: ok', 'Update quota', 'OVA bundle', 'Cluster config'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['tanzu login', 'Harbor: healthy', 'Image promote', 'Post-upg val', 'Namespace bkp'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('ESXi hosts · RAM DIMMs · Network NICs · vSAN/NFS storage · NSX-T fabric · vCenter appliance'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Tanzu CLI          = kubectl plug-in and tanzu binary for cluster lifecycle and context management'))
+    lines.append(txt_row('tanzu cluster      = CLI sub-command for create, scale, upgrade, delete of workload clusters'))
+    lines.append(txt_row('Node drain         = kubectl drain removes pods from a node before maintenance or upgrade'))
+    lines.append(txt_row('Node pool scaling  = Adding or removing worker VMs in a pool via Cluster API update'))
+    lines.append(txt_row('Supervisor upgrade = vCenter-driven update of the Workload Management control plane version'))
+    lines.append(txt_row('OVA bundle         = Tanzu node OS image OVA; uploaded to vCenter content library for upgrades'))
+    lines.append(txt_row('kubeconfig         = Kubernetes configuration file with cluster endpoint and credentials for kubectl'))
+    lines.append(txt_row('Namespace quota    = CPU/memory/storage limits applied to a vSphere namespace; enforced by Supervisor'))
+    lines.append(txt_row('Cluster API CR     = Custom Resource defining desired cluster state; reconciled by Cluster API controller'))
+    lines.append(txt_row('GitOps pipeline    = Declarative deployment pipeline applying manifests from git to Kubernetes clusters'))
+    lines.append(txt_row('Harbor             = VMware OCI-compatible registry; image scanning and replication built-in'))
+    lines.append(txt_row('ETCD snapshot      = Backup of Kubernetes cluster state; taken before any major upgrade operation'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def tanzu_security():
+    """Tanzu Security sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VMware Tanzu — Security'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'vSphere SSO and LDAP/AD integration for Kubernetes RBAC; namespace-scoped role bindings')))
+    lines.append(R(bMid(IV_L, IV_R, 'Pod Security Admission: enforce Restricted/Baseline/Privileged policies per namespace')))
+    lines.append(R(bMid(IV_L, IV_R, 'Network policies via NSX-T: micro-segmentation between pods and namespaces')))
+    lines.append(R(bMid(IV_L, IV_R, 'Harbor image scanning: Trivy/Clair CVE scanning; admission webhook rejects vulnerable images')))
+    lines.append(R(bMid(IV_L, IV_R, 'mTLS between services via Tanzu Service Mesh (TSM); certificate rotation automated')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication gates cluster access · RBAC scopes namespace permissions · network policy isolates pods'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Authentication'),
+        bMid(B2_L, B2_R, 'Access Control'),
+        bMid(B3_L, B3_R, 'Workload Security'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vSphere SSO'),
+        bMid(B2_L, B2_R, 'RBAC bindings'),
+        bMid(B3_L, B3_R, 'Pod Security Adm'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'LDAP/AD groups'),
+        bMid(B2_L, B2_R, 'Namespace RBAC'),
+        bMid(B3_L, B3_R, 'Network policy'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'OIDC provider'),
+        bMid(B2_L, B2_R, 'Service accounts'),
+        bMid(B3_L, B3_R, 'Image scanning'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'kubeconfig auth'),
+        bMid(B2_L, B2_R, 'Cluster roles'),
+        bMid(B3_L, B3_R, 'mTLS (TSM)'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cert rotation'),
+        bMid(B2_L, B2_R, 'OPA/Gatekeeper'),
+        bMid(B3_L, B3_R, 'Admission webhook'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Audit logging'),
+        bMid(B2_L, B2_R, 'TMC policies'),
+        bMid(B3_L, B3_R, 'vSAN encryption'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Auth controls cluster access · RBAC scopes roles · pod security and network policy isolate workloads'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Auth', 'Access Ctrl', 'Workload Sec', 'Hardening', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vSphere SSO', 'RBAC roles', 'Pod Sec Adm', 'CIS k8s bench', 'API audit log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LDAP groups', 'Namespace RBAC', 'Network policy', 'PSA Restricted', 'RBAC changes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['OIDC provider', 'Cluster roles', 'Image scanning', 'Cert rotation', 'Harbor scan log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Service accounts', 'OPA policies', 'mTLS TSM', 'Min-priv SA', 'Admission log'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('ESXi hosts · RAM DIMMs · Network NICs · NSX-T fabric · vSAN encryption · CA infrastructure'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('vSphere SSO        = vCenter Single Sign-On; identity source for Kubernetes RBAC in Tanzu'))
+    lines.append(txt_row('RBAC               = Kubernetes Role-Based Access Control; ClusterRole/Role bound to users or groups'))
+    lines.append(txt_row('Pod Security Adm   = Kubernetes built-in policy enforcing Restricted/Baseline/Privileged per namespace'))
+    lines.append(txt_row('Network policy     = Kubernetes resource restricting pod-to-pod traffic; enforced by NSX-T CNI'))
+    lines.append(txt_row('OPA/Gatekeeper     = Open Policy Agent admission controller; enforces custom policy constraints'))
+    lines.append(txt_row('Admission webhook  = Kubernetes API hook that validates or mutates resources before admission'))
+    lines.append(txt_row('Image scanning     = Harbor Trivy/Clair CVE scan; blocks deployment of images above severity threshold'))
+    lines.append(txt_row('mTLS               = Mutual TLS between services; provided by Tanzu Service Mesh (Istio-based)'))
+    lines.append(txt_row('OIDC               = OpenID Connect; used by Pinniped to federate identity to Kubernetes API server'))
+    lines.append(txt_row('Service account    = Kubernetes identity for pods; scoped to namespace; used for API server auth'))
+    lines.append(txt_row('vSAN encryption    = Data-at-rest encryption for node disks; uses vCenter Key Provider (KMS)'))
+    lines.append(txt_row('Kubernetes audit   = API server audit log capturing all API calls; forwarded to Aria Logs for SIEM'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def tanzu_troubleshooting():
+    """Tanzu Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VMware Tanzu — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Cluster creation stuck: check Supervisor status in vCenter; validate NSX-T and storage config')))
+    lines.append(R(bMid(IV_L, IV_R, 'Nodes NotReady: check kubelet status on node; verify vSAN/network connectivity from node VM')))
+    lines.append(R(bMid(IV_L, IV_R, 'Workload Management degraded: validate vCenter health, vSphere namespace quota, and NTP sync')))
+    lines.append(R(bMid(IV_L, IV_R, 'Image pull failures: check Harbor availability; verify imagePullSecret and network policy')))
+    lines.append(R(bMid(IV_L, IV_R, 'kubectl logs and describe events are first diagnostic step; tanzu diagnostics collects bundles')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues guide triage · diagnostics use kubectl and events · escalation bundles for VMware GSS'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Common Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cluster stuck'),
+        bMid(B2_L, B2_R, 'kubectl describe'),
+        bMid(B3_L, B3_R, 'tanzu diagnostics'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Node NotReady'),
+        bMid(B2_L, B2_R, 'kubectl logs'),
+        bMid(B3_L, B3_R, 'GSS case'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'WCP degraded'),
+        bMid(B2_L, B2_R, 'kubectl events'),
+        bMid(B3_L, B3_R, 'Skyline Health'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Image pull fail'),
+        bMid(B2_L, B2_R, 'vCenter events'),
+        bMid(B3_L, B3_R, 'TAM escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Pod pending'),
+        bMid(B2_L, B2_R, 'NSX-T logs'),
+        bMid(B3_L, B3_R, 'Log bundle'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Quota exceeded'),
+        bMid(B2_L, B2_R, 'Harbor health'),
+        bMid(B3_L, B3_R, 'Version compat'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues triage cluster and node faults · diagnostics use kubectl and vCenter · escalate via GSS'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Issues', 'Diagnostics', 'Log Paths', 'Escalation', 'Recovery'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Cluster stuck', 'kubectl descr', 'vCenter tasks', 'tanzu diagnos', 'Re-provision'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Node NotReady', 'kubectl logs', 'kubelet journal', 'GSS P1 case', 'Drain+replace'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['WCP degraded', 'kubectl events', 'NSX-T manager', 'TAM escalate', 'Restart WCP'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Image pull fail', 'Harbor health', 'Harbor logs', 'Skyline health', 'Update secret'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('ESXi hosts · RAM DIMMs · Network NICs · vSAN/NFS storage · NSX-T fabric · vCenter appliance'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Supervisor status  = Workload Management health shown in vCenter UI; Running/Degraded/Error states'))
+    lines.append(txt_row('Node NotReady      = Kubernetes node condition when kubelet cannot communicate with API server'))
+    lines.append(txt_row('kubelet            = Node agent managing pod lifecycle; check journalctl -u kubelet for errors'))
+    lines.append(txt_row('WCP                = Workload Control Plane; VMware internal name for the Supervisor Cluster'))
+    lines.append(txt_row('kubectl describe   = Shows detailed state and events for any Kubernetes resource'))
+    lines.append(txt_row('kubectl events     = Lists recent events in a namespace; critical for cluster and pod triage'))
+    lines.append(txt_row('imagePullSecret    = Kubernetes secret holding registry credentials for pulling private images'))
+    lines.append(txt_row('tanzu diagnostics  = CLI command collecting cluster diagnostic bundle for GSS escalation'))
+    lines.append(txt_row('Pod Pending        = Pod scheduled but not running; check events for resource or image pull errors'))
+    lines.append(txt_row('Quota exceeded     = vSphere namespace CPU/memory/storage limit reached; expand or reclaim resources'))
+    lines.append(txt_row('Skyline Health     = VMware proactive support tool validating Tanzu configuration against best practices'))
+    lines.append(txt_row('Cluster API events = Events on TanzuKubernetesCluster CR showing provisioning error details'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vsphere_replication_architecture():
+    """vSphere Replication Architecture sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSphere Replication — Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'vSphere Replication (VR): per-VM async replication from source vCenter to target vCenter')))
+    lines.append(R(bMid(IV_L, IV_R, 'VR appliance (VRMS) per site; VR server (VRS) handles bulk of replication traffic per site')))
+    lines.append(R(bMid(IV_L, IV_R, 'Replication granularity: per-VMDK; RPO configurable from 5 minutes to 24 hours per VM')))
+    lines.append(R(bMid(IV_L, IV_R, 'Network compression and encryption of replication traffic; FQDN-resolved endpoints')))
+    lines.append(R(bMid(IV_L, IV_R, 'Site Recovery Manager integration: VR seeds VM copies used for SRM orchestrated failover')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines VR appliances · integrations connect SRM · standards govern RPO and sizing'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'How It Works'),
+        bMid(B2_L, B2_R, 'Integrations'),
+        bMid(B3_L, B3_R, 'Design Standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VRMS per site'),
+        bMid(B2_L, B2_R, 'SRM integration'),
+        bMid(B3_L, B3_R, 'RPO per VM class'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VRS per site'),
+        bMid(B2_L, B2_R, 'vCenter plugin'),
+        bMid(B3_L, B3_R, 'Bandwidth sizing'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Per-VMDK rep'),
+        bMid(B2_L, B2_R, 'Storage compat'),
+        bMid(B3_L, B3_R, 'Encryption on'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'RPO 5 min-24 hr'),
+        bMid(B2_L, B2_R, 'vSAN as target'),
+        bMid(B3_L, B3_R, 'Compression on'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Traffic encrypt'),
+        bMid(B2_L, B2_R, 'NFS/VMFS target'),
+        bMid(B3_L, B3_R, 'Max VMs per VRS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Delta sync'),
+        bMid(B2_L, B2_R, 'Aria Ops intg'),
+        bMid(B3_L, B3_R, 'FQDN config'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works covers VR appliances and RPO · integrations connect SRM and storage · standards govern sizing'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['How It Works', 'Integrations', 'Design Stds', 'Deployment', 'Key Stds'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['VRMS per site', 'SRM pairing', 'RPO tiers', 'VRMS deploy', 'RPO per class'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['VRS per site', 'vCenter plugin', 'BW planning', 'VRS deploy', 'Encrypt traffic'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Per-VMDK rep', 'vSAN target', 'Compress on', 'Site pairing', 'Max VM/VRS'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Delta sync', 'NFS/VMFS tgt', 'FQDN config', 'Multi-VRS', 'Storage policy'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (VRMS + VRS) · RAM DIMMs · WAN link for replication traffic · Target storage (vSAN/NFS/VMFS)'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('VRMS               = vSphere Replication Management Server; registers with vCenter; manages replication'))
+    lines.append(txt_row('VRS                = vSphere Replication Server; handles the bulk replication data transfer per site'))
+    lines.append(txt_row('Per-VMDK replication = Each virtual disk replicated independently; exclude swap VMDKs to save bandwidth'))
+    lines.append(txt_row('RPO                = Recovery Point Objective; minimum 5 minutes in VR; defines max data loss window'))
+    lines.append(txt_row('Delta sync         = Changed block tracking (CBT) used to send only modified blocks each replication cycle'))
+    lines.append(txt_row('Site pairing       = vCenter-level trust relationship between source and target VR sites'))
+    lines.append(txt_row('Replication target = Datastore on target site where replica VMDK files are stored'))
+    lines.append(txt_row('Traffic encryption = TLS-encrypted replication stream between source VRS and target VRS'))
+    lines.append(txt_row('Compression        = Network compression of replication data; reduces bandwidth at cost of CPU'))
+    lines.append(txt_row('SRM integration    = Site Recovery Manager uses VR as the replication provider for orchestrated failover'))
+    lines.append(txt_row('vSAN target        = vSAN datastore on target site used as replication destination; policy-based'))
+    lines.append(txt_row('Changed block track = CBT bitmap tracking written blocks in a VMDK; enables efficient delta replication'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vsphere_replication_operations():
+    """vSphere Replication Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSphere Replication — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Monitor replication status for all protected VMs; check RPO compliance and missed sync counts')))
+    lines.append(R(bMid(IV_L, IV_R, 'Configure replication: select VM, set RPO, choose target datastore and network compression')))
+    lines.append(R(bMid(IV_L, IV_R, 'Pause and resume replication: maintenance window operations; resume to trigger full delta sync')))
+    lines.append(R(bMid(IV_L, IV_R, 'Test recovery: recover to isolated test network; validate VM boots at target; revert test')))
+    lines.append(R(bMid(IV_L, IV_R, 'Appliance upgrades: upgrade VRMS and VRS before upgrading protected VMs and vCenter hosts')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops monitor RPO compliance · lifecycle upgrades appliances before hosts · automation via SRM'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Lifecycle'),
+        bMid(B3_L, B3_R, 'Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'RPO compliance'),
+        bMid(B2_L, B2_R, 'VRMS upgrade'),
+        bMid(B3_L, B3_R, 'SRM plans'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Missed sync'),
+        bMid(B2_L, B2_R, 'VRS upgrade'),
+        bMid(B3_L, B3_R, 'REST API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Rep health'),
+        bMid(B2_L, B2_R, 'Cert rotation'),
+        bMid(B3_L, B3_R, 'Aria Ops alerts'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Pause/resume'),
+        bMid(B2_L, B2_R, 'vCenter upg'),
+        bMid(B3_L, B3_R, 'Scheduled test'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Test recovery'),
+        bMid(B2_L, B2_R, 'Config backup'),
+        bMid(B3_L, B3_R, 'VR API calls'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'BW utilisation'),
+        bMid(B2_L, B2_R, 'Post-upg val'),
+        bMid(B3_L, B3_R, 'Monitoring API'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops track RPO and sync health · lifecycle upgrades appliances · automation tests and alerts'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CLI Ref', 'Health Chk', 'Procedures', 'Install/Up', 'Backup/Rest'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['VR REST API', 'RPO: met', 'Configure VM', 'VRMS upgrade', 'Config export'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vSphere API', 'Sync: ok', 'Pause rep', 'VRS upgrade', 'Rep metadata'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SRM API', 'BW: normal', 'Resume rep', 'Cert rotation', 'Restore config'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Aria Ops API', 'Appliance: up', 'Test recovery', 'Post-upg val', 'Site re-pair'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (VRMS + VRS) · RAM DIMMs · WAN link · Target storage array or vSAN · vCenter appliance'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('RPO compliance     = All replicated VMs meeting their configured RPO within the monitoring window'))
+    lines.append(txt_row('Missed sync        = Replication cycle that failed to complete within the RPO window; alerts in vCenter'))
+    lines.append(txt_row('Pause replication  = Temporarily halting delta sync; all changes accumulate until resumed'))
+    lines.append(txt_row('Resume replication = Restarting replication after pause; triggers full delta resync of changed blocks'))
+    lines.append(txt_row('Test recovery      = Recovering replica to isolated test network; validates DR readiness without failover'))
+    lines.append(txt_row('Bandwidth usage    = Network throughput consumed by replication; monitored to prevent link saturation'))
+    lines.append(txt_row('VRMS upgrade       = OVF/VAMI-based upgrade of the management appliance; must precede VRS upgrade'))
+    lines.append(txt_row('VRS upgrade        = Upgrade of the replication server appliance; precedes vCenter and host upgrades'))
+    lines.append(txt_row('Configuration backup = Export of VR replication config; used for recovery if appliance rebuild needed'))
+    lines.append(txt_row('Site pairing health = vCenter-to-vCenter VR trust relationship; must be green for replication to function'))
+    lines.append(txt_row('SRM recovery plan  = Orchestrated failover workflow that uses VR replicas as recovery source'))
+    lines.append(txt_row('VR REST API        = HTTP API for querying and managing replication config programmatically'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vsphere_replication_security():
+    """vSphere Replication Security sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSphere Replication — Security'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'vCenter SSO authentication for VR appliance management; RBAC via vCenter roles')))
+    lines.append(R(bMid(IV_L, IV_R, 'Replication traffic encrypted over TLS between source VRS and target VRS')))
+    lines.append(R(bMid(IV_L, IV_R, 'Certificate management: VRMS and VRS certs signed by CA or vCenter CA; rotated on schedule')))
+    lines.append(R(bMid(IV_L, IV_R, 'Firewall rules: VRMS port 8043/443, VRS port 31031, vCenter port 443 between sites')))
+    lines.append(R(bMid(IV_L, IV_R, 'Audit: all replication config changes logged in vCenter Tasks and Events; syslog forward')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  vCenter SSO gates management · TLS encrypts replication traffic · certificates and firewall harden perimeter'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Authentication'),
+        bMid(B2_L, B2_R, 'Access Control'),
+        bMid(B3_L, B3_R, 'Encryption'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vCenter SSO'),
+        bMid(B2_L, B2_R, 'vCenter RBAC'),
+        bMid(B3_L, B3_R, 'Traffic TLS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'LDAP via vCenter'),
+        bMid(B2_L, B2_R, 'Admin role'),
+        bMid(B3_L, B3_R, 'Cert management'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VRMS local admin'),
+        bMid(B2_L, B2_R, 'Read-only role'),
+        bMid(B3_L, B3_R, 'CA-signed certs'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Plugin auth'),
+        bMid(B2_L, B2_R, 'Datastore perm'),
+        bMid(B3_L, B3_R, 'FIPS mode'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Site trust cert'),
+        bMid(B2_L, B2_R, 'Site admin roles'),
+        bMid(B3_L, B3_R, 'Compress+encrypt'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VAMI local auth'),
+        bMid(B2_L, B2_R, 'Firewall rules'),
+        bMid(B3_L, B3_R, 'Audit logging'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  SSO controls management access · RBAC scopes permissions · TLS and certs secure all replication paths'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Auth', 'Access Ctrl', 'Encryption', 'Hardening', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vCenter SSO', 'vCenter RBAC', 'Traffic TLS', 'Cert rotation', 'vCenter tasks'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LDAP groups', 'Admin role', 'CA-signed cert', 'Firewall rules', 'Config events'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['VRMS local', 'Read-only role', 'FIPS mode', 'Min-perm RBAC', 'Syslog forward'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Site trust cert', 'Firewall scope', 'Compress+enc', 'VAMI hardening', 'Site pair log'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (VRMS + VRS) · RAM DIMMs · WAN firewall · CA infrastructure · vCenter appliance'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('vCenter SSO        = Single Sign-On; authenticates admin access to VR plugin within vCenter UI'))
+    lines.append(txt_row('RBAC               = Role-Based Access Control; VR uses vCenter roles for permissions scoping'))
+    lines.append(txt_row('Admin role         = Full VR management: configure, pause, resume, reconfigure replication'))
+    lines.append(txt_row('Read-only role     = View replication status only; cannot configure or modify replication'))
+    lines.append(txt_row('Traffic encryption = TLS between source and target VRS; enabled by default; FIPS mode optional'))
+    lines.append(txt_row('VRMS certificate   = TLS cert for the VRMS management UI; signed by vCenter CA or external CA'))
+    lines.append(txt_row('VRS certificate    = TLS cert for the VRS data path; must be trusted at both source and target sites'))
+    lines.append(txt_row('Site trust         = Certificate-based trust between source vCenter and target vCenter for VR pairing'))
+    lines.append(txt_row('VAMI               = Virtual Appliance Management Interface; admin UI for VRMS/VRS; secured with local auth'))
+    lines.append(txt_row('Firewall rules     = Required: 8043/443 for VRMS, 31031 for VRS data, 443 for vCenter communication'))
+    lines.append(txt_row('Audit log          = All VR config changes logged in vCenter Tasks/Events; forwarded via syslog to SIEM'))
+    lines.append(txt_row('FIPS 140-2         = Federal cryptographic standard; enabled for VR traffic encryption at cluster config'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vsphere_replication_troubleshooting():
+    """vSphere Replication Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSphere Replication — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Replication failing: verify firewall rules on ports 443, 8043, 31031; check site pairing cert')))
+    lines.append(R(bMid(IV_L, IV_R, 'RPO violations: check available WAN bandwidth; review missed sync count in VR monitor')))
+    lines.append(R(bMid(IV_L, IV_R, 'VR appliance unreachable: verify VRMS/VRS VM is powered on; check VAMI service status')))
+    lines.append(R(bMid(IV_L, IV_R, 'CBT issues: reset CBT on VM via snapshot cycle; required after hardware change events')))
+    lines.append(R(bMid(IV_L, IV_R, 'Collect support bundle from VRMS VAMI; attach to VMware GSS case with vCenter logs')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues triage network and appliance faults · diagnostics use logs and VAMI · escalate via GSS'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Common Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Replication fail'),
+        bMid(B2_L, B2_R, 'vCenter events'),
+        bMid(B3_L, B3_R, 'VRMS bundle'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'RPO violation'),
+        bMid(B2_L, B2_R, 'VAMI health'),
+        bMid(B3_L, B3_R, 'GSS case open'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VRMS unreachable'),
+        bMid(B2_L, B2_R, 'VR monitor UI'),
+        bMid(B3_L, B3_R, 'vCenter log bndl'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'CBT corruption'),
+        bMid(B2_L, B2_R, '/var/log/vmware/vr'),
+        bMid(B3_L, B3_R, 'TAM escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Site pair fail'),
+        bMid(B2_L, B2_R, 'Firewall test'),
+        bMid(B3_L, B3_R, 'Skyline health'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Disk space target'),
+        bMid(B2_L, B2_R, 'Cert validity'),
+        bMid(B3_L, B3_R, 'Version compat'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues triage replication faults · diagnostics use VAMI and VR monitor · escalate with bundles'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Issues', 'Diagnostics', 'Log Paths', 'Escalation', 'Recovery'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Rep failing', 'vCenter events', '/var/log/vmware/vr', 'VRMS bundle', 'Re-configure'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['RPO violated', 'VAMI health pg', '/var/log/hms', 'GSS P1 case', 'Reduce RPO'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['VRMS down', 'VR monitor UI', '/var/log/vmware', 'TAM escalate', 'Restart VRMS'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CBT issue', 'Firewall test', 'VRMS syslog', 'Skyline health', 'Reset CBT'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 VMs (VRMS + VRS) · RAM DIMMs · WAN link · Firewall between sites · Target datastore'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Replication failure = VR sync cycle did not complete; check vCenter events for error code and source'))
+    lines.append(txt_row('RPO violation      = Missed sync count > 0 in VR monitor; investigate bandwidth or appliance health'))
+    lines.append(txt_row('CBT               = Changed Block Tracking; bitmap tracking VMDK changes; corruption causes resync'))
+    lines.append(txt_row('CBT reset          = Snapshot + delete cycle on a VM to force CBT bitmap rebuild; triggers full resync'))
+    lines.append(txt_row('VAMI               = Virtual Appliance Management Interface; check service status and disk usage here'))
+    lines.append(txt_row('VR Monitor UI      = vCenter plugin tab showing per-VM replication status, RPO, and last sync time'))
+    lines.append(txt_row('Site pairing failure = Lost trust between source/target vCenter; re-pair after certificate change'))
+    lines.append(txt_row('Firewall ports     = 443 (vCenter), 8043 (VRMS mgmt), 31031 (VRS data); all required between sites'))
+    lines.append(txt_row('VRMS support bundle = Diagnostic archive from VAMI including VR logs; attach to GSS case'))
+    lines.append(txt_row('Disk space target  = Insufficient space on target datastore; VR pauses replication until resolved'))
+    lines.append(txt_row('Skyline Health     = VMware proactive tool validating VR configuration against known best practices'))
+    lines.append(txt_row('Log path           = Primary VR logs at /var/log/vmware/vr/; HMS service logs at /var/log/hms'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vmware_vxrail_architecture():
+    """VxRail Architecture sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VxRail — Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VxRail = Dell EMC HCI appliance running VMware ESXi + vSAN + vCenter (embedded)')))
+    lines.append(R(bMid(IV_L, IV_R, 'VxRail Manager provides unified lifecycle management via REST API and plugin in vCenter')))
+    lines.append(R(bMid(IV_L, IV_R, 'Node families: P-series (general), E-series (entry), V-series (vSAN ESA), G-series (GPU)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Supports stretched clusters and VCF integration for full software-defined data centre')))
+    lines.append(R(bMid(IV_L, IV_R, 'LCM bundles upgrade FW + ESXi + vSAN together per node; VxRail Manager orchestrates sequence')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works defines HCI mechanics · integrations connect vCenter and Dell tools · standards govern sizing'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'How It Works'),
+        bMid(B2_L, B2_R, 'Integrations'),
+        bMid(B3_L, B3_R, 'Design Standards'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'HCI: ESXi+vSAN+vCtr'),
+        bMid(B2_L, B2_R, 'vCenter plugin'),
+        bMid(B3_L, B3_R, 'Cluster 3-64 nodes'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VxRail Mgr API'),
+        bMid(B2_L, B2_R, 'Dell OMIVV'),
+        bMid(B3_L, B3_R, 'VMk VLAN plan'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'LCM unified upg'),
+        bMid(B2_L, B2_R, 'iDRAC hardware'),
+        bMid(B3_L, B3_R, 'iDRAC OOB VLAN'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Node families P/E/V/G'),
+        bMid(B2_L, B2_R, 'Aria Ops adapter'),
+        bMid(B3_L, B3_R, 'LCM bundle match'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vSAN stretched'),
+        bMid(B2_L, B2_R, 'SupportAssist'),
+        bMid(B3_L, B3_R, 'FTT policy'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VxRail on VCF'),
+        bMid(B2_L, B2_R, 'CloudIQ monitoring'),
+        bMid(B3_L, B3_R, 'Witness sizing'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  How-it-works covers HCI stack · integrations connect Dell and VMware tools · standards enforce cluster design'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['How It Works', 'Integrations', 'Design Stds', 'Deployment', 'Key Stds'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['VxRail Mgr API', 'vCenter plugin', '3-64 nodes', '3-node starter', 'VLAN plan'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LCM lifecycle', 'Dell OMIVV', 'VMk VLANs', '4+ stretched', 'FTT policy'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Node families', 'iDRAC HW', 'iDRAC OOB', 'VCF ready', 'Witness sizing'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vSAN stretched', 'Aria Ops', 'LCM bundle', 'Scale-out', 'BOM match'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('Dell PowerEdge servers · NVMe/SSD/HDD drives · 25GbE NICs · iDRAC OOB · ToR switches'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('VxRail Manager    = Embedded VM on the cluster; provides REST API and vCenter plugin for HCI management'))
+    lines.append(txt_row('OMIVV             = OpenManage Integration for VMware vCenter; surfaces Dell hardware alerts in vCenter'))
+    lines.append(txt_row('LCM               = Lifecycle Manager; orchestrates FW + ESXi + vSAN upgrade as a single bundle operation'))
+    lines.append(txt_row('HCI               = Hyperconverged Infrastructure; compute, storage, and networking in a single appliance'))
+    lines.append(txt_row('iDRAC             = Integrated Dell Remote Access Controller; OOB management for hardware health and console'))
+    lines.append(txt_row('SupportAssist     = Dell proactive support service; auto-creates cases on hardware alert detection'))
+    lines.append(txt_row('CloudIQ           = Dell SaaS monitoring platform; capacity, performance, and health tracking for VxRail'))
+    lines.append(txt_row('VxRail bundle     = Signed LCM package containing matched FW, ESXi, and vSAN component versions'))
+    lines.append(txt_row('FTT               = Failures to Tolerate; vSAN policy defining how many host/disk failures data can survive'))
+    lines.append(txt_row('P/E/V/G-series    = VxRail node families: P=general, E=entry, V=vSAN ESA NVMe, G=GPU-accelerated'))
+    lines.append(txt_row('Stretched cluster = VxRail cluster spanning two sites with a witness VM for quorum and zero RPO'))
+    lines.append(txt_row('VCF on VxRail     = VMware Cloud Foundation deployed on VxRail hardware using Dell-managed LCM'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vmware_vxrail_operations():
+    """VxRail Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VxRail — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VxRail plugin daily health checks in vCenter; iDRAC hardware alarms monitoring')))
+    lines.append(R(bMid(IV_L, IV_R, 'LCM bundle download and pre-check before upgrade; node-by-node upgrade sequence')))
+    lines.append(R(bMid(IV_L, IV_R, 'FW + ESXi upgraded together per node in a single LCM operation per node')))
+    lines.append(R(bMid(IV_L, IV_R, 'SupportAssist for proactive case creation on hardware alerts from iDRAC or OMIVV')))
+    lines.append(R(bMid(IV_L, IV_R, 'Post-upgrade validation: vSAN health, ESXi version, iDRAC FW, and cluster stability checks')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops catch drift early · lifecycle upgrades per node · automation scales VxRail management'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Lifecycle'),
+        bMid(B3_L, B3_R, 'Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VxRail plugin UI'),
+        bMid(B2_L, B2_R, 'LCM bundle DL'),
+        bMid(B3_L, B3_R, 'VxRail Mgr API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'iDRAC alarms'),
+        bMid(B2_L, B2_R, 'Pre-check health'),
+        bMid(B3_L, B3_R, 'LCM REST API'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'ESXi connected'),
+        bMid(B2_L, B2_R, 'Node-by-node upg'),
+        bMid(B3_L, B3_R, 'PowerCLI vSAN'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vSAN resync chk'),
+        bMid(B2_L, B2_R, 'FW+ESXi together'),
+        bMid(B3_L, B3_R, 'Dell automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'LCM status'),
+        bMid(B2_L, B2_R, 'Rebalance post-add'),
+        bMid(B3_L, B3_R, 'Ansible VxRail'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SupportAssist'),
+        bMid(B2_L, B2_R, 'Post-check'),
+        bMid(B3_L, B3_R, 'SupportAssist API'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops catch issues early · lifecycle upgrades in sequence · automation handles at-scale changes'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['CLI Ref', 'Health Chk', 'Procedures', 'Install/Up', 'Backup/Rest'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['VxRail API', 'Plugin: green', 'Daily checks', 'LCM bundle DL', 'Config export'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LCM REST API', 'iDRAC: ok', 'Maint window', 'Pre-check run', 'vSAN config bk'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['PowerCLI vSAN', 'vSAN: resync=0', 'Node maint', 'Node-by-node', 'iDRAC config'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Ansible VxRail', 'ESXi: connected', 'Expand cluster', 'Post-upg val', 'Restore redep'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('Dell PowerEdge servers · NVMe/SSD/HDD · 25GbE NICs · iDRAC OOB · ToR switches'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('VxRail Manager API  = REST API on VxRail Manager VM; used for LCM jobs, health queries, and config'))
+    lines.append(txt_row('LCM bundle          = Signed Dell upgrade package; FW + ESXi + vSAN versions tested and bundled together'))
+    lines.append(txt_row('Pre-check           = Health validation run before LCM upgrade; blocks if vSAN or network issues exist'))
+    lines.append(txt_row('Node-by-node upgrade = LCM puts one node in maintenance, upgrades FW+ESXi, then moves to next node'))
+    lines.append(txt_row('SupportAssist       = Dell proactive support; auto-opens cases on hardware alert from iDRAC or OMIVV'))
+    lines.append(txt_row('iDRAC               = Integrated Dell Remote Access Controller; hardware health, console, and OOB access'))
+    lines.append(txt_row('OMIVV               = OpenManage Integration for VMware vCenter; shows Dell hardware alarms in vCenter'))
+    lines.append(txt_row('vSAN rebalance      = Redistributes vSAN objects evenly after a node is added to the cluster'))
+    lines.append(txt_row('Maintenance mode    = ESXi state that evacuates VMs via DRS before hardware or upgrade operations'))
+    lines.append(txt_row('FW update           = Firmware update applied to iDRAC, BIOS, NICs, and drives as part of LCM bundle'))
+    lines.append(txt_row('PowerCLI            = VMware PowerShell module; used for vSAN health checks and cluster automation'))
+    lines.append(txt_row('Post-upgrade validation = Checks ESXi version, iDRAC FW, vSAN health, and cluster stability after LCM'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vmware_vxrail_security():
+    """VxRail Security sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VxRail — Security'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'iDRAC LDAP/AD authentication with OOB-only VLAN access for hardware management')))
+    lines.append(R(bMid(IV_L, IV_R, 'ESXi lockdown mode (normal) with host profiles enforcement across all cluster nodes')))
+    lines.append(R(bMid(IV_L, IV_R, 'vCenter SSO for all management plane access; VxRail Manager TLS certificates enforced')))
+    lines.append(R(bMid(IV_L, IV_R, 'vSAN data-at-rest encryption with KMIP-compatible KMS integration for key management')))
+    lines.append(R(bMid(IV_L, IV_R, 'Secure Boot on all nodes; STIG alignment via host profiles; syslog forwarded to SIEM')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication gates hardware access · access control limits management scope · encryption protects data'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Authentication'),
+        bMid(B2_L, B2_R, 'Access Control'),
+        bMid(B3_L, B3_R, 'Encryption'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'iDRAC LDAP/AD'),
+        bMid(B2_L, B2_R, 'RBAC via vCenter'),
+        bMid(B3_L, B3_R, 'vSAN data-at-rest'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'ESXi lockdown mode'),
+        bMid(B2_L, B2_R, 'iDRAC user roles'),
+        bMid(B3_L, B3_R, 'iDRAC HTTPS only'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vCenter SSO'),
+        bMid(B2_L, B2_R, 'VxRail Mgr roles'),
+        bMid(B3_L, B3_R, 'Secure Boot ESXi'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VxRail Mgr local'),
+        bMid(B2_L, B2_R, 'LCM op roles'),
+        bMid(B3_L, B3_R, 'VxRail Mgr TLS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'iDRAC 2FA'),
+        bMid(B2_L, B2_R, 'Least privilege'),
+        bMid(B3_L, B3_R, 'iDRAC SSL cert'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Svc acct policy'),
+        bMid(B2_L, B2_R, 'Audit events'),
+        bMid(B3_L, B3_R, 'Syslog TLS'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Auth controls who accesses hardware · RBAC scopes management · encryption protects data and transport'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Auth', 'Access Ctrl', 'Encryption', 'Hardening', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['iDRAC LDAP', 'vCenter RBAC', 'vSAN encrypt', 'Secure Boot', 'vCenter events'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['ESXi lockdown', 'iDRAC roles', 'iDRAC HTTPS', 'SSH disabled', 'iDRAC audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vCenter SSO', 'VxRail roles', 'VxRail TLS', 'Host profiles', 'Syslog to SIEM'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['iDRAC 2FA', 'Least privilege', 'Cert rotation', 'STIG align', 'LCM log audit'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('Dell PowerEdge servers · TPM 2.0 · NVMe/SSD/HDD · iDRAC OOB network · CA infrastructure'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('iDRAC             = Integrated Dell Remote Access Controller; LDAP/AD auth; OOB-only VLAN access'))
+    lines.append(txt_row('Lockdown mode     = ESXi host setting preventing direct SSH/DCUI; all management via vCenter only'))
+    lines.append(txt_row('vSAN encryption   = Data-at-rest encryption on vSAN datastore; keys managed by external KMIP KMS'))
+    lines.append(txt_row('KMS/KMIP          = Key Management Server / protocol; external key store for vSAN and VM encryption'))
+    lines.append(txt_row('Secure Boot       = UEFI feature verifying ESXi VIB signatures on all VxRail nodes at boot time'))
+    lines.append(txt_row('Host Profile      = vCenter config template enforcing lockdown, NTP, syslog, and security settings'))
+    lines.append(txt_row('VxRail Manager TLS = TLS certificate on VxRail Manager VM; used for API and plugin communications'))
+    lines.append(txt_row('STIG alignment    = Defense Information Systems Agency hardening guide applied via host profiles'))
+    lines.append(txt_row('OOB VLAN          = Out-of-band management VLAN restricted to iDRAC access only; no VM traffic'))
+    lines.append(txt_row('LDAP/AD integration = iDRAC and vCenter authenticate against Active Directory for role mapping'))
+    lines.append(txt_row('RBAC              = Role-Based Access Control; vCenter roles applied to VxRail management operations'))
+    lines.append(txt_row('2FA on iDRAC      = Two-factor authentication on iDRAC console; reduces OOB access risk'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vmware_vxrail_troubleshooting():
+    """VxRail Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VxRail — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VxRail plugin unavailable in vCenter; LCM pre-check failure blocking upgrade')))
+    lines.append(R(bMid(IV_L, IV_R, 'vSAN object degraded or resync stuck; iDRAC hardware alert on a node')))
+    lines.append(R(bMid(IV_L, IV_R, 'Node not rejoining cluster after maintenance; network mismatch causing VxRail Manager issues')))
+    lines.append(R(bMid(IV_L, IV_R, 'Diagnostics: VxRail API debug, LCM logs, vSAN health UI, iDRAC system event log')))
+    lines.append(R(bMid(IV_L, IV_R, 'Escalation: support bundle export, Dell GSS P1, TAM contact, log archive for ProSupport')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues define triage path · diagnostics isolate root cause · escalation engages Dell support'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Common Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Plugin unavail'),
+        bMid(B2_L, B2_R, 'VxRail API debug'),
+        bMid(B3_L, B3_R, 'VxRail bndl'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'LCM pre-chk fail'),
+        bMid(B2_L, B2_R, 'LCM log files'),
+        bMid(B3_L, B3_R, 'Dell support case'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vSAN degraded'),
+        bMid(B2_L, B2_R, 'vSAN health UI'),
+        bMid(B3_L, B3_R, 'GSS escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'iDRAC alert'),
+        bMid(B2_L, B2_R, 'iDRAC sys event'),
+        bMid(B3_L, B3_R, 'TAM contact'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Node not rejoin'),
+        bMid(B2_L, B2_R, 'get-tech-support'),
+        bMid(B3_L, B3_R, 'P1 Dell ProSupp'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Net mismatch'),
+        bMid(B2_L, B2_R, 'vm-support bndl'),
+        bMid(B3_L, B3_R, 'Log archive'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Common issues guide triage · diagnostics pinpoint root cause · escalation gets Dell support engaged'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Issues', 'Diagnostics', 'Log Paths', 'Escalation', 'Recovery'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Plugin unavail', 'VxRail API dbg', 'VxRail Mgr logs', 'Bundle export', 'Restart VxRail'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LCM pre-chk fail', 'LCM log files', '/var/log/vmware', 'Dell support', 'Fix + retry'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vSAN degraded', 'vSAN health UI', '/var/log/vsan', 'GSS P1 case', 'Replace disk'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Node not rejoin', 'iDRAC sys evt', 'iDRAC /log', 'TAM contact', 'Re-add node'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('Dell PowerEdge servers · NVMe/SSD/HDD · iDRAC OOB · 25GbE NICs · ToR switches'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('VxRail plugin     = vCenter plugin provided by VxRail Manager; shows cluster health and LCM status'))
+    lines.append(txt_row('LCM pre-check     = Validation run before upgrade; fails if vSAN resync, network, or health issues exist'))
+    lines.append(txt_row('vSAN object health = vSAN tracks each VM object; degraded = FTT violated; resync = rebuilding copies'))
+    lines.append(txt_row('iDRAC SEL         = System Event Log on iDRAC; hardware faults (disk, PSU, fan, NIC) recorded here'))
+    lines.append(txt_row('get-tech-support  = VxRail CLI command collecting full diagnostic bundle for Dell GSS cases'))
+    lines.append(txt_row('Support bundle    = Compressed log archive from VxRail Manager, ESXi hosts, and iDRAC for escalation'))
+    lines.append(txt_row('TAM               = Technical Account Manager; Dell named support contact for critical escalations'))
+    lines.append(txt_row('Dell ProSupport   = Dell premium support tier; P1 = production down, response in under 4 hours'))
+    lines.append(txt_row('Node rejoin       = Process of ESXi host re-entering vSAN cluster after maintenance or failure'))
+    lines.append(txt_row('Network mismatch  = VLAN or MTU misconfiguration preventing VxRail Manager from reaching ESXi hosts'))
+    lines.append(txt_row('VxRail Mgr restart = Restarting Mystic service on VxRail Manager VM to recover plugin or API issues'))
+    lines.append(txt_row('GSS escalation    = Global Support Services; Dell/VMware support organisation for P1/P2 incidents'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vmware_topics():
+    """VMware Topics sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VMware — Topics'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VMware technical deep-dive topics: cluster failure domains, cluster state validation')))
+    lines.append(R(bMid(IV_L, IV_R, 'DRS/vMotion behavior, HA admission control, host isolation response, maintenance risk')))
+    lines.append(R(bMid(IV_L, IV_R, 'Network packet loss, recovery behavior, resource contention, snapshot impact on storage')))
+    lines.append(R(bMid(IV_L, IV_R, 'Storage latency troubleshooting: APD/PDL response, VMFS locking, datastore I/O queues')))
+    lines.append(R(bMid(IV_L, IV_R, 'Time/DNS validation: NTP sync required for HA, vSAN, and certificate operations')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Cluster topics cover HA design · performance topics isolate bottlenecks · resilience covers failure paths'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cluster Topics'),
+        bMid(B2_L, B2_R, 'Performance Topics'),
+        bMid(B3_L, B3_R, 'Resilience Topics'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Failure domains'),
+        bMid(B2_L, B2_R, 'Resource conten'),
+        bMid(B3_L, B3_R, 'Recovery behav'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Cluster state'),
+        bMid(B2_L, B2_R, 'Snapshot impact'),
+        bMid(B3_L, B3_R, 'HA restart ord'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'DRS/vMotion'),
+        bMid(B2_L, B2_R, 'Storage latency'),
+        bMid(B3_L, B3_R, 'APD/PDL resp'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'HA admission'),
+        bMid(B2_L, B2_R, 'Network pkt loss'),
+        bMid(B3_L, B3_R, 'Host isolation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Isolation resp'),
+        bMid(B2_L, B2_R, 'vMotion timing'),
+        bMid(B3_L, B3_R, 'Time/DNS val'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Maint risk val'),
+        bMid(B2_L, B2_R, 'Balloon/swap'),
+        bMid(B3_L, B3_R, 'Upgrade seq'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Cluster topics cover HA/DRS · performance topics isolate contention · resilience covers failure response'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['HA/Cluster', 'DRS/vMotion', 'Resources', 'Storage', 'Network/Time'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Failure domains', 'DRS behavior', 'Resource cont', 'Storage latency', 'Network pkt loss'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Cluster state', 'vMotion timing', 'Snapshot impact', 'APD/PDL resp', 'Time/DNS val'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['HA admission', 'Maint risk', 'Memory balloon', 'Datastore I/O', 'DNS resolution'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Isolation resp', 'Migration thres', 'CPU ready %', 'VMFS lock', 'NTP sync check'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86 cluster · ESXi hosts · Shared storage (SAN/vSAN) · ToR switches · Physical NICs'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Failure domain      = Host group in a cluster; HA distributes VM restarts across domains to limit blast radius'))
+    lines.append(txt_row('Cluster state val.  = Verification of vCenter, HA agent, DRS, and vSAN state across all cluster hosts'))
+    lines.append(txt_row('HA admission control = Policy reserving cluster capacity for VM restarts; slot-based or % resource model'))
+    lines.append(txt_row('Host isolation resp = HA action when host loses heartbeat: power off, shutdown, or leave VMs running'))
+    lines.append(txt_row('DRS migration thres = Aggressiveness setting (1-5) controlling how often DRS initiates vMotion migrations'))
+    lines.append(txt_row('vMotion             = Live migration of a running VM between ESXi hosts with zero downtime'))
+    lines.append(txt_row('Resource contention = CPU ready, memory balloon/swap, or storage latency caused by overcommitment'))
+    lines.append(txt_row('Snapshot delta      = VMDK delta disk created at snapshot time; grows with writes; impacts performance'))
+    lines.append(txt_row('APD                 = All Paths Down; storage device unreachable; all paths to datastore failed'))
+    lines.append(txt_row('PDL                 = Permanent Device Loss; storage device reports itself gone; triggers HA restart'))
+    lines.append(txt_row('NTP synchronization = Required for HA elections, vSAN, SSO certificates, and replication timestamps'))
+    lines.append(txt_row('Balloon driver      = VMware memory reclaim driver; inflates inside guest to force OS to free memory'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vxrail_hardware():
+    """VxRail Hardware sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VxRail — Hardware'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VxRail hardware operations: node health monitoring via iDRAC and VxRail Manager')))
+    lines.append(R(bMid(IV_L, IV_R, 'Disk replacement procedures using guided workflow; NIC health and link state checks')))
+    lines.append(R(bMid(IV_L, IV_R, 'Power and cooling alarm management; iDRAC out-of-band access configuration')))
+    lines.append(R(bMid(IV_L, IV_R, 'Firmware inventory and compliance tracking via OMIVV and LCM bundle validation')))
+    lines.append(R(bMid(IV_L, IV_R, 'SupportAssist and CloudIQ for proactive hardware monitoring and capacity planning')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Node health monitors hardware state · hardware ops cover disk and NIC · monitoring alerts on failures'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Node Health'),
+        bMid(B2_L, B2_R, 'Hardware Ops'),
+        bMid(B3_L, B3_R, 'HW Monitoring'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VxRail plugin'),
+        bMid(B2_L, B2_R, 'Disk replacement'),
+        bMid(B3_L, B3_R, 'OMIVV alerts'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'iDRAC health'),
+        bMid(B2_L, B2_R, 'NIC link check'),
+        bMid(B3_L, B3_R, 'SupportAssist'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'ESXi connected'),
+        bMid(B2_L, B2_R, 'Power/cooling'),
+        bMid(B3_L, B3_R, 'CloudIQ view'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vSAN node ok'),
+        bMid(B2_L, B2_R, 'iDRAC config'),
+        bMid(B3_L, B3_R, 'iDRAC SEL log'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Hardware alarm'),
+        bMid(B2_L, B2_R, 'FW inventory'),
+        bMid(B3_L, B3_R, 'Temp/fan/PSU'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Disk state'),
+        bMid(B2_L, B2_R, 'Guided removal'),
+        bMid(B3_L, B3_R, 'Drive SMART'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Node health surfaces hardware faults · ops guide replacement procedures · monitoring enables proactive care'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Node Health', 'Disk Replace', 'NIC Health', 'Power/Cooling', 'iDRAC/FW'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['VxRail plugin', 'Guided workflow', 'Link state', 'PSU status', 'iDRAC config'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['iDRAC health', 'Pre-removal chk', 'NIC teaming', 'Temp alarms', 'FW inventory'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['ESXi connected', 'vSAN rebuild', 'Driver compat', 'Fan speed', 'iDRAC LDAP'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vSAN node ok', 'Post-replace val', 'OMIVV NIC chk', 'Cooling zones', 'FW compliance'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('Dell PowerEdge servers · NVMe/SSD/HDD drives · iDRAC OOB chip · PSUs · Cooling fans · NICs'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('iDRAC             = Integrated Dell Remote Access Controller; hardware health, OOB console, LDAP auth'))
+    lines.append(txt_row('VxRail Manager    = Embedded management VM; aggregates node health from iDRAC and ESXi into plugin'))
+    lines.append(txt_row('OMIVV             = OpenManage Integration for VMware vCenter; surfaces Dell HW alarms in vCenter UI'))
+    lines.append(txt_row('SupportAssist     = Dell proactive support service; auto-creates cases on hardware fault detection'))
+    lines.append(txt_row('CloudIQ           = Dell SaaS monitoring platform; capacity, health, and performance tracking'))
+    lines.append(txt_row('SEL               = System Event Log on iDRAC; records all hardware events (disk, PSU, fan, NIC)'))
+    lines.append(txt_row('SMART             = Self-Monitoring Analysis and Reporting Technology; drive health predictor'))
+    lines.append(txt_row('PSU               = Power Supply Unit; dual PSU in each VxRail node for redundancy'))
+    lines.append(txt_row('NIC teaming       = Active/standby or LACP NIC bonding on VxRail nodes for network redundancy'))
+    lines.append(txt_row('Firmware inventory = LCM bundle tracks required FW versions for BIOS, iDRAC, NICs, and drives'))
+    lines.append(txt_row('vSAN disk group   = Cache + capacity disk grouping per node; disk failure triggers vSAN rebuild'))
+    lines.append(txt_row('Guided disk replacement = VxRail Manager workflow that puts node in maint mode before disk removal'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vxrail_lifecycle():
+    """VxRail Lifecycle sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VxRail — Lifecycle'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VxRail upgrade lifecycle: planning with compatibility matrix and BOM validation')))
+    lines.append(R(bMid(IV_L, IV_R, 'Pre-check health assessment before LCM run; bundle download from Dell support portal')))
+    lines.append(R(bMid(IV_L, IV_R, 'Firmware update alongside ESXi in single LCM operation per node (node-by-node)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Rollback planning if upgrade fails; post-upgrade validation of all cluster components')))
+    lines.append(R(bMid(IV_L, IV_R, 'vSAN rebalance after cluster expansion; staged upgrade planning for large environments')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Planning validates BOM · execution runs LCM node-by-node · validation confirms cluster health post-upgrade'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Planning'),
+        bMid(B2_L, B2_R, 'Execution'),
+        bMid(B3_L, B3_R, 'Validation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'BOM compat check'),
+        bMid(B2_L, B2_R, 'Bundle download'),
+        bMid(B3_L, B3_R, 'Post-upg health'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Upgrade planning'),
+        bMid(B2_L, B2_R, 'Pre-check run'),
+        bMid(B3_L, B3_R, 'vSAN check'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Pre-req review'),
+        bMid(B2_L, B2_R, 'Node-by-node'),
+        bMid(B3_L, B3_R, 'ESXi version ok'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Bundle select'),
+        bMid(B2_L, B2_R, 'FW+ESXi together'),
+        bMid(B3_L, B3_R, 'iDRAC FW ver'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Rollback plan'),
+        bMid(B2_L, B2_R, 'vSAN rebalance'),
+        bMid(B3_L, B3_R, 'LCM status'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Risk assessment'),
+        bMid(B2_L, B2_R, 'Progress monitor'),
+        bMid(B3_L, B3_R, 'Cluster stable'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Planning catches BOM gaps · execution upgrades node-by-node safely · validation confirms stable cluster'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Upg Planning', 'Pre-Checks', 'Bundle Mgmt', 'Firmware', 'Rollback/Post'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['BOM compat', 'Health pre-chk', 'Bundle download', 'FW with ESXi', 'Rollback plan'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Upgrade plan', 'vSAN resync=0', 'Bundle validate', 'FW inventory', 'Post-upg val'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Risk assess', 'ESXi compat', 'Staging area', 'iDRAC FW', 'vSAN check'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['BOM select', 'Network check', 'Bundle history', 'BIOS version', 'Cluster stable'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('Dell PowerEdge servers · NVMe/SSD/HDD · iDRAC · 25GbE NICs · ToR switches'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('LCM               = Lifecycle Manager; VxRail orchestration engine for node-by-node upgrade operations'))
+    lines.append(txt_row('BOM               = Bill of Materials; version matrix of ESXi, FW, and driver combinations from Dell'))
+    lines.append(txt_row('Pre-check         = LCM health validation before upgrade; blocks if vSAN or connectivity issues found'))
+    lines.append(txt_row('Bundle            = Signed Dell LCM package with all matched component versions for the upgrade'))
+    lines.append(txt_row('Firmware update   = BIOS, iDRAC, NIC, and drive FW updated per node as part of the LCM bundle'))
+    lines.append(txt_row('ESXi upgrade      = ESXi version bump included in LCM bundle; applied node-by-node with maintenance'))
+    lines.append(txt_row('vSAN rebalance    = Object redistribution after cluster expansion; triggered automatically or manually'))
+    lines.append(txt_row('Rollback          = Returning a node to previous ESXi boot bank if LCM upgrade fails mid-sequence'))
+    lines.append(txt_row('Post-upgrade val  = Checks ESXi version, iDRAC FW, vSAN health, and cluster alarms after LCM run'))
+    lines.append(txt_row('Compatibility matrix = Dell matrix defining which ESXi, vCenter, and FW versions are supported together'))
+    lines.append(txt_row('Staged upgrade    = Upgrading a subset of nodes first to validate before proceeding to full cluster'))
+    lines.append(txt_row('Node-by-node      = LCM upgrade sequence: one node at a time into maintenance, upgrade, then exit'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vxrail_operations():
+    """VxRail Operations sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VxRail — Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Daily VxRail cluster operations: health checks via VxRail plugin and iDRAC')))
+    lines.append(R(bMid(IV_L, IV_R, 'Maintenance window procedures; node maintenance mode workflow and DRS evacuation')))
+    lines.append(R(bMid(IV_L, IV_R, 'Cluster expansion node addition; support case preparation with bundle generation')))
+    lines.append(R(bMid(IV_L, IV_R, 'Post-change validation; LCM failure triage; pre-upgrade readiness checks')))
+    lines.append(R(bMid(IV_L, IV_R, 'Change management log; alert review from OMIVV, SupportAssist, and vCenter alarms')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops catch cluster issues · maintenance keeps nodes updated · cluster mgmt handles expansion'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily Ops'),
+        bMid(B2_L, B2_R, 'Maintenance'),
+        bMid(B3_L, B3_R, 'Cluster Mgmt'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Daily checks'),
+        bMid(B2_L, B2_R, 'Maint window'),
+        bMid(B3_L, B3_R, 'Cluster expand'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VxRail plugin'),
+        bMid(B2_L, B2_R, 'Node maint mode'),
+        bMid(B3_L, B3_R, 'Node add guide'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'iDRAC alarms'),
+        bMid(B2_L, B2_R, 'Pre-maint chk'),
+        bMid(B3_L, B3_R, 'Rebalance'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vSAN resync'),
+        bMid(B2_L, B2_R, 'Change window'),
+        bMid(B3_L, B3_R, 'Support case'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Node health'),
+        bMid(B2_L, B2_R, 'Post-change val'),
+        bMid(B3_L, B3_R, 'LCM fail triage'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Alert review'),
+        bMid(B2_L, B2_R, 'Change log'),
+        bMid(B3_L, B3_R, 'Pre-upg checks'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily ops surface issues early · maintenance follows change process · cluster mgmt scales the environment'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Daily Chks', 'Maint Window', 'Node Maint', 'Cluster Expnd', 'Support Case'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['VxRail plugin', 'Pre-maint chk', 'Maint mode', 'Add node guide', 'Bundle gen'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['iDRAC alarms', 'Change window', 'DRS evacuate', 'Rebalance', 'Log collect'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['vSAN resync=0', 'Work perform', 'FW+ESXi upg', 'vSAN expand', 'SupportAssist'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['ESXi connected', 'Post-chng val', 'Exit maint', 'Cluster health', 'GSS portal'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('Dell PowerEdge servers · NVMe/SSD/HDD · iDRAC OOB · 25GbE NICs · ToR switches'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('VxRail plugin     = vCenter plugin aggregating cluster health from VxRail Manager into a single view'))
+    lines.append(txt_row('Maintenance mode  = ESXi state evacuating VMs via DRS before node-level maintenance or upgrade'))
+    lines.append(txt_row('DRS evacuation    = DRS migrates all VMs off a host via vMotion before maintenance mode is entered'))
+    lines.append(txt_row('Cluster expansion = Adding new VxRail nodes to an existing cluster via guided VxRail Manager workflow'))
+    lines.append(txt_row('Post-change val   = Checks vSAN health, ESXi connectivity, iDRAC status, and alarms after any change'))
+    lines.append(txt_row('Support bundle    = Log archive generated by VxRail Manager for Dell GSS case submission'))
+    lines.append(txt_row('SupportAssist     = Dell proactive support service; opens cases automatically on hardware fault'))
+    lines.append(txt_row('LCM failure triage = Investigating why an LCM upgrade stalled; review LCM logs and pre-check output'))
+    lines.append(txt_row('Pre-upgrade check = Health and readiness validation run before initiating an LCM upgrade job'))
+    lines.append(txt_row('Change management = Formal process for scheduling, approving, and documenting cluster changes'))
+    lines.append(txt_row('iDRAC             = Integrated Dell Remote Access Controller; hardware health and OOB access'))
+    lines.append(txt_row('Node-by-node      = LCM upgrade pattern: maintenance → upgrade → validate → next node in sequence'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vxrail_troubleshooting():
+    """VxRail Troubleshooting sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VxRail — Troubleshooting'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'LCM upgrade failures and rollback; VxRail Manager VM (Mystic service) unavailable')))
+    lines.append(R(bMid(IV_L, IV_R, 'Host alerts from ESXi or hardware; vSAN alerts for degraded objects or capacity')))
+    lines.append(R(bMid(IV_L, IV_R, 'Support bundle generation failures; network alerts for VLAN or link issues')))
+    lines.append(R(bMid(IV_L, IV_R, 'iDRAC system event review; OMIVV alarm triage; VxRail API debug for service issues')))
+    lines.append(R(bMid(IV_L, IV_R, 'Escalation: Dell GSS P1, TAM contact, ProSupport log archive for critical incidents')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  LCM/VxRail issues block upgrades · diagnostics isolate service failures · escalation gets Dell engaged'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'LCM/VxRail Issues'),
+        bMid(B2_L, B2_R, 'Diagnostics'),
+        bMid(B3_L, B3_R, 'Escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'LCM fail triage'),
+        bMid(B2_L, B2_R, 'VxRail API debug'),
+        bMid(B3_L, B3_R, 'VxRail bundle'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Mgr unavailable'),
+        bMid(B2_L, B2_R, 'LCM log files'),
+        bMid(B3_L, B3_R, 'Dell support'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Host alerts'),
+        bMid(B2_L, B2_R, 'iDRAC SEL'),
+        bMid(B3_L, B3_R, 'GSS escalation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vSAN alerts'),
+        bMid(B2_L, B2_R, 'vSAN health UI'),
+        bMid(B3_L, B3_R, 'TAM contact'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Bundle fail'),
+        bMid(B2_L, B2_R, 'Bundle gen log'),
+        bMid(B3_L, B3_R, 'P1 ProSupport'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Net alerts'),
+        bMid(B2_L, B2_R, 'OMIVV alerts'),
+        bMid(B3_L, B3_R, 'Log archive'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  LCM issues block upgrades · diagnostics pinpoint service faults · escalation engages Dell ProSupport'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LCM Failures', 'Mgr Unavail', 'Host/vSAN', 'Bundle Fail', 'Network Alerts'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LCM pre-chk', 'VxRail svc', 'Host alerts', 'Bundle gen err', 'VLAN mismatch'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LCM stall', 'Mystic server', 'vSAN degrade', 'Log collection', 'Link down NIC'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LCM rollback', 'VxRail API', 'vSAN capacity', 'API timeout', 'MTU issue'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Post-fail chk', 'Mgr restart', 'iDRAC alerts', 'Manual bundle', 'ToR config'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('Dell PowerEdge servers · NVMe/SSD/HDD · iDRAC · 25GbE NICs · ToR switches'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('LCM failure       = Upgrade job failed mid-sequence; check LCM logs and pre-check output for root cause'))
+    lines.append(txt_row('VxRail Manager    = Embedded management VM running Mystic service; provides REST API and vCenter plugin'))
+    lines.append(txt_row('Host alert        = ESXi or iDRAC hardware alarm (disk, NIC, PSU, CPU) surfaced in VxRail plugin'))
+    lines.append(txt_row('vSAN degraded     = vSAN object FTT violated; component on failed disk or host; rebuild in progress'))
+    lines.append(txt_row('Support bundle    = Compressed log archive from VxRail Manager and ESXi hosts for Dell GSS submission'))
+    lines.append(txt_row('SupportAssist     = Dell proactive support; auto-opens cases on hardware fault; submits initial logs'))
+    lines.append(txt_row('iDRAC SEL         = System Event Log; hardware events (disk, PSU, fan, NIC); first stop for HW triage'))
+    lines.append(txt_row('OMIVV             = OpenManage Integration for VMware vCenter; surfaces Dell HW alarms in vCenter'))
+    lines.append(txt_row('TAM escalation    = Engaging named Dell Technical Account Manager for critical production incidents'))
+    lines.append(txt_row('Dell ProSupport P1 = Highest Dell support priority; production down; response in under 4 hours'))
+    lines.append(txt_row('LCM rollback      = Reverting a node to previous ESXi boot bank after a failed LCM upgrade attempt'))
+    lines.append(txt_row('Network alert     = VLAN mismatch, link down, or MTU issue detected by OMIVV or VxRail Manager'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+def vxrail_manager():
+    """VxRail Manager Overview sub-section — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VxRail Manager — Overview'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VxRail Manager is the VM running the "Mystic" service: REST API and vCenter plugin')))
+    lines.append(R(bMid(IV_L, IV_R, 'Manages LCM lifecycle jobs; generates support bundles; manages cluster connectivity config')))
+    lines.append(R(bMid(IV_L, IV_R, 'Handles certificate management for the appliance; aggregates log files for diagnostics')))
+    lines.append(R(bMid(IV_L, IV_R, 'API token authentication for REST access; job queue for LCM and pre-check operations')))
+    lines.append(R(bMid(IV_L, IV_R, 'DNS/NTP configuration and proxy config managed through VxRail Manager connectivity page')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Service health monitors Mystic · lifecycle jobs run upgrades · connectivity manages cluster networking'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Service Health'),
+        bMid(B2_L, B2_R, 'Operations'),
+        bMid(B3_L, B3_R, 'Connectivity'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Mystic service'),
+        bMid(B2_L, B2_R, 'Lifecycle jobs'),
+        bMid(B3_L, B3_R, 'vCenter plugin'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'API endpoint'),
+        bMid(B2_L, B2_R, 'Support bundle'),
+        bMid(B3_L, B3_R, 'VxRail API TLS'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Plugin status'),
+        bMid(B2_L, B2_R, 'Cert management'),
+        bMid(B3_L, B3_R, 'iDRAC access'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Job queue'),
+        bMid(B2_L, B2_R, 'Log collection'),
+        bMid(B3_L, B3_R, 'ESXi mgmt net'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Log service'),
+        bMid(B2_L, B2_R, 'API token'),
+        bMid(B3_L, B3_R, 'DNS/NTP config'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Health endpoint'),
+        bMid(B2_L, B2_R, 'Upgrade trigger'),
+        bMid(B3_L, B3_R, 'Proxy config'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Service health confirms Mystic is running · operations cover LCM and certs · connectivity manages network'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Svc Health', 'Lifecycle Jobs', 'Support Bndl', 'Connectivity', 'Certs/Logs'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Mystic status', 'LCM job status', 'Bundle gen', 'Plugin connect', 'Cert expiry'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['API endpoint', 'Job history', 'Log collect', 'vCenter auth', 'Cert rotation'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Plugin loaded', 'Pre-check jobs', 'SupportAssist', 'DNS/NTP cfg', '/var/log/mystic'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Health check', 'Upgrade jobs', 'Manual bundle', 'Proxy config', 'API access log'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('Dell PowerEdge servers · VxRail Manager VM · iDRAC OOB · 25GbE NICs · vCenter cluster'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('VxRail Manager    = Embedded VM on VxRail cluster; runs Mystic service for all cluster management'))
+    lines.append(txt_row('Mystic service    = Core Java service inside VxRail Manager VM; handles API, LCM, and plugin operations'))
+    lines.append(txt_row('LCM job           = Lifecycle Manager upgrade task managed by VxRail Manager; tracked in job queue'))
+    lines.append(txt_row('Support bundle    = Compressed diagnostic archive generated by VxRail Manager for Dell GSS cases'))
+    lines.append(txt_row('vCenter plugin    = VxRail UI extension in vCenter; shows cluster health, LCM status, and node details'))
+    lines.append(txt_row('REST API          = VxRail Manager API on port 443; used for LCM, health queries, and cluster config'))
+    lines.append(txt_row('API token         = Bearer token for VxRail Manager REST API authentication; scoped per session'))
+    lines.append(txt_row('Certificate mgmt  = VxRail Manager manages TLS certs for API and plugin; rotation handled via UI/API'))
+    lines.append(txt_row('DNS/NTP config    = Cluster DNS servers and NTP sources configured in VxRail Manager connectivity page'))
+    lines.append(txt_row('Proxy config      = HTTP proxy settings for VxRail Manager to reach SupportAssist and CloudIQ'))
+    lines.append(txt_row('/var/log/mystic   = Primary VxRail Manager log directory; contains service, API, and LCM job logs'))
+    lines.append(txt_row('SupportAssist intg = VxRail Manager sends hardware alerts to Dell for proactive case creation'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+
 # ── Diagram registry ──────────────────────────────────────────────────────────
 # 'file' is relative to the repo root (the directory containing mkdocs.yml).
 # Add an entry here whenever you add a new diagram function above.
@@ -8099,6 +15320,354 @@ DIAGRAMS = {
         'file': 'docs/virtualization/vmware/vsphere-replication/index.md',
         'description': 'vSphere Replication Stack — VRMS, HBRSVC, delta sync, RPO, MPIT, failover/failback',
     },
+    # ── ESXi sub-section diagrams ────────────────────────────────────────────────
+    'esxi-architecture': {
+        'fn': esxi_architecture,
+        'file': 'docs/virtualization/vmware/esxi/architecture/index.md',
+        'description': 'ESXi Architecture — VMkernel, vmknic, storage stack, HA/DRS integration',
+    },
+    'esxi-operations': {
+        'fn': esxi_operations,
+        'file': 'docs/virtualization/vmware/esxi/operations/index.md',
+        'description': 'ESXi Operations — patching, host profiles, maintenance mode, lifecycle',
+    },
+    'esxi-security': {
+        'fn': esxi_security,
+        'file': 'docs/virtualization/vmware/esxi/security/index.md',
+        'description': 'ESXi Security — lockdown mode, RBAC, TLS, vSphere Trust Authority',
+    },
+    'esxi-troubleshooting': {
+        'fn': esxi_troubleshooting,
+        'file': 'docs/virtualization/vmware/esxi/troubleshooting/index.md',
+        'description': 'ESXi Troubleshooting — PSOD, APD/PDL, DCUI, esxcli diagnostics',
+    },
+    # ── NSX sub-section diagrams ─────────────────────────────────────────────────
+    'nsx-architecture': {
+        'fn': nsx_architecture,
+        'file': 'docs/virtualization/vmware/nsx/architecture/index.md',
+        'description': 'NSX Architecture — manager cluster, control plane, transport nodes, DFW',
+    },
+    'nsx-operations': {
+        'fn': nsx_operations,
+        'file': 'docs/virtualization/vmware/nsx/operations/index.md',
+        'description': 'NSX Operations — manager cluster health, transport node prep, upgrade coordinator',
+    },
+    'nsx-security': {
+        'fn': nsx_security,
+        'file': 'docs/virtualization/vmware/nsx/security/index.md',
+        'description': 'NSX Security — DFW microsegmentation, IDPS, RBAC, TLS, audit logging',
+    },
+    'nsx-troubleshooting': {
+        'fn': nsx_troubleshooting,
+        'file': 'docs/virtualization/vmware/nsx/troubleshooting/index.md',
+        'description': 'NSX Troubleshooting — transport node issues, BGP peering, DFW, support bundle',
+    },
+    # ── vSAN sub-section diagrams ────────────────────────────────────────────────
+    'vsan-architecture': {
+        'fn': vsan_architecture,
+        'file': 'docs/virtualization/vmware/vsan/architecture/index.md',
+        'description': 'vSAN Architecture — disk groups, SPBM, FTT, ESA, stretched cluster',
+    },
+    'vsan-operations': {
+        'fn': vsan_operations,
+        'file': 'docs/virtualization/vmware/vsan/operations/index.md',
+        'description': 'vSAN Operations — health service, resyncing, capacity, upgrade sequencing',
+    },
+    'vsan-security': {
+        'fn': vsan_security,
+        'file': 'docs/virtualization/vmware/vsan/security/index.md',
+        'description': 'vSAN Security — D@RE, RBAC, data-in-transit encryption, KMS, vSphere Trust',
+    },
+    'vsan-troubleshooting': {
+        'fn': vsan_troubleshooting,
+        'file': 'docs/virtualization/vmware/vsan/troubleshooting/index.md',
+        'description': 'vSAN Troubleshooting — disk faults, resync stalls, network partition, proactive tests',
+    },
+    # ── vCenter sub-section diagrams ─────────────────────────────────────────────
+    'vcenter-architecture': {
+        'fn': vcenter_architecture,
+        'file': 'docs/virtualization/vmware/vcenter/architecture/index.md',
+        'description': 'vCenter Architecture — VCSA, PSC, SSO, ELM topology, HA, LCM',
+    },
+    'vcenter-operations': {
+        'fn': vcenter_operations,
+        'file': 'docs/virtualization/vmware/vcenter/operations/index.md',
+        'description': 'vCenter Operations — VAMI, backup, upgrade, certificate management',
+    },
+    'vcenter-security': {
+        'fn': vcenter_security,
+        'file': 'docs/virtualization/vmware/vcenter/security/index.md',
+        'description': 'vCenter Security — SSO hardening, RBAC, TLS, audit, Workspace ONE',
+    },
+    'vcenter-troubleshooting': {
+        'fn': vcenter_troubleshooting,
+        'file': 'docs/virtualization/vmware/vcenter/troubleshooting/index.md',
+        'description': 'vCenter Troubleshooting — SSO issues, DB connection, service restarts, VAMI',
+    },
+    # ── VCF sub-section diagrams ─────────────────────────────────────────────────
+    'vcf-architecture': {
+        'fn': vcf_architecture,
+        'file': 'docs/virtualization/vmware/vmware-cloud-foundation/architecture/index.md',
+        'description': 'VCF Architecture — SDDC Manager, management/workload domains, CloudBuilder',
+    },
+    'vcf-operations': {
+        'fn': vcf_operations,
+        'file': 'docs/virtualization/vmware/vmware-cloud-foundation/operations/index.md',
+        'description': 'VCF Operations — LCM bundle upgrades, domain lifecycle, SDDC Manager tasks',
+    },
+    'vcf-security': {
+        'fn': vcf_security,
+        'file': 'docs/virtualization/vmware/vmware-cloud-foundation/security/index.md',
+        'description': 'VCF Security — SDDC Manager RBAC, cert management, vIDM, STIG compliance',
+    },
+    'vcf-troubleshooting': {
+        'fn': vcf_troubleshooting,
+        'file': 'docs/virtualization/vmware/vmware-cloud-foundation/troubleshooting/index.md',
+        'description': 'VCF Troubleshooting — LCM failures, NSX prep, SDDC Manager, support bundles',
+    },
+    # ── Aria Automation sub-section diagrams ─────────────────────────────────────
+    'aria-automation-architecture': {
+        'fn': aria_automation_architecture,
+        'file': 'docs/virtualization/vmware/aria-automation/architecture/index.md',
+        'description': 'Aria Automation Architecture — Prelude cluster, CAS, ABX, service broker, extensibility',
+    },
+    'aria-automation-operations': {
+        'fn': aria_automation_operations,
+        'file': 'docs/virtualization/vmware/aria-automation/operations/index.md',
+        'description': 'Aria Automation Operations — blueprint publishing, upgrade, cert management, API',
+    },
+    'aria-automation-security': {
+        'fn': aria_automation_security,
+        'file': 'docs/virtualization/vmware/aria-automation/security/index.md',
+        'description': 'Aria Automation Security — vIDM SSO, RBAC org/project, TLS, audit events',
+    },
+    'aria-automation-troubleshooting': {
+        'fn': aria_automation_troubleshooting,
+        'file': 'docs/virtualization/vmware/aria-automation/troubleshooting/index.md',
+        'description': 'Aria Automation Troubleshooting — deployment failures, vRO errors, ABX, support bundle',
+    },
+    # ── Aria Operations sub-section diagrams ─────────────────────────────────────
+    'aria-operations-architecture': {
+        'fn': aria_operations_architecture,
+        'file': 'docs/virtualization/vmware/aria-operations/architecture/index.md',
+        'description': 'Aria Operations Architecture — analytics cluster, remote collectors, adapters, capacity',
+    },
+    'aria-operations-operations': {
+        'fn': aria_operations_operations,
+        'file': 'docs/virtualization/vmware/aria-operations/operations/index.md',
+        'description': 'Aria Operations Operations — alert management, right-sizing, lifecycle, REST API',
+    },
+    'aria-operations-security': {
+        'fn': aria_operations_security,
+        'file': 'docs/virtualization/vmware/aria-operations/security/index.md',
+        'description': 'Aria Operations Security — vIDM SSO, RBAC roles, TLS, API tokens, audit log',
+    },
+    'aria-operations-troubleshooting': {
+        'fn': aria_operations_troubleshooting,
+        'file': 'docs/virtualization/vmware/aria-operations/troubleshooting/index.md',
+        'description': 'Aria Operations Troubleshooting — adapter failures, alert noise, missing data, support.zip',
+    },
+    # ── Aria Logs sub-section diagrams ───────────────────────────────────────────
+    'aria-logs-architecture': {
+        'fn': aria_logs_architecture,
+        'file': 'docs/virtualization/vmware/aria-operations-for-logs/architecture/index.md',
+        'description': 'Aria Logs Architecture — master/worker HA cluster, vRLI agents, VLQL, content packs',
+    },
+    'aria-logs-operations': {
+        'fn': aria_logs_operations,
+        'file': 'docs/virtualization/vmware/aria-operations-for-logs/operations/index.md',
+        'description': 'Aria Logs Operations — alert management, disk retention, content packs, upgrade',
+    },
+    'aria-logs-security': {
+        'fn': aria_logs_security,
+        'file': 'docs/virtualization/vmware/aria-operations-for-logs/security/index.md',
+        'description': 'Aria Logs Security — AD/LDAP SSO, RBAC, TLS agent/syslog, FIPS, audit trail',
+    },
+    'aria-logs-troubleshooting': {
+        'fn': aria_logs_troubleshooting,
+        'file': 'docs/virtualization/vmware/aria-operations-for-logs/troubleshooting/index.md',
+        'description': 'Aria Logs Troubleshooting — agents silent, disk full, alert not firing, vRLI bundle',
+    },
+    # ── Aria Networks sub-section diagrams ───────────────────────────────────────
+    'aria-networks-architecture': {
+        'fn': aria_networks_architecture,
+        'file': 'docs/virtualization/vmware/aria-operations-for-networks/architecture/index.md',
+        'description': 'Aria Networks Architecture — platform/collector VMs, IPFIX flows, path analysis, NSX',
+    },
+    'aria-networks-operations': {
+        'fn': aria_networks_operations,
+        'file': 'docs/virtualization/vmware/aria-operations-for-networks/operations/index.md',
+        'description': 'Aria Networks Operations — flow queries, path analysis, alert management, upgrade',
+    },
+    'aria-networks-security': {
+        'fn': aria_networks_security,
+        'file': 'docs/virtualization/vmware/aria-operations-for-networks/security/index.md',
+        'description': 'Aria Networks Security — vIDM SSO, RBAC, TLS, API tokens, audit log',
+    },
+    'aria-networks-troubleshooting': {
+        'fn': aria_networks_troubleshooting,
+        'file': 'docs/virtualization/vmware/aria-operations-for-networks/troubleshooting/index.md',
+        'description': 'Aria Networks Troubleshooting — flow gaps, path analysis errors, collector offline',
+    },
+    # ── Aria LCM sub-section diagrams ────────────────────────────────────────────
+    'aria-lcm-architecture': {
+        'fn': aria_lcm_architecture,
+        'file': 'docs/virtualization/vmware/aria-suite-lifecycle/architecture/index.md',
+        'description': 'Aria LCM Architecture — LCM appliance, Locker, cert manager, product registry',
+    },
+    'aria-lcm-operations': {
+        'fn': aria_lcm_operations,
+        'file': 'docs/virtualization/vmware/aria-suite-lifecycle/operations/index.md',
+        'description': 'Aria LCM Operations — product deploy/upgrade, binary sync, cert rotation, Locker',
+    },
+    'aria-lcm-security': {
+        'fn': aria_lcm_security,
+        'file': 'docs/virtualization/vmware/aria-suite-lifecycle/security/index.md',
+        'description': 'Aria LCM Security — vIDM SSO, RBAC, Locker vault, TLS, audit log',
+    },
+    'aria-lcm-troubleshooting': {
+        'fn': aria_lcm_troubleshooting,
+        'file': 'docs/virtualization/vmware/aria-suite-lifecycle/troubleshooting/index.md',
+        'description': 'Aria LCM Troubleshooting — deploy failures, binary sync, cert issues, support bundle',
+    },
+    # ── Horizon sub-section diagrams ─────────────────────────────────────────────
+    'horizon-architecture': {
+        'fn': horizon_architecture,
+        'file': 'docs/virtualization/vmware/horizon/architecture/index.md',
+        'description': 'Horizon Architecture — Connection Server, UAG, Blast/PCoIP, App Volumes, DEM, pools',
+    },
+    'horizon-operations': {
+        'fn': horizon_operations,
+        'file': 'docs/virtualization/vmware/horizon/operations/index.md',
+        'description': 'Horizon Operations — pod health, pool management, composer recompose, upgrade',
+    },
+    'horizon-security': {
+        'fn': horizon_security,
+        'file': 'docs/virtualization/vmware/horizon/security/index.md',
+        'description': 'Horizon Security — UAG smart card, AD auth, TLS, RBAC, Blast encryption',
+    },
+    'horizon-troubleshooting': {
+        'fn': horizon_troubleshooting,
+        'file': 'docs/virtualization/vmware/horizon/troubleshooting/index.md',
+        'description': 'Horizon Troubleshooting — black screen, provisioning errors, UAG, log bundle',
+    },
+    # ── SRM sub-section diagrams ─────────────────────────────────────────────────
+    'srm-architecture': {
+        'fn': srm_architecture,
+        'file': 'docs/virtualization/vmware/srm/architecture/index.md',
+        'description': 'SRM Architecture — site pair, SRA, protection groups, recovery plans, IP customisation',
+    },
+    'srm-operations': {
+        'fn': srm_operations,
+        'file': 'docs/virtualization/vmware/srm/operations/index.md',
+        'description': 'SRM Operations — test failover, planned migration, reprotect, failback, upgrade',
+    },
+    'srm-security': {
+        'fn': srm_security,
+        'file': 'docs/virtualization/vmware/srm/security/index.md',
+        'description': 'SRM Security — vCenter SSO, RBAC, TLS site pair, SRA authentication, audit',
+    },
+    'srm-troubleshooting': {
+        'fn': srm_troubleshooting,
+        'file': 'docs/virtualization/vmware/srm/troubleshooting/index.md',
+        'description': 'SRM Troubleshooting — site pair failure, plan errors, replication issues, log bundle',
+    },
+    # ── Tanzu sub-section diagrams ───────────────────────────────────────────────
+    'tanzu-architecture': {
+        'fn': tanzu_architecture,
+        'file': 'docs/virtualization/vmware/tanzu/architecture/index.md',
+        'description': 'Tanzu Architecture — Supervisor Cluster, TKGs/TKGm, Cluster API, NSX-T, Harbor, TMC',
+    },
+    'tanzu-operations': {
+        'fn': tanzu_operations,
+        'file': 'docs/virtualization/vmware/tanzu/operations/index.md',
+        'description': 'Tanzu Operations — cluster lifecycle, node pool scaling, upgrade, Harbor, Tanzu CLI',
+    },
+    'tanzu-security': {
+        'fn': tanzu_security,
+        'file': 'docs/virtualization/vmware/tanzu/security/index.md',
+        'description': 'Tanzu Security — vSphere SSO, RBAC, Pod Security Admission, NSX-T policies, mTLS',
+    },
+    'tanzu-troubleshooting': {
+        'fn': tanzu_troubleshooting,
+        'file': 'docs/virtualization/vmware/tanzu/troubleshooting/index.md',
+        'description': 'Tanzu Troubleshooting — cluster stuck, node NotReady, WCP degraded, tanzu diagnostics',
+    },
+    # ── vSphere Replication sub-section diagrams ─────────────────────────────────
+    'vsphere-replication-architecture': {
+        'fn': vsphere_replication_architecture,
+        'file': 'docs/virtualization/vmware/vsphere-replication/architecture/index.md',
+        'description': 'vSphere Replication Architecture — VRMS/VRS per site, per-VMDK RPO, SRM integration',
+    },
+    'vsphere-replication-operations': {
+        'fn': vsphere_replication_operations,
+        'file': 'docs/virtualization/vmware/vsphere-replication/operations/index.md',
+        'description': 'vSphere Replication Operations — RPO monitoring, pause/resume, test recovery, upgrade',
+    },
+    'vsphere-replication-security': {
+        'fn': vsphere_replication_security,
+        'file': 'docs/virtualization/vmware/vsphere-replication/security/index.md',
+        'description': 'vSphere Replication Security — vCenter SSO, RBAC, TLS traffic, cert management, FIPS',
+    },
+    'vsphere-replication-troubleshooting': {
+        'fn': vsphere_replication_troubleshooting,
+        'file': 'docs/virtualization/vmware/vsphere-replication/troubleshooting/index.md',
+        'description': 'vSphere Replication Troubleshooting — rep failures, RPO violations, CBT, VAMI bundle',
+    },
+    # ── VMware/VxRail sub-section diagrams ───────────────────────────────────────
+    'vmware-vxrail-architecture': {
+        'fn': vmware_vxrail_architecture,
+        'file': 'docs/virtualization/vmware/vxrail/architecture/index.md',
+        'description': 'VMware VxRail Architecture — node families, vSAN HCI stack, LCM, VCF integration',
+    },
+    'vmware-vxrail-operations': {
+        'fn': vmware_vxrail_operations,
+        'file': 'docs/virtualization/vmware/vxrail/operations/index.md',
+        'description': 'VMware VxRail Operations — daily health, LCM upgrades, cluster expansion, automation',
+    },
+    'vmware-vxrail-security': {
+        'fn': vmware_vxrail_security,
+        'file': 'docs/virtualization/vmware/vxrail/security/index.md',
+        'description': 'VMware VxRail Security — iDRAC LDAP, lockdown mode, vSAN encryption, Secure Boot',
+    },
+    'vmware-vxrail-troubleshooting': {
+        'fn': vmware_vxrail_troubleshooting,
+        'file': 'docs/virtualization/vmware/vxrail/troubleshooting/index.md',
+        'description': 'VMware VxRail Troubleshooting — plugin unavailable, LCM pre-check, vSAN degraded',
+    },
+    # ── VMware Topics deep-dive diagram ──────────────────────────────────────────
+    'vmware-topics': {
+        'fn': vmware_topics,
+        'file': 'docs/virtualization/vmware/topics/index.md',
+        'description': 'VMware Topics — HA, DRS, APD/PDL, resource contention, NTP/DNS deep-dive topics',
+    },
+    # ── VxRail section sub-page diagrams ─────────────────────────────────────────
+    'vxrail-hardware': {
+        'fn': vxrail_hardware,
+        'file': 'docs/virtualization/vxrail/hardware/index.md',
+        'description': 'VxRail Hardware — node health, disk replacement, NIC health, power/cooling, FW inventory',
+    },
+    'vxrail-lifecycle': {
+        'fn': vxrail_lifecycle,
+        'file': 'docs/virtualization/vxrail/lifecycle/index.md',
+        'description': 'VxRail Lifecycle — BOM validation, LCM planning, node upgrade, rollback, post-validation',
+    },
+    'vxrail-operations': {
+        'fn': vxrail_operations,
+        'file': 'docs/virtualization/vxrail/operations/index.md',
+        'description': 'VxRail Operations — daily ops, maintenance windows, cluster expansion, support bundles',
+    },
+    'vxrail-troubleshooting': {
+        'fn': vxrail_troubleshooting,
+        'file': 'docs/virtualization/vxrail/troubleshooting/index.md',
+        'description': 'VxRail Troubleshooting — LCM failures, Mystic unavailable, vSAN alerts, network alerts',
+    },
+    'vxrail-manager': {
+        'fn': vxrail_manager,
+        'file': 'docs/virtualization/vxrail/vxrail-manager/index.md',
+        'description': 'VxRail Manager — Mystic service health, LCM jobs, bundle generation, connectivity, certs',
+    },
+
 }
 
 

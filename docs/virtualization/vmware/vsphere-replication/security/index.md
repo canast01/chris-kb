@@ -1,20 +1,61 @@
 # vSphere Replication — Security
 
 ```
-  VR Security Layers Overview
-┌──────────────────────────────────────────────────────────────┐
-│  Identity           Access Control      Encryption           │
-│  ┌──────────────┐   ┌──────────────┐    ┌──────────────┐     │
-│  │ vCenter SSO  │   │ Custom roles:│    │ In-transit:  │     │
-│  │ (no VR user  │   │  VR-Operator │    │  TLS 1.2+    │     │
-│  │   store)     │   │  VR-Recovery │    │  opt. AES-256│     │
-│  │ VRA local:   │   │              │    │  per-VM      │     │
-│  │  admin/root  │   │ Least priv.: │    │              │     │
-│  │  (change     │   │  Recover    │    │ At rest:     │      │
-│  │   on deploy) │   │  privilege   │    │  vSAN / VM   │     │
-│  └──────────────┘   │  DR team only│    │  encryption  │     │
-│                     └──────────────┘    └──────────────┘     │
-└──────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────── vSphere Replication — Security ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         vCenter SSO authentication for VR appliance management; RBAC via vCenter roles        │   │
+│   │            Replication traffic encrypted over TLS between source VRS and target VRS           │   │
+│   │   Certificate management: VRMS and VRS certs signed by CA or vCenter CA; rotated on schedule  │   │
+│   │       Firewall rules: VRMS port 8043/443, VRS port 31031, vCenter port 443 between sites      │   │
+│   │    Audit: all replication config changes logged in vCenter Tasks and Events; syslog forward   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    vCenter SSO gates management · TLS encrypts replication traffic · certificates and firewall harden │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Authentication       │  │        Access Control       │  │          Encryption         │   │
+│   │         vCenter SSO         │  │         vCenter RBAC        │  │         Traffic TLS         │   │
+│   │       LDAP via vCenter      │  │          Admin role         │  │       Cert management       │   │
+│   │       VRMS local admin      │  │        Read-only role       │  │       CA-signed certs       │   │
+│   │         Plugin auth         │  │        Datastore perm       │  │          FIPS mode          │   │
+│   │       Site trust cert       │  │       Site admin roles      │  │       Compress+encrypt      │   │
+│   │       VAMI local auth       │  │        Firewall rules       │  │        Audit logging        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    SSO controls management access · RBAC scopes permissions · TLS and certs secure all replication pat│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Auth       │   Access Ctrl    │     Encryption    │    Hardening     │      Audit       │   │
+│   │   vCenter SSO    │   vCenter RBAC   │    Traffic TLS    │  Cert rotation   │  vCenter tasks   │   │
+│   │   LDAP groups    │    Admin role    │   CA-signed cert  │  Firewall rules  │  Config events   │   │
+│   │    VRMS local    │  Read-only role  │     FIPS mode     │  Min-perm RBAC   │  Syslog forward  │   │
+│   │ Site trust cert  │  Firewall scope  │    Compress+enc   │  VAMI hardening  │  Site pair log   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 VMs (VRMS + VRS) · RAM DIMMs · WAN firewall · CA infrastructure · vCenter appliance              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vCenter SSO        = Single Sign-On; authenticates admin access to VR plugin within vCenter UI       │
+│  RBAC               = Role-Based Access Control; VR uses vCenter roles for permissions scoping        │
+│  Admin role         = Full VR management: configure, pause, resume, reconfigure replication           │
+│  Read-only role     = View replication status only; cannot configure or modify replication            │
+│  Traffic encryption = TLS between source and target VRS; enabled by default; FIPS mode optional       │
+│  VRMS certificate   = TLS cert for the VRMS management UI; signed by vCenter CA or external CA        │
+│  VRS certificate    = TLS cert for the VRS data path; must be trusted at both source and target sites │
+│  Site trust         = Certificate-based trust between source vCenter and target vCenter for VR pairing│
+│  VAMI               = Virtual Appliance Management Interface; admin UI for VRMS/VRS; secured with loca│
+│  Firewall rules     = Required: 8043/443 for VRMS, 31031 for VRS data, 443 for vCenter communication  │
+│  Audit log          = All VR config changes logged in vCenter Tasks/Events; forwarded via syslog to SI│
+│  FIPS 140-2         = Federal cryptographic standard; enabled for VR traffic encryption at cluster con│
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">

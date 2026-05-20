@@ -26,19 +26,60 @@ Analytics cluster for vSphere performance, capacity, and compliance monitoring. 
 
 ## Component Topology
 
-```mermaid
-graph TB
-  ADP1["vCenter Adapter"] & ADP2["NSX Adapter"] & ADP3["Storage Adapter"] --> COL["Remote Collector\n(cloud proxy)"]
-  COL --> ANAL["Aria Operations\nAnalytics Cluster"]
-  ANAL --> DATA[("Metrics Store\nCassandra + GemFire")]
-  ANAL --> ALERTS["Alerts · Capacity · Rightsizing"]
-  ADMIN(["vSphere Admin"]) -->|"browser"| ANAL
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class ANAL,COL ctrl
-  class DATA store
-  class ADP1,ADP2,ADP3,ALERTS mgmt
-  class ADMIN host
+```
+┌─────────────────────────────────── Aria Operations — Architecture ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Aria Operations (formerly vROps) — analytics cluster: primary + replica + data nodes per site │   │
+│   │Remote collectors deployed per site collect metrics without exposing firewall paths to the clus│   │
+│   │    Adapter instances per integration: vSphere, NSX-T, storage, ServiceNow, SIEM, email/SNMP   │   │
+│   │Dashboards and alerts surface health, risk, efficiency badges across vSphere, NSX, storage, clo│   │
+│   │  Capacity management and optimization actions right-size VMs and forecast resource exhaustion │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works defines the cluster internals · integrations connect adapters · standards govern sizin│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         How It Works        │  │         Integrations        │  │       Design Standards      │   │
+│   │      Analytics cluster      │  │       vSphere adapter       │  │     Cluster L/XL sizing     │   │
+│   │      Remote collectors      │  │        NSX-T adapter        │  │       Remote coll/site      │   │
+│   │      Adapter instances      │  │       Storage adapters      │  │      Adapter config std     │   │
+│   │       Collector groups      │  │       ServiceNow ITSM       │  │       Data retain 6 mo      │   │
+│   │      Dashboards+alerts      │  │          SIEM/Kafka         │  │         Alert policy        │   │
+│   │        Capacity mgmt        │  │       Email/SNMP alert      │  │       Custom dash std       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works covers cluster nodes · integrations connect adapters and ITSM · standards enforce sizi│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   How It Works   │   Integrations   │    Design Stds    │    Deployment    │     Key Stds     │   │
+│   │Analytics cluster │ vSphere adapter  │   Cluster sizing  │   Single node    │   Alert policy   │   │
+│   │Remote collectors │  NSX-T adapter   │    Remote coll    │  Small cluster   │  Dashboard std   │   │
+│   │Adapter instances │ Storage adapters │   Data retention  │    HA cluster    │   Naming conv    │   │
+│   │ Collector groups │ ServiceNow intg  │  Custom policies  │   Multi-cloud    │     RBAC std     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 VMs (cluster nodes + remote collectors) · RAM DIMMs · Network NICs · vCenter/cloud targets       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Analytics cluster  = Primary + replica + data nodes forming the Aria Ops processing engine           │
+│  Primary node       = Cluster leader; hosts the UI, API, and coordinates analytics workload           │
+│  Replica node       = Standby for primary; takes over if primary fails; participates in analytics     │
+│  Data node          = Additional analytics capacity node; scales metric ingestion and retention       │
+│  Remote collector   = Lightweight VM per site; collects adapter data and forwards to cluster          │
+│  Adapter instance   = Configured connection to a monitored product: vSphere, NSX, storage, cloud      │
+│  Collector group    = Named group of remote collectors assigned to adapter instances for load sharing │
+│  Dashboard          = Customizable view of metrics, badges, and alerts for a resource group           │
+│  Alert definition   = Rule triggering notification when a metric crosses a threshold or symptom fires │
+│  Capacity analytics = Forecasting engine projecting resource exhaustion based on trend analysis       │
+│  Optimization action = Recommended change (right-size, power off, migrate) to improve efficiency      │
+│  Badge              = Health/risk/efficiency score (0-100) summarising object state at a glance       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

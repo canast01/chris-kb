@@ -3,28 +3,61 @@
 VxRail Manager notes for service health, lifecycle jobs, support bundles, connectivity, certificates, and logs.
 
 ```
-  ┌──────────────────────────────────────────────────────────┐
-  │                   VxRail Manager                         │
-  │                                                          │
-  │  ┌────────────────────────────────────────────────────┐  │
-  │  │  UI (HTTPS) / REST API (/rest/vxm/v1/...)          │  │
-  │  └──────────────────────────────────────────────────┬─┘  │
-  │                                                     │    │
-  │    ┌────────────────────┬────────────────────┐      │    │
-  │    ▼                    ▼                    ▼      │    │
-  │  ┌──────────┐  ┌──────────────┐  ┌──────────────┐  │    │
-  │  │  marvin  │  │    mystic    │  │   ptolemy    │  │    │
-  │  │  LCM     │  │  ext. API   │  │  vSAN bridge │  │    │
-  │  │ orchestr.│  │  cred. mgmt │  │  health      │  │    │
-  │  └────┬─────┘  └──────┬───────┘  └──────┬───────┘  │    │
-  │       │               │                 │           │    │
-  │       └───────────────┴─────────────────┘           │    │
-  │                        │                            │    │
-  │             ┌──────────┴───────────┐                │    │
-  │             ▼                      ▼                │    │
-  │         vCenter                  iDRAC              │    │
-  │         (cluster ops)            (hardware)         │    │
-  └──────────────────────────────────────────────────────────┘
+┌────────────────────────────────────── VxRail Manager — Overview ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       VxRail Manager is the VM running the "Mystic" service: REST API and vCenter plugin      │   │
+│   │   Manages LCM lifecycle jobs; generates support bundles; manages cluster connectivity config  │   │
+│   │     Handles certificate management for the appliance; aggregates log files for diagnostics    │   │
+│   │      API token authentication for REST access; job queue for LCM and pre-check operations     │   │
+│   │    DNS/NTP configuration and proxy config managed through VxRail Manager connectivity page    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Service health monitors Mystic · lifecycle jobs run upgrades · connectivity manages cluster network│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Service Health       │  │          Operations         │  │         Connectivity        │   │
+│   │        Mystic service       │  │        Lifecycle jobs       │  │        vCenter plugin       │   │
+│   │         API endpoint        │  │        Support bundle       │  │        VxRail API TLS       │   │
+│   │        Plugin status        │  │       Cert management       │  │         iDRAC access        │   │
+│   │          Job queue          │  │        Log collection       │  │        ESXi mgmt net        │   │
+│   │         Log service         │  │          API token          │  │        DNS/NTP config       │   │
+│   │       Health endpoint       │  │       Upgrade trigger       │  │         Proxy config        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Service health confirms Mystic is running · operations cover LCM and certs · connectivity manages n│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Svc Health    │  Lifecycle Jobs  │    Support Bndl   │   Connectivity   │    Certs/Logs    │   │
+│   │  Mystic status   │  LCM job status  │     Bundle gen    │  Plugin connect  │   Cert expiry    │   │
+│   │   API endpoint   │   Job history    │    Log collect    │   vCenter auth   │  Cert rotation   │   │
+│   │  Plugin loaded   │  Pre-check jobs  │   SupportAssist   │   DNS/NTP cfg    │ /var/log/mystic  │   │
+│   │   Health check   │   Upgrade jobs   │   Manual bundle   │   Proxy config   │  API access log  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Dell PowerEdge servers · VxRail Manager VM · iDRAC OOB · 25GbE NICs · vCenter cluster                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VxRail Manager    = Embedded VM on VxRail cluster; runs Mystic service for all cluster management    │
+│  Mystic service    = Core Java service inside VxRail Manager VM; handles API, LCM, and plugin operatio│
+│  LCM job           = Lifecycle Manager upgrade task managed by VxRail Manager; tracked in job queue   │
+│  Support bundle    = Compressed diagnostic archive generated by VxRail Manager for Dell GSS cases     │
+│  vCenter plugin    = VxRail UI extension in vCenter; shows cluster health, LCM status, and node detail│
+│  REST API          = VxRail Manager API on port 443; used for LCM, health queries, and cluster config │
+│  API token         = Bearer token for VxRail Manager REST API authentication; scoped per session      │
+│  Certificate mgmt  = VxRail Manager manages TLS certs for API and plugin; rotation handled via UI/API │
+│  DNS/NTP config    = Cluster DNS servers and NTP sources configured in VxRail Manager connectivity pag│
+│  Proxy config      = HTTP proxy settings for VxRail Manager to reach SupportAssist and CloudIQ        │
+│  /var/log/mystic   = Primary VxRail Manager log directory; contains service, API, and LCM job logs    │
+│  SupportAssist intg = VxRail Manager sends hardware alerts to Dell for proactive case creation        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">

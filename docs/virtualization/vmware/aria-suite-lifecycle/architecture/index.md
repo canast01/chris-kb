@@ -25,19 +25,60 @@ Central management appliance for deploying and upgrading the full VMware Aria Su
 
 ## Product Management Topology
 
-```mermaid
-graph TB
-  LCM["Aria Suite Lifecycle\n(LCM appliance)"]
-  LCM --> VROPS["Aria Operations"]
-  LCM --> VRLI["Aria Ops for Logs"]
-  LCM --> VRA["Aria Automation"]
-  LCM --> VRNI["Aria Ops for Networks"]
-  LCM --> REPO["Product Binaries Repo\n(NFS /data)"]
-  ADMIN(["vSphere Admin"]) -->|"web UI"| LCM
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class LCM mgmt
-  class VROPS,VRLI,VRA,VRNI ctrl
-  class ADMIN host
+```
+┌─────────────────────────────────────── Aria LCM — Architecture ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Aria Suite Lifecycle (formerly vRealize Suite LCM) = LCM appliance with embedded vIDM identity│   │
+│   │    Manages lifecycle of Aria products (vRA/vROps/vRLI/vRNI) grouped into named Environments   │   │
+│   │Password Locker stores and encrypts credentials at rest; Certificate Locker manages product cer│   │
+│   │     Install/upgrade wizard orchestrates product deployment order and pre-check validation     │   │
+│   │    DR replication between LCM instances; My VMware integration for product binary downloads   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works defines LCM appliance role · integrations connect identity and deployment targets · st│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         How It Works        │  │         Integrations        │  │       Design Standards      │   │
+│   │        LCM appliance        │  │         WS1/vIDM SSO        │  │       LCM sizing 4vCPU      │   │
+│   │         Environments        │  │      vCenter deploy tgt     │  │        Env naming std       │   │
+│   │       Password Locker       │  │         My VMware DL        │  │      Pwd Locker policy      │   │
+│   │         Cert Locker         │  │        LDAP directory       │  │       Cert Locker std       │   │
+│   │       Install/upgrade       │  │        NSX placement        │  │        Product compat       │   │
+│   │        DR replication       │  │        NTP/DNS config       │  │        DR replication       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works covers LCM appliance and Lockers · integrations connect identity and vCenter · standar│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   How It Works   │   Integrations   │    Design Stds    │    Deployment    │     Key Stds     │   │
+│   │  LCM appliance   │   vIDM/WS1 SSO   │     LCM sizing    │    Single LCM    │    Env naming    │   │
+│   │   Environments   │  vCenter deploy  │     Env naming    │     DR pair      │    Pwd policy    │   │
+│   │ Password Locker  │   My VMware DL   │    Cert policy    │    Multi-env     │  Compat matrix   │   │
+│   │   Cert Locker    │  LDAP directory  │     DR replica    │    Enterprise    │    Locker std    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 VM (LCM appliance) · RAM DIMMs · Network NICs · vCenter (deployment target) · Identity provider  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  LCM appliance     = Aria Suite Lifecycle virtual appliance; central orchestrator for all Aria product│
+│  Environment       = Logical grouping in LCM containing related Aria products sharing the same vIDM in│
+│  Password Locker   = Encrypted credential store in LCM; holds passwords for all products and infrastru│
+│  Certificate Locker = LCM certificate store; manages TLS certs for Aria products; supports CA-signed c│
+│  vIDM (Identity Manager) = Embedded identity provider in LCM; provides SSO across all managed Aria pro│
+│  Product BOM       = Bill of Materials; version matrix listing compatible Aria product versions per re│
+│  Install wizard    = LCM UI workflow for deploying a new Aria product into an existing Environment    │
+│  Upgrade wizard    = LCM UI workflow for upgrading Aria products in dependency order with pre-check va│
+│  Day-2 operations  = Post-install operations in LCM: cert rotation, password rotation, content managem│
+│  DR replication    = LCM appliance replication to a secondary site for disaster recovery failover     │
+│  My VMware         = Broadcom/VMware portal integration; LCM downloads product binaries directly from │
+│  Workspace ONE     = VMware identity and access management platform; can replace embedded vIDM in LCM │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

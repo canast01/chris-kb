@@ -1,33 +1,61 @@
 # Aria Operations — Operations
 
 ```
-Aria Operations — Operations Overview
-┌─────────────────────────────────────────────────────┐
-│  Daily Operations Loop                              │
-│                                                     │
-│  ┌─────────────┐    ┌─────────────────────────────┐ │
-│  │ Health Check│    │  Alert Triage               │ │
-│  │             │    │                             │ │
-│  │ vracli      │───►│  Alerts → All Alerts        │ │
-│  │ cluster     │    │  filter by Critical/Immed.   ││
-│  │ health      │    │  → investigate → acknowledge ││
-│  └─────────────┘    └─────────────────────────────┘ │
-│          │                                          │
-│          ▼                                          │
-│  ┌─────────────────────────────────────────────┐    │
-│  │  Capacity Review (weekly)                   │    │
-│  │  Optimize → Capacity Overview               │    │
-│  │  → clusters/datastores < 60 days remaining  │    │
-│  │  → rightsizing: idle + oversized VMs        │    │
-│  └─────────────────────────────────────────────┘    │
-│          │                                          │
-│          ▼                                          │
-│  ┌─────────────────────────────────────────────┐    │
-│  │  Lifecycle (upgrades via LCM or in-product) │    │
-│  │  Pre-check → snapshot VMs → upgrade nodes  │     │
-│  │  data → replica → primary (LCM order)       │    │
-│  └─────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────┘
+┌──────────────────────────────────── Aria Operations — Operations ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Alert management and noise reduction: tune thresholds, suppress flapping, cancel false positive│   │
+│   │  Capacity optimization: review right-sizing recommendations; act on workload placement advice │   │
+│   │   Report scheduling: cost management integration; automated PDF/CSV delivery to stakeholders  │   │
+│   │  Cluster node health monitoring: verify all nodes stable; check adapter collection intervals  │   │
+│   │     Lifecycle: upgrade wizard sequences node upgrades; pre-upgrade health check mandatory     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Daily ops review alerts and capacity · lifecycle keeps cluster current · automation scales operatio│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Daily Ops          │  │          Lifecycle          │  │          Automation         │   │
+│   │       Alert management      │  │       Upgrade planner       │  │           REST API          │   │
+│   │      Capacity overview      │  │        Pre-upg health       │  │        PowerCLI vROps       │   │
+│   │        Optim. actions       │  │        Node upg order       │  │          Alert API          │   │
+│   │        Workload place       │  │        Adapter compat       │  │         Capacity API        │   │
+│   │         Badge status        │  │          CMDB sync          │  │        Dashboard API        │   │
+│   │       Report schedule       │  │          Cert renew         │  │          Report API         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Daily ops catch alert noise · lifecycle upgrades nodes in sequence · automation reduces manual toil│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     CLI Ref      │    Health Chk    │     Procedures    │    Install/Up    │   Backup/Rest    │   │
+│   │  REST API calls  │  Cluster: green  │    Alert triage   │  Upgrade wizard  │  Config export   │   │
+│   │  PowerCLI vROps  │  Nodes: healthy  │    Capacity rpt   │  Pre-chk health  │   Support.zip    │   │
+│   │    Alert API     │   Adapters: ok   │  Add remote coll  │  Node upg order  │  Restore config  │   │
+│   │   Capacity API   │  Collectors: up  │   Dashboard add   │   Post-upg val   │  Metric data bk  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 VMs (primary/replica/data/collector) · RAM DIMMs · Network NICs · vCenter/cloud connectivity     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Analytics cluster  = Primary + replica + data nodes; all must be healthy for full functionality      │
+│  Remote collector   = Lightweight VM per site forwarding adapter metrics to the analytics cluster     │
+│  Adapter instance   = Configured integration to a monitored product; collection interval configurable │
+│  Alert definition   = Symptom-based rule firing notifications on threshold breach or anomaly          │
+│  Capacity engine    = Forecasting subsystem projecting time-to-exhaustion for CPU, RAM, storage       │
+│  Optimization action = Right-size, power-off, or migrate recommendation generated by analytics        │
+│  Workload placement = DRS-aligned recommendation for optimal VM-to-host assignment                    │
+│  Badge score        = 0-100 health/risk/efficiency score assigned to every monitored object           │
+│  Right-sizing       = Reducing oversized vCPU/RAM allocations based on observed peak utilisation      │
+│  Cost driver        = Resource consumer identified as a top contributor to capacity or cost usage     │
+│  Upgrade planner    = Built-in wizard validating compatibility and sequencing node upgrade steps      │
+│  support.zip bundle = Diagnostic package collected from Aria Ops for GSS case submission              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">
