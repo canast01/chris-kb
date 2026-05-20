@@ -12,8 +12,9 @@ HOW TO ADD A NEW DIAGRAM
    Use the vmware_platform_landscape() function below as the template.
    Two lines of setup at the top, then use the module-level helpers directly:
 
+       @kb_diagram('my-key', 'docs/section/index.md', 'Short description')
        def my_diagram():
-           W2 = 95
+           W2 = 103
            R, txt_row = make_helpers(W2)
            # layout constants …
            lines = []
@@ -32,8 +33,8 @@ HOW TO ADD A NEW DIAGRAM
        lines.append(txt_row())
    Never put annotations inline on the arrow line — put them in the label above.
 
-2. Register it in DIAGRAMS at the bottom of this file.
-3. Run:  python3 scripts/ascii_diagram_gen.py my_name --write
+2. The @kb_diagram decorator auto-registers the function — no separate DIAGRAMS entry.
+3. Run:  python3 scripts/ascii_diagram_gen.py my-key --write
 
 USAGE
 ─────
@@ -76,6 +77,21 @@ HELPER REFERENCE
 import os
 import re
 import sys
+
+# ── Diagram registry ─────────────────────────────────────────────────────────
+DIAGRAMS = {}  # populated at import time by @kb_diagram decorators
+
+def kb_diagram(key, file, description):
+    """Decorator that auto-registers a diagram function. Usage:
+
+        @kb_diagram('my-key', 'docs/path/index.md', 'Short description')
+        def my_diagram():
+            ...
+    """
+    def _register(fn):
+        DIAGRAMS[key] = {'fn': fn, 'file': file, 'description': description}
+        return fn
+    return _register
 
 # ── Core primitives ──────────────────────────────────────────────────────────
 
@@ -245,6 +261,11 @@ def layout(inner_widths, margin=3, gap=2):
 # Then use bTop/bMid/bBot/sections/merge/arrow/connector from module scope.
 # Register every new function in DIAGRAMS at the bottom of this file.
 
+@kb_diagram(
+    'vmware',
+    'docs/virtualization/vmware/index.md',
+    'VMware Platform Landscape — full stack: vSphere, vSAN, NSX, VCF, Aria',
+)
 def vmware_platform_landscape():
     """VMware Platform Landscape — W=103."""
     W2 = 103
@@ -474,6 +495,11 @@ def vmware_platform_landscape():
     return lines
 
 
+@kb_diagram(
+    'virtualization',
+    'docs/virtualization/index.md',
+    'VMware Platform Stack — VCF → vCenter/NSX-T/VxRail → ESXi → vSAN',
+)
 def virtualization_platform_stack():
     """VMware Platform Stack — W=103. Full learning diagram: VCF → vCenter/NSX-T/VxRail → ESXi → vSAN.
 
@@ -618,6 +644,11 @@ def virtualization_platform_stack():
     return lines
 
 
+@kb_diagram(
+    'dell',
+    'docs/storage/dell/index.md',
+    'Dell Storage Portfolio — PowerMax, PowerStore, Unity, PowerScale, Data Domain, ECS',
+)
 def dell_storage_portfolio():
     """Dell Storage Portfolio — W=103."""
     W2 = 103
@@ -790,6 +821,11 @@ def dell_storage_portfolio():
     return lines
 
 
+@kb_diagram(
+    'pure',
+    'docs/storage/pure/index.md',
+    'Pure Storage Stack — Pure1, FlashArray, FlashBlade, Evergreen, replication',
+)
 def pure_storage_stack():
     """Pure Storage Stack — W=103."""
     W2 = 103
@@ -958,6 +994,11 @@ def pure_storage_stack():
     return lines
 
 
+@kb_diagram(
+    'storage',
+    'docs/storage/index.md',
+    'Enterprise Storage Landscape — Pure, Dell, NetApp arrays + protocol layer',
+)
 def enterprise_storage_landscape():
     """Enterprise Storage Landscape — W=103."""
     W2 = 103
@@ -1137,6 +1178,11 @@ def enterprise_storage_landscape():
     return lines
 
 
+@kb_diagram(
+    'cloud',
+    'docs/cloud/index.md',
+    'Cloud Infrastructure — AWS and Azure: IAM, compute, storage, networking, connectivity',
+)
 def cloud_infrastructure_overview():
     """Cloud Infrastructure Overview — W=103."""
     W2 = 103
@@ -1318,6 +1364,11 @@ def cloud_infrastructure_overview():
     return lines
 
 
+@kb_diagram(
+    'netapp',
+    'docs/storage/netapp/index.md',
+    'NetApp Storage Stack — ONTAP, StorageGRID, Keystone, SnapMirror, SnapCenter, FabricPool',
+)
 def netapp_storage_stack():
     """NetApp Storage Stack — W=103."""
     W2 = 103
@@ -1486,6 +1537,11 @@ def netapp_storage_stack():
     return lines
 
 
+@kb_diagram(
+    'aws',
+    'docs/cloud/aws/index.md',
+    'AWS Platform Stack — IAM, Compute, Networking, Storage, DB, Security, Connectivity',
+)
 def aws_platform_stack():
     """AWS Platform Stack — W=103."""
     W2 = 103
@@ -1633,6 +1689,11 @@ def aws_platform_stack():
     return lines
 
 
+@kb_diagram(
+    'azure',
+    'docs/cloud/azure/index.md',
+    'Azure Platform Stack — Entra ID, Compute, Networking, Storage, DB, Security',
+)
 def azure_platform_stack():
     """Azure Platform Stack — W=103."""
     W2 = 103
@@ -1778,6 +1839,11 @@ def azure_platform_stack():
     return lines
 
 
+@kb_diagram(
+    'compute',
+    'docs/compute/index.md',
+    'Compute Platform Overview — Linux and Windows Server side by side',
+)
 def compute_platform_overview():
     """Compute Platform Overview — W=103."""
     W2 = 103
@@ -1910,6 +1976,11 @@ def compute_platform_overview():
     return lines
 
 
+@kb_diagram(
+    'linux',
+    'docs/compute/linux/index.md',
+    'Linux Server Stack — architecture, networking, storage, ops, security, troubleshooting',
+)
 def linux_server_stack():
     """Linux Server Stack — W=103."""
     W2 = 103
@@ -2058,6 +2129,11 @@ def linux_server_stack():
     return lines
 
 
+@kb_diagram(
+    'windows',
+    'docs/compute/windows-server/index.md',
+    'Windows Server Stack — architecture, networking, AD, ops, security, troubleshooting',
+)
 def windows_server_stack():
     """Windows Server Stack — W=103."""
     W2 = 103
@@ -2207,6 +2283,11 @@ def windows_server_stack():
     return lines
 
 
+@kb_diagram(
+    'san',
+    'docs/san/index.md',
+    'SAN Fabric Overview — Cisco MDS and Brocade FC fabric side by side',
+)
 def san_fabric_overview():
     """SAN Fabric Overview — W=103."""
     W2 = 103
@@ -2341,6 +2422,11 @@ def san_fabric_overview():
     return lines
 
 
+@kb_diagram(
+    'cisco-san',
+    'docs/san/cisco/index.md',
+    'Cisco SAN Stack — MDS 9000, DCNM, Nexus Dashboard, VSAN, Zoning, ISL',
+)
 def cisco_san_stack():
     """Cisco SAN Stack — W=103."""
     W2 = 103
@@ -2490,6 +2576,11 @@ def cisco_san_stack():
     return lines
 
 
+@kb_diagram(
+    'brocade',
+    'docs/san/brocade/index.md',
+    'Brocade SAN Stack — Fabric OS, SANnav, Zoning, ISL, MAPS, D-Port',
+)
 def brocade_san_stack():
     """Brocade SAN Stack — W=103."""
     W2 = 103
@@ -2625,6 +2716,11 @@ def brocade_san_stack():
     return lines
 
 
+@kb_diagram(
+    'vxrail',
+    'docs/virtualization/vxrail/index.md',
+    'VxRail Platform Stack — compute, networking, vSAN, LCM, ops, integration',
+)
 def vxrail_platform_stack():
     """VxRail Platform Stack — W=103."""
     W2 = 103
@@ -2774,6 +2870,11 @@ def vxrail_platform_stack():
     return lines
 
 
+@kb_diagram(
+    'vmware-ops',
+    'docs/virtualization/operations/index.md',
+    'VMware Operations Overview — health checks, troubleshooting, runbooks, automation',
+)
 def vmware_operations_overview():
     """VMware Operations Overview — W=103."""
     W2 = 103
@@ -2923,6 +3024,11 @@ def vmware_operations_overview():
     return lines
 
 
+@kb_diagram(
+    'vmware-ref',
+    'docs/virtualization/reference/index.md',
+    'VMware Reference Hub — standards, inventory, upgrade readiness, quick reference',
+)
 def vmware_reference_hub():
     """VMware Reference Hub — W=103."""
     W2 = 103
@@ -3046,6 +3152,11 @@ def vmware_reference_hub():
 
 # ── Pure Storage sub-section diagrams ─────────────────────────────────────────
 
+@kb_diagram(
+    'pure-flasharray',
+    'docs/storage/pure/flasharray/index.md',
+    'Pure FlashArray Stack — CT0/CT1 HA, Purity//FA, NVMe/FC, ActiveDR, ActiveCluster, SafeMode',
+)
 def pure_flasharray_stack():
     """Pure FlashArray Stack — W=103."""
     W2 = 103
@@ -3152,6 +3263,11 @@ def pure_flasharray_stack():
     return lines
 
 
+@kb_diagram(
+    'pure-flashblade',
+    'docs/storage/pure/flashblade/index.md',
+    'Pure FlashBlade Stack — scale-out blades, NFS/SMB/S3/HDFS, Purity//FB, replication',
+)
 def pure_flashblade_stack():
     """Pure FlashBlade Stack — W=103."""
     W2 = 103
@@ -3257,6 +3373,11 @@ def pure_flashblade_stack():
     return lines
 
 
+@kb_diagram(
+    'pure-evergreen',
+    'docs/storage/pure/evergreen/index.md',
+    'Pure Evergreen Program — NDU controller refresh, Purity upgrades, Ever Modern lifecycle',
+)
 def pure_evergreen_program():
     """Pure Evergreen Program — W=103."""
     W2 = 103
@@ -3362,6 +3483,11 @@ def pure_evergreen_program():
     return lines
 
 
+@kb_diagram(
+    'pure-evergreen-one',
+    'docs/storage/pure/evergreen-one/index.md',
+    'Pure Evergreen//One — STaaS, Pure-owned hardware, 99.9999% SLA, consumption billing',
+)
 def pure_evergreen_one():
     """Pure Evergreen//One STaaS — W=103."""
     W2 = 103
@@ -3467,6 +3593,11 @@ def pure_evergreen_one():
     return lines
 
 
+@kb_diagram(
+    'pure-operations',
+    'docs/storage/pure/operations/index.md',
+    'Pure Storage Operations Hub — Pure1 portal, alerts severity, support cases P1-P4',
+)
 def pure_operations_hub():
     """Pure Storage Operations Hub — W=103."""
     W2 = 103
@@ -3574,6 +3705,11 @@ def pure_operations_hub():
 
 # ── AWS sub-section diagrams ───────────────────────────────────────────────────
 
+@kb_diagram(
+    'aws-architecture',
+    'docs/cloud/aws/architecture/index.md',
+    'AWS Architecture Overview — multi-account, Organizations, SCPs, TGW, IAM Identity Center',
+)
 def aws_architecture_overview():
     """AWS Architecture Overview — W=103."""
     W2 = 103
@@ -3679,6 +3815,11 @@ def aws_architecture_overview():
     return lines
 
 
+@kb_diagram(
+    'aws-backup',
+    'docs/cloud/aws/backup/index.md',
+    'AWS Backup Overview — Backup Plans, Vaults, Vault Lock, jobs, restore testing, compliance',
+)
 def aws_backup_overview():
     """AWS Backup Overview — W=103."""
     W2 = 103
@@ -3784,6 +3925,11 @@ def aws_backup_overview():
     return lines
 
 
+@kb_diagram(
+    'aws-cli',
+    'docs/cloud/aws/cli-reference/index.md',
+    'AWS CLI Reference — CLI v2, profiles, assume-role, ec2/s3/iam/rds/eks commands',
+)
 def aws_cli_reference():
     """AWS CLI Reference — W=103."""
     W2 = 103
@@ -3889,6 +4035,11 @@ def aws_cli_reference():
     return lines
 
 
+@kb_diagram(
+    'aws-compute',
+    'docs/cloud/aws/compute/index.md',
+    'AWS Compute Overview — EC2, AMI, instance types, Auto Scaling, Lambda, SSM',
+)
 def aws_compute_overview():
     """AWS Compute Overview — W=103."""
     W2 = 103
@@ -3994,6 +4145,11 @@ def aws_compute_overview():
     return lines
 
 
+@kb_diagram(
+    'aws-cost',
+    'docs/cloud/aws/cost/index.md',
+    'AWS Cost Management — Cost Explorer, Budgets, Reserved Instances, Savings Plans',
+)
 def aws_cost_management():
     """AWS Cost Management — W=103."""
     W2 = 103
@@ -4099,6 +4255,11 @@ def aws_cost_management():
     return lines
 
 
+@kb_diagram(
+    'aws-governance',
+    'docs/cloud/aws/governance/index.md',
+    'AWS Governance — Organizations, OUs, SCPs, AWS Config, tag policies, compliance',
+)
 def aws_governance_overview():
     """AWS Governance Overview — W=103."""
     W2 = 103
@@ -4204,6 +4365,11 @@ def aws_governance_overview():
     return lines
 
 
+@kb_diagram(
+    'aws-identity',
+    'docs/cloud/aws/identity/index.md',
+    'AWS Identity — IAM, roles, policies, IAM Identity Center SSO, Access Analyzer',
+)
 def aws_identity_overview():
     """AWS Identity Overview — W=103."""
     W2 = 103
@@ -4309,6 +4475,11 @@ def aws_identity_overview():
     return lines
 
 
+@kb_diagram(
+    'aws-monitoring',
+    'docs/cloud/aws/monitoring/index.md',
+    'AWS Monitoring — CloudWatch metrics/logs/alarms, CloudTrail, EventBridge, AWS Health',
+)
 def aws_monitoring_overview():
     """AWS Monitoring Overview — W=103."""
     W2 = 103
@@ -4414,6 +4585,11 @@ def aws_monitoring_overview():
     return lines
 
 
+@kb_diagram(
+    'aws-networking',
+    'docs/cloud/aws/networking/index.md',
+    'AWS Networking — VPC, subnets, SGs, NACLs, TGW, DirectConnect, VPC Endpoints, ALB',
+)
 def aws_networking_overview():
     """AWS Networking Overview — W=103."""
     W2 = 103
@@ -4519,6 +4695,11 @@ def aws_networking_overview():
     return lines
 
 
+@kb_diagram(
+    'aws-operations',
+    'docs/cloud/aws/operations/index.md',
+    'AWS Operations — health checks, procedures, Patch Manager, backup/restore, automation',
+)
 def aws_operations_overview():
     """AWS Operations Overview — W=103."""
     W2 = 103
@@ -4624,6 +4805,11 @@ def aws_operations_overview():
     return lines
 
 
+@kb_diagram(
+    'aws-security',
+    'docs/cloud/aws/security/index.md',
+    'AWS Security — IAM IC SSO, MFA, KMS, Secrets Manager, ACM, GuardDuty, Security Hub',
+)
 def aws_security_overview():
     """AWS Security Overview — W=103."""
     W2 = 103
@@ -4729,6 +4915,11 @@ def aws_security_overview():
     return lines
 
 
+@kb_diagram(
+    'aws-storage',
+    'docs/cloud/aws/storage/index.md',
+    'AWS Storage — EBS (gp3/io2), S3 (classes/lifecycle/replication), EFS, FSx',
+)
 def aws_storage_overview():
     """AWS Storage Overview — W=103."""
     W2 = 103
@@ -4834,6 +5025,11 @@ def aws_storage_overview():
     return lines
 
 
+@kb_diagram(
+    'aws-troubleshooting',
+    'docs/cloud/aws/troubleshooting/index.md',
+    'AWS Troubleshooting — common issues, Policy Simulator, Reachability Analyzer, CloudTrail',
+)
 def aws_troubleshooting_overview():
     """AWS Troubleshooting Overview — W=103."""
     W2 = 103
@@ -4941,6 +5137,11 @@ def aws_troubleshooting_overview():
 
 # ── Azure sub-section diagrams ─────────────────────────────────────────────────
 
+@kb_diagram(
+    'azure-architecture',
+    'docs/cloud/azure/architecture/index.md',
+    'Azure Architecture Overview — tenant hierarchy, hub-spoke VNet, Entra ID, Availability Zones',
+)
 def azure_architecture_overview():
     """Azure Architecture Overview — W=103."""
     W2 = 103
@@ -5046,6 +5247,11 @@ def azure_architecture_overview():
     return lines
 
 
+@kb_diagram(
+    'azure-backup-dr',
+    'docs/cloud/azure/backup-dr/index.md',
+    'Azure Backup & DR — Azure Backup, RSV, ASR replication, failover/failback, test failover',
+)
 def azure_backup_dr_overview():
     """Azure Backup and DR Overview — W=103."""
     W2 = 103
@@ -5151,6 +5357,11 @@ def azure_backup_dr_overview():
     return lines
 
 
+@kb_diagram(
+    'azure-cli',
+    'docs/cloud/azure/cli-reference/index.md',
+    'Azure CLI Reference — az login, az vm/storage/network/backup/identity commands',
+)
 def azure_cli_reference():
     """Azure CLI Reference — W=103."""
     W2 = 103
@@ -5256,6 +5467,11 @@ def azure_cli_reference():
     return lines
 
 
+@kb_diagram(
+    'azure-compute',
+    'docs/cloud/azure/compute/index.md',
+    'Azure Compute Overview — VMs, Availability Sets/Zones, VMSS, Update Manager, extensions',
+)
 def azure_compute_overview():
     """Azure Compute Overview — W=103."""
     W2 = 103
@@ -5361,6 +5577,11 @@ def azure_compute_overview():
     return lines
 
 
+@kb_diagram(
+    'azure-cost',
+    'docs/cloud/azure/cost/index.md',
+    'Azure Cost Management — Cost Management, budgets, Reservations, Savings Plans, Advisor',
+)
 def azure_cost_management():
     """Azure Cost Management — W=103."""
     W2 = 103
@@ -5466,6 +5687,11 @@ def azure_cost_management():
     return lines
 
 
+@kb_diagram(
+    'azure-governance',
+    'docs/cloud/azure/governance/index.md',
+    'Azure Governance — Management Groups, Azure Policy (Audit/Deny/DINE), initiatives, compliance',
+)
 def azure_governance_overview():
     """Azure Governance Overview — W=103."""
     W2 = 103
@@ -5571,6 +5797,11 @@ def azure_governance_overview():
     return lines
 
 
+@kb_diagram(
+    'azure-identity',
+    'docs/cloud/azure/identity/index.md',
+    'Azure Identity — Entra ID, RBAC, managed identities, PIM, conditional access',
+)
 def azure_identity_overview():
     """Azure Identity Overview — W=103."""
     W2 = 103
@@ -5676,6 +5907,11 @@ def azure_identity_overview():
     return lines
 
 
+@kb_diagram(
+    'azure-monitoring',
+    'docs/cloud/azure/monitoring/index.md',
+    'Azure Monitoring — Azure Monitor, Log Analytics (KQL), alerts, action groups',
+)
 def azure_monitoring_overview():
     """Azure Monitoring Overview — W=103."""
     W2 = 103
@@ -5781,6 +6017,11 @@ def azure_monitoring_overview():
     return lines
 
 
+@kb_diagram(
+    'azure-networking',
+    'docs/cloud/azure/networking/index.md',
+    'Azure Networking — VNet, subnets, NSGs, Azure Firewall, Private Endpoints, ExpressRoute',
+)
 def azure_networking_overview():
     """Azure Networking Overview — W=103."""
     W2 = 103
@@ -5886,6 +6127,11 @@ def azure_networking_overview():
     return lines
 
 
+@kb_diagram(
+    'azure-operations',
+    'docs/cloud/azure/operations/index.md',
+    'Azure Operations — health checks, VM procedures, Update Manager, backup/restore, automation',
+)
 def azure_operations_overview():
     """Azure Operations Overview — W=103."""
     W2 = 103
@@ -5991,6 +6237,11 @@ def azure_operations_overview():
     return lines
 
 
+@kb_diagram(
+    'azure-security',
+    'docs/cloud/azure/security/index.md',
+    'Azure Security — Entra ID SSO/MFA, Key Vault, CMK, Defender for Cloud, Secure Score, Sentinel',
+)
 def azure_security_overview():
     """Azure Security Overview — W=103."""
     W2 = 103
@@ -6096,6 +6347,11 @@ def azure_security_overview():
     return lines
 
 
+@kb_diagram(
+    'azure-storage',
+    'docs/cloud/azure/storage/index.md',
+    'Azure Storage — Blob tiers, lifecycle, Managed Disks (Premium/Ultra/ZRS), Azure Files',
+)
 def azure_storage_overview():
     """Azure Storage Overview — W=103."""
     W2 = 103
@@ -6201,6 +6457,11 @@ def azure_storage_overview():
     return lines
 
 
+@kb_diagram(
+    'azure-troubleshooting',
+    'docs/cloud/azure/troubleshooting/index.md',
+    'Azure Troubleshooting — common issues, Boot Diagnostics, Serial Console, Network Watcher',
+)
 def azure_troubleshooting_overview():
     """Azure Troubleshooting Overview — W=103."""
     W2 = 103
@@ -6308,6 +6569,11 @@ def azure_troubleshooting_overview():
 
 # ── VMware product diagrams — batch 1 of 2 ────────────────────────────────────
 
+@kb_diagram(
+    'esxi',
+    'docs/virtualization/vmware/esxi/index.md',
+    'ESXi Host Stack — VMkernel, VMkernel ports, patching, host profiles, lockdown mode',
+)
 def esxi_stack():
     """ESXi Host Stack — W=103."""
     W2 = 103
@@ -6413,6 +6679,11 @@ def esxi_stack():
     return lines
 
 
+@kb_diagram(
+    'nsx',
+    'docs/virtualization/vmware/nsx/index.md',
+    'NSX SDN Stack — Geneve overlay, T0/T1 gateways, DFW microsegmentation, Edge nodes',
+)
 def nsx_stack():
     """NSX Software-Defined Networking Stack — W=103."""
     W2 = 103
@@ -6518,6 +6789,11 @@ def nsx_stack():
     return lines
 
 
+@kb_diagram(
+    'vsan',
+    'docs/virtualization/vmware/vsan/index.md',
+    'vSAN Stack — disk groups, SPBM policies, FTT, resync, D@RE, vSAN ESA',
+)
 def vsan_stack():
     """vSAN Software-Defined Storage Stack — W=103."""
     W2 = 103
@@ -6623,6 +6899,11 @@ def vsan_stack():
     return lines
 
 
+@kb_diagram(
+    'vcenter',
+    'docs/virtualization/vmware/vcenter/index.md',
+    'vCenter Server Management Plane — VCSA, DRS, HA, SSO, ELM, LCM',
+)
 def vcenter_stack():
     """vCenter Server Management Plane — W=103."""
     W2 = 103
@@ -6728,6 +7009,11 @@ def vcenter_stack():
     return lines
 
 
+@kb_diagram(
+    'vcf',
+    'docs/virtualization/vmware/vmware-cloud-foundation/index.md',
+    'VCF Full Stack — SDDC Manager, management domain, workload domains, LCM, CloudBuilder',
+)
 def vcf_stack():
     """VMware Cloud Foundation Full-Stack Overview — W=103."""
     W2 = 103
@@ -6833,6 +7119,11 @@ def vcf_stack():
     return lines
 
 
+@kb_diagram(
+    'aria-automation',
+    'docs/virtualization/vmware/aria-automation/index.md',
+    'Aria Automation Stack — blueprints, CAS, ABX, service catalogue, approval policies',
+)
 def aria_automation_stack():
     """Aria Automation (vRealize Automation) Stack — W=103."""
     W2 = 103
@@ -6938,6 +7229,11 @@ def aria_automation_stack():
     return lines
 
 
+@kb_diagram(
+    'aria-operations',
+    'docs/virtualization/vmware/aria-operations/index.md',
+    'Aria Operations Stack — analytics cluster, adapters, management packs, rightsizing',
+)
 def aria_operations_stack():
     """Aria Operations (vRealize Operations) Stack — W=103."""
     W2 = 103
@@ -7045,6 +7341,11 @@ def aria_operations_stack():
 
 # ── VMware product diagrams — batch 2 of 2 ────────────────────────────────────
 
+@kb_diagram(
+    'aria-logs',
+    'docs/virtualization/vmware/aria-operations-for-logs/index.md',
+    'Aria Operations for Logs Stack — log ingestion, content packs, alerts, webhooks',
+)
 def aria_logs_stack():
     """Aria Operations for Logs Stack — W=103."""
     W2 = 103
@@ -7150,6 +7451,11 @@ def aria_logs_stack():
     return lines
 
 
+@kb_diagram(
+    'aria-networks',
+    'docs/virtualization/vmware/aria-operations-for-networks/index.md',
+    'Aria Operations for Networks Stack — path analysis, IPFIX flows, physical topology',
+)
 def aria_networks_stack():
     """Aria Operations for Networks Stack — W=103."""
     W2 = 103
@@ -7255,6 +7561,11 @@ def aria_networks_stack():
     return lines
 
 
+@kb_diagram(
+    'aria-lcm',
+    'docs/virtualization/vmware/aria-suite-lifecycle/index.md',
+    'Aria Suite Lifecycle Manager — deploy/upgrade Aria products, cert manager, Locker',
+)
 def aria_lcm_stack():
     """Aria Suite Lifecycle Manager Stack — W=103."""
     W2 = 103
@@ -7360,6 +7671,11 @@ def aria_lcm_stack():
     return lines
 
 
+@kb_diagram(
+    'horizon',
+    'docs/virtualization/vmware/horizon/index.md',
+    'Horizon VDI Stack — Connection Server, UAG, desktop pools, App Volumes, DEM',
+)
 def horizon_stack():
     """VMware Horizon VDI Stack — W=103."""
     W2 = 103
@@ -7465,6 +7781,11 @@ def horizon_stack():
     return lines
 
 
+@kb_diagram(
+    'tanzu',
+    'docs/virtualization/vmware/tanzu/index.md',
+    'Tanzu Kubernetes Stack — Supervisor Cluster, TKG, vSphere namespaces, Harbor, TMC',
+)
 def tanzu_stack():
     """VMware Tanzu Kubernetes Stack — W=103."""
     W2 = 103
@@ -7570,6 +7891,11 @@ def tanzu_stack():
     return lines
 
 
+@kb_diagram(
+    'srm',
+    'docs/virtualization/vmware/srm/index.md',
+    'Site Recovery Manager Stack — site pair, protection groups, recovery plans, test failover',
+)
 def srm_stack():
     """VMware Site Recovery Manager Stack — W=103."""
     W2 = 103
@@ -7675,6 +8001,11 @@ def srm_stack():
     return lines
 
 
+@kb_diagram(
+    'vsphere-replication',
+    'docs/virtualization/vmware/vsphere-replication/index.md',
+    'vSphere Replication Stack — VRMS, HBRSVC, delta sync, RPO, MPIT, failover/failback',
+)
 def vsphere_replication_stack():
     """vSphere Replication Stack — W=103."""
     W2 = 103
@@ -7779,6 +8110,11 @@ def vsphere_replication_stack():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
+@kb_diagram(
+    'esxi-architecture',
+    'docs/virtualization/vmware/esxi/architecture/index.md',
+    'ESXi Architecture — VMkernel, vmknic, storage stack, HA/DRS integration',
+)
 def esxi_architecture():
     """ESXi Architecture sub-section — W=103."""
     W2 = 103
@@ -7884,6 +8220,11 @@ def esxi_architecture():
     return lines
 
 
+@kb_diagram(
+    'esxi-operations',
+    'docs/virtualization/vmware/esxi/operations/index.md',
+    'ESXi Operations — patching, host profiles, maintenance mode, lifecycle',
+)
 def esxi_operations():
     """ESXi Operations sub-section — W=103."""
     W2 = 103
@@ -7989,6 +8330,11 @@ def esxi_operations():
     return lines
 
 
+@kb_diagram(
+    'esxi-security',
+    'docs/virtualization/vmware/esxi/security/index.md',
+    'ESXi Security — lockdown mode, RBAC, TLS, vSphere Trust Authority',
+)
 def esxi_security():
     """ESXi Security sub-section — W=103."""
     W2 = 103
@@ -8094,6 +8440,11 @@ def esxi_security():
     return lines
 
 
+@kb_diagram(
+    'esxi-troubleshooting',
+    'docs/virtualization/vmware/esxi/troubleshooting/index.md',
+    'ESXi Troubleshooting — PSOD, APD/PDL, DCUI, esxcli diagnostics',
+)
 def esxi_troubleshooting():
     """ESXi Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -8199,6 +8550,11 @@ def esxi_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'nsx-architecture',
+    'docs/virtualization/vmware/nsx/architecture/index.md',
+    'NSX Architecture — manager cluster, control plane, transport nodes, DFW',
+)
 def nsx_architecture():
     """NSX Architecture sub-section — W=103."""
     W2 = 103
@@ -8304,6 +8660,11 @@ def nsx_architecture():
     return lines
 
 
+@kb_diagram(
+    'nsx-operations',
+    'docs/virtualization/vmware/nsx/operations/index.md',
+    'NSX Operations — manager cluster health, transport node prep, upgrade coordinator',
+)
 def nsx_operations():
     """NSX Operations sub-section — W=103."""
     W2 = 103
@@ -8409,6 +8770,11 @@ def nsx_operations():
     return lines
 
 
+@kb_diagram(
+    'nsx-security',
+    'docs/virtualization/vmware/nsx/security/index.md',
+    'NSX Security — DFW microsegmentation, IDPS, RBAC, TLS, audit logging',
+)
 def nsx_security():
     """NSX Security sub-section — W=103."""
     W2 = 103
@@ -8514,6 +8880,11 @@ def nsx_security():
     return lines
 
 
+@kb_diagram(
+    'nsx-troubleshooting',
+    'docs/virtualization/vmware/nsx/troubleshooting/index.md',
+    'NSX Troubleshooting — transport node issues, BGP peering, DFW, support bundle',
+)
 def nsx_troubleshooting():
     """NSX Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -8619,6 +8990,11 @@ def nsx_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'vsan-architecture',
+    'docs/virtualization/vmware/vsan/architecture/index.md',
+    'vSAN Architecture — disk groups, SPBM, FTT, ESA, stretched cluster',
+)
 def vsan_architecture():
     """vSAN Architecture sub-section — W=103."""
     W2 = 103
@@ -8729,6 +9105,11 @@ def vsan_architecture():
     return lines
 
 
+@kb_diagram(
+    'vsan-operations',
+    'docs/virtualization/vmware/vsan/operations/index.md',
+    'vSAN Operations — health service, resyncing, capacity, upgrade sequencing',
+)
 def vsan_operations():
     """vSAN Operations sub-section — W=103."""
     W2 = 103
@@ -8839,6 +9220,11 @@ def vsan_operations():
     return lines
 
 
+@kb_diagram(
+    'vsan-security',
+    'docs/virtualization/vmware/vsan/security/index.md',
+    'vSAN Security — D@RE, RBAC, data-in-transit encryption, KMS, vSphere Trust',
+)
 def vsan_security():
     """vSAN Security sub-section — W=103."""
     W2 = 103
@@ -8949,6 +9335,11 @@ def vsan_security():
     return lines
 
 
+@kb_diagram(
+    'vsan-troubleshooting',
+    'docs/virtualization/vmware/vsan/troubleshooting/index.md',
+    'vSAN Troubleshooting — disk faults, resync stalls, network partition, proactive tests',
+)
 def vsan_troubleshooting():
     """vSAN Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -9059,6 +9450,11 @@ def vsan_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'vcenter-architecture',
+    'docs/virtualization/vmware/vcenter/architecture/index.md',
+    'vCenter Architecture — VCSA, PSC, SSO, ELM topology, HA, LCM',
+)
 def vcenter_architecture():
     """vCenter Architecture sub-section — W=103."""
     W2 = 103
@@ -9169,6 +9565,11 @@ def vcenter_architecture():
     return lines
 
 
+@kb_diagram(
+    'vcenter-operations',
+    'docs/virtualization/vmware/vcenter/operations/index.md',
+    'vCenter Operations — VAMI, backup, upgrade, certificate management',
+)
 def vcenter_operations():
     """vCenter Operations sub-section — W=103."""
     W2 = 103
@@ -9279,6 +9680,11 @@ def vcenter_operations():
     return lines
 
 
+@kb_diagram(
+    'vcenter-security',
+    'docs/virtualization/vmware/vcenter/security/index.md',
+    'vCenter Security — SSO hardening, RBAC, TLS, audit, Workspace ONE',
+)
 def vcenter_security():
     """vCenter Security sub-section — W=103."""
     W2 = 103
@@ -9389,6 +9795,11 @@ def vcenter_security():
     return lines
 
 
+@kb_diagram(
+    'vcenter-troubleshooting',
+    'docs/virtualization/vmware/vcenter/troubleshooting/index.md',
+    'vCenter Troubleshooting — SSO issues, DB connection, service restarts, VAMI',
+)
 def vcenter_troubleshooting():
     """vCenter Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -9499,6 +9910,11 @@ def vcenter_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'vcf-architecture',
+    'docs/virtualization/vmware/vmware-cloud-foundation/architecture/index.md',
+    'VCF Architecture — SDDC Manager, management/workload domains, CloudBuilder',
+)
 def vcf_architecture():
     """VCF Architecture sub-section — W=103."""
     W2 = 103
@@ -9609,6 +10025,11 @@ def vcf_architecture():
     return lines
 
 
+@kb_diagram(
+    'vcf-operations',
+    'docs/virtualization/vmware/vmware-cloud-foundation/operations/index.md',
+    'VCF Operations — LCM bundle upgrades, domain lifecycle, SDDC Manager tasks',
+)
 def vcf_operations():
     """VCF Operations sub-section — W=103."""
     W2 = 103
@@ -9719,6 +10140,11 @@ def vcf_operations():
     return lines
 
 
+@kb_diagram(
+    'vcf-security',
+    'docs/virtualization/vmware/vmware-cloud-foundation/security/index.md',
+    'VCF Security — SDDC Manager RBAC, cert management, vIDM, STIG compliance',
+)
 def vcf_security():
     """VCF Security sub-section — W=103."""
     W2 = 103
@@ -9829,6 +10255,11 @@ def vcf_security():
     return lines
 
 
+@kb_diagram(
+    'vcf-troubleshooting',
+    'docs/virtualization/vmware/vmware-cloud-foundation/troubleshooting/index.md',
+    'VCF Troubleshooting — LCM failures, NSX prep, SDDC Manager, support bundles',
+)
 def vcf_troubleshooting():
     """VCF Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -9939,6 +10370,11 @@ def vcf_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'aria-automation-architecture',
+    'docs/virtualization/vmware/aria-automation/architecture/index.md',
+    'Aria Automation Architecture — Prelude cluster, CAS, ABX, service broker, extensibility',
+)
 def aria_automation_architecture():
     """Aria Automation Architecture sub-section — W=103."""
     W2 = 103
@@ -10049,6 +10485,11 @@ def aria_automation_architecture():
     return lines
 
 
+@kb_diagram(
+    'aria-automation-operations',
+    'docs/virtualization/vmware/aria-automation/operations/index.md',
+    'Aria Automation Operations — blueprint publishing, upgrade, cert management, API',
+)
 def aria_automation_operations():
     """Aria Automation Operations sub-section — W=103."""
     W2 = 103
@@ -10159,6 +10600,11 @@ def aria_automation_operations():
     return lines
 
 
+@kb_diagram(
+    'aria-automation-security',
+    'docs/virtualization/vmware/aria-automation/security/index.md',
+    'Aria Automation Security — vIDM SSO, RBAC org/project, TLS, audit events',
+)
 def aria_automation_security():
     """Aria Automation Security sub-section — W=103."""
     W2 = 103
@@ -10269,6 +10715,11 @@ def aria_automation_security():
     return lines
 
 
+@kb_diagram(
+    'aria-automation-troubleshooting',
+    'docs/virtualization/vmware/aria-automation/troubleshooting/index.md',
+    'Aria Automation Troubleshooting — deployment failures, vRO errors, ABX, support bundle',
+)
 def aria_automation_troubleshooting():
     """Aria Automation Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -10379,6 +10830,11 @@ def aria_automation_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'aria-operations-architecture',
+    'docs/virtualization/vmware/aria-operations/architecture/index.md',
+    'Aria Operations Architecture — analytics cluster, remote collectors, adapters, capacity',
+)
 def aria_operations_architecture():
     """Aria Operations Architecture sub-section — W=103."""
     W2 = 103
@@ -10489,6 +10945,11 @@ def aria_operations_architecture():
     return lines
 
 
+@kb_diagram(
+    'aria-operations-operations',
+    'docs/virtualization/vmware/aria-operations/operations/index.md',
+    'Aria Operations Operations — alert management, right-sizing, lifecycle, REST API',
+)
 def aria_operations_operations():
     """Aria Operations Operations sub-section — W=103."""
     W2 = 103
@@ -10599,6 +11060,11 @@ def aria_operations_operations():
     return lines
 
 
+@kb_diagram(
+    'aria-operations-security',
+    'docs/virtualization/vmware/aria-operations/security/index.md',
+    'Aria Operations Security — vIDM SSO, RBAC roles, TLS, API tokens, audit log',
+)
 def aria_operations_security():
     """Aria Operations Security sub-section — W=103."""
     W2 = 103
@@ -10709,6 +11175,11 @@ def aria_operations_security():
     return lines
 
 
+@kb_diagram(
+    'aria-operations-troubleshooting',
+    'docs/virtualization/vmware/aria-operations/troubleshooting/index.md',
+    'Aria Operations Troubleshooting — adapter failures, alert noise, missing data, support.zip',
+)
 def aria_operations_troubleshooting():
     """Aria Operations Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -10819,6 +11290,11 @@ def aria_operations_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'aria-logs-architecture',
+    'docs/virtualization/vmware/aria-operations-for-logs/architecture/index.md',
+    'Aria Logs Architecture — master/worker HA cluster, vRLI agents, VLQL, content packs',
+)
 def aria_logs_architecture():
     """Aria Logs Architecture sub-section — W=103."""
     W2 = 103
@@ -10929,6 +11405,11 @@ def aria_logs_architecture():
     return lines
 
 
+@kb_diagram(
+    'aria-logs-operations',
+    'docs/virtualization/vmware/aria-operations-for-logs/operations/index.md',
+    'Aria Logs Operations — alert management, disk retention, content packs, upgrade',
+)
 def aria_logs_operations():
     """Aria Logs Operations sub-section — W=103."""
     W2 = 103
@@ -11039,6 +11520,11 @@ def aria_logs_operations():
     return lines
 
 
+@kb_diagram(
+    'aria-logs-security',
+    'docs/virtualization/vmware/aria-operations-for-logs/security/index.md',
+    'Aria Logs Security — AD/LDAP SSO, RBAC, TLS agent/syslog, FIPS, audit trail',
+)
 def aria_logs_security():
     """Aria Logs Security sub-section — W=103."""
     W2 = 103
@@ -11149,6 +11635,11 @@ def aria_logs_security():
     return lines
 
 
+@kb_diagram(
+    'aria-logs-troubleshooting',
+    'docs/virtualization/vmware/aria-operations-for-logs/troubleshooting/index.md',
+    'Aria Logs Troubleshooting — agents silent, disk full, alert not firing, vRLI bundle',
+)
 def aria_logs_troubleshooting():
     """Aria Logs Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -11259,6 +11750,11 @@ def aria_logs_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'aria-networks-architecture',
+    'docs/virtualization/vmware/aria-operations-for-networks/architecture/index.md',
+    'Aria Networks Architecture — platform/collector VMs, IPFIX flows, path analysis, NSX',
+)
 def aria_networks_architecture():
     """Aria Networks Architecture sub-section — W=103."""
     W2 = 103
@@ -11369,6 +11865,11 @@ def aria_networks_architecture():
     return lines
 
 
+@kb_diagram(
+    'aria-networks-operations',
+    'docs/virtualization/vmware/aria-operations-for-networks/operations/index.md',
+    'Aria Networks Operations — flow queries, path analysis, alert management, upgrade',
+)
 def aria_networks_operations():
     """Aria Networks Operations sub-section — W=103."""
     W2 = 103
@@ -11479,6 +11980,11 @@ def aria_networks_operations():
     return lines
 
 
+@kb_diagram(
+    'aria-networks-security',
+    'docs/virtualization/vmware/aria-operations-for-networks/security/index.md',
+    'Aria Networks Security — vIDM SSO, RBAC, TLS, API tokens, audit log',
+)
 def aria_networks_security():
     """Aria Networks Security sub-section — W=103."""
     W2 = 103
@@ -11589,6 +12095,11 @@ def aria_networks_security():
     return lines
 
 
+@kb_diagram(
+    'aria-networks-troubleshooting',
+    'docs/virtualization/vmware/aria-operations-for-networks/troubleshooting/index.md',
+    'Aria Networks Troubleshooting — flow gaps, path analysis errors, collector offline',
+)
 def aria_networks_troubleshooting():
     """Aria Networks Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -11699,6 +12210,11 @@ def aria_networks_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'aria-lcm-architecture',
+    'docs/virtualization/vmware/aria-suite-lifecycle/architecture/index.md',
+    'Aria LCM Architecture — LCM appliance, Locker, cert manager, product registry',
+)
 def aria_lcm_architecture():
     """Aria LCM Architecture sub-section — W=103."""
     W2 = 103
@@ -11809,6 +12325,11 @@ def aria_lcm_architecture():
     return lines
 
 
+@kb_diagram(
+    'aria-lcm-operations',
+    'docs/virtualization/vmware/aria-suite-lifecycle/operations/index.md',
+    'Aria LCM Operations — product deploy/upgrade, binary sync, cert rotation, Locker',
+)
 def aria_lcm_operations():
     """Aria LCM Operations sub-section — W=103."""
     W2 = 103
@@ -11919,6 +12440,11 @@ def aria_lcm_operations():
     return lines
 
 
+@kb_diagram(
+    'aria-lcm-security',
+    'docs/virtualization/vmware/aria-suite-lifecycle/security/index.md',
+    'Aria LCM Security — vIDM SSO, RBAC, Locker vault, TLS, audit log',
+)
 def aria_lcm_security():
     """Aria LCM Security sub-section — W=103."""
     W2 = 103
@@ -12029,6 +12555,11 @@ def aria_lcm_security():
     return lines
 
 
+@kb_diagram(
+    'aria-lcm-troubleshooting',
+    'docs/virtualization/vmware/aria-suite-lifecycle/troubleshooting/index.md',
+    'Aria LCM Troubleshooting — deploy failures, binary sync, cert issues, support bundle',
+)
 def aria_lcm_troubleshooting():
     """Aria LCM Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -12139,6 +12670,11 @@ def aria_lcm_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'horizon-architecture',
+    'docs/virtualization/vmware/horizon/architecture/index.md',
+    'Horizon Architecture — Connection Server, UAG, Blast/PCoIP, App Volumes, DEM, pools',
+)
 def horizon_architecture():
     """Horizon Architecture sub-section — W=103."""
     W2 = 103
@@ -12249,6 +12785,11 @@ def horizon_architecture():
     return lines
 
 
+@kb_diagram(
+    'horizon-operations',
+    'docs/virtualization/vmware/horizon/operations/index.md',
+    'Horizon Operations — pod health, pool management, composer recompose, upgrade',
+)
 def horizon_operations():
     """Horizon Operations sub-section — W=103."""
     W2 = 103
@@ -12359,6 +12900,11 @@ def horizon_operations():
     return lines
 
 
+@kb_diagram(
+    'horizon-security',
+    'docs/virtualization/vmware/horizon/security/index.md',
+    'Horizon Security — UAG smart card, AD auth, TLS, RBAC, Blast encryption',
+)
 def horizon_security():
     """Horizon Security sub-section — W=103."""
     W2 = 103
@@ -12469,6 +13015,11 @@ def horizon_security():
     return lines
 
 
+@kb_diagram(
+    'horizon-troubleshooting',
+    'docs/virtualization/vmware/horizon/troubleshooting/index.md',
+    'Horizon Troubleshooting — black screen, provisioning errors, UAG, log bundle',
+)
 def horizon_troubleshooting():
     """Horizon Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -12579,6 +13130,11 @@ def horizon_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'srm-architecture',
+    'docs/virtualization/vmware/srm/architecture/index.md',
+    'SRM Architecture — site pair, SRA, protection groups, recovery plans, IP customisation',
+)
 def srm_architecture():
     """SRM Architecture sub-section — W=103."""
     W2 = 103
@@ -12689,6 +13245,11 @@ def srm_architecture():
     return lines
 
 
+@kb_diagram(
+    'srm-operations',
+    'docs/virtualization/vmware/srm/operations/index.md',
+    'SRM Operations — test failover, planned migration, reprotect, failback, upgrade',
+)
 def srm_operations():
     """SRM Operations sub-section — W=103."""
     W2 = 103
@@ -12799,6 +13360,11 @@ def srm_operations():
     return lines
 
 
+@kb_diagram(
+    'srm-security',
+    'docs/virtualization/vmware/srm/security/index.md',
+    'SRM Security — vCenter SSO, RBAC, TLS site pair, SRA authentication, audit',
+)
 def srm_security():
     """SRM Security sub-section — W=103."""
     W2 = 103
@@ -12909,6 +13475,11 @@ def srm_security():
     return lines
 
 
+@kb_diagram(
+    'srm-troubleshooting',
+    'docs/virtualization/vmware/srm/troubleshooting/index.md',
+    'SRM Troubleshooting — site pair failure, plan errors, replication issues, log bundle',
+)
 def srm_troubleshooting():
     """SRM Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -13019,6 +13590,11 @@ def srm_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'tanzu-architecture',
+    'docs/virtualization/vmware/tanzu/architecture/index.md',
+    'Tanzu Architecture — Supervisor Cluster, TKGs/TKGm, Cluster API, NSX-T, Harbor, TMC',
+)
 def tanzu_architecture():
     """Tanzu Architecture sub-section — W=103."""
     W2 = 103
@@ -13129,6 +13705,11 @@ def tanzu_architecture():
     return lines
 
 
+@kb_diagram(
+    'tanzu-operations',
+    'docs/virtualization/vmware/tanzu/operations/index.md',
+    'Tanzu Operations — cluster lifecycle, node pool scaling, upgrade, Harbor, Tanzu CLI',
+)
 def tanzu_operations():
     """Tanzu Operations sub-section — W=103."""
     W2 = 103
@@ -13239,6 +13820,11 @@ def tanzu_operations():
     return lines
 
 
+@kb_diagram(
+    'tanzu-security',
+    'docs/virtualization/vmware/tanzu/security/index.md',
+    'Tanzu Security — vSphere SSO, RBAC, Pod Security Admission, NSX-T policies, mTLS',
+)
 def tanzu_security():
     """Tanzu Security sub-section — W=103."""
     W2 = 103
@@ -13349,6 +13935,11 @@ def tanzu_security():
     return lines
 
 
+@kb_diagram(
+    'tanzu-troubleshooting',
+    'docs/virtualization/vmware/tanzu/troubleshooting/index.md',
+    'Tanzu Troubleshooting — cluster stuck, node NotReady, WCP degraded, tanzu diagnostics',
+)
 def tanzu_troubleshooting():
     """Tanzu Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -13459,6 +14050,11 @@ def tanzu_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'vsphere-replication-architecture',
+    'docs/virtualization/vmware/vsphere-replication/architecture/index.md',
+    'vSphere Replication Architecture — VRMS/VRS per site, per-VMDK RPO, SRM integration',
+)
 def vsphere_replication_architecture():
     """vSphere Replication Architecture sub-section — W=103."""
     W2 = 103
@@ -13569,6 +14165,11 @@ def vsphere_replication_architecture():
     return lines
 
 
+@kb_diagram(
+    'vsphere-replication-operations',
+    'docs/virtualization/vmware/vsphere-replication/operations/index.md',
+    'vSphere Replication Operations — RPO monitoring, pause/resume, test recovery, upgrade',
+)
 def vsphere_replication_operations():
     """vSphere Replication Operations sub-section — W=103."""
     W2 = 103
@@ -13679,6 +14280,11 @@ def vsphere_replication_operations():
     return lines
 
 
+@kb_diagram(
+    'vsphere-replication-security',
+    'docs/virtualization/vmware/vsphere-replication/security/index.md',
+    'vSphere Replication Security — vCenter SSO, RBAC, TLS traffic, cert management, FIPS',
+)
 def vsphere_replication_security():
     """vSphere Replication Security sub-section — W=103."""
     W2 = 103
@@ -13789,6 +14395,11 @@ def vsphere_replication_security():
     return lines
 
 
+@kb_diagram(
+    'vsphere-replication-troubleshooting',
+    'docs/virtualization/vmware/vsphere-replication/troubleshooting/index.md',
+    'vSphere Replication Troubleshooting — rep failures, RPO violations, CBT, VAMI bundle',
+)
 def vsphere_replication_troubleshooting():
     """vSphere Replication Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -13899,6 +14510,11 @@ def vsphere_replication_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'vmware-vxrail-architecture',
+    'docs/virtualization/vmware/vxrail/architecture/index.md',
+    'VMware VxRail Architecture — node families, vSAN HCI stack, LCM, VCF integration',
+)
 def vmware_vxrail_architecture():
     """VxRail Architecture sub-section — W=103."""
     W2 = 103
@@ -14009,6 +14625,11 @@ def vmware_vxrail_architecture():
     return lines
 
 
+@kb_diagram(
+    'vmware-vxrail-operations',
+    'docs/virtualization/vmware/vxrail/operations/index.md',
+    'VMware VxRail Operations — daily health, LCM upgrades, cluster expansion, automation',
+)
 def vmware_vxrail_operations():
     """VxRail Operations sub-section — W=103."""
     W2 = 103
@@ -14119,6 +14740,11 @@ def vmware_vxrail_operations():
     return lines
 
 
+@kb_diagram(
+    'vmware-vxrail-security',
+    'docs/virtualization/vmware/vxrail/security/index.md',
+    'VMware VxRail Security — iDRAC LDAP, lockdown mode, vSAN encryption, Secure Boot',
+)
 def vmware_vxrail_security():
     """VxRail Security sub-section — W=103."""
     W2 = 103
@@ -14229,6 +14855,11 @@ def vmware_vxrail_security():
     return lines
 
 
+@kb_diagram(
+    'vmware-vxrail-troubleshooting',
+    'docs/virtualization/vmware/vxrail/troubleshooting/index.md',
+    'VMware VxRail Troubleshooting — plugin unavailable, LCM pre-check, vSAN degraded',
+)
 def vmware_vxrail_troubleshooting():
     """VxRail Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -14339,6 +14970,11 @@ def vmware_vxrail_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'vmware-topics',
+    'docs/virtualization/vmware/topics/index.md',
+    'VMware Topics — HA, DRS, APD/PDL, resource contention, NTP/DNS deep-dive topics',
+)
 def vmware_topics():
     """VMware Topics sub-section — W=103."""
     W2 = 103
@@ -14449,6 +15085,11 @@ def vmware_topics():
     return lines
 
 
+@kb_diagram(
+    'vxrail-hardware',
+    'docs/virtualization/vxrail/hardware/index.md',
+    'VxRail Hardware — node health, disk replacement, NIC health, power/cooling, FW inventory',
+)
 def vxrail_hardware():
     """VxRail Hardware sub-section — W=103."""
     W2 = 103
@@ -14559,6 +15200,11 @@ def vxrail_hardware():
     return lines
 
 
+@kb_diagram(
+    'vxrail-lifecycle',
+    'docs/virtualization/vxrail/lifecycle/index.md',
+    'VxRail Lifecycle — BOM validation, LCM planning, node upgrade, rollback, post-validation',
+)
 def vxrail_lifecycle():
     """VxRail Lifecycle sub-section — W=103."""
     W2 = 103
@@ -14669,6 +15315,11 @@ def vxrail_lifecycle():
     return lines
 
 
+@kb_diagram(
+    'vxrail-operations',
+    'docs/virtualization/vxrail/operations/index.md',
+    'VxRail Operations — daily ops, maintenance windows, cluster expansion, support bundles',
+)
 def vxrail_operations():
     """VxRail Operations sub-section — W=103."""
     W2 = 103
@@ -14779,6 +15430,11 @@ def vxrail_operations():
     return lines
 
 
+@kb_diagram(
+    'vxrail-troubleshooting',
+    'docs/virtualization/vxrail/troubleshooting/index.md',
+    'VxRail Troubleshooting — LCM failures, Mystic unavailable, vSAN alerts, network alerts',
+)
 def vxrail_troubleshooting():
     """VxRail Troubleshooting sub-section — W=103."""
     W2 = 103
@@ -14889,6 +15545,11 @@ def vxrail_troubleshooting():
     return lines
 
 
+@kb_diagram(
+    'vxrail-manager',
+    'docs/virtualization/vxrail/vxrail-manager/index.md',
+    'VxRail Manager — Mystic service health, LCM jobs, bundle generation, connectivity, certs',
+)
 def vxrail_manager():
     """VxRail Manager Overview sub-section — W=103."""
     W2 = 103
@@ -14998,677 +15659,6 @@ def vxrail_manager():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-
-
-# ── Diagram registry ──────────────────────────────────────────────────────────
-# 'file' is relative to the repo root (the directory containing mkdocs.yml).
-# Add an entry here whenever you add a new diagram function above.
-
-DIAGRAMS = {
-    'vmware': {
-        'fn': vmware_platform_landscape,
-        'file': 'docs/virtualization/vmware/index.md',
-        'description': 'VMware Platform Landscape — full stack: vSphere, vSAN, NSX, VCF, Aria',
-    },
-    'virtualization': {
-        'fn': virtualization_platform_stack,
-        'file': 'docs/virtualization/index.md',
-        'description': 'VMware Platform Stack — VCF → vCenter/NSX-T/VxRail → ESXi → vSAN',
-    },
-    'storage': {
-        'fn': enterprise_storage_landscape,
-        'file': 'docs/storage/index.md',
-        'description': 'Enterprise Storage Landscape — Pure, Dell, NetApp arrays + protocol layer',
-    },
-    'pure': {
-        'fn': pure_storage_stack,
-        'file': 'docs/storage/pure/index.md',
-        'description': 'Pure Storage Stack — Pure1, FlashArray, FlashBlade, Evergreen, replication',
-    },
-    'dell': {
-        'fn': dell_storage_portfolio,
-        'file': 'docs/storage/dell/index.md',
-        'description': 'Dell Storage Portfolio — PowerMax, PowerStore, Unity, PowerScale, Data Domain, ECS',
-    },
-    'netapp': {
-        'fn': netapp_storage_stack,
-        'file': 'docs/storage/netapp/index.md',
-        'description': 'NetApp Storage Stack — ONTAP, StorageGRID, Keystone, SnapMirror, SnapCenter, FabricPool',
-    },
-    'cloud': {
-        'fn': cloud_infrastructure_overview,
-        'file': 'docs/cloud/index.md',
-        'description': 'Cloud Infrastructure — AWS and Azure: IAM, compute, storage, networking, connectivity',
-    },
-    'aws': {
-        'fn': aws_platform_stack,
-        'file': 'docs/cloud/aws/index.md',
-        'description': 'AWS Platform Stack — IAM, Compute, Networking, Storage, DB, Security, Connectivity',
-    },
-    'azure': {
-        'fn': azure_platform_stack,
-        'file': 'docs/cloud/azure/index.md',
-        'description': 'Azure Platform Stack — Entra ID, Compute, Networking, Storage, DB, Security',
-    },
-    'compute': {
-        'fn': compute_platform_overview,
-        'file': 'docs/compute/index.md',
-        'description': 'Compute Platform Overview — Linux and Windows Server side by side',
-    },
-    'linux': {
-        'fn': linux_server_stack,
-        'file': 'docs/compute/linux/index.md',
-        'description': 'Linux Server Stack — architecture, networking, storage, ops, security, troubleshooting',
-    },
-    'windows': {
-        'fn': windows_server_stack,
-        'file': 'docs/compute/windows-server/index.md',
-        'description': 'Windows Server Stack — architecture, networking, AD, ops, security, troubleshooting',
-    },
-    'san': {
-        'fn': san_fabric_overview,
-        'file': 'docs/san/index.md',
-        'description': 'SAN Fabric Overview — Cisco MDS and Brocade FC fabric side by side',
-    },
-    'cisco-san': {
-        'fn': cisco_san_stack,
-        'file': 'docs/san/cisco/index.md',
-        'description': 'Cisco SAN Stack — MDS 9000, DCNM, Nexus Dashboard, VSAN, Zoning, ISL',
-    },
-    'brocade': {
-        'fn': brocade_san_stack,
-        'file': 'docs/san/brocade/index.md',
-        'description': 'Brocade SAN Stack — Fabric OS, SANnav, Zoning, ISL, MAPS, D-Port',
-    },
-    'vxrail': {
-        'fn': vxrail_platform_stack,
-        'file': 'docs/virtualization/vxrail/index.md',
-        'description': 'VxRail Platform Stack — compute, networking, vSAN, LCM, ops, integration',
-    },
-    'vmware-ops': {
-        'fn': vmware_operations_overview,
-        'file': 'docs/virtualization/operations/index.md',
-        'description': 'VMware Operations Overview — health checks, troubleshooting, runbooks, automation',
-    },
-    'vmware-ref': {
-        'fn': vmware_reference_hub,
-        'file': 'docs/virtualization/reference/index.md',
-        'description': 'VMware Reference Hub — standards, inventory, upgrade readiness, quick reference',
-    },
-    'pure-flasharray': {
-        'fn': pure_flasharray_stack,
-        'file': 'docs/storage/pure/flasharray/index.md',
-        'description': 'Pure FlashArray Stack — CT0/CT1 HA, Purity//FA, NVMe/FC, ActiveDR, ActiveCluster, SafeMode',
-    },
-    'pure-flashblade': {
-        'fn': pure_flashblade_stack,
-        'file': 'docs/storage/pure/flashblade/index.md',
-        'description': 'Pure FlashBlade Stack — scale-out blades, NFS/SMB/S3/HDFS, Purity//FB, replication',
-    },
-    'pure-evergreen': {
-        'fn': pure_evergreen_program,
-        'file': 'docs/storage/pure/evergreen/index.md',
-        'description': 'Pure Evergreen Program — NDU controller refresh, Purity upgrades, Ever Modern lifecycle',
-    },
-    'pure-evergreen-one': {
-        'fn': pure_evergreen_one,
-        'file': 'docs/storage/pure/evergreen-one/index.md',
-        'description': 'Pure Evergreen//One — STaaS, Pure-owned hardware, 99.9999% SLA, consumption billing',
-    },
-    'pure-operations': {
-        'fn': pure_operations_hub,
-        'file': 'docs/storage/pure/operations/index.md',
-        'description': 'Pure Storage Operations Hub — Pure1 portal, alerts severity, support cases P1-P4',
-    },
-    'aws-architecture': {
-        'fn': aws_architecture_overview,
-        'file': 'docs/cloud/aws/architecture/index.md',
-        'description': 'AWS Architecture Overview — multi-account, Organizations, SCPs, TGW, IAM Identity Center',
-    },
-    'aws-backup': {
-        'fn': aws_backup_overview,
-        'file': 'docs/cloud/aws/backup/index.md',
-        'description': 'AWS Backup Overview — Backup Plans, Vaults, Vault Lock, jobs, restore testing, compliance',
-    },
-    'aws-cli': {
-        'fn': aws_cli_reference,
-        'file': 'docs/cloud/aws/cli-reference/index.md',
-        'description': 'AWS CLI Reference — CLI v2, profiles, assume-role, ec2/s3/iam/rds/eks commands',
-    },
-    'aws-compute': {
-        'fn': aws_compute_overview,
-        'file': 'docs/cloud/aws/compute/index.md',
-        'description': 'AWS Compute Overview — EC2, AMI, instance types, Auto Scaling, Lambda, SSM',
-    },
-    'aws-cost': {
-        'fn': aws_cost_management,
-        'file': 'docs/cloud/aws/cost/index.md',
-        'description': 'AWS Cost Management — Cost Explorer, Budgets, Reserved Instances, Savings Plans',
-    },
-    'aws-governance': {
-        'fn': aws_governance_overview,
-        'file': 'docs/cloud/aws/governance/index.md',
-        'description': 'AWS Governance — Organizations, OUs, SCPs, AWS Config, tag policies, compliance',
-    },
-    'aws-identity': {
-        'fn': aws_identity_overview,
-        'file': 'docs/cloud/aws/identity/index.md',
-        'description': 'AWS Identity — IAM, roles, policies, IAM Identity Center SSO, Access Analyzer',
-    },
-    'aws-monitoring': {
-        'fn': aws_monitoring_overview,
-        'file': 'docs/cloud/aws/monitoring/index.md',
-        'description': 'AWS Monitoring — CloudWatch metrics/logs/alarms, CloudTrail, EventBridge, AWS Health',
-    },
-    'aws-networking': {
-        'fn': aws_networking_overview,
-        'file': 'docs/cloud/aws/networking/index.md',
-        'description': 'AWS Networking — VPC, subnets, SGs, NACLs, TGW, DirectConnect, VPC Endpoints, ALB',
-    },
-    'aws-operations': {
-        'fn': aws_operations_overview,
-        'file': 'docs/cloud/aws/operations/index.md',
-        'description': 'AWS Operations — health checks, procedures, Patch Manager, backup/restore, automation',
-    },
-    'aws-security': {
-        'fn': aws_security_overview,
-        'file': 'docs/cloud/aws/security/index.md',
-        'description': 'AWS Security — IAM IC SSO, MFA, KMS, Secrets Manager, ACM, GuardDuty, Security Hub',
-    },
-    'aws-storage': {
-        'fn': aws_storage_overview,
-        'file': 'docs/cloud/aws/storage/index.md',
-        'description': 'AWS Storage — EBS (gp3/io2), S3 (classes/lifecycle/replication), EFS, FSx',
-    },
-    'aws-troubleshooting': {
-        'fn': aws_troubleshooting_overview,
-        'file': 'docs/cloud/aws/troubleshooting/index.md',
-        'description': 'AWS Troubleshooting — common issues, Policy Simulator, Reachability Analyzer, CloudTrail',
-    },
-    'azure-architecture': {
-        'fn': azure_architecture_overview,
-        'file': 'docs/cloud/azure/architecture/index.md',
-        'description': 'Azure Architecture Overview — tenant hierarchy, hub-spoke VNet, Entra ID, Availability Zones',
-    },
-    'azure-backup-dr': {
-        'fn': azure_backup_dr_overview,
-        'file': 'docs/cloud/azure/backup-dr/index.md',
-        'description': 'Azure Backup & DR — Azure Backup, RSV, ASR replication, failover/failback, test failover',
-    },
-    'azure-cli': {
-        'fn': azure_cli_reference,
-        'file': 'docs/cloud/azure/cli-reference/index.md',
-        'description': 'Azure CLI Reference — az login, az vm/storage/network/backup/identity commands',
-    },
-    'azure-compute': {
-        'fn': azure_compute_overview,
-        'file': 'docs/cloud/azure/compute/index.md',
-        'description': 'Azure Compute Overview — VMs, Availability Sets/Zones, VMSS, Update Manager, extensions',
-    },
-    'azure-cost': {
-        'fn': azure_cost_management,
-        'file': 'docs/cloud/azure/cost/index.md',
-        'description': 'Azure Cost Management — Cost Management, budgets, Reservations, Savings Plans, Advisor',
-    },
-    'azure-governance': {
-        'fn': azure_governance_overview,
-        'file': 'docs/cloud/azure/governance/index.md',
-        'description': 'Azure Governance — Management Groups, Azure Policy (Audit/Deny/DINE), initiatives, compliance',
-    },
-    'azure-identity': {
-        'fn': azure_identity_overview,
-        'file': 'docs/cloud/azure/identity/index.md',
-        'description': 'Azure Identity — Entra ID, RBAC, managed identities, PIM, conditional access',
-    },
-    'azure-monitoring': {
-        'fn': azure_monitoring_overview,
-        'file': 'docs/cloud/azure/monitoring/index.md',
-        'description': 'Azure Monitoring — Azure Monitor, Log Analytics (KQL), alerts, action groups',
-    },
-    'azure-networking': {
-        'fn': azure_networking_overview,
-        'file': 'docs/cloud/azure/networking/index.md',
-        'description': 'Azure Networking — VNet, subnets, NSGs, Azure Firewall, Private Endpoints, ExpressRoute',
-    },
-    'azure-operations': {
-        'fn': azure_operations_overview,
-        'file': 'docs/cloud/azure/operations/index.md',
-        'description': 'Azure Operations — health checks, VM procedures, Update Manager, backup/restore, automation',
-    },
-    'azure-security': {
-        'fn': azure_security_overview,
-        'file': 'docs/cloud/azure/security/index.md',
-        'description': 'Azure Security — Entra ID SSO/MFA, Key Vault, CMK, Defender for Cloud, Secure Score, Sentinel',
-    },
-    'azure-storage': {
-        'fn': azure_storage_overview,
-        'file': 'docs/cloud/azure/storage/index.md',
-        'description': 'Azure Storage — Blob tiers, lifecycle, Managed Disks (Premium/Ultra/ZRS), Azure Files',
-    },
-    'azure-troubleshooting': {
-        'fn': azure_troubleshooting_overview,
-        'file': 'docs/cloud/azure/troubleshooting/index.md',
-        'description': 'Azure Troubleshooting — common issues, Boot Diagnostics, Serial Console, Network Watcher',
-    },
-    'esxi': {
-        'fn': esxi_stack,
-        'file': 'docs/virtualization/vmware/esxi/index.md',
-        'description': 'ESXi Host Stack — VMkernel, VMkernel ports, patching, host profiles, lockdown mode',
-    },
-    'nsx': {
-        'fn': nsx_stack,
-        'file': 'docs/virtualization/vmware/nsx/index.md',
-        'description': 'NSX SDN Stack — Geneve overlay, T0/T1 gateways, DFW microsegmentation, Edge nodes',
-    },
-    'vsan': {
-        'fn': vsan_stack,
-        'file': 'docs/virtualization/vmware/vsan/index.md',
-        'description': 'vSAN Stack — disk groups, SPBM policies, FTT, resync, D@RE, vSAN ESA',
-    },
-    'vcenter': {
-        'fn': vcenter_stack,
-        'file': 'docs/virtualization/vmware/vcenter/index.md',
-        'description': 'vCenter Server Management Plane — VCSA, DRS, HA, SSO, ELM, LCM',
-    },
-    'vcf': {
-        'fn': vcf_stack,
-        'file': 'docs/virtualization/vmware/vmware-cloud-foundation/index.md',
-        'description': 'VCF Full Stack — SDDC Manager, management domain, workload domains, LCM, CloudBuilder',
-    },
-    'aria-automation': {
-        'fn': aria_automation_stack,
-        'file': 'docs/virtualization/vmware/aria-automation/index.md',
-        'description': 'Aria Automation Stack — blueprints, CAS, ABX, service catalogue, approval policies',
-    },
-    'aria-operations': {
-        'fn': aria_operations_stack,
-        'file': 'docs/virtualization/vmware/aria-operations/index.md',
-        'description': 'Aria Operations Stack — analytics cluster, adapters, management packs, rightsizing',
-    },
-    'aria-logs': {
-        'fn': aria_logs_stack,
-        'file': 'docs/virtualization/vmware/aria-operations-for-logs/index.md',
-        'description': 'Aria Operations for Logs Stack — log ingestion, content packs, alerts, webhooks',
-    },
-    'aria-networks': {
-        'fn': aria_networks_stack,
-        'file': 'docs/virtualization/vmware/aria-operations-for-networks/index.md',
-        'description': 'Aria Operations for Networks Stack — path analysis, IPFIX flows, physical topology',
-    },
-    'aria-lcm': {
-        'fn': aria_lcm_stack,
-        'file': 'docs/virtualization/vmware/aria-suite-lifecycle/index.md',
-        'description': 'Aria Suite Lifecycle Manager — deploy/upgrade Aria products, cert manager, Locker',
-    },
-    'horizon': {
-        'fn': horizon_stack,
-        'file': 'docs/virtualization/vmware/horizon/index.md',
-        'description': 'Horizon VDI Stack — Connection Server, UAG, desktop pools, App Volumes, DEM',
-    },
-    'tanzu': {
-        'fn': tanzu_stack,
-        'file': 'docs/virtualization/vmware/tanzu/index.md',
-        'description': 'Tanzu Kubernetes Stack — Supervisor Cluster, TKG, vSphere namespaces, Harbor, TMC',
-    },
-    'srm': {
-        'fn': srm_stack,
-        'file': 'docs/virtualization/vmware/srm/index.md',
-        'description': 'Site Recovery Manager Stack — site pair, protection groups, recovery plans, test failover',
-    },
-    'vsphere-replication': {
-        'fn': vsphere_replication_stack,
-        'file': 'docs/virtualization/vmware/vsphere-replication/index.md',
-        'description': 'vSphere Replication Stack — VRMS, HBRSVC, delta sync, RPO, MPIT, failover/failback',
-    },
-    # ── ESXi sub-section diagrams ────────────────────────────────────────────────
-    'esxi-architecture': {
-        'fn': esxi_architecture,
-        'file': 'docs/virtualization/vmware/esxi/architecture/index.md',
-        'description': 'ESXi Architecture — VMkernel, vmknic, storage stack, HA/DRS integration',
-    },
-    'esxi-operations': {
-        'fn': esxi_operations,
-        'file': 'docs/virtualization/vmware/esxi/operations/index.md',
-        'description': 'ESXi Operations — patching, host profiles, maintenance mode, lifecycle',
-    },
-    'esxi-security': {
-        'fn': esxi_security,
-        'file': 'docs/virtualization/vmware/esxi/security/index.md',
-        'description': 'ESXi Security — lockdown mode, RBAC, TLS, vSphere Trust Authority',
-    },
-    'esxi-troubleshooting': {
-        'fn': esxi_troubleshooting,
-        'file': 'docs/virtualization/vmware/esxi/troubleshooting/index.md',
-        'description': 'ESXi Troubleshooting — PSOD, APD/PDL, DCUI, esxcli diagnostics',
-    },
-    # ── NSX sub-section diagrams ─────────────────────────────────────────────────
-    'nsx-architecture': {
-        'fn': nsx_architecture,
-        'file': 'docs/virtualization/vmware/nsx/architecture/index.md',
-        'description': 'NSX Architecture — manager cluster, control plane, transport nodes, DFW',
-    },
-    'nsx-operations': {
-        'fn': nsx_operations,
-        'file': 'docs/virtualization/vmware/nsx/operations/index.md',
-        'description': 'NSX Operations — manager cluster health, transport node prep, upgrade coordinator',
-    },
-    'nsx-security': {
-        'fn': nsx_security,
-        'file': 'docs/virtualization/vmware/nsx/security/index.md',
-        'description': 'NSX Security — DFW microsegmentation, IDPS, RBAC, TLS, audit logging',
-    },
-    'nsx-troubleshooting': {
-        'fn': nsx_troubleshooting,
-        'file': 'docs/virtualization/vmware/nsx/troubleshooting/index.md',
-        'description': 'NSX Troubleshooting — transport node issues, BGP peering, DFW, support bundle',
-    },
-    # ── vSAN sub-section diagrams ────────────────────────────────────────────────
-    'vsan-architecture': {
-        'fn': vsan_architecture,
-        'file': 'docs/virtualization/vmware/vsan/architecture/index.md',
-        'description': 'vSAN Architecture — disk groups, SPBM, FTT, ESA, stretched cluster',
-    },
-    'vsan-operations': {
-        'fn': vsan_operations,
-        'file': 'docs/virtualization/vmware/vsan/operations/index.md',
-        'description': 'vSAN Operations — health service, resyncing, capacity, upgrade sequencing',
-    },
-    'vsan-security': {
-        'fn': vsan_security,
-        'file': 'docs/virtualization/vmware/vsan/security/index.md',
-        'description': 'vSAN Security — D@RE, RBAC, data-in-transit encryption, KMS, vSphere Trust',
-    },
-    'vsan-troubleshooting': {
-        'fn': vsan_troubleshooting,
-        'file': 'docs/virtualization/vmware/vsan/troubleshooting/index.md',
-        'description': 'vSAN Troubleshooting — disk faults, resync stalls, network partition, proactive tests',
-    },
-    # ── vCenter sub-section diagrams ─────────────────────────────────────────────
-    'vcenter-architecture': {
-        'fn': vcenter_architecture,
-        'file': 'docs/virtualization/vmware/vcenter/architecture/index.md',
-        'description': 'vCenter Architecture — VCSA, PSC, SSO, ELM topology, HA, LCM',
-    },
-    'vcenter-operations': {
-        'fn': vcenter_operations,
-        'file': 'docs/virtualization/vmware/vcenter/operations/index.md',
-        'description': 'vCenter Operations — VAMI, backup, upgrade, certificate management',
-    },
-    'vcenter-security': {
-        'fn': vcenter_security,
-        'file': 'docs/virtualization/vmware/vcenter/security/index.md',
-        'description': 'vCenter Security — SSO hardening, RBAC, TLS, audit, Workspace ONE',
-    },
-    'vcenter-troubleshooting': {
-        'fn': vcenter_troubleshooting,
-        'file': 'docs/virtualization/vmware/vcenter/troubleshooting/index.md',
-        'description': 'vCenter Troubleshooting — SSO issues, DB connection, service restarts, VAMI',
-    },
-    # ── VCF sub-section diagrams ─────────────────────────────────────────────────
-    'vcf-architecture': {
-        'fn': vcf_architecture,
-        'file': 'docs/virtualization/vmware/vmware-cloud-foundation/architecture/index.md',
-        'description': 'VCF Architecture — SDDC Manager, management/workload domains, CloudBuilder',
-    },
-    'vcf-operations': {
-        'fn': vcf_operations,
-        'file': 'docs/virtualization/vmware/vmware-cloud-foundation/operations/index.md',
-        'description': 'VCF Operations — LCM bundle upgrades, domain lifecycle, SDDC Manager tasks',
-    },
-    'vcf-security': {
-        'fn': vcf_security,
-        'file': 'docs/virtualization/vmware/vmware-cloud-foundation/security/index.md',
-        'description': 'VCF Security — SDDC Manager RBAC, cert management, vIDM, STIG compliance',
-    },
-    'vcf-troubleshooting': {
-        'fn': vcf_troubleshooting,
-        'file': 'docs/virtualization/vmware/vmware-cloud-foundation/troubleshooting/index.md',
-        'description': 'VCF Troubleshooting — LCM failures, NSX prep, SDDC Manager, support bundles',
-    },
-    # ── Aria Automation sub-section diagrams ─────────────────────────────────────
-    'aria-automation-architecture': {
-        'fn': aria_automation_architecture,
-        'file': 'docs/virtualization/vmware/aria-automation/architecture/index.md',
-        'description': 'Aria Automation Architecture — Prelude cluster, CAS, ABX, service broker, extensibility',
-    },
-    'aria-automation-operations': {
-        'fn': aria_automation_operations,
-        'file': 'docs/virtualization/vmware/aria-automation/operations/index.md',
-        'description': 'Aria Automation Operations — blueprint publishing, upgrade, cert management, API',
-    },
-    'aria-automation-security': {
-        'fn': aria_automation_security,
-        'file': 'docs/virtualization/vmware/aria-automation/security/index.md',
-        'description': 'Aria Automation Security — vIDM SSO, RBAC org/project, TLS, audit events',
-    },
-    'aria-automation-troubleshooting': {
-        'fn': aria_automation_troubleshooting,
-        'file': 'docs/virtualization/vmware/aria-automation/troubleshooting/index.md',
-        'description': 'Aria Automation Troubleshooting — deployment failures, vRO errors, ABX, support bundle',
-    },
-    # ── Aria Operations sub-section diagrams ─────────────────────────────────────
-    'aria-operations-architecture': {
-        'fn': aria_operations_architecture,
-        'file': 'docs/virtualization/vmware/aria-operations/architecture/index.md',
-        'description': 'Aria Operations Architecture — analytics cluster, remote collectors, adapters, capacity',
-    },
-    'aria-operations-operations': {
-        'fn': aria_operations_operations,
-        'file': 'docs/virtualization/vmware/aria-operations/operations/index.md',
-        'description': 'Aria Operations Operations — alert management, right-sizing, lifecycle, REST API',
-    },
-    'aria-operations-security': {
-        'fn': aria_operations_security,
-        'file': 'docs/virtualization/vmware/aria-operations/security/index.md',
-        'description': 'Aria Operations Security — vIDM SSO, RBAC roles, TLS, API tokens, audit log',
-    },
-    'aria-operations-troubleshooting': {
-        'fn': aria_operations_troubleshooting,
-        'file': 'docs/virtualization/vmware/aria-operations/troubleshooting/index.md',
-        'description': 'Aria Operations Troubleshooting — adapter failures, alert noise, missing data, support.zip',
-    },
-    # ── Aria Logs sub-section diagrams ───────────────────────────────────────────
-    'aria-logs-architecture': {
-        'fn': aria_logs_architecture,
-        'file': 'docs/virtualization/vmware/aria-operations-for-logs/architecture/index.md',
-        'description': 'Aria Logs Architecture — master/worker HA cluster, vRLI agents, VLQL, content packs',
-    },
-    'aria-logs-operations': {
-        'fn': aria_logs_operations,
-        'file': 'docs/virtualization/vmware/aria-operations-for-logs/operations/index.md',
-        'description': 'Aria Logs Operations — alert management, disk retention, content packs, upgrade',
-    },
-    'aria-logs-security': {
-        'fn': aria_logs_security,
-        'file': 'docs/virtualization/vmware/aria-operations-for-logs/security/index.md',
-        'description': 'Aria Logs Security — AD/LDAP SSO, RBAC, TLS agent/syslog, FIPS, audit trail',
-    },
-    'aria-logs-troubleshooting': {
-        'fn': aria_logs_troubleshooting,
-        'file': 'docs/virtualization/vmware/aria-operations-for-logs/troubleshooting/index.md',
-        'description': 'Aria Logs Troubleshooting — agents silent, disk full, alert not firing, vRLI bundle',
-    },
-    # ── Aria Networks sub-section diagrams ───────────────────────────────────────
-    'aria-networks-architecture': {
-        'fn': aria_networks_architecture,
-        'file': 'docs/virtualization/vmware/aria-operations-for-networks/architecture/index.md',
-        'description': 'Aria Networks Architecture — platform/collector VMs, IPFIX flows, path analysis, NSX',
-    },
-    'aria-networks-operations': {
-        'fn': aria_networks_operations,
-        'file': 'docs/virtualization/vmware/aria-operations-for-networks/operations/index.md',
-        'description': 'Aria Networks Operations — flow queries, path analysis, alert management, upgrade',
-    },
-    'aria-networks-security': {
-        'fn': aria_networks_security,
-        'file': 'docs/virtualization/vmware/aria-operations-for-networks/security/index.md',
-        'description': 'Aria Networks Security — vIDM SSO, RBAC, TLS, API tokens, audit log',
-    },
-    'aria-networks-troubleshooting': {
-        'fn': aria_networks_troubleshooting,
-        'file': 'docs/virtualization/vmware/aria-operations-for-networks/troubleshooting/index.md',
-        'description': 'Aria Networks Troubleshooting — flow gaps, path analysis errors, collector offline',
-    },
-    # ── Aria LCM sub-section diagrams ────────────────────────────────────────────
-    'aria-lcm-architecture': {
-        'fn': aria_lcm_architecture,
-        'file': 'docs/virtualization/vmware/aria-suite-lifecycle/architecture/index.md',
-        'description': 'Aria LCM Architecture — LCM appliance, Locker, cert manager, product registry',
-    },
-    'aria-lcm-operations': {
-        'fn': aria_lcm_operations,
-        'file': 'docs/virtualization/vmware/aria-suite-lifecycle/operations/index.md',
-        'description': 'Aria LCM Operations — product deploy/upgrade, binary sync, cert rotation, Locker',
-    },
-    'aria-lcm-security': {
-        'fn': aria_lcm_security,
-        'file': 'docs/virtualization/vmware/aria-suite-lifecycle/security/index.md',
-        'description': 'Aria LCM Security — vIDM SSO, RBAC, Locker vault, TLS, audit log',
-    },
-    'aria-lcm-troubleshooting': {
-        'fn': aria_lcm_troubleshooting,
-        'file': 'docs/virtualization/vmware/aria-suite-lifecycle/troubleshooting/index.md',
-        'description': 'Aria LCM Troubleshooting — deploy failures, binary sync, cert issues, support bundle',
-    },
-    # ── Horizon sub-section diagrams ─────────────────────────────────────────────
-    'horizon-architecture': {
-        'fn': horizon_architecture,
-        'file': 'docs/virtualization/vmware/horizon/architecture/index.md',
-        'description': 'Horizon Architecture — Connection Server, UAG, Blast/PCoIP, App Volumes, DEM, pools',
-    },
-    'horizon-operations': {
-        'fn': horizon_operations,
-        'file': 'docs/virtualization/vmware/horizon/operations/index.md',
-        'description': 'Horizon Operations — pod health, pool management, composer recompose, upgrade',
-    },
-    'horizon-security': {
-        'fn': horizon_security,
-        'file': 'docs/virtualization/vmware/horizon/security/index.md',
-        'description': 'Horizon Security — UAG smart card, AD auth, TLS, RBAC, Blast encryption',
-    },
-    'horizon-troubleshooting': {
-        'fn': horizon_troubleshooting,
-        'file': 'docs/virtualization/vmware/horizon/troubleshooting/index.md',
-        'description': 'Horizon Troubleshooting — black screen, provisioning errors, UAG, log bundle',
-    },
-    # ── SRM sub-section diagrams ─────────────────────────────────────────────────
-    'srm-architecture': {
-        'fn': srm_architecture,
-        'file': 'docs/virtualization/vmware/srm/architecture/index.md',
-        'description': 'SRM Architecture — site pair, SRA, protection groups, recovery plans, IP customisation',
-    },
-    'srm-operations': {
-        'fn': srm_operations,
-        'file': 'docs/virtualization/vmware/srm/operations/index.md',
-        'description': 'SRM Operations — test failover, planned migration, reprotect, failback, upgrade',
-    },
-    'srm-security': {
-        'fn': srm_security,
-        'file': 'docs/virtualization/vmware/srm/security/index.md',
-        'description': 'SRM Security — vCenter SSO, RBAC, TLS site pair, SRA authentication, audit',
-    },
-    'srm-troubleshooting': {
-        'fn': srm_troubleshooting,
-        'file': 'docs/virtualization/vmware/srm/troubleshooting/index.md',
-        'description': 'SRM Troubleshooting — site pair failure, plan errors, replication issues, log bundle',
-    },
-    # ── Tanzu sub-section diagrams ───────────────────────────────────────────────
-    'tanzu-architecture': {
-        'fn': tanzu_architecture,
-        'file': 'docs/virtualization/vmware/tanzu/architecture/index.md',
-        'description': 'Tanzu Architecture — Supervisor Cluster, TKGs/TKGm, Cluster API, NSX-T, Harbor, TMC',
-    },
-    'tanzu-operations': {
-        'fn': tanzu_operations,
-        'file': 'docs/virtualization/vmware/tanzu/operations/index.md',
-        'description': 'Tanzu Operations — cluster lifecycle, node pool scaling, upgrade, Harbor, Tanzu CLI',
-    },
-    'tanzu-security': {
-        'fn': tanzu_security,
-        'file': 'docs/virtualization/vmware/tanzu/security/index.md',
-        'description': 'Tanzu Security — vSphere SSO, RBAC, Pod Security Admission, NSX-T policies, mTLS',
-    },
-    'tanzu-troubleshooting': {
-        'fn': tanzu_troubleshooting,
-        'file': 'docs/virtualization/vmware/tanzu/troubleshooting/index.md',
-        'description': 'Tanzu Troubleshooting — cluster stuck, node NotReady, WCP degraded, tanzu diagnostics',
-    },
-    # ── vSphere Replication sub-section diagrams ─────────────────────────────────
-    'vsphere-replication-architecture': {
-        'fn': vsphere_replication_architecture,
-        'file': 'docs/virtualization/vmware/vsphere-replication/architecture/index.md',
-        'description': 'vSphere Replication Architecture — VRMS/VRS per site, per-VMDK RPO, SRM integration',
-    },
-    'vsphere-replication-operations': {
-        'fn': vsphere_replication_operations,
-        'file': 'docs/virtualization/vmware/vsphere-replication/operations/index.md',
-        'description': 'vSphere Replication Operations — RPO monitoring, pause/resume, test recovery, upgrade',
-    },
-    'vsphere-replication-security': {
-        'fn': vsphere_replication_security,
-        'file': 'docs/virtualization/vmware/vsphere-replication/security/index.md',
-        'description': 'vSphere Replication Security — vCenter SSO, RBAC, TLS traffic, cert management, FIPS',
-    },
-    'vsphere-replication-troubleshooting': {
-        'fn': vsphere_replication_troubleshooting,
-        'file': 'docs/virtualization/vmware/vsphere-replication/troubleshooting/index.md',
-        'description': 'vSphere Replication Troubleshooting — rep failures, RPO violations, CBT, VAMI bundle',
-    },
-    # ── VMware/VxRail sub-section diagrams ───────────────────────────────────────
-    'vmware-vxrail-architecture': {
-        'fn': vmware_vxrail_architecture,
-        'file': 'docs/virtualization/vmware/vxrail/architecture/index.md',
-        'description': 'VMware VxRail Architecture — node families, vSAN HCI stack, LCM, VCF integration',
-    },
-    'vmware-vxrail-operations': {
-        'fn': vmware_vxrail_operations,
-        'file': 'docs/virtualization/vmware/vxrail/operations/index.md',
-        'description': 'VMware VxRail Operations — daily health, LCM upgrades, cluster expansion, automation',
-    },
-    'vmware-vxrail-security': {
-        'fn': vmware_vxrail_security,
-        'file': 'docs/virtualization/vmware/vxrail/security/index.md',
-        'description': 'VMware VxRail Security — iDRAC LDAP, lockdown mode, vSAN encryption, Secure Boot',
-    },
-    'vmware-vxrail-troubleshooting': {
-        'fn': vmware_vxrail_troubleshooting,
-        'file': 'docs/virtualization/vmware/vxrail/troubleshooting/index.md',
-        'description': 'VMware VxRail Troubleshooting — plugin unavailable, LCM pre-check, vSAN degraded',
-    },
-    # ── VMware Topics deep-dive diagram ──────────────────────────────────────────
-    'vmware-topics': {
-        'fn': vmware_topics,
-        'file': 'docs/virtualization/vmware/topics/index.md',
-        'description': 'VMware Topics — HA, DRS, APD/PDL, resource contention, NTP/DNS deep-dive topics',
-    },
-    # ── VxRail section sub-page diagrams ─────────────────────────────────────────
-    'vxrail-hardware': {
-        'fn': vxrail_hardware,
-        'file': 'docs/virtualization/vxrail/hardware/index.md',
-        'description': 'VxRail Hardware — node health, disk replacement, NIC health, power/cooling, FW inventory',
-    },
-    'vxrail-lifecycle': {
-        'fn': vxrail_lifecycle,
-        'file': 'docs/virtualization/vxrail/lifecycle/index.md',
-        'description': 'VxRail Lifecycle — BOM validation, LCM planning, node upgrade, rollback, post-validation',
-    },
-    'vxrail-operations': {
-        'fn': vxrail_operations,
-        'file': 'docs/virtualization/vxrail/operations/index.md',
-        'description': 'VxRail Operations — daily ops, maintenance windows, cluster expansion, support bundles',
-    },
-    'vxrail-troubleshooting': {
-        'fn': vxrail_troubleshooting,
-        'file': 'docs/virtualization/vxrail/troubleshooting/index.md',
-        'description': 'VxRail Troubleshooting — LCM failures, Mystic unavailable, vSAN alerts, network alerts',
-    },
-    'vxrail-manager': {
-        'fn': vxrail_manager,
-        'file': 'docs/virtualization/vxrail/vxrail-manager/index.md',
-        'description': 'VxRail Manager — Mystic service health, LCM jobs, bundle generation, connectivity, certs',
-    },
-
-}
 
 
 # ── Write / check helpers ─────────────────────────────────────────────────────
