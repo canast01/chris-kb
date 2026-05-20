@@ -3453,3 +3453,939 @@ def vcf_troubleshooting():
 
     lines.append('└' + '─' * W2 + '┘')
     return lines
+
+
+@kb_diagram(
+    'virt-ref-cluster-inventory',
+    'docs/virtualization/reference/inventory/Cluster Inventory/index.md',
+    'vSphere Cluster Inventory — fields, HA/DRS config, vSAN/NSX flags, capacity tracking',
+)
+def virt_ref_cluster_inventory():
+    """vSphere Cluster Inventory reference — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSphere — Cluster Inventory'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Per-cluster record capturing identity, feature enablement, and capacity state')))
+    lines.append(R(bMid(IV_L, IV_R, 'One row per cluster; reviewed during capacity planning, audits, and change control')))
+    lines.append(R(bMid(IV_L, IV_R, 'Fields: name, vCenter, environment, host count, HA, DRS, vSAN, NSX, resource pools')))
+    lines.append(R(bMid(IV_L, IV_R, 'Capacity fields: overcommit ratio, datastore count, free memory headroom, notes')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Identity fields anchor the record · Feature flags drive operational decisions'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Identity'), bMid(B2_L, B2_R, 'Feature Flags'), bMid(B3_L, B3_R, 'Capacity'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Cluster name'), bMid(B2_L, B2_R, 'HA enabled (Y/N)'), bMid(B3_L, B3_R, 'Host count'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'vCenter FQDN'), bMid(B2_L, B2_R, 'DRS automation'), bMid(B3_L, B3_R, 'Datastore count'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Environment tag'), bMid(B2_L, B2_R, 'vSAN enabled'), bMid(B3_L, B3_R, 'vCPU overcommit'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Datacenter / site'), bMid(B2_L, B2_R, 'NSX enabled'), bMid(B3_L, B3_R, 'RAM headroom %'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Owner / team'), bMid(B2_L, B2_R, 'EVC baseline'), bMid(B3_L, B3_R, 'Free datastore GB'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Identity + flags determine operational posture and expansion eligibility'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Name', 'vCenter', 'HA/DRS', 'vSAN/NSX', 'Capacity'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['cl-prod-compute', 'vcsa-prod-01', 'Y / Auto', 'Y / Y', '>25% free'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['cl-prod-edge', 'vcsa-prod-01', 'Y / Partial', 'N / Y', 'NFS backed'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['cl-dev-compute', 'vcsa-dev-01', 'Y / Auto', 'Y / N', 'Dev only'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: Dell PowerEdge nodes · vCenter appliance · vSAN disk groups · NSX transport nodes'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Cluster       = vSphere grouping of ESXi hosts sharing HA, DRS, and vSAN resources'))
+    lines.append(txt_row('  HA            = High Availability; restarts VMs on surviving hosts after a host failure'))
+    lines.append(txt_row('  DRS           = Distributed Resource Scheduler; balances VM workloads across cluster hosts'))
+    lines.append(txt_row('  vSAN          = Virtual SAN; pooled storage from host-local NVMe/SSD disks per cluster'))
+    lines.append(txt_row('  NSX           = Network virtualisation; software-defined networking overlay for the cluster'))
+    lines.append(txt_row('  EVC           = Enhanced vMotion Compatibility; CPU baseline for cross-host live migration'))
+    lines.append(txt_row('  DRS Auto      = DRS migrates VMs automatically to balance load without operator approval'))
+    lines.append(txt_row('  Overcommit    = vCPU or vRAM assigned to VMs vs physical cores/RAM on the cluster'))
+    lines.append(txt_row('  HA headroom   = Free memory reserved by admission control for VM restart on host failure'))
+    lines.append(txt_row('  Resource pool = vSphere object limiting and reserving CPU/memory for a group of VMs'))
+    lines.append(txt_row('  Environment   = Production / Non-Production / DR tag applied for policy and access scoping'))
+    lines.append(txt_row('  Datacenter    = vSphere logical container grouping clusters, hosts, and datastores'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virt-ref-datastore-inventory',
+    'docs/virtualization/reference/inventory/Datastore Inventory/index.md',
+    'vSphere Datastore Inventory — capacity, free space, type, connected hosts, VM count',
+)
+def virt_ref_datastore_inventory():
+    """vSphere Datastore Inventory reference — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSphere — Datastore Inventory'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Per-datastore record for capacity management, storage policy audits, and VM placement')))
+    lines.append(R(bMid(IV_L, IV_R, 'Fields: name, type (VMFS/vSAN/NFS/vVol), capacity, free space, hosts, VM count')))
+    lines.append(R(bMid(IV_L, IV_R, 'Policy: default SPBM policy applied, datastore cluster membership, replication state')))
+    lines.append(R(bMid(IV_L, IV_R, 'Alert thresholds: 80% used = capacity warning; 90% used = critical; action required')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Datastore type determines protocol, redundancy model, and SPBM policy options'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Identity'), bMid(B2_L, B2_R, 'Capacity'), bMid(B3_L, B3_R, 'Connectivity'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Datastore name'), bMid(B2_L, B2_R, 'Total capacity (GB)'), bMid(B3_L, B3_R, 'Hosts connected'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Type (VMFS/NFS)'), bMid(B2_L, B2_R, 'Free space (GB)'), bMid(B3_L, B3_R, 'VM count'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Version/block sz'), bMid(B2_L, B2_R, 'Used %'), bMid(B3_L, B3_R, 'Storage policy'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Datastore cluster'), bMid(B2_L, B2_R, 'Thin provisioned'), bMid(B3_L, B3_R, 'Replication state'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'NFS server/path'), bMid(B2_L, B2_R, 'Overcommit ratio'), bMid(B3_L, B3_R, 'Backup target tag'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Capacity and connectivity fields drive VM placement and storage DRS decisions'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Name', 'Type', 'Cap / Free', 'Hosts/VMs', 'Policy'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['ds-vsan-prod-01', 'vSAN', '40TB / 12TB', '8 / 220', 'vSAN Default'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['ds-nfs-prod-01', 'NFS v3', '20TB / 6TB', '8 / 80', 'NetApp NFS'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['ds-vmfs-mgmt', 'VMFS 6', '4TB / 1.2TB', '4 / 15', 'Management'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: vSAN NVMe/SSD disk groups · NFS NAS heads · VMFS on FC/iSCSI LUNs'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  VMFS          = vSphere VMFS filesystem on block LUN (FC/iSCSI); cluster-aware locking'))
+    lines.append(txt_row('  vSAN          = Pooled datastore from host-local NVMe/SSD managed by vSAN kernel module'))
+    lines.append(txt_row('  NFS datastore = NAS share mounted over NFS v3/v4.1; managed at the NAS head level'))
+    lines.append(txt_row('  vVol          = Virtual Volumes; per-VM objects on VASA-capable arrays (no VMFS needed)'))
+    lines.append(txt_row('  SPBM          = Storage Policy Based Management; assigns storage capabilities to VMs'))
+    lines.append(txt_row('  SDRS          = Storage DRS; balances space/IO across datastores in a datastore cluster'))
+    lines.append(txt_row('  Thin prov.    = VM disk uses only written space; capacity grows on demand up to disk limit'))
+    lines.append(txt_row('  Overcommit    = Total thin-provisioned capacity vs actual datastore physical capacity'))
+    lines.append(txt_row('  Replication   = SnapMirror / vSAN Stretched / SRM protection state of the datastore'))
+    lines.append(txt_row('  Backup target = Tag marking datastore as backup destination rather than primary workload'))
+    lines.append(txt_row('  80% threshold = Standard alert point; capacity action required before hitting 90% usage'))
+    lines.append(txt_row('  Datastore cluster = SDRS-managed group; VMs placed and migrated across member datastores'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virt-ref-host-inventory',
+    'docs/virtualization/reference/inventory/Host Inventory/index.md',
+    'vSphere Host Inventory — hardware model, CPU/RAM, ESXi version, cluster, NIC/HBA config',
+)
+def virt_ref_host_inventory():
+    """vSphere Host Inventory reference — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSphere — Host Inventory'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Per-ESXi-host record for lifecycle, capacity, and support — updated after each LCM cycle')))
+    lines.append(R(bMid(IV_L, IV_R, 'Fields: hostname, cluster, hardware model, CPU (sockets/cores), RAM, ESXi build')))
+    lines.append(R(bMid(IV_L, IV_R, 'Network: NIC count, VDS uplinks, NIC model; Storage: HBA count, HBA model, iDRAC IP')))
+    lines.append(R(bMid(IV_L, IV_R, 'State: lockdown mode, maintenance mode, vSAN participation, host profile compliance')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Hardware identity drives upgrade eligibility · ESXi build drives HCL compliance state'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Identity'), bMid(B2_L, B2_R, 'Hardware'), bMid(B3_L, B3_R, 'State'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Hostname (FQDN)'), bMid(B2_L, B2_R, 'Model (PowerEdge)'), bMid(B3_L, B3_R, 'ESXi build'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Cluster member'), bMid(B2_L, B2_R, 'CPU sockets/cores'), bMid(B3_L, B3_R, 'Lockdown mode'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'vCenter managed'), bMid(B2_L, B2_R, 'RAM (GB total)'), bMid(B3_L, B3_R, 'Maint. mode'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'iDRAC IP addr'), bMid(B2_L, B2_R, 'NIC count/model'), bMid(B3_L, B3_R, 'vSAN member'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Site/rack'), bMid(B2_L, B2_R, 'HBA count/model'), bMid(B3_L, B3_R, 'Profile OK'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Hardware + state fields determine maintenance eligibility and capacity contribution'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Host', 'Model', 'CPU / RAM', 'ESXi build', 'State'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['esx-prod-01', 'R750xa', '2x18c/1.5TB', '8.0 U3', 'Active'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['esx-prod-02', 'R750xa', '2x18c/1.5TB', '8.0 U3', 'Active'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['esx-prod-03', 'R750xa', '2x18c/1.5TB', '8.0 U2', 'Needs patch'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: Dell PowerEdge servers · iDRAC OOB · NIC/HBA PCIe cards · vSAN NVMe disks'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  ESXi build    = Specific patch level (e.g. 8.0 U3 build 24022510); matches HCL entry'))
+    lines.append(txt_row('  Lockdown mode = ESXi blocks direct SSH/shell; all management via vCenter API only'))
+    lines.append(txt_row('  Host profile  = vCenter config template enforcing NTP, syslog, lockdown, NIC teaming'))
+    lines.append(txt_row('  HBA           = Host Bus Adapter; FC card connecting ESXi host to SAN fabric'))
+    lines.append(txt_row('  iDRAC         = Dell out-of-band management; independent of ESXi state for hardware ops'))
+    lines.append(txt_row('  vSAN member   = Host contributing local NVMe/SSD disks to the vSAN datastore pool'))
+    lines.append(txt_row('  Maint. mode   = ESXi state where VMs are evacuated prior to host maintenance work'))
+    lines.append(txt_row('  HCL           = Hardware Compatibility List; ESXi build + model + driver must be listed'))
+    lines.append(txt_row('  NIC teaming   = Multiple physical NICs bonded for redundancy and throughput on VDS'))
+    lines.append(txt_row('  Profile OK    = Host configuration matches host profile; non-compliant hosts flagged'))
+    lines.append(txt_row('  Site/rack     = Physical location tag used for anti-affinity and failure domain config'))
+    lines.append(txt_row('  CPU sockets   = Physical CPU count; drives vCPU overcommit capacity for the cluster'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virt-ref-mgmt-tools',
+    'docs/virtualization/reference/inventory/Management Tools/index.md',
+    'VMware Management Tools — vCenter, VxRail Manager, Aria Suite, NSX Manager, SDDC Manager',
+)
+def virt_ref_mgmt_tools():
+    """VMware Management Tools inventory — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VMware — Management Tools'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Layered management toolstack for the VMware platform: compute, network, storage, lifecycle')))
+    lines.append(R(bMid(IV_L, IV_R, 'Each tool manages a distinct layer; SDDC Manager orchestrates VCF lifecycle across all')))
+    lines.append(R(bMid(IV_L, IV_R, 'Track: FQDN, version, admin URL, primary admin account, last upgrade date per tool')))
+    lines.append(R(bMid(IV_L, IV_R, 'Access: all tools require LDAP/SSO + MFA; direct root is break-glass only, vault stored')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Compute/storage mgmt → network mgmt → operations and lifecycle management'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Compute & Storage'), bMid(B2_L, B2_R, 'Network & Security'), bMid(B3_L, B3_R, 'Ops & Lifecycle'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'vCenter Server'), bMid(B2_L, B2_R, 'NSX Manager'), bMid(B3_L, B3_R, 'Aria Operations'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'vSphere Client'), bMid(B2_L, B2_R, 'NSX UI / API'), bMid(B3_L, B3_R, 'Aria Logs'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'VxRail Manager'), bMid(B2_L, B2_R, 'Aria Networks'), bMid(B3_L, B3_R, 'Aria Automation'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'vSAN Skyline'), bMid(B2_L, B2_R, 'NSX Intelligence'), bMid(B3_L, B3_R, 'Aria Suite LCM'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SDDC Manager'), bMid(B2_L, B2_R, 'Load Balancer UI'), bMid(B3_L, B3_R, 'Skyline Advisor'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Hardware access: iDRAC / RACADM — independent of ESXi and vCenter for OOB management'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Tool', 'FQDN', 'Version', 'Admin URL', 'Last upgrade'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['vCenter', 'vcsa-prod-01', '8.0 U3', 'https://vcsa', '2025-03'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['NSX Manager', 'nsx-mgr-01', '4.1.2', 'https://nsx', '2025-03'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['VxRail Mgr', 'vxrail-mgr', '8.0.300', 'https://vxrm', '2025-04'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: management VMs on dedicated cluster · iDRAC on dedicated OOB network'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  vCenter Server  = Central management for ESXi clusters, VMs, storage, and networking'))
+    lines.append(txt_row('  NSX Manager     = Control plane for NSX-T; manages segments, gateways, DFW policy'))
+    lines.append(txt_row('  VxRail Manager  = Dell VxRail appliance manager; Mystic service orchestrates LCM'))
+    lines.append(txt_row('  SDDC Manager    = VCF lifecycle orchestrator; manages domains, clusters, upgrades'))
+    lines.append(txt_row('  Aria Operations = vROps; monitors vSphere/vSAN/NSX with ML anomaly detection'))
+    lines.append(txt_row('  Aria Logs       = vRLI; log analytics for ESXi, vCenter, NSX, and infrastructure'))
+    lines.append(txt_row('  Aria Automation = vRA; IaC and self-service cloud automation; Terraform backed'))
+    lines.append(txt_row('  Aria Suite LCM  = Lifecycle Manager for Aria products; upgrades and cert rotation'))
+    lines.append(txt_row('  Skyline Advisor = Proactive support; flags known issues before they cause outages'))
+    lines.append(txt_row('  iDRAC           = Dell OOB management; hardware-level access independent of OS'))
+    lines.append(txt_row('  Aria Networks   = vRNI; network flow visibility and micro-segmentation planning'))
+    lines.append(txt_row('  Break-glass     = Emergency admin account in vault; used only when SSO/LDAP fails'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virt-ref-network-inventory',
+    'docs/virtualization/reference/inventory/Network Inventory/index.md',
+    'vSphere Network Inventory — VDS switches, port groups, VLANs, uplinks, NSX segments',
+)
+def virt_ref_network_inventory():
+    """vSphere Network Inventory reference — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSphere — Network Inventory'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Per-VDS record tracking port groups, VLAN assignments, uplinks, and NSX overlay config')))
+    lines.append(R(bMid(IV_L, IV_R, 'VDS is the standard for production clusters; one VDS per cluster with defined uplinks')))
+    lines.append(R(bMid(IV_L, IV_R, 'Port groups: Management, vMotion, vSAN, iSCSI/NFS, NSX TEP — each on distinct VLAN')))
+    lines.append(R(bMid(IV_L, IV_R, 'NSX overlay: GENEVE-encapsulated traffic over TEP VLAN; logical segments over physical')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical NIC uplinks → VDS → port groups → VMs and VMkernel adapters'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'VDS Identity'), bMid(B2_L, B2_R, 'Port Groups'), bMid(B3_L, B3_R, 'NSX Overlay'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'VDS name'), bMid(B2_L, B2_R, 'PG-Mgmt VLAN 10'), bMid(B3_L, B3_R, 'TEP VLAN ID'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'VDS version'), bMid(B2_L, B2_R, 'PG-vMotion VLAN 20'), bMid(B3_L, B3_R, 'Segment count'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'MTU setting'), bMid(B2_L, B2_R, 'PG-vSAN VLAN 30'), bMid(B3_L, B3_R, 'Gateway IP'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Uplink count'), bMid(B2_L, B2_R, 'PG-iSCSI VLAN 40'), bMid(B3_L, B3_R, 'Tier-0 name'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'LB policy'), bMid(B2_L, B2_R, 'PG-VM trunk'), bMid(B3_L, B3_R, 'Edge cluster'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  VDS config + NSX overlay define all VM and VMkernel reachability across the cluster'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['VDS name', 'Version', 'MTU', 'Uplinks', 'LB policy'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['vds-prod-01', '8.0', '9000', '2x 25GbE', 'Route by port'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['vds-mgmt-01', '8.0', '1500', '2x 10GbE', 'Active/standby'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['vds-edge-01', '8.0', '9000', '2x 25GbE', 'Route by port'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: 25/100GbE NICs · top-of-rack switches · physical VLAN trunks to hosts'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  VDS           = vSphere Distributed Switch; centrally managed in vCenter across hosts'))
+    lines.append(txt_row('  Port group    = Named VLAN policy container on VDS; VMkernel or VM adapters attach here'))
+    lines.append(txt_row('  VMkernel      = ESXi virtual NIC for Management, vMotion, vSAN, iSCSI, NFS traffic'))
+    lines.append(txt_row('  VLAN          = 802.1Q tag isolating traffic at Layer 2 across the physical switch fabric'))
+    lines.append(txt_row('  MTU 9000      = Jumbo frames required for vSAN and NSX TEP traffic (GENEVE overhead)'))
+    lines.append(txt_row('  TEP           = Tunnel Endpoint; NSX GENEVE encapsulation source/dest per ESXi host'))
+    lines.append(txt_row('  GENEVE        = NSX overlay protocol; carries logical segment traffic over underlay IP'))
+    lines.append(txt_row('  Tier-0 GW     = NSX logical router peering with physical switches; handles N/S routing'))
+    lines.append(txt_row('  Tier-1 GW     = NSX tenant router for workload E/W routing; connected to Tier-0'))
+    lines.append(txt_row('  LB policy     = VDS uplink selection: route by port ID, IP hash, active/standby, LACP'))
+    lines.append(txt_row('  Edge cluster  = NSX Edge transport nodes hosting Tier-0/1 gateways and load balancers'))
+    lines.append(txt_row('  Segment       = NSX logical network; GENEVE-backed overlay equivalent of a VLAN port group'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virt-ref-version-inventory',
+    'docs/virtualization/reference/inventory/Version Inventory/index.md',
+    'VMware Platform Version Inventory — vCenter, ESXi, vSAN, NSX, VxRail, Aria Suite versions',
+)
+def virt_ref_version_inventory():
+    """VMware Platform Version Inventory reference — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'VMware — Version Inventory'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Track product versions for all VMware components — required for LCM planning and support')))
+    lines.append(R(bMid(IV_L, IV_R, 'Versions must be validated against the VMware Product Interoperability Matrix before upgrades')))
+    lines.append(R(bMid(IV_L, IV_R, 'HCL status: ESXi build + server model + driver version must appear on VMware HCL')))
+    lines.append(R(bMid(IV_L, IV_R, 'Support dates: track EoGS and EoTGS per product for lifecycle and budget planning')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Core platform versions → Aria Suite versions → support and compliance status'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Core Platform'), bMid(B2_L, B2_R, 'Aria Suite'), bMid(B3_L, B3_R, 'Compliance'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'vCenter version'), bMid(B2_L, B2_R, 'Aria Automation'), bMid(B3_L, B3_R, 'HCL status'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'ESXi build'), bMid(B2_L, B2_R, 'Aria Operations'), bMid(B3_L, B3_R, 'EoGS date'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'vSAN version'), bMid(B2_L, B2_R, 'Aria Logs'), bMid(B3_L, B3_R, 'EoTGS date'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'NSX-T version'), bMid(B2_L, B2_R, 'Aria LCM'), bMid(B3_L, B3_R, 'Interop matrix'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'VxRail version'), bMid(B2_L, B2_R, 'SDDC Manager'), bMid(B3_L, B3_R, 'Patch level'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  EoGS components require immediate lifecycle action — unpatched = unsupported risk'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Product', 'Version', 'Build', 'EoGS', 'HCL/Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['vCenter', '8.0 U3', '24022515', '2027-10', 'Compliant'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['ESXi', '8.0 U3', '24022510', '2027-10', 'HCL OK'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['NSX-T', '4.1.2', '23287883', '2026-06', 'Check matrix'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: iDRAC firmware also tracked — updated via VxRail LCM bundle automatically'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  EoGS          = End of General Support; product still supported but no new features added'))
+    lines.append(txt_row('  EoTGS         = End of Technical Guidance Support; only critical CVE patches provided'))
+    lines.append(txt_row('  Interop matrix = VMware Product Interoperability Matrix; validates cross-product versions'))
+    lines.append(txt_row('  HCL           = Hardware Compatibility List; ESXi build + model + driver must be listed'))
+    lines.append(txt_row('  Build number  = Exact patch build identifier; used for support cases and HCL lookup'))
+    lines.append(txt_row('  VxRail ver.   = Compound version: bundle includes ESXi + vCenter + iDRAC + VxRail Mgr'))
+    lines.append(txt_row('  Patch level   = Latest applied patch; may differ from GA release version number'))
+    lines.append(txt_row('  SDDC Manager  = VCF LCM; must match supported version for workload domain upgrades'))
+    lines.append(txt_row('  LCM bundle    = VxRail single package covering all node components in one upgrade'))
+    lines.append(txt_row('  Interop check = Required before any upgrade; prevents incompatible version combinations'))
+    lines.append(txt_row('  Critical CVE  = High-severity security flaw; drives emergency patching outside LCM cycle'))
+    lines.append(txt_row('  Upgrade path  = Validated intermediate version sequence needed to reach target version'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virt-std-access',
+    'docs/virtualization/reference/standards/Access Standard/index.md',
+    'vSphere Access Standard — RBAC roles, SSO, lockdown mode, service accounts, audit logging',
+)
+def virt_std_access():
+    """vSphere Access Standard — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSphere — Access Standard'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Access standard governing authentication, authorisation, and audit for the vSphere platform')))
+    lines.append(R(bMid(IV_L, IV_R, 'All management access via vCenter SSO backed by Active Directory; direct host access blocked')))
+    lines.append(R(bMid(IV_L, IV_R, 'Three-tier RBAC: Administrator / Operator (custom role) / Read-only; no built-in admin sharing')))
+    lines.append(R(bMid(IV_L, IV_R, 'Service accounts: one per integration, least-privilege, vault-stored, rotated 90 days')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Authentication gate → authorisation scope → audit trail for all management actions'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Authentication'), bMid(B2_L, B2_R, 'Authorisation'), bMid(B3_L, B3_R, 'Audit'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'vCenter SSO + AD'), bMid(B2_L, B2_R, 'Administrator role'), bMid(B3_L, B3_R, 'vCenter events'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'MFA enforcement'), bMid(B2_L, B2_R, 'Operator (custom)'), bMid(B3_L, B3_R, 'iDRAC audit log'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Lockdown mode'), bMid(B2_L, B2_R, 'Read-only role'), bMid(B3_L, B3_R, 'Syslog to SIEM'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Service accounts'), bMid(B2_L, B2_R, 'Scope: DC/cluster'), bMid(B3_L, B3_R, 'Login attempts'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Break-glass acct'), bMid(B2_L, B2_R, 'Least privilege'), bMid(B3_L, B3_R, 'Role changes'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  All three pillars required: no auth without logging, no access without defined role'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Access tier', 'Auth method', 'vCenter role', 'Scope', 'Review freq'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Administrator', 'SSO + AD + MFA', 'Administrator', 'Datacenter', 'Quarterly'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Operator', 'SSO + AD + MFA', 'Custom ops role', 'Cluster', 'Quarterly'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Read-only', 'SSO + AD', 'Read-only', 'Datacenter', 'Annual'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: ESXi hosts in lockdown mode; iDRAC on OOB VLAN; vCenter on management cluster'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  vCenter SSO   = Single Sign-On; authentication broker for vCenter and connected services'))
+    lines.append(txt_row('  Lockdown mode = ESXi blocks direct SSH/shell; all access via vCenter API path only'))
+    lines.append(txt_row('  RBAC          = Role-Based Access Control; vCenter permissions assigned via role+scope'))
+    lines.append(txt_row('  Administrator = Full vCenter access; restricted to named infra team members only'))
+    lines.append(txt_row('  Operator role = Custom role with write permissions scoped to specific operations'))
+    lines.append(txt_row('  Read-only     = No changes; appropriate for monitoring and helpdesk triage access'))
+    lines.append(txt_row('  Service acct  = Non-human account for tool integration; one per tool, least-privilege'))
+    lines.append(txt_row('  Break-glass   = Emergency admin stored in vault; retrieved on MFA failure or lockout'))
+    lines.append(txt_row('  Least priv.   = Grant only the minimum permissions required for the role to function'))
+    lines.append(txt_row('  Propagate     = vCenter permission flag that applies a role to all child objects too'))
+    lines.append(txt_row('  Scope         = vCenter object level where permission is assigned: DC, cluster, folder'))
+    lines.append(txt_row('  SIEM          = Security Information and Event Management; receives vSphere syslog events'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virt-std-cluster',
+    'docs/virtualization/reference/standards/Cluster Standard/index.md',
+    'vSphere Cluster Standard — HA admission control, DRS settings, EVC mode, capacity rules',
+)
+def virt_std_cluster():
+    """vSphere Cluster Standard — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSphere — Cluster Standard'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Standard configuration for all vSphere clusters — HA, DRS, EVC, and naming enforcement')))
+    lines.append(R(bMid(IV_L, IV_R, 'HA admission control: percentage-based; reserve capacity for N host failures (default N=1)')))
+    lines.append(R(bMid(IV_L, IV_R, 'DRS: Fully Automated for compute clusters; Partially Automated for edge/management clusters')))
+    lines.append(R(bMid(IV_L, IV_R, 'Naming: cl-{env}-{function}-{nn}; consistent naming enables automated policy application')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  HA protects availability · DRS optimises performance · EVC enables live migration'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'HA Settings'), bMid(B2_L, B2_R, 'DRS Settings'), bMid(B3_L, B3_R, 'EVC & Sizing'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Enabled: always'), bMid(B2_L, B2_R, 'Fully Automated'), bMid(B3_L, B3_R, 'EVC: enabled'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Admission: % based'), bMid(B2_L, B2_R, 'Threshold: 65%'), bMid(B3_L, B3_R, 'CPU baseline set'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Heartbeat: 5 min'), bMid(B2_L, B2_R, 'Predictive DRS'), bMid(B3_L, B3_R, 'Min 3 hosts'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Restart priority'), bMid(B2_L, B2_R, 'Affinity rules'), bMid(B3_L, B3_R, 'Max 64 hosts'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Failure condition'), bMid(B2_L, B2_R, 'Resource pools'), bMid(B3_L, B3_R, 'Homogeneous HW'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Settings applied via host profiles and cluster configuration; reviewed quarterly'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Setting', 'Production', 'Dev/Test', 'Edge', 'Management'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['HA', 'Enabled', 'Enabled', 'Enabled', 'Enabled'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['DRS', 'Fully Auto', 'Fully Auto', 'Partial', 'Partial'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['EVC', 'Required', 'Required', 'Optional', 'Required'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: consistent hardware generation per cluster required for EVC baseline stability'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  HA            = High Availability; monitors hosts and restarts VMs on failure detection'))
+    lines.append(txt_row('  Admission ctrl = HA reserves CPU/RAM capacity for N host failure scenarios'))
+    lines.append(txt_row('  DRS           = Distributed Resource Scheduler; migrates VMs to balance cluster load'))
+    lines.append(txt_row('  Fully Auto    = DRS applies vMotion migrations without operator approval'))
+    lines.append(txt_row('  Partial Auto  = DRS recommends but operator must approve each migration'))
+    lines.append(txt_row('  EVC           = Enhanced vMotion Compatibility; masks newer CPU features for migration'))
+    lines.append(txt_row('  Affinity rule = DRS rule keeping or separating specific VMs across hosts'))
+    lines.append(txt_row('  Resource pool = vSphere container applying CPU/RAM shares and limits to VM groups'))
+    lines.append(txt_row('  Predictive DRS = DRS integration with Aria Operations for workload-aware pre-migration'))
+    lines.append(txt_row('  Heartbeat     = HA heartbeat network; secondary check when management network lost'))
+    lines.append(txt_row('  Homogeneous   = Same CPU generation across cluster hosts; required for stable EVC'))
+    lines.append(txt_row('  Restart prio  = HA restart order for VMs; high priority VMs restarted before medium'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virt-std-datastore',
+    'docs/virtualization/reference/standards/Datastore Standard/index.md',
+    'vSphere Datastore Standard — storage policies, naming, sizing thresholds, vSAN rules',
+)
+def virt_std_datastore():
+    """vSphere Datastore Standard — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSphere — Datastore Standard'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Standards governing datastore naming, sizing, storage policy assignment, and vSAN config')))
+    lines.append(R(bMid(IV_L, IV_R, 'Naming: ds-{type}-{site}-{nn}; type = vsan / nfs / vmfs; site = datacenter code')))
+    lines.append(R(bMid(IV_L, IV_R, 'Capacity: 80% used triggers warning; 90% used triggers critical and blocks new VMs')))
+    lines.append(R(bMid(IV_L, IV_R, 'SPBM: all VMs must have an explicit storage policy; no VMs on default policy in prod')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Naming standard + SPBM policy + capacity thresholds define the datastore compliance state'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Naming Rules'), bMid(B2_L, B2_R, 'Capacity Rules'), bMid(B3_L, B3_R, 'Policy Rules'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'ds-{type}-{site}'), bMid(B2_L, B2_R, '80% = warn'), bMid(B3_L, B3_R, 'SPBM required'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Lowercase only'), bMid(B2_L, B2_R, '90% = critical'), bMid(B3_L, B3_R, 'vSAN FTT=1 min'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No spaces/dots'), bMid(B2_L, B2_R, 'Max 64TB VMFS'), bMid(B3_L, B3_R, 'Dedup/compress'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Site code suffix'), bMid(B2_L, B2_R, 'SDRS at 85%'), bMid(B3_L, B3_R, 'Backup tag reqd'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Sequential nn'), bMid(B2_L, B2_R, 'Thin < 150%'), bMid(B3_L, B3_R, 'Tiering policy'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Non-compliant datastores flagged in vCenter; reviewed in weekly capacity meeting'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Type', 'Naming example', 'Max size', 'SPBM policy', 'Threshold'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['vSAN', 'ds-vsan-lon-01', 'Cluster-bound', 'vSAN FTT=1', '80% warn'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['NFS', 'ds-nfs-lon-01', 'NAS-bound', 'NetApp Gold', '80% warn'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['VMFS', 'ds-vmfs-lon-01', '64TB', 'SAN Standard', '80% warn'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: NVMe/SSD disk groups (vSAN) · NFS NAS arrays · FC/iSCSI LUNs (VMFS)'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  SPBM          = Storage Policy Based Management; VM-level storage capability assignment'))
+    lines.append(txt_row('  FTT           = Failures To Tolerate; vSAN redundancy level (FTT=1 means 1 host failure ok)'))
+    lines.append(txt_row('  SDRS          = Storage DRS; migrates VMs when datastore exceeds utilisation threshold'))
+    lines.append(txt_row('  Datastore cluster = SDRS-managed group; enables automated space and IO balancing'))
+    lines.append(txt_row('  Thin overcommit = Provisioned thin capacity as ratio of physical; max 150% recommended'))
+    lines.append(txt_row('  Dedup/compress = vSAN space efficiency; reduces effective capacity needed per VM'))
+    lines.append(txt_row('  Backup tag    = Custom vCenter tag marking backup target datastores vs workload stores'))
+    lines.append(txt_row('  Tiering policy = FabricPool / vSAN policy for cold data migration to capacity tier'))
+    lines.append(txt_row('  Sequential nn = Two-digit suffix (-01, -02) for ordered datastore identification'))
+    lines.append(txt_row('  Site code     = Two-to-four letter datacenter code embedded in datastore name'))
+    lines.append(txt_row('  64TB VMFS     = Maximum VMFS 6 datastore size on a single LUN'))
+    lines.append(txt_row('  Capacity warn = 80% threshold triggers capacity planning; 90% blocks new provisioning'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virt-std-host-build',
+    'docs/virtualization/reference/standards/Host Build Standard/index.md',
+    'ESXi Host Build Standard — NTP, DNS, syslog, lockdown, NIC teaming, host profile',
+)
+def virt_std_host_build():
+    """ESXi Host Build Standard — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'ESXi — Host Build Standard'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Baseline configuration applied to every ESXi host via host profile — enforced in vCenter')))
+    lines.append(R(bMid(IV_L, IV_R, 'NTP: 2+ NTP servers; drift < 250ms; required for vSAN, vMotion, and Kerberos auth')))
+    lines.append(R(bMid(IV_L, IV_R, 'Syslog: forwarded to centralised SIEM; retention 90 days minimum at SIEM level')))
+    lines.append(R(bMid(IV_L, IV_R, 'Lockdown: Normal mode on all production hosts; exception list for LCM service accounts')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Build standard items enforced via host profile; non-compliant hosts flagged in vCenter'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Time & DNS'), bMid(B2_L, B2_R, 'Security'), bMid(B3_L, B3_R, 'Networking'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'NTP servers x2'), bMid(B2_L, B2_R, 'Lockdown: Normal'), bMid(B3_L, B3_R, 'VDS uplinks x2'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'DNS primary/sec'), bMid(B2_L, B2_R, 'SSH: disabled'), bMid(B3_L, B3_R, 'MTU: 9000'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'DNS suffix list'), bMid(B2_L, B2_R, 'ESXi Shell: off'), bMid(B3_L, B3_R, 'LACP / failover'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Syslog target'), bMid(B2_L, B2_R, 'VIB: PartnerSupp'), bMid(B3_L, B3_R, 'VMkernel IPs'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Drift < 250ms'), bMid(B2_L, B2_R, 'Host profile'), bMid(B3_L, B3_R, 'iDRAC VLAN'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Host profile compliance checked after every LCM patch; non-compliant hosts remediated'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Item', 'Required value', 'Enforced by', 'Check', 'Remediation'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Lockdown mode', 'Normal', 'Host profile', 'vCenter UI', 'Profile apply'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['SSH service', 'Stopped/off', 'Host profile', 'esxcli check', 'Profile apply'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['NTP drift', '< 250ms', 'NTP daemon', 'ntpq -p', 'Sync NTP servers'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: management NIC on VLAN 10; iDRAC on OOB VLAN; vSAN NIC on VLAN 30'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Host profile  = vCenter template enforcing consistent config across all cluster hosts'))
+    lines.append(txt_row('  Lockdown mode = ESXi state blocking direct SSH; all management routed through vCenter'))
+    lines.append(txt_row('  Exception list = Accounts permitted direct host access in lockdown (VxRail Mgr SVC acct)'))
+    lines.append(txt_row('  VIB acceptance = Host policy for VIB package signing: VMwareCertified > PartnerSupported'))
+    lines.append(txt_row('  NTP drift     = Clock offset tolerance; >250ms breaks vSAN resync and Kerberos tickets'))
+    lines.append(txt_row('  ESXi Shell    = TSM service; disabled in production to reduce attack surface'))
+    lines.append(txt_row('  SSH service   = TSM-SSH service; disabled in production; enabled only for troubleshooting'))
+    lines.append(txt_row('  Syslog target = Remote syslog server (SIEM) receiving all ESXi log events'))
+    lines.append(txt_row('  LACP          = Link Aggregation Control Protocol; bonds uplinks for bandwidth and failover'))
+    lines.append(txt_row('  PartnerSupp   = VIB acceptance level allowing Dell, NetApp, and VMware-signed VIBs'))
+    lines.append(txt_row('  VMkernel IP   = Per-VLAN ESXi virtual NIC IP: management, vMotion, vSAN, iSCSI/NFS'))
+    lines.append(txt_row('  iDRAC VLAN    = OOB management VLAN for iDRAC; isolated from ESXi and VM traffic'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virt-std-naming',
+    'docs/virtualization/reference/standards/Naming Standard/index.md',
+    'vSphere Naming Standard — conventions for clusters, hosts, VMs, datastores, port groups',
+)
+def virt_std_naming():
+    """vSphere Naming Standard — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSphere — Naming Standard'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Consistent naming conventions for all vSphere objects — enables automation and auditing')))
+    lines.append(R(bMid(IV_L, IV_R, 'Pattern: {prefix}-{env}-{function}-{site}-{nn} — lowercase, hyphens, no spaces or dots')))
+    lines.append(R(bMid(IV_L, IV_R, 'Environment codes: prod / nprod / dev / dr; site codes: 3-letter DC identifier')))
+    lines.append(R(bMid(IV_L, IV_R, 'Enforced via vCenter tags and automated naming check in CI/CD provisioning pipelines')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Consistent names drive automation, CMDB population, and audit traceability'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Infrastructure'), bMid(B2_L, B2_R, 'Networking'), bMid(B3_L, B3_R, 'Storage'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Cluster: cl-*'), bMid(B2_L, B2_R, 'VDS: vds-{env}'), bMid(B3_L, B3_R, 'DS: ds-{type}'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Host: esx-{site}'), bMid(B2_L, B2_R, 'PG-{vlan}-{func}'), bMid(B3_L, B3_R, 'ds-vsan-{site}'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'VM: {app}-{env}'), bMid(B2_L, B2_R, 'NSX seg: seg-*'), bMid(B3_L, B3_R, 'ds-nfs-{site}'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Template: tmpl-*'), bMid(B2_L, B2_R, 'Tier-0: t0-{site}'), bMid(B3_L, B3_R, 'ds-vmfs-{site}'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'vCenter: vcsa-*'), bMid(B2_L, B2_R, 'Tier-1: t1-{func}'), bMid(B3_L, B3_R, 'Policy: pol-{tier}'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Non-compliant names flagged by naming lint script in provisioning pipeline'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Object', 'Pattern', 'Example', 'Max len', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Cluster', 'cl-{env}-{fn}-{nn}', 'cl-prod-compute-01', '32', 'Lowercase'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['ESXi host', 'esx-{site}-{nn}', 'esx-lon-01', '15', 'FQDN used'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['VM', '{app}-{env}-{nn}', 'app1-prod-01', '15', 'FQDN match'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: server naming aligned with iDRAC hostname and rack label for traceability'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Prefix        = Object type identifier: cl (cluster), esx (host), ds (datastore), pg (portgroup)'))
+    lines.append(txt_row('  Environment   = prod / nprod / dev / dr — applied to clusters, VMs, and datastores'))
+    lines.append(txt_row('  Site code     = 3-letter datacenter ID (lon, ams, nyc); embedded in host and DS names'))
+    lines.append(txt_row('  Function      = Role identifier in cluster/VDS name: compute, edge, mgmt, vdi, db'))
+    lines.append(txt_row('  Sequential nn = Zero-padded two-digit counter per site/env: -01, -02, -03'))
+    lines.append(txt_row('  FQDN          = Fully Qualified Domain Name; VM hostname must match FQDN in DNS'))
+    lines.append(txt_row('  NSX segment   = seg-{function}-{vlan}: seg-web-100, seg-db-200, seg-app-300'))
+    lines.append(txt_row('  Port group    = PG-{VLAN ID}-{purpose}: PG-10-Mgmt, PG-20-vMotion, PG-30-vSAN'))
+    lines.append(txt_row('  Template      = tmpl-{os}-{version}: tmpl-rhel9-2024q4, tmpl-win2022-2024q4'))
+    lines.append(txt_row('  Policy name   = pol-{tier}: pol-gold, pol-silver, pol-bronze for storage SPBM'))
+    lines.append(txt_row('  Lint script   = CI/CD pre-provisioning check that validates names against naming regex'))
+    lines.append(txt_row('  CMDB populate = Automated CMDB entry creation triggered by consistent naming pattern'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virt-std-vm',
+    'docs/virtualization/reference/standards/VM Standard/index.md',
+    'vSphere VM Standard — vHW version, CPU/RAM sizing tiers, snapshot policy, VMware Tools',
+)
+def virt_std_vm():
+    """vSphere VM Standard — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'vSphere — VM Standard'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Baseline VM configuration standard — hardware version, sizing, snapshot, and tools policy')))
+    lines.append(R(bMid(IV_L, IV_R, 'Hardware version: vHW 21 minimum (ESXi 8.0); upgrade at OS patching cycle if feasible')))
+    lines.append(R(bMid(IV_L, IV_R, 'Sizing tiers: XS/S/M/L/XL — defined by vCPU and RAM; over-sized VMs flagged by DRS')))
+    lines.append(R(bMid(IV_L, IV_R, 'Snapshots: max 3 per VM, max 14 days age; monitored and alerted via Aria Operations')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Hardware version → OS template → sizing tier → storage policy → snapshot compliance'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Hardware Config'), bMid(B2_L, B2_R, 'Sizing Policy'), bMid(B3_L, B3_R, 'Lifecycle'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'vHW 21 minimum'), bMid(B2_L, B2_R, 'XS: 1vCPU/2GB'), bMid(B3_L, B3_R, 'VMware Tools'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'CPU hot-add: off'), bMid(B2_L, B2_R, 'S: 2vCPU/4GB'), bMid(B3_L, B3_R, 'Auto-update on'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'RAM hot-add: off'), bMid(B2_L, B2_R, 'M: 4vCPU/8GB'), bMid(B3_L, B3_R, 'Snapshot: max 3'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SCSI: PVSCSI'), bMid(B2_L, B2_R, 'L: 8vCPU/16GB'), bMid(B3_L, B3_R, 'Max age 14 days'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'NIC: VMXNET3'), bMid(B2_L, B2_R, 'XL: 16vCPU/32+'), bMid(B3_L, B3_R, 'Thin disks'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Templates enforce vHW version and NIC/SCSI controller types at provisioning time'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Setting', 'Standard value', 'Exception path', 'Enforced by', 'Alert'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['vHW version', '21+', 'Change ticket', 'Template', 'Aria Ops'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Snapshot age', '≤ 14 days', 'CAB approval', 'Aria monitor', 'Alert email'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['VMware Tools', 'Current', 'Frozen OS', 'Tools check', 'Aria Ops'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: VMs on vSAN datastores with SPBM policy; PVSCSI for all non-legacy workloads'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  vHW version   = VMware Virtual Hardware version; controls available VM features and devices'))
+    lines.append(txt_row('  CPU hot-add   = Add vCPUs without reboot; disabled — causes NUMA imbalance in most OSes'))
+    lines.append(txt_row('  RAM hot-add   = Add vRAM without reboot; disabled — OS fragmentation risk, keep off'))
+    lines.append(txt_row('  PVSCSI        = Paravirtual SCSI controller; higher throughput and lower CPU than LSI Logic'))
+    lines.append(txt_row('  VMXNET3       = Paravirtual NIC; much higher performance than E1000; required standard'))
+    lines.append(txt_row('  VMware Tools  = Guest agent enabling quiesced snapshots, heartbeat, IP reporting'))
+    lines.append(txt_row('  Thin disk     = VM disk uses only written bytes; grows to allocated maximum on demand'))
+    lines.append(txt_row('  Snapshot      = Point-in-time VM state; delta disk accumulates writes; delete after use'))
+    lines.append(txt_row('  Sizing tier   = Predefined vCPU/RAM combination; prevents arbitrary VM sizing'))
+    lines.append(txt_row('  SPBM policy   = Storage policy assigned at provisioning; defines redundancy and tiering'))
+    lines.append(txt_row('  Template      = Golden image VM converted to template; enforces vHW and controller type'))
+    lines.append(txt_row('  DRS oversized = DRS flag when VM has more vCPUs than it uses; triggers right-size alert'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines

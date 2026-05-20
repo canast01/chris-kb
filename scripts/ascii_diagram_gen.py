@@ -116,12 +116,11 @@ def _width_str(lines):
 
 
 def _write(name):
-    """Replace the first bare ``` block (or ```mermaid fallback) with fresh output.
+    """Replace the first bare ``` block with fresh output.
 
-    When a mermaid block is found, it is removed from its current position and
-    the diagram is inserted immediately after the kb-summary </div> instead —
-    enforcing the MkDocs superfences rule that the code fence must precede
-    any <div class="kb-grid"> block.
+    Insertion priority when no ``` block exists:
+      1. ```mermaid block → strip it, re-insert after kb-summary (MkDocs placement rule)
+      2. No block at all → insert after kb-summary </div>, or before kb-grid, or after title
     """
     entry = DIAGRAMS[name]
     lines = entry['fn']()
@@ -134,25 +133,31 @@ def _write(name):
         return False
     replacement = '```\n' + '\n'.join(lines) + '\n```'
     new_content, n = _BLOCK_RE.subn(replacement, content, count=1)
+    # If block exists but is after the kb-grid, strip it and let the fallback re-insert correctly.
+    if n == 1:
+        grid_m = re.search(r'^<div class="kb-grid', content, re.MULTILINE)
+        block_m = _BLOCK_RE.search(content)
+        if grid_m and block_m and block_m.start() > grid_m.start():
+            new_content = _BLOCK_RE.sub('', content, count=1)
+            n = 0
     if n == 0:
-        # Mermaid fallback: remove the block in-place, then re-insert after kb-summary.
+        # Mermaid fallback: strip it, then re-insert at the correct position.
         stripped, n = _MERMAID_RE.subn('', content, count=1)
-        if n == 0:
-            print(f'  ERROR: no ``` or ```mermaid block found in {entry["file"]}', file=sys.stderr)
-            return False
-        # Insert after the kb-summary closing </div>
-        summary_end = re.search(r'</div>\n', stripped)
-        if summary_end:
+        base = stripped if n else content
+        # Find insertion point: after kb-summary </div>, else before kb-grid, else after title
+        summary_end = re.search(r'</div>\n', base)
+        grid_start = re.search(r'^<div class="kb-grid', base, re.MULTILINE)
+        title_end = re.search(r'^# .+\n', base, re.MULTILINE)
+        if summary_end and (not grid_start or summary_end.end() <= grid_start.start()):
             pos = summary_end.end()
-            new_content = stripped[:pos] + '\n' + replacement + '\n' + stripped[pos:].lstrip('\n')
+        elif grid_start:
+            pos = grid_start.start()
+        elif title_end:
+            pos = title_end.end()
         else:
-            # No kb-summary — insert after the title line
-            title_end = re.search(r'^# .+\n', stripped, re.MULTILINE)
-            pos = title_end.end() if title_end else 0
-            new_content = stripped[:pos] + '\n' + replacement + '\n' + stripped[pos:].lstrip('\n')
-    if n == 0:
-        print(f'  ERROR: no ``` or ```mermaid block found in {entry["file"]}', file=sys.stderr)
-        return False
+            pos = 0
+        new_content = base[:pos] + '\n' + replacement + '\n' + base[pos:].lstrip('\n')
+        n = 1  # mark as handled
     if new_content == content:
         print(f'  OK (unchanged)  {entry["file"]}')
         return True

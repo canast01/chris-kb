@@ -1,5 +1,58 @@
 # SANnav — Access Control
 
+```
+┌─────────────────────────────────────── SANnav — Access Control ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          SANnav RBAC: three roles mapped from AD groups; optionally scoped per fabric         │   │
+│   │        Network Administrator: full access including zone management and switch firmware       │   │
+│   │        Network Operator: port admin, monitoring, and reporting; no zone set activation        │   │
+│   │        Read-only: dashboard and inventory view only; no configuration changes permitted       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Role assignment via AD group → fabric scope applied → API token for automation accounts            │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Network Admin        │  │       Network Operator      │  │          Read-Only          │   │
+│   │       Zone management       │  │       Port enable/dis       │  │        View dashboard       │   │
+│   │       FW upgrade jobs       │  │       Alert management      │  │        View inventory       │   │
+│   │       User management       │  │        Report export        │  │         View reports        │   │
+│   │        SANnav config        │  │        Health checks        │  │         View alerts         │   │
+│   │        Fabric add/del       │  │       Performance mon       │  │          No changes         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Service accounts use API tokens (no password); scoped to minimum required role                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Role       │     AD group     │    Fabric scope   │    API token     │   Review freq    │   │
+│   │    Net Admin     │    SAN-Admins    │    All fabrics    │    Yes (auto)    │    Quarterly     │   │
+│   │   Net Operator   │     SAN-Ops      │     Per fabric    │   Yes (RO API)   │    Quarterly     │   │
+│   │    Read-only     │   SAN-Viewers    │    All fabrics    │    View only     │      Annual      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: SANnav on management network; access from jump host only                                 │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    RBAC          = Role-Based Access Control; SANnav maps AD groups to built-in roles                 │
+│    Fabric scope  = Restrict a role to specific fabrics; admin sees only assigned fabrics              │
+│    API token     = SANnav-generated token for REST API access; no password exchange                   │
+│    Zone activate = cfgenable equivalent; Network Admin role required to push changes                  │
+│    AD group      = Active Directory security group mapped to SANnav role in LDAP settings             │
+│    Service acct  = Non-human account for ITSM/monitoring integration; least-privilege                 │
+│    Port admin    = Enable or disable individual FC ports; Operator role minimum                       │
+│    FW upgrade    = Firmware upgrade job scheduling on switches; Admin role required                   │
+│    User mgmt     = Create/delete/modify SANnav user accounts; Admin only                              │
+│    Performance   = Per-port and per-ISL bandwidth graphs; Operator and above                          │
+│    Quarterly rev = Access list reviewed against joiners/movers/leavers each quarter                   │
+│    Break-glass   = Local admin account; password in vault; used if LDAP unavailable                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 > Part of the [SANnav](../../) reference.
 
 ---
