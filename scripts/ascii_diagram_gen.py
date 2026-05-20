@@ -15764,6 +15764,39 @@ def _list():
         print()
 
 
+def _audit_placement():
+    """Return list of (name, file, issue) for placement violations."""
+    issues = []
+    for name, entry in DIAGRAMS.items():
+        path = os.path.join(REPO_ROOT, entry['file'])
+        if not os.path.exists(path):
+            continue
+        with open(path) as f:
+            lines = f.read().split('\n')
+        fence = next((i + 1 for i, l in enumerate(lines) if l == '```'), None)
+        grid  = next((i + 1 for i, l in enumerate(lines) if 'kb-grid' in l), None)
+        if fence is None:
+            issues.append((name, entry['file'], 'NO FENCE'))
+        elif grid and fence >= grid:
+            issues.append((name, entry['file'], f'fence={fence} after grid={grid}'))
+    return issues
+
+
+def _audit_widths():
+    """Run all diagram functions and collect WARNs, grouped by diagram name.
+    Returns dict of name -> list of warn strings (empty means clean)."""
+    import io, contextlib
+    results = {}
+    for name, entry in sorted(DIAGRAMS.items()):
+        buf = io.StringIO()
+        with contextlib.redirect_stderr(buf):
+            entry['fn']()
+        warns = [l.strip() for l in buf.getvalue().splitlines() if 'WARN' in l]
+        if warns:
+            results[name] = warns
+    return results
+
+
 if __name__ == '__main__':
     import argparse
 
@@ -15777,7 +15810,8 @@ if __name__ == '__main__':
             '  python3 scripts/ascii_diagram_gen.py vmware               # print to stdout\n'
             '  python3 scripts/ascii_diagram_gen.py vmware --write       # update file\n'
             '  python3 scripts/ascii_diagram_gen.py --write-all          # update all\n'
-            '  python3 scripts/ascii_diagram_gen.py --check              # verify sync\n'
+            '  python3 scripts/ascii_diagram_gen.py --check              # sync + widths + placement\n'
+            '  python3 scripts/ascii_diagram_gen.py --validate           # width WARNs grouped by name\n'
             '  python3 scripts/ascii_diagram_gen.py --layout 20 20 47    # box positions\n'
         ),
     )
@@ -15787,7 +15821,9 @@ if __name__ == '__main__':
     parser.add_argument('--write-all', action='store_true',
                         help='update all registered markdown files')
     parser.add_argument('--check', action='store_true',
-                        help='verify all files match current diagram output')
+                        help='verify sync, width limits, and fence placement for all files')
+    parser.add_argument('--validate', action='store_true',
+                        help='run all functions and report width WARNs grouped by diagram name')
     parser.add_argument('--layout', nargs='+', type=int, metavar='W',
                         help='calculate box (L, R) positions for given inner widths')
     parser.add_argument('--margin', type=int, default=3,
@@ -15804,9 +15840,24 @@ if __name__ == '__main__':
         for name in sorted(DIAGRAMS):
             _write(name)
 
+    elif args.validate:
+        width_issues = _audit_widths()
+        if not width_issues:
+            print('All diagrams clean — no width WARNs.')
+        else:
+            print(f'{len(width_issues)} diagram(s) have width WARNs:\n')
+            for name, warns in width_issues.items():
+                print(f'  {name}:')
+                for w in warns:
+                    print(f'    {w}')
+        sys.exit(1 if width_issues else 0)
+
     elif args.check:
         all_ok = True
         col = max(len(n) for n in DIAGRAMS) + 2
+
+        # 1. Sync check
+        print('── Sync ──')
         for name, entry in sorted(DIAGRAMS.items()):
             result = _check(name)
             if result is None:
@@ -15817,7 +15868,33 @@ if __name__ == '__main__':
             else:
                 status = 'OUT OF SYNC'
                 all_ok = False
-            print(f'  {name:<{col}}  {status}  {entry["file"]}')
+            if result is None or not result:
+                print(f'  {name:<{col}}  {status}  {entry["file"]}')
+        if all_ok:
+            print(f'  All {len(DIAGRAMS)} diagrams in sync.\n')
+
+        # 2. Width check
+        print('── Widths ──')
+        width_issues = _audit_widths()
+        if not width_issues:
+            print(f'  All {len(DIAGRAMS)} diagrams within width limits.\n')
+        else:
+            all_ok = False
+            for name, warns in width_issues.items():
+                print(f'  {name}: {len(warns)} WARN(s)')
+                for w in warns[:3]:
+                    print(f'    {w}')
+
+        # 3. Placement check
+        print('── Placement ──')
+        placement_issues = _audit_placement()
+        if not placement_issues:
+            print(f'  All {len(DIAGRAMS)} diagrams correctly placed before kb-grid.\n')
+        else:
+            all_ok = False
+            for name, filepath, issue in placement_issues:
+                print(f'  {name:<{col}}  {issue}  {filepath}')
+
         if not all_ok:
             sys.exit(1)
 
