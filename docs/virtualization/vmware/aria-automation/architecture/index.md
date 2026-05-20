@@ -4,23 +4,6 @@
 Kubernetes-based microservices platform for infrastructure self-service automation. Cloud templates (YAML IaC) define resources declaratively; Aria Automation resolves placement and orchestrates provisioning across vSphere, NSX, and public cloud.
 </div>
 
-![Aria Automation Architecture](../../../../assets/aria-automation-architecture-overview.svg)
-
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with vCenter, NSX, cloud providers, and external tools.</span></a>
-<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Sizing guidelines, HA design, and configuration best practices.</span></a>
-</div>
-
-## Deployment Models
-
-| Model | Description |
-|---|---|
-| SaaS (Cloud) | VMware-hosted; no infrastructure to manage; connected via cloud extensibility proxy |
-| On-Premises | 1 or 3 appliance cluster; self-managed; supports air-gap environments |
-
-## Cluster Topology
-
 ```
 ┌─────────────────────────────────── Aria Automation — Architecture ────────────────────────────────────┐
 │                                                                                                       │
@@ -78,3 +61,19 @@ Kubernetes-based microservices platform for infrastructure self-service automati
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+![Aria Automation Architecture](../../../../assets/aria-automation-architecture-overview.svg)
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with vCenter, NSX, cloud providers, and external tools.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Sizing guidelines, HA design, and configuration best practices.</span></a>
+</div>
+
+## Deployment Models
+
+| Model | Description |
+|---|---|
+| SaaS (Cloud) | VMware-hosted; no infrastructure to manage; connected via cloud extensibility proxy |
+| On-Premises | 1 or 3 appliance cluster; self-managed; supports air-gap environments |
+

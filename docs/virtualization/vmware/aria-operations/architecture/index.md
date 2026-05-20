@@ -4,28 +4,6 @@
 Analytics cluster for vSphere performance, capacity, and compliance monitoring. Adapters collect metrics from vCenter, NSX, and storage; remote collectors extend reach into remote sites and DMZs without direct cluster connectivity.
 </div>
 
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with vCenter, NSX, storage, and external monitoring tools.</span></a>
-<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Sizing guidelines, adapter configuration, and cluster design best practices.</span></a>
-</div>
-
-## Aria Operations Cluster Architecture
-
-![Aria Operations Cluster Architecture](../../../../assets/aria-operations-architecture-overview.svg)
-
-## Node Roles
-
-| Node Role | Description |
-|---|---|
-| Primary | Hosts the UI, analytics controller, and cluster coordination |
-| Primary Replica | Hot standby — automatically promoted if Primary fails |
-| Data | Scale-out metric ingestion and storage nodes |
-| Remote Collector | Lightweight proxy for remote sites/DMZs; forwards to cluster without joining it |
-| Cloud Proxy | SaaS-hosted proxy for VMware Cloud on AWS integrations |
-
-## Component Topology
-
 ```
 ┌─────────────────────────────────── Aria Operations — Architecture ────────────────────────────────────┐
 │                                                                                                       │
@@ -83,3 +61,24 @@ Analytics cluster for vSphere performance, capacity, and compliance monitoring. 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with vCenter, NSX, storage, and external monitoring tools.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Sizing guidelines, adapter configuration, and cluster design best practices.</span></a>
+</div>
+
+## Aria Operations Cluster Architecture
+
+![Aria Operations Cluster Architecture](../../../../assets/aria-operations-architecture-overview.svg)
+
+## Node Roles
+
+| Node Role | Description |
+|---|---|
+| Primary | Hosts the UI, analytics controller, and cluster coordination |
+| Primary Replica | Hot standby — automatically promoted if Primary fails |
+| Data | Scale-out metric ingestion and storage nodes |
+| Remote Collector | Lightweight proxy for remote sites/DMZs; forwards to cluster without joining it |
+| Cloud Proxy | SaaS-hosted proxy for VMware Cloud on AWS integrations |
+
