@@ -1,5 +1,9 @@
 # VxRail — Security
 
+<div class="kb-summary">
+Security reference for VxRail in the VMware product context. Covers iDRAC LDAP authentication, ESXi lockdown mode, vSAN encryption, Secure Boot, and audit logging.
+</div>
+
 ```
 ┌────────────────────────────────────────── VxRail — Security ──────────────────────────────────────────┐
 │                                                                                                       │

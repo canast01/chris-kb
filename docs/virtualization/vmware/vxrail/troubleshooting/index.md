@@ -1,5 +1,9 @@
 # VxRail — Troubleshooting
 
+<div class="kb-summary">
+Troubleshooting guide for VxRail in the VMware product context. Covers VxRail plugin unavailability, LCM pre-check failures, vSAN degraded states, and node rejoin procedures.
+</div>
+
 ```
 ┌────────────────────────────────────── VxRail — Troubleshooting ───────────────────────────────────────┐
 │                                                                                                       │

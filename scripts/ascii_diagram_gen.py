@@ -15689,7 +15689,13 @@ def _width_str(lines):
 
 
 def _write(name):
-    """Replace the first bare ``` block (or ```mermaid fallback) with fresh output."""
+    """Replace the first bare ``` block (or ```mermaid fallback) with fresh output.
+
+    When a mermaid block is found, it is removed from its current position and
+    the diagram is inserted immediately after the kb-summary </div> instead —
+    enforcing the MkDocs superfences rule that the code fence must precede
+    any <div class="kb-grid"> block.
+    """
     entry = DIAGRAMS[name]
     lines = entry['fn']()
     target = os.path.join(REPO_ROOT, entry['file'])
@@ -15702,8 +15708,21 @@ def _write(name):
     replacement = '```\n' + '\n'.join(lines) + '\n```'
     new_content, n = _BLOCK_RE.subn(replacement, content, count=1)
     if n == 0:
-        # Fall back: replace ```mermaid block if present
-        new_content, n = _MERMAID_RE.subn(replacement, content, count=1)
+        # Mermaid fallback: remove the block in-place, then re-insert after kb-summary.
+        stripped, n = _MERMAID_RE.subn('', content, count=1)
+        if n == 0:
+            print(f'  ERROR: no ``` or ```mermaid block found in {entry["file"]}', file=sys.stderr)
+            return False
+        # Insert after the kb-summary closing </div>
+        summary_end = re.search(r'</div>\n', stripped)
+        if summary_end:
+            pos = summary_end.end()
+            new_content = stripped[:pos] + '\n' + replacement + '\n' + stripped[pos:].lstrip('\n')
+        else:
+            # No kb-summary — insert after the title line
+            title_end = re.search(r'^# .+\n', stripped, re.MULTILINE)
+            pos = title_end.end() if title_end else 0
+            new_content = stripped[:pos] + '\n' + replacement + '\n' + stripped[pos:].lstrip('\n')
     if n == 0:
         print(f'  ERROR: no ``` or ```mermaid block found in {entry["file"]}', file=sys.stderr)
         return False

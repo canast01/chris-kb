@@ -1,5 +1,9 @@
 # VxRail — Operations
 
+<div class="kb-summary">
+Day-to-day operational reference for VxRail in the VMware product context. Covers plugin health, LCM upgrade sequencing, cluster expansion, and SupportAssist automation.
+</div>
+
 ```
 ┌───────────────────────────────────────── VxRail — Operations ─────────────────────────────────────────┐
 │                                                                                                       │
