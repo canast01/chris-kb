@@ -4,7 +4,7 @@
 ┌───────────────────────────────────── Aria Operations — Security ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │vIDM/Active Directory integration for SSO; RBAC roles (admin/user/viewer) for object-level acce│   │
+│   │   vIDM/Active Directory integration for SSO; RBAC roles (admin/user/viewer) for object-level  │   │
 │   │        Certificate management: cluster and adapter TLS certificates rotated on schedule       │   │
 │   │    API token authentication: scoped bearer tokens for REST API integrations and automation    │   │
 │   │      All REST API communication over TLS; encrypted passwords stored in credential vault      │   │
@@ -42,7 +42,7 @@
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  vIDM               = VMware Identity Manager; provides SSO and group-based role assignment to Aria Op│
+│  vIDM               = VMware Identity Manager; provides SSO and group-based role assignment to Aria   │
 │  Active Directory    = LDAP-compatible directory; groups mapped to Aria Ops roles for user access     │
 │  RBAC               = Role-Based Access Control; admin/user/viewer roles scoped to object groups      │
 │  Admin role         = Full access: manage adapters, alerts, dashboards, users, and system config      │

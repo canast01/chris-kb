@@ -36,7 +36,7 @@ ESXi is VMware's Type-1 hypervisor. It is deployed in standalone, standard clust
 │   │   Networking: vSS per host or vDS cluster-wide; port groups per workload; NIC teaming for HA  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works defines VMkernel internals · integrations connect vCenter and storage · standards enfo│
+│    How-it-works defines VMkernel internals · integrations connect vCenter and storage                 │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -49,7 +49,7 @@ ESXi is VMware's Type-1 hypervisor. It is deployed in standalone, standard clust
 │   │     Cluster: HA/DRS/vSAN    │  │    Identity: vCenter SSO    │  │    VIB acceptance policy    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works covers VMkernel · integrations connect storage and monitoring · standards enforce host│
+│    How-it-works covers VMkernel · integrations connect storage and monitoring                         │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

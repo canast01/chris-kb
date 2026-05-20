@@ -15,7 +15,7 @@ Troubleshooting reference for VMware vSAN. Covers common failure patterns, diagn
 │   │       RVC and esxcli vsan provide CLI diagnostics; vm-support bundle for GSS escalation       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues define the triage path · diagnostics isolate root cause · escalation engages VMware s│
+│    Common issues define the triage path · diagnostics isolate root cause                              │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -29,7 +29,7 @@ Troubleshooting reference for VMware vSAN. Covers common failure patterns, diagn
 │   │       Component absent      │  │      Policy violations      │  │        Core analysis        │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues guide triage · diagnostics pinpoint root cause · escalation gets vendor support engag│
+│    Common issues guide triage · diagnostics pinpoint root cause                                       │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

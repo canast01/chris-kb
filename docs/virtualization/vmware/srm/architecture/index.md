@@ -15,7 +15,7 @@ VMware Site Recovery Manager automates DR failover and failback by orchestrating
 │   │     NSX network remapping automates IP customization during failover or planned migration     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works defines replication and runbooks · integrations connect vCenter and storage · standard│
+│    How-it-works defines replication and runbooks · integrations connect vCenter and storage           │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -29,7 +29,7 @@ VMware Site Recovery Manager automates DR failover and failback by orchestrating
 │   │        Inventory maps       │  │          Array API          │  │        Test schedule        │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works covers replication and recovery plans · integrations connect sites · standards enforce│
+│    How-it-works covers replication and recovery plans · integrations connect sites                    │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -46,7 +46,7 @@ VMware Site Recovery Manager automates DR failover and failback by orchestrating
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  SRM server         = Site Recovery Manager appliance; one per site; paired across protected and recov│
+│  SRM server         = Site Recovery Manager appliance; one per site; paired across protected and      │
 │  Protection group   = Logical set of VMs grouped for replication and recovery together                │
 │  Recovery plan      = Ordered runbook of steps executed during test, migration, or failover           │
 │  Test failover      = Non-disruptive recovery validation in an isolated network; production unaffected│

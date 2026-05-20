@@ -24,7 +24,7 @@
 │   │      ssm start-session      │  │      s3api head-bucket      │  │    iam simulate-principal   │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Compute CLI manages instances · Storage CLI handles S3/EBS/EFS · Identity CLI manages IAM and acces│
+│    Compute CLI manages instances · Storage CLI handles S3/EBS/EFS                                     │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

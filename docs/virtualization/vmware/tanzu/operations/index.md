@@ -11,7 +11,7 @@
 │   │      Tanzu CLI: tanzu cluster create/delete/upgrade/scale; kubeconfig context management      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops manage cluster state · lifecycle upgrades Kubernetes versions · automation scales node po│
+│    Daily ops manage cluster state · lifecycle upgrades Kubernetes versions                            │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │       kubeconfig mgmt       │  │        Cert rotation        │  │         Helm deploys        │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops check cluster and node health · lifecycle upgrades Kubernetes safely · automation uses Ta│
+│    Daily ops check cluster and node health · lifecycle upgrades Kubernetes safely                     │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -50,8 +50,8 @@
 │  OVA bundle         = Tanzu node OS image OVA; uploaded to vCenter content library for upgrades       │
 │  kubeconfig         = Kubernetes configuration file with cluster endpoint and credentials for kubectl │
 │  Namespace quota    = CPU/memory/storage limits applied to a vSphere namespace; enforced by Supervisor│
-│  Cluster API CR     = Custom Resource defining desired cluster state; reconciled by Cluster API contro│
-│  GitOps pipeline    = Declarative deployment pipeline applying manifests from git to Kubernetes cluste│
+│  Cluster API CR     = Custom Resource defining desired cluster state; reconciled by Cluster API       │
+│  GitOps pipeline    = Declarative deployment pipeline applying manifests from git to Kubernetes       │
 │  Harbor             = VMware OCI-compatible registry; image scanning and replication built-in         │
 │  ETCD snapshot      = Backup of Kubernetes cluster state; taken before any major upgrade operation    │
 │                                                                                                       │

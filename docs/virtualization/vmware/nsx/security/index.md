@@ -10,12 +10,12 @@ Security reference for VMware NSX. Covers NSX Manager authentication, role-based
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ NSX security: distributed firewall, microsegmentation, IDPS, URL filtering, and TLS inspection│   │
 │   │  Authentication: AD/LDAP integration; NSX admin roles; API token auth; vIDM/Workspace ONE SSO │   │
-│   │Access control: RBAC roles (Enterprise Admin, Security Admin, Auditor); object-level permission│   │
+│   │      Access control: RBAC roles (Enterprise Admin, Security Admin, Auditor); object-level     │   │
 │   │  DFW microsegmentation: stateful L4 rules enforced at vNIC; east-west traffic control per VM  │   │
 │   │     Advanced security: IDPS signatures, Gateway FW, URL filtering, TLS inspection on Edge     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication controls who manages NSX · RBAC limits scope · DFW enforces east-west microsegmentat│
+│    Authentication controls who manages NSX · RBAC limits scope                                        │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

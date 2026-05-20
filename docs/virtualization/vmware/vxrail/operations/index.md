@@ -43,12 +43,12 @@
 │  Key terms:                                                                                           │
 │                                                                                                       │
 │  VxRail Manager API  = REST API on VxRail Manager VM; used for LCM jobs, health queries, and config   │
-│  LCM bundle          = Signed Dell upgrade package; FW + ESXi + vSAN versions tested and bundled toget│
-│  Pre-check           = Health validation run before LCM upgrade; blocks if vSAN or network issues exis│
+│  LCM bundle          = Signed Dell upgrade package; FW + ESXi + vSAN versions tested and bundled      │
+│  Pre-check           = Health validation run before LCM upgrade; blocks if vSAN or network issues     │
 │  Node-by-node upgrade = LCM puts one node in maintenance, upgrades FW+ESXi, then moves to next node   │
 │  SupportAssist       = Dell proactive support; auto-opens cases on hardware alert from iDRAC or OMIVV │
-│  iDRAC               = Integrated Dell Remote Access Controller; hardware health, console, and OOB acc│
-│  OMIVV               = OpenManage Integration for VMware vCenter; shows Dell hardware alarms in vCente│
+│  iDRAC               = Integrated Dell Remote Access Controller; hardware health, console, and OOB    │
+│  OMIVV               = OpenManage Integration for VMware vCenter; shows Dell hardware alarms in       │
 │  vSAN rebalance      = Redistributes vSAN objects evenly after a node is added to the cluster         │
 │  Maintenance mode    = ESXi state that evacuates VMs via DRS before hardware or upgrade operations    │
 │  FW update           = Firmware update applied to iDRAC, BIOS, NICs, and drives as part of LCM bundle │

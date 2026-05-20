@@ -28,7 +28,7 @@ Horizon knowledge base — architecture, operations, CLI references, security, a
 │   │    DEM: user profile mgmt   │  │    Events DB: query logs    │  │    Entitlement: AD group    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Architecture defines the brokering stack · Operations manage pools and sessions · Security locks ac│
+│    Architecture defines the brokering stack · Operations manage pools and sessions                    │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

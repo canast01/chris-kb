@@ -15,7 +15,7 @@ Day-to-day operational reference for VMware NSX. Covers CLI commands, health che
 │   │     Automation: NSX Policy REST API, Terraform NSX provider, PowerCLI NSX, Ansible modules    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Daily checks catch control plane drift · lifecycle upgrades in sequence · automation scales NSX man│
+│    Daily checks catch control plane drift · lifecycle upgrades in sequence                            │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -28,7 +28,7 @@ Day-to-day operational reference for VMware NSX. Covers CLI commands, health che
 │   │     DFW: rule count sync    │  │     Version compat check    │  │        nsxcli on edge       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops catch issues early · upgrade sequence prevents mismatch · automation handles at-scale cha│
+│    Daily ops catch issues early · upgrade sequence prevents mismatch                                  │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -46,7 +46,7 @@ Day-to-day operational reference for VMware NSX. Covers CLI commands, health che
 │  Key terms:                                                                                           │
 │                                                                                                       │
 │  nsxcli        = NSX Edge CLI; access via SSH or console; commands: get, set, debug namespaces        │
-│  NSX coordinator = Upgrade orchestrator built into NSX Manager; manages upgrade sequence and pre-check│
+│  NSX coordinator = Upgrade orchestrator built into NSX Manager; manages upgrade sequence and          │
 │  MPA           = Management Plane Agent; runs on each transport node; communicates with Manager       │
 │  Transport node = ESXi host or Edge VM enrolled in NSX; carries GENEVE overlay traffic                │
 │  BGP peer      = ToR switch NSX peers with for T0 uplink routing; BFD tracks peer state               │

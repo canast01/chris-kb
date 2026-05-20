@@ -15,7 +15,7 @@ Azure Networking articles, operational checks, troubleshooting notes, and refere
 │   │    Hybrid: ExpressRoute (private circuit) · VPN Gateway (IPsec) · Private Endpoints (PaaS)    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    VNet defines the network · NSG/Firewall secure it · Load Balancer distributes traffic · Hybrid conn│
+│    VNet defines the network · NSG/Firewall secure it · Load Balancer distributes traffic              │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -28,7 +28,7 @@ Azure Networking articles, operational checks, troubleshooting notes, and refere
 │   │      Service endpoints      │  │     Flow logs: NSG → LA     │  │     LB: internal+public     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    VNet/subnets form the base · NSG/Firewall protect traffic · Connectivity services extend to on-prem│
+│    VNet/subnets form the base · NSG/Firewall protect traffic                                          │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -45,9 +45,9 @@ Azure Networking articles, operational checks, troubleshooting notes, and refere
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  VNet           = Virtual Network; isolated private network in a region; one or more CIDR address spac│
+│  VNet           = Virtual Network; isolated private network in a region; one or more CIDR address     │
 │  Subnet         = Address range within a VNet; services and NSGs attached per subnet                  │
-│  NSG            = Network Security Group; stateful L4 ACL; priority-ordered allow/deny rules on port/I│
+│  NSG            = Network Security Group; stateful L4 ACL; priority-ordered allow/deny rules on       │
 │  VNet peering   = Private connectivity between VNets in same or different regions; low latency        │
 │  UDR            = User Defined Route; custom route table overriding Azure defaults; force to firewall │
 │  Azure Firewall = Managed stateful L4/L7 firewall in hub VNet; centralises egress and spoke traffic   │

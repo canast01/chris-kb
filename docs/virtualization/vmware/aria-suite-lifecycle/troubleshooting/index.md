@@ -11,7 +11,7 @@
 │   │     Escalation: LCM support bundle export from UI; pre-check report; TAM escalation for P1    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues define the triage path · diagnostics isolate LCM or product layer · escalation engage│
+│    Common issues define the triage path · diagnostics isolate LCM or product layer                    │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │          API errors         │  │         Product logs        │  │          Log export         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues guide triage · diagnostics use LCM logs and pre-check output · escalation bundles for│
+│    Common issues guide triage · diagnostics use LCM logs and pre-check output                         │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -42,18 +42,18 @@
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  Environment installation = LCM workflow deploying Aria products into a new or existing named Environm│
+│  Environment installation = LCM workflow deploying Aria products into a new or existing named         │
 │  Upgrade orchestration = LCM upgrade wizard that sequences product upgrades to maintain compatibility │
-│  Certificate mismatch  = TLS cert on LCM or product does not match expected CA or SAN; causes auth fai│
-│  vIDM connectivity     = LCM requires vIDM to be reachable for SSO; vIDM failure breaks all product lo│
+│  Certificate mismatch  = TLS cert on LCM or product does not match expected CA or SAN; causes auth    │
+│  vIDM connectivity     = LCM requires vIDM to be reachable for SSO; vIDM failure breaks all product   │
 │  Disk space threshold  = LCM appliance disk usage limit; upgrade aborts if insufficient space detected│
 │  Pre-check validation  = Automated checks before install/upgrade; catches misconfig before deployment │
-│  LCM support bundle    = Diagnostic archive from LCM UI; contains vlcm logs and request history for GS│
-│  Day-2 operation       = Post-install LCM task such as cert rotation, password rotation, or content de│
-│  API debug             = Verbose REST API logging mode in LCM; shows detailed request and response dat│
+│  LCM support bundle    = Diagnostic archive from LCM UI; contains vlcm logs and request history for   │
+│  Day-2 operation       = Post-install LCM task such as cert rotation, password rotation, or content   │
+│  API debug             = Verbose REST API logging mode in LCM; shows detailed request and response    │
 │  BOM version mismatch  = Aria products in an Environment on incompatible versions; blocks LCM upgrade │
-│  TAM escalation        = Escalation to Technical Account Manager for critical LCM P1 upgrade or instal│
-│  Product log collection = Gathering logs from individual Aria products (vRA/vROps/vRLI) to diagnose fa│
+│  TAM escalation        = Escalation to Technical Account Manager for critical LCM P1 upgrade or       │
+│  Product log collection = Gathering logs from individual Aria products (vRA/vROps/vRLI) to diagnose   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

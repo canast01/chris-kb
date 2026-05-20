@@ -11,7 +11,7 @@ All-flash block storage running Purity//FA — ActiveDR, ActiveCluster, NVMe/FC,
 │   │                     Pure FlashArray — All-Flash Block Storage (Purity//FA)                    │   │
 │   │   Dual-controller HA pair: CT0 + CT1 active/active with NVRAM mirroring for < 1 ms write ACK  │   │
 │   │     Protocols: Fibre Channel (16/32G) · iSCSI (10/25 GbE) · NVMe/FC · NVMe/RoCE · NVMe/TCP    │   │
-│   │Pure1: cloud management portal — telemetry, AI support alerts, capacity forecasting, proactive │   │
+│   │ Pure1: cloud management portal — telemetry, AI support alerts, capacity forecasting, proactive│   │
 │   │  Replication: ActiveDR (async, RPO minutes) · ActiveCluster (sync, zero RPO, stretch cluster) │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
@@ -28,7 +28,7 @@ All-flash block storage running Purity//FA — ActiveDR, ActiveCluster, NVMe/FC,
 │   │ ActiveCluster: stretch vols │  │ ActiveDR: async replication │  │ Directory services: AD/LDAP │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Architecture defines HA and data path · Operations manage volumes · Security hardens access and dat│
+│    Architecture defines HA and data path · Operations manage volumes                                  │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

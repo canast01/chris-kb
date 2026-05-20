@@ -15,7 +15,7 @@ Troubleshooting reference for VMware vCenter Server. Covers common VCSA failure 
 │   │ VCSA shell and vcsa-check script for diagnostics; PSC sync issues resolved by SSO repair tool │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues guide triage · diagnostics isolate the service layer · escalation engages VMware supp│
+│    Common issues guide triage · diagnostics isolate the service layer                                 │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

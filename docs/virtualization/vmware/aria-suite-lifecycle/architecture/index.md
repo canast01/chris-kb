@@ -31,12 +31,12 @@ Central management appliance for deploying and upgrading the full VMware Aria Su
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Aria Suite Lifecycle (formerly vRealize Suite LCM) = LCM appliance with embedded vIDM identity│   │
 │   │    Manages lifecycle of Aria products (vRA/vROps/vRLI/vRNI) grouped into named Environments   │   │
-│   │Password Locker stores and encrypts credentials at rest; Certificate Locker manages product cer│   │
+│   │  Password Locker stores and encrypts credentials at rest; Certificate Locker manages product  │   │
 │   │     Install/upgrade wizard orchestrates product deployment order and pre-check validation     │   │
 │   │    DR replication between LCM instances; My VMware integration for product binary downloads   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works defines LCM appliance role · integrations connect identity and deployment targets · st│
+│    How-it-works defines LCM appliance role · integrations connect identity and deployment targets     │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -50,7 +50,7 @@ Central management appliance for deploying and upgrading the full VMware Aria Su
 │   │        DR replication       │  │        NTP/DNS config       │  │        DR replication       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works covers LCM appliance and Lockers · integrations connect identity and vCenter · standar│
+│    How-it-works covers LCM appliance and Lockers · integrations connect identity and vCenter          │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -67,15 +67,15 @@ Central management appliance for deploying and upgrading the full VMware Aria Su
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  LCM appliance     = Aria Suite Lifecycle virtual appliance; central orchestrator for all Aria product│
-│  Environment       = Logical grouping in LCM containing related Aria products sharing the same vIDM in│
-│  Password Locker   = Encrypted credential store in LCM; holds passwords for all products and infrastru│
-│  Certificate Locker = LCM certificate store; manages TLS certs for Aria products; supports CA-signed c│
-│  vIDM (Identity Manager) = Embedded identity provider in LCM; provides SSO across all managed Aria pro│
-│  Product BOM       = Bill of Materials; version matrix listing compatible Aria product versions per re│
+│  LCM appliance     = Aria Suite Lifecycle virtual appliance; central orchestrator for all Aria        │
+│  Environment       = Logical grouping in LCM containing related Aria products sharing the same vIDM   │
+│  Password Locker   = Encrypted credential store in LCM; holds passwords for all products and          │
+│  Certificate Locker = LCM certificate store; manages TLS certs for Aria products; supports CA-signed  │
+│  vIDM (Identity Manager) = Embedded identity provider in LCM; provides SSO across all managed Aria    │
+│  Product BOM       = Bill of Materials; version matrix listing compatible Aria product versions per   │
 │  Install wizard    = LCM UI workflow for deploying a new Aria product into an existing Environment    │
-│  Upgrade wizard    = LCM UI workflow for upgrading Aria products in dependency order with pre-check va│
-│  Day-2 operations  = Post-install operations in LCM: cert rotation, password rotation, content managem│
+│  Upgrade wizard    = LCM UI workflow for upgrading Aria products in dependency order with pre-check   │
+│  Day-2 operations  = Post-install operations in LCM: cert rotation, password rotation, content        │
 │  DR replication    = LCM appliance replication to a secondary site for disaster recovery failover     │
 │  My VMware         = Broadcom/VMware portal integration; LCM downloads product binaries directly from │
 │  Workspace ONE     = VMware identity and access management platform; can replace embedded vIDM in LCM │

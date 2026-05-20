@@ -15,7 +15,7 @@ Pure Storage Evergreen hardware subscription model — non-disruptive controller
 │   │   Controller refresh: new CT shipped, slide-in swap; no data migration, no reformat required  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Evergreen covers the full lifecycle: architecture, operations, refresh, security, and troubleshooti│
+│    Evergreen covers the full lifecycle: architecture, operations, refresh, security, and              │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -28,7 +28,7 @@ Pure Storage Evergreen hardware subscription model — non-disruptive controller
 │   │ Pure1: lifecycle visibility │  │   Security: baseline check  │  │  Compatibility matrix check │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Architecture defines the subscription model · Operations execute upgrades · Lifecycle tracks versio│
+│    Architecture defines the subscription model · Operations execute upgrades                          │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

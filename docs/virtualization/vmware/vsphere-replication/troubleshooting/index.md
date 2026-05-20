@@ -11,7 +11,7 @@
 │   │       Collect support bundle from VRMS VAMI; attach to VMware GSS case with vCenter logs      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues triage network and appliance faults · diagnostics use logs and VAMI · escalate via GS│
+│    Common issues triage network and appliance faults · diagnostics use logs and VAMI                  │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │      Disk space target      │  │        Cert validity        │  │        Version compat       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues triage replication faults · diagnostics use VAMI and VR monitor · escalate with bundl│
+│    Common issues triage replication faults · diagnostics use VAMI and VR monitor                      │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -45,7 +45,7 @@
 │  Replication failure = VR sync cycle did not complete; check vCenter events for error code and source │
 │  RPO violation      = Missed sync count > 0 in VR monitor; investigate bandwidth or appliance health  │
 │  CBT               = Changed Block Tracking; bitmap tracking VMDK changes; corruption causes resync   │
-│  CBT reset          = Snapshot + delete cycle on a VM to force CBT bitmap rebuild; triggers full resyn│
+│  CBT reset          = Snapshot + delete cycle on a VM to force CBT bitmap rebuild; triggers full      │
 │  VAMI               = Virtual Appliance Management Interface; check service status and disk usage here│
 │  VR Monitor UI      = vCenter plugin tab showing per-VM replication status, RPO, and last sync time   │
 │  Site pairing failure = Lost trust between source/target vCenter; re-pair after certificate change    │

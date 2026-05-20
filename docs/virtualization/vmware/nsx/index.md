@@ -28,7 +28,7 @@ Technical and operational reference for VMware NSX. Covers segments, gateways, d
 │   │   Transport zone: overlay   │  │    Alarms: BGP down, TEP    │  │    NSX Intelligence: flow   │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Architecture defines overlay and routing · Operations manage segments and DFW · Security hardens SD│
+│    Architecture defines overlay and routing · Operations manage segments and DFW                      │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -41,7 +41,7 @@ Technical and operational reference for VMware NSX. Covers segments, gateways, d
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ESXi hosts with TEP VMkernel NICs · physical ToR switches · BGP-capable fabric · Edge bare-metal node│
+│  ESXi hosts with TEP VMkernel NICs · physical ToR switches · BGP-capable fabric                       │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │

@@ -29,7 +29,7 @@ Security reference for VMware Cloud Foundation. Covers SDDC Manager authenticati
 │   │      SDDC Manager auth      │  │       Password policy       │  │          KMS config         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Auth controls who accesses VCF · RBAC limits domain scope · encryption protects data and credential│
+│    Auth controls who accesses VCF · RBAC limits domain scope                                          │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

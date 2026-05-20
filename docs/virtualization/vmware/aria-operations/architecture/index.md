@@ -31,13 +31,13 @@ Analytics cluster for vSphere performance, capacity, and compliance monitoring. 
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Aria Operations (formerly vROps) — analytics cluster: primary + replica + data nodes per site │   │
-│   │Remote collectors deployed per site collect metrics without exposing firewall paths to the clus│   │
+│   │   Remote collectors deployed per site collect metrics without exposing firewall paths to the  │   │
 │   │    Adapter instances per integration: vSphere, NSX-T, storage, ServiceNow, SIEM, email/SNMP   │   │
-│   │Dashboards and alerts surface health, risk, efficiency badges across vSphere, NSX, storage, clo│   │
+│   │  Dashboards and alerts surface health, risk, efficiency badges across vSphere, NSX, storage,  │   │
 │   │  Capacity management and optimization actions right-size VMs and forecast resource exhaustion │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works defines the cluster internals · integrations connect adapters · standards govern sizin│
+│    How-it-works defines the cluster internals · integrations connect adapters                         │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -51,7 +51,7 @@ Analytics cluster for vSphere performance, capacity, and compliance monitoring. 
 │   │        Capacity mgmt        │  │       Email/SNMP alert      │  │       Custom dash std       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works covers cluster nodes · integrations connect adapters and ITSM · standards enforce sizi│
+│    How-it-works covers cluster nodes · integrations connect adapters and ITSM                         │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

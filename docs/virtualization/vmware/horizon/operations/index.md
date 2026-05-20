@@ -11,7 +11,7 @@
 │   │  Automation: PowerCLI Horizon module, REST API, Provisioning API for at-scale pool management │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops track sessions and pool health · lifecycle upgrades CS first · automation scales manageme│
+│    Daily ops track sessions and pool health · lifecycle upgrades CS first                             │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │          Log review         │  │          Add new CS         │  │        Dashboard API        │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops catch session and pool issues · lifecycle upgrades in order · automation reduces manual t│
+│    Daily ops catch session and pool issues · lifecycle upgrades in order                              │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

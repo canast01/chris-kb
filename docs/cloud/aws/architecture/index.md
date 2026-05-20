@@ -9,13 +9,13 @@ Multi-account AWS platform managed through AWS Organizations with SCPs, IAM Iden
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      AWS Platform Architecture — Multi-Account Organisation with Hub-and-Spoke Networking     │   │
-│   │Management Account: AWS Organizations root · SCPs · IAM Identity Center SSO · billing aggregati│   │
-│   │Networking: Transit Gateway hub connects spoke VPCs across accounts and on-premises via DirectC│   │
+│   │     Management Account: AWS Organizations root · SCPs · IAM Identity Center SSO · billing     │   │
+│   │    Networking: Transit Gateway hub connects spoke VPCs across accounts and on-premises via    │   │
 │   │  Workload accounts: dedicated member accounts per environment (dev/staging/prod) or per team  │   │
 │   │ Guardrails: SCPs (preventive) + AWS Config (detective) + Security Hub (aggregated compliance) │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Management account controls governance · networking hub connects spokes · workload accounts run app│
+│    Management account controls governance · networking hub connects spokes                            │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -28,7 +28,7 @@ Multi-account AWS platform managed through AWS Organizations with SCPs, IAM Iden
 │   │  Config: resource inventory │  │  Billing: CUR + Cost Expl.  │  │  No workloads in mgmt acct  │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Architecture defines OU layout and networking · Integrations connect IdP and on-prem · Standards en│
+│    Architecture defines OU layout and networking · Integrations connect IdP and on-prem               │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -47,7 +47,7 @@ Multi-account AWS platform managed through AWS Organizations with SCPs, IAM Iden
 │                                                                                                       │
 │  Organizations = AWS service for multi-account management; root contains management account and OUs   │
 │  OU            = Organisational Unit; logical grouping of accounts; SCPs applied at OU level          │
-│  SCP           = Service Control Policy; preventive guardrail; restricts what actions accounts can tak│
+│  SCP           = Service Control Policy; preventive guardrail; restricts what actions accounts can    │
 │  IAM Identity Center= AWS SSO service; assigns permission sets to users/groups in member accounts     │
 │  Transit Gateway= Regional hub router; connects VPCs across accounts and to on-premises via DX/VPN    │
 │  DirectConnect = Dedicated private network connection from on-premises to AWS; bypasses internet      │

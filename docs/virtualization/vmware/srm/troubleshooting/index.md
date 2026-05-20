@@ -11,7 +11,7 @@
 │   │    Escalation: collect SRM bundles from both sites; engage array vendor; contact TAM for P1   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues define triage path · diagnostics isolate replication or plan layer · escalation bundl│
+│    Common issues define triage path · diagnostics isolate replication or plan layer                   │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │       HBCR agent fail       │  │        Support bundle       │  │          P1 process         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues guide triage · diagnostics use logs and RPO dashboard · escalation gathers bundles fo│
+│    Common issues guide triage · diagnostics use logs and RPO dashboard                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

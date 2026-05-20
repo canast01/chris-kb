@@ -11,7 +11,7 @@
 │   │   Escalation: Azure Support cases; collect sub ID, region, resource ID, error, and timeframe  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues guide investigation · Diagnostics locate root cause · Escalation engages Microsoft su│
+│    Common issues guide investigation · Diagnostics locate root cause                                  │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -37,7 +37,7 @@
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Azure VM host fabric · Azure networking SDN · Microsoft Support infrastructure · Azure Monitor backen│
+│  Azure VM host fabric · Azure networking SDN · Microsoft Support infrastructure                       │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │

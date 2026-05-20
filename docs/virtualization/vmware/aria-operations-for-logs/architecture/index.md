@@ -29,14 +29,14 @@ Minimum for production HA: **3 nodes** (1 master + 2 workers) on separate ESXi h
 ┌────────────────────────────────────── Aria Logs — Architecture ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Aria Operations for Logs (formerly vRealize Log Insight) — master node + worker nodes HA cluste│   │
+│   │    Aria Operations for Logs (formerly vRealize Log Insight) — master node + worker nodes HA   │   │
 │   │   vRLI agents on Windows/Linux hosts; syslog TCP/UDP ingestion from network devices and ESXi  │   │
 │   │   VLQL structured queries for interactive analytics; alert pipelines to vROps/email/webhook   │   │
 │   │     Content packs provide structured field extraction and dashboards for known log sources    │   │
 │   │   Log forwarder exports filtered streams to SIEM; retention enforced by disk policy per node  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works defines cluster mechanics · integrations connect log sources · standards govern retent│
+│    How-it-works defines cluster mechanics · integrations connect log sources                          │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -50,7 +50,7 @@ Minimum for production HA: **3 nodes** (1 master + 2 workers) on separate ESXi h
 │   │        Content packs        │  │       SIEM forwarding       │  │         Disk sizing         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works covers cluster and ingestion · integrations connect sources · standards enforce retent│
+│    How-it-works covers cluster and ingestion · integrations connect sources                           │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -63,16 +63,16 @@ Minimum for production HA: **3 nodes** (1 master + 2 workers) on separate ESXi h
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86 VMs (master + workers) · RAM DIMMs · Network NICs · High-capacity storage (log disk) · Syslog sou│
+│  x86 VMs (master + workers) · RAM DIMMs · Network NICs · High-capacity storage (log disk)             │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  Master node        = Aria Logs cluster leader; hosts UI, API, and coordinates ingestion across worker│
+│  Master node        = Aria Logs cluster leader; hosts UI, API, and coordinates ingestion across       │
 │  Worker node        = Additional cluster member; shares ingestion load and stores log partitions      │
 │  vRLI agent         = Lightweight agent on Windows/Linux; forwards structured log events to cluster   │
 │  Syslog ingestion   = UDP/TCP syslog receiver on port 514/6514; accepts RFC3164/5424 formatted logs   │
 │  VLQL               = vRLI Query Language; structured query syntax for filtering and aggregating logs │
-│  Content pack       = Pre-built dashboards and field extractors for a specific log source (NSX, vSpher│
+│  Content pack       = Pre-built dashboards and field extractors for a specific log source (NSX,       │
 │  Alert pipeline     = Rule triggering notifications or forwarding to vROps/email/webhook on log match │
 │  Log forwarder      = Cluster feature streaming filtered log events to an external SIEM destination   │
 │  Structured parsing = Field extraction from raw log text using content pack or custom regex rules     │

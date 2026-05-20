@@ -39,7 +39,7 @@ Dell VxRail is an HCI appliance built on vSphere and vSAN. VxRail Manager orches
 │   │  LCM bundles upgrade FW + ESXi + vSAN together per node; VxRail Manager orchestrates sequence │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works defines HCI mechanics · integrations connect vCenter and Dell tools · standards govern│
+│    How-it-works defines HCI mechanics · integrations connect vCenter and Dell tools                   │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -53,7 +53,7 @@ Dell VxRail is an HCI appliance built on vSphere and vSAN. VxRail Manager orches
 │   │        VxRail on VCF        │  │      CloudIQ monitoring     │  │        Witness sizing       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works covers HCI stack · integrations connect Dell and VMware tools · standards enforce clus│
+│    How-it-works covers HCI stack · integrations connect Dell and VMware tools                         │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -70,15 +70,15 @@ Dell VxRail is an HCI appliance built on vSphere and vSAN. VxRail Manager orches
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  VxRail Manager    = Embedded VM on the cluster; provides REST API and vCenter plugin for HCI manageme│
-│  OMIVV             = OpenManage Integration for VMware vCenter; surfaces Dell hardware alerts in vCent│
-│  LCM               = Lifecycle Manager; orchestrates FW + ESXi + vSAN upgrade as a single bundle opera│
-│  HCI               = Hyperconverged Infrastructure; compute, storage, and networking in a single appli│
+│  VxRail Manager    = Embedded VM on the cluster; provides REST API and vCenter plugin for HCI         │
+│  OMIVV             = OpenManage Integration for VMware vCenter; surfaces Dell hardware alerts in      │
+│  LCM               = Lifecycle Manager; orchestrates FW + ESXi + vSAN upgrade as a single bundle      │
+│  HCI               = Hyperconverged Infrastructure; compute, storage, and networking in a single      │
 │  iDRAC             = Integrated Dell Remote Access Controller; OOB management for hardware health and │
 │  SupportAssist     = Dell proactive support service; auto-creates cases on hardware alert detection   │
-│  CloudIQ           = Dell SaaS monitoring platform; capacity, performance, and health tracking for VxR│
+│  CloudIQ           = Dell SaaS monitoring platform; capacity, performance, and health tracking for    │
 │  VxRail bundle     = Signed LCM package containing matched FW, ESXi, and vSAN component versions      │
-│  FTT               = Failures to Tolerate; vSAN policy defining how many host/disk failures data can s│
+│  FTT               = Failures to Tolerate; vSAN policy defining how many host/disk failures data can  │
 │  P/E/V/G-series    = VxRail node families: P=general, E=entry, V=vSAN ESA NVMe, G=GPU-accelerated     │
 │  Stretched cluster = VxRail cluster spanning two sites with a witness VM for quorum and zero RPO      │
 │  VCF on VxRail     = VMware Cloud Foundation deployed on VxRail hardware using Dell-managed LCM       │

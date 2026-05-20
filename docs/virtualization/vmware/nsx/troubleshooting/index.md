@@ -15,7 +15,7 @@ Troubleshooting reference for VMware NSX. Covers common overlay, gateway, and DF
 │   │    Escalation: NSX support bundle; TAM for P1; verify vSphere and NSX version compatibility   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues define the triage path · diagnostics isolate the layer · escalation engages VMware su│
+│    Common issues define the triage path · diagnostics isolate the layer                               │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -28,7 +28,7 @@ Troubleshooting reference for VMware NSX. Covers common overlay, gateway, and DF
 │   │      MTU mismatch drop      │  │       /var/log/syslog       │  │      Core dump collect      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues guide triage · diagnostics use nsxcli and flow analysis · escalation bundles logs for│
+│    Common issues guide triage · diagnostics use nsxcli and flow analysis                              │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

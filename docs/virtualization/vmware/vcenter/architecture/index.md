@@ -15,7 +15,7 @@ vCenter Server is the management plane for VMware vSphere, deployed as the VCSA 
 │   │     VAMI (port 5480) manages appliance: network, time, backup, update, and service control    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works defines VCSA internals · integrations connect identity and tools · standards govern si│
+│    How-it-works defines VCSA internals · integrations connect identity and tools                      │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -29,7 +29,7 @@ vCenter Server is the management plane for VMware vSphere, deployed as the VCSA 
 │   │        VAMI: web mgmt       │  │       Aria Auto: cloud      │  │      SSO single domain      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works defines VCSA and SSO · integrations connect identity and tools · standards enforce dep│
+│    How-it-works defines VCSA and SSO · integrations connect identity and tools                        │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

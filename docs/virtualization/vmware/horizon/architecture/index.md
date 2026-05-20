@@ -15,7 +15,7 @@ VMware Horizon delivers virtual desktops and published applications through Conn
 │   │ vGPU (NVIDIA) profiles attached to pools for 3D/graphics workloads; vCenter manages ESXi pools│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works defines broker and pool mechanics · integrations connect directory and vCenter · stand│
+│    How-it-works defines broker and pool mechanics · integrations connect directory and vCenter        │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -29,7 +29,7 @@ VMware Horizon delivers virtual desktops and published applications through Conn
 │   │         Dyn Env Mgr         │  │        Horizon Cloud        │  │       RDS session lim       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works covers broker and pools · integrations connect vCenter and directory · standards enfor│
+│    How-it-works covers broker and pools · integrations connect vCenter and directory                  │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

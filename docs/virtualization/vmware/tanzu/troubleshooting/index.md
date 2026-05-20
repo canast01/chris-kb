@@ -25,7 +25,7 @@
 │   │        Quota exceeded       │  │        Harbor health        │  │        Version compat       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues triage cluster and node faults · diagnostics use kubectl and vCenter · escalate via G│
+│    Common issues triage cluster and node faults · diagnostics use kubectl and vCenter                 │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -52,7 +52,7 @@
 │  tanzu diagnostics  = CLI command collecting cluster diagnostic bundle for GSS escalation             │
 │  Pod Pending        = Pod scheduled but not running; check events for resource or image pull errors   │
 │  Quota exceeded     = vSphere namespace CPU/memory/storage limit reached; expand or reclaim resources │
-│  Skyline Health     = VMware proactive support tool validating Tanzu configuration against best practi│
+│  Skyline Health     = VMware proactive support tool validating Tanzu configuration against best       │
 │  Cluster API events = Events on TanzuKubernetesCluster CR showing provisioning error details          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘

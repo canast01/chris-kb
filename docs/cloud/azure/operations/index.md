@@ -24,7 +24,7 @@
 │   │    Backup jobs: success?    │  │      ASR: test failover     │  │    Azure Automation: run    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Health checks prevent failures · Procedures execute changes · Automation scales operational efficie│
+│    Health checks prevent failures · Procedures execute changes                                        │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -43,7 +43,7 @@
 │                                                                                                       │
 │  Azure Update Manager = Replaces Automation Update Management; patches OS at scale per schedule       │
 │  Service Health      = Azure health dashboard for your subscriptions; planned and unplanned events    │
-│  LB health probe     = TCP or HTTP check sent to backend pool members; failure removes VM from rotatio│
+│  LB health probe     = TCP or HTTP check sent to backend pool members; failure removes VM from        │
 │  VM resize           = Change VM SKU; requires deallocation first (downtime); no data loss            │
 │  Disk expansion      = Increase managed disk size in portal/CLI; then extend partition inside OS      │
 │  VMSS instance refresh= Rolling replacement of scale set instances with updated image or config       │

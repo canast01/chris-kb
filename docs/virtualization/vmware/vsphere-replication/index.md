@@ -28,7 +28,7 @@ vSphere Replication knowledge base — architecture, operations, CLI references,
 │   │   Seed: initial full copy   │  │    Failback: reprotect VM   │  │    Audit: vCenter events    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Architecture defines replication data path · Operations monitor and execute failover · Security sec│
+│    Architecture defines replication data path · Operations monitor and execute failover               │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

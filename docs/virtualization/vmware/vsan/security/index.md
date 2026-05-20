@@ -9,13 +9,13 @@ Security reference for VMware vSAN. Covers vCenter SSO authentication, role-base
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ vSAN data-at-rest encryption via external KMS (KMIP); key rotation without data re-encryption │   │
-│   │Host Trust Authority provides TPM-based attestation; ensures only trusted hosts join the cluste│   │
+│   │    Host Trust Authority provides TPM-based attestation; ensures only trusted hosts join the   │   │
 │   │  vSAN stretched cluster requires authentication between sites; network isolation per segment  │   │
 │   │     SPBM security policies enforce encryption and FTT compliance; audit via vCenter events    │   │
 │   │   RBAC inherited from vCenter SSO; AD groups map to roles; in-transit encryption on vSAN ESA  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication controls cluster access · access control enforces RBAC · encryption protects stored │
+│    Authentication controls cluster access · access control enforces RBAC                              │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -29,7 +29,7 @@ Security reference for VMware vSAN. Covers vCenter SSO authentication, role-base
 │   │      vSAN stretch auth      │  │         Audit events        │  │       TPM attestation       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Auth gates cluster membership · RBAC scopes access · encryption and attestation protect data at res│
+│    Auth gates cluster membership · RBAC scopes access                                                 │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

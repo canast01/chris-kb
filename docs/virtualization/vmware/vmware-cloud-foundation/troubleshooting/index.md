@@ -15,7 +15,7 @@ Troubleshooting reference for VMware Cloud Foundation. Covers common SDDC Manage
 │   │       Escalation: TAM/GSS for P1; BOM mismatch validation; Skyline proactive diagnostics      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues define the triage path · diagnostics isolate root cause · escalation engages VCF supp│
+│    Common issues define the triage path · diagnostics isolate root cause                              │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -29,7 +29,7 @@ Troubleshooting reference for VMware Cloud Foundation. Covers common SDDC Manage
 │   │       Password rot err      │  │         vSAN health         │  │          P1 process         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues guide triage · diagnostics pinpoint root cause · escalation gets vendor support engag│
+│    Common issues guide triage · diagnostics pinpoint root cause                                       │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

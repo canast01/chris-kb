@@ -11,7 +11,7 @@
 │   │     Escalation: vRA log bundle export; GSS case; TAM for P1; support compatibility matrix     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues define the triage path · diagnostics isolate root cause · escalation engages Aria sup│
+│    Common issues define the triage path · diagnostics isolate root cause                              │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

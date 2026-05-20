@@ -11,7 +11,7 @@
 │   │      App Volumes and DEM file encryption; USB policy enforces device restriction per pool     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication gates user access · RBAC controls entitlements · encryption protects all protocol tr│
+│    Authentication gates user access · RBAC controls entitlements                                      │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │       UAG passthrough       │  │         Audit events        │  │          USB policy         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Auth controls who connects · access control limits entitlements · encryption secures all display tr│
+│    Auth controls who connects · access control limits entitlements                                    │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

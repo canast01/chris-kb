@@ -25,14 +25,14 @@ Kubernetes-based microservices platform for infrastructure self-service automati
 ┌─────────────────────────────────── Aria Automation — Architecture ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Aria Automation = Automation appliance + Service Broker + Assembler + Extensibility (ABX + Orch│   │
+│   │   Aria Automation = Automation appliance + Service Broker + Assembler + Extensibility (ABX +  │   │
 │   │      Service Broker provides self-service catalog with entitlements and approval policies     │   │
 │   │   Assembler manages blueprints, cloud accounts, and cloud zones for multi-cloud provisioning  │   │
 │   │  ABX actions and embedded Orchestrator extend automation with custom functions and workflows  │   │
 │   │ Connects to cloud accounts: vCenter, AWS, Azure, GCP; cloud proxy for on-premises connectivity│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works defines platform components · integrations connect cloud accounts · standards govern d│
+│    How-it-works defines platform components · integrations connect cloud accounts                     │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -46,7 +46,7 @@ Kubernetes-based microservices platform for infrastructure self-service automati
 │   │        Cloud accounts       │  │      Slack/Teams notify     │  │         Cloud zones         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works covers platform components · integrations connect cloud and ITSM · standards enforce p│
+│    How-it-works covers platform components · integrations connect cloud and ITSM                      │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

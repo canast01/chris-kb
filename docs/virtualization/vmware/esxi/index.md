@@ -15,7 +15,7 @@ Technical and operational reference for VMware ESXi. Covers host architecture, n
 │   │          Networking: vSS or vDS; uplink teaming; port groups per workload or function         │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    VMkernel is the host foundation · networking and storage connect VMs · lifecycle keeps hosts curren│
+│    VMkernel is the host foundation · networking and storage connect VMs                               │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

@@ -15,7 +15,7 @@ Day-to-day operational reference for VMware vCenter Server. Covers CLI commands,
 │   │     Automation: PowerCLI for vCenter management, REST API explorer, tag and attribute API     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops monitor VCSA health · lifecycle keeps vCenter current · automation scales management task│
+│    Daily ops monitor VCSA health · lifecycle keeps vCenter current                                    │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -29,7 +29,7 @@ Day-to-day operational reference for VMware vCenter Server. Covers CLI commands,
 │   │        DB size check        │  │         PSC sync chk        │  │        API token auth       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops catch service drift · lifecycle upgrades vCenter safely · automation handles at-scale tas│
+│    Daily ops catch service drift · lifecycle upgrades vCenter safely                                  │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -48,7 +48,7 @@ Day-to-day operational reference for VMware vCenter Server. Covers CLI commands,
 │                                                                                                       │
 │  VCSA          = vCenter Server Appliance; Linux-based VM; all vSphere management runs here           │
 │  VAMI          = vCenter Appliance Management Interface; port 5480; monitors services and backup      │
-│  File-based backup = Scheduled VCSA backup to SFTP or NFS; restores full appliance config and inventor│
+│  File-based backup = Scheduled VCSA backup to SFTP or NFS; restores full appliance config and         │
 │  Update Planner = vCenter tool checking compatibility matrix before scheduling an upgrade             │
 │  PowerCLI      = VMware PowerShell module; connects to vCenter REST API for at-scale automation       │
 │  REST API      = vCenter REST API (api/); supports hosts, VMs, tags, policies, and content library    │

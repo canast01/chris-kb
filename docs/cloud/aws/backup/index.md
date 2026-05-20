@@ -28,7 +28,7 @@ AWS Backup provides centralised backup management across EC2, EBS, RDS, DynamoDB
 │   │  Retention: daily/wk/mo/yr  │  │   Recovery point: RPO time  │  │  Compliance: Audit Manager  │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Plans define schedules · Vaults store recovery points securely · Jobs track backup and restore exec│
+│    Plans define schedules · Vaults store recovery points securely                                     │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

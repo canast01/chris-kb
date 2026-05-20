@@ -15,7 +15,7 @@ Azure Governance articles, operational checks, troubleshooting notes, and refere
 │   │     Compliance review: policy state dashboard; non-compliant resources; remediation tasks     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Management Groups scope policies · Policy defines rules · Initiatives bundle them · Compliance trac│
+│    Management Groups scope policies · Policy defines rules · Initiatives bundle them                  │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -56,7 +56,7 @@ Azure Governance articles, operational checks, troubleshooting notes, and refere
 │  Remediation task   = Auto-runs the DINE effect on existing non-compliant resources in scope          │
 │  Exemption          = Excludes a resource or scope from a policy assignment; time-bound or permanent  │
 │  Compliance state   = Per-resource evaluation result: Compliant / Non-compliant / Not started / Exempt│
-│  Tagging policy     = Policy enforcing required tags (e.g. Owner, Environment) on all resource creatio│
+│  Tagging policy     = Policy enforcing required tags (e.g. Owner, Environment) on all resource        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

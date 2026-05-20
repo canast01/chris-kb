@@ -25,7 +25,7 @@
 │   │       ABX timeout chk       │  │        API compat chk       │  │         API Explorer        │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops monitor request health · lifecycle upgrades safely with snapshot · automation enables at-│
+│    Daily ops monitor request health · lifecycle upgrades safely with snapshot                         │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -43,15 +43,15 @@
 │  Key terms:                                                                                           │
 │                                                                                                       │
 │  Blueprint     = IaC template; versioned in Aria Automation; deploy, update, and destroy lifecycle    │
-│  Request       = User-initiated catalog item deployment; tracked in Service Broker with status and log│
-│  Catalog item  = Published blueprint or workflow in Service Broker; versioned and entitlement-controll│
+│  Request       = User-initiated catalog item deployment; tracked in Service Broker with status and    │
+│  Catalog item  = Published blueprint or workflow in Service Broker; versioned and                     │
 │  ABX action    = FaaS function (Python/Node/PowerShell) triggered by events or directly from blueprint│
 │  Subscription  = Event broker rule mapping a lifecycle event to an ABX action or Orchestrator workflow│
 │  Event broker  = Aria Automation event bus; publishes compute/network/storage events to subscriptions │
 │  Cloud account = Aria connection to vCenter/AWS/Azure/GCP; health check ensures connectivity          │
 │  Approval policy = Required sign-off before request fulfillment; configurable per catalog item        │
 │  Orchestrator workflow = vRO workflow embedded in Aria Automation; runs complex multi-step tasks      │
-│  vRA REST API  = Primary Aria Automation programmatic interface; used for requests, blueprints, catalo│
+│  vRA REST API  = Primary Aria Automation programmatic interface; used for requests, blueprints,       │
 │  Terraform provider = Aria Automation Terraform provider for IaC-driven provisioning workflows        │
 │  Entitlement   = Service Broker policy granting project members access to specific catalog items      │
 │                                                                                                       │

@@ -27,7 +27,7 @@ VxRail operations notes for daily checks, maintenance windows, node work, expans
 │   │         Alert review        │  │          Change log         │  │        Pre-upg checks       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops surface issues early · maintenance follows change process · cluster mgmt scales the envir│
+│    Daily ops surface issues early · maintenance follows change process                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

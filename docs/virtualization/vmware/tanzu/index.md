@@ -28,7 +28,7 @@ Tanzu knowledge base — architecture, operations, CLI references, security, and
 │   │   TMC: multi-cluster mgmt   │  │   TMC: policy + lifecycle   │  │    Audit: API server logs   │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Architecture defines the Kubernetes layers · Operations manage clusters · Security governs workload│
+│    Architecture defines the Kubernetes layers · Operations manage clusters                            │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -54,7 +54,7 @@ Tanzu knowledge base — architecture, operations, CLI references, security, and
 │  PSA           = Pod Security Admission; Kubernetes enforcer for restricted/baseline/privileged modes │
 │  NSX CNI       = NSX-T container network interface; provides pod networking and policy for TKG        │
 │  Content trust = Harbor feature ensuring only signed images can be pulled; uses Notary/cosign         │
-│  RBAC          = Kubernetes Role-Based Access Control; ClusterRole, Role, RoleBinding, ClusterRoleBind│
+│  RBAC          = Kubernetes Role-Based Access Control; ClusterRole, Role, RoleBinding,                │
 │  Network policy= Kubernetes L4 firewall rules between pods; enforced by NSX CNI in Tanzu              │
 │  tanzu CLI     = kubectl plugin for TKG; cluster create, upgrade, kubeconfig management               │
 │                                                                                                       │

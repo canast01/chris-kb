@@ -15,7 +15,7 @@ Security reference for VMware vCenter Server. Covers SSO authentication, identit
 │   │    2FA via SSO plugin (RSA SecurID or RADIUS); API over TLS; VCSA disk encryption optional    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication gates vCenter access · RBAC scopes permissions · encryption and audit enforce compli│
+│    Authentication gates vCenter access · RBAC scopes permissions                                      │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

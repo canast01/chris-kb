@@ -12,10 +12,10 @@ AWS governance is structured around AWS Organizations with SCPs enforcing preven
 │   │    AWS Organizations: root account > OUs > member accounts; SCPs enforced at each OU level    │   │
 │   │  Service Control Policies: preventive guardrails; deny actions before IAM even evaluates them │   │
 │   │    AWS Config: detective compliance; records every resource config change; evaluates rules    │   │
-│   │Tagging standards: mandatory tags enforced by Config rules; used for cost and compliance report│   │
+│   │    Tagging standards: mandatory tags enforced by Config rules; used for cost and compliance   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Organizations provides structure · SCPs prevent violations · Config detects drift · Tags enable tra│
+│    Organizations provides structure · SCPs prevent violations · Config detects drift                  │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -28,7 +28,7 @@ AWS governance is structured around AWS Organizations with SCPs enforcing preven
 │   │    Account structure std.   │  │    Guardrail: no root key   │  │   Config: S3 delivery dest  │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Organizations structures accounts · SCPs prevent bad actions · Config tracks and detects compliance│
+│    Organizations structures accounts · SCPs prevent bad actions                                       │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -56,7 +56,7 @@ AWS governance is structured around AWS Organizations with SCPs enforcing preven
 │  Tag policy      = Organizations policy enforcing consistent tag keys/values across accounts          │
 │  Consolidated billing= Single bill for all accounts in org; volume discounts and RI sharing applies   │
 │  Account structure = Pattern of management/audit/log-archive/workload accounts following landing zone │
-│  SCP allow-list   = Deny-all-except pattern; safer than deny-list; only permits explicitly listed serv│
+│  SCP allow-list   = Deny-all-except pattern; safer than deny-list; only permits explicitly listed     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

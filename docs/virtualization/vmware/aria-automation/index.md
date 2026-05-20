@@ -28,7 +28,7 @@ Technical and operational reference for VMware Aria Automation. Covers infrastru
 │   │   Terraform: IaC provider   │  │   Approval: request+grant   │  │    Audit: deployment log    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Architecture defines the platform · Operations manage deployments · Security controls access and ap│
+│    Architecture defines the platform · Operations manage deployments                                  │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

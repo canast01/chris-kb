@@ -11,7 +11,7 @@
 │   │       mTLS between services via Tanzu Service Mesh (TSM); certificate rotation automated      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication gates cluster access · RBAC scopes namespace permissions · network policy isolates p│
+│    Authentication gates cluster access · RBAC scopes namespace permissions                            │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │        Audit logging        │  │         TMC policies        │  │       vSAN encryption       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Auth controls cluster access · RBAC scopes roles · pod security and network policy isolate workload│
+│    Auth controls cluster access · RBAC scopes roles                                                   │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -44,11 +44,11 @@
 │                                                                                                       │
 │  vSphere SSO        = vCenter Single Sign-On; identity source for Kubernetes RBAC in Tanzu            │
 │  RBAC               = Kubernetes Role-Based Access Control; ClusterRole/Role bound to users or groups │
-│  Pod Security Adm   = Kubernetes built-in policy enforcing Restricted/Baseline/Privileged per namespac│
+│  Pod Security Adm   = Kubernetes built-in policy enforcing Restricted/Baseline/Privileged per         │
 │  Network policy     = Kubernetes resource restricting pod-to-pod traffic; enforced by NSX-T CNI       │
 │  OPA/Gatekeeper     = Open Policy Agent admission controller; enforces custom policy constraints      │
 │  Admission webhook  = Kubernetes API hook that validates or mutates resources before admission        │
-│  Image scanning     = Harbor Trivy/Clair CVE scan; blocks deployment of images above severity threshol│
+│  Image scanning     = Harbor Trivy/Clair CVE scan; blocks deployment of images above severity         │
 │  mTLS               = Mutual TLS between services; provided by Tanzu Service Mesh (Istio-based)       │
 │  OIDC               = OpenID Connect; used by Pinniped to federate identity to Kubernetes API server  │
 │  Service account    = Kubernetes identity for pods; scoped to namespace; used for API server auth     │

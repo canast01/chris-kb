@@ -11,7 +11,7 @@
 │   │       Test isolation network prevents recovery test VMs from reaching production systems      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication controls SRM access · RBAC scopes recovery roles · encryption protects replication d│
+│    Authentication controls SRM access · RBAC scopes recovery roles                                    │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │       Cert management       │  │         vCenter RBAC        │  │        Audit log TLS        │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Auth controls who uses SRM · RBAC limits recovery execution · encryption secures replication and au│
+│    Auth controls who uses SRM · RBAC limits recovery execution                                        │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

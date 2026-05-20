@@ -11,7 +11,7 @@
 │   │    LCM REST API for day-2 automation; vIDM integration API for identity and SSO management    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops monitor all Aria products · lifecycle wizard orchestrates upgrades · automation scales da│
+│    Daily ops monitor all Aria products · lifecycle wizard orchestrates upgrades                       │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │       Download catalog      │  │        Cert rotation        │  │        vIDM intg API        │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops catch cert expiry and version drift · upgrade wizard enforces order · API enables day-2 a│
+│    Daily ops catch cert expiry and version drift · upgrade wizard enforces order                      │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -42,8 +42,8 @@
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  Upgrade wizard    = LCM UI workflow that orchestrates Aria product upgrades in correct dependency seq│
-│  Pre-check validation = Automated checks run before upgrade; verifies disk space, connectivity, and co│
+│  Upgrade wizard    = LCM UI workflow that orchestrates Aria product upgrades in correct dependency    │
+│  Pre-check validation = Automated checks run before upgrade; verifies disk space, connectivity, and   │
 │  Certificate Locker = LCM component for managing TLS certificates; used for cert rotation workflows   │
 │  Password Locker   = LCM encrypted credential store; used for password rotation day-2 operations      │
 │  BOM compatibility = Verification that all Aria products in an Environment are on a supported version │
@@ -53,7 +53,7 @@
 │  Request monitoring = LCM job tracker for all background operations; shows progress and error details │
 │  DR replication    = LCM configuration backup replicated to DR site for failover capability           │
 │  Content management = LCM workflow for managing Aria Automation content packs and blueprints          │
-│  LCM REST API      = REST API for automating LCM day-2 operations: cert rotation, upgrades, locker acc│
+│  LCM REST API      = REST API for automating LCM day-2 operations: cert rotation, upgrades, locker    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

@@ -13,7 +13,7 @@ VxRail lifecycle notes for upgrade planning, pre-checks, bundles, firmware, roll
 │   │     vSAN rebalance after cluster expansion; staged upgrade planning for large environments    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Planning validates BOM · execution runs LCM node-by-node · validation confirms cluster health post-│
+│    Planning validates BOM · execution runs LCM node-by-node                                           │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -27,7 +27,7 @@ VxRail lifecycle notes for upgrade planning, pre-checks, bundles, firmware, roll
 │   │       Risk assessment       │  │       Progress monitor      │  │        Cluster stable       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Planning catches BOM gaps · execution upgrades node-by-node safely · validation confirms stable clu│
+│    Planning catches BOM gaps · execution upgrades node-by-node safely                                 │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -44,16 +44,16 @@ VxRail lifecycle notes for upgrade planning, pre-checks, bundles, firmware, roll
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  LCM               = Lifecycle Manager; VxRail orchestration engine for node-by-node upgrade operation│
+│  LCM               = Lifecycle Manager; VxRail orchestration engine for node-by-node upgrade          │
 │  BOM               = Bill of Materials; version matrix of ESXi, FW, and driver combinations from Dell │
 │  Pre-check         = LCM health validation before upgrade; blocks if vSAN or connectivity issues found│
 │  Bundle            = Signed Dell LCM package with all matched component versions for the upgrade      │
 │  Firmware update   = BIOS, iDRAC, NIC, and drive FW updated per node as part of the LCM bundle        │
 │  ESXi upgrade      = ESXi version bump included in LCM bundle; applied node-by-node with maintenance  │
-│  vSAN rebalance    = Object redistribution after cluster expansion; triggered automatically or manuall│
+│  vSAN rebalance    = Object redistribution after cluster expansion; triggered automatically or        │
 │  Rollback          = Returning a node to previous ESXi boot bank if LCM upgrade fails mid-sequence    │
 │  Post-upgrade val  = Checks ESXi version, iDRAC FW, vSAN health, and cluster alarms after LCM run     │
-│  Compatibility matrix = Dell matrix defining which ESXi, vCenter, and FW versions are supported togeth│
+│  Compatibility matrix = Dell matrix defining which ESXi, vCenter, and FW versions are supported       │
 │  Staged upgrade    = Upgrading a subset of nodes first to validate before proceeding to full cluster  │
 │  Node-by-node      = LCM upgrade sequence: one node at a time into maintenance, upgrade, then exit    │
 │                                                                                                       │

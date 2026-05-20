@@ -28,7 +28,7 @@ Commonly used Azure CLI (`az`) commands for managing compute, storage, networkin
 │   │      az vm run-command      │  │    az keyvault secret get   │  │    az monitor alert list    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Compute CLI manages VMs/AKS · Storage CLI handles blobs and disks · Identity/Network CLI governs ac│
+│    Compute CLI manages VMs/AKS · Storage CLI handles blobs and disks                                  │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

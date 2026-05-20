@@ -11,7 +11,7 @@
 │   │       Automation: SRM REST API, PowerCLI SRM, PG API, Recovery plan API for at-scale ops      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops monitor RPO and PG health · lifecycle upgrades both sites · automation handles plan manag│
+│    Daily ops monitor RPO and PG health · lifecycle upgrades both sites                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │         Alert review        │  │        HBCR agent upg       │  │      Inventory map API      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops catch RPO breaches early · lifecycle upgrades both sites together · automation scales DR │
+│    Daily ops catch RPO breaches early · lifecycle upgrades both sites together                        │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

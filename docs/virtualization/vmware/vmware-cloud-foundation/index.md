@@ -28,7 +28,7 @@ Technical and operational reference for VMware Cloud Foundation (VCF). Covers SD
 │   │  CloudBuilder: day-0 deploy │  │   Network pools: IP blocks  │  │   Compliance: audit + log   │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Architecture defines domain layout · Operations execute LCM and commissioning · Security governs pl│
+│    Architecture defines domain layout · Operations execute LCM and commissioning                      │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -45,7 +45,7 @@ Technical and operational reference for VMware Cloud Foundation (VCF). Covers SD
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  SDDC Manager  = VCF orchestration appliance; manages lifecycle, inventory, passwords, and certificate│
+│  SDDC Manager  = VCF orchestration appliance; manages lifecycle, inventory, passwords, and            │
 │  Workload Domain= Isolated vSphere+vSAN+NSX instance for a workload type; VI or VVF flavour           │
 │  VI Domain     = vSphere Infrastructure domain; vCenter + NSX + vSAN for VM workloads                 │
 │  VVF Domain    = vSphere with Tanzu; VI domain plus Supervisor Cluster for Kubernetes                 │

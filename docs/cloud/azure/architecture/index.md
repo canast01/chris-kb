@@ -28,7 +28,7 @@ Azure cloud platform architecture — management hierarchy, hub-and-spoke networ
 │   │  Availability Zones: 3 per  │  │   Billing: Cost Management  │  │  HA: zone + region pattern  │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Architecture defines hierarchy and networking · Integrations connect on-prem · Standards enforce go│
+│    Architecture defines hierarchy and networking · Integrations connect on-prem                       │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -56,7 +56,7 @@ Azure cloud platform architecture — management hierarchy, hub-and-spoke networ
 │  RBAC              = Role-Based Access Control; Owner/Contributor/Reader built-in + custom roles      │
 │  PIM               = Privileged Identity Management; just-in-time role activation; approval + audit   │
 │  Availability Zone = Physically separate DC within a region; independent power/cooling/networking     │
-│  Conditional Access = Entra ID policy engine; evaluates sign-in context to enforce MFA, block, or allo│
+│  Conditional Access = Entra ID policy engine; evaluates sign-in context to enforce MFA, block, or     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

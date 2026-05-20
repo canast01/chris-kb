@@ -12,10 +12,10 @@ vSAN pools local NVMe and SSD disks across ESXi hosts into a shared distributed 
 │   │ FTT policies (RAID-1 mirroring, RAID-5/6 erasure coding) protect objects across hosts/domains │   │
 │   │ Dedup and compression available in all-flash OSA; OSA (original) vs ESA (express) architecture│   │
 │   │ vSAN ESA uses single-tier NVMe with compression-first; no separate cache/capacity disk groups │   │
-│   │Stretched cluster spans two sites with a witness host; SPBM storage policies enforce per-VM rul│   │
+│   │  Stretched cluster spans two sites with a witness host; SPBM storage policies enforce per-VM  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works defines HCI storage pooling · integrations connect vSphere and management · standards │
+│    How-it-works defines HCI storage pooling · integrations connect vSphere and management             │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -29,7 +29,7 @@ vSAN pools local NVMe and SSD disks across ESXi hosts into a shared distributed 
 │   │      SPBM per-VM policy     │  │       Aria Ops adapter      │  │         25% headroom        │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works covers pooling and policies · integrations connect vCenter and NSX · standards enforce│
+│    How-it-works covers pooling and policies · integrations connect vCenter and NSX                    │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -46,7 +46,7 @@ vSAN pools local NVMe and SSD disks across ESXi hosts into a shared distributed 
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  OSA           = Original Storage Architecture; vSAN disk groups with separate cache and capacity tier│
+│  OSA           = Original Storage Architecture; vSAN disk groups with separate cache and capacity     │
 │  ESA           = Express Storage Architecture; single-tier NVMe; compression-first; vSAN 8.0+         │
 │  FTT           = Failures To Tolerate; number of host/disk failures a vSAN object can survive         │
 │  RAID-5/6      = Erasure coding in vSAN; RAID-5 requires 4 hosts (1 FTT); RAID-6 needs 6 hosts (2 FTT)│

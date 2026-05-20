@@ -28,7 +28,7 @@ Unified fast file and object storage running Purity//FB — NFS, SMB, S3, and HD
 │   │   Replication: async FB→FB  │  │    Health: blade, network   │  │ Directory services: AD/LDAP │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Architecture defines scale-out layout · Operations manage shares and buckets · Security protects da│
+│    Architecture defines scale-out layout · Operations manage shares and buckets                       │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -41,7 +41,7 @@ Unified fast file and object storage running Purity//FB — NFS, SMB, S3, and HD
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  FlashBlade chassis · F-series blade modules · 10/25/100 GbE NICs · Ethernet switches · Power & Coolin│
+│  FlashBlade chassis · F-series blade modules · 10/25/100 GbE NICs · Ethernet switches                 │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │

@@ -11,7 +11,7 @@
 │   │   vRLI upgrade sequence: backup config, upgrade nodes in order, validate post-upgrade health  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops review alerts and agents · lifecycle upgrades nodes safely · automation scales log manage│
+│    Daily ops review alerts and agents · lifecycle upgrades nodes safely                               │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │      Content pk status      │  │          Cert renew         │  │        VLQL scripted        │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops monitor agents and disk · lifecycle upgrades safely · automation handles source onboardin│
+│    Daily ops monitor agents and disk · lifecycle upgrades safely                                      │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -47,8 +47,8 @@
 │  Alert pipeline     = Log-match rule triggering email, webhook, or vROps notification on condition    │
 │  VLQL query         = vRLI Query Language statement for filtering, grouping, and charting log events  │
 │  Log forwarder      = Cluster feature streaming matched events to SIEM via syslog or REST endpoint    │
-│  Disk retention     = Automatic deletion of oldest log partitions when disk reaches configured thresho│
-│  HA cluster upgrade = Sequenced upgrade: master node last; workers upgraded first to preserve ingestio│
+│  Disk retention     = Automatic deletion of oldest log partitions when disk reaches configured        │
+│  HA cluster upgrade = Sequenced upgrade: master node last; workers upgraded first to preserve         │
 │  Source health      = Admin UI view showing per-source event rate and last-received timestamp         │
 │  REST API           = vRLI API for querying events, managing alerts, sources, and content packs       │
 │  Interactive analytics = VLQL query workspace for ad-hoc investigation with chart and table views     │

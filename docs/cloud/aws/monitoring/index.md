@@ -9,13 +9,13 @@ AWS observability is built on CloudWatch (metrics, logs, alarms), CloudTrail (AP
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │                    AWS Monitoring — CloudWatch, CloudTrail, and EventBridge                   │   │
-│   │CloudWatch: metrics, logs, alarms, dashboards — native to every AWS service; no agent for servi│   │
+│   │   CloudWatch: metrics, logs, alarms, dashboards — native to every AWS service; no agent for   │   │
 │   │CloudWatch Agent: installs on EC2 for OS-level metrics (memory, disk) and custom log forwarding│   │
-│   │CloudTrail: API audit log; every AWS API call recorded; multi-region trail ships to S3 + CloudW│   │
-│   │EventBridge: event bus routing rules to targets (Lambda, SNS, SQS, Step Functions, cross-accoun│   │
+│   │    CloudTrail: API audit log; every AWS API call recorded; multi-region trail ships to S3 +   │   │
+│   │       EventBridge: event bus routing rules to targets (Lambda, SNS, SQS, Step Functions,      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    CloudWatch collects metrics/logs · CloudTrail audits API calls · EventBridge drives event automatio│
+│    CloudWatch collects metrics/logs · CloudTrail audits API calls                                     │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -48,7 +48,7 @@ AWS observability is built on CloudWatch (metrics, logs, alarms), CloudTrail (AP
 │  CloudWatch metrics = Time-series data from AWS services; 1-min granularity; stored 15 months         │
 │  Log group         = CloudWatch Logs container for streams; retention 1 day–10 years or indefinite    │
 │  Metric filter     = Extracts numeric values from log events and publishes them as CloudWatch metrics │
-│  CW Alarm          = Watches a metric or expression; transitions OK/ALARM/INSUFFICIENT; triggers actio│
+│  CW Alarm          = Watches a metric or expression; transitions OK/ALARM/INSUFFICIENT; triggers      │
 │  Composite alarm   = AND/OR combination of alarms; reduces alert noise from correlated conditions     │
 │  CloudTrail        = Records management events (API calls) and optionally data events (S3/Lambda)     │
 │  Org trail         = Single CloudTrail covering all accounts in the AWS Organization; recommended     │

@@ -28,7 +28,7 @@ Technical and operational reference for VMware Aria Suite Lifecycle Manager. Cov
 │   │   Upgrade checker: pre-val  │  │    Scale: node add/remove   │  │      Audit: change log      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Architecture defines environments · Operations deploy and upgrade · Security manages certs and cred│
+│    Architecture defines environments · Operations deploy and upgrade                                  │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

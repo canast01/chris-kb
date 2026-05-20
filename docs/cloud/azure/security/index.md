@@ -24,7 +24,7 @@
 │   │  Access reviews: quarterly  │  │       Disk: SSE + CMK       │  │   NSG + Firewall: network   │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication + RBAC prevent access · Encryption protects data · Defender detects and scores postu│
+│    Authentication + RBAC prevent access · Encryption protects data                                    │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -37,14 +37,14 @@
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Azure HSM for Key Vault · Defender for Cloud backend · Entra ID global service · Network security fab│
+│  Azure HSM for Key Vault · Defender for Cloud backend · Entra ID global service                       │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
 │  Key Vault        = Managed secrets, keys, and certificates; RBAC + access policy; HSM-backed option  │
-│  CMK              = Customer-Managed Key; encryption key you control in Key Vault; used for Azure serv│
+│  CMK              = Customer-Managed Key; encryption key you control in Key Vault; used for Azure     │
 │  SSE              = Server-Side Encryption; Azure encrypts managed disks at rest using PME or CMK     │
-│  Private Link     = Private Endpoint mapping PaaS service to VNet IP; eliminates public internet expos│
+│  Private Link     = Private Endpoint mapping PaaS service to VNet IP; eliminates public internet      │
 │  Defender for Cloud= CSPM + CWPP; security posture management and workload protection across Azure    │
 │  Secure Score     = Numeric score (0-100) of security posture; improvements mapped to recommendations │
 │  Defender plans   = Per-resource workload protection: VMs, SQL, Storage, Containers, Key Vault, DNS   │

@@ -7,7 +7,7 @@
 │   │              Pure Storage Operations — Pure1, Alerts, and Support Case Management             │   │
 │   │    Pure1 cloud portal: central management for all FlashArray and FlashBlade arrays globally   │   │
 │   │Alerts: hardware, software, and capacity events; severity levels Info, Warning, Error, Critical│   │
-│   │Support cases: opened via Pure1 or phone; include log bundle, serial number, and impact stateme│   │
+│   │    Support cases: opened via Pure1 or phone; include log bundle, serial number, and impact    │   │
 │   │   Proactive support: Pure1 AI detects anomalies and opens cases automatically before failure  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
@@ -24,7 +24,7 @@
 │   │   Proactive case auto-open  │  │   Repl alerts: lag + state  │  │   TAM for strategic issues  │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Pure1 provides fleet visibility · Alerts drive action · Support Cases resolve hardware and software│
+│    Pure1 provides fleet visibility · Alerts drive action                                              │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -41,10 +41,10 @@
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  Pure1         = Cloud management portal for all Pure arrays; telemetry, AI health, and upgrade schedu│
+│  Pure1         = Cloud management portal for all Pure arrays; telemetry, AI health, and upgrade       │
 │  Alert severity= Info (FYI) · Warning (monitor) · Error (investigate) · Critical (act immediately)    │
-│  Log bundle    = puresupport bundle command output; full diagnostic archive for support case submissio│
-│  Proactive case= Pure1 AI opens a support case automatically when anomaly detected before failure occu│
+│  Log bundle    = puresupport bundle command output; full diagnostic archive for support case          │
+│  Proactive case= Pure1 AI opens a support case automatically when anomaly detected before failure     │
 │  P1 case       = Severity 1; production down or data loss; 24/7 response SLA, engineer on phone       │
 │  P2 case       = Severity 2; degraded performance or risk; business-hours response with engineer      │
 │  Remote assist = Pure engineer connects via secure tunnel to live array for real-time troubleshooting │

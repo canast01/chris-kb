@@ -41,17 +41,17 @@
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  EC2 status check = System check (infra) + instance check (OS); failure triggers alarm or auto-recover│
+│  EC2 status check = System check (infra) + instance check (OS); failure triggers alarm or             │
 │  Policy Simulator = IAM console tool; tests IAM policies to check if an action would be allowed/denied│
-│  Reachability Analyzer= VPC tool; traces packet path between source and destination; finds blocking ru│
+│  Reachability Analyzer= VPC tool; traces packet path between source and destination; finds blocking   │
 │  VPC Flow Logs   = Captures accepted/rejected traffic metadata for subnets, VPCs, or ENIs             │
-│  CloudTrail      = Records every AWS API call; start with event history for the last 90 days in consol│
+│  CloudTrail      = Records every AWS API call; start with event history for the last 90 days in       │
 │  EC2 Serial Console= Out-of-band console access; useful when SSH/SSM unreachable; OS-level triage     │
 │  Trusted Advisor  = AWS checks across cost, security, performance, fault tolerance, and service limits│
 │  P1 case          = Production down; 24/7 response; call +1-800-xxx alongside opening console case    │
 │  TAM              = Technical Account Manager; named AWS contact for strategic and critical escalation│
 │  sts get-caller-identity= CLI command returning current identity; first step when debugging IAM issues│
-│  Session Manager  = SSM feature; connect to EC2 without SSH when networking is broken but SSM agent wo│
+│  Session Manager  = SSM feature; connect to EC2 without SSH when networking is broken but SSM agent   │
 │  Access Denied    = IAM error; check CloudTrail for the denied call; use Policy Simulator to trace    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘

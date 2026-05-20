@@ -15,7 +15,7 @@ AWS networking is built around VPCs with public and private subnets across avail
 │   │   VPC Endpoints: private access to S3, DynamoDB, and 150+ services without internet gateway   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    VPC is the foundation · TGW connects VPCs and on-prem · SGs+NACLs protect resources · Endpoints avo│
+│    VPC is the foundation · TGW connects VPCs and on-prem · SGs+NACLs protect resources                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -28,7 +28,7 @@ AWS networking is built around VPCs with public and private subnets across avail
 │   │  VPC Endpoints: private SVC │  │    WAF: ALB / CloudFront    │  │   VPN: site-to-site IPsec   │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    VPC/subnets define the network · Security controls filter traffic · Connectivity extends to on-prem│
+│    VPC/subnets define the network · Security controls filter traffic                                  │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -48,7 +48,7 @@ AWS networking is built around VPCs with public and private subnets across avail
 │  VPC            = Virtual Private Cloud; logically isolated network within a region; one CIDR block   │
 │  Subnet         = CIDR subdivision of a VPC; lives in one AZ; public if route to IGW exists           │
 │  Security Group = Stateful firewall attached to ENI; return traffic automatically allowed             │
-│  NACL           = Network Access Control List; stateless; rules evaluated in order; both in and out ru│
+│  NACL           = Network Access Control List; stateless; rules evaluated in order; both in and out   │
 │  Internet Gateway= Allows resources in public subnets to reach the internet; 1:1 to a VPC             │
 │  NAT Gateway    = Allows private subnet resources to initiate outbound internet; blocks inbound       │
 │  Transit Gateway= Regional router connecting VPCs and on-premises networks; route tables per TGW      │

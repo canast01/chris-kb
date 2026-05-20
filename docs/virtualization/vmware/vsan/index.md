@@ -15,7 +15,7 @@ Technical and operational reference for VMware vSAN. Covers storage policies, di
 │   │           Resync: data rebuilds after host/disk failure; controlled by I/O scheduler          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Disk groups form the storage layer · SPBM policies govern data protection · Health monitors cluster│
+│    Disk groups form the storage layer · SPBM policies govern data protection                          │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -28,7 +28,7 @@ Technical and operational reference for VMware vSAN. Covers storage policies, di
 │   │  Dedup+compression: cluster │  │    Disk group: add/remove   │  │  Audit log: config changes  │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Architecture defines the disk groups · Operations manage policies and capacity · Security encrypts │
+│    Architecture defines the disk groups · Operations manage policies and capacity                     │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

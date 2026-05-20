@@ -11,7 +11,7 @@
 │   │    Audit: all replication config changes logged in vCenter Tasks and Events; syslog forward   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    vCenter SSO gates management · TLS encrypts replication traffic · certificates and firewall harden │
+│    vCenter SSO gates management · TLS encrypts replication traffic                                    │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │       VAMI local auth       │  │        Firewall rules       │  │        Audit logging        │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    SSO controls management access · RBAC scopes permissions · TLS and certs secure all replication pat│
+│    SSO controls management access · RBAC scopes permissions                                           │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -50,10 +50,10 @@
 │  VRMS certificate   = TLS cert for the VRMS management UI; signed by vCenter CA or external CA        │
 │  VRS certificate    = TLS cert for the VRS data path; must be trusted at both source and target sites │
 │  Site trust         = Certificate-based trust between source vCenter and target vCenter for VR pairing│
-│  VAMI               = Virtual Appliance Management Interface; admin UI for VRMS/VRS; secured with loca│
+│  VAMI               = Virtual Appliance Management Interface; admin UI for VRMS/VRS; secured with     │
 │  Firewall rules     = Required: 8043/443 for VRMS, 31031 for VRS data, 443 for vCenter communication  │
-│  Audit log          = All VR config changes logged in vCenter Tasks/Events; forwarded via syslog to SI│
-│  FIPS 140-2         = Federal cryptographic standard; enabled for VR traffic encryption at cluster con│
+│  Audit log          = All VR config changes logged in vCenter Tasks/Events; forwarded via syslog to   │
+│  FIPS 140-2         = Federal cryptographic standard; enabled for VR traffic encryption at cluster    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

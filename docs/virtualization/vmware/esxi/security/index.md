@@ -15,7 +15,7 @@ Security reference for VMware ESXi. Covers vCenter SSO authentication, lockdown 
 │   │    Hardening: DISA STIG / VMware Security Guide baseline; SSH disabled; secure boot enabled   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication gates access · lockdown mode enforces vCenter-only management · encryption protects │
+│    Authentication gates access · lockdown mode enforces vCenter-only management                       │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -28,7 +28,7 @@ Security reference for VMware ESXi. Covers vCenter SSO authentication, lockdown 
 │   │     MFA: via vCenter SSO    │  │     Syslog: to vRLI/SIEM    │  │    vSAN encrypt: at rest    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication controls who logs in · access control limits what they can do · encryption protects │
+│    Authentication controls who logs in · access control limits what they can do                       │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -46,8 +46,8 @@ Security reference for VMware ESXi. Covers vCenter SSO authentication, lockdown 
 │  Key terms:                                                                                           │
 │                                                                                                       │
 │  Lockdown mode  = Host setting preventing direct access; all management must go through vCenter       │
-│  DCUI           = Direct Console User Interface; physical/IPMI console on ESXi host; break-glass acces│
-│  vTPM           = Virtual Trusted Platform Module; per-VM emulated TPM 2.0 for BitLocker and attestati│
+│  DCUI           = Direct Console User Interface; physical/IPMI console on ESXi host; break-glass      │
+│  vTPM           = Virtual Trusted Platform Module; per-VM emulated TPM 2.0 for BitLocker and          │
 │  KMS            = Key Management Server; external KMIP-compatible server for VM encryption keys       │
 │  KMIP           = Key Management Interoperability Protocol; standard API for KMS integration          │
 │  Secure Boot    = UEFI feature verifying ESXi VIB signatures; prevents loading unsigned modules       │

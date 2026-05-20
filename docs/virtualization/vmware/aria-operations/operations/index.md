@@ -4,14 +4,14 @@
 ┌──────────────────────────────────── Aria Operations — Operations ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Alert management and noise reduction: tune thresholds, suppress flapping, cancel false positive│   │
+│   │     Alert management and noise reduction: tune thresholds, suppress flapping, cancel false    │   │
 │   │  Capacity optimization: review right-sizing recommendations; act on workload placement advice │   │
 │   │   Report scheduling: cost management integration; automated PDF/CSV delivery to stakeholders  │   │
 │   │  Cluster node health monitoring: verify all nodes stable; check adapter collection intervals  │   │
 │   │     Lifecycle: upgrade wizard sequences node upgrades; pre-upgrade health check mandatory     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops review alerts and capacity · lifecycle keeps cluster current · automation scales operatio│
+│    Daily ops review alerts and capacity · lifecycle keeps cluster current                             │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

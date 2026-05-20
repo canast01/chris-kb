@@ -11,7 +11,7 @@
 │   │         Certificate rotation for agent TLS, cluster UI cert, and syslog TLS endpoints         │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication gates access · role-based access scopes dashboards · encryption secures all log tran│
+│    Authentication gates access · role-based access scopes dashboards                                  │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

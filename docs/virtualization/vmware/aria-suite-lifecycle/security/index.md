@@ -11,7 +11,7 @@
 │   │  Least privilege: operator role limited to day-2 tasks; viewer role read-only for dashboards  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication gates LCM access · RBAC scopes environment permissions · Locker encryption protects │
+│    Authentication gates LCM access · RBAC scopes environment permissions                              │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │       Session timeout       │  │       Request approve       │  │        Log encryption       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Auth gates LCM access · RBAC scopes per-environment permissions · Locker and TLS protect credential│
+│    Auth gates LCM access · RBAC scopes per-environment permissions                                    │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -42,18 +42,18 @@
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  vIDM              = VMware Identity Manager embedded in LCM; provides SSO across all managed Aria pro│
-│  Workspace ONE     = VMware identity platform; alternative to embedded vIDM for enterprise SSO integra│
-│  LCM RBAC          = Role-based access control in LCM; scoped per Environment; admin/operator/viewer r│
-│  Admin role        = Full LCM access; can install/upgrade products, manage Lockers, and configure Envi│
-│  Operator role     = Day-2 access in LCM; can run cert/password rotation and monitoring; no install ri│
+│  vIDM              = VMware Identity Manager embedded in LCM; provides SSO across all managed Aria    │
+│  Workspace ONE     = VMware identity platform; alternative to embedded vIDM for enterprise SSO        │
+│  LCM RBAC          = Role-based access control in LCM; scoped per Environment; admin/operator/viewer  │
+│  Admin role        = Full LCM access; can install/upgrade products, manage Lockers, and configure     │
+│  Operator role     = Day-2 access in LCM; can run cert/password rotation and monitoring; no install   │
 │  Viewer role       = Read-only LCM access; can view Environment health and Locker inventory; no write │
 │  Password Locker encryption = AES encryption of all credentials stored in LCM Password Locker at rest │
-│  Certificate Locker = LCM store for TLS certificates; supports rotation workflows and CA-signed cert u│
+│  Certificate Locker = LCM store for TLS certificates; supports rotation workflows and CA-signed cert  │
 │  API key           = Bearer token for LCM REST API access; subject to TTL and minimum privilege policy│
 │  HTTPS enforcement = All LCM API and UI traffic requires TLS; HTTP redirected or blocked by policy    │
-│  Session timeout   = LCM UI session automatically expires after idle period; configurable per security│
-│  Audit event log   = LCM audit trail recording all user actions: logins, upgrades, Locker access, role│
+│  Session timeout   = LCM UI session automatically expires after idle period; configurable per         │
+│  Audit event log   = LCM audit trail recording all user actions: logins, upgrades, Locker access,     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

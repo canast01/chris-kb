@@ -45,9 +45,9 @@ AWS cost management combines visibility tools (Cost Explorer, Anomaly Detection)
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  Cost Explorer   = AWS console and API tool for analysing spend trends by service, account, tag, regio│
+│  Cost Explorer   = AWS console and API tool for analysing spend trends by service, account, tag,      │
 │  CUR             = Cost and Usage Report; detailed hourly billing data exported to S3 for FinOps tools│
-│  Budget          = Spend threshold with alert and optional action; types: cost, usage, RI, Savings Pla│
+│  Budget          = Spend threshold with alert and optional action; types: cost, usage, RI, Savings    │
 │  Action budget   = Budget that auto-applies SCPs or IAM policies when spend threshold is crossed      │
 │  Reserved Instance= 1 or 3-year commitment to EC2/RDS capacity; up to 72% discount vs on-demand       │
 │  Savings Plan    = Flexible commitment to $/hr compute spend; applies to EC2, Fargate, Lambda         │

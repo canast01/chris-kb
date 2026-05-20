@@ -15,7 +15,7 @@ Site Recovery Manager knowledge base — architecture, operations, CLI reference
 │   │    Test failover: creates isolated test network bubble; no production impact during DR test   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Site pairing enables recovery · protection groups define scope · recovery plans orchestrate failove│
+│    Site pairing enables recovery · protection groups define scope                                     │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

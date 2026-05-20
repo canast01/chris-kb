@@ -11,7 +11,7 @@
 │   │     Escalation: collect Horizon log bundle and UAG support bundle; open GSS case with TAM     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues define the triage path · diagnostics isolate the layer · escalation engages VMware su│
+│    Common issues define the triage path · diagnostics isolate the layer                               │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │         UAG cert err        │  │           DCT tool          │  │         RCA template        │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues guide triage · diagnostics pinpoint root cause · escalation gets vendor support engag│
+│    Common issues guide triage · diagnostics pinpoint root cause                                       │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

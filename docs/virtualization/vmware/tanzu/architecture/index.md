@@ -15,7 +15,7 @@ VMware Tanzu provides Kubernetes-based application platform capabilities on top 
 │   │    Tanzu Mission Control: multi-cluster governance, policy, and lifecycle management plane    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works defines supervisor and workload clusters · integrations connect NSX and storage · stan│
+│    How-it-works defines supervisor and workload clusters · integrations connect NSX and storage       │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -29,7 +29,7 @@ VMware Tanzu provides Kubernetes-based application platform capabilities on top 
 │   │       Control plane HA      │  │         vCenter auth        │  │        Resource quota       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works covers supervisor + workload clusters · integrations connect NSX and Harbor · standard│
+│    How-it-works covers supervisor + workload clusters · integrations connect NSX and Harbor           │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -49,7 +49,7 @@ VMware Tanzu provides Kubernetes-based application platform capabilities on top 
 │  Supervisor Cluster  = vSphere control plane running Kubernetes API server on ESXi host kernel        │
 │  TKGs               = Tanzu Kubernetes Grid Service; provisions workload clusters via Supervisor      │
 │  TKGm               = Tanzu Kubernetes Grid multicloud; standalone management cluster on any infra    │
-│  vSphere namespace   = Kubernetes namespace mapped to vSphere resource pool, storage policy, and netwo│
+│  vSphere namespace   = Kubernetes namespace mapped to vSphere resource pool, storage policy, and      │
 │  Workload cluster   = Tanzu Kubernetes cluster provisioned in a namespace via Cluster API             │
 │  Cluster API        = Kubernetes-native API for declarative lifecycle management of workload clusters │
 │  Node pool          = Group of identically sized worker nodes within a Tanzu Kubernetes cluster       │
@@ -57,7 +57,7 @@ VMware Tanzu provides Kubernetes-based application platform capabilities on top 
 │  Avi Load Balancer  = NSX Advanced LB (Avi); provides L4/L7 load balancing for Tanzu services         │
 │  Harbor             = VMware container registry; private image registry integrated with Tanzu         │
 │  Tanzu Mission Ctrl = SaaS management plane for multi-cluster policy, RBAC, and lifecycle governance  │
-│  Resource quota     = vSphere namespace CPU, memory, storage limits enforced across all cluster worklo│
+│  Resource quota     = vSphere namespace CPU, memory, storage limits enforced across all cluster       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

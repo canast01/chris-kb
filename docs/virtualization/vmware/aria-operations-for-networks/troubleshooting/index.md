@@ -5,13 +5,13 @@
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    Collector offline and not collecting data; missing flow data gaps in platform analytics    │   │
-│   │Path trace errors for connectivity troubleshooting; NSX data source stale after credential chan│   │
+│   │   Path trace errors for connectivity troubleshooting; NSX data source stale after credential  │   │
 │   │     Physical switch collection gaps due to SNMP misconfiguration or firewall blocking SNMP    │   │
 │   │    Alert not firing for topology changes; platform UI unresponsive or API returning errors    │   │
 │   │  Escalation: support bundle export from Platform UI; GSS case with logs and API debug output  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues define the triage path · diagnostics isolate data source or platform layer · escalati│
+│    Common issues define the triage path · diagnostics isolate data source or platform layer           │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │        Alert not fire       │  │          SNMP test          │  │         Log collect         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues guide triage · diagnostics isolate data source or network layer · escalation bundles │
+│    Common issues guide triage · diagnostics isolate data source or network layer                      │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -43,17 +43,17 @@
 │  Key terms:                                                                                           │
 │                                                                                                       │
 │  Collector offline      = Collector VM not reachable or service stopped; no data flows to Platform VM │
-│  Flow data gap         = Missing time range in flow analytics; caused by Collector outage or data sour│
-│  Path trace engine     = Aria Networks component that computes end-to-end path using topology and flow│
-│  NSX data source       = Configured NSX connection; becomes stale if credentials change without re-aut│
-│  SNMP collection       = Physical switch polling via SNMP; gaps caused by cred mismatch or firewall bl│
-│  Support bundle        = Diagnostic archive generated from Platform UI; contains logs and configuratio│
-│  API debug mode        = Verbose logging mode for REST API requests; helps diagnose query and auth fai│
-│  Data source re-authentication = Process of re-entering credentials for a stale NSX/vCenter data sourc│
+│  Flow data gap         = Missing time range in flow analytics; caused by Collector outage or data     │
+│  Path trace engine     = Aria Networks component that computes end-to-end path using topology and     │
+│  NSX data source       = Configured NSX connection; becomes stale if credentials change without       │
+│  SNMP collection       = Physical switch polling via SNMP; gaps caused by cred mismatch or firewall   │
+│  Support bundle        = Diagnostic archive generated from Platform UI; contains logs and             │
+│  API debug mode        = Verbose logging mode for REST API requests; helps diagnose query and auth    │
+│  Data source re-authentication = Process of re-entering credentials for a stale NSX/vCenter data      │
 │  Platform restart      = Service or VM restart of the Platform appliance to recover from unresponsive │
-│  Credential rotation   = Update of service account passwords requiring re-auth of all affected data so│
-│  Version compatibility  = Aria Networks to NSX/vCenter version matrix; mismatch can cause collection f│
-│  Stale topology        = Outdated network map caused by data source not syncing; resolve by re-authent│
+│  Credential rotation   = Update of service account passwords requiring re-auth of all affected data   │
+│  Version compatibility  = Aria Networks to NSX/vCenter version matrix; mismatch can cause collection  │
+│  Stale topology        = Outdated network map caused by data source not syncing; resolve by           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

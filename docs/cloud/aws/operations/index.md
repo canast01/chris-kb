@@ -5,13 +5,13 @@
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │              AWS Operations — Health Checks, Procedures, Patching, and Automation             │   │
-│   │Health Checks: EC2 status checks · RDS availability · CloudWatch alarm state · AWS Health event│   │
+│   │   Health Checks: EC2 status checks · RDS availability · CloudWatch alarm state · AWS Health   │   │
 │   │    Procedures: instance lifecycle, AMI management, EBS expansion, ASG scaling, RDS failover   │   │
 │   │  Patching: Systems Manager Patch Manager applies OS patches on schedule; compliance reporting │   │
 │   │      Backup/Restore: AWS Backup jobs · EBS snapshot restore · RDS point-in-time recovery      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Health checks prevent failures · Procedures execute changes safely · Automation reduces manual effo│
+│    Health checks prevent failures · Procedures execute changes safely                                 │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -24,7 +24,7 @@
 │   │   TGW + VPN: BGP sessions   │  │    RDS failover: promote    │  │   Step Functions: workflow  │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Health checks detect issues · Procedures resolve them · Automation prevents recurrence and reduces │
+│    Health checks detect issues · Procedures resolve them                                              │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

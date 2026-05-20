@@ -10,7 +10,7 @@ Day-to-day operational reference for VMware Cloud Foundation. Covers CLI command
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   SDDC Manager dashboard for domain health; LCM upgrade orchestration across all components   │   │
 │   │  SoS health check tool validates VCF component state; reports failures per domain and service │   │
-│   │Password rotation for all components via SDDC Manager; certificate status monitoring across dom│   │
+│   │  Password rotation for all components via SDDC Manager; certificate status monitoring across  │   │
 │   │  LCM upgrade sequence: Management domain first; VI domains staged after; pre-checks mandatory │   │
 │   │            Automation: SDDC REST API, LCM API, PowerCLI VCF, Terraform VCF provider           │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
@@ -29,7 +29,7 @@ Day-to-day operational reference for VMware Cloud Foundation. Covers CLI command
 │   │         SoS tool run        │  │          BOM update         │  │       Tag-based policy      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops keep domains healthy · lifecycle upgrades safely in sequence · automation reduces manual │
+│    Daily ops keep domains healthy · lifecycle upgrades safely in sequence                             │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

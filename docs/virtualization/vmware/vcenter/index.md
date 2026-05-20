@@ -28,7 +28,7 @@ Technical and operational reference for VMware vCenter Server (VCSA). Covers arc
 │   │  vDS: distributed switching │  │   Alarms: configure + ack   │  │  Audit: tasks + events log  │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Architecture defines the management plane · Operations run day-to-day tasks · Security governs acce│
+│    Architecture defines the management plane · Operations run day-to-day tasks                        │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

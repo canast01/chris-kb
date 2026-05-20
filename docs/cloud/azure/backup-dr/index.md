@@ -13,7 +13,7 @@ Backup and recovery notes for Azure Backup, Site Recovery, vaults, jobs, and res
 │   │   Restore testing: mandatory for RTO/RPO validation; test failover in isolated network (ASR)  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Backup policies protect data · ASR replicates VMs for DR · Vault centralises all recovery operation│
+│    Backup policies protect data · ASR replicates VMs for DR                                           │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -43,7 +43,7 @@ Backup and recovery notes for Azure Backup, Site Recovery, vaults, jobs, and res
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  Recovery Services Vault= Azure container for backup items and ASR replication configs; scoped per reg│
+│  Recovery Services Vault= Azure container for backup items and ASR replication configs; scoped per    │
 │  Azure Backup    = Managed backup for VMs, SQL, SAP, files, blobs; policy-driven; encrypted at rest   │
 │  Backup Policy   = Defines schedule (daily/weekly) and retention (daily/weekly/monthly/yearly)        │
 │  Soft delete     = 14-day recovery window after accidental backup item deletion; default enabled      │
@@ -52,7 +52,7 @@ Backup and recovery notes for Azure Backup, Site Recovery, vaults, jobs, and res
 │  Azure Site Recovery= Continuous replication of VMs to another region; orchestrated failover/failback │
 │  RPO             = Recovery Point Objective; ASR achieves ~30s RPO for Azure-to-Azure VM replication  │
 │  Test failover   = ASR feature; spins up replica VM in isolated VNet; validates app without affecting │
-│  Failback        = Re-protecting and reversing replication direction after a failover test or real dis│
+│  Failback        = Re-protecting and reversing replication direction after a failover test or real    │
 │  Recovery plan   = ASR orchestration of failover order, scripts, and timing for multi-VM workloads    │
 │  Replication health= ASR metric; monitors churn rate, RPO breach, and agent connectivity on source VM │
 │                                                                                                       │

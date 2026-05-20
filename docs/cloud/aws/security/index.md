@@ -11,11 +11,11 @@ AWS security layers authentication (IAM Identity Center SSO, MFA), encryption (K
 │   │                AWS Security — Authentication, Encryption, and Threat Detection                │   │
 │   │ Authentication: IAM Identity Center SSO · MFA enforcement · no shared credentials; roles only │   │
 │   │ Encryption: KMS for data-at-rest · ACM for TLS certificates · Secrets Manager for credentials │   │
-│   │Threat detection: GuardDuty (ML-based) · Security Hub (posture) · Inspector (vulnerability scan│   │
-│   │Preventive guardrails: SCPs limit service/region access · Config rules detect drift · WAF block│   │
+│   │   Threat detection: GuardDuty (ML-based) · Security Hub (posture) · Inspector (vulnerability  │   │
+│   │   Preventive guardrails: SCPs limit service/region access · Config rules detect drift · WAF   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication controls access · Encryption protects data · Threat detection responds to active thr│
+│    Authentication controls access · Encryption protects data                                          │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -28,7 +28,7 @@ AWS security layers authentication (IAM Identity Center SSO, MFA), encryption (K
 │   │   Access Analyzer: review   │  │   EBS/RDS: encrypt at rest  │  │    WAF: ALB + CloudFront    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication + SCPs prevent access · Encryption protects data · GuardDuty/Hub detect active threa│
+│    Authentication + SCPs prevent access · Encryption protects data                                    │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -41,7 +41,7 @@ AWS security layers authentication (IAM Identity Center SSO, MFA), encryption (K
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  AWS security regions · KMS hardware security modules · CloudFront edge for WAF · TLS endpoint termina│
+│  AWS security regions · KMS hardware security modules · CloudFront edge for WAF                       │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
@@ -55,7 +55,7 @@ AWS security layers authentication (IAM Identity Center SSO, MFA), encryption (K
 │  WAF             = Web Application Firewall; Layer 7 rules for ALB, API Gateway, and CloudFront       │
 │  SSE-KMS         = Server-side encryption with KMS CMK; allows key policy + CloudTrail audit of usage │
 │  Permission Boundary= IAM policy capping maximum permissions; limits blast radius of over-provisioned │
-│  Access Analyzer = IAM service that finds externally-accessible resources; generates least-priv polici│
+│  Access Analyzer = IAM service that finds externally-accessible resources; generates least-priv       │
 │  IAM Identity Center= SSO for human access; enforces MFA; integrates with Okta/Azure AD via SAML/SCIM │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘

@@ -11,7 +11,7 @@
 │   │     vRLI support bundle collects cluster and agent logs; attach to GSS case for escalation    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues triage agent and source faults · diagnostics use logs and API · escalation bundles fo│
+│    Common issues triage agent and source faults · diagnostics use logs and API                        │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │        Forwarder err        │  │       Content pk test       │  │        Version matrix       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues guide triage · diagnostics use source admin and log paths · escalation collects bundl│
+│    Common issues guide triage · diagnostics use source admin and log paths                            │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

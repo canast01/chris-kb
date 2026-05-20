@@ -28,7 +28,7 @@ Azure Cost articles, operational checks, troubleshooting notes, and references.
 │   │   Cost alloc: tags billing  │  │    Budget: scope mgmt grp   │  │    Idle: deallocate + del   │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Cost analysis provides visibility · Budgets alert on thresholds · Reservations and Advisor cut spen│
+│    Cost analysis provides visibility · Budgets alert on thresholds                                    │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

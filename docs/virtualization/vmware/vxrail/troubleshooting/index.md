@@ -43,7 +43,7 @@
 │  Key terms:                                                                                           │
 │                                                                                                       │
 │  VxRail plugin     = vCenter plugin provided by VxRail Manager; shows cluster health and LCM status   │
-│  LCM pre-check     = Validation run before upgrade; fails if vSAN resync, network, or health issues ex│
+│  LCM pre-check     = Validation run before upgrade; fails if vSAN resync, network, or health issues   │
 │  vSAN object health = vSAN tracks each VM object; degraded = FTT violated; resync = rebuilding copies │
 │  iDRAC SEL         = System Event Log on iDRAC; hardware faults (disk, PSU, fan, NIC) recorded here   │
 │  get-tech-support  = VxRail CLI command collecting full diagnostic bundle for Dell GSS cases          │

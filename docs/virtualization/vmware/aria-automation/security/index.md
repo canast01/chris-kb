@@ -25,7 +25,7 @@
 │   │      Break-glass admin      │  │        Cloud zone acc       │  │         Secret refs         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Auth controls who uses Aria · RBAC limits catalog and blueprint scope · secrets protect cloud crede│
+│    Auth controls who uses Aria · RBAC limits catalog and blueprint scope                              │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

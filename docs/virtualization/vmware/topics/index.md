@@ -13,7 +13,7 @@ Deep-dive reference articles on specific VMware behaviors, edge cases, and troub
 │   │        Time/DNS validation: NTP sync required for HA, vSAN, and certificate operations        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Cluster topics cover HA design · performance topics isolate bottlenecks · resilience covers failure│
+│    Cluster topics cover HA design · performance topics isolate bottlenecks                            │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -27,7 +27,7 @@ Deep-dive reference articles on specific VMware behaviors, edge cases, and troub
 │   │        Maint risk val       │  │         Balloon/swap        │  │         Upgrade seq         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Cluster topics cover HA/DRS · performance topics isolate contention · resilience covers failure res│
+│    Cluster topics cover HA/DRS · performance topics isolate contention                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -44,14 +44,14 @@ Deep-dive reference articles on specific VMware behaviors, edge cases, and troub
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  Failure domain      = Host group in a cluster; HA distributes VM restarts across domains to limit bla│
+│  Failure domain      = Host group in a cluster; HA distributes VM restarts across domains to limit    │
 │  Cluster state val.  = Verification of vCenter, HA agent, DRS, and vSAN state across all cluster hosts│
-│  HA admission control = Policy reserving cluster capacity for VM restarts; slot-based or % resource mo│
+│  HA admission control = Policy reserving cluster capacity for VM restarts; slot-based or % resource   │
 │  Host isolation resp = HA action when host loses heartbeat: power off, shutdown, or leave VMs running │
-│  DRS migration thres = Aggressiveness setting (1-5) controlling how often DRS initiates vMotion migrat│
+│  DRS migration thres = Aggressiveness setting (1-5) controlling how often DRS initiates vMotion       │
 │  vMotion             = Live migration of a running VM between ESXi hosts with zero downtime           │
 │  Resource contention = CPU ready, memory balloon/swap, or storage latency caused by overcommitment    │
-│  Snapshot delta      = VMDK delta disk created at snapshot time; grows with writes; impacts performanc│
+│  Snapshot delta      = VMDK delta disk created at snapshot time; grows with writes; impacts           │
 │  APD                 = All Paths Down; storage device unreachable; all paths to datastore failed      │
 │  PDL                 = Permanent Device Loss; storage device reports itself gone; triggers HA restart │
 │  NTP synchronization = Required for HA elections, vSAN, SSO certificates, and replication timestamps  │

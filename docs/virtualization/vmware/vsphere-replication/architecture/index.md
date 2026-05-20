@@ -29,7 +29,7 @@ vSphere Replication is a hypervisor-based asynchronous replication solution mana
 │   │          Delta sync         │  │        Aria Ops intg        │  │         FQDN config         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works covers VR appliances and RPO · integrations connect SRM and storage · standards govern│
+│    How-it-works covers VR appliances and RPO · integrations connect SRM and storage                   │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -46,18 +46,18 @@ vSphere Replication is a hypervisor-based asynchronous replication solution mana
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  VRMS               = vSphere Replication Management Server; registers with vCenter; manages replicati│
+│  VRMS               = vSphere Replication Management Server; registers with vCenter; manages          │
 │  VRS                = vSphere Replication Server; handles the bulk replication data transfer per site │
-│  Per-VMDK replication = Each virtual disk replicated independently; exclude swap VMDKs to save bandwid│
+│  Per-VMDK replication = Each virtual disk replicated independently; exclude swap VMDKs to save        │
 │  RPO                = Recovery Point Objective; minimum 5 minutes in VR; defines max data loss window │
 │  Delta sync         = Changed block tracking (CBT) used to send only modified blocks each replication │
 │  Site pairing       = vCenter-level trust relationship between source and target VR sites             │
 │  Replication target = Datastore on target site where replica VMDK files are stored                    │
 │  Traffic encryption = TLS-encrypted replication stream between source VRS and target VRS              │
 │  Compression        = Network compression of replication data; reduces bandwidth at cost of CPU       │
-│  SRM integration    = Site Recovery Manager uses VR as the replication provider for orchestrated failo│
+│  SRM integration    = Site Recovery Manager uses VR as the replication provider for orchestrated      │
 │  vSAN target        = vSAN datastore on target site used as replication destination; policy-based     │
-│  Changed block track = CBT bitmap tracking written blocks in a VMDK; enables efficient delta replicati│
+│  Changed block track = CBT bitmap tracking written blocks in a VMDK; enables efficient delta          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

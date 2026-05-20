@@ -12,10 +12,10 @@ Azure Storage articles, operational checks, troubleshooting notes, and reference
 │   │  Blob Storage: Hot / Cool / Cold / Archive access tiers; lifecycle management; immutable WORM │   │
 │   │     Managed Disks: Premium SSD / Standard SSD / Ultra; ZRS for zone redundancy; snapshots     │   │
 │   │  Azure Files: managed SMB and NFS shares; AD integration for Windows shares; Azure File Sync  │   │
-│   │Storage accounts: replication LRS/ZRS/GRS/GZRS; encryption at rest by default; private endpoint│   │
+│   │     Storage accounts: replication LRS/ZRS/GRS/GZRS; encryption at rest by default; private    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Blob serves objects · Managed Disks serve VM block I/O · Files serve shared mounts · Accounts contr│
+│    Blob serves objects · Managed Disks serve VM block I/O · Files serve shared mounts                 │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

@@ -36,7 +36,7 @@ VMware Cloud Foundation (VCF) is a full-stack SDDC platform. SDDC Manager orches
 │   │     NSX per domain provides overlay networking; vCenter per domain for workload management    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works defines domain architecture · integrations connect stack components · standards govern│
+│    How-it-works defines domain architecture · integrations connect stack components                   │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -50,7 +50,7 @@ VMware Cloud Foundation (VCF) is a full-stack SDDC platform. SDDC Manager orches
 │   │      Mgmt domain: core      │  │         SIEM syslog         │  │      Subscription model     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works covers domain model · integrations connect stack and identity · standards enforce VCF │
+│    How-it-works covers domain model · integrations connect stack and identity                         │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -72,7 +72,7 @@ VMware Cloud Foundation (VCF) is a full-stack SDDC platform. SDDC Manager orches
 │  Workload domain = Isolated vSphere+vSAN+NSX unit; separate vCenter, NSX Manager, and cluster         │
 │  Management domain = First VCF domain; hosts SDDC Manager, vCenter, and shared infrastructure         │
 │  VI domain     = Virtual Infrastructure workload domain; runs production VMs separate from management │
-│  BOM (Bill of Materials) = Validated version matrix for all VCF components; ensures stack compatibilit│
+│  BOM (Bill of Materials) = Validated version matrix for all VCF components; ensures stack             │
 │  SDDC bring-up = Cloud Builder automated deployment of Management domain from JSON spec               │
 │  NSX per domain = Each VCF workload domain gets its own NSX Manager cluster for isolation             │
 │  vCenter per domain = Each VCF domain has a dedicated vCenter for workload management and HA/DRS      │

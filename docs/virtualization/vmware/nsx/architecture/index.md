@@ -37,7 +37,7 @@ NSX virtualises the network layer and enforces distributed security at the hyper
 │   │     Distributed Firewall (DFW) enforces microsegmentation at the vNIC level on every host     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works defines overlay mechanics · integrations connect physical network · standards govern s│
+│    How-it-works defines overlay mechanics · integrations connect physical network                     │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -50,7 +50,7 @@ NSX virtualises the network layer and enforces distributed security at the hyper
 │   │     DFW: per-vNIC rules     │  │       SIEM: syslog API      │  │     IP plan: overlay/T0     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    How-it-works defines overlay and routing · integrations connect physical fabric · standards enforce│
+│    How-it-works defines overlay and routing · integrations connect physical fabric                    │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -67,7 +67,7 @@ NSX virtualises the network layer and enforces distributed security at the hyper
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  GENEVE        = Generic Network Virtualization Encapsulation; NSX overlay protocol; encapsulates L2 i│
+│  GENEVE        = Generic Network Virtualization Encapsulation; NSX overlay protocol; encapsulates L2  │
 │  Transport node = ESXi host or Edge VM prepared for NSX; carries overlay traffic via GENEVE           │
 │  Manager cluster = 3-node NSX Manager in active/active/active; hosts control plane and Policy API     │
 │  Tier-0 (T0)   = NSX logical router with physical connectivity; BGP/static to ToR switches            │

@@ -41,7 +41,7 @@ Technical and operational reference for VMware Aria Operations. Covers performan
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Aria Operations VMs (master/replica/data/RC) · vSphere cluster · shared datastore · 443 network acces│
+│  Aria Operations VMs (master/replica/data/RC) · vSphere cluster · shared datastore                    │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │

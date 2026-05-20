@@ -11,7 +11,7 @@
 │   │      Secure Boot on all nodes; STIG alignment via host profiles; syslog forwarded to SIEM     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication gates hardware access · access control limits management scope · encryption protects│
+│    Authentication gates hardware access · access control limits management scope                      │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -25,7 +25,7 @@
 │   │       Svc acct policy       │  │         Audit events        │  │          Syslog TLS         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Auth controls who accesses hardware · RBAC scopes management · encryption protects data and transpo│
+│    Auth controls who accesses hardware · RBAC scopes management                                       │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

@@ -13,7 +13,7 @@ VxRail troubleshooting notes for lifecycle failures, manager issues, host alerts
 │   │      Escalation: Dell GSS P1, TAM contact, ProSupport log archive for critical incidents      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    LCM/VxRail issues block upgrades · diagnostics isolate service failures · escalation gets Dell enga│
+│    LCM/VxRail issues block upgrades · diagnostics isolate service failures                            │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -27,7 +27,7 @@ VxRail troubleshooting notes for lifecycle failures, manager issues, host alerts
 │   │          Net alerts         │  │         OMIVV alerts        │  │         Log archive         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    LCM issues block upgrades · diagnostics pinpoint service faults · escalation engages Dell ProSuppor│
+│    LCM issues block upgrades · diagnostics pinpoint service faults                                    │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -44,8 +44,8 @@ VxRail troubleshooting notes for lifecycle failures, manager issues, host alerts
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  LCM failure       = Upgrade job failed mid-sequence; check LCM logs and pre-check output for root cau│
-│  VxRail Manager    = Embedded management VM running Mystic service; provides REST API and vCenter plug│
+│  LCM failure       = Upgrade job failed mid-sequence; check LCM logs and pre-check output for root    │
+│  VxRail Manager    = Embedded management VM running Mystic service; provides REST API and vCenter     │
 │  Host alert        = ESXi or iDRAC hardware alarm (disk, NIC, PSU, CPU) surfaced in VxRail plugin     │
 │  vSAN degraded     = vSAN object FTT violated; component on failed disk or host; rebuild in progress  │
 │  Support bundle    = Compressed log archive from VxRail Manager and ESXi hosts for Dell GSS submission│

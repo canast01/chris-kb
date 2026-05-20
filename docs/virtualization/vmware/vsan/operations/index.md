@@ -29,7 +29,7 @@ Day-to-day operational reference for VMware vSAN. Covers CLI commands, health ch
 │   │        Alarms review        │  │          Post-check         │  │           SPBM API          │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops catch resync and capacity issues · lifecycle upgrades node-by-node · automation handles r│
+│    Daily ops catch resync and capacity issues · lifecycle upgrades node-by-node                       │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

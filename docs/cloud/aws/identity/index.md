@@ -15,7 +15,7 @@ AWS IAM governs every API call in the platform. The principle of least privilege
 │   │ Review cycle: Access Analyzer, Access Advisor, Credential Report — quarterly permission review│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    IAM authenticates every API call · Identity Center enables SSO · Access tools enforce least privile│
+│    IAM authenticates every API call · Identity Center enables SSO                                     │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -28,7 +28,7 @@ AWS IAM governs every API call in the platform. The principle of least privilege
 │   │    Cross-acct: sts assume   │  │  Assignment: user+acct+set  │  │   Credential Report: audit  │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    IAM manages roles and policies · Identity Center enables SSO · Access tools maintain least privileg│
+│    IAM manages roles and policies · Identity Center enables SSO                                       │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -45,16 +45,16 @@ AWS IAM governs every API call in the platform. The principle of least privilege
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  IAM Role       = Identity with trust policy; assumed by services, users, or other accounts for temp c│
+│  IAM Role       = Identity with trust policy; assumed by services, users, or other accounts for temp  │
 │  Trust policy   = JSON document on a role defining who can call sts:AssumeRole on it                  │
-│  Permission Boundary= IAM policy limiting maximum permissions a role or user can have; reduces blast r│
+│  Permission Boundary= IAM policy limiting maximum permissions a role or user can have; reduces blast  │
 │  IAM Identity Center= AWS SSO; centralises human access to accounts via groups and permission sets    │
 │  Permission set = Collection of IAM policies assigned to a user/group for one or more accounts via SSO│
 │  Access Analyzer= Identifies resources shared outside the account or org; detects unintended external │
 │  Access Advisor  = Shows last service access dates per role; helps prune unused permissions           │
 │  Credential Report= CSV listing all IAM users, key age, MFA status, and last login per account        │
 │  Instance profile= IAM role wrapper for EC2; metadata endpoint exposes temporary credentials to the OS│
-│  Cross-account role= Role in account B trusted by account A; enables resource sharing without key shar│
+│  Cross-account role= Role in account B trusted by account A; enables resource sharing without key     │
 │  STS            = Security Token Service; issues temporary credentials for assume-role and federation │
 │  External ID    = Secret added to cross-account trust policy; prevents confused deputy attacks        │
 │                                                                                                       │

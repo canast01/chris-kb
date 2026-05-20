@@ -11,7 +11,7 @@
 │   │      Credential rotation policy for data source service accounts; API key TTL enforcement     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication gates platform access · RBAC limits data visibility · encryption protects all API tr│
+│    Authentication gates platform access · RBAC limits data visibility                                 │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -42,17 +42,17 @@
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  AD/LDAP           = Active Directory or LDAP integration for user authentication to Aria Networks pla│
-│  API key           = Authentication token for REST API access; scoped to user role; subject to TTL pol│
-│  Data source credential = Service account used by Aria Networks to connect to NSX, vCenter, or switche│
-│  SNMP v3           = SNMPv3 credentials for physical switch collection; provides authentication and pr│
-│  Service account   = Dedicated non-interactive account used for data source authentication and collect│
-│  Admin role        = Full access role in Aria Networks; can configure data sources, users, and all set│
+│  AD/LDAP           = Active Directory or LDAP integration for user authentication to Aria Networks    │
+│  API key           = Authentication token for REST API access; scoped to user role; subject to TTL    │
+│  Data source credential = Service account used by Aria Networks to connect to NSX, vCenter, or        │
+│  SNMP v3           = SNMPv3 credentials for physical switch collection; provides authentication and   │
+│  Service account   = Dedicated non-interactive account used for data source authentication and        │
+│  Admin role        = Full access role in Aria Networks; can configure data sources, users, and all    │
 │  Member role       = Standard access role; can view topology, run queries, and use path trace features│
-│  Auditor role      = Read-only role; can view all data and reports but cannot make configuration chang│
-│  TLS encryption    = Transport Layer Security enforced on all REST API and Collector-to-Platform commu│
-│  Certificate management = Platform and Collector TLS cert lifecycle including rotation and CA trust co│
-│  Credential rotation = Periodic renewal of data source service account passwords and API keys per poli│
+│  Auditor role      = Read-only role; can view all data and reports but cannot make configuration      │
+│  TLS encryption    = Transport Layer Security enforced on all REST API and Collector-to-Platform      │
+│  Certificate management = Platform and Collector TLS cert lifecycle including rotation and CA trust   │
+│  Credential rotation = Periodic renewal of data source service account passwords and API keys per     │
 │  Role-based access = RBAC model limiting which data sources and features each user role can access    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘

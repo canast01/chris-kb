@@ -28,7 +28,7 @@ Azure Compute articles, operational checks, troubleshooting notes, and reference
 │   │  Resize: without data loss  │  │    VMSS: instance refresh   │  │  Inventory: ASC + Defender  │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    VMs provide individual compute · Availability features distribute load · Fleet tools manage at scal│
+│    VMs provide individual compute · Availability features distribute load                             │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -41,7 +41,7 @@ Azure Compute articles, operational checks, troubleshooting notes, and reference
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Azure host servers · Availability Zones (physical DCs) · Managed Disk storage fabric · VNet networkin│
+│  Azure host servers · Availability Zones (physical DCs) · Managed Disk storage fabric                 │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
@@ -51,12 +51,12 @@ Azure Compute articles, operational checks, troubleshooting notes, and reference
 │  Managed Identity  = Auto-managed service principal for a VM; used to authenticate to Azure services  │
 │  Proximity Placement Group= PPG; co-locates VMs in same data centre for lowest latency between VMs    │
 │  Fault Domain      = Rack-level isolation in an Availability Set; typically 2 or 3 per set            │
-│  Update Domain     = Rolling maintenance group; Azure updates one UD at a time during planned maintena│
+│  Update Domain     = Rolling maintenance group; Azure updates one UD at a time during planned         │
 │  Boot Diagnostics  = Captures VM serial console log and screenshot; diagnoses non-booting VMs         │
 │  Serial Console    = Out-of-band console access to VM; works when SSH/RDP unreachable                 │
 │  Azure Update Manager= Replaces Azure Automation Update Management; patches VMs on schedule at scale  │
 │  VM Extension      = Agent-based add-ons; installs monitoring agents, DSC, custom scripts on VMs      │
-│  Shared Image Gallery= Azure Compute Gallery; stores versioned custom VM images shared across subscrip│
+│  Shared Image Gallery= Azure Compute Gallery; stores versioned custom VM images shared across         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

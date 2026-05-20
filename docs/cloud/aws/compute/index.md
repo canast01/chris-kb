@@ -12,7 +12,7 @@ AWS compute spans EC2 virtual machines, Auto Scaling groups, Lambda serverless f
 │   │ EC2: virtual machines in 400+ instance types across general, compute, memory, storage families│   │
 │   │     Auto Scaling: launch templates + scaling policies maintain desired capacity across AZs    │   │
 │   │  Systems Manager: fleet management without SSH — session manager, patch manager, run command  │   │
-│   │Lambda: serverless functions; event-driven; up to 15 min timeout; 10 GB RAM; no servers to patc│   │
+│   │   Lambda: serverless functions; event-driven; up to 15 min timeout; 10 GB RAM; no servers to  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │    Compute spans persistent VMs (EC2), elastic fleets (ASG), and serverless (Lambda) managed by SSM   │
@@ -28,7 +28,7 @@ AWS compute spans EC2 virtual machines, Auto Scaling groups, Lambda serverless f
 │   │    Metadata: IMDSv2 only    │  │  Instance refresh: rolling  │  │   Parameter Store: config   │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    EC2 provides persistent VMs · Auto Scaling elastically manages fleets · SSM handles fleet operation│
+│    EC2 provides persistent VMs · Auto Scaling elastically manages fleets                              │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -47,16 +47,16 @@ AWS compute spans EC2 virtual machines, Auto Scaling groups, Lambda serverless f
 │                                                                                                       │
 │  EC2            = Elastic Compute Cloud; virtual machines running on AWS Nitro hypervisor             │
 │  AMI            = Amazon Machine Image; snapshot of OS + config used to launch new EC2 instances      │
-│  Instance type  = Defines vCPU, RAM, network, and storage; families: t (burstable), m (general), c (co│
+│  Instance type  = Defines vCPU, RAM, network, and storage; families: t (burstable), m (general), c    │
 │  Launch template= Versioned EC2 config (AMI, type, SG, IAM, user-data) used by ASG and manual launches│
-│  Auto Scaling Group= Maintains desired instance count; replaces unhealthy; scales on policies or sched│
+│  Auto Scaling Group= Maintains desired instance count; replaces unhealthy; scales on policies or      │
 │  Instance profile= IAM role attached to EC2; grants AWS API permissions to the instance itself        │
 │  IMDSv2         = Instance Metadata Service v2; token-based; required; prevents SSRF metadata theft   │
 │  Session Manager= SSM feature replacing SSH; browser or CLI access; no inbound ports needed on SG     │
 │  Patch Manager  = SSM feature applying OS patches on schedule; records compliance per instance        │
 │  Run Command    = SSM feature executing scripts/commands on fleets without SSH; output to CloudWatch  │
 │  Lambda         = Serverless compute; no servers to manage; billed per invocation and duration (ms)   │
-│  EBS            = Elastic Block Store; persistent block volumes attached to EC2; survives instance sto│
+│  EBS            = Elastic Block Store; persistent block volumes attached to EC2; survives instance    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

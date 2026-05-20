@@ -11,7 +11,7 @@ Day-to-day operational reference for VMware ESXi. Covers CLI commands, health ch
 │   │ ESXi day-to-day operations: CLI commands, health checks, procedures, and lifecycle management │   │
 │   │Daily: review host alarms in vCenter, check storage paths, confirm NTP sync and hardware health│   │
 │   │   Lifecycle: patch via VUM/LCM baselines; apply host profiles; update ESXi image in cluster   │   │
-│   │Backup: no built-in VM backup; use VADP-based solutions; host config backed up via host profile│   │
+│   │    Backup: no built-in VM backup; use VADP-based solutions; host config backed up via host    │   │
 │   │ Automation: esxcli scripting, PowerCLI, REST API, Ansible VMware modules for at-scale changes │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │

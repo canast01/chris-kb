@@ -43,15 +43,15 @@
 │  Key terms:                                                                                           │
 │                                                                                                       │
 │  RPO compliance     = All replicated VMs meeting their configured RPO within the monitoring window    │
-│  Missed sync        = Replication cycle that failed to complete within the RPO window; alerts in vCent│
+│  Missed sync        = Replication cycle that failed to complete within the RPO window; alerts in      │
 │  Pause replication  = Temporarily halting delta sync; all changes accumulate until resumed            │
 │  Resume replication = Restarting replication after pause; triggers full delta resync of changed blocks│
-│  Test recovery      = Recovering replica to isolated test network; validates DR readiness without fail│
+│  Test recovery      = Recovering replica to isolated test network; validates DR readiness without     │
 │  Bandwidth usage    = Network throughput consumed by replication; monitored to prevent link saturation│
 │  VRMS upgrade       = OVF/VAMI-based upgrade of the management appliance; must precede VRS upgrade    │
 │  VRS upgrade        = Upgrade of the replication server appliance; precedes vCenter and host upgrades │
 │  Configuration backup = Export of VR replication config; used for recovery if appliance rebuild needed│
-│  Site pairing health = vCenter-to-vCenter VR trust relationship; must be green for replication to func│
+│  Site pairing health = vCenter-to-vCenter VR trust relationship; must be green for replication to     │
 │  SRM recovery plan  = Orchestrated failover workflow that uses VR replicas as recovery source         │
 │  VR REST API        = HTTP API for querying and managing replication config programmatically          │
 │                                                                                                       │

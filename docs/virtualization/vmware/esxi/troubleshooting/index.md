@@ -9,13 +9,13 @@ Troubleshooting reference for VMware ESXi. Covers common host failure patterns, 
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   ESXi troubleshooting: common failure patterns, diagnostic commands, and escalation process  │   │
-│   │Common issues: PSOD (purple screen), host disconnect from vCenter, storage path loss, vMotion f│   │
+│   │ Common issues: PSOD (purple screen), host disconnect from vCenter, storage path loss, vMotion │   │
 │   │ Diagnostics: esxcli for live state, esxtop for real-time perf, vmkernel.log for kernel events │   │
 │   │      Log collection: vm-support bundle collects all host logs; attach to GSS support case     │   │
 │   │    Escalation: P1 for production VMs down; TAM escalation for critical/sustained incidents    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues define the triage path · diagnostics isolate root cause · escalation engages VMware s│
+│    Common issues define the triage path · diagnostics isolate root cause                              │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -28,7 +28,7 @@ Troubleshooting reference for VMware ESXi. Covers common host failure patterns, 
 │   │       HA agent restart      │  │      /var/log/vmkernel      │  │       HCL / BOM match       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Common issues guide triage · diagnostics pinpoint root cause · escalation gets vendor support engag│
+│    Common issues guide triage · diagnostics pinpoint root cause                                       │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -47,7 +47,7 @@ Troubleshooting reference for VMware ESXi. Covers common host failure patterns, 
 │                                                                                                       │
 │  PSOD          = Purple Screen of Death; ESXi kernel panic; check /var/log/vmkernel for root cause    │
 │  APD           = All Paths Down; storage device unreachable; all paths to LUN failed simultaneously   │
-│  PDL           = Permanent Device Loss; storage reports device gone; triggers VM failover if HA enable│
+│  PDL           = Permanent Device Loss; storage reports device gone; triggers VM failover if HA       │
 │  vm-support    = ESXi log bundle collector; generates .tgz with all host logs for GSS cases           │
 │  hostd         = ESXi host agent; handles vCenter communication; restart if host shows disconnected   │
 │  vpxa          = vCenter agent on ESXi; proxies vCenter management; restart to fix vCenter disconnect │

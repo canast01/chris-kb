@@ -13,7 +13,7 @@ VxRail hardware notes for nodes, disks, NICs, power, cooling, iDRAC, and firmwar
 │   │       SupportAssist and CloudIQ for proactive hardware monitoring and capacity planning       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Node health monitors hardware state · hardware ops cover disk and NIC · monitoring alerts on failur│
+│    Node health monitors hardware state · hardware ops cover disk and NIC                              │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
@@ -27,7 +27,7 @@ VxRail hardware notes for nodes, disks, NICs, power, cooling, iDRAC, and firmwar
 │   │          Disk state         │  │        Guided removal       │  │         Drive SMART         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Node health surfaces hardware faults · ops guide replacement procedures · monitoring enables proact│
+│    Node health surfaces hardware faults · ops guide replacement procedures                            │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │

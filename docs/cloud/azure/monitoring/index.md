@@ -11,7 +11,7 @@ Azure Monitoring articles, operational checks, troubleshooting notes, and refere
 │   │                    Azure Monitor — Metrics, Logs, Alerts, and Observability                   │   │
 │   │  Azure Monitor: platform for all metrics, logs, alerts, and dashboards across Azure services  │   │
 │   │ Log Analytics: workspace stores logs; KQL query language; used for dashboards and alert rules │   │
-│   │Alerts: metric, log, and activity log alert rules; action groups for notification and automatio│   │
+│   │     Alerts: metric, log, and activity log alert rules; action groups for notification and     │   │
 │   │  Diagnostic settings: route resource logs and metrics to Log Analytics, Storage, or Event Hub │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
@@ -45,10 +45,10 @@ Azure Monitoring articles, operational checks, troubleshooting notes, and refere
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  Azure Monitor     = Platform service aggregating all metrics, logs, alerts, and traces from Azure res│
-│  Log Analytics workspace= Storage and query engine for Azure Monitor logs; uses KQL; one or more per o│
-│  KQL               = Kusto Query Language; used in Log Analytics, Application Insights, and Data Explo│
-│  Diagnostic settings= Resource-level config routing logs/metrics to Log Analytics, Storage, or Event H│
+│  Azure Monitor     = Platform service aggregating all metrics, logs, alerts, and traces from Azure    │
+│  Log Analytics workspace= Storage and query engine for Azure Monitor logs; uses KQL; one or more per  │
+│  KQL               = Kusto Query Language; used in Log Analytics, Application Insights, and Data      │
+│  Diagnostic settings= Resource-level config routing logs/metrics to Log Analytics, Storage, or Event  │
 │  Activity Log      = Subscription-level control-plane audit log; who did what, when; 90 days retention│
 │  Metric alert      = Fires when a metric (CPU, memory, latency) crosses a threshold for N minutes     │
 │  Log alert         = Fires when a KQL query returns rows; evaluated on a schedule (5 min – 1 day)     │
@@ -56,7 +56,7 @@ Azure Monitoring articles, operational checks, troubleshooting notes, and refere
 │  Action group      = Reusable set of notification actions (email, SMS, webhook, Logic App, ITSM)      │
 │  Alert severity    = Sev 0 (Critical) to Sev 4 (Verbose); used to route and prioritise alerts         │
 │  Service Health    = Azure-side health events and planned maintenance for your subscriptions/services │
-│  Workbook          = Azure Monitor interactive report combining metrics, logs, and parameters in one v│
+│  Workbook          = Azure Monitor interactive report combining metrics, logs, and parameters in one  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
