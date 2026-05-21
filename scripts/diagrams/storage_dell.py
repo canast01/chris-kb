@@ -3150,3 +3150,3775 @@ def dell_data_domain_troubleshooting():
 
     lines.append('└' + '─' * W2 + '┘')
     return lines
+
+
+@kb_diagram('dell-ecs', 'docs/storage/dell/ecs/index.md',
+            'Dell ECS — Elastic Cloud Storage object storage platform')
+def dell_ecs():
+    """Dell ECS — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell ECS — Elastic Cloud Storage'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'ECS: Dell scale-out object storage; S3-compatible; designed for unstructured data at scale')))
+    lines.append(R(bMid(IV_L, IV_R, 'Protocols: S3, Swift, Atmos, HDFS, NFS (via gateway); RESTful API for all operations')))
+    lines.append(R(bMid(IV_L, IV_R, 'Architecture: commodity nodes in geo-distributed sites; cross-site replication for durability')))
+    lines.append(R(bMid(IV_L, IV_R, 'Use cases: backup landing zone, media archive, IoT data lake, cloud-native app storage')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  App writes via S3 → ECS nodes distribute across site → replicate to geo sites → 99.9999% durable'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Storage Engine'), bMid(B2_L, B2_R, 'Data Services'), bMid(B3_L, B3_R, 'Management'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Object store'), bMid(B2_L, B2_R, 'S3 compatible'), bMid(B3_L, B3_R, 'ECS Portal'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Scale-out nodes'), bMid(B2_L, B2_R, 'Swift API'), bMid(B3_L, B3_R, 'ECS REST API'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Erasure coding'), bMid(B2_L, B2_R, 'HDFS support'), bMid(B3_L, B3_R, 'Namespace mgmt'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Geo replication'), bMid(B2_L, B2_R, 'Metadata search'), bMid(B3_L, B3_R, 'CloudIQ'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '99.9999% durable'), bMid(B2_L, B2_R, 'ILM policies'), bMid(B3_L, B3_R, 'Alerting'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  ECS nodes are commodity x86 servers with NL-SAS or NVMe drives; no external storage required'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Layer', 'Component', 'Protocol', 'Location', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Clients', 'Apps/tools', 'S3 REST', 'Any network', 'AWS SDK compat.'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['ECS nodes', 'Object store', 'Internal mesh', 'On-premises', '4+ nodes per site'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Geo sites', 'DR / archive', 'WAN repl.', 'Remote DC', 'Up to 3 sites'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['ECS Portal', 'Management UI', 'HTTPS', 'On-premises', 'Central mgmt'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: commodity nodes in rack; 10/25 GbE data network; 1 GbE management network per node'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  ECS            = Elastic Cloud Storage; Dell object storage platform for unstructured data'))
+    lines.append(txt_row('  S3 compatible  = ECS supports Amazon S3 API; AWS SDK and tools work without modification'))
+    lines.append(txt_row('  Object         = Immutable data unit with metadata; accessed via bucket/key path'))
+    lines.append(txt_row('  Bucket         = Namespace container for objects; analogous to S3 bucket'))
+    lines.append(txt_row('  Namespace      = Logical tenant container; groups buckets and users; multitenancy unit'))
+    lines.append(txt_row('  Erasure coding = EC (12+4 or 10+2 by default) provides durability without full replication'))
+    lines.append(txt_row('  Geo replication = Cross-site object replication; active-active or active-passive configuration'))
+    lines.append(txt_row('  ILM policy     = Information Lifecycle Management; auto-move or expire objects by age or tag'))
+    lines.append(txt_row('  Metadata search = ECS system metadata and custom user metadata are indexed and searchable'))
+    lines.append(txt_row('  HDFS support   = ECS exports as HDFS; Hadoop/Spark workloads read directly from ECS'))
+    lines.append(txt_row('  99.9999% durability = Six nines; achieved via erasure coding and geo replication combined'))
+    lines.append(txt_row('  ECS Portal     = Web-based management UI for ECS; namespace, user, bucket, and policy mgmt'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-ecs-operations', 'docs/storage/dell/ecs/operations/index.md',
+            'Dell ECS — Day-to-day operations')
+def dell_ecs_operations():
+    """Dell ECS operations — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell ECS — Operations'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'ECS operations: capacity monitoring, replication health, node maintenance, and alerts')))
+    lines.append(R(bMid(IV_L, IV_R, 'Capacity: monitor per-VDC usage, erasure coding overhead, and project growth trends')))
+    lines.append(R(bMid(IV_L, IV_R, 'Replication: check geo replication lag, RPO status, and recovery point across sites')))
+    lines.append(R(bMid(IV_L, IV_R, 'Maintenance: rolling node updates, drive replacement, disk rebuild monitoring, log review')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Daily health check → capacity review → replication status → node health → alert triage'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Capacity Ops'), bMid(B2_L, B2_R, 'Replication Ops'), bMid(B3_L, B3_R, 'Node Ops'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'VDC usage'), bMid(B2_L, B2_R, 'Repl lag check'), bMid(B3_L, B3_R, 'Rolling update'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'EC overhead'), bMid(B2_L, B2_R, 'RPO status'), bMid(B3_L, B3_R, 'Drive replace'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Growth forecast'), bMid(B2_L, B2_R, 'Bandwidth util'), bMid(B3_L, B3_R, 'Rebuild monitor'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Bucket quotas'), bMid(B2_L, B2_R, 'Site failover'), bMid(B3_L, B3_R, 'Log review'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'ILM review'), bMid(B2_L, B2_R, 'Policy check'), bMid(B3_L, B3_R, 'PSU / fan'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  ECS Portal provides cluster-wide metrics; CLI (ecscli) available for scripted health checks'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Frequency', 'Task', 'Owner', 'Tool', 'Output'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Daily', 'Health check', 'Storage ops', 'ECS Portal', 'Alert log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Weekly', 'Replication check', 'Storage ops', 'ECS Portal', 'RPO report'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Monthly', 'Capacity review', 'Storage lead', 'ECS reports', 'Forecast plan'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['On-demand', 'Drive replace', 'Storage eng.', 'ECS Portal', 'Rebuild done'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: ECS nodes on 10/25 GbE switch; separate management network; nodes same rack or spread'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  VDC            = Virtual Data Center; ECS logical group of nodes within one physical site'))
+    lines.append(txt_row('  EC overhead    = Erasure coding adds ~33-50% storage overhead (12+4 EC = 1.33x raw data)'))
+    lines.append(txt_row('  Bucket quota   = Per-bucket capacity limit; enforces fair use in multi-tenant environments'))
+    lines.append(txt_row('  ILM review     = Check that Information Lifecycle Management policies expire data as expected'))
+    lines.append(txt_row('  Repl lag       = Delay between object write and geo replication completion; monitor per-pair'))
+    lines.append(txt_row('  RPO            = Recovery Point Objective; maximum data loss if site fails; tied to repl lag'))
+    lines.append(txt_row('  Site failover  = Redirect client access to secondary site when primary is unreachable'))
+    lines.append(txt_row('  Rolling update = ECS firmware/software update applied node by node; no cluster downtime'))
+    lines.append(txt_row('  Drive replace  = Hot-swap failed drive; ECS auto-starts rebuild; monitor rebuild % in Portal'))
+    lines.append(txt_row('  Rebuild monitor = Track erasure coding rebuild progress after drive failure; avoid adding load'))
+    lines.append(txt_row('  ecscli         = ECS command-line tool for scripted health checks, bucket queries, and exports'))
+    lines.append(txt_row('  Growth forecast = ECS capacity trend used to plan node addition before capacity is exhausted'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-ecs-security', 'docs/storage/dell/ecs/security/index.md',
+            'Dell ECS — Security overview')
+def dell_ecs_security():
+    """Dell ECS security — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell ECS — Security'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'ECS security: multitenancy isolation, IAM, encryption, bucket policies, and compliance')))
+    lines.append(R(bMid(IV_L, IV_R, 'IAM: namespace-level users, IAM roles, S3 bucket policies, ACLs, resource-based policies')))
+    lines.append(R(bMid(IV_L, IV_R, 'Encryption: SSE-S3 and SSE-C (customer-managed keys) for object encryption at rest')))
+    lines.append(R(bMid(IV_L, IV_R, 'Network: TLS 1.2+ for all data and management; VLANs separate data from management')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Client auth → IAM/policy check → namespace isolation → encrypted write → audit logged'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Identity & Access'), bMid(B2_L, B2_R, 'Data Security'), bMid(B3_L, B3_R, 'Compliance'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'IAM users'), bMid(B2_L, B2_R, 'SSE-S3 encrypt'), bMid(B3_L, B3_R, 'Audit log'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'S3 bucket policy'), bMid(B2_L, B2_R, 'SSE-C key'), bMid(B3_L, B3_R, 'WORM / lock'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'ACLs'), bMid(B2_L, B2_R, 'TLS 1.2+'), bMid(B3_L, B3_R, 'Retention lock'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Namespace isolate'), bMid(B2_L, B2_R, 'VLAN separation'), bMid(B3_L, B3_R, 'WORM bucket'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'LDAP/AD'), bMid(B2_L, B2_R, 'Data-at-rest enc.'), bMid(B3_L, B3_R, 'SOC 2 ready'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Namespaces are fully isolated; tenants cannot access other namespace buckets or objects'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Control', 'Standard', 'Scope', 'Config', 'Owner'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['IAM policy', 'AWS IAM compat', 'Per bucket', 'JSON policy', 'App team'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['SSE-S3', 'AES-256', 'All objects', 'Bucket default', 'Storage eng.'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['TLS 1.2+', 'PCI DSS 4.0', 'All endpoints', 'TLS config', 'Infra team'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['WORM bucket', 'SEC 17a-4', 'Bucket level', 'Immutable flag', 'Legal + ops'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: ECS data VLAN and management VLAN separate; TLS on both; nodes not internet-facing'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  IAM            = Identity and Access Management; ECS supports S3-compatible IAM policies'))
+    lines.append(txt_row('  Bucket policy  = JSON policy attached to S3 bucket defining who can read, write, or list'))
+    lines.append(txt_row('  ACL            = Access Control List; per-object or per-bucket access; simpler than policies'))
+    lines.append(txt_row('  SSE-S3         = Server-Side Encryption with S3-managed keys; AES-256; transparent to client'))
+    lines.append(txt_row('  SSE-C          = Server-Side Encryption with Customer-provided key; client sends key per request'))
+    lines.append(txt_row('  Namespace isolate = ECS tenant boundary; buckets and users in one NS cannot see another NS'))
+    lines.append(txt_row('  WORM bucket    = Bucket with object lock enabled; objects cannot be deleted before retention date'))
+    lines.append(txt_row('  Retention lock = Object-level retention; object immutable until specified expiry timestamp'))
+    lines.append(txt_row('  LDAP/AD        = ECS can authenticate management users via LDAP or Active Directory'))
+    lines.append(txt_row('  SOC 2 ready    = ECS audit logging and WORM features support SOC 2 compliance requirements'))
+    lines.append(txt_row('  VLAN separation = Data VLAN for S3 traffic; management VLAN for ECS Portal and SSH access'))
+    lines.append(txt_row('  SEC 17a-4      = US regulation requiring WORM storage for financial records; ECS qualifies'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-ecs-troubleshooting', 'docs/storage/dell/ecs/troubleshooting/index.md',
+            'Dell ECS — Troubleshooting overview')
+def dell_ecs_troubleshooting():
+    """Dell ECS troubleshooting — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell ECS — Troubleshooting'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'ECS troubleshooting: S3 API errors, replication failures, node outages, and capacity issues')))
+    lines.append(R(bMid(IV_L, IV_R, 'S3 errors: 403 (auth/ACL), 404 (missing bucket/key), 503 (node overload or rebuild)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Replication: lag alerts, site unreachable, bandwidth saturation, or policy mismatch')))
+    lines.append(R(bMid(IV_L, IV_R, 'Node issues: node offline, drive failure, rebuild stuck, disk health warnings in Portal')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Identify error → check ECS Portal Alerts → collect support bundle → open Dell TAC SR'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'S3 API Issues'), bMid(B2_L, B2_R, 'Replication'), bMid(B3_L, B3_R, 'Node / Disk'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '403 forbidden'), bMid(B2_L, B2_R, 'Lag alert'), bMid(B3_L, B3_R, 'Node offline'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '404 not found'), bMid(B2_L, B2_R, 'Site unreachable'), bMid(B3_L, B3_R, 'Drive failure'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '503 overload'), bMid(B2_L, B2_R, 'BW saturation'), bMid(B3_L, B3_R, 'Rebuild stuck'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Auth failure'), bMid(B2_L, B2_R, 'Policy mismatch'), bMid(B3_L, B3_R, 'Disk warnings'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Perf degraded'), bMid(B2_L, B2_R, 'RPO breach'), bMid(B3_L, B3_R, 'Capacity full'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Check ECS Portal: Alerts, Nodes status, Disk health, and Geo Replication tabs first'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Symptom', 'Cause', 'Check', 'Fix', 'Escalate If'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['S3 403', 'ACL/policy', 'Bucket policy', 'Fix IAM policy', 'All requests'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Repl lag', 'BW / site', 'Repl dashboard', 'Raise throttle', 'RPO breached'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Node offline', 'HW fault', 'Node health', 'Replace node', 'Immediately'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['503 errors', 'Rebuild load', 'Node status', 'Throttle rebuild', 'Persistent'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: ECS support bundle collected via Portal > Support; contains logs, config, disk status'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  S3 403         = Forbidden; check bucket policy, IAM user, and ACL; most common auth issue'))
+    lines.append(txt_row('  S3 404         = Bucket or object not found; verify bucket name, key path, and namespace'))
+    lines.append(txt_row('  S3 503         = Service unavailable; often during drive rebuild or node failure; retry logic'))
+    lines.append(txt_row('  Repl lag       = Time between object write and geo sync; monitor in ECS Portal > Replication'))
+    lines.append(txt_row('  RPO breach     = Replication lag exceeds Recovery Point Objective; DR team must be notified'))
+    lines.append(txt_row('  BW saturation  = Replication link full; add throttle or schedule during off-peak hours'))
+    lines.append(txt_row('  Policy mismatch = Source and target replication policy differ; causes objects to be skipped'))
+    lines.append(txt_row('  Node offline   = ECS detects node unreachable; EC rebuild starts on remaining nodes'))
+    lines.append(txt_row('  Rebuild stuck  = EC rebuild paused due to I/O overload; throttle client traffic to recover'))
+    lines.append(txt_row('  Disk warnings  = S.M.A.R.T. pre-failure indicators; replace proactively before drive fails'))
+    lines.append(txt_row('  Support bundle = ECS diagnostic package; download from Portal > Support > Generate bundle'))
+    lines.append(txt_row('  Throttle rebuild = Limit EC rebuild I/O rate via Portal to reduce impact on client workloads'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-fod', 'docs/storage/dell/fod/index.md',
+            'Dell Features on Demand — Software feature licensing model')
+def dell_fod():
+    """Dell Features on Demand — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Features on Demand (FoD)'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FoD: Dell software feature licensing; unlock array capabilities via license key purchase')))
+    lines.append(R(bMid(IV_L, IV_R, 'Features unlocked: extra protocols, replication, snapshots, encryption, tiering, FAST VP')))
+    lines.append(R(bMid(IV_L, IV_R, 'Key applied via array management UI or CLI; feature active instantly without reboot')))
+    lines.append(R(bMid(IV_L, IV_R, 'Supported on PowerStore, PowerMax, Unity XT, PowerScale; managed via Licensing Portal')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Identify needed feature → purchase FoD key → download → apply via array GUI → feature live'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Feature Types'), bMid(B2_L, B2_R, 'Array Support'), bMid(B3_L, B3_R, 'Management'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Protocols'), bMid(B2_L, B2_R, 'PowerStore'), bMid(B3_L, B3_R, 'Licensing portal'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Replication'), bMid(B2_L, B2_R, 'PowerMax / VMAX'), bMid(B3_L, B3_R, 'Array GUI/CLI'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Snapshots'), bMid(B2_L, B2_R, 'Unity XT'), bMid(B3_L, B3_R, 'CloudIQ monitor'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Encryption'), bMid(B2_L, B2_R, 'PowerScale'), bMid(B3_L, B3_R, 'Support portal'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'FAST VP tiering'), bMid(B2_L, B2_R, 'PowerStore-X'), bMid(B3_L, B3_R, 'Dell account'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  FoD keys are array-serial-number bound; not transferable between arrays'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Component', 'Role', 'Owner', 'Tool', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['FoD key', 'Unlocks feature', 'Customer buys', 'Licensing portal', 'Per SN'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Array mgr', 'Applies key', 'Storage eng.', 'GUI or CLI', 'Instant effect'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['License portal', 'Key purchase', 'Storage lead', 'Dell portal', 'All key history'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['CloudIQ', 'Feature status', 'Storage ops', 'SaaS portal', 'Optional'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: no hardware change needed; FoD unlocks software capability already on the array'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  FoD            = Features on Demand; Dell software feature licensing model for array capabilities'))
+    lines.append(txt_row('  FoD key        = License file purchased and downloaded from Dell Licensing Portal'))
+    lines.append(txt_row('  Protocol FoD   = Unlock NFS, SMB, iSCSI, FC, or NVMe-oF protocol support on an array'))
+    lines.append(txt_row('  Replication FoD = Unlock array-based replication (e.g. PowerStore replication, SRDF on VMAX)'))
+    lines.append(txt_row('  Snapshot FoD   = Unlock snapshot creation beyond the base limit included in hardware purchase'))
+    lines.append(txt_row('  Encryption FoD = Unlock data-at-rest encryption capability; AES-256 via array controller'))
+    lines.append(txt_row('  FAST VP        = Fully Automated Storage Tiering for Virtual Pools; automated data placement'))
+    lines.append(txt_row('  SN bound       = FoD key cryptographically tied to a specific array serial number'))
+    lines.append(txt_row('  Instant effect = Feature visible in array UI seconds after key is applied; no reboot'))
+    lines.append(txt_row('  Licensing portal = Dell portal for purchasing, downloading, and tracking FoD license keys'))
+    lines.append(txt_row('  Base license   = Features included with array purchase without FoD; varies by model/SKU'))
+    lines.append(txt_row('  Bundle key     = Some FoD products sold as a bundle; single key unlocks multiple features'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-fod-arch-design-standards',
+            'docs/storage/dell/fod/architecture/design-standards/index.md',
+            'Dell FoD — Architecture design standards')
+def dell_fod_arch_design_standards():
+    """Dell FoD architecture design standards — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell FoD — Architecture Design Standards'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FoD design standards: key inventory, firmware prereqs, change control, and CMDB hygiene')))
+    lines.append(R(bMid(IV_L, IV_R, 'Pre-apply standard: verify minimum firmware version before applying any FoD key')))
+    lines.append(R(bMid(IV_L, IV_R, 'Inventory standard: all purchased FoD keys documented in key inventory with SN and date')))
+    lines.append(R(bMid(IV_L, IV_R, 'Change control: all FoD key applications require approved CR; tested in non-prod first')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Plan feature need → verify prereqs → raise CR → purchase key → apply in window → update CMDB'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key Standards'), bMid(B2_L, B2_R, 'Firmware Standards'), bMid(B3_L, B3_R, 'Process Standards'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Vault storage'), bMid(B2_L, B2_R, 'Min FW before apply'), bMid(B3_L, B3_R, 'CR required'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key inventory doc'), bMid(B2_L, B2_R, 'Compat matrix check'), bMid(B3_L, B3_R, 'Non-prod test'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SN tracking'), bMid(B2_L, B2_R, 'DDOS / PMAS ver'), bMid(B3_L, B3_R, 'CMDB update'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Bundle awareness'), bMid(B2_L, B2_R, 'Pre-upgrade plan'), bMid(B3_L, B3_R, 'Quarterly audit'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Portal re-download'), bMid(B2_L, B2_R, 'Release notes'), bMid(B3_L, B3_R, 'Naming scheme'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Naming: FoD keys stored as <ARRAYNAME>-<FEATURE>-<DATE>.lic in secure vault'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Standard', 'Requirement', 'Reason', 'Reference', 'Owner'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Key vault', 'Store all keys', 'Recovery/audit', 'Sec policy', 'Storage lead'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['FW prereq', 'Check before apply', 'Avoid failure', 'Release notes', 'Storage eng.'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['CR required', 'ITSM CR raised', 'Change control', 'ITSM policy', 'Storage lead'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['CMDB update', 'After apply', 'Accuracy', 'CMDB standard', 'Ops team'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: FoD modifies array firmware feature flags; no hardware change; instant and reversible'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key inventory  = Spreadsheet or CMDB entry tracking all FoD keys: SN, feature, applied date'))
+    lines.append(txt_row('  Vault storage  = FoD .lic files stored in HashiCorp Vault or encrypted file share'))
+    lines.append(txt_row('  Min FW         = Each FoD key requires minimum array firmware; check before applying key'))
+    lines.append(txt_row('  Compat matrix  = Dell support matrix showing which FoD keys work with which firmware versions'))
+    lines.append(txt_row('  PMAS           = PowerMax Array Software; Hypermax OS version on PowerMax arrays'))
+    lines.append(txt_row('  Non-prod test  = Apply FoD in test/dev array first; validate feature behavior before production'))
+    lines.append(txt_row('  CR required    = Change Request; prevents unauthorized feature activation in production arrays'))
+    lines.append(txt_row('  Bundle awareness = Some FoD keys activate multiple features; understand full scope before applying'))
+    lines.append(txt_row('  Portal re-download = All FoD keys re-downloadable from Dell Licensing Portal by SN and order'))
+    lines.append(txt_row('  Quarterly audit = Review all FoD keys applied per array; confirm CMDB matches array license list'))
+    lines.append(txt_row('  Naming scheme  = Consistent file name for FoD keys in vault; aids search and audit'))
+    lines.append(txt_row('  Release notes  = Dell FoD release notes list firmware prereqs and feature activation behavior'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-fod-arch-integrations',
+            'docs/storage/dell/fod/architecture/integrations/index.md',
+            'Dell FoD — Architecture integrations')
+def dell_fod_arch_integrations():
+    """Dell FoD architecture integrations — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell FoD — Architecture Integrations'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FoD integrates with Dell Licensing Portal, array management systems, and ITSM workflows')))
+    lines.append(R(bMid(IV_L, IV_R, 'Licensing Portal: purchase, download, and track FoD keys; tied to support account + SN')))
+    lines.append(R(bMid(IV_L, IV_R, 'Array management: Unisphere, PowerStore Manager, or CLI applies key; feature activates')))
+    lines.append(R(bMid(IV_L, IV_R, 'ITSM integration: FoD key application triggers CR; webhook closes CR on completion')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Purchase portal → download key → ITSM CR → apply via array GUI → CMDB updated → CR closed'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Licensing Portal'), bMid(B2_L, B2_R, 'Array Management'), bMid(B3_L, B3_R, 'ITSM / CMDB'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Buy FoD key'), bMid(B2_L, B2_R, 'PowerStore Mgr'), bMid(B3_L, B3_R, 'CR pre-approval'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Download .lic'), bMid(B2_L, B2_R, 'Unisphere'), bMid(B3_L, B3_R, 'Webhook close'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Order history'), bMid(B2_L, B2_R, 'Isilon/OneFS'), bMid(B3_L, B3_R, 'CMDB update'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SN binding'), bMid(B2_L, B2_R, 'Array CLI'), bMid(B3_L, B3_R, 'Audit trail'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'License history'), bMid(B2_L, B2_R, 'Instant effect'), bMid(B3_L, B3_R, 'Inventory doc'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  CloudIQ shows active FoD features per array in Health > Features view (select models)'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['System', 'Function', 'Protocol', 'Auth', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Licensing portal', 'Key purchase', 'HTTPS', 'Dell SSO', 'licensing.dell.com'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['PowerStore Mgr', 'Key apply', 'HTTPS REST', 'Local/LDAP', 'Per array'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['ITSM', 'Change control', 'API/webhook', 'Service token', 'Pre-approved CR'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['CMDB', 'Feature tracking', 'API', 'Svc account', 'Updated post-apply'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: FoD key applied to array controller; no network path to licensing portal required'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Licensing portal = Dell portal for FoD key purchase, download, and history tracking'))
+    lines.append(txt_row('  PowerStore Mgr = PowerStore Manager web UI; Settings > Licenses to import FoD key'))
+    lines.append(txt_row('  Unisphere      = Web UI for PowerMax and Unity; Administration > License to apply FoD key'))
+    lines.append(txt_row('  Isilon / OneFS = PowerScale (formerly Isilon) uses OneFS CLI for FoD key application'))
+    lines.append(txt_row('  Array CLI      = Fall-back method for FoD application if GUI is unavailable'))
+    lines.append(txt_row('  ITSM webhook   = ITSM auto-closes the CR when FoD application succeeds (optional integration)'))
+    lines.append(txt_row('  Audit trail    = ITSM CR + array event log provide complete audit of feature activation'))
+    lines.append(txt_row('  CMDB update    = After key apply, update CMDB record for the array with new feature list'))
+    lines.append(txt_row('  Inventory doc  = Key inventory spreadsheet updated with feature, SN, date applied, applied by'))
+    lines.append(txt_row('  SN binding     = Each FoD key is cryptographically bound to one array serial number'))
+    lines.append(txt_row('  Order history  = All FoD purchases in licensing portal; re-download any key by order number'))
+    lines.append(txt_row('  CR pre-approval = Standing change request for FoD activation; avoids delay in urgent situations'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-fod-operations', 'docs/storage/dell/fod/operations/index.md',
+            'Dell FoD — Day-to-day operations')
+def dell_fod_operations():
+    """Dell FoD operations — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell FoD — Operations'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FoD operations: feature request handling, key purchase, application, and quarterly audit')))
+    lines.append(R(bMid(IV_L, IV_R, 'Request: app team requests new feature; storage team validates need and firmware prereq')))
+    lines.append(R(bMid(IV_L, IV_R, 'Purchase: raise CR, get approval, buy key from portal, store in vault, apply to array')))
+    lines.append(R(bMid(IV_L, IV_R, 'Audit: quarterly review of all active FoD features per array; CMDB reconciliation')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Feature request → prereq check → CR → purchase → apply → verify → CMDB → quarterly audit'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Request Ops'), bMid(B2_L, B2_R, 'Key Ops'), bMid(B3_L, B3_R, 'Audit Ops'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Feature intake'), bMid(B2_L, B2_R, 'Raise CR'), bMid(B3_L, B3_R, 'Quarterly review'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Need validation'), bMid(B2_L, B2_R, 'Purchase key'), bMid(B3_L, B3_R, 'CMDB reconcile'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'FW prereq check'), bMid(B2_L, B2_R, 'Apply key'), bMid(B3_L, B3_R, 'Key inventory'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Budget sign-off'), bMid(B2_L, B2_R, 'Verify feature'), bMid(B3_L, B3_R, 'Unused key review'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Test in non-prod'), bMid(B2_L, B2_R, 'Update CMDB'), bMid(B3_L, B3_R, 'Portal reconcile'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  All FoD key applications require approved CR and documented business justification'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Frequency', 'Task', 'Owner', 'Tool', 'Output'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['On-demand', 'Key purchase', 'Storage lead', 'Licensing portal', 'Key applied'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['On-demand', 'Key apply', 'Storage eng.', 'Array GUI/CLI', 'Feature active'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Quarterly', 'Key audit', 'Storage lead', 'CMDB + portal', 'Audit report'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Annual', 'FW compat check', 'Storage eng.', 'Dell compat matrix', 'Upgrade plan'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: FoD application is online; no downtime; feature available across all array nodes'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Feature intake = Formal request from app or business team; documented in ITSM ticket'))
+    lines.append(txt_row('  Need validation = Storage team confirms requested feature is not already active or available'))
+    lines.append(txt_row('  FW prereq check = Verify array firmware meets minimum version required for the FoD key'))
+    lines.append(txt_row('  Budget sign-off = Finance approval for FoD key cost before purchase; include in request'))
+    lines.append(txt_row('  Test in non-prod = Apply identical FoD key on non-production array first; validate feature'))
+    lines.append(txt_row('  Verify feature  = After apply, confirm feature appears active in array management UI'))
+    lines.append(txt_row('  CMDB reconcile = Compare array license list to CMDB records; update discrepancies'))
+    lines.append(txt_row('  Key inventory  = Maintained list of all FoD keys: SN, feature, purchase date, applied date'))
+    lines.append(txt_row('  Unused key review = Check for purchased but unapplied keys; ensure stored in vault securely'))
+    lines.append(txt_row('  Portal reconcile = Compare licensing portal order history to key inventory; gaps indicate lost keys'))
+    lines.append(txt_row('  FW compat check = Annual review of FoD keys against latest firmware; ensure no incompatibility'))
+    lines.append(txt_row('  CR             = Change Request; ITSM ticket documenting reason and approver for FoD apply'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-fod-ops-backup',
+            'docs/storage/dell/fod/operations/backup-restore/index.md',
+            'Dell FoD — Backup and restore operations')
+def dell_fod_ops_backup():
+    """Dell FoD backup/restore — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell FoD — Backup and Restore'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FoD backup: protect license key files and array configuration for restore scenarios')))
+    lines.append(R(bMid(IV_L, IV_R, 'Key backup: store .lic files in vault; keys always re-downloadable from Dell portal')))
+    lines.append(R(bMid(IV_L, IV_R, 'Config backup: export array license list before and after each FoD key application')))
+    lines.append(R(bMid(IV_L, IV_R, 'Restore: re-apply key from portal if array replaced or controller swap occurs')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Apply key → export license config → store in vault → portal re-download available if needed'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key Backup'), bMid(B2_L, B2_R, 'Config Backup'), bMid(B3_L, B3_R, 'Restore'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Vault storage'), bMid(B2_L, B2_R, 'Pre-apply export'), bMid(B3_L, B3_R, 'Re-download'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Portal re-DL'), bMid(B2_L, B2_R, 'Post-apply export'), bMid(B3_L, B3_R, 'Re-apply key'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Encrypted share'), bMid(B2_L, B2_R, 'Diff verify'), bMid(B3_L, B3_R, 'Ctrl swap'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key inventory'), bMid(B2_L, B2_R, 'CMDB entry'), bMid(B3_L, B3_R, 'Array replace'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Version track'), bMid(B2_L, B2_R, 'Change record'), bMid(B3_L, B3_R, 'Verify feature'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  FoD keys tied to array SN; controller swap on same chassis does not require new key'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Task', 'Trigger', 'Tool', 'Owner', 'Retention'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Key backup', 'After purchase', 'Vault + portal', 'Storage eng.', 'Permanent'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Config export', 'Before/after key', 'Array GUI', 'Storage eng.', '1 year min'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Key re-DL', 'Array replace', 'Licensing portal', 'Storage eng.', 'On-demand'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Verify feature', 'After restore', 'Array GUI', 'Storage eng.', 'Per restore'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: .lic files stored in HashiCorp Vault or CyberArk; do not store in plain-text repos'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key vault      = Secure secret manager (HashiCorp Vault, CyberArk) for .lic file storage'))
+    lines.append(txt_row('  Portal re-DL   = FoD keys always re-downloadable from Dell Licensing Portal by order/SN'))
+    lines.append(txt_row('  Pre-apply export = Array license list snapshot before key; used as rollback reference'))
+    lines.append(txt_row('  Post-apply export = Array license list after key; diff confirms expected feature activated'))
+    lines.append(txt_row('  Diff verify    = Compare pre/post config exports; only new FoD feature should appear'))
+    lines.append(txt_row('  Controller swap = Replacing failed controller in same chassis; SN unchanged; key still valid'))
+    lines.append(txt_row('  Array replace  = Entire chassis replaced; new SN issued; request key re-issue from Dell'))
+    lines.append(txt_row('  Key re-issue   = Dell Licensing team re-binds purchased FoD to new SN after array replace'))
+    lines.append(txt_row('  Key inventory  = Master document tracking every FoD key: SN, feature, file name, vault path'))
+    lines.append(txt_row('  Version track  = Each key application logged in inventory with version/date for audit trail'))
+    lines.append(txt_row('  CMDB entry     = Configuration record updated with new active features post-apply'))
+    lines.append(txt_row('  Encrypted share = Secondary backup of .lic files on encrypted file server alongside vault'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-fod-ops-procedures',
+            'docs/storage/dell/fod/operations/procedures/index.md',
+            'Dell FoD — Operational procedures')
+def dell_fod_ops_procedures():
+    """Dell FoD operational procedures — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell FoD — Operational Procedures'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FoD procedures: feature request, key purchase, key application, and quarterly audit')))
+    lines.append(R(bMid(IV_L, IV_R, 'Request: document feature need in ITSM; validate prereqs; get budget approval')))
+    lines.append(R(bMid(IV_L, IV_R, 'Apply: import .lic file via array GUI or CLI within approved CR change window')))
+    lines.append(R(bMid(IV_L, IV_R, 'Audit: quarterly reconcile of array license list against CMDB and key inventory')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Request → prereq → CR → purchase → download → vault → apply → verify → CMDB → close CR'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Request Phase'), bMid(B2_L, B2_R, 'Apply Phase'), bMid(B3_L, B3_R, 'Audit Phase'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'ITSM ticket'), bMid(B2_L, B2_R, 'Log into array'), bMid(B3_L, B3_R, 'Array lic. list'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'FW check'), bMid(B2_L, B2_R, 'Import .lic'), bMid(B3_L, B3_R, 'CMDB compare'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Raise CR'), bMid(B2_L, B2_R, 'Confirm active'), bMid(B3_L, B3_R, 'Inventory update'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Buy key'), bMid(B2_L, B2_R, 'Update CMDB'), bMid(B3_L, B3_R, 'Unused key check'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Store in vault'), bMid(B2_L, B2_R, 'Close CR'), bMid(B3_L, B3_R, 'Portal verify'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  FoD key application takes under 1 minute; no array downtime; all hosts unaffected'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Phase', 'Step', 'Tool', 'Owner', 'Duration'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Request', 'ITSM + prereqs', 'ITSM + portal', 'Storage lead', '1-2 days'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Purchase', 'Buy + download', 'Licensing portal', 'Storage lead', '1-3 days'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Apply', 'Import .lic', 'Array GUI/CLI', 'Storage eng.', '< 5 min'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Audit', 'Quarterly audit', 'CMDB + portal', 'Storage lead', '1-2 hours'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: apply FoD during business hours; no maintenance window required; zero-downtime'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  ITSM ticket    = Feature request logged in ServiceNow / Jira with business justification'))
+    lines.append(txt_row('  FW check       = Verify array firmware meets minimum requirement listed in FoD release notes'))
+    lines.append(txt_row('  Import .lic    = Array GUI: Settings > Licenses > Import License; browse to .lic file'))
+    lines.append(txt_row('  Confirm active = After import, license status shows feature as Active in array license list'))
+    lines.append(txt_row('  Close CR       = Mark CR resolved after CMDB updated and feature confirmed active'))
+    lines.append(txt_row('  Array lic list = Full list of active licenses on array; export from GUI for audit comparison'))
+    lines.append(txt_row('  CMDB compare   = Match array license list to CMDB entries; flag any discrepancies'))
+    lines.append(txt_row('  Inventory update = Add new FoD key to inventory doc: feature, SN, applied date, applied by'))
+    lines.append(txt_row('  Unused key check = Keys purchased but not applied; confirm stored in vault; plan application'))
+    lines.append(txt_row('  Portal verify  = Confirm licensing portal order history matches keys in local inventory'))
+    lines.append(txt_row('  Store in vault = Save .lic file to HashiCorp Vault immediately after download from portal'))
+    lines.append(txt_row('  Zero-downtime  = FoD application does not interrupt I/O; hosts and workloads unaffected'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-fod-security', 'docs/storage/dell/fod/security/index.md',
+            'Dell FoD — Security overview')
+def dell_fod_security():
+    """Dell FoD security overview — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell FoD — Security'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FoD security: protect license keys, restrict who can apply features, and audit all changes')))
+    lines.append(R(bMid(IV_L, IV_R, 'Key protection: store .lic files in secure vault; never commit to source control or email')))
+    lines.append(R(bMid(IV_L, IV_R, 'Access control: only named storage engineers can apply FoD keys; RBAC on array GUI')))
+    lines.append(R(bMid(IV_L, IV_R, 'Audit: all FoD applications logged in array event log and ITSM; quarterly reconcile')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key in vault → named engineer with CR → apply via RBAC-controlled GUI → audit trail'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key Security'), bMid(B2_L, B2_R, 'Access Control'), bMid(B3_L, B3_R, 'Audit'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Vault storage'), bMid(B2_L, B2_R, 'Named engineers'), bMid(B3_L, B3_R, 'Array event log'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No email/SCM'), bMid(B2_L, B2_R, 'Array RBAC'), bMid(B3_L, B3_R, 'ITSM CR record'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Encrypted share'), bMid(B2_L, B2_R, 'CR required'), bMid(B3_L, B3_R, 'Quarterly audit'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Portal MFA'), bMid(B2_L, B2_R, '2-person rule'), bMid(B3_L, B3_R, 'CMDB diff'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key rotation N/A'), bMid(B2_L, B2_R, 'Offboard revoke'), bMid(B3_L, B3_R, 'Portal history'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  FoD keys do not expire; lost or leaked keys cannot be remotely revoked; vault is critical'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Control', 'Implementation', 'Standard', 'Tool', 'Owner'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Key storage', 'Vault only', 'Sec policy', 'HashiCorp Vault', 'Storage lead'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Apply access', 'Named + CR', 'Change ctrl', 'Array RBAC', 'Storage lead'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Portal access', 'MFA enforced', 'NIST 800-63', 'Dell SSO + MFA', 'Storage lead'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Audit log', 'Quarterly review', 'SOC 2', 'ITSM + array log', 'Sec team'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: FoD .lic files never stored in unencrypted locations; vault access is MFA-gated'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Vault storage  = All .lic files stored in HashiCorp Vault or CyberArk; access logged'))
+    lines.append(txt_row('  No email/SCM   = Never send .lic files via email or store in Git/Jira; vault only'))
+    lines.append(txt_row('  Portal MFA     = Dell Licensing Portal requires MFA; enforce org-wide in portal settings'))
+    lines.append(txt_row('  Named engineers = Limit FoD apply privilege to 2-3 storage engineers; document by name'))
+    lines.append(txt_row('  Array RBAC     = Only Storage Admin role on array can import license keys; not Operator'))
+    lines.append(txt_row('  CR required    = No FoD key applied without approved ITSM CR; prevents unauthorized changes'))
+    lines.append(txt_row('  2-person rule  = FoD apply observed by second engineer; prevents unauthorized feature unlock'))
+    lines.append(txt_row('  Offboard revoke = When storage engineer leaves, remove array RBAC and vault access immediately'))
+    lines.append(txt_row('  Key rotation   = FoD keys do not rotate; protect the original; report loss to Dell licensing'))
+    lines.append(txt_row('  Quarterly audit = Review portal history vs CMDB; detect unauthorized feature activation'))
+    lines.append(txt_row('  Portal history = Dell Licensing Portal logs all key downloads; review for unauthorized access'))
+    lines.append(txt_row('  CMDB diff      = Quarterly comparison of array active license list to CMDB; flag surprises'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-fod-security-access',
+            'docs/storage/dell/fod/security/access-control/index.md',
+            'Dell FoD — Access control')
+def dell_fod_security_access():
+    """Dell FoD access control — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell FoD — Access Control'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FoD access control: who can purchase keys, download files, apply licenses, and audit')))
+    lines.append(R(bMid(IV_L, IV_R, 'Portal access: only named storage leads with MFA-enabled Dell accounts can purchase')))
+    lines.append(R(bMid(IV_L, IV_R, 'Array access: only Storage Admin role can import license keys; Operator cannot')))
+    lines.append(R(bMid(IV_L, IV_R, 'Vault access: only named engineers can retrieve .lic files; access is MFA-gated')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Purchase (storage lead) → vault store → retrieve (named eng.) → apply (admin role) → logged'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Portal Access'), bMid(B2_L, B2_R, 'Array Access'), bMid(B3_L, B3_R, 'Vault Access'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Named leads only'), bMid(B2_L, B2_R, 'Admin role only'), bMid(B3_L, B3_R, 'Named engineers'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'MFA enforced'), bMid(B2_L, B2_R, 'LDAP/AD group'), bMid(B3_L, B3_R, 'MFA required'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Dell SSO'), bMid(B2_L, B2_R, 'No shared acct'), bMid(B3_L, B3_R, 'Access log'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Account audit'), bMid(B2_L, B2_R, 'CR pre-apply'), bMid(B3_L, B3_R, 'Lease expiry'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'IP restrict'), bMid(B2_L, B2_R, 'Quarterly review'), bMid(B3_L, B3_R, 'Offboard revoke'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  On engineer offboarding: revoke Dell portal access, array RBAC, and vault lease immediately'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['System', 'Who', 'Auth Method', 'Review Freq', 'Owner'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Dell portal', 'Storage leads', 'Dell SSO + MFA', 'Quarterly', 'Storage lead'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Array GUI', 'Named admins', 'LDAP + RBAC', 'Quarterly', 'Storage lead'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Vault', 'Named engineers', 'MFA token', 'Quarterly', 'Sec team'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['CMDB', 'Ops team', 'Service acct', 'Annual', 'Ops lead'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: array GUI RBAC enforced; no direct filesystem or iDRAC access needed for FoD apply'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Portal access  = Access to Dell Licensing Portal; limit to storage leads who handle purchasing'))
+    lines.append(txt_row('  Admin role     = Array management role with license import rights; separate from Operator'))
+    lines.append(txt_row('  LDAP group     = Array admin rights controlled via AD group; add/remove via directory'))
+    lines.append(txt_row('  No shared acct = Each engineer has individual array admin account; shared accounts banned'))
+    lines.append(txt_row('  CR pre-apply   = ITSM CR must be approved before any engineer retrieves key from vault'))
+    lines.append(txt_row('  Vault lease    = HashiCorp Vault access token with TTL; expires and must be renewed'))
+    lines.append(txt_row('  MFA required   = Both Dell portal and vault require MFA; prevents credential-only access'))
+    lines.append(txt_row('  Account audit  = Quarterly review of Dell portal accounts; remove leavers and excess access'))
+    lines.append(txt_row('  Quarterly review = Storage lead reviews who has array admin and vault access; remove if not needed'))
+    lines.append(txt_row('  Offboard revoke = Immediate removal from portal, LDAP group, and vault on engineer departure'))
+    lines.append(txt_row('  IP restrict    = Dell portal can restrict login to corporate IP ranges; reduces phishing risk'))
+    lines.append(txt_row('  Lease expiry   = Vault lease auto-expires; reduces risk of standing access to .lic files'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-fod-security-auth',
+            'docs/storage/dell/fod/security/authentication/index.md',
+            'Dell FoD — Authentication')
+def dell_fod_security_auth():
+    """Dell FoD authentication — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell FoD — Authentication'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FoD authentication: secure access to Dell portal, array management, and key vault')))
+    lines.append(R(bMid(IV_L, IV_R, 'Dell portal: Dell SSO with MFA (TOTP or hardware key); tied to support account')))
+    lines.append(R(bMid(IV_L, IV_R, 'Array GUI: local accounts or LDAP/AD integration; Storage Admin role for license import')))
+    lines.append(R(bMid(IV_L, IV_R, 'Vault: LDAP or AppRole auth with MFA token; short-lived lease; audit log per access')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Dell portal MFA → download key → vault MFA store → array LDAP auth → import license'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Portal Auth'), bMid(B2_L, B2_R, 'Array Auth'), bMid(B3_L, B3_R, 'Vault Auth'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Dell SSO'), bMid(B2_L, B2_R, 'Local accounts'), bMid(B3_L, B3_R, 'LDAP method'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'TOTP MFA'), bMid(B2_L, B2_R, 'LDAP / AD'), bMid(B3_L, B3_R, 'AppRole method'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Hardware key'), bMid(B2_L, B2_R, 'SSH key auth'), bMid(B3_L, B3_R, 'Short TTL lease'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Session timeout'), bMid(B2_L, B2_R, 'Password policy'), bMid(B3_L, B3_R, 'MFA wrapper'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'IP allowlist'), bMid(B2_L, B2_R, 'Account lockout'), bMid(B3_L, B3_R, 'Access log'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  All three systems require individual named accounts; no service accounts for FoD apply'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['System', 'Method', 'MFA', 'Session TTL', 'Lockout'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Dell portal', 'Dell SSO', 'TOTP/HW key', '30 min idle', '5 attempts'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Array GUI', 'LDAP/local', 'N/A (LDAP MFA)', '60 min idle', '5 attempts'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Vault', 'LDAP/AppRole', 'TOTP required', 'Lease TTL 1h', 'N/A (lease)'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Array CLI', 'SSH key', 'N/A', 'Session only', '5 attempts'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: auth tokens never stored on shared systems; personal TOTP app or hardware key only'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Dell SSO      = Dell identity provider for support.dell.com and licensing.dell.com'))
+    lines.append(txt_row('  TOTP MFA      = Time-based One-Time Password; Google/Microsoft Authenticator app'))
+    lines.append(txt_row('  Hardware key  = YubiKey or similar FIDO2 key; strongest MFA option for portal access'))
+    lines.append(txt_row('  LDAP auth     = Array authenticates engineers via Active Directory; groups control roles'))
+    lines.append(txt_row('  AppRole       = HashiCorp Vault machine auth method; used by automation scripts'))
+    lines.append(txt_row('  Short TTL     = Vault lease expires in 1 hour; engineer must re-auth to retrieve another key'))
+    lines.append(txt_row('  MFA wrapper   = Vault LDAP auth combined with TOTP second factor; both required'))
+    lines.append(txt_row('  SSH key auth  = Array CLI accessed via SSH keypair only; disable password SSH on all arrays'))
+    lines.append(txt_row('  Password policy = Array local accounts: 12+ chars, complexity, 90-day rotation'))
+    lines.append(txt_row('  Account lockout = 5 failed attempts locks account; admin or LDAP reset required'))
+    lines.append(txt_row('  IP allowlist  = Dell portal access restricted to corporate egress IP; home access blocked'))
+    lines.append(txt_row('  Session timeout = Portal and array GUI auto-logout after idle period; re-auth required'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-fod-security-encryption',
+            'docs/storage/dell/fod/security/encryption/index.md',
+            'Dell FoD — Encryption of license key files')
+def dell_fod_security_encryption():
+    """Dell FoD encryption — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell FoD — Encryption'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FoD encryption: protect .lic key files in transit and at rest; portal uses TLS 1.2+')))
+    lines.append(R(bMid(IV_L, IV_R, 'Key files: FoD .lic files are cryptographically signed by Dell; cannot be forged')))
+    lines.append(R(bMid(IV_L, IV_R, 'At rest: .lic files stored in encrypted vault (AES-256); never stored in plaintext')))
+    lines.append(R(bMid(IV_L, IV_R, 'In transit: portal download over TLS 1.2+; array import over HTTPS management plane')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Portal TLS download → vault AES-256 storage → HTTPS import to array → signature verified'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key File Security'), bMid(B2_L, B2_R, 'Transit'), bMid(B3_L, B3_R, 'At Rest'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Dell PKI signed'), bMid(B2_L, B2_R, 'TLS 1.2+'), bMid(B3_L, B3_R, 'Vault AES-256'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SN binding'), bMid(B2_L, B2_R, 'HTTPS portal'), bMid(B3_L, B3_R, 'Encrypted share'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Tamper evident'), bMid(B2_L, B2_R, 'HTTPS array mgmt'), bMid(B3_L, B3_R, 'Never plaintext'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Sig verification'), bMid(B2_L, B2_R, 'No email/FTP'), bMid(B3_L, B3_R, 'Key access log'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No re-use'), bMid(B2_L, B2_R, 'Cert pinning'), bMid(B3_L, B3_R, 'Backup encrypted'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Array firmware verifies Dell PKI signature on .lic file; rejects unsigned or modified files'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Layer', 'Algorithm', 'Applied To', 'Owner', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Key signature', 'Dell PKI/RSA', 'Every .lic file', 'Dell', 'Verified on import'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Transit', 'TLS 1.2+', 'Download + import', 'Dell + customer', 'HTTPS only'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['At rest', 'AES-256', 'Vault storage', 'Customer', 'Vault-managed key'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Backup', 'AES-256', 'Encrypted share', 'Customer', 'Mirror of vault'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: .lic files never transit unencrypted network segments; TLS or encrypted channel only'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Dell PKI       = Dell Public Key Infrastructure; signs every FoD .lic file with private key'))
+    lines.append(txt_row('  Sig verification = Array firmware checks Dell public key signature on .lic at import time'))
+    lines.append(txt_row('  Tamper evident = Any modification to .lic file content invalidates the Dell PKI signature'))
+    lines.append(txt_row('  SN binding     = .lic cryptographic content includes the target array serial number'))
+    lines.append(txt_row('  No re-use      = A FoD key for SN-A cannot be applied to SN-B; signature check fails'))
+    lines.append(txt_row('  TLS 1.2+       = Dell portal and array management plane require TLS 1.2 minimum'))
+    lines.append(txt_row('  No email/FTP   = .lic files must not transit unencrypted channels; vault and HTTPS only'))
+    lines.append(txt_row('  Cert pinning   = Array management HTTPS; trust only Dell-issued cert; rejects MITM cert'))
+    lines.append(txt_row('  Vault AES-256  = HashiCorp Vault encrypts all stored secrets (inc. .lic files) with AES-256'))
+    lines.append(txt_row('  Key access log = Vault audit log records every read of a .lic file; who, when, IP'))
+    lines.append(txt_row('  Backup encrypted = Secondary .lic backup on encrypted file server; same AES-256 protection'))
+    lines.append(txt_row('  Vault-managed key = Vault handles AES-256 key rotation for stored secrets automatically'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-fod-security-hardening',
+            'docs/storage/dell/fod/security/hardening/index.md',
+            'Dell FoD — Hardening the FoD environment')
+def dell_fod_security_hardening():
+    """Dell FoD hardening — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell FoD — Hardening'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FoD hardening: secure the portal account, vault, array management, and audit workflow')))
+    lines.append(R(bMid(IV_L, IV_R, 'Portal hardening: enforce MFA, IP allowlist, session timeout, and account review')))
+    lines.append(R(bMid(IV_L, IV_R, 'Vault hardening: short-lived leases, MFA auth, LDAP backend, access log review')))
+    lines.append(R(bMid(IV_L, IV_R, 'Array hardening: disable unused protocols, enforce LDAP auth, SSH key-only CLI')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Harden portal account → harden vault → harden array → audit controls → quarterly review'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Portal Hardening'), bMid(B2_L, B2_R, 'Vault Hardening'), bMid(B3_L, B3_R, 'Array Hardening'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Enforce MFA'), bMid(B2_L, B2_R, 'Short TTL lease'), bMid(B3_L, B3_R, 'SSH key-only'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'IP allowlist'), bMid(B2_L, B2_R, 'MFA + LDAP'), bMid(B3_L, B3_R, 'Disable HTTP'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Session timeout'), bMid(B2_L, B2_R, 'Audit log review'), bMid(B3_L, B3_R, 'LDAP auth'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Account review'), bMid(B2_L, B2_R, 'Sealed vault'), bMid(B3_L, B3_R, 'Mgmt VLAN'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Offboard SOP'), bMid(B2_L, B2_R, 'Policy-as-code'), bMid(B3_L, B3_R, 'FW restrict'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Vault sealed when not in use; unseal requires quorum of key shares; reduces breach window'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Layer', 'Control', 'Setting', 'Standard', 'Owner'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Dell portal', 'Enforce MFA', 'Org-wide', 'NIST 800-63', 'Storage lead'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Vault', 'Short TTL', '1h lease max', 'CIS benchmark', 'Sec team'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Array', 'SSH key-only', 'Disable pw SSH', 'CIS L1', 'Infra team'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Network', 'Mgmt VLAN', 'Isolated VLAN', 'Sec policy', 'Network team'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: array management interface on isolated VLAN; only jumphost or VPN can reach it'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Portal MFA     = Enforce MFA for all Dell portal accounts; disable accounts that bypass it'))
+    lines.append(txt_row('  IP allowlist   = Restrict portal login to corporate egress IPs; block personal/home access'))
+    lines.append(txt_row('  Session timeout = Portal logs out after 30 min idle; vault lease expires in 1h'))
+    lines.append(txt_row('  Sealed vault   = HashiCorp Vault sealed state; no secrets accessible until quorum unseal'))
+    lines.append(txt_row('  Short TTL      = Vault leases expire in 1 hour; limits window of access after key retrieval'))
+    lines.append(txt_row('  Policy-as-code = Vault ACL policies in HCL files under version control; reviewed each quarter'))
+    lines.append(txt_row('  SSH key-only   = Disable password-based SSH on array; only pre-approved public keys allowed'))
+    lines.append(txt_row('  Disable HTTP   = Array management only on HTTPS 443; no plaintext HTTP redirect'))
+    lines.append(txt_row('  LDAP auth      = Array and vault use corporate AD/LDAP; no local service accounts for FoD'))
+    lines.append(txt_row('  Mgmt VLAN      = Array management IPs on isolated VLAN; not reachable from user workstations'))
+    lines.append(txt_row('  FW restrict    = Firewall allows only jumphost IP to reach array management VLAN'))
+    lines.append(txt_row('  CIS L1         = Center for Internet Security Level 1 baseline applied to array OS'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-fod-troubleshooting', 'docs/storage/dell/fod/troubleshooting/index.md',
+            'Dell FoD — Troubleshooting overview')
+def dell_fod_troubleshooting():
+    """Dell FoD troubleshooting — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell FoD — Troubleshooting'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FoD troubleshooting: key rejection, feature not activating, portal access failures')))
+    lines.append(R(bMid(IV_L, IV_R, 'Key rejection: SN mismatch, wrong key scope, corrupt file — re-download from portal')))
+    lines.append(R(bMid(IV_L, IV_R, 'Feature not active: firmware prereq not met, bundle partially applied, license conflict')))
+    lines.append(R(bMid(IV_L, IV_R, 'Portal issues: account MFA locked, key not in order history, account link missing')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Symptom → check array event log → verify SN and FW → re-download if needed → Dell SR'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key Issues'), bMid(B2_L, B2_R, 'Feature Issues'), bMid(B3_L, B3_R, 'Portal Issues'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Rejection error'), bMid(B2_L, B2_R, 'Not activating'), bMid(B3_L, B3_R, 'Login failure'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SN mismatch'), bMid(B2_L, B2_R, 'FW prereq fail'), bMid(B3_L, B3_R, 'Key not found'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Wrong scope'), bMid(B2_L, B2_R, 'Partial bundle'), bMid(B3_L, B3_R, 'No entitlement'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Corrupt file'), bMid(B2_L, B2_R, 'License conflict'), bMid(B3_L, B3_R, 'Account link'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Already applied'), bMid(B2_L, B2_R, 'Wrong array model'), bMid(B3_L, B3_R, 'MFA locked'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Collect: array SN, event log error text, firmware version, and portal order screenshot'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Symptom', 'Cause', 'Check', 'Fix', 'Escalate If'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Key rejected', 'SN mismatch', 'Array GUI SN', 'Re-download', 'After 2 tries'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Not active', 'FW prereq', 'Firmware ver.', 'Upgrade array', 'Dell TAC SR'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Portal login', 'MFA locked', 'Dell account', 'Account reset', 'Dell support'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Key missing', 'Wrong account', 'Order history', 'Link accounts', 'Dell licensing'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: confirm SN from chassis label; do not rely on documentation which may be outdated'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Rejection error = Array event log shows specific error code; note exact text for Dell TAC'))
+    lines.append(txt_row('  SN mismatch    = Key file SN differs from array SN; most common FoD failure; re-download'))
+    lines.append(txt_row('  Wrong scope    = Key unlocks different feature or tier than intended; verify before purchase'))
+    lines.append(txt_row('  Corrupt file   = Download interrupted; browser saved incomplete .lic; re-download via HTTPS'))
+    lines.append(txt_row('  FW prereq fail = Array firmware below minimum required for feature; upgrade before applying'))
+    lines.append(txt_row('  Partial bundle = Bundle key partially active; some features of bundle blocked by FW prereq'))
+    lines.append(txt_row('  License conflict = Two keys conflict on same feature; contact Dell TAC; do not apply more keys'))
+    lines.append(txt_row('  Wrong array model = FoD key model-specific; a Unity key will not apply to a PowerStore'))
+    lines.append(txt_row('  Already applied = Duplicate key import attempt; array shows duplicate; harmless but contact Dell'))
+    lines.append(txt_row('  No entitlement = Support contract not linked to SN; contact Dell licensing team to link'))
+    lines.append(txt_row('  Account link   = Link service tag to Dell support account via support.dell.com portal'))
+    lines.append(txt_row('  MFA locked     = Too many failed MFA attempts; Dell support can unlock the portal account'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-fod-troubleshooting-issues',
+            'docs/storage/dell/fod/troubleshooting/common-issues/index.md',
+            'Dell FoD — Common troubleshooting issues')
+def dell_fod_troubleshooting_issues():
+    """Dell FoD common issues — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell FoD — Common Issues'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Common FoD issues: key rejection, feature mismatch, portal problems, and audit gaps')))
+    lines.append(R(bMid(IV_L, IV_R, 'Key rejection: #1 issue is SN mismatch; verify SN in array GUI before contacting Dell')))
+    lines.append(R(bMid(IV_L, IV_R, 'Feature mismatch: key unlocks different feature than expected; check key description')))
+    lines.append(R(bMid(IV_L, IV_R, 'Audit gap: keys applied without CMDB update; discovered in quarterly reconciliation')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Identify issue → check event log error → verify SN/FW/scope → fix or escalate → document'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key Problems'), bMid(B2_L, B2_R, 'Feature Problems'), bMid(B3_L, B3_R, 'Process Problems'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SN mismatch'), bMid(B2_L, B2_R, 'Wrong feature'), bMid(B3_L, B3_R, 'No CMDB entry'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Corrupt download'), bMid(B2_L, B2_R, 'FW too old'), bMid(B3_L, B3_R, 'No CR raised'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Wrong model key'), bMid(B2_L, B2_R, 'Bundle mismatch'), bMid(B3_L, B3_R, 'Lost key file'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Already applied'), bMid(B2_L, B2_R, 'Feature hidden'), bMid(B3_L, B3_R, 'Vault not used'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Account link'), bMid(B2_L, B2_R, 'Reboot needed'), bMid(B3_L, B3_R, 'Audit gap'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Prevention: always confirm SN from array GUI, verify FW, and use key inventory before apply'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Issue', 'Root Cause', 'Diagnostic', 'Resolution', 'Prevention'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Key rejected', 'SN mismatch', 'Array GUI SN', 'Re-download', 'Confirm SN first'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Wrong feature', 'Scope error', 'Key desc. text', 'Buy correct key', 'Read key desc.'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['FW too old', 'Prereq not met', 'FW version', 'Upgrade first', 'Check compat'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['No CMDB entry', 'Process skip', 'CMDB vs array', 'Update CMDB', 'CR as reminder'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: chassis SN label is authoritative; array GUI SN must match; check both if uncertain'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  SN mismatch    = Most common FoD failure; key cryptographically bound to different SN'))
+    lines.append(txt_row('  Corrupt download = Incomplete .lic; browser cache or network issue; clear cache and re-download'))
+    lines.append(txt_row('  Wrong model key = FoD keys are model-specific; a PowerMax key will not import on Unity XT'))
+    lines.append(txt_row('  Already applied = Same key imported twice; array event log shows duplicate; harmless warning'))
+    lines.append(txt_row('  Account link   = FoD key not visible in portal because SN not linked to support account'))
+    lines.append(txt_row('  Wrong feature  = Purchased key for Feature A but needed Feature B; verify before checkout'))
+    lines.append(txt_row('  FW too old     = Most FoD features require minimum firmware; run compatibility check first'))
+    lines.append(txt_row('  Bundle mismatch = Key enables a feature bundle but not all features in bundle apply to model'))
+    lines.append(txt_row('  Feature hidden = Feature activated but UI element hidden; check Settings > Features for status'))
+    lines.append(txt_row('  Reboot needed  = Some FoD features (rare) require array restart; check release notes'))
+    lines.append(txt_row('  No CMDB entry  = Engineer applied key but skipped CMDB update; found at quarterly audit'))
+    lines.append(txt_row('  Vault not used = .lic file stored in email or share; security gap; move to vault immediately'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('dell-fod-troubleshooting-escalation',
+            'docs/storage/dell/fod/troubleshooting/escalation/index.md',
+            'Dell FoD — Escalation procedures')
+def dell_fod_troubleshooting_escalation():
+    """Dell FoD escalation — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell FoD — Escalation'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FoD escalation: when self-service fails, escalate to Dell licensing, TAC, or account team')))
+    lines.append(R(bMid(IV_L, IV_R, 'Dell licensing: key re-issue for array replacement, SN re-binding, duplicate resolution')))
+    lines.append(R(bMid(IV_L, IV_R, 'Dell TAC: feature not activating after valid key; firmware issues; event log errors')))
+    lines.append(R(bMid(IV_L, IV_R, 'Account team: contract/entitlement disputes; key not tied to support contract')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Self-service fails → collect diagnostics → open Dell SR → licensing or TAC → account team'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Licensing Team'), bMid(B2_L, B2_R, 'Dell TAC'), bMid(B3_L, B3_R, 'Account Team'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key re-issue'), bMid(B2_L, B2_R, 'Feature inactive'), bMid(B3_L, B3_R, 'Entitlement'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SN re-binding'), bMid(B2_L, B2_R, 'Firmware bug'), bMid(B3_L, B3_R, 'Contract query'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Duplicate key'), bMid(B2_L, B2_R, 'License conflict'), bMid(B3_L, B3_R, 'Pricing'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Account merge'), bMid(B2_L, B2_R, 'Event log error'), bMid(B3_L, B3_R, 'Exec escalation'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Order history'), bMid(B2_L, B2_R, 'Bundle partial'), bMid(B3_L, B3_R, 'Account link'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Collect before escalating: array SN, .lic file, event log, firmware version, order number'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Issue Type', 'Escalate To', 'Info Needed', 'SLA', 'Contact'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Key rejected', 'Dell Licensing', 'SN + key file', '1 biz day', 'Licensing portal'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Feature inactive', 'Dell TAC', 'FW + event log', '4h P2 SLA', 'support.dell.com'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Contract issue', 'Account team', 'Contract ID', '1 biz day', 'Dell rep'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Exec escalate', 'Account exec', 'SR number', 'Same day', 'Account team'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: collect chassis SN label photo; compare to portal before opening any escalation'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Dell Licensing = Dell team managing FoD key purchase, SN binding, and re-issue processes'))
+    lines.append(txt_row('  SN re-binding  = Re-issuing FoD key for a replacement array with new serial number'))
+    lines.append(txt_row('  Account merge  = Consolidating two Dell portal accounts that each hold keys for same array'))
+    lines.append(txt_row('  Duplicate key  = Same key applied twice or purchased twice; licensing team resolves billing'))
+    lines.append(txt_row('  Dell TAC       = Technical Assistance Center; handles firmware and feature activation issues'))
+    lines.append(txt_row('  Bundle partial = Some features in a bundle not activating; TAC debugs feature flag state'))
+    lines.append(txt_row('  License conflict = Two conflicting FoD features applied; TAC resolves with Dell backend'))
+    lines.append(txt_row('  Event log      = Array event log showing exact error code and text from failed key import'))
+    lines.append(txt_row('  Order number   = Dell purchase order number; required for licensing team to locate key history'))
+    lines.append(txt_row('  P2 SLA         = 4-hour TAC response; FoD failure blocking production may qualify'))
+    lines.append(txt_row('  Account exec   = Dell account executive; involved for contract disputes or exec escalation'))
+    lines.append(txt_row('  SR number      = Service Request tracking number; always reference when following up'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powermax',
+    'docs/storage/dell/powermax/index.md',
+    'Dell PowerMax — NVMe enterprise array; SLO tiers; SRDF replication; TimeFinder snapshots',
+)
+def dell_powermax():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerMax Enterprise Storage'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'PowerMax: Dell enterprise NVMe array; all-NVMe (2000) or NVMe+SAS (8000) tiers')))
+    lines.append(R(bMid(IV_L, IV_R, 'SLO-based provisioning: Diamond/Platinum/Gold/Silver/Bronze maps workload to media tier')))
+    lines.append(R(bMid(IV_L, IV_R, 'SRDF replication: Metro (active-active), Sync, Async, Adaptive Copy modes')))
+    lines.append(R(bMid(IV_L, IV_R, 'Managed via Unisphere GUI and symcli (SYMAPI); REST API for automation')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Hosts connect via FA directors → SLO maps I/O to SRP tier → SRDF replicates to partner array'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Architecture'), bMid(B2_L, B2_R, 'Operations'), bMid(B3_L, B3_R, 'Security'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Director blades'), bMid(B2_L, B2_R, 'Unisphere GUI'), bMid(B3_L, B3_R, 'DARE encryption'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SRP thin pools'), bMid(B2_L, B2_R, 'symcli / SYMAPI'), bMid(B3_L, B3_R, 'LDAP / AD auth'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SLO tiers'), bMid(B2_L, B2_R, 'TimeFinder snaps'), bMid(B3_L, B3_R, 'Masking views'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SRDF directors'), bMid(B2_L, B2_R, 'SRDF replication'), bMid(B3_L, B3_R, 'Audit logging'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'NVMe / SAS media'), bMid(B2_L, B2_R, 'REST API'), bMid(B3_L, B3_R, 'Host access ctrl'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Data path: host HBA → FA director port → SRP pool tier → DA director → NVMe/SAS drives'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Category', 'PowerMax 2000', 'PowerMax 8000', 'Protocol', 'Replication'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Media', 'All-NVMe', 'NVMe + SAS', 'FC / FICON', 'SRDF/Metro'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Capacity', 'Up to 4 PB', 'Up to 4 PB+', 'iSCSI', 'SRDF/Sync'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Directors', '6 directors', '8+ directors', 'NVMe/FC', 'SRDF/Async'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Tier', 'Mid-range', 'Flagship', '—', 'Adaptive Copy'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: PowerMax chassis (2U/4U enclosure); director modules; NVMe/SAS bays; dual power'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  SRP          = Storage Resource Pool; thin provisioning pool aligned to SLO tier'))
+    lines.append(txt_row('  SLO          = Service Level Objective; Diamond/Platinum/Gold/Silver/Bronze/Optimized'))
+    lines.append(txt_row('  SRDF         = Symmetrix Remote Data Facility; block-level array-to-array replication'))
+    lines.append(txt_row('  SRDF/Metro   = Active-active sync replication; both sites serve I/O simultaneously'))
+    lines.append(txt_row('  TimeFinder   = Local copy: /Snap (thin pointer), /Clone (full), /VP Snap (virtual)'))
+    lines.append(txt_row('  FA director  = Front-End Adapter; host-facing FC / iSCSI / NVMe-oF ports'))
+    lines.append(txt_row('  DA director  = Disk Adapter; back-end NVMe / SAS drive connectivity'))
+    lines.append(txt_row('  RDF director = Remote Data Facility; SRDF link ports between partner arrays'))
+    lines.append(txt_row('  DARE         = Data At Rest Encryption; self-encrypting drives managed by key server'))
+    lines.append(txt_row('  Masking view = Host access control: storage group + port group + initiator group'))
+    lines.append(txt_row('  Unisphere    = Web-based management GUI for PowerMax; REST API surface'))
+    lines.append(txt_row('  symcli       = SYMAPI command-line toolkit: syminq, symsg, symdg, symrdf, symsnap'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powermax-arch-design-standards',
+    'docs/storage/dell/powermax/architecture/design-standards/index.md',
+    'Dell PowerMax design standards — SLO selection, SRDF topology, zoning, SRP sizing',
+)
+def dell_powermax_arch_design_standards():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerMax Architecture Design Standards'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Design standards define SLO selection, SRDF topology, FC zoning, and SRP sizing rules')))
+    lines.append(R(bMid(IV_L, IV_R, 'SLO tier matched to workload IOPS profile: Diamond = latency-critical, Bronze = archive')))
+    lines.append(R(bMid(IV_L, IV_R, 'SRDF topology: Metro for zero-RPO HA, Async for DR; Adaptive Copy for data movement')))
+    lines.append(R(bMid(IV_L, IV_R, 'FC zoning: single-initiator / single-target per zone; no zone sprawl across fabrics')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Profile workload → select SLO → size SRP → define masking view → configure SRDF topology'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SLO Standards'), bMid(B2_L, B2_R, 'SRDF Standards'), bMid(B3_L, B3_R, 'Zoning Standards'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Diamond: <1ms DB'), bMid(B2_L, B2_R, 'Metro: zero RPO'), bMid(B3_L, B3_R, 'SI/ST per zone'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Platinum: <2ms'), bMid(B2_L, B2_R, 'Sync: near-zero'), bMid(B3_L, B3_R, '2 fabrics min'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Gold: <5ms mixed'), bMid(B2_L, B2_R, 'Async: RPO mins'), bMid(B3_L, B3_R, 'VSAN tagging'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Silver: <10ms'), bMid(B2_L, B2_R, 'Adaptive: bulk'), bMid(B3_L, B3_R, 'NPIV per host'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Bronze: archive'), bMid(B2_L, B2_R, 'RDF group per SG'), bMid(B3_L, B3_R, 'No zone sprawl'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  SRP sizing → SRDF consistency group → masking view → host-side multipath (PowerPath/MPIO)'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Standard', 'Rule', 'Rationale', 'Anti-pattern', 'Impact'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SLO', 'Match IOPS tier', 'Predictable perf', 'All Diamond', 'Cost overrun'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SRP', 'Per-workload pool', 'Avoid contention', 'One SRP all', 'Noisy neighbor'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SRDF', 'Metro + Async', 'HA + DR layers', 'Sync only', 'No DR fallback'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Zoning', 'SI/ST per zone', 'Fault isolation', 'Multi-init zone', 'Masking gaps'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: dual-fabric SAN; RDF directors on dedicated SRDF links; separate mgmt network'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  SI/ST          = Single-Initiator/Single-Target; one HBA port and one array port per zone'))
+    lines.append(txt_row('  SRDF Metro     = Active-active stretch cluster; both R1 and R2 volumes serve production I/O'))
+    lines.append(txt_row('  SRDF Async     = Asynchronous replication; RPO in seconds to minutes; DR site standby'))
+    lines.append(txt_row('  Adaptive Copy  = Non-disruptive bulk migration or data movement; no consistency guarantee'))
+    lines.append(txt_row('  RDF group      = Logical SRDF pairing; each group maps one set of volumes to a remote array'))
+    lines.append(txt_row('  NPIV           = N-Port ID Virtualization; virtual WWN per VM for per-VM zoning'))
+    lines.append(txt_row('  Consistency grp= SRDF consistency group; ensures write-order fidelity across volumes'))
+    lines.append(txt_row('  PowerPath      = Dell multipath driver; load balancing and failover for PowerMax hosts'))
+    lines.append(txt_row('  MPIO           = Native OS multipath (Windows/Linux) as alternative to PowerPath'))
+    lines.append(txt_row('  Noisy neighbor = SRP contention when unrelated workloads share a pool; mitigated by SLO'))
+    lines.append(txt_row('  VSAN tagging   = Brocade/Cisco zoning attribute to restrict zone scope to a VSAN'))
+    lines.append(txt_row('  Zone sprawl    = Excessive zone membership causing management overhead and masking risk'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powermax-operations',
+    'docs/storage/dell/powermax/operations/index.md',
+    'Dell PowerMax operations — day-2 tasks; SRDF management; TimeFinder; health checks',
+)
+def dell_powermax_operations():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerMax Operations'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Day-2 operations: SRDF state management, TimeFinder copies, SLO rebalancing, capacity')))
+    lines.append(R(bMid(IV_L, IV_R, 'SRDF suspend/resume, failover/failback, and swap-personality for planned maintenance')))
+    lines.append(R(bMid(IV_L, IV_R, 'TimeFinder: create/restore snaps; snap schedules; VP Snap and Clone for test/dev')))
+    lines.append(R(bMid(IV_L, IV_R, 'Health: Unisphere alerts, SYMAPI event logs, CloudIQ analytics, SCG-based reporting')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Monitor alerts → run health checks → execute SRDF or TimeFinder action → verify and close'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SRDF Operations'), bMid(B2_L, B2_R, 'TimeFinder Ops'), bMid(B3_L, B3_R, 'Capacity / Health'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Suspend / Resume'), bMid(B2_L, B2_R, 'Snap establish'), bMid(B3_L, B3_R, 'SRP utilization'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Failover / Failbk'), bMid(B2_L, B2_R, 'Snap restore'), bMid(B3_L, B3_R, 'CloudIQ health'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Swap personality'), bMid(B2_L, B2_R, 'Clone split'), bMid(B3_L, B3_R, 'Unisphere alerts'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Group consistency'), bMid(B2_L, B2_R, 'VP Snap mount'), bMid(B3_L, B3_R, 'FE port stats'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'RDF link monitor'), bMid(B2_L, B2_R, 'Snap schedule'), bMid(B3_L, B3_R, 'Capacity trends'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  SRDF state check → TimeFinder snap/clone → SRP capacity review → alert remediation loop'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Task', 'Tool', 'CLI command', 'Frequency', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SRDF check', 'symrdf', 'symrdf -g query', 'Daily', 'Check link state'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Snap create', 'symsnap', 'symsnap -sg est', 'Per schedule', 'Verify gen count'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SRP usage', 'Unisphere', 'symcfg list -srp', 'Weekly', 'Alert >80%'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Health alerts', 'CloudIQ', 'REST API poll', 'Continuous', 'SCG required'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: Unisphere on embedded mgmt network; SCG phone-home for CloudIQ telemetry relay'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  symrdf         = SYMAPI CLI tool for SRDF state management (query, suspend, failover, swap)'))
+    lines.append(txt_row('  symsnap        = SYMAPI CLI tool for TimeFinder/Snap operations (establish, restore, term)'))
+    lines.append(txt_row('  symdg          = SYMAPI device group tool; groups volumes for consistent SRDF/snap ops'))
+    lines.append(txt_row('  symsg          = SYMAPI storage group tool; list, modify, and provision storage groups'))
+    lines.append(txt_row('  Swap personality = SRDF planned failover; R1 becomes R2 and vice versa at recovery site'))
+    lines.append(txt_row('  VP Snap        = Virtual Provisioning Snap; pointer-based thin snap mounted on a host'))
+    lines.append(txt_row('  RDF link       = Physical or virtual ISL between PowerMax arrays for SRDF traffic'))
+    lines.append(txt_row('  SCG            = Secure Connect Gateway; phone-home proxy for CloudIQ telemetry'))
+    lines.append(txt_row('  SRP utilization= Percentage of thin pool capacity consumed; alert threshold typically 80%'))
+    lines.append(txt_row('  FE port stats  = Front-End director port I/O stats; check for hotspot or imbalance'))
+    lines.append(txt_row('  Snap schedule  = Automated TimeFinder snap generation policy (hourly/daily/weekly)'))
+    lines.append(txt_row('  Clone split    = Full physical copy created from Clone; independent of source after split'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powermax-security',
+    'docs/storage/dell/powermax/security/index.md',
+    'Dell PowerMax security — DARE encryption, LDAP auth, masking views, audit logging',
+)
+def dell_powermax_security():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerMax Security'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'PowerMax security: DARE (drive-level encryption), masking views, LDAP/AD, audit log')))
+    lines.append(R(bMid(IV_L, IV_R, 'DARE: self-encrypting drives; keys managed by external KMIP server or local vault')))
+    lines.append(R(bMid(IV_L, IV_R, 'Host access: masking views (storage group + port group + initiator group) — no masking view')))
+    lines.append(R(bMid(IV_L, IV_R, 'LDAP/AD integration for Unisphere GUI roles; local accounts for emergency break-glass')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  DARE encrypts drives at rest → masking view controls host access → LDAP controls admin auth'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Encryption'), bMid(B2_L, B2_R, 'Access Control'), bMid(B3_L, B3_R, 'Auth / Audit'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'DARE (SED drives)'), bMid(B2_L, B2_R, 'Storage group'), bMid(B3_L, B3_R, 'LDAP / AD roles'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'KMIP key server'), bMid(B2_L, B2_R, 'Port group'), bMid(B3_L, B3_R, 'Local break-glass'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key rotation'), bMid(B2_L, B2_R, 'Initiator group'), bMid(B3_L, B3_R, 'Audit log export'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Crypto erase'), bMid(B2_L, B2_R, 'Masking view'), bMid(B3_L, B3_R, 'SYSLOG forward'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'TLS mgmt plane'), bMid(B2_L, B2_R, 'No access = deny'), bMid(B3_L, B3_R, 'SNMP v3'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  SED key rotation → masking view review → LDAP role audit → syslog review cycle'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Control', 'Mechanism', 'Standard', 'Exception', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Encryption', 'DARE + KMIP', 'All volumes', 'Key server down', 'Key audit log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Host access', 'Masking view', 'Deny by default', 'None allowed', 'Masking report'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Admin auth', 'LDAP / AD', 'Role-based', 'Local only', 'Login events'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Logging', 'Syslog/SNMP', 'Offsite SIEM', '—', 'All changes'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: SEDs in drive bays; KMIP server on isolated security VLAN; mgmt on OOB network'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  DARE           = Data At Rest Encryption; drive-level encryption using self-encrypting drives'))
+    lines.append(txt_row('  SED            = Self-Encrypting Drive; encryption/decryption in drive controller hardware'))
+    lines.append(txt_row('  KMIP           = Key Management Interoperability Protocol; standard for external key servers'))
+    lines.append(txt_row('  Crypto erase   = Destroy SED encryption key making all data unrecoverable; used for decommission'))
+    lines.append(txt_row('  Masking view   = Binding of storage group + port group + initiator group; controls host access'))
+    lines.append(txt_row('  Storage group  = Logical collection of volumes presented to a host via masking view'))
+    lines.append(txt_row('  Port group     = Collection of array FA director ports included in a masking view'))
+    lines.append(txt_row('  Initiator group= Collection of host HBA WWNs or iSCSI IQNs mapped in masking view'))
+    lines.append(txt_row('  Break-glass    = Local admin account for emergency access when LDAP is unavailable'))
+    lines.append(txt_row('  SIEM           = Security Information and Event Management; receives syslog from PowerMax'))
+    lines.append(txt_row('  TLS mgmt plane = Unisphere REST API and GUI encrypted with TLS 1.2+ on management NIC'))
+    lines.append(txt_row('  SNMP v3        = Encrypted/authenticated SNMP for monitoring integration'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powermax-troubleshooting',
+    'docs/storage/dell/powermax/troubleshooting/index.md',
+    'Dell PowerMax troubleshooting — SRDF link issues, masking errors, perf, DARE key faults',
+)
+def dell_powermax_troubleshooting():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerMax Troubleshooting'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Common faults: SRDF link degraded, masking view missing, SRP near-full, DARE key unreachable')))
+    lines.append(R(bMid(IV_L, IV_R, 'SRDF: check RDF link state, RDF group consistency, and ISL utilization on fabric')))
+    lines.append(R(bMid(IV_L, IV_R, 'Masking: verify initiator group WWN, port group FA ports, and storage group membership')))
+    lines.append(R(bMid(IV_L, IV_R, 'Performance: identify hot SLO tier, FA port saturation, or SRP over-commitment')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Alert fires → check Unisphere event log → run symrdf/symcfg → isolate layer → remediate'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SRDF Issues'), bMid(B2_L, B2_R, 'Host / Masking'), bMid(B3_L, B3_R, 'Perf / Capacity'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Link degraded'), bMid(B2_L, B2_R, 'Host sees no LUN'), bMid(B3_L, B3_R, 'SRP >80% full'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Out of sync'), bMid(B2_L, B2_R, 'Wrong initiator'), bMid(B3_L, B3_R, 'FA port saturated'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Suspended state'), bMid(B2_L, B2_R, 'No port group'), bMid(B3_L, B3_R, 'SLO not met'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Group split'), bMid(B2_L, B2_R, 'Masking missing'), bMid(B3_L, B3_R, 'DARE key timeout'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'ISL congestion'), bMid(B2_L, B2_R, 'HBA offline'), bMid(B3_L, B3_R, 'Snap gen full'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Isolate layer (fabric / array / host) → confirm with symrdf -g query or symcfg list'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Symptom', 'First check', 'Tool', 'Fix', 'Escalate if'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SRDF link down', 'RDF link state', 'symrdf -g query', 'Resume link', 'Link stays down'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['No LUN visible', 'Masking view', 'symmask list', 'Fix masking', 'Zoning correct'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Perf degraded', 'SLO compliance', 'Unisphere perf', 'Rebalance SRP', 'SLO breach cont.'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['DARE key error', 'KMIP reachable', 'Unisphere alert', 'Fix KMIP reach', 'Array locked out'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: check RDF director LEDs; FA port LEDs; ISL port counters on SAN switch'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  RDF link state = SRDF link health: In Sync / Suspended / Failed / Consistent states'))
+    lines.append(txt_row('  Snap gen full  = TimeFinder/Snap generation limit reached; oldest snap must be terminated'))
+    lines.append(txt_row('  SLO compliance = Percentage of volumes meeting their Service Level Objective latency target'))
+    lines.append(txt_row('  symmask        = SYMAPI masking tool; list and audit masking views, initiator and port groups'))
+    lines.append(txt_row('  ISL congestion = Inter-Switch Link saturation between fabric switches; affects SRDF bandwidth'))
+    lines.append(txt_row('  DARE key timeout= KMIP server unreachable; array may lock encrypted volumes after threshold'))
+    lines.append(txt_row('  SRP over-commit = Thin pool subscribed beyond physical capacity; data at risk if all written'))
+    lines.append(txt_row('  FA port saturated= Front-End director port at bandwidth limit; redistribute hosts to other ports'))
+    lines.append(txt_row('  Group split    = SRDF consistency group members diverged; requires re-establish from R1'))
+    lines.append(txt_row('  symmaskdb      = SYMAPI database for masking configuration; exportable for audit'))
+    lines.append(txt_row('  RDF director LED= Physical indicator on director blade; amber = degraded, red = failed'))
+    lines.append(txt_row('  symcfg list    = SYMAPI command to list array config: SRP, director, port, volume info'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerpath',
+    'docs/storage/dell/powerpath/index.md',
+    'Dell PowerPath — multipath I/O driver; load balancing; failover; path policy management',
+)
+def dell_powerpath():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerPath Multipath I/O'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'PowerPath: Dell host-side multipath driver; load balancing and automatic failover')))
+    lines.append(R(bMid(IV_L, IV_R, 'Policies: CLAROpt (adaptive LB), Adaptive (round-robin), Basic (failover-only)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Supports: PowerMax, Unity, VNX, XtremIO, ECS; FC, iSCSI, FCoE transports')))
+    lines.append(R(bMid(IV_L, IV_R, 'Managed via powermt CLI; PowerPath/VE edition for VMware ESXi hosts')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Host HBAs → multiple FC/iSCSI paths → PowerPath load-balances I/O → array FA ports'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Path Policies'), bMid(B2_L, B2_R, 'Operations'), bMid(B3_L, B3_R, 'Platform Support'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'CLAROpt (default)'), bMid(B2_L, B2_R, 'powermt display'), bMid(B3_L, B3_R, 'RHEL / SLES'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Adaptive LB'), bMid(B2_L, B2_R, 'powermt restore'), bMid(B3_L, B3_R, 'Windows Server'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Basic failover'), bMid(B2_L, B2_R, 'powermt save'), bMid(B3_L, B3_R, 'VMware ESXi /VE'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Optimized'), bMid(B2_L, B2_R, 'powermt set'), bMid(B3_L, B3_R, 'AIX / Solaris'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Per-LUN policy'), bMid(B2_L, B2_R, 'powermt check'), bMid(B3_L, B3_R, 'Ubuntu LTS'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Path failure detected → I/O rerouted to live paths → dead path polled → re-enabled on recovery'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Policy', 'Description', 'Best for', 'Array type', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['CLAROpt', 'Array-aware LB', 'Unity / VNX', 'CLARiiON-class', 'Default policy'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Adaptive', 'Round-robin LB', 'Mixed workload', 'All arrays', 'Per-I/O balance'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Basic', 'Failover only', 'Low I/O apps', 'All arrays', 'One active path'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Optimized', 'Perf-aware LB', 'PowerMax', 'Symmetrix-class', 'Preferred paths'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: HBA ports in host → FC fabric or iSCSI network → array FA director ports'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  CLAROpt        = CLARiiON Optimized; array-aware load balancing for Unity/VNX arrays'))
+    lines.append(txt_row('  powermt        = PowerPath management CLI; primary tool for all path and policy operations'))
+    lines.append(txt_row('  powermt display= Show all multipath devices, paths, and states on the host'))
+    lines.append(txt_row('  powermt restore= Re-apply saved PowerPath configuration after host reboot'))
+    lines.append(txt_row('  powermt save   = Persist current path policy and config to disk for restore after reboot'))
+    lines.append(txt_row('  powermt set    = Set path policy or other parameter: powermt set policy=adaptive dev=all'))
+    lines.append(txt_row('  Dead path      = Path that failed I/O; PowerPath polls it for recovery every few seconds'))
+    lines.append(txt_row('  Emulation      = Array class identifier in PowerPath config (emc_symm, emc_clariion, etc.)'))
+    lines.append(txt_row('  PowerPath/VE   = PowerPath Virtual Edition for VMware ESXi; replaces native NMP PSP'))
+    lines.append(txt_row('  Registration   = License key bound to host system; verified via powermt check_registration'))
+    lines.append(txt_row('  Trespass       = Ownership transfer of LUN between array SPs in active/passive arrays'))
+    lines.append(txt_row('  ALUA           = Asymmetric Logical Unit Access; standard for preferred/non-preferred paths'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerpath-arch-design-standards',
+    'docs/storage/dell/powerpath/architecture/design-standards/index.md',
+    'Dell PowerPath design standards — HBA count, path count, policy selection, failover testing',
+)
+def dell_powerpath_arch_design_standards():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerPath Architecture Design Standards'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Design standards: minimum 2 HBAs per host on separate fabrics; 4+ paths per LUN for HA')))
+    lines.append(R(bMid(IV_L, IV_R, 'Policy: CLAROpt for Unity/VNX; Optimized for PowerMax; Adaptive for mixed environments')))
+    lines.append(R(bMid(IV_L, IV_R, 'Path count rule: 4 paths minimum (2 per fabric); 8 paths for business-critical workloads')))
+    lines.append(R(bMid(IV_L, IV_R, 'Mandatory: powermt save after config; failover test per LUN after deployment')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  HBA sizing → SAN zoning → PowerPath install → policy set → save config → failover test'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Path Standards'), bMid(B2_L, B2_R, 'Policy Standards'), bMid(B3_L, B3_R, 'Testing Standards'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '2+ HBAs per host'), bMid(B2_L, B2_R, 'Match array class'), bMid(B3_L, B3_R, 'Fail each path'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Separate fabrics'), bMid(B2_L, B2_R, 'CLAROpt → Unity'), bMid(B3_L, B3_R, 'Verify I/O cont.'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '4 paths minimum'), bMid(B2_L, B2_R, 'Optimized → PMAX'), bMid(B3_L, B3_R, 'Confirm recovery'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '8 paths for crit.'), bMid(B2_L, B2_R, 'Adaptive → mixed'), bMid(B3_L, B3_R, 'powermt save req'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No single fabric'), bMid(B2_L, B2_R, 'Per-LUN override'), bMid(B3_L, B3_R, 'Annual retest'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Design verified → failover test every path → powermt save → document path topology'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Standard', 'Minimum', 'Recommended', 'Anti-pattern', 'Risk'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['HBAs', '2 per host', '4 per host', '1 HBA only', 'Single point fail'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Paths', '4 per LUN', '8 per LUN', '2 same fabric', 'Fabric SPOF'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Policy', 'Array-matched', 'Per workload', 'Basic all', 'No LB benefit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Failover', 'Test all paths', 'Quarterly test', 'No test done', 'Untested failover'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: dual-fabric SAN (A+B fabric); HBA 0 → Fabric A; HBA 1 → Fabric B per host'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  SPOF           = Single Point of Failure; eliminated by dual HBA / dual fabric design'))
+    lines.append(txt_row('  CLAROpt policy = Optimal for CLARiiON-class arrays (Unity, VNX); array-aware balancing'))
+    lines.append(txt_row('  Optimized policy= Best for PowerMax; uses array preferred path information for I/O routing'))
+    lines.append(txt_row('  Adaptive policy = Generic round-robin; suitable when array class is mixed or unknown'))
+    lines.append(txt_row('  Per-LUN override= Set different policy on a specific device: powermt set policy=X dev=hdisk2'))
+    lines.append(txt_row('  Fabric A/B     = Two independent FC fabrics; host HBAs split across both for redundancy'))
+    lines.append(txt_row('  Path failover  = Automatic reroute of I/O when path goes down; no manual intervention needed'))
+    lines.append(txt_row('  powermt save   = Writes current config to /etc/powermt.custom; survives reboot if used'))
+    lines.append(txt_row('  Dead path poll = PowerPath probes dead paths at configurable interval to detect recovery'))
+    lines.append(txt_row('  4-path rule    = Ensures one path loss from each fabric still leaves 2 active paths per LUN'))
+    lines.append(txt_row('  Annual retest  = Periodic failover test to confirm path recovery still works in production'))
+    lines.append(txt_row('  No single fabric= Both fabrics must carry paths; single-fabric design fails on ISL outage'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerpath-operations',
+    'docs/storage/dell/powerpath/operations/index.md',
+    'Dell PowerPath operations — path monitoring, policy changes, registration, save/restore',
+)
+def dell_powerpath_operations():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerPath Operations'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Day-2 operations: path monitoring, dead path investigation, policy tuning, registration')))
+    lines.append(R(bMid(IV_L, IV_R, 'powermt display: shows all multipath devices, path states, active I/O distribution')))
+    lines.append(R(bMid(IV_L, IV_R, 'Policy changes: powermt set policy=X dev=all; save immediately after with powermt save')))
+    lines.append(R(bMid(IV_L, IV_R, 'Registration: powermt check_registration; license tied to host; re-register on rebuild')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Check path state → investigate dead paths → adjust policy → save config → verify distribution'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Path Monitoring'), bMid(B2_L, B2_R, 'Policy Management'), bMid(B3_L, B3_R, 'License / Config'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'powermt display'), bMid(B2_L, B2_R, 'powermt set'), bMid(B3_L, B3_R, 'check_registration'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Dead path check'), bMid(B2_L, B2_R, 'Per-device policy'), bMid(B3_L, B3_R, 'powermt save'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Path count verify'), bMid(B2_L, B2_R, 'powermt restore'), bMid(B3_L, B3_R, 'powermt restore'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'I/O distribution'), bMid(B2_L, B2_R, 'Policy verify'), bMid(B3_L, B3_R, 'License renew'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'powermt check'), bMid(B2_L, B2_R, 'Reset to default'), bMid(B3_L, B3_R, 'Emulation audit'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  powermt display → identify dead paths → resolve root cause → verify path recovery'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Task', 'Command', 'Output / Action', 'Frequency', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Path check', 'powermt display', 'Path state list', 'Daily', 'Check dead paths'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Policy set', 'powermt set', 'Policy applied', 'On change', 'Save after set'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Registration', 'check_registr.', 'License valid', 'On install', 'Bound to host'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Config save', 'powermt save', 'Persists config', 'After any change', 'Survives reboot'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: paths shown as hdiskX (AIX), sdX (Linux), or disk# (Windows) in powermt output'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  powermt display= List all PowerPath devices with path health and I/O distribution per path'))
+    lines.append(txt_row('  Dead path      = Path that failed I/O; shown as Dead in powermt output; polled for recovery'))
+    lines.append(txt_row('  powermt set    = Change path policy: powermt set policy=adaptive dev=all class=emc_symm'))
+    lines.append(txt_row('  powermt save   = Write config to /etc/powermt.custom; must run after every policy change'))
+    lines.append(txt_row('  powermt restore= Apply config from /etc/powermt.custom; run manually or at boot via init'))
+    lines.append(txt_row('  powermt check  = Verify PowerPath sees all expected paths; report any discrepancies'))
+    lines.append(txt_row('  check_registration= Validate license key registration on the host (powermt check_registration)'))
+    lines.append(txt_row('  Emulation      = Array class (emc_symm, emc_clariion, etc.) assigned to each device'))
+    lines.append(txt_row('  I/O distribution= Per-path I/O count shown by powermt; should be roughly balanced for LB'))
+    lines.append(txt_row('  Path recovery  = PowerPath re-enables dead path after successful I/O probe to the array port'))
+    lines.append(txt_row('  powermt.custom = Config file persisted by powermt save; read at boot by powermt restore'))
+    lines.append(txt_row('  License renew  = Obtain new key from Dell licensing portal; powermt remove + re-register'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerpath-ops-procedures',
+    'docs/storage/dell/powerpath/operations/procedures/index.md',
+    'Dell PowerPath operational procedures — install, upgrade, decommission, policy change steps',
+)
+def dell_powerpath_ops_procedures():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerPath Operational Procedures'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Standard procedures: install, upgrade, policy change, decommission, path failover test')))
+    lines.append(R(bMid(IV_L, IV_R, 'Install: kernel driver + powermt registration key; reboot required on Linux/Windows')))
+    lines.append(R(bMid(IV_L, IV_R, 'Upgrade: uninstall old version → install new → re-register → powermt restore → verify')))
+    lines.append(R(bMid(IV_L, IV_R, 'Decommission: powermt remove dev=X → unmap LUN from array → verify no ghost paths')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Pre-check path count → execute procedure → powermt display → powermt save → sign-off'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Install Steps'), bMid(B2_L, B2_R, 'Policy Change'), bMid(B3_L, B3_R, 'Decommission'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Install package'), bMid(B2_L, B2_R, 'Check current'), bMid(B3_L, B3_R, 'Drain I/O'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Register license'), bMid(B2_L, B2_R, 'Set new policy'), bMid(B3_L, B3_R, 'powermt remove'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Reboot host'), bMid(B2_L, B2_R, 'powermt save'), bMid(B3_L, B3_R, 'Unmap at array'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'powermt restore'), bMid(B2_L, B2_R, 'Verify balance'), bMid(B3_L, B3_R, 'Verify ghost=0'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Verify path count'), bMid(B2_L, B2_R, 'Failover test'), bMid(B3_L, B3_R, 'Update CMDB'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Procedure complete → powermt display dev=all → confirm all paths alive → save and document'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Procedure', 'Duration', 'Reboot needed', 'Rollback', 'Risk'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Install', '30 min', 'Yes (Linux/Win)', 'Uninstall pkg', 'I/O pause'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Upgrade', '45 min', 'Yes', 'Re-install old', 'I/O disruption'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Policy change', '5 min', 'No', 'powermt set old', 'Rebalance lag'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Decommission', '15 min', 'No', 'Re-map LUN', 'Ghost paths'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: package installed on host OS; kernel module loaded; no network required for config'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  powermt remove = Remove a device from PowerPath management; stops multipath tracking for LUN'))
+    lines.append(txt_row('  Ghost path     = Stale path entry after LUN unmapped; appears as Dead in powermt output'))
+    lines.append(txt_row('  powermt restore= Re-apply /etc/powermt.custom after reboot; part of standard boot sequence'))
+    lines.append(txt_row('  Drain I/O      = Gracefully stop application I/O before decommissioning a path or LUN'))
+    lines.append(txt_row('  CMDB           = Configuration Management Database; record device removal for asset tracking'))
+    lines.append(txt_row('  Kernel module  = PowerPath loads as a kernel driver; requires compatible kernel version'))
+    lines.append(txt_row('  Rebalance lag  = Brief period after policy change while I/O re-distributes to new path order'))
+    lines.append(txt_row('  Failover test  = Manually disable a path and verify I/O continues on remaining paths'))
+    lines.append(txt_row('  Sign-off       = Post-procedure verification step; document path count and policy in record'))
+    lines.append(txt_row('  Uninstall pkg  = Remove PowerPath package (rpm -e / dpkg -r / msiexec /x) then reinstall old'))
+    lines.append(txt_row('  Re-register    = After upgrade, re-run powermt check_registration with existing license key'))
+    lines.append(txt_row('  Ghost=0        = Confirmation that no stale path entries remain after LUN decommission'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerpath-security',
+    'docs/storage/dell/powerpath/security/index.md',
+    'Dell PowerPath security — access control, license protection, audit, path integrity',
+)
+def dell_powerpath_security():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerPath Security'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'PowerPath security: access control for powermt CLI, license key protection, path audit')))
+    lines.append(R(bMid(IV_L, IV_R, 'powermt requires root (Linux) or Administrator (Windows); no non-privileged access')))
+    lines.append(R(bMid(IV_L, IV_R, 'License keys are host-bound; protect key file; track via Dell support portal')))
+    lines.append(R(bMid(IV_L, IV_R, 'Audit: log powermt commands via OS auditing (auditd/Windows Event Log); alert on changes')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Restrict CLI access → protect license file → enable OS audit logging → review path changes'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Access Control'), bMid(B2_L, B2_R, 'License Security'), bMid(B3_L, B3_R, 'Audit / Logging'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Root-only powermt'), bMid(B2_L, B2_R, 'Host-bound key'), bMid(B3_L, B3_R, 'auditd rules'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Sudo policy'), bMid(B2_L, B2_R, 'Portal tracking'), bMid(B3_L, B3_R, 'Event log'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No non-priv exec'), bMid(B2_L, B2_R, 'Key file perms'), bMid(B3_L, B3_R, 'SIEM forward'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'PAM integration'), bMid(B2_L, B2_R, 'License expiry'), bMid(B3_L, B3_R, 'Policy changes'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'MFA for admin'), bMid(B2_L, B2_R, 'Renewal alerts'), bMid(B3_L, B3_R, 'Path add/remove'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Privilege control → audit logging → license monitoring → periodic path count reconciliation'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Control', 'Implementation', 'Standard', 'Exception', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['CLI access', 'Root / sudo', 'Named accounts', 'No shared root', 'Sudo log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['License', 'Host-bound key', 'Stored securely', 'No sharing', 'Portal audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Path audit', 'OS audit log', 'SIEM ingest', '—', 'Weekly review'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Policy change', 'Change control', 'CR required', 'Emergency proc', 'Post-change log'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: powermt binary at /sbin (Linux); license file at /etc; restrict file permissions'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Host-bound key = PowerPath license cryptographically tied to host system ID; not transferable'))
+    lines.append(txt_row('  auditd         = Linux kernel auditing daemon; log all execve calls matching powermt binary'))
+    lines.append(txt_row('  Sudo policy    = /etc/sudoers rule granting named storage admin powermt exec without full root'))
+    lines.append(txt_row('  Key file perms = /etc/powermt.custom should be root:root 600; world-readable is a risk'))
+    lines.append(txt_row('  PAM integration= Pluggable Authentication Module; enforce MFA for storage admin login'))
+    lines.append(txt_row('  SIEM           = Security Information and Event Management; receives powermt audit events'))
+    lines.append(txt_row('  License expiry = PowerPath subscription license; expired license disables new registrations'))
+    lines.append(txt_row('  Named accounts = No shared root; each admin has own account with sudo to powermt'))
+    lines.append(txt_row('  CR required    = Change Request; formal change control approval before policy modification'))
+    lines.append(txt_row('  Portal audit   = Dell support portal shows all registered hosts and license key assignments'))
+    lines.append(txt_row('  Path count recn= Periodic reconcile of expected vs. actual paths per host to detect removals'))
+    lines.append(txt_row('  Emergency proc = Out-of-band change process for production incidents; still post-log required'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerpath-security-encryption',
+    'docs/storage/dell/powerpath/security/encryption/index.md',
+    'Dell PowerPath security encryption — transport security, DARE passthrough, iSCSI CHAP',
+)
+def dell_powerpath_security_encryption():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerPath Security — Encryption'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'PowerPath is transparent to data encryption; DARE operates at array drive layer below it')))
+    lines.append(R(bMid(IV_L, IV_R, 'FC transport: no native data encryption; rely on FC-SP or fabric-level encryption SAN ISL')))
+    lines.append(R(bMid(IV_L, IV_R, 'iSCSI transport: CHAP for authentication; IPSec for data-in-flight encryption per hop')))
+    lines.append(R(bMid(IV_L, IV_R, 'PowerPath does not inspect or modify data; encryption/decryption at host HBA or array')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Host I/O → PowerPath load-balances path → FC/iSCSI transport → array decrypts at DARE layer'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'FC Transport'), bMid(B2_L, B2_R, 'iSCSI Transport'), bMid(B3_L, B3_R, 'Array Encryption'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'FC-SP (optional)'), bMid(B2_L, B2_R, 'CHAP auth'), bMid(B3_L, B3_R, 'DARE at drives'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'ISL encryption'), bMid(B2_L, B2_R, 'IPSec tunnel'), bMid(B3_L, B3_R, 'KMIP key server'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'VSAN isolation'), bMid(B2_L, B2_R, 'TLS iSNS'), bMid(B3_L, B3_R, 'Transparent pass'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Zoning boundary'), bMid(B2_L, B2_R, 'Mutual CHAP'), bMid(B3_L, B3_R, 'Key rotation'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No PP inspect'), bMid(B2_L, B2_R, 'No PP inspect'), bMid(B3_L, B3_R, 'Crypto erase'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Enable iSCSI CHAP or IPSec at transport layer; DARE configured at array; PowerPath unaffected'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Layer', 'Transport', 'Mechanism', 'Config location', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Data at rest', 'FC / iSCSI', 'DARE (array)', 'Array GUI', 'Below PowerPath'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Auth', 'iSCSI', 'CHAP secret', 'iSCSI initiator', 'Mutual CHAP'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['In-flight', 'iSCSI', 'IPSec ESP', 'OS / network', 'Per-hop config'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['FC link', 'FC', 'FC-SP / ISL enc', 'SAN switch', 'Optional'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: FC-SP on HBA and switch; IPSec on iSCSI NIC/NIC driver; DARE on array drive bays'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  DARE           = Data At Rest Encryption; array-side SED encryption; transparent to PowerPath'))
+    lines.append(txt_row('  FC-SP          = Fibre Channel Security Protocol; DH-CHAP authentication on FC links'))
+    lines.append(txt_row('  ISL encryption = In-flight encryption between fabric switches; configured at SAN switch level'))
+    lines.append(txt_row('  CHAP           = Challenge Handshake Authentication Protocol; iSCSI initiator/target auth'))
+    lines.append(txt_row('  Mutual CHAP    = Both initiator and target authenticate each other; stronger than one-way'))
+    lines.append(txt_row('  IPSec ESP      = Encapsulating Security Payload; encrypts iSCSI packets in-flight'))
+    lines.append(txt_row('  iSNS TLS       = iSCSI Name Service secured with TLS; optional discovery plane protection'))
+    lines.append(txt_row('  Transparent pass= PowerPath passes I/O bytes unchanged; does not encrypt or decrypt data'))
+    lines.append(txt_row('  KMIP key server= External key manager for DARE; unreachable KMIP can lock array volumes'))
+    lines.append(txt_row('  Crypto erase   = Destroy DARE encryption key on decommission; all data permanently unreadable'))
+    lines.append(txt_row('  VSAN isolation = FC VSAN separates storage traffic; limits blast radius of any breach'))
+    lines.append(txt_row('  Zoning boundary= FC zone restricts which HWWNs can communicate; primary FC security control'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerpath-security-hardening',
+    'docs/storage/dell/powerpath/security/hardening/index.md',
+    'Dell PowerPath security hardening — privilege restriction, binary integrity, config protection',
+)
+def dell_powerpath_security_hardening():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerPath Security Hardening'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Hardening: restrict powermt to named accounts via sudo; protect config and license files')))
+    lines.append(R(bMid(IV_L, IV_R, 'Binary integrity: verify PowerPath RPM/DEB signature before install; use Dell repo GPG key')))
+    lines.append(R(bMid(IV_L, IV_R, 'Config file /etc/powermt.custom: perms root:root 600; no group or world read')))
+    lines.append(R(bMid(IV_L, IV_R, 'Disable unused features: unused emulations should be removed from powermt config')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Verify package signature → restrict CLI → protect config file → enable audit → review monthly'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'OS Hardening'), bMid(B2_L, B2_R, 'Config Hardening'), bMid(B3_L, B3_R, 'Audit Hardening'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Named sudo only'), bMid(B2_L, B2_R, 'powermt.custom'), bMid(B3_L, B3_R, 'auditd rule'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No shared root'), bMid(B2_L, B2_R, 'Perms 600'), bMid(B3_L, B3_R, 'SIEM forward'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Package GPG sig'), bMid(B2_L, B2_R, 'Remove unused'), bMid(B3_L, B3_R, 'Monthly review'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'MFA for storage'), bMid(B2_L, B2_R, 'License protect'), bMid(B3_L, B3_R, 'Change log'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SELinux context'), bMid(B2_L, B2_R, 'Minimal emul.'), bMid(B3_L, B3_R, 'Integrity check'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Harden OS → restrict config file perms → audit all powermt commands → alert on anomaly'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Hardening', 'Action', 'Standard', 'Verify with', 'Risk if skipped'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['CLI access', 'Named sudo', 'No shared root', 'sudo -l output', 'Uncontrolled'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Config file', 'chmod 600', 'root:root only', 'ls -la /etc', 'Config leak'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Package', 'GPG verify', 'Dell signed RPM', 'rpm --verify', 'Tampered binary'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Audit', 'auditd rule', 'All execve', 'ausearch', 'No trail'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: /sbin/powermt binary root-owned; /etc/powermt.custom 600; auditd rule on /sbin'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  GPG signature  = Dell signs PowerPath packages; verify with rpm --checksig or dpkg verify'))
+    lines.append(txt_row('  powermt.custom = Persisted config file; world-readable allows path policy enumeration'))
+    lines.append(txt_row('  Named sudo     = Individual storage admin accounts with specific sudo rule for powermt only'))
+    lines.append(txt_row('  SELinux context= AppArmor/SELinux policy for PowerPath binary and config file access'))
+    lines.append(txt_row('  Minimal emul.  = Remove unused array emulations from powermt config to reduce attack surface'))
+    lines.append(txt_row('  auditd rule    = /etc/audit/rules.d entry: -w /sbin/powermt -p x -k powerpath_exec'))
+    lines.append(txt_row('  ausearch       = auditd log query tool: ausearch -k powerpath_exec to review executions'))
+    lines.append(txt_row('  Integrity check= Periodic rpm --verify on PowerPath package to detect binary modification'))
+    lines.append(txt_row('  SIEM           = Security Information and Event Management; ingest auditd events for alerting'))
+    lines.append(txt_row('  License protect= Store registration key file with 600 perms; do not commit to version control'))
+    lines.append(txt_row('  Uncontrolled   = Risk when shared root used; any user with root can modify path policy silently'))
+    lines.append(txt_row('  Change log     = Record of every powermt policy or config change; tied to CR number'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerpath-troubleshooting',
+    'docs/storage/dell/powerpath/troubleshooting/index.md',
+    'Dell PowerPath troubleshooting — dead paths, no LUN, registration failure, path imbalance',
+)
+def dell_powerpath_troubleshooting():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerPath Troubleshooting'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Common issues: dead paths, LUN not visible, registration failure, I/O imbalance')))
+    lines.append(R(bMid(IV_L, IV_R, 'Dead path: check HBA port state, SAN zone, and array FA port; remove then rescan')))
+    lines.append(R(bMid(IV_L, IV_R, 'LUN missing: verify masking view at array; rescan after masking; powermt check')))
+    lines.append(R(bMid(IV_L, IV_R, 'Registration: expired or wrong host ID; re-register with valid key from Dell portal')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Symptom reported → powermt display → identify affected path/device → trace to root cause'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Path Issues'), bMid(B2_L, B2_R, 'LUN / Device'), bMid(B3_L, B3_R, 'Registration'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'All paths dead'), bMid(B2_L, B2_R, 'LUN not visible'), bMid(B3_L, B3_R, 'License expired'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Single path dead'), bMid(B2_L, B2_R, 'Ghost path'), bMid(B3_L, B3_R, 'Wrong host ID'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Path imbalance'), bMid(B2_L, B2_R, 'Masking missing'), bMid(B3_L, B3_R, 'Key file missing'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Slow I/O'), bMid(B2_L, B2_R, 'Wrong emulation'), bMid(B3_L, B3_R, 'Portal mismatch'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Trespass loop'), bMid(B2_L, B2_R, 'Rescan needed'), bMid(B3_L, B3_R, 'Re-register'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  powermt display → check dead path layer (HBA / fabric / array) → fix at source → verify'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Symptom', 'First check', 'Command', 'Fix', 'Escalate if'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['All paths dead', 'HBA port state', 'powermt display', 'Fix HBA/zone', 'Array port down'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['LUN missing', 'Array masking', 'powermt check', 'Fix masking', 'Rescan no result'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['I/O imbalance', 'Policy check', 'powermt display', 'Set policy', 'Persists after'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Reg. failure', 'Key validity', 'check_registr.', 'Re-register', 'Key rejected'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: check HBA port LED, SAN switch port counters, array FA port LEDs for dead path'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  All paths dead = No active path to device; I/O queued or returned error to host OS'))
+    lines.append(txt_row('  Trespass loop  = Active/passive array SP ownership conflict; path oscillates between SPs'))
+    lines.append(txt_row('  Ghost path     = Dead path entry for LUN that was unmapped; powermt remove to clean up'))
+    lines.append(txt_row('  Wrong emulation= Device assigned wrong array class; set correct emulation with powermt config'))
+    lines.append(txt_row('  I/O imbalance  = Most I/O on one path; caused by Basic policy or sticky preferred path'))
+    lines.append(txt_row('  check_registr. = powermt check_registration; validates license key is active on this host'))
+    lines.append(txt_row('  Re-register    = powermt remove license + powermt check_registration with new key'))
+    lines.append(txt_row('  Rescan         = Host OS HBA rescan after masking change; picks up new or removed LUNs'))
+    lines.append(txt_row('  Portal mismatch= Dell portal shows key assigned to different host ID; contact Dell licensing'))
+    lines.append(txt_row('  Path imbalance = powermt set policy=adaptive dev=all to re-enable load balancing'))
+    lines.append(txt_row('  FA port LED    = Array Front-End director port indicator; dark/amber = fault in path'))
+    lines.append(txt_row('  HBA port state = fcinfo hba-port (Solaris), systool (Linux), Get-InitiatorPort (Windows)'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerscale',
+    'docs/storage/dell/powerscale/index.md',
+    'Dell PowerScale (Isilon) — scale-out NAS; OneFS; NFS/SMB/S3; SmartPools; SyncIQ',
+)
+def dell_powerscale():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerScale (Isilon) Scale-Out NAS'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'PowerScale: Dell scale-out NAS cluster; OneFS distributed OS across 3–252 nodes')))
+    lines.append(R(bMid(IV_L, IV_R, 'Protocols: NFS v3/v4.1, SMB 2/3, S3, HDFS, FTP; single namespace across all nodes')))
+    lines.append(R(bMid(IV_L, IV_R, 'SmartPools: automated data tiering; H-series (hybrid), F-series (flash), A-series (archive)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Replication via SyncIQ (async to remote cluster); snapshots via SnapshotIQ')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Client → SmartConnect DNS LB → node NFS/SMB → OneFS namespace → SmartPool tier → drives'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Architecture'), bMid(B2_L, B2_R, 'Operations'), bMid(B3_L, B3_R, 'Security'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'OneFS cluster'), bMid(B2_L, B2_R, 'isi CLI'), bMid(B3_L, B3_R, 'Access zones'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Node pools'), bMid(B2_L, B2_R, 'isi statistics'), bMid(B3_L, B3_R, 'AD / LDAP / KRB'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SmartPools tiers'), bMid(B2_L, B2_R, 'SyncIQ jobs'), bMid(B3_L, B3_R, 'SmartLock WORM'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SmartConnect'), bMid(B2_L, B2_R, 'SnapshotIQ'), bMid(B3_L, B3_R, 'RBAC / roles'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'FlexProtect'), bMid(B2_L, B2_R, 'SmartQuotas'), bMid(B3_L, B3_R, 'Audit logging'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Client I/O → node → OneFS journal → data written to drives → SmartPool migrates tier'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Feature', 'H-series', 'F-series', 'A-series', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Media', 'SSD + SAS', 'All-NVMe/SSD', 'SAS + SATA', 'Node type'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Use case', 'Mixed workload', 'High perf NAS', 'Archive/cold', 'Tiered by SmartP'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Cluster min', '3 nodes', '3 nodes', '3 nodes', 'Max 252 nodes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Protocol', 'NFS/SMB/S3', 'NFS/SMB/S3', 'NFS/SMB/S3', 'All in one NS'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: nodes in rack; InfiniBand or 25/100GbE back-end; front-end Ethernet for clients'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  OneFS          = PowerScale distributed OS; runs identically on all cluster nodes'))
+    lines.append(txt_row('  SmartPools     = Automated tiering across node pools; moves data by file policy and age'))
+    lines.append(txt_row('  SmartConnect   = DNS round-robin or zone-based client connection balancing across nodes'))
+    lines.append(txt_row('  SyncIQ         = Async replication to remote PowerScale cluster; policy-driven schedules'))
+    lines.append(txt_row('  SnapshotIQ     = Local read-only snapshots; accessible via .snapshot directory'))
+    lines.append(txt_row('  SmartQuotas    = Directory/user/group capacity quotas; hard and advisory thresholds'))
+    lines.append(txt_row('  FlexProtect    = Dynamic N+M data protection; rebalances after node failure automatically'))
+    lines.append(txt_row('  Access zone    = Isolated namespace with own auth providers, IP pools, and share policies'))
+    lines.append(txt_row('  SmartLock      = WORM compliance (cannot delete/modify files during retention period)'))
+    lines.append(txt_row('  isi            = OneFS CLI tool; isi status, isi statistics, isi sync, isi quota'))
+    lines.append(txt_row('  InsightIQ      = Analytics platform for PowerScale performance reporting'))
+    lines.append(txt_row('  InfiniBand BE  = Back-end node interconnect for metadata and data traffic within cluster'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerscale-arch-design-standards',
+    'docs/storage/dell/powerscale/architecture/design-standards/index.md',
+    'Dell PowerScale design standards — node sizing, protection policy, SmartPool tiers, network',
+)
+def dell_powerscale_arch_design_standards():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerScale Architecture Design Standards'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Design standards: minimum 4 nodes for production HA; FlexProtect N+2 for 3-node min')))
+    lines.append(R(bMid(IV_L, IV_R, 'Network: separate front-end client network and back-end InfiniBand/Ethernet node fabric')))
+    lines.append(R(bMid(IV_L, IV_R, 'SmartPool tiers: performance pool for hot data; archive pool for cold; policy-driven move')))
+    lines.append(R(bMid(IV_L, IV_R, 'SyncIQ: RPO ≥ minutes; define bandwidth throttle; separate replication IP pool')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Capacity model → node type selection → protection level → SmartPool policy → network design'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Sizing Standards'), bMid(B2_L, B2_R, 'Protection Stds'), bMid(B3_L, B3_R, 'Network Standards'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '4 nodes min prod'), bMid(B2_L, B2_R, 'N+2:1 default'), bMid(B3_L, B3_R, 'Front/back split'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Mixed node pools'), bMid(B2_L, B2_R, 'N+3:1 critical'), bMid(B3_L, B3_R, '25/100G front'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Cap plan +20%'), bMid(B2_L, B2_R, 'Mirror for WORM'), bMid(B3_L, B3_R, 'InfiniBand back'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'F-series for perf'), bMid(B2_L, B2_R, 'No degraded run'), bMid(B3_L, B3_R, 'Separate repl IP'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'A-series archive'), bMid(B2_L, B2_R, 'Resync on add'), bMid(B3_L, B3_R, 'SmartConnect DNS'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Node pool configured → FlexProtect set → SmartPool tier policy defined → test failover'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Standard', 'Rule', 'Rationale', 'Anti-pattern', 'Risk'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Node count', '4 nodes min', 'Tolerate N+2', '3 nodes prod', 'No failure margin'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Protection', 'N+2:1 default', 'Two-fault tol.', 'N+1:1 only', 'Single fault tol'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Network', 'Separate FE/BE', 'No contention', 'Shared fabric', 'Back-end impact'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Capacity', '+20% headroom', 'Space for jobs', 'Full pool', 'SmartPool stall'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: nodes on ToR switches; back-end IB or 25G switch; separate mgmt VLAN'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  N+2:1         = FlexProtect level; tolerates simultaneous failure of 2 drives or 1 node'))
+    lines.append(txt_row('  N+3:1         = Three-fault-tolerant protection; for mission-critical or large node pools'))
+    lines.append(txt_row('  FlexProtect   = OneFS auto-protection; dynamically balances protection across available drives'))
+    lines.append(txt_row('  Front-end net = Client-facing Ethernet; SmartConnect IP pool for NFS/SMB client connections'))
+    lines.append(txt_row('  Back-end net  = Node-to-node InfiniBand or 25/100G Ethernet; carries metadata and data traffic'))
+    lines.append(txt_row('  Separate repl IP= SyncIQ uses dedicated IP pool; prevents replication from saturating client LAN'))
+    lines.append(txt_row('  Cap plan +20% = Keep 20% free in SmartPool; SmartPool jobs and snapshots need space headroom'))
+    lines.append(txt_row('  SmartPool stall= SmartPool tier migration stops when pool is 100% full; data at risk'))
+    lines.append(txt_row('  Resync on add = After adding nodes, OneFS rebalances data across the expanded pool'))
+    lines.append(txt_row('  Mirror WORM   = SmartLock compliance volumes use mirroring for highest protection'))
+    lines.append(txt_row('  ToR switch    = Top of Rack switch; connects node front-end ports to client network'))
+    lines.append(txt_row('  No degraded run= Do not operate cluster long-term in degraded state; add node or replace drive'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerscale-operations',
+    'docs/storage/dell/powerscale/operations/index.md',
+    'Dell PowerScale operations — isi CLI, SyncIQ jobs, quotas, snapshots, health monitoring',
+)
+def dell_powerscale_operations():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerScale Operations'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Day-2 ops: cluster health, SyncIQ replication, SnapshotIQ lifecycle, quota management')))
+    lines.append(R(bMid(IV_L, IV_R, 'isi status: cluster health overview; isi statistics: node/protocol/drive performance')))
+    lines.append(R(bMid(IV_L, IV_R, 'SyncIQ: run/pause/resume policies; monitor RPO; failover and failback procedures')))
+    lines.append(R(bMid(IV_L, IV_R, 'Quota alerts: track SmartQuota thresholds; isi quota list for space accounting')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  isi status → review alerts → SyncIQ policy check → quota review → snapshot expiry cleanup'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Cluster Health'), bMid(B2_L, B2_R, 'Replication'), bMid(B3_L, B3_R, 'Capacity / Data'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'isi status'), bMid(B2_L, B2_R, 'isi sync policy'), bMid(B3_L, B3_R, 'isi quota list'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Drive state'), bMid(B2_L, B2_R, 'isi sync job'), bMid(B3_L, B3_R, 'SmartPool jobs'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Node state'), bMid(B2_L, B2_R, 'Failover policy'), bMid(B3_L, B3_R, 'isi snap list'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'FlexProtect job'), bMid(B2_L, B2_R, 'Failback policy'), bMid(B3_L, B3_R, 'Snap delete'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Event log'), bMid(B2_L, B2_R, 'RPO alert'), bMid(B3_L, B3_R, 'Capacity trend'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Cluster health → SyncIQ RPO check → quota threshold review → snapshot cleanup cycle'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Task', 'Command', 'Output', 'Frequency', 'Alert threshold'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Health', 'isi status', 'Node/drive OK', 'Daily', 'Any degraded'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SyncIQ check', 'isi sync job', 'Last run time', 'Daily', 'RPO exceeded'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Quota check', 'isi quota list', 'Usage vs. limit', 'Weekly', '>85% threshold'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Snap cleanup', 'isi snap delete', 'Freed capacity', 'Monthly', 'Policy expired'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: SSH to any cluster node; isi commands run on OneFS and return cluster-wide data'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  isi status     = Cluster-wide health: node states, drive states, FlexProtect job status'))
+    lines.append(txt_row('  isi statistics = Protocol throughput, node IOPS, latency, drive stats; -c for CSV'))
+    lines.append(txt_row('  isi sync policy= List/modify SyncIQ replication policies; target, schedule, throttle'))
+    lines.append(txt_row('  isi sync job   = View running SyncIQ jobs; last run, bytes transferred, RPO gap'))
+    lines.append(txt_row('  isi quota list = Display directory quotas; hard limit, advisory, grace period status'))
+    lines.append(txt_row('  isi snap list  = List snapshots; name, target directory, creation time, size'))
+    lines.append(txt_row('  FlexProtect job= Restripe job that repairs data after drive or node failure'))
+    lines.append(txt_row('  RPO alert      = SyncIQ replication behind schedule; data loss window exceeded target'))
+    lines.append(txt_row('  SmartPool job  = Background tier migration; moves files between pools per file pool policy'))
+    lines.append(txt_row('  Quota threshold= SmartQuota hard limit stops writes; advisory sends alert only'))
+    lines.append(txt_row('  Snap delete    = Remove expired or manual snapshots; reclaims capacity in snapshot delta'))
+    lines.append(txt_row('  Failover policy= SyncIQ policy action to allow writes on target during source cluster outage'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerscale-ops-install-upgrade',
+    'docs/storage/dell/powerscale/operations/install-upgrade/index.md',
+    'Dell PowerScale install and upgrade — OneFS rolling upgrade, node addition, decommission',
+)
+def dell_powerscale_ops_install_upgrade():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerScale Install and Upgrade'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'OneFS rolling upgrade: upgrades nodes sequentially; cluster stays online throughout')))
+    lines.append(R(bMid(IV_L, IV_R, 'Node addition: new node joins cluster; FlexProtect restripes data across expanded pool')))
+    lines.append(R(bMid(IV_L, IV_R, 'Pre-upgrade: verify isi upgrade start --verify; review compatibility matrix')))
+    lines.append(R(bMid(IV_L, IV_R, 'Decommission: evacuate node with isi devices node smartfail then remove from cluster')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Pre-check → upgrade commit → rolling node-by-node reboot → verify cluster → sign-off'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Upgrade Steps'), bMid(B2_L, B2_R, 'Node Addition'), bMid(B3_L, B3_R, 'Decommission'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Pre-check verify'), bMid(B2_L, B2_R, 'Cable new node'), bMid(B3_L, B3_R, 'smartfail node'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Download image'), bMid(B2_L, B2_R, 'Add to cluster'), bMid(B3_L, B3_R, 'Data evacuates'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Commit upgrade'), bMid(B2_L, B2_R, 'FlexProtect run'), bMid(B3_L, B3_R, 'Remove node'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Rolling reboot'), bMid(B2_L, B2_R, 'Pool restripe'), bMid(B3_L, B3_R, 'Pool restripe'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Post verify'), bMid(B2_L, B2_R, 'Verify join'), bMid(B3_L, B3_R, 'Confirm health'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Upgrade duration scales with cluster size; plan maintenance window for FlexProtect restripe'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Operation', 'Command', 'Duration', 'Cluster impact', 'Rollback'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Pre-check', 'isi upgrade', 'Minutes', 'None', 'N/A — read only'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Upgrade', 'isi upgrade start', 'Hours', 'None (rolling)', 'isi upgrade abort'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Node add', 'isi devices add', 'Hours (restripe)', 'I/O continues', 'Remove node'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Decommission', 'isi smartfail', 'Hours (drain)', 'I/O continues', 'Abort if early'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: new node racked and cabled to back-end switch before isi devices add command'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Rolling upgrade= OneFS upgrades one node at a time; node reboots while others serve I/O'))
+    lines.append(txt_row('  isi upgrade    = OneFS CLI upgrade tool; --verify checks compatibility before committing'))
+    lines.append(txt_row('  smartfail      = Controlled node/drive removal; OneFS evacuates data before marking removed'))
+    lines.append(txt_row('  isi devices    = Node and drive management tool; add, remove, smartfail subcommands'))
+    lines.append(txt_row('  FlexProtect run= Auto-triggered after node add/remove; restripes data to new protection level'))
+    lines.append(txt_row('  Pool restripe  = Data redistribution across updated node count; runs in background'))
+    lines.append(txt_row('  Compatibility  = Check OneFS version matrix; protocol clients, SyncIQ, and hardware support'))
+    lines.append(txt_row('  isi upgrade abort= Stops in-progress upgrade; reverts upgraded nodes back to prior version'))
+    lines.append(txt_row('  Pre-check verify= isi upgrade start --verify; confirms no blocking conditions before commit'))
+    lines.append(txt_row('  Maintenance window= Plan for FlexProtect restripe after node addition; I/O performance impact'))
+    lines.append(txt_row('  Data evacuates = smartfail moves all data off the target node before it is removed from pool'))
+    lines.append(txt_row('  Add to cluster = isi devices node add; OneFS detects new node on back-end and joins it'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerscale-security',
+    'docs/storage/dell/powerscale/security/index.md',
+    'Dell PowerScale security — access zones, AD/LDAP auth, SmartLock WORM, audit logging',
+)
+def dell_powerscale_security():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerScale Security'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'PowerScale security: access zones isolate tenants; AD/LDAP/Kerberos for file auth')))
+    lines.append(R(bMid(IV_L, IV_R, 'Access zones: each zone has own auth providers, IP pool, SMB shares, NFS exports')))
+    lines.append(R(bMid(IV_L, IV_R, 'SmartLock: WORM retention (compliance = tamper-proof; enterprise = admin override)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Audit: protocol audit log per zone; CEE (Common Event Enabler) export to SIEM')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Client auth → access zone lookup → ACL / Unix perm check → SmartLock WORM → audit log'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Access Zones'), bMid(B2_L, B2_R, 'Authentication'), bMid(B3_L, B3_R, 'Data Protection'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Per-zone auth'), bMid(B2_L, B2_R, 'AD Kerberos'), bMid(B3_L, B3_R, 'SmartLock WORM'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Isolated IP pool'), bMid(B2_L, B2_R, 'LDAP provider'), bMid(B3_L, B3_R, 'Compliance mode'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Per-zone shares'), bMid(B2_L, B2_R, 'NIS provider'), bMid(B3_L, B3_R, 'Enterprise mode'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'RBAC roles'), bMid(B2_L, B2_R, 'Local accounts'), bMid(B3_L, B3_R, 'CEE audit log'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Zone isolation'), bMid(B2_L, B2_R, 'SID / UID map'), bMid(B3_L, B3_R, 'SIEM forward'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Zone auth configured → RBAC roles assigned → SmartLock retention set → audit enabled'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Control', 'Mechanism', 'Standard', 'Exception', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['File auth', 'AD Kerberos', 'All NAS clients', 'LDAP fallback', 'Auth events'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Admin auth', 'RBAC + AD', 'Named accounts', 'Local break-glass', 'Login log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['WORM', 'SmartLock', 'Compliance mode', 'Enterprise only', 'Retention log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Audit log', 'CEE / SIEM', 'All file ops', '—', 'Weekly review'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: SSH admin access on mgmt port; CEE agent on cluster node forwards audit events'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Access zone    = Isolated namespace partition; own auth providers, IPs, shares, and exports'))
+    lines.append(txt_row('  SmartLock      = OneFS WORM; compliance = no override; enterprise = admin can override'))
+    lines.append(txt_row('  Compliance mode= SmartLock mode that prevents even root from deleting WORM-retained files'))
+    lines.append(txt_row('  Enterprise mode= SmartLock WORM with admin override capability; less strict than compliance'))
+    lines.append(txt_row('  CEE            = Common Event Enabler; OneFS audit log export agent for SIEM integration'))
+    lines.append(txt_row('  RBAC roles     = OneFS built-in roles: SystemAdmin, AuditAdmin, SecurityAdmin, BackupAdmin'))
+    lines.append(txt_row('  SID/UID map    = Identity mapping between Windows SID and Unix UID for mixed permissions'))
+    lines.append(txt_row('  Kerberos       = Protocol for mutual auth between AD domain and OneFS NFS/SMB clients'))
+    lines.append(txt_row('  Break-glass    = Local root account on OneFS node for emergency when AD unavailable'))
+    lines.append(txt_row('  Zone isolation = Cross-zone access is blocked; tenant A cannot access zone B data'))
+    lines.append(txt_row('  NIS provider   = Legacy Unix auth; NIS maps used in mixed Unix environments'))
+    lines.append(txt_row('  Retention log  = SmartLock audit record of file commit, retention date, and release events'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerscale-troubleshooting',
+    'docs/storage/dell/powerscale/troubleshooting/index.md',
+    'Dell PowerScale troubleshooting — SyncIQ failures, quota exceeded, node degraded, auth',
+)
+def dell_powerscale_troubleshooting():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerScale Troubleshooting'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Common faults: SyncIQ policy failure, node degraded, quota exceeded, auth errors')))
+    lines.append(R(bMid(IV_L, IV_R, 'SyncIQ: check isi sync job; stalled replication causes RPO gap; check network path')))
+    lines.append(R(bMid(IV_L, IV_R, 'Node degraded: drive failure triggers FlexProtect restripe; do not remove until complete')))
+    lines.append(R(bMid(IV_L, IV_R, 'Quota: full hard quota blocks all writes; raise limit or archive data immediately')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Alert fires → isi status + event log → identify fault layer → remediate → verify health'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SyncIQ Issues'), bMid(B2_L, B2_R, 'Cluster Issues'), bMid(B3_L, B3_R, 'Client Issues'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Policy stalled'), bMid(B2_L, B2_R, 'Node degraded'), bMid(B3_L, B3_R, 'Auth failure'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'RPO exceeded'), bMid(B2_L, B2_R, 'Drive failure'), bMid(B3_L, B3_R, 'Quota exceeded'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Network blocked'), bMid(B2_L, B2_R, 'FlexProt stall'), bMid(B3_L, B3_R, 'NFS mount fail'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Target cert err'), bMid(B2_L, B2_R, 'Pool 100% full'), bMid(B3_L, B3_R, 'SMB access deny'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Failover stuck'), bMid(B2_L, B2_R, 'Slow restripe'), bMid(B3_L, B3_R, 'Slow I/O'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  isi status → event log filter → isi sync job list → isi quota list → targeted fix'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Symptom', 'First check', 'Command', 'Fix', 'Escalate if'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SyncIQ stall', 'Network path', 'isi sync job', 'Fix route', 'Policy errors'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Node degraded', 'Drive state', 'isi status', 'Replace drive', 'Node offline'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Quota full', 'Usage vs. limit', 'isi quota list', 'Raise or archive', 'App writes fail'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Auth failure', 'AD join state', 'isi auth status', 'Rejoin AD', 'KDC unreachable'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: check drive bay LEDs for failed drives; verify back-end cable for degraded node'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Policy stalled = SyncIQ job in Error or Needs Attention state; check isi sync job list'))
+    lines.append(txt_row('  RPO exceeded   = Last successful sync older than RPO target; data loss risk if source fails'))
+    lines.append(txt_row('  FlexProt stall = FlexProtect restripe paused; pool too full to complete; free capacity first'))
+    lines.append(txt_row('  Pool 100% full = All usable space consumed; SmartPool migration and FlexProtect both stall'))
+    lines.append(txt_row('  isi auth status= Show AD/LDAP provider join state and Kerberos ticket validity'))
+    lines.append(txt_row('  KDC unreachable= Kerberos Key Distribution Center offline; all Kerberos auth fails'))
+    lines.append(txt_row('  Target cert err= SyncIQ TLS cert mismatch between source and target; regenerate cert'))
+    lines.append(txt_row('  NFS mount fail = Check export policy in access zone; confirm client IP in export client list'))
+    lines.append(txt_row('  SMB access deny= Check share permissions and ACL in access zone; confirm AD group membership'))
+    lines.append(txt_row('  Slow restripe  = FlexProtect running; I/O throttled; normal behavior after node/drive event'))
+    lines.append(txt_row('  Failover stuck = SyncIQ failover did not complete; check allow_writes on target policy'))
+    lines.append(txt_row('  isi quota list = Show quota usage; -v for details; identify directory exceeding hard limit'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerstore',
+    'docs/storage/dell/powerstore/index.md',
+    'Dell PowerStore — NVMe mid-range; block and file; inline dedup/compress; Metro Volume',
+)
+def dell_powerstore():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerStore Mid-Range NVMe Storage'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'PowerStore: Dell NVMe mid-range array; block (FC/iSCSI/NVMe-oF) and file (NFS/SMB)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Inline deduplication and compression; DARE encryption; CloudIQ via SCG for analytics')))
+    lines.append(R(bMid(IV_L, IV_R, 'Replication: async native (volume groups); Metro Volume for zero-RPO sync')))
+    lines.append(R(bMid(IV_L, IV_R, 'Managed via PowerStore Manager (REST API + web GUI) and pstcli CLI')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Host HBA/NIC → FC/iSCSI/NVMe-oF → PowerStore appliance → NVMe RAID → inline dedup/compress'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Architecture'), bMid(B2_L, B2_R, 'Operations'), bMid(B3_L, B3_R, 'Security'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'NVMe appliance'), bMid(B2_L, B2_R, 'PowerStore Mgr'), bMid(B3_L, B3_R, 'DARE encryption'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Block + File'), bMid(B2_L, B2_R, 'pstcli'), bMid(B3_L, B3_R, 'LDAP / AD auth'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Inline dedup'), bMid(B2_L, B2_R, 'REST API'), bMid(B3_L, B3_R, 'RBAC roles'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Metro Volume'), bMid(B2_L, B2_R, 'Snap policies'), bMid(B3_L, B3_R, 'Audit logging'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'CloudIQ / SCG'), bMid(B2_L, B2_R, 'Async repl'), bMid(B3_L, B3_R, 'TLS mgmt plane'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Host I/O → NVMe drives → inline dedup/compress → snapshot delta → async/sync replication'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Feature', 'T-series', 'X-series', 'Protocol', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Workload', 'Block + File', 'Block only', 'FC / iSCSI', 'NVMe/FC support'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Efficiency', 'Dedup + comp', 'Dedup + comp', 'NFS / SMB', 'Inline always on'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Replication', 'Async + Metro', 'Async + Metro', 'NVMe/TCP', 'Zero-RPO Metro'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Media', 'All-NVMe', 'All-NVMe', '—', 'RAID 5 inline'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: PowerStore 500T/1000T/3000T appliance (2U); dual node cluster optional'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Metro Volume   = Active-active sync replication between two PowerStore appliances; zero RPO'))
+    lines.append(txt_row('  Inline dedup   = Deduplication at write time; data compared against existing blocks before write'))
+    lines.append(txt_row('  Inline compress= Compression at write time; reduces media consumption without post-process lag'))
+    lines.append(txt_row('  PowerStore Mgr = Web GUI and REST API management interface for PowerStore appliances'))
+    lines.append(txt_row('  pstcli         = PowerStore CLI; connects to appliance REST API from admin workstation'))
+    lines.append(txt_row('  DARE           = Data At Rest Encryption; SED drives with key management via KMIP'))
+    lines.append(txt_row('  CloudIQ        = Dell SaaS analytics platform; receives telemetry from PowerStore via SCG'))
+    lines.append(txt_row('  SCG            = Secure Connect Gateway; phone-home proxy for CloudIQ telemetry upload'))
+    lines.append(txt_row('  Async repl     = Volume group replication to remote PowerStore; configurable RPO schedule'))
+    lines.append(txt_row('  NVMe/FC        = NVMe over Fibre Channel; lower latency than iSCSI for NVMe-native hosts'))
+    lines.append(txt_row('  NVMe/TCP       = NVMe over TCP/IP; enables NVMe performance over standard Ethernet'))
+    lines.append(txt_row('  RAID 5 inline  = NVMe RAID calculated inline on write; no separate RAID rebuild after failure'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerstore-operations',
+    'docs/storage/dell/powerstore/operations/index.md',
+    'Dell PowerStore operations — snapshots, replication, health checks, CloudIQ, pstcli',
+)
+def dell_powerstore_operations():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerStore Operations'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Day-2 ops: snapshot lifecycle, replication monitoring, capacity, CloudIQ health review')))
+    lines.append(R(bMid(IV_L, IV_R, 'Snapshots: policy-based volume/group snaps; scheduled or manual; thin pointer model')))
+    lines.append(R(bMid(IV_L, IV_R, 'Replication: monitor lag, transfer rate, and RPO gap via PowerStore Manager dashboard')))
+    lines.append(R(bMid(IV_L, IV_R, 'pstcli: REST-backed CLI; volume create, snap apply, replication policy, health check')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  CloudIQ alert → PowerStore Manager → check health → pstcli or GUI action → verify'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Snapshot Ops'), bMid(B2_L, B2_R, 'Replication Ops'), bMid(B3_L, B3_R, 'Health / Capacity'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Snap policy run'), bMid(B2_L, B2_R, 'Repl lag check'), bMid(B3_L, B3_R, 'CloudIQ score'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Manual snap'), bMid(B2_L, B2_R, 'RPO monitor'), bMid(B3_L, B3_R, 'Capacity trend'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Snap restore'), bMid(B2_L, B2_R, 'Failover test'), bMid(B3_L, B3_R, 'Drive health'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Snap clone'), bMid(B2_L, B2_R, 'Repl pause'), bMid(B3_L, B3_R, 'Dedup savings'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Snap expire'), bMid(B2_L, B2_R, 'Repl resume'), bMid(B3_L, B3_R, 'Alert review'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Snap policy schedules → replication RPO check → capacity headroom review → alert clear loop'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Task', 'Tool', 'CLI', 'Frequency', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Health', 'CloudIQ', 'pstcli health', 'Daily', 'Check score'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Snapshot', 'PS Manager', 'pstcli snap', 'Per policy', 'Verify gen count'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Replication', 'PS Manager', 'pstcli repl', 'Daily', 'RPO check'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Capacity', 'PS Manager', 'pstcli vol list', 'Weekly', 'Alert >80%'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: SCG appliance or VM phone-home; PowerStore Manager on embedded service processor'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  CloudIQ score  = Aggregate health score; checks capacity, performance, config, and replication'))
+    lines.append(txt_row('  pstcli         = PowerStore command-line interface; wraps REST API for scripting'))
+    lines.append(txt_row('  Snap policy    = Rule defining snapshot schedule, retention, and naming for a volume/group'))
+    lines.append(txt_row('  Snap clone     = Writable thin clone created from a snapshot for test/dev use'))
+    lines.append(txt_row('  Snap restore   = Revert a volume to a snapshot point-in-time state; overwrites current data'))
+    lines.append(txt_row('  Repl lag       = Time difference between last replication sync and current; measures RPO gap'))
+    lines.append(txt_row('  Failover test  = Switch writes to replication target; verify application continues; then fail back'))
+    lines.append(txt_row('  Dedup savings  = Ratio of logical data written to physical consumed; shown in PS Manager'))
+    lines.append(txt_row('  SCG phone-home = SCG proxy sends appliance telemetry to Dell CloudIQ SaaS platform'))
+    lines.append(txt_row('  Volume group   = Logical grouping of volumes; snapped and replicated as consistent set'))
+    lines.append(txt_row('  Snap expire    = Snapshot past retention date is automatically deleted per policy'))
+    lines.append(txt_row('  Drive health   = SSD wear indicator and error count; shown in PowerStore Manager hardware view'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerstore-security',
+    'docs/storage/dell/powerstore/security/index.md',
+    'Dell PowerStore security — DARE, LDAP/AD, RBAC, audit logging, TLS management plane',
+)
+def dell_powerstore_security():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerStore Security'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'PowerStore security: DARE (SED drives), LDAP/AD for admin auth, RBAC, audit log')))
+    lines.append(R(bMid(IV_L, IV_R, 'DARE: SED drives + external KMIP key server; crypto erase on decommission')))
+    lines.append(R(bMid(IV_L, IV_R, 'Admin access: LDAP/AD group-based roles; local admin for break-glass only')))
+    lines.append(R(bMid(IV_L, IV_R, 'Audit: all admin actions logged; export via syslog to SIEM; TLS 1.2+ on REST API')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  DARE at rest → TLS in transit → LDAP/AD admin auth → RBAC role check → audit log write'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Encryption'), bMid(B2_L, B2_R, 'Authentication'), bMid(B3_L, B3_R, 'Audit / Access'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'DARE (SED)'), bMid(B2_L, B2_R, 'LDAP / AD'), bMid(B3_L, B3_R, 'Syslog / SIEM'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'KMIP key server'), bMid(B2_L, B2_R, 'Local break-glass'), bMid(B3_L, B3_R, 'RBAC roles'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key rotation'), bMid(B2_L, B2_R, 'MFA supported'), bMid(B3_L, B3_R, 'Admin audit log'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Crypto erase'), bMid(B2_L, B2_R, 'API token auth'), bMid(B3_L, B3_R, 'Session timeout'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'TLS REST API'), bMid(B2_L, B2_R, 'Cert management'), bMid(B3_L, B3_R, 'Alert on fail'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  DARE key check → LDAP role assignment → audit log export → periodic access review'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Control', 'Mechanism', 'Standard', 'Exception', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Encryption', 'DARE + KMIP', 'All volumes', 'KMIP outage', 'Key audit trail'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Admin auth', 'LDAP / AD', 'Named accounts', 'Local only', 'Login events'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['API access', 'Token + TLS', 'Short-lived token', '—', 'API call log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Logging', 'Syslog/SIEM', 'All admin ops', '—', 'Weekly review'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: KMIP server on isolated VLAN; management IP on OOB network; no shared mgmt'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  DARE           = Data At Rest Encryption; SED drives; keys managed by KMIP server'))
+    lines.append(txt_row('  KMIP           = Key Management Interoperability Protocol; standard for external key servers'))
+    lines.append(txt_row('  Crypto erase   = Destroy KMIP encryption key; all DARE-encrypted data becomes unreadable'))
+    lines.append(txt_row('  RBAC roles     = PowerStore built-in roles: Administrator, Storage Operator, VM Admin, Viewer'))
+    lines.append(txt_row('  API token auth = REST API session token; short-lived; invalidated on logout or timeout'))
+    lines.append(txt_row('  Syslog         = Admin event log export; all GUI/CLI/API changes forwarded to SIEM'))
+    lines.append(txt_row('  TLS REST API   = PowerStore Manager REST API and web GUI require TLS 1.2+'))
+    lines.append(txt_row('  Cert management= Custom TLS cert upload for PowerStore Manager GUI; replaces self-signed'))
+    lines.append(txt_row('  Break-glass    = Local admin account; use only when LDAP unavailable; log every use'))
+    lines.append(txt_row('  MFA supported  = Multi-factor auth via LDAP identity provider integration'))
+    lines.append(txt_row('  Session timeout= Configurable idle timeout for GUI and REST sessions; default 30 min'))
+    lines.append(txt_row('  Alert on fail  = Failed login attempts trigger syslog event and optionally email alert'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-powerstore-troubleshooting',
+    'docs/storage/dell/powerstore/troubleshooting/index.md',
+    'Dell PowerStore troubleshooting — drive fault, replication failure, capacity, KMIP outage',
+)
+def dell_powerstore_troubleshooting():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell PowerStore Troubleshooting'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Common faults: NVMe drive failure, replication lag, KMIP unreachable, capacity near-full')))
+    lines.append(R(bMid(IV_L, IV_R, 'Drive failure: RAID rebuild auto-starts; replace failed drive; monitor rebuild progress')))
+    lines.append(R(bMid(IV_L, IV_R, 'KMIP outage: array continues I/O while keys are cached; fix KMIP before cache expires')))
+    lines.append(R(bMid(IV_L, IV_R, 'Replication lag: check network path, bandwidth throttle, and RPO policy schedule')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  CloudIQ alert → PowerStore Manager event → identify fault category → remediate → verify'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Hardware Faults'), bMid(B2_L, B2_R, 'Replication'), bMid(B3_L, B3_R, 'Security / Data'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'NVMe drive fail'), bMid(B2_L, B2_R, 'Repl lag >RPO'), bMid(B3_L, B3_R, 'KMIP unreachable'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'RAID rebuild'), bMid(B2_L, B2_R, 'Policy paused'), bMid(B3_L, B3_R, 'Capacity >90%'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Node fault'), bMid(B2_L, B2_R, 'Network loss'), bMid(B3_L, B3_R, 'DARE key err'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SSD wear high'), bMid(B2_L, B2_R, 'Failover stuck'), bMid(B3_L, B3_R, 'Snap space full'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Fan / PSU fault'), bMid(B2_L, B2_R, 'Cert expired'), bMid(B3_L, B3_R, 'LDAP auth fail'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Check CloudIQ score → event log → hardware health view → isolate layer → fix and verify'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Symptom', 'First check', 'Tool', 'Fix', 'Escalate if'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Drive failure', 'Drive health', 'PS Manager HW', 'Replace drive', 'RAID rebuild fail'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['KMIP outage', 'KMIP reachable', 'PS Manager sec', 'Fix KMIP reach', 'Volumes locked'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Repl lag', 'Network path', 'PS Manager repl', 'Fix BW throttle', 'RPO exceeded'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Capacity >90%', 'Usage trend', 'CloudIQ', 'Delete/archive', 'Pool full blocks'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: check drive bay LED (amber = degraded); PSU LED; SFP port for replication link'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  RAID rebuild   = PowerStore reconstructs data after NVMe drive failure onto hot spare'))
+    lines.append(txt_row('  KMIP unreachable= Key server offline; array serves cached keys temporarily; fix before expiry'))
+    lines.append(txt_row('  Volumes locked = DARE-encrypted volumes locked when KMIP key unavailable and cache expired'))
+    lines.append(txt_row('  Repl lag >RPO  = Replication behind schedule; data loss exposure exceeds agreed RPO'))
+    lines.append(txt_row('  Policy paused  = Replication policy suspended; resume after fixing network or space issue'))
+    lines.append(txt_row('  Failover stuck = Metro Volume or async failover did not complete; check event log for error'))
+    lines.append(txt_row('  Cert expired   = Replication TLS cert expired on source or target; renew and re-pair'))
+    lines.append(txt_row('  SSD wear high  = NVMe drive write endurance approaching limit; replace before failure'))
+    lines.append(txt_row('  Snap space full= Snapshot delta store consumed available capacity; delete old snaps first'))
+    lines.append(txt_row('  LDAP auth fail = Admin cannot log in; check AD/LDAP connectivity and group membership'))
+    lines.append(txt_row('  BW throttle    = Replication bandwidth limit; increase or remove throttle to clear lag'))
+    lines.append(txt_row('  Pool full blocks= When usable capacity = 0%, all writes fail; emergency capacity needed'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-scg',
+    'docs/storage/dell/secure-connect-gateway/index.md',
+    'Dell Secure Connect Gateway (SCG) — phone-home proxy; CloudIQ telemetry; support relay',
+)
+def dell_scg():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Secure Connect Gateway (SCG)'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'SCG: Dell phone-home gateway; relays support telemetry from on-prem arrays to Dell')))
+    lines.append(R(bMid(IV_L, IV_R, 'Outbound HTTPS port 443 to Dell support; no inbound connections required')))
+    lines.append(R(bMid(IV_L, IV_R, 'Supports: PowerMax, Unity, PowerScale, PowerStore, VxBlock, iDRAC, VxRail, ECS')))
+    lines.append(R(bMid(IV_L, IV_R, 'Deployment: VM or physical appliance; registered devices enroll via support portal')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Array sends telemetry → SCG collects → HTTPS to Dell → CloudIQ ingests → alert/analytics'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Connectivity'), bMid(B2_L, B2_R, 'Managed Devices'), bMid(B3_L, B3_R, 'Functions'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'HTTPS port 443'), bMid(B2_L, B2_R, 'PowerMax'), bMid(B3_L, B3_R, 'Telemetry relay'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No inbound req.'), bMid(B2_L, B2_R, 'Unity'), bMid(B3_L, B3_R, 'Alert forward'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Proxy support'), bMid(B2_L, B2_R, 'PowerScale'), bMid(B3_L, B3_R, 'Log collection'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'TLS 1.2+'), bMid(B2_L, B2_R, 'PowerStore'), bMid(B3_L, B3_R, 'CloudIQ feed'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'VM or appliance'), bMid(B2_L, B2_R, 'iDRAC / VxRail'), bMid(B3_L, B3_R, 'Support SR open'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Device enrolled → SCG polls or receives events → batches telemetry → forwards to Dell'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Aspect', 'Detail', 'Requirement', 'Alternative', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Network', 'HTTPS 443 out', 'Firewall allow', 'HTTP proxy', 'DNS resolution'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Deployment', 'VM (OVA)', '4 vCPU, 8 GB', 'Physical appl.', 'vCenter needed'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Registration', 'Support acct', 'Active contract', '—', 'Per device SN'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['CloudIQ', 'Auto-feeds', 'SCG enrolled', 'Direct call home', 'SaaS analytics'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: SCG VM on management network; DNS and port 443 to esrs.emc.com required'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Phone-home     = Automated outbound telemetry from array to Dell Support; no manual uploads'))
+    lines.append(txt_row('  CloudIQ        = Dell SaaS analytics and health platform; receives data from SCG relay'))
+    lines.append(txt_row('  ESRS           = EMC Secure Remote Support; earlier name for SCG protocol/service'))
+    lines.append(txt_row('  Alert forward  = SCG forwards array alerts to Dell Support; can auto-open Service Requests'))
+    lines.append(txt_row('  Log collection = SCG pulls diagnostic logs from enrolled arrays for support case upload'))
+    lines.append(txt_row('  Proxy support  = SCG can use HTTP/HTTPS proxy for outbound if direct internet not allowed'))
+    lines.append(txt_row('  TLS 1.2+       = All traffic from SCG to Dell uses TLS; no unencrypted support traffic'))
+    lines.append(txt_row('  OVA            = Open Virtualization Appliance; SCG deployment format for VMware'))
+    lines.append(txt_row('  Support SR     = Service Request; SCG can auto-create SRs when critical alerts fire'))
+    lines.append(txt_row('  Enrolled device= Array registered with SCG; SCG relays its events and telemetry to Dell'))
+    lines.append(txt_row('  Direct call home= Some arrays can phone home directly without SCG; SCG is preferred'))
+    lines.append(txt_row('  Active contract= SCG and CloudIQ require valid Dell support contract for enrolled devices'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-unity',
+    'docs/storage/dell/unity/index.md',
+    'Dell Unity XT — unified mid-range; dual SP; block FC/iSCSI; file NFS/SMB; FAST VP tiering',
+)
+def dell_unity():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Unity XT Unified Mid-Range Storage'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Unity XT: Dell unified mid-range; dual Storage Processors (SP A/B); active-passive HA')))
+    lines.append(R(bMid(IV_L, IV_R, 'Block: FC and iSCSI LUNs; consistency groups; metro volumes for active-active')))
+    lines.append(R(bMid(IV_L, IV_R, 'File: NFS, SMB, FTP, NDMP via NAS Server; multiple NAS servers per array')))
+    lines.append(R(bMid(IV_L, IV_R, 'FAST VP automated tiering: Flash, SAS, NL-SAS; schedule-driven data placement')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Host → SP A or SP B → LUN / NAS Server → FAST VP tiering → Flash / SAS / NL-SAS drives'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Architecture'), bMid(B2_L, B2_R, 'Operations'), bMid(B3_L, B3_R, 'Security'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Dual SP HA'), bMid(B2_L, B2_R, 'Unisphere GUI'), bMid(B3_L, B3_R, 'DARE (SED)'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'FAST VP tiers'), bMid(B2_L, B2_R, 'uemcli'), bMid(B3_L, B3_R, 'LDAP / AD auth'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'NAS Server'), bMid(B2_L, B2_R, 'Snap schedules'), bMid(B3_L, B3_R, 'RBAC roles'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Block + File'), bMid(B2_L, B2_R, 'Async repl'), bMid(B3_L, B3_R, 'Audit logging'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'CloudIQ / SCG'), bMid(B2_L, B2_R, 'FAST VP job'), bMid(B3_L, B3_R, 'TLS mgmt plane'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  SP A/B active-passive → LUN or NAS Server → FAST VP moves data → async replication'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Layer', 'Block', 'File', 'Protocol', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Access', 'LUN / CG', 'NAS Server', 'FC / iSCSI', 'NFS / SMB'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Snapshot', 'LUN snap', 'FS snap', 'NDMP backup', 'Per schedule'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Replication', 'Async / Metro', 'Async NAS', 'FC / iSCSI', 'RPO minutes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Tiering', 'FAST VP', 'FAST VP', 'Flash/SAS/NL', 'Auto-policy'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: Unity chassis (2U base); expansion DAEs; dual SP blades; SPE/DPE drive enclosures'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  SP A / SP B    = Storage Processors; active-passive pair; SP A owns resources normally'))
+    lines.append(txt_row('  FAST VP        = Fully Automated Storage Tiering for Virtual Pools; moves data by heat'))
+    lines.append(txt_row('  NAS Server     = Virtual NAS container on Unity; has own IP, auth provider, shares/exports'))
+    lines.append(txt_row('  CG             = Consistency Group; set of LUNs snapped/replicated together as a unit'))
+    lines.append(txt_row('  Metro Volume   = Active-active sync replication between two Unity arrays; zero RPO'))
+    lines.append(txt_row('  uemcli         = Unity CLI tool; REST API-backed; uemcli /stor/prov/luns/lun -list'))
+    lines.append(txt_row('  Unisphere      = Web GUI for Unity management; login with AD or local admin credentials'))
+    lines.append(txt_row('  DARE           = Data At Rest Encryption; SED drives with KMIP key management'))
+    lines.append(txt_row('  NL-SAS         = Near-Line SAS; high-capacity archive tier; lower IOPS than SAS'))
+    lines.append(txt_row('  NDMP           = Network Data Management Protocol; backup NAS data via NDMP client'))
+    lines.append(txt_row('  SPE            = Storage Processor Enclosure; base chassis containing SP A and SP B'))
+    lines.append(txt_row('  DAE            = Disk Array Enclosure; expansion shelf for additional drives'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-unity-operations',
+    'docs/storage/dell/unity/operations/index.md',
+    'Dell Unity operations — SP health, FAST VP, snapshots, async replication, uemcli tasks',
+)
+def dell_unity_operations():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Unity Operations'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Day-2 ops: SP health check, FAST VP job monitoring, snapshot lifecycle, replication')))
+    lines.append(R(bMid(IV_L, IV_R, 'SP health: Unisphere health dashboard; uemcli /sys/general/health -list')))
+    lines.append(R(bMid(IV_L, IV_R, 'FAST VP: schedule-driven tier moves; monitor via Unisphere Storage Pool view')))
+    lines.append(R(bMid(IV_L, IV_R, 'Replication: async session monitoring; RPO check; failover / failback procedures')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Health check → FAST VP job review → snap schedule verify → replication lag → alert close'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Health / SP'), bMid(B2_L, B2_R, 'Data Services'), bMid(B3_L, B3_R, 'Replication'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SP health check'), bMid(B2_L, B2_R, 'FAST VP job'), bMid(B3_L, B3_R, 'Session state'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Drive health'), bMid(B2_L, B2_R, 'Snap schedule'), bMid(B3_L, B3_R, 'RPO monitor'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Fan / PSU'), bMid(B2_L, B2_R, 'Snap restore'), bMid(B3_L, B3_R, 'Failover'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Pool capacity'), bMid(B2_L, B2_R, 'Snap expire'), bMid(B3_L, B3_R, 'Failback'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'CloudIQ score'), bMid(B2_L, B2_R, 'Pool shrink/grow'), bMid(B3_L, B3_R, 'Repl resync'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  SP status → FAST VP tier check → snap policy audit → replication RPO → capacity trend'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Task', 'Tool', 'CLI', 'Frequency', 'Alert threshold'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SP health', 'Unisphere', 'uemcli health', 'Daily', 'Any degraded'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['FAST VP', 'Unisphere', 'uemcli tier', 'Weekly', 'Stalled job'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Replication', 'Unisphere', 'uemcli repl', 'Daily', 'RPO exceeded'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Capacity', 'CloudIQ', 'uemcli pool', 'Weekly', '>80% used'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: Unisphere on embedded service processor; uemcli connects via HTTPS to SP IP'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  uemcli         = Unity CLI; REST API wrapper: uemcli /stor/prov/luns/lun -list'))
+    lines.append(txt_row('  FAST VP job    = Scheduled data migration between Flash, SAS, and NL-SAS tiers'))
+    lines.append(txt_row('  Snap schedule  = Automated snapshot rule; hourly/daily/weekly; max snap count limit'))
+    lines.append(txt_row('  Snap restore   = Revert LUN or filesystem to snapshot state; overwrites current data'))
+    lines.append(txt_row('  Snap expire    = Snapshot past retention date deleted automatically; capacity reclaimed'))
+    lines.append(txt_row('  Pool capacity  = Storage pool usable space; alert at >80% used to avoid write failures'))
+    lines.append(txt_row('  Repl session   = Unity async replication pairing; shows last sync time and transfer size'))
+    lines.append(txt_row('  Failover       = Switch replication target to read/write; application moves to DR site'))
+    lines.append(txt_row('  Failback       = Resync data back to primary Unity; resume original replication direction'))
+    lines.append(txt_row('  Repl resync    = Re-establish replication after failback; delta sync not full reseed'))
+    lines.append(txt_row('  CloudIQ score  = SaaS health score; receives data from Unity via SCG phone-home'))
+    lines.append(txt_row('  SP degraded    = One SP fault; remaining SP takes all I/O; repair SP immediately'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-unity-ops-install-upgrade',
+    'docs/storage/dell/unity/operations/install-upgrade/index.md',
+    'Dell Unity install and upgrade — initial config, OE upgrade, non-disruptive rolling SP upgrade',
+)
+def dell_unity_ops_install_upgrade():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Unity Install and Upgrade'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Initial install: rack Unity → cable SPs and DAEs → configure via Unisphere wizard')))
+    lines.append(R(bMid(IV_L, IV_R, 'OE upgrade: download upgrade package → upload to Unity → health pre-check → commit')))
+    lines.append(R(bMid(IV_L, IV_R, 'Rolling upgrade: SP B reboots first → SP A takes all I/O → SP B ready → SP A reboots')))
+    lines.append(R(bMid(IV_L, IV_R, 'Non-disruptive: hosts continue I/O during upgrade; one SP always serving')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Health pre-check → upload OE package → commit → SP B upgrade/reboot → SP A upgrade/reboot'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Initial Install'), bMid(B2_L, B2_R, 'OE Upgrade'), bMid(B3_L, B3_R, 'Add Drives/DAE'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Rack and cable'), bMid(B2_L, B2_R, 'Download OE'), bMid(B3_L, B3_R, 'Cable new DAE'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Power on'), bMid(B2_L, B2_R, 'Upload to array'), bMid(B3_L, B3_R, 'Rescan drives'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Unisphere wizard'), bMid(B2_L, B2_R, 'Pre-check run'), bMid(B3_L, B3_R, 'Expand pool'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Network config'), bMid(B2_L, B2_R, 'SP B upgrade'), bMid(B3_L, B3_R, 'FAST VP rebal'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SCG enroll'), bMid(B2_L, B2_R, 'SP A upgrade'), bMid(B3_L, B3_R, 'Verify health'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  OE upgrade non-disruptive; hosts continue I/O; each SP takes ~15-20 min to reboot'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Operation', 'Duration', 'Disruptive', 'Rollback', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Initial install', '2–4 hours', 'Yes (new system)', 'N/A', 'Follow wizard'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['OE upgrade', '30–60 min', 'No (rolling)', 'Prior OE image', 'Pre-check first'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['DAE add', '15 min', 'No', 'Remove DAE', 'Rescan required'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Drive add', '5 min', 'No', 'N/A', 'Pool expand opt.'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: SPE base unit; DAEs connect via SAS expansion cable from SP to first DAE chain'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  OE             = Operating Environment; Unity OS upgrade package (.tgz file from Dell)')    )
+    lines.append(txt_row('  Rolling upgrade= SP B upgraded first while SP A serves I/O; then roles swap for SP A upgrade'))
+    lines.append(txt_row('  Pre-check      = Automated health validation before upgrade commit; blocks on unresolved alerts'))
+    lines.append(txt_row('  Unisphere wizard= Web-based initial configuration wizard; run once after first power-on'))
+    lines.append(txt_row('  SPE            = Storage Processor Enclosure; base 2U chassis containing SP A and SP B'))
+    lines.append(txt_row('  DAE            = Disk Array Enclosure; 2U or 4U expansion shelf; chained from SPE'))
+    lines.append(txt_row('  FAST VP rebal  = After adding drives, FAST VP distributes data across new capacity'))
+    lines.append(txt_row('  Pool expand    = Add drives to existing storage pool; capacity available after rescan'))
+    lines.append(txt_row('  SCG enroll     = Register Unity with SCG after install for CloudIQ and phone-home support'))
+    lines.append(txt_row('  Rollback OE    = If upgrade fails mid-way, Unity can revert to previous OE version'))
+    lines.append(txt_row('  SAS expansion  = Back-end SAS cabling between SPE and DAE; daisy-chain up to max DAEs'))
+    lines.append(txt_row('  15-20 min reboot= Each SP reboot time during OE upgrade; I/O served by partner SP'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-unity-security',
+    'docs/storage/dell/unity/security/index.md',
+    'Dell Unity security — DARE, LDAP/AD, RBAC, NAS server auth, audit logging',
+)
+def dell_unity_security():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Unity Security'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Unity security: DARE (SED drives), LDAP/AD for admin and NAS auth, RBAC, audit log')))
+    lines.append(R(bMid(IV_L, IV_R, 'Admin auth: LDAP/AD group mapped to Unity roles; local accounts for break-glass')))
+    lines.append(R(bMid(IV_L, IV_R, 'NAS auth: each NAS Server has own AD/LDAP provider; Kerberos for SMB authentication')))
+    lines.append(R(bMid(IV_L, IV_R, 'Audit: all Unisphere and uemcli actions logged; export via syslog to SIEM')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  DARE at rest → TLS REST API → LDAP role check → NAS Kerberos → file ACL → audit log'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Encryption'), bMid(B2_L, B2_R, 'Admin Auth'), bMid(B3_L, B3_R, 'NAS / Audit'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'DARE (SED)'), bMid(B2_L, B2_R, 'LDAP / AD'), bMid(B3_L, B3_R, 'NAS AD/Kerberos'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'KMIP key server'), bMid(B2_L, B2_R, 'RBAC roles'), bMid(B3_L, B3_R, 'Syslog SIEM'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key rotation'), bMid(B2_L, B2_R, 'Local break-glass'), bMid(B3_L, B3_R, 'Admin audit log'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Crypto erase'), bMid(B2_L, B2_R, 'TLS REST API'), bMid(B3_L, B3_R, 'NAS file audit'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'In-transit TLS'), bMid(B2_L, B2_R, 'Session timeout'), bMid(B3_L, B3_R, 'CEE export'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  DARE + KMIP → LDAP role assignment → NAS Kerberos → file ACL → syslog audit review'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Control', 'Mechanism', 'Standard', 'Exception', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Encryption', 'DARE + KMIP', 'All volumes', 'KMIP outage', 'Key audit trail'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Admin auth', 'LDAP / AD', 'Named accounts', 'Local only', 'Login events'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['NAS file auth', 'AD Kerberos', 'Per NAS Server', 'NTLM fallback', 'Auth events'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Logging', 'Syslog + CEE', 'SIEM ingest', '—', 'Weekly review'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: KMIP on isolated VLAN; Unity management IP on OOB network; no shared mgmt'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  DARE           = Data At Rest Encryption; SED drives; key managed by external KMIP server'))
+    lines.append(txt_row('  RBAC roles     = Unity roles: Administrator, Storage Admin, VM Admin, Operator, Auditor'))
+    lines.append(txt_row('  NAS Server AD  = Each NAS Server joined to its own AD domain for SMB Kerberos auth'))
+    lines.append(txt_row('  Kerberos       = Mutual auth for SMB clients and Unity NAS Server via AD tickets'))
+    lines.append(txt_row('  NTLM fallback  = Legacy SMB auth when Kerberos unavailable; weaker; disable if possible'))
+    lines.append(txt_row('  CEE            = Common Event Enabler; NAS file audit export to SIEM'))
+    lines.append(txt_row('  File audit     = NAS Server logs file access events (open, delete, rename) via CEE'))
+    lines.append(txt_row('  Syslog         = Admin action log (Unisphere / uemcli changes) forwarded to SIEM'))
+    lines.append(txt_row('  Session timeout= Configurable idle timeout for Unisphere and uemcli sessions'))
+    lines.append(txt_row('  Crypto erase   = Destroy SED encryption key on drive decommission; data unrecoverable'))
+    lines.append(txt_row('  KMIP outage    = Unity caches keys temporarily; fix KMIP before cache expires'))
+    lines.append(txt_row('  Break-glass    = Local Unity admin account; use only when LDAP unavailable; log all use'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-unity-troubleshooting',
+    'docs/storage/dell/unity/troubleshooting/index.md',
+    'Dell Unity troubleshooting — SP failover, drive rebuild, FAST VP stall, NAS fault',
+)
+def dell_unity_troubleshooting():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Unity Troubleshooting'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Common faults: SP failure (failover to peer), drive failure, FAST VP stall, NAS fault')))
+    lines.append(R(bMid(IV_L, IV_R, 'SP failure: peer SP takes all I/O; replace faulted SP; monitor for stability')))
+    lines.append(R(bMid(IV_L, IV_R, 'Drive failure: RAID rebuild starts automatically; do not remove drive until rebuild done')))
+    lines.append(R(bMid(IV_L, IV_R, 'FAST VP stall: pool too full to tier; free space or expand pool before VP can run')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Unisphere alert → health view → identify fault (SP/drive/NAS/pool) → remediate → verify'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SP / Hardware'), bMid(B2_L, B2_R, 'Data Services'), bMid(B3_L, B3_R, 'NAS / Network'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SP fault'), bMid(B2_L, B2_R, 'FAST VP stall'), bMid(B3_L, B3_R, 'NAS unreachable'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Drive failure'), bMid(B2_L, B2_R, 'Snap space full'), bMid(B3_L, B3_R, 'SMB auth fail'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'RAID rebuild'), bMid(B2_L, B2_R, 'Repl lag'), bMid(B3_L, B3_R, 'NFS mount fail'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Fan / PSU fault'), bMid(B2_L, B2_R, 'Pool near-full'), bMid(B3_L, B3_R, 'AD join fail'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SFP / port fault'), bMid(B2_L, B2_R, 'KMIP outage'), bMid(B3_L, B3_R, 'Slow NFS I/O'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Check Unisphere health → event log filter → uemcli health query → fix layer → verify'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Symptom', 'First check', 'Tool', 'Fix', 'Escalate if'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SP fault', 'SP state LEDs', 'Unisphere HW', 'Replace SP', 'Both SPs failed'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Drive failure', 'Drive bay LED', 'uemcli disk', 'Replace drive', 'Rebuild fails'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['FAST VP stall', 'Pool capacity', 'Unisphere pool', 'Free space', 'Pool >95% full'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['NAS unreachable', 'NAS Server state', 'Unisphere NAS', 'Failover NAS', 'SP owning fault'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: SP A/B LEDs; drive bay amber LED; SFP port light; PSU green/amber indicator'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  SP failover    = When SP A fails, SP B takes ownership of all LUNs and NAS Servers'))
+    lines.append(txt_row('  RAID rebuild   = Drive replacement triggers automatic data reconstruction onto new drive'))
+    lines.append(txt_row('  FAST VP stall  = Pool <10% free; automated tiering cannot move data; free space first'))
+    lines.append(txt_row('  NAS failover   = NAS Server migrated to peer SP when owning SP faults'))
+    lines.append(txt_row('  AD join fail   = NAS Server cannot rejoin AD domain; SMB auth will fail for all shares'))
+    lines.append(txt_row('  Pool near-full = Pool >80% used; alert threshold; FAST VP stalls at ~95%'))
+    lines.append(txt_row('  KMIP outage    = DARE key unavailable; Unity uses cached key temporarily; fix urgently'))
+    lines.append(txt_row('  uemcli disk    = uemcli /stor/hw/disk -list; shows drive state, slot, and tier'))
+    lines.append(txt_row('  Both SPs failed= Complete array outage; contact Dell TAC immediately; P1 case'))
+    lines.append(txt_row('  SFP port fault = Fibre Channel or iSCSI port SFP failed; host paths go dead'))
+    lines.append(txt_row('  Failover NAS   = Manually move NAS Server to peer SP via Unisphere migration wizard'))
+    lines.append(txt_row('  Slow NFS I/O   = Check SP CPU, network saturation, and FAST VP job contending for I/O'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-vplex',
+    'docs/storage/dell/vplex/index.md',
+    'Dell VPLEX — storage federation; virtual volumes; Metro active-active; GeoSynchrony OS',
+)
+def dell_vplex():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell VPLEX Storage Federation'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VPLEX: Dell storage virtualization/federation; presents virtual volumes to hosts')))
+    lines.append(R(bMid(IV_L, IV_R, 'VPLEX Local: single cluster; virtualizes back-end arrays; pooling and migration')))
+    lines.append(R(bMid(IV_L, IV_R, 'VPLEX Metro: two clusters linked via WAN; distributed volumes for active-active')))
+    lines.append(R(bMid(IV_L, IV_R, 'GeoSynchrony OS: VPLEX management; directors (I/O and Storage); witness for Metro')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Host → I/O Director → virtual volume → Storage Director → back-end array LUN'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Architecture'), bMid(B2_L, B2_R, 'Operations'), bMid(B3_L, B3_R, 'Metro / HA'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'I/O Director'), bMid(B2_L, B2_R, 'VPLEX CLI'), bMid(B3_L, B3_R, 'Distributed vol'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Storage Director'), bMid(B2_L, B2_R, 'Virtual vol prov'), bMid(B3_L, B3_R, 'Witness VM'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'GeoSynchrony OS'), bMid(B2_L, B2_R, 'CG management'), bMid(B3_L, B3_R, 'WAN link <5ms'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'DRAM write cache'), bMid(B2_L, B2_R, 'Storage view'), bMid(B3_L, B3_R, 'Split-brain prot'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Back-end arrays'), bMid(B2_L, B2_R, 'Director health'), bMid(B3_L, B3_R, 'Metro failover'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  I/O director receives host write → DRAM cache → Storage Director → back-end array'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Mode', 'VPLEX Local', 'VPLEX Metro', 'Protocol', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Clusters', '1 cluster', '2 clusters', 'FC host', 'iSCSI optional'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Volume type', 'Virtual vol', 'Distributed vol', 'FC back-end', 'Array-agnostic'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['RPO', 'N/A local', 'Zero (sync)', 'WAN IP link', '<5ms RTT req.'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Witness', 'Not required', 'Required', '—', 'Tie-breaker VM'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: VPLEX chassis with director blades; FC fabric to hosts and back-end arrays'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  I/O Director   = Front-end VPLEX blade; handles host FC connections and virtual volume I/O'))
+    lines.append(txt_row('  Storage Director= Back-end VPLEX blade; connects to physical array FC ports'))
+    lines.append(txt_row('  Virtual volume = Logical volume presented to host; backed by one or more array LUNs'))
+    lines.append(txt_row('  Distributed vol= Metro volume visible and writable from both VPLEX clusters simultaneously'))
+    lines.append(txt_row('  GeoSynchrony   = VPLEX management OS; configuration, CLI access, director orchestration'))
+    lines.append(txt_row('  Storage view   = VPLEX host access control; maps virtual volumes to initiator ports'))
+    lines.append(txt_row('  DRAM cache     = Write cache in director; coalesces writes before committing to array'))
+    lines.append(txt_row('  Witness VM     = Third-site VM; breaks tie in Metro split-brain; must be on neutral site'))
+    lines.append(txt_row('  Split-brain    = Both clusters lose WAN; each thinks it is the only survivor; witness decides'))
+    lines.append(txt_row('  Metro failover = One cluster takes full I/O after site loss; witness determines survivor'))
+    lines.append(txt_row('  CG             = Consistency Group; set of distributed volumes with write-order fidelity'))
+    lines.append(txt_row('  VPLEX CLI      = vplex-shell; management console on GeoSynchrony for all VPLEX config'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-vplex-operations',
+    'docs/storage/dell/vplex/operations/index.md',
+    'Dell VPLEX operations — virtual volume provisioning, CG management, Metro ops, health checks',
+)
+def dell_vplex_operations():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell VPLEX Operations'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Day-2 ops: virtual volume provisioning, CG operations, Metro volume health, WAN monitoring')))
+    lines.append(R(bMid(IV_L, IV_R, 'Provision: claim back-end LUN → create storage volume → virtual volume → storage view')))
+    lines.append(R(bMid(IV_L, IV_R, 'Metro ops: check distributed volume state, WAN link health, and witness connectivity')))
+    lines.append(R(bMid(IV_L, IV_R, 'Health: director status, cache utilization, back-end path health via VPLEX CLI')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Back-end LUN claimed → virtual volume created → CG added → storage view updated → host sees'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Provisioning'), bMid(B2_L, B2_R, 'Metro Ops'), bMid(B3_L, B3_R, 'Health'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Claim back-end'), bMid(B2_L, B2_R, 'Dist vol state'), bMid(B3_L, B3_R, 'Director status'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Create virt vol'), bMid(B2_L, B2_R, 'WAN link health'), bMid(B3_L, B3_R, 'Cache stats'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Add to CG'), bMid(B2_L, B2_R, 'Witness check'), bMid(B3_L, B3_R, 'BE path check'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Storage view'), bMid(B2_L, B2_R, 'Metro failover'), bMid(B3_L, B3_R, 'Event log'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Host rescan'), bMid(B2_L, B2_R, 'Metro failback'), bMid(B3_L, B3_R, 'Alert review'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Director health → WAN link state → distributed volume check → storage view audit'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Task', 'CLI context', 'Command', 'Frequency', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Director health', 'engines', 'ls directors', 'Daily', 'Any degraded'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Vol state', 'virtual-volumes', 'ls -t', 'Daily', 'Check detached'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['WAN link', 'clusters', 'ls comm-links', 'Daily (Metro)', 'Check latency'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Witness', 'clusters', 'ls witnesses', 'Weekly', 'Must be reachable'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: VPLEX chassis FC ports to SAN fabric; IP WAN ports for Metro cluster link'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Claim back-end = VPLEX takes ownership of an array LUN for use as a storage volume'))
+    lines.append(txt_row('  Storage volume = VPLEX internal representation of a claimed back-end LUN'))
+    lines.append(txt_row('  Virtual volume = External-facing volume presented to hosts via VPLEX storage view'))
+    lines.append(txt_row('  Storage view   = Maps virtual volumes to host initiator ports; VPLEX access control'))
+    lines.append(txt_row('  Distributed vol= Metro volume type; accessible from both clusters simultaneously'))
+    lines.append(txt_row('  WAN comm-link  = IP link between two VPLEX Metro clusters; must be <5ms RTT'))
+    lines.append(txt_row('  Witness        = Third-site VM; provides quorum for Metro split decisions'))
+    lines.append(txt_row('  Detached vol   = Virtual volume not currently accessible due to director or BE fault'))
+    lines.append(txt_row('  Metro failover = One cluster takes full write ownership after WAN loss; witness arbitrates'))
+    lines.append(txt_row('  Metro failback = After site recovery, resync cluster and restore distributed volume state'))
+    lines.append(txt_row('  ls directors   = VPLEX CLI: list all directors and their operational state'))
+    lines.append(txt_row('  ls comm-links  = VPLEX CLI: list Metro WAN communication links and latency stats'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-vplex-security',
+    'docs/storage/dell/vplex/security/index.md',
+    'Dell VPLEX security — LDAP admin auth, storage view access control, TLS, audit logging',
+)
+def dell_vplex_security():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell VPLEX Security'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'VPLEX security: storage views for host access control; LDAP for admin auth; audit log')))
+    lines.append(R(bMid(IV_L, IV_R, 'Storage view: binds virtual volumes to host initiator WWNs; deny by default')))
+    lines.append(R(bMid(IV_L, IV_R, 'Admin auth: LDAP/AD group mapped to GeoSynchrony roles; local admin for emergency')))
+    lines.append(R(bMid(IV_L, IV_R, 'TLS on management API; audit log of all CLI and GUI changes exportable via syslog')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Host WWN in storage view → virtual volume access granted → LDAP admin auth → audit log'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Host Access'), bMid(B2_L, B2_R, 'Admin Auth'), bMid(B3_L, B3_R, 'Audit / Logging'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Storage view'), bMid(B2_L, B2_R, 'LDAP / AD'), bMid(B3_L, B3_R, 'CLI audit log'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'WWN binding'), bMid(B2_L, B2_R, 'RBAC roles'), bMid(B3_L, B3_R, 'Syslog export'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Deny by default'), bMid(B2_L, B2_R, 'Local break-glass'), bMid(B3_L, B3_R, 'Event filter'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SAN zoning'), bMid(B2_L, B2_R, 'TLS mgmt API'), bMid(B3_L, B3_R, 'SIEM forward'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Port zoning'), bMid(B2_L, B2_R, 'Session timeout'), bMid(B3_L, B3_R, 'Login events'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Storage view review → LDAP role audit → SAN zone check → syslog review cycle'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Control', 'Mechanism', 'Standard', 'Exception', 'Audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Host access', 'Storage view', 'WWN whitelist', 'No open views', 'View audit'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Admin auth', 'LDAP / AD', 'Named accounts', 'Local only', 'Login log'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['CLI access', 'Role-based', 'Storage admin', 'Read-only role', 'CLI audit trail'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Logging', 'Syslog/SIEM', 'All changes', '—', 'Weekly review'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: VPLEX management port on OOB network; SAN fabric for I/O; WAN port for Metro'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Storage view   = VPLEX host access control: virtual volume + initiator group + port group'))
+    lines.append(txt_row('  WWN binding    = Specific host HBA WWN(s) included in storage view; unlisted WWNs denied'))
+    lines.append(txt_row('  Deny by default= VPLEX presents no volumes to any host until a storage view is created'))
+    lines.append(txt_row('  SAN zoning     = FC fabric zones restrict which HBAs see which VPLEX front-end ports'))
+    lines.append(txt_row('  RBAC roles     = GeoSynchrony roles: Admin, Operator, Monitor (read-only)'))
+    lines.append(txt_row('  Local break-glass= Local admin account on GeoSynchrony; use only when LDAP down'))
+    lines.append(txt_row('  TLS mgmt API   = VPLEX management API and CLI secured with TLS; REST and SSH'))
+    lines.append(txt_row('  CLI audit log  = GeoSynchrony logs all vplex-shell commands with user, time, and action'))
+    lines.append(txt_row('  Event filter   = VPLEX event log filter by severity; export to syslog for SIEM correlation'))
+    lines.append(txt_row('  Open view      = Storage view with all-WWN access; prohibited; every view must be explicit'))
+    lines.append(txt_row('  Session timeout= Idle timeout on vplex-shell and GUI; default 30 min'))
+    lines.append(txt_row('  Port group     = Collection of VPLEX I/O director ports mapped in a storage view'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-vplex-troubleshooting',
+    'docs/storage/dell/vplex/troubleshooting/index.md',
+    'Dell VPLEX troubleshooting — director fault, WAN loss, split-brain, detached volumes',
+)
+def dell_vplex_troubleshooting():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell VPLEX Troubleshooting'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Common faults: director failure, WAN link loss, split-brain, back-end path, cache fault')))
+    lines.append(R(bMid(IV_L, IV_R, 'Director fault: peer director in cluster takes I/O; replace blade; check DRAM cache')))
+    lines.append(R(bMid(IV_L, IV_R, 'WAN loss (Metro): witness determines survivor; losing cluster fences volumes')))
+    lines.append(R(bMid(IV_L, IV_R, 'Detached volumes: virtual volume not accessible; check back-end path and director state')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Alert fires → VPLEX CLI → director/volume state check → isolate fault → remediate → verify'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Director Issues'), bMid(B2_L, B2_R, 'Metro Issues'), bMid(B3_L, B3_R, 'Volume Issues'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Director failed'), bMid(B2_L, B2_R, 'WAN link lost'), bMid(B3_L, B3_R, 'Volume detached'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Cache fault'), bMid(B2_L, B2_R, 'Split-brain'), bMid(B3_L, B3_R, 'Back-end path'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Port offline'), bMid(B2_L, B2_R, 'Witness loss'), bMid(B3_L, B3_R, 'Host no I/O'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Director degrad'), bMid(B2_L, B2_R, 'Fenced cluster'), bMid(B3_L, B3_R, 'Storage view'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Power fault'), bMid(B2_L, B2_R, 'Failover stuck'), bMid(B3_L, B3_R, 'Rebuild volume'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  VPLEX CLI → ls directors → ls virtual-volumes -t → check comm-links → fix root cause'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Symptom', 'First check', 'CLI command', 'Fix', 'Escalate if'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Director fail', 'Director LEDs', 'ls directors', 'Replace blade', 'Cache corrupt'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['WAN loss', 'Comm-link state', 'ls comm-links', 'Fix WAN route', 'Split-brain'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Vol detached', 'BE path state', 'ls virtual-vols', 'Fix BE path', 'Vol unrecoverable'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Split-brain', 'Witness state', 'ls witnesses', 'Restore witness', 'Manual fence req'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: director blade LEDs in chassis; FC SFP port lights; WAN IP link ping test'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Director fault = I/O or Storage director blade failure; peer director takes over in cluster'))
+    lines.append(txt_row('  Cache fault    = DRAM write cache error; may require director replacement to clear'))
+    lines.append(txt_row('  WAN link lost  = Metro cluster communication disrupted; both clusters wait for witness'))
+    lines.append(txt_row('  Split-brain    = Both clusters operational but disconnected; witness arbitrates survivor'))
+    lines.append(txt_row('  Fenced cluster = Losing Metro cluster fences its volumes; I/O stops at losing site'))
+    lines.append(txt_row('  Witness loss   = Witness unreachable; Metro cluster cannot resolve split-brain safely'))
+    lines.append(txt_row('  Volume detached= Virtual volume not serving I/O; check back-end path and director state'))
+    lines.append(txt_row('  Back-end path  = FC path from Storage Director to array port; failure detaches volumes'))
+    lines.append(txt_row('  ls directors   = Show director operational state: Online, Degraded, Faulted'))
+    lines.append(txt_row('  ls comm-links  = Show WAN link state and latency between Metro clusters'))
+    lines.append(txt_row('  Manual fence   = Force one cluster to fence when witness is also unreachable'))
+    lines.append(txt_row('  Rebuild volume = After BE path recovery, VPLEX re-attaches volume and syncs distributed state'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines

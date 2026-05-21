@@ -1,5 +1,59 @@
 # FOD — Access Control
 
+```
+┌────────────────────────────────────── Dell FoD — Access Control ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      FoD access control: who can purchase keys, download files, apply licenses, and audit     │   │
+│   │      Portal access: only named storage leads with MFA-enabled Dell accounts can purchase      │   │
+│   │         Array access: only Storage Admin role can import license keys; Operator cannot        │   │
+│   │        Vault access: only named engineers can retrieve .lic files; access is MFA-gated        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Purchase (storage lead) → vault store → retrieve (named eng.) → apply (admin role) → logged        │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Portal Access        │  │         Array Access        │  │         Vault Access        │   │
+│   │       Named leads only      │  │       Admin role only       │  │       Named engineers       │   │
+│   │         MFA enforced        │  │        LDAP/AD group        │  │         MFA required        │   │
+│   │           Dell SSO          │  │        No shared acct       │  │          Access log         │   │
+│   │        Account audit        │  │         CR pre-apply        │  │         Lease expiry        │   │
+│   │         IP restrict         │  │       Quarterly review      │  │       Offboard revoke       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    On engineer offboarding: revoke Dell portal access, array RBAC, and vault lease immediately        │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      System      │       Who        │    Auth Method    │   Review Freq    │      Owner       │   │
+│   │   Dell portal    │  Storage leads   │   Dell SSO + MFA  │    Quarterly     │   Storage lead   │   │
+│   │    Array GUI     │   Named admins   │    LDAP + RBAC    │    Quarterly     │   Storage lead   │   │
+│   │      Vault       │ Named engineers  │     MFA token     │    Quarterly     │     Sec team     │   │
+│   │       CMDB       │     Ops team     │    Service acct   │      Annual      │     Ops lead     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: array GUI RBAC enforced; no direct filesystem or iDRAC access needed for FoD apply       │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Portal access  = Access to Dell Licensing Portal; limit to storage leads who handle purchasing     │
+│    Admin role     = Array management role with license import rights; separate from Operator          │
+│    LDAP group     = Array admin rights controlled via AD group; add/remove via directory              │
+│    No shared acct = Each engineer has individual array admin account; shared accounts banned          │
+│    CR pre-apply   = ITSM CR must be approved before any engineer retrieves key from vault             │
+│    Vault lease    = HashiCorp Vault access token with TTL; expires and must be renewed                │
+│    MFA required   = Both Dell portal and vault require MFA; prevents credential-only access           │
+│    Account audit  = Quarterly review of Dell portal accounts; remove leavers and excess access        │
+│    Quarterly review = Storage lead reviews who has array admin and vault access; remove if not needed │
+│    Offboard revoke = Immediate removal from portal, LDAP group, and vault on engineer departure       │
+│    IP restrict    = Dell portal can restrict login to corporate IP ranges; reduces phishing risk      │
+│    Lease expiry   = Vault lease auto-expires; reduces risk of standing access to .lic files           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 > Part of the [Flex on Demand](../../) reference.
 
 ---

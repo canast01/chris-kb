@@ -1,5 +1,59 @@
 # FOD — Encryption
 
+```
+┌──────────────────────────────────────── Dell FoD — Encryption ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      FoD encryption: protect .lic key files in transit and at rest; portal uses TLS 1.2+      │   │
+│   │        Key files: FoD .lic files are cryptographically signed by Dell; cannot be forged       │   │
+│   │       At rest: .lic files stored in encrypted vault (AES-256); never stored in plaintext      │   │
+│   │      In transit: portal download over TLS 1.2+; array import over HTTPS management plane      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Portal TLS download → vault AES-256 storage → HTTPS import to array → signature verified           │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      Key File Security      │  │           Transit           │  │           At Rest           │   │
+│   │       Dell PKI signed       │  │           TLS 1.2+          │  │        Vault AES-256        │   │
+│   │          SN binding         │  │         HTTPS portal        │  │       Encrypted share       │   │
+│   │        Tamper evident       │  │       HTTPS array mgmt      │  │       Never plaintext       │   │
+│   │       Sig verification      │  │         No email/FTP        │  │        Key access log       │   │
+│   │          No re-use          │  │         Cert pinning        │  │       Backup encrypted      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Array firmware verifies Dell PKI signature on .lic file; rejects unsigned or modified files        │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Layer       │    Algorithm     │     Applied To    │      Owner       │      Notes       │   │
+│   │  Key signature   │   Dell PKI/RSA   │  Every .lic file  │       Dell       │Verified on import│   │
+│   │     Transit      │     TLS 1.2+     │ Download + import │ Dell + customer  │    HTTPS only    │   │
+│   │     At rest      │     AES-256      │   Vault storage   │     Customer     │Vault-managed key │   │
+│   │      Backup      │     AES-256      │  Encrypted share  │     Customer     │ Mirror of vault  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: .lic files never transit unencrypted network segments; TLS or encrypted channel only     │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Dell PKI       = Dell Public Key Infrastructure; signs every FoD .lic file with private key        │
+│    Sig verification = Array firmware checks Dell public key signature on .lic at import time          │
+│    Tamper evident = Any modification to .lic file content invalidates the Dell PKI signature          │
+│    SN binding     = .lic cryptographic content includes the target array serial number                │
+│    No re-use      = A FoD key for SN-A cannot be applied to SN-B; signature check fails               │
+│    TLS 1.2+       = Dell portal and array management plane require TLS 1.2 minimum                    │
+│    No email/FTP   = .lic files must not transit unencrypted channels; vault and HTTPS only            │
+│    Cert pinning   = Array management HTTPS; trust only Dell-issued cert; rejects MITM cert            │
+│    Vault AES-256  = HashiCorp Vault encrypts all stored secrets (inc. .lic files) with AES-256        │
+│    Key access log = Vault audit log records every read of a .lic file; who, when, IP                  │
+│    Backup encrypted = Secondary .lic backup on encrypted file server; same AES-256 protection         │
+│    Vault-managed key = Vault handles AES-256 key rotation for stored secrets automatically            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 > Part of the [Flex on Demand](../../) reference.
 
 ---

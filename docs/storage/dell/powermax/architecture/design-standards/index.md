@@ -1,5 +1,59 @@
 # PowerMax — Standards
 
+```
+┌───────────────────────────── Dell PowerMax Architecture Design Standards ─────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Design standards define SLO selection, SRDF topology, FC zoning, and SRP sizing rules     │   │
+│   │    SLO tier matched to workload IOPS profile: Diamond = latency-critical, Bronze = archive    │   │
+│   │      SRDF topology: Metro for zero-RPO HA, Async for DR; Adaptive Copy for data movement      │   │
+│   │      FC zoning: single-initiator / single-target per zone; no zone sprawl across fabrics      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Profile workload → select SLO → size SRP → define masking view → configure SRDF topology           │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        SLO Standards        │  │        SRDF Standards       │  │       Zoning Standards      │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │       Diamond: <1ms DB      │  │       Metro: zero RPO       │  │        SI/ST per zone       │   │
+│   │        Platinum: <2ms       │  │       Sync: near-zero       │  │        2 fabrics min        │   │
+│   │       Gold: <5ms mixed      │  │       Async: RPO mins       │  │         VSAN tagging        │   │
+│   │        Silver: <10ms        │  │        Adaptive: bulk       │  │        NPIV per host        │   │
+│   │       Bronze: archive       │  │       RDF group per SG      │  │        No zone sprawl       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    SRP sizing → SRDF consistency group → masking view → host-side multipath (PowerPath/MPIO)          │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   │     Standard     │       Rule       │     Rationale     │   Anti-pattern   │      Impact      │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │       SLO        │ Match IOPS tier  │  Predictable perf │   All Diamond    │   Cost overrun   │   │
+│   │       SRP        │Per-workload pool │  Avoid contention │   One SRP all    │  Noisy neighbor  │   │
+│   │       SRDF       │  Metro + Async   │   HA + DR layers  │    Sync only     │  No DR fallback  │   │
+│   │      Zoning      │  SI/ST per zone  │  Fault isolation  │ Multi-init zone  │   Masking gaps   │   │
+│                                                                                                       │
+│    Physical: dual-fabric SAN; RDF directors on dedicated SRDF links; separate mgmt network            │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SI/ST          = Single-Initiator/Single-Target; one HBA port and one array port per zone          │
+│    SRDF Metro     = Active-active stretch cluster; both R1 and R2 volumes serve production I/O        │
+│    SRDF Async     = Asynchronous replication; RPO in seconds to minutes; DR site standby              │
+│    Adaptive Copy  = Non-disruptive bulk migration or data movement; no consistency guarantee          │
+│    RDF group      = Logical SRDF pairing; each group maps one set of volumes to a remote array        │
+│    NPIV           = N-Port ID Virtualization; virtual WWN per VM for per-VM zoning                    │
+│    Consistency grp= SRDF consistency group; ensures write-order fidelity across volumes               │
+│    PowerPath      = Dell multipath driver; load balancing and failover for PowerMax hosts             │
+│    MPIO           = Native OS multipath (Windows/Linux) as alternative to PowerPath                   │
+│    Noisy neighbor = SRP contention when unrelated workloads share a pool; mitigated by SLO            │
+│    VSAN tagging   = Brocade/Cisco zoning attribute to restrict zone scope to a VSAN                   │
+│    Zone sprawl    = Excessive zone membership causing management overhead and masking risk            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Naming Conventions
 
 | Object | Convention | Example |
