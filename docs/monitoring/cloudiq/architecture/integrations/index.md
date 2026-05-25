@@ -1,4 +1,4 @@
-# CloudIQ — Integrations
+# CloudIQ — Integrations (Monitoring)
 
 <div class="kb-summary">
 CloudIQ integrates natively with Dell storage arrays via the SCG, and outbound to ITSM and notification systems via the REST API and webhook connectors.

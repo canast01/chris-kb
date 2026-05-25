@@ -1,4 +1,4 @@
-# FlashBlade — Common Issues
+# FlashBlade — Known Issues
 
 ```text
 FlashBlade Triage Flow

@@ -1,4 +1,4 @@
-# SnapCenter — Common Issues
+# SnapCenter — Known Issues
 
 > Part of the [SnapCenter Operations](../index.md) reference.
 

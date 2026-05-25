@@ -1,4 +1,4 @@
-# Storage Latency Troubleshooting
+# Storage Latency Troubleshooting (VMware)
 
 ```text
 ┌──────────── Storage Latency: VM to Array Triage Path ──────────────────────────┐

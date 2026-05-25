@@ -1,4 +1,4 @@
-# Scripts
+# Evergreen//One — Scripts
 
 > Part of the [Pure Storage Evergreen//One](../index.md) reference.
 

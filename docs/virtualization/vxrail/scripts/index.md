@@ -1,4 +1,4 @@
-# Scripts
+# VxRail — Scripts
 
 > Part of the [VxRail](../index.md) reference.
 

@@ -1,4 +1,4 @@
-# Nexus Dashboard — How It Works
+# Nexus Dashboard — How It Works (Monitoring)
 
 Cisco Nexus Dashboard (ND) is a centralised operations platform for Cisco ACI and NX-OS data centre fabrics. It provides unified management, health monitoring, policy orchestration, and network insights through a microservices-based architecture. Services including Nexus Dashboard Fabric Controller (NDFC) and Nexus Dashboard Insights (NDI) run on top of the ND platform and are independently licensed and deployed.
 

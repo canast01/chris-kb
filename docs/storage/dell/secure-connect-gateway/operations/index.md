@@ -1,4 +1,4 @@
-# Operations
+# Secure Connect Gateway — Operations
 
 > Part of the [Secure Connect Gateway](../index.md) reference.
 

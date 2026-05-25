@@ -1,4 +1,4 @@
-# Scripts
+# Secure Connect Gateway — Scripts
 
 > Part of the [Dell Secure Connect Gateway](../index.md) reference.
 

@@ -1,4 +1,4 @@
-# Scripts
+# Azure — Scripts
 
 > Part of the [Azure](../../index.md) reference.
 

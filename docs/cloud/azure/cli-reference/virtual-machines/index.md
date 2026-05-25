@@ -1,4 +1,4 @@
-# Virtual Machines
+# Azure CLI — Virtual Machines
 
 > Part of the Azure CLI Reference.
 

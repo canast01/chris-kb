@@ -1,4 +1,4 @@
-# PowerShell — Scripts
+# PowerShell — Script Reference
 
 ## VM Health Report
 

@@ -1,8 +1,8 @@
 ---
-title: TLS
+title: TLS (LDAP)
 ---
 
-# LDAP TLS (LDAPS)
+# TLS (LDAP)
 
 ```text
         STARTTLS vs LDAPS

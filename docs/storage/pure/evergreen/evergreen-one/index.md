@@ -1,4 +1,4 @@
-# Pure Storage Evergreen//One
+# Evergreen//One (Evergreen Sub-Service)
 
 ```text
   Evergreen//One Subscription Model

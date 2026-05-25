@@ -1,4 +1,4 @@
-# Scripts
+# CloudIQ — Scripts
 
 > Part of the [CloudIQ](../../index.md) reference.
 

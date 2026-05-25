@@ -1,4 +1,4 @@
-# SnapMirror — Common Issues
+# SnapMirror — Known Issues
 
 > Part of the [SnapMirror Operations](../index.md) reference.
 

@@ -1,4 +1,4 @@
-# Aria Operations
+# Aria Operations (Monitoring)
 
 <div class="kb-summary">
 VMware Aria Operations monitoring platform — architecture, health checks, capacity, alerting, dashboards, and operational runbooks.

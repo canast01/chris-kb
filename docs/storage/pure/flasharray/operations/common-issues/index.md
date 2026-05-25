@@ -1,4 +1,4 @@
-# FlashArray — Common Issues
+# FlashArray — Known Issues
 
 ```text
 FlashArray Triage Flow

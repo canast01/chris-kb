@@ -1,4 +1,4 @@
-# MDS — Common Issues
+# MDS — Known Issues
 
 > Part of the [Cisco MDS](../../index.md) reference.
 

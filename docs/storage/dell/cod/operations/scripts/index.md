@@ -1,4 +1,4 @@
-# Scripts
+# Dell CoD — Scripts
 
 > Part of the [Dell Capacity on Demand](../index.md) reference.
 

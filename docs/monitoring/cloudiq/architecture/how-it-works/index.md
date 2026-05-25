@@ -1,4 +1,4 @@
-# CloudIQ — How It Works
+# CloudIQ — How It Works (Monitoring)
 
 Dell CloudIQ is a cloud-native SaaS AIOps platform that collects telemetry from Dell storage, server, and networking systems. All communication is outbound HTTPS from an on-premises Secure Connect Gateway (SCG) virtual appliance — no inbound firewall rules are required.
 

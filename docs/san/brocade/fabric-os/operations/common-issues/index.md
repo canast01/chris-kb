@@ -1,4 +1,4 @@
-# FabricOS — Common Issues
+# FabricOS — Known Issues
 
 ```text
 ┌────────────────────────────────────── FabricOS — Common Issues ───────────────────────────────────────┐

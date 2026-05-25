@@ -1,4 +1,4 @@
-# Aria Operations — Architecture
+# Aria Operations — Architecture (Monitoring)
 
 <div class="kb-summary">
 Aria Operations deploys as an analytics cluster (Primary + Replica + optional Data Nodes) with Remote Collectors distributing telemetry collection across sites. Management Packs extend coverage to third-party platforms.

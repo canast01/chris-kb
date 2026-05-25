@@ -1,4 +1,4 @@
-# VxRail — How It Works
+# VxRail — How It Works (VMware Platform)
 
 Dell VxRail is a hyper-converged infrastructure (HCI) appliance that combines compute, storage, and networking in a pre-integrated, factory-configured unit. VxRail is built on VMware vSphere and vSAN, and is exclusively managed through the VxRail Manager plugin within vCenter. Every VxRail cluster runs vSAN as its storage layer — there is no shared external storage in a standard VxRail deployment.
 

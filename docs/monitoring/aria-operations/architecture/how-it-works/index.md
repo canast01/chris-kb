@@ -1,4 +1,4 @@
-# Aria Operations — How It Works
+# Aria Operations — How It Works (Monitoring)
 
 VMware Aria Operations (formerly vROps) is deployed as an analytics cluster comprising primary, replica, and optional data nodes. Remote Collectors distribute collection workload across sites without adding to the analytics tier. All components are managed through the Aria Suite Lifecycle Manager.
 

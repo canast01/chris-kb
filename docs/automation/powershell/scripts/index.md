@@ -1,4 +1,4 @@
-# Scripts
+# PowerShell — Scripts
 
 > Part of the [PowerShell](../index.md) reference.
 

@@ -1,4 +1,4 @@
-# CloudIQ — Architecture
+# CloudIQ — Architecture (Monitoring)
 
 <div class="kb-summary">
 CloudIQ is a SaaS AIOps platform. The only on-premises component is the Secure Connect Gateway (SCG) virtual appliance, which collects telemetry from Dell arrays and forwards it outbound over HTTPS — no inbound firewall rules required.

@@ -1,8 +1,8 @@
 ---
-title: AI
+title: AI — Certifications
 ---
 
-# AI
+# AI — Certifications
 
 AI operational notes and deep-dive references.
 

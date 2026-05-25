@@ -1,8 +1,8 @@
 ---
-title: SAN
+title: SAN — Certifications
 ---
 
-# SAN
+# SAN — Certifications
 
 SAN operational notes and deep-dive references.
 

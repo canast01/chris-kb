@@ -1,4 +1,4 @@
-# CloudIQ
+# CloudIQ (Monitoring)
 
 <div class="kb-summary">
 Dell CloudIQ cloud-based monitoring platform — architecture, health scoring, capacity forecasting, recommendations, and operational runbooks.

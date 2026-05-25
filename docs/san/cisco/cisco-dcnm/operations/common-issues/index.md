@@ -1,4 +1,4 @@
-# Cisco DCNM — Common Issues
+# Cisco DCNM — Known Issues
 
 Quick reference for common problems and resolutions.
 

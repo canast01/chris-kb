@@ -1,4 +1,4 @@
-# Azure CLI Reference
+# Azure Operations CLI Reference
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐

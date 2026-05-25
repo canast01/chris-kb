@@ -1,4 +1,4 @@
-# Post-Change Validation
+# Post-Change Validation (Virtualization)
 
 Run these checks after any infrastructure change — maintenance, upgrade, patch, or configuration modification. Document evidence in the change record before closing.
 

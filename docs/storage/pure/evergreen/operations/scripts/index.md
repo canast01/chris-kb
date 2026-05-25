@@ -1,4 +1,4 @@
-# Evergreen — Scripts
+# Evergreen — Script Reference
 
 ```text
   Pure Script Execution Paths

@@ -1,4 +1,4 @@
-# PowerPath — Common Issues
+# PowerPath — Known Issues
 
 ## Incident Triage
 

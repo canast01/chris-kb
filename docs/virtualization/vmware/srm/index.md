@@ -1,8 +1,8 @@
 ---
-title: SRM
+title: SRM (VMware Platform)
 ---
 
-# Site Recovery Manager
+# SRM (VMware Platform)
 
 <div class="kb-summary">
 Site Recovery Manager knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.

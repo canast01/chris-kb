@@ -1,8 +1,8 @@
 ---
-title: AWS
+title: AWS — Certifications
 ---
 
-# AWS Certification
+# AWS — Certifications
 
 
 <div class="kb-grid kb-grid-1">

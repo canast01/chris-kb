@@ -1,4 +1,4 @@
-# SRM — How It Works
+# SRM — How It Works (VMware Platform)
 
 ## Site Topology
 

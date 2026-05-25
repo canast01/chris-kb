@@ -1,4 +1,4 @@
-# Weak Areas
+# Weak Areas (Storage)
 
 ## Purpose
 

@@ -1,8 +1,8 @@
 ---
-title: IAM
+title: AWS CLI — IAM
 ---
 
-# Identity & Access (IAM / STS)
+# AWS CLI — IAM
 
 ```text
 IAM CLI: Users · Roles · Policies · STS

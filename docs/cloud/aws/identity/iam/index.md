@@ -1,8 +1,8 @@
 ---
-title: IAM
+title: AWS Identity — IAM
 ---
 
-# AWS IAM
+# AWS Identity — IAM
 ## Overview
 
 AWS IAM notes for day-to-day infrastructure operations.

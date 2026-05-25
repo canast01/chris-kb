@@ -1,4 +1,4 @@
-# Networking
+# Azure CLI — Networking
 
 > Part of the Azure CLI Reference.
 

@@ -1,4 +1,4 @@
-# Scripts
+# Dell Apex STaaS — Scripts
 
 > Part of the [APEX Storage as a Service](../index.md) reference.
 

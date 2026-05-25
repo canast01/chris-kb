@@ -1,4 +1,4 @@
-# Windows Server — Common Issues
+# Windows Server — Known Issues
 
 Quick reference for common problems and resolutions.
 

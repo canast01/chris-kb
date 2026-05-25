@@ -1,4 +1,4 @@
-# Nexus Dashboard
+# Nexus Dashboard (Monitoring)
 
 <div class="kb-summary">
 Cisco Nexus Dashboard unified operations platform — architecture, NDFC/NDI services, fabric health, ACI integration, and operational runbooks.

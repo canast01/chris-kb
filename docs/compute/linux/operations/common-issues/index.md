@@ -1,4 +1,4 @@
-# Linux — Common Issues
+# Linux — Known Issues
 
 Quick reference for common problems and resolutions.
 
