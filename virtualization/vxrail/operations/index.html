@@ -4769,7 +4769,7 @@
 
 <h1 id="vxrail-operations">VxRail Operations<a class="headerlink" href="#vxrail-operations" title="Permanent link">&para;</a></h1>
 <p>VxRail operations notes for daily checks, maintenance windows, node work, expansion, support cases, and post-change validation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── VxRail — Operations ─────────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── VxRail — Operations ─────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │           Daily VxRail cluster operations: health checks via VxRail plugin and iDRAC          │   │
@@ -4825,6 +4825,117 @@
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│                                                                                                       │
 <a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+┌───────────────────────────────────────── VxRail — Operations ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           Daily VxRail cluster operations: health checks via VxRail plugin and iDRAC          │   │
+│   │        Maintenance window procedures; node maintenance mode workflow and DRS evacuation       │   │
+│   │        Cluster expansion node addition; support case preparation with bundle generation       │   │
+│   │            Post-change validation; LCM failure triage; pre-upgrade readiness checks           │   │
+│   │       Change management log; alert review from OMIVV, SupportAssist, and vCenter alarms       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Daily ops catch cluster issues · maintenance keeps nodes updated · cluster mgmt handles expansion  │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Daily Ops          │  │         Maintenance         │  │         Cluster Mgmt        │   │
+│   │         Daily checks        │  │         Maint window        │  │        Cluster expand       │   │
+│   │        VxRail plugin        │  │       Node maint mode       │  │        Node add guide       │   │
+│   │         iDRAC alarms        │  │        Pre-maint chk        │  │          Rebalance          │   │
+│   │         vSAN resync         │  │        Change window        │  │         Support case        │   │
+│   │         Node health         │  │       Post-change val       │  │       LCM fail triage       │   │
+│   │         Alert review        │  │          Change log         │  │        Pre-upg checks       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Daily ops surface issues early · maintenance follows change process                                │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Daily Chks    │   Maint Window   │     Node Maint    │  Cluster Expnd   │   Support Case   │   │
+│   │  VxRail plugin   │  Pre-maint chk   │     Maint mode    │  Add node guide  │    Bundle gen    │   │
+│   │   iDRAC alarms   │  Change window   │    DRS evacuate   │    Rebalance     │   Log collect    │   │
+│   │  vSAN resync=0   │   Work perform   │    FW+ESXi upg    │   vSAN expand    │  SupportAssist   │   │
+│   │  ESXi connected  │  Post-chng val   │     Exit maint    │  Cluster health  │    GSS portal    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Dell PowerEdge servers · NVMe/SSD/HDD · iDRAC OOB · 25GbE NICs · ToR switches                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VxRail plugin     = vCenter plugin aggregating cluster health from VxRail Manager into a single view │
+│  Maintenance mode  = ESXi state evacuating VMs via DRS before node-level maintenance or upgrade       │
+│  DRS evacuation    = DRS migrates all VMs off a host via vMotion before maintenance mode is entered   │
+│  Cluster expansion = Adding new VxRail nodes to an existing cluster via guided VxRail Manager workflow│
+│  Post-change val   = Checks vSAN health, ESXi connectivity, iDRAC status, and alarms after any change │
+│  Support bundle    = Log archive generated by VxRail Manager for Dell GSS case submission             │
+│  SupportAssist     = Dell proactive support service; opens cases automatically on hardware fault      │
+│  LCM failure triage = Investigating why an LCM upgrade stalled; review LCM logs and pre-check output  │
+│  Pre-upgrade check = Health and readiness validation run before initiating an LCM upgrade job         │
+│  Change management = Formal process for scheduling, approving, and documenting cluster changes        │
+│  iDRAC             = Integrated Dell Remote Access Controller; hardware health and OOB access         │
+│  Node-by-node      = LCM upgrade pattern: maintenance → upgrade → validate → next node in sequence    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────────── VxRail — Operations ─────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │           Daily VxRail cluster operations: health checks via VxRail plugin and iDRAC          │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │        Maintenance window procedures; node maintenance mode workflow and DRS evacuation       │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │        Cluster expansion node addition; support case preparation with bundle generation       │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │            Post-change validation; LCM failure triage; pre-upgrade readiness checks           │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │       Change management log; alert review from OMIVV, SupportAssist, and vCenter alarms       │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    Daily ops catch cluster issues · maintenance keeps nodes updated · cluster mgmt handles expansion  │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │          Daily Ops          │  │         Maintenance         │  │         Cluster Mgmt        │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │         Daily checks        │  │         Maint window        │  │        Cluster expand       │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │        VxRail plugin        │  │       Node maint mode       │  │        Node add guide       │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │         iDRAC alarms        │  │        Pre-maint chk        │  │          Rebalance          │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         vSAN resync         │  │        Change window        │  │         Support case        │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         Node health         │  │       Post-change val       │  │       LCM fail triage       │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         Alert review        │  │          Change log         │  │        Pre-upg checks       │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    Daily ops surface issues early · maintenance follows change process                                │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │    Daily Chks    │   Maint Window   │     Node Maint    │  Cluster Expnd   │   Support Case   │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │  VxRail plugin   │  Pre-maint chk   │     Maint mode    │  Add node guide  │    Bundle gen    │   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │   iDRAC alarms   │  Change window   │    DRS evacuate   │    Rebalance     │   Log collect    │   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   │  vSAN resync=0   │   Work perform   │    FW+ESXi upg    │   vSAN expand    │  SupportAssist   │   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│   │  ESXi connected  │  Post-chng val   │     Exit maint    │  Cluster health  │    GSS portal    │   │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Dell PowerEdge servers · NVMe/SSD/HDD · iDRAC OOB · 25GbE NICs · ToR switches                        │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│                                                                                                       │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                                                                                       │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  VxRail plugin     = vCenter plugin aggregating cluster health from VxRail Manager into a single view │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Maintenance mode  = ESXi state evacuating VMs via DRS before node-level maintenance or upgrade       │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  DRS evacuation    = DRS migrates all VMs off a host via vMotion before maintenance mode is entered   │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  Cluster expansion = Adding new VxRail nodes to an existing cluster via guided VxRail Manager workflow│
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  Post-change val   = Checks vSAN health, ESXi connectivity, iDRAC status, and alarms after any change │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  Support bundle    = Log archive generated by VxRail Manager for Dell GSS case submission             │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  SupportAssist     = Dell proactive support service; opens cases automatically on hardware fault      │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  LCM failure triage = Investigating why an LCM upgrade stalled; review LCM logs and pre-check output  │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│  Pre-upgrade check = Health and readiness validation run before initiating an LCM upgrade job         │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│  Change management = Formal process for scheduling, approving, and documenting cluster changes        │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│  iDRAC             = Integrated Dell Remote Access Controller; hardware health and OOB access         │
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│  Node-by-node      = LCM upgrade pattern: maintenance → upgrade → validate → next node in sequence    │
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│                                                                                                       │
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="daily-checks/">

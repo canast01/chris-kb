@@ -4656,36 +4656,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#vmware-storage-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VMware Storage Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cluster-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cluster Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -4833,7 +4803,7 @@
 vSAN pools local NVMe and SSD disks across ESXi hosts into a shared distributed datastore. Storage policies (RAID-1/5/6, FTT) define per-VM resilience. vSAN ESA eliminates the separate cache tier on supported hardware.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── vSAN — Architecture ─────────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── vSAN — Architecture ─────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │  VMware vSAN — HCI storage pooling local NVMe/SSD/HDD from ESXi hosts into a shared datastore │   │
@@ -4889,67 +4859,62 @@ vSAN pools local NVMe and SSD disks across ESXi hosts into a shared distributed 
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│                                                                                                       │
 <a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Architecture</th>
-<th>Storage location</th>
-<th>Shared across hosts</th>
-<th>vMotion / HA / DRS</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DAS</td>
-<td>Local to host</td>
-<td>No</td>
-<td>No</td>
-</tr>
-<tr>
-<td>SAN (FC / iSCSI / NVMe-oF)</td>
-<td>External array</td>
-<td>Yes</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td>NAS (NFS / SMB)</td>
-<td>External array</td>
-<td>Yes</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td>vSAN (HCI)</td>
-<td>Pooled from hosts</td>
-<td>Yes</td>
-<td>Yes</td>
-</tr>
-</tbody>
-</table>
-<h2 id="vmware-storage-architecture">VMware Storage Architecture<a class="headerlink" href="#vmware-storage-architecture" title="Permanent link">&para;</a></h2>
-<p><img alt="VMware Storage Architecture" src="../../../../assets/vmware-storage-overview.svg" /></p>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Storage architecture modes, objects, data path, and core components.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>vCenter, NSX, File Services, and Aria Operations.</span></a>
-<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Network requirements, storage policies, naming conventions, and capacity planning.</span></a>
-</div>
-
-<hr />
-<h2 id="cluster-topology">Cluster Topology<a class="headerlink" href="#cluster-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  H1["ESXi-01\nCache NVMe + Capacity SSD"] &amp; H2["ESXi-02\nCache NVMe + Capacity SSD"] &amp; H3["ESXi-03\nCache NVMe + Capacity SSD"] --&gt; VSANNET["vSAN VMkernel Network\n25 / 10 GbE dedicated"]
-  VSANNET --&gt; DS[("vSAN Datastore\nFTT policy — RAID-1 / RAID-5 / RAID-6")]
-  DS --&gt; VM(["VM Workloads"])
-  VCSA["vCenter\n(vSAN management)"] --&gt; VSANNET
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef store fill:#1d4ed8,stroke:#1e40af,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class H1,H2,H3 ctrl
-  class VSANNET net
-  class DS store
-  class VM host
-  class VCSA mgmt</code></pre>
+┌───────────────────────────────────────── vSAN — Architecture ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  VMware vSAN — HCI storage pooling local NVMe/SSD/HDD from ESXi hosts into a shared datastore │   │
+│   │ FTT policies (RAID-1 mirroring, RAID-5/6 erasure coding) protect objects across hosts/domains │   │
+│   │ Dedup and compression available in all-flash OSA; OSA (original) vs ESA (express) architecture│   │
+│   │ vSAN ESA uses single-tier NVMe with compression-first; no separate cache/capacity disk groups │   │
+│   │  Stretched cluster spans two sites with a witness host; SPBM storage policies enforce per-VM  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works defines HCI storage pooling · integrations connect vSphere and management             │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         How It Works        │  │         Integrations        │  │       Design Standards      │   │
+│   │      Disk groups (OSA)      │  │      vCenter: native UI     │  │       Min 3 nodes OSA       │   │
+│   │      FTT/RAID policies      │  │        vSphere HA/DRS       │  │       Min 4 nodes ESA       │   │
+│   │     Witness: stretch HA     │  │        NSX: microseg        │  │        FTT=1 default        │   │
+│   │        Dedup+compress       │  │      File services: NFS     │  │        Cache ≥10% OSA       │   │
+│   │        vSAN ESA: NVMe       │  │        HCL: hw compat       │  │       Witness: tiny VM      │   │
+│   │      SPBM per-VM policy     │  │       Aria Ops adapter      │  │         25% headroom        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works covers pooling and policies · integrations connect vCenter and NSX                    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   How It Works   │   Integrations   │    Design Stds    │    Deployment    │     Key Stds     │   │
+│   │   Disk groups    │  vCenter native  │    Min 3 nodes    │    All-flash     │    FTT policy    │   │
+│   │  FTT/RAID tiers  │   HA/DRS intg    │    Min 4 (ESA)    │    Hybrid OSA    │    Cache 10%     │   │
+│   │  Dedup/compress  │   NSX microseg   │    Witness host   │    Stretched     │   HCL required   │   │
+│   │  SPBM policies   │  Aria Ops intg   │    25% headroom   │    HCI design    │     SPBM std     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 servers with NVMe/SSD/HDD · RAM DIMMs · 25GbE NICs · Witness host VM · ToR switches              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OSA           = Original Storage Architecture; vSAN disk groups with separate cache and capacity     │
+│  ESA           = Express Storage Architecture; single-tier NVMe; compression-first; vSAN 8.0+         │
+│  FTT           = Failures To Tolerate; number of host/disk failures a vSAN object can survive         │
+│  RAID-5/6      = Erasure coding in vSAN; RAID-5 requires 4 hosts (1 FTT); RAID-6 needs 6 hosts (2 FTT)│
+│  Disk group    = OSA unit of storage; one cache disk + 1-7 capacity disks per ESXi host               │
+│  SPBM          = Storage Policy-Based Management; per-VM policy defines FTT, RAID, IOPs limits        │
+│  Witness       = Lightweight VM in stretched cluster; holds metadata tie-breaker; no VM data stored   │
+│  Dedup+compress = All-flash OSA feature reducing capacity footprint; applied per disk group           │
+│  vSAN health   = Built-in health service in vCenter; checks HCL, network, disk, and capacity          │
+│  HCL           = Hardware Compatibility List; vSAN requires HCL-certified disks, NICs, and servers    │
+│  Stretched cluster = vSAN spanning two fault domains with a witness; tolerates full site failure      │
+│  PFTT          = Primary Failures To Tolerate; site-level FTT setting in stretched cluster policy     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 
 
 

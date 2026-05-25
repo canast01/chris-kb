@@ -4048,61 +4048,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#esxi-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ESXi Installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hostname-and-dns" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hostname and DNS
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ntp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NTP
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#syslog" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Syslog
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#management-vmkernel" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4317,7 +4262,7 @@
 <p>Part of the <a href="../">Standards</a> reference.</p>
 </blockquote>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                  ESXi Host Build Checklist — Order                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├─────────┬────────────────────────────────────────────────────────────────┤
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Phase  │  Steps                                                         │
@@ -4332,113 +4277,58 @@
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│ Monitor │ Add to monitoring platform │ Inventory updated                 │
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>└─────────┴────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>All ESXi hosts must be built to this standard before joining a cluster. Deviations require documented approval. This standard applies to bare-metal ESXi deployments and VxRail nodes (where applicable — VxRail nodes are managed via VxRail LCM and may have additional vendor-specific requirements).</p>
-<h2 id="esxi-installation">ESXi Installation<a class="headerlink" href="#esxi-installation" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Required Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ESXi Version</td>
-<td>Current approved baseline (see Version Inventory)</td>
-</tr>
-<tr>
-<td>Installation Source</td>
-<td>Approved vendor-customised ISO (Dell VIB bundle for Dell hardware)</td>
-</tr>
-<tr>
-<td>Boot Device</td>
-<td>Internal SD card, USB, or M.2 (avoid shared SAN LUNs for boot)</td>
-</tr>
-<tr>
-<td>Scratch Partition</td>
-<td>Must be on a persistent local device — not the boot device</td>
-</tr>
-</tbody>
-</table>
-<h2 id="hostname-and-dns">Hostname and DNS<a class="headerlink" href="#hostname-and-dns" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Requirement</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Hostname</td>
-<td>Follow naming standard (<code>esx-&lt;site&gt;-&lt;##&gt;</code>)</td>
-</tr>
-<tr>
-<td>DNS Servers</td>
-<td>Two DNS servers configured (primary and secondary)</td>
-</tr>
-<tr>
-<td>DNS Search Domain</td>
-<td>Corporate domain (e.g. <code>example.com</code>)</td>
-</tr>
-<tr>
-<td>Forward and reverse DNS</td>
-<td>Host must resolve by name and IP</td>
-</tr>
-</tbody>
-</table>
-<h2 id="ntp">NTP<a class="headerlink" href="#ntp" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Requirement</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>NTP Service</td>
-<td>Enabled and set to start with host</td>
-</tr>
-<tr>
-<td>NTP Servers</td>
-<td>Two NTP servers configured (internal stratum 2 preferred)</td>
-</tr>
-<tr>
-<td>Time Sync Policy</td>
-<td>Do not use VMware Tools time sync as the sole time source</td>
-</tr>
-</tbody>
-</table>
-<p>Verify NTP is synchronised after build: <code>esxcli system time get</code> and check clock skew.</p>
-<h2 id="syslog">Syslog<a class="headerlink" href="#syslog" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Requirement</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Remote Syslog</td>
-<td>Configured to forward to central syslog / Aria Logs</td>
-</tr>
-<tr>
-<td>Local Log Location</td>
-<td><code>/scratch/log</code> on persistent storage</td>
-</tr>
-<tr>
-<td>Log Rotation</td>
-<td>Default (sufficient for most environments)</td>
-</tr>
-</tbody>
-</table>
-<p>Configure via:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span>udp://aria-logs-01.example.com:514
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
-</code></pre></div>
+┌───────────────────────────────────── ESXi — Host Build Standard ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Baseline configuration applied to every ESXi host via host profile — enforced in vCenter   │   │
+│   │       NTP: 2+ NTP servers; drift &lt; 250ms; required for vSAN, vMotion, and Kerberos auth       │   │
+│   │         Syslog: forwarded to centralised SIEM; retention 90 days minimum at SIEM level        │   │
+│   │     Lockdown: Normal mode on all production hosts; exception list for LCM service accounts    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Build standard items enforced via host profile; non-compliant hosts flagged in vCenter             │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Time &amp; DNS         │  │           Security          │  │          Networking         │   │
+│   │        NTP servers x2       │  │       Lockdown: Normal      │  │        VDS uplinks x2       │   │
+│   │       DNS primary/sec       │  │        SSH: disabled        │  │          MTU: 9000          │   │
+│   │       DNS suffix list       │  │       ESXi Shell: off       │  │       LACP / failover       │   │
+│   │        Syslog target        │  │       VIB: PartnerSupp      │  │         VMkernel IPs        │   │
+│   │        Drift &lt; 250ms        │  │         Host profile        │  │          iDRAC VLAN         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Host profile compliance checked after every LCM patch; non-compliant hosts remediated              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Item       │  Required value  │    Enforced by    │      Check       │   Remediation    │   │
+│   │  Lockdown mode   │      Normal      │    Host profile   │    vCenter UI    │  Profile apply   │   │
+│   │   SSH service    │   Stopped/off    │    Host profile   │   esxcli check   │  Profile apply   │   │
+│   │    NTP drift     │     &lt; 250ms      │     NTP daemon    │     ntpq -p      │ Sync NTP servers │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: management NIC on VLAN 10; iDRAC on OOB VLAN; vSAN NIC on VLAN 30                        │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Host profile  = vCenter template enforcing consistent config across all cluster hosts              │
+│    Lockdown mode = ESXi state blocking direct SSH; all management routed through vCenter              │
+│    Exception list = Accounts permitted direct host access in lockdown (VxRail Mgr SVC acct)           │
+│    VIB acceptance = Host policy for VIB package signing: VMwareCertified &gt; PartnerSupported           │
+│    NTP drift     = Clock offset tolerance; &gt;250ms breaks vSAN resync and Kerberos tickets             │
+│    ESXi Shell    = TSM service; disabled in production to reduce attack surface                       │
+│    SSH service   = TSM-SSH service; disabled in production; enabled only for troubleshooting          │
+│    Syslog target = Remote syslog server (SIEM) receiving all ESXi log events                          │
+│    LACP          = Link Aggregation Control Protocol; bonds uplinks for bandwidth and failover        │
+│    PartnerSupp   = VIB acceptance level allowing Dell, NetApp, and VMware-signed VIBs                 │
+│    VMkernel IP   = Per-VLAN ESXi virtual NIC IP: management, vMotion, vSAN, iSCSI/NFS                 │
+│    iDRAC VLAN    = OOB management VLAN for iDRAC; isolated from ESXi and VM traffic                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h2 id="management-vmkernel">Management VMkernel<a class="headerlink" href="#management-vmkernel" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

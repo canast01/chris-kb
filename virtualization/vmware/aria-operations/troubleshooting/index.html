@@ -4799,7 +4799,7 @@
 
 
 <h1 id="aria-operations-troubleshooting">Aria Operations — Troubleshooting<a class="headerlink" href="#aria-operations-troubleshooting" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Aria Operations — Troubleshooting ──────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Aria Operations — Troubleshooting ──────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │      Adapter collection failures: verify credentials, firewall paths, and adapter version     │   │
@@ -4855,6 +4855,117 @@
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│                                                                                                       │
 <a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+┌────────────────────────────────── Aria Operations — Troubleshooting ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Adapter collection failures: verify credentials, firewall paths, and adapter version     │   │
+│   │    Alert noise and false positives: tune symptom thresholds; check adapter collection gaps    │   │
+│   │  Missing metric data: confirm remote collector reachability; check collector group assignment │   │
+│   │       Dashboard errors: verify data source adapter health; check widget metric mappings       │   │
+│   │        support.zip bundle collects all cluster logs; attach to GSS case for escalation        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Common issues guide triage · diagnostics isolate adapter or cluster root cause                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Common Issues        │  │         Diagnostics         │  │          Escalation         │   │
+│   │      Adapter coll fail      │  │     Cluster diagnostics     │  │         Support.zip         │   │
+│   │         Alert noise         │  │         Adapter log         │  │        GSS case open        │   │
+│   │         Missing data        │  │         Support.zip         │  │        Skyline health       │   │
+│   │       Dashboard error       │  │        REST API debug       │  │        TAM escalation       │   │
+│   │       Remote coll down      │  │       Log Insight intg      │  │          Log bundle         │   │
+│   │        Capacity wrong       │  │       Metric explorer       │  │        Version compat       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Common issues triage adapter and cluster faults · diagnostics use logs and metric explorer         │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Issues      │   Diagnostics    │     Log Paths     │    Escalation    │     Recovery     │   │
+│   │   Adapter fail   │   Adapter log    │   /var/log/vrops  │   support.zip    │ Re-auth adapter  │   │
+│   │   Alert noise    │ Metric explorer  │    Cluster diag   │   GSS P1 case    │    Tune alert    │   │
+│   │   Missing data   │  REST API debug  │   /var/log/casa   │   TAM escalate   │    Re-collect    │   │
+│   │  Collector down  │   Support.zip    │   /var/log/coll   │  Skyline health  │   Restart coll   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 VMs (cluster nodes + collectors) · RAM DIMMs · Network NICs · vCenter/cloud connectivity         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Adapter collection = Periodic metric pull by an adapter instance; fails on auth or network errors    │
+│  Remote collector   = Site-local VM forwarding metrics; offline if unreachable or out of resources    │
+│  Alert noise        = Excessive or false-positive alerts caused by overly sensitive symptom thresholds│
+│  Metric gap         = Missing data points in a metric time series; caused by collection or node       │
+│  Support.zip bundle = Full diagnostic archive from Aria Ops cluster; submitted to GSS for analysis    │
+│  Cluster diagnostics = Built-in health tool validating node connectivity, services, and disk usage    │
+│  Metric explorer    = UI tool for querying raw metric time series to identify gaps or anomalies       │
+│  Capacity calculation = Engine consuming metric history to project resource exhaustion dates          │
+│  Skyline Health     = VMware proactive support tool that validates cluster health against best        │
+│  REST API           = Aria Ops API for querying metrics, alerts, recommendations programmatically     │
+│  Log Insight intg   = Aria Logs integration forwarding Aria Ops cluster logs for structured search    │
+│  False positive alert = Alert firing when no real problem exists; tuned via symptom threshold change  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────── Aria Operations — Troubleshooting ──────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │      Adapter collection failures: verify credentials, firewall paths, and adapter version     │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │    Alert noise and false positives: tune symptom thresholds; check adapter collection gaps    │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │  Missing metric data: confirm remote collector reachability; check collector group assignment │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │       Dashboard errors: verify data source adapter health; check widget metric mappings       │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │        support.zip bundle collects all cluster logs; attach to GSS case for escalation        │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    Common issues guide triage · diagnostics isolate adapter or cluster root cause                     │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │        Common Issues        │  │         Diagnostics         │  │          Escalation         │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │      Adapter coll fail      │  │     Cluster diagnostics     │  │         Support.zip         │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │         Alert noise         │  │         Adapter log         │  │        GSS case open        │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │         Missing data        │  │         Support.zip         │  │        Skyline health       │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │       Dashboard error       │  │        REST API debug       │  │        TAM escalation       │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │       Remote coll down      │  │       Log Insight intg      │  │          Log bundle         │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │        Capacity wrong       │  │       Metric explorer       │  │        Version compat       │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    Common issues triage adapter and cluster faults · diagnostics use logs and metric explorer         │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │      Issues      │   Diagnostics    │     Log Paths     │    Escalation    │     Recovery     │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │   Adapter fail   │   Adapter log    │   /var/log/vrops  │   support.zip    │ Re-auth adapter  │   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │   Alert noise    │ Metric explorer  │    Cluster diag   │   GSS P1 case    │    Tune alert    │   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   │   Missing data   │  REST API debug  │   /var/log/casa   │   TAM escalate   │    Re-collect    │   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│   │  Collector down  │   Support.zip    │   /var/log/coll   │  Skyline health  │   Restart coll   │   │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  x86 VMs (cluster nodes + collectors) · RAM DIMMs · Network NICs · vCenter/cloud connectivity         │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│                                                                                                       │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                                                                                       │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Adapter collection = Periodic metric pull by an adapter instance; fails on auth or network errors    │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Remote collector   = Site-local VM forwarding metrics; offline if unreachable or out of resources    │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  Alert noise        = Excessive or false-positive alerts caused by overly sensitive symptom thresholds│
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  Metric gap         = Missing data points in a metric time series; caused by collection or node       │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  Support.zip bundle = Full diagnostic archive from Aria Ops cluster; submitted to GSS for analysis    │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  Cluster diagnostics = Built-in health tool validating node connectivity, services, and disk usage    │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  Metric explorer    = UI tool for querying raw metric time series to identify gaps or anomalies       │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  Capacity calculation = Engine consuming metric history to project resource exhaustion dates          │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│  Skyline Health     = VMware proactive support tool that validates cluster health against best        │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│  REST API           = Aria Ops API for querying metrics, alerts, recommendations programmatically     │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│  Log Insight intg   = Aria Logs integration forwarding Aria Ops cluster logs for structured search    │
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│  False positive alert = Alert firing when no real problem exists; tuned via symptom threshold change  │
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│                                                                                                       │
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="common-issues/">

@@ -4489,7 +4489,7 @@
 
 
 <h1 id="apex-storage-as-a-service-troubleshooting">APEX Storage as a Service — Troubleshooting<a class="headerlink" href="#apex-storage-as-a-service-troubleshooting" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Dell Apex STaaS — Troubleshooting ──────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Dell Apex STaaS — Troubleshooting ──────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │         Apex troubleshooting: host path failures, performance issues, capacity alerts         │   │
@@ -4542,6 +4542,111 @@
 <a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+┌────────────────────────────────── Dell Apex STaaS — Troubleshooting ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Apex troubleshooting: host path failures, performance issues, capacity alerts         │   │
+│   │        Host path: check multipath status, iSCSI sessions, FC logins, VLAN reachability        │   │
+│   │        Performance: check CloudIQ IOPS/latency graphs; identify noisy-neighbour volumes       │   │
+│   │        Capacity: CloudIQ alert at 80% committed; open SR to expand before hitting burst       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Symptom → CloudIQ health → host path check → array alert → SR to Dell → resolve                    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Connectivity        │  │         Performance         │  │           Capacity          │   │
+│   │        Host path down       │  │         High latency        │  │       Near-full alert       │   │
+│   │        iSCSI session        │  │        IOPS throttle        │  │        Burst billing        │   │
+│   │        FC login fail        │  │         Queue depth         │  │          Expand SR          │   │
+│   │        VLAN mismatch        │  │         Noisy volume        │  │         Thin reclaim        │   │
+│   │         SCG offline         │  │         Slow rebuild        │  │       Forecast review       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Hardware faults are Dell responsibility; open P1 SR immediately for controller alarms              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Symptom      │   First check    │        Tool       │    Resolution    │    Escalation    │   │
+│   │    Path down     │  multipath -ll   │      Host OS      │  Fix VLAN/zone   │    Dell SR P2    │   │
+│   │   High latency   │  CloudIQ graph   │      CloudIQ      │  Throttle/move   │    Dell SR P2    │   │
+│   │   Capacity 80%   │   Usage report   │    Apex Console   │  Open expand SR  │      P3 SR       │   │
+│   │   SCG offline    │  SCG VM status   │    SCG console    │  Restart SCG VM  │    Dell SR P3    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: multipath paths (cable, SFP, switch) · iSCSI VLAN tagging · FC zone check                │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    multipath -ll   = Linux command; shows all paths to each storage device with status                │
+│    Path down       = Multipath shows one path in "failed" state; I/O continues on other path          │
+│    iSCSI session   = Active TCP connection between host initiator and array iSCSI target              │
+│    FC login fail   = Host HBA cannot FLOGI to fabric; check zoning and WWN registration               │
+│    IOPS throttle   = Array QoS limiting IOPS on a volume; shown as max-rate in CloudIQ                │
+│    Noisy volume    = High-I/O volume consuming array resources impacting other volumes                │
+│    Queue depth     = Outstanding I/O requests per path; excessive depth causes latency                │
+│    SCG offline     = Secure Connect Gateway VM stopped; CloudIQ data gap; no SupportAssist            │
+│    Thin reclaim    = UNMAP/TRIM commands return unused thin-provisioned blocks to pool                │
+│    Capacity SR     = Service Request to expand Apex committed tier; include usage data                │
+│    P1/P2 severity  = P1=production down; P2=degraded; drives Dell response SLA                        │
+│    Controller alarm = CloudIQ or SupportAssist alert on controller hardware; P1 SR now                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────── Dell Apex STaaS — Troubleshooting ──────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │         Apex troubleshooting: host path failures, performance issues, capacity alerts         │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │        Host path: check multipath status, iSCSI sessions, FC logins, VLAN reachability        │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │        Performance: check CloudIQ IOPS/latency graphs; identify noisy-neighbour volumes       │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │        Capacity: CloudIQ alert at 80% committed; open SR to expand before hitting burst       │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│    Symptom → CloudIQ health → host path check → array alert → SR to Dell → resolve                    │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │         Connectivity        │  │         Performance         │  │           Capacity          │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │        Host path down       │  │         High latency        │  │       Near-full alert       │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │        iSCSI session        │  │        IOPS throttle        │  │        Burst billing        │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │        FC login fail        │  │         Queue depth         │  │          Expand SR          │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │        VLAN mismatch        │  │         Noisy volume        │  │         Thin reclaim        │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         SCG offline         │  │         Slow rebuild        │  │       Forecast review       │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    Hardware faults are Dell responsibility; open P1 SR immediately for controller alarms              │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│   │     Symptom      │   First check    │        Tool       │    Resolution    │    Escalation    │   │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   │    Path down     │  multipath -ll   │      Host OS      │  Fix VLAN/zone   │    Dell SR P2    │   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │   High latency   │  CloudIQ graph   │      CloudIQ      │  Throttle/move   │    Dell SR P2    │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │   Capacity 80%   │   Usage report   │    Apex Console   │  Open expand SR  │      P3 SR       │   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │   SCG offline    │  SCG VM status   │    SCG console    │  Restart SCG VM  │    Dell SR P3    │   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                                                                                       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    Physical: multipath paths (cable, SFP, switch) · iSCSI VLAN tagging · FC zone check                │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│                                                                                                       │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│    multipath -ll   = Linux command; shows all paths to each storage device with status                │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│    Path down       = Multipath shows one path in &quot;failed&quot; state; I/O continues on other path          │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│    iSCSI session   = Active TCP connection between host initiator and array iSCSI target              │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│    FC login fail   = Host HBA cannot FLOGI to fabric; check zoning and WWN registration               │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│    IOPS throttle   = Array QoS limiting IOPS on a volume; shown as max-rate in CloudIQ                │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│    Noisy volume    = High-I/O volume consuming array resources impacting other volumes                │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│    Queue depth     = Outstanding I/O requests per path; excessive depth causes latency                │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│    SCG offline     = Secure Connect Gateway VM stopped; CloudIQ data gap; no SupportAssist            │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│    Thin reclaim    = UNMAP/TRIM commands return unused thin-provisioned blocks to pool                │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│    Capacity SR     = Service Request to expand Apex committed tier; include usage data                │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│    P1/P2 severity  = P1=production down; P2=degraded; drives Dell response SLA                        │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│    Controller alarm = CloudIQ or SupportAssist alert on controller hardware; P1 SR now                │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                                                                                       │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>
 <a class="kb-card" href="diagnostics/"><strong>Diagnostics</strong><span>Diagnostic procedures and log analysis.</span></a>

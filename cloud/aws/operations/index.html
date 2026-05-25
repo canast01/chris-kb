@@ -4258,28 +4258,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#change-readiness" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4450,7 +4428,7 @@
 
 
 <h1 id="aws-operations">AWS — Operations<a class="headerlink" href="#aws-operations" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────── AWS Operations Overview ───────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────── AWS Operations Overview ───────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │              AWS Operations — Health Checks, Procedures, Patching, and Automation             │   │
@@ -4505,127 +4483,61 @@
 <a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│                                                                                                       │
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="cli-reference/">
-  <strong>CLI Reference</strong>
-  <span>AWS CLI commands, syntax, and quick reference.</span>
-</a>
-
-<a class="kb-card" href="health-checks/">
-  <strong>Health Checks</strong>
-  <span>Service health, EC2 status, RDS availability, and CloudWatch alarm review.</span>
-</a>
-
-<a class="kb-card" href="procedures/">
-  <strong>Procedures</strong>
-  <span>Day-to-day operational tasks across compute, storage, and networking.</span>
-</a>
-
-<a class="kb-card" href="install-upgrade/">
-  <strong>Install & Upgrade</strong>
-  <span>AMI management, patching via Systems Manager, and service upgrades.</span>
-</a>
-
-<a class="kb-card" href="backup-restore/">
-  <strong>Backup & Restore</strong>
-  <span>AWS Backup jobs, restore procedures, and snapshot management.</span>
-</a>
-
-<a class="kb-card" href="scripts/">
-  <strong>Scripts</strong>
-  <span>Automation scripts and reusable AWS CLI code.</span>
-</a>
-
-</div>
-
-<blockquote>
-<p>Part of the <a href="../">AWS</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Check active AWS service health events</td>
-<td><code>aws health describe-events --filter eventStatusCodes=open</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review active CloudWatch alarms</td>
-<td><code>aws cloudwatch describe-alarms --state-value ALARM</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Verify running EC2 instance health</td>
-<td><code>aws ec2 describe-instance-status --filter Name=instance-state-name,Values=running</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check RDS instance status</td>
-<td><code>aws rds describe-db-instances --query 'DBInstances[*].[DBInstanceIdentifier,DBInstanceStatus]'</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Verify ELB target health</td>
-<td><code>aws elbv2 describe-target-health --target-group-arn &lt;arn&gt;</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review AWS Backup job status for the last 24 hours</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check Cost Explorer for unexpected spend spikes vs. prior day/week</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review CloudTrail for unexpected IAM changes or privilege escalati</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Confirm AWS CLI identity resolves correctly</li>
-<li>[ ] Verify all running EC2 instances report OK instance status</li>
-<li>[ ] Confirm all RDS instances are in <code>available</code> state</li>
-<li>[ ] Check all CloudWatch alarms — zero alarms in <code>ALARM</code> state expected</li>
-<li>[ ] Verify ELB target group health shows all targets healthy</li>
-<li>[ ] Confirm AWS Backup last job completed successfully</li>
-<li>[ ] Check no VPN or Direct Connect tunnels are down</li>
-<li>[ ] Review AWS Health Dashboard for any active or upcoming events</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Confirm caller identity</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># EC2 instance status for all running instances</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-instance-status<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--filter<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>instance-state-name,Values<span class="o">=</span>running<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;InstanceStatuses[*].[InstanceId,InstanceStatus.Status,SystemStatus.Status]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># RDS instance status</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;DBInstances[*].[DBInstanceIdentifier,DBInstanceStatus,Engine]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Active CloudWatch alarms</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--state-value<span class="w"> </span>ALARM<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;MetricAlarms[*].[AlarmName,StateReason]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span>--output<span class="w"> </span>table
-</code></pre></div>
+┌─────────────────────────────────────── AWS Operations Overview ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │              AWS Operations — Health Checks, Procedures, Patching, and Automation             │   │
+│   │   Health Checks: EC2 status checks · RDS availability · CloudWatch alarm state · AWS Health   │   │
+│   │    Procedures: instance lifecycle, AMI management, EBS expansion, ASG scaling, RDS failover   │   │
+│   │  Patching: Systems Manager Patch Manager applies OS patches on schedule; compliance reporting │   │
+│   │      Backup/Restore: AWS Backup jobs · EBS snapshot restore · RDS point-in-time recovery      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Health checks prevent failures · Procedures execute changes safely                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Health Checks        │  │          Procedures         │  │          Automation         │   │
+│   │    EC2 status: 2/2 checks   │  │    Start/stop/reboot EC2    │  │    SSM Run Command: fleet   │   │
+│   │    RDS: available + IOPS    │  │    Resize: instance type    │  │  EventBridge: auto-trigger  │   │
+│   │    CW Alarms: OK vs ALARM   │  │   EBS: extend + resize fs   │  │    Lambda: remediation fn   │   │
+│   │    AWS Health: svc events   │  │    ASG: refresh instances   │  │  CloudFormation: IaC drift  │   │
+│   │   TGW + VPN: BGP sessions   │  │    RDS failover: promote    │  │   Step Functions: workflow  │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Health checks detect issues · Procedures resolve them                                              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Health Checks   │    Procedures    │      Patching     │  Backup/Restore  │     Scripts      │   │
+│   │   EC2 2/2 OK?    │   AMI: create    │   Patch baseline  │ Backup job: run  │  CLI: describe   │   │
+│   │  CW alarms: OK   │   EBS: extend    │    Patch window   │ EBS snap restore │   Boto3: boto3   │   │
+│   │  RDS: available  │   ASG: refresh   │  Compliance: view │     RDS PITR     │   SSM scripts    │   │
+│   │ AWS Health: evts │   RDS failover   │  Reboot if needed │ Cross-region: cp │     CDK / TF     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  EC2 hosts on Nitro · EBS storage fabric · RDS managed infrastructure · AZs for HA · VPC networking   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  EC2 status checks = System check (AWS infra) + instance check (OS/app); both must pass (2/2)         │
+│  AWS Health        = Personalised service health and maintenance events for your account and resources│
+│  Patch Manager     = SSM feature; applies OS patches per baseline; records compliance per instance    │
+│  Patch baseline    = Defines which patches to install; AWS-managed or custom per OS and severity      │
+│  AMI               = Amazon Machine Image; golden image snapshot; used for ASG instance refresh       │
+│  ASG instance refresh= Rolling replacement of instances in an ASG with a new launch template version  │
+│  EBS expansion     = Increase volume size; then extend filesystem (growpart + resize2fs or diskpart)  │
+│  RDS PITR          = Point-in-time recovery; restore RDS to any second within the retention window    │
+│  CloudFormation drift= Detects manual changes to stack resources not captured in the template         │
+│  Step Functions    = AWS serverless workflow orchestrator; chains Lambda, SSM, ECS tasks with retries │
+│  Run Command       = SSM feature executing commands/scripts on EC2 fleet; no SSH or VPN needed        │
+│  EventBridge rule  = Triggers Lambda/SSM/SQS on schedule or event pattern; enables auto-remediation   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] AMI snapshot or RDS snapshot taken and verified before change</li>

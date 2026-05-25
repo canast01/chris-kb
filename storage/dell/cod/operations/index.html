@@ -4597,7 +4597,7 @@
 
 
 <h1 id="cod-operations">COD — Operations<a class="headerlink" href="#cod-operations" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────── Dell CoD — Operations ────────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────── Dell CoD — Operations ────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │   CoD operations: monitor dark capacity levels, plan key purchases, apply keys, audit usage   │   │
@@ -4650,6 +4650,111 @@
 <a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+┌──────────────────────────────────────── Dell CoD — Operations ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   CoD operations: monitor dark capacity levels, plan key purchases, apply keys, audit usage   │   │
+│   │      Monitoring: CloudIQ tracks used vs locked capacity; alerts at configurable threshold     │   │
+│   │     Planning: forecast capacity needs 3-6 months ahead; pre-purchase keys to avoid delays     │   │
+│   │    Key application: import key file via array management UI or CLI; instant capacity unlock   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Monitor usage → hit threshold → raise change request → purchase key → apply → verify               │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Monitoring         │  │           Planning          │  │        Key Operations       │   │
+│   │      CloudIQ dashboard      │  │       Forecast review       │  │         Purchase key        │   │
+│   │       Capacity alerts       │  │         Pre-buy keys        │  │         Download key        │   │
+│   │       Threshold config      │  │           Raise CR          │  │        Apply to array       │   │
+│   │        Dark cap view        │  │        Lead time plan       │  │        Verify unlock        │   │
+│   │        Monthly audit        │  │       Budget approval       │  │         Update CMDB         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Monthly review: check dark capacity remaining, update forecast, ensure pre-purchased keys ready    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Frequency     │       Task       │       Owner       │       Tool       │      Output      │   │
+│   │      Daily       │   Alert triage   │    Storage ops    │     CloudIQ      │    Alert log     │   │
+│   │     Monthly      │  Capacity audit  │    Storage lead   │ CloudIQ + portal │ Forecast report  │   │
+│   │    Quarterly     │ Key pre-purchase │    Storage lead   │ Licensing portal │   Keys on hand   │   │
+│   │    On-demand     │ Key application  │    Storage eng.   │  Array GUI/CLI   │  Capacity live   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: dark drives/nodes on array already installed; key activates firmware to expose them      │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Dark capacity  = Installed but locked drives or nodes; appear as locked in array management        │
+│    Threshold alert = CloudIQ fires when used capacity / total CoD capacity exceeds set percentage     │
+│    Pre-buy key    = Purchasing CoD keys before threshold is hit; avoids procurement delay             │
+│    Lead time      = Procurement approval plus Dell order processing; typically 1-5 business days      │
+│    Change request = ITSM CR raised before CoD key application; documents capacity change reason       │
+│    Capacity audit = Monthly review of all arrays: dark remaining, used, forecast, keys on hand        │
+│    CMDB update    = After key applied, update CMDB with new licensed capacity per array               │
+│    Verify unlock  = After key application, confirm in array GUI that new capacity is visible          │
+│    Budget approval = Finance sign-off required for CoD key purchase; include in capacity plan         │
+│    Keys on hand   = Purchased but unapplied CoD keys stored in licensing portal for quick use         │
+│    Monthly audit  = Formal review; compare used vs dark vs keys on hand across all CoD arrays         │
+│    Forecast review = Projecting when next CoD key will be needed based on growth trend                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────────── Dell CoD — Operations ────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │   CoD operations: monitor dark capacity levels, plan key purchases, apply keys, audit usage   │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │      Monitoring: CloudIQ tracks used vs locked capacity; alerts at configurable threshold     │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │     Planning: forecast capacity needs 3-6 months ahead; pre-purchase keys to avoid delays     │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │    Key application: import key file via array management UI or CLI; instant capacity unlock   │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│    Monitor usage → hit threshold → raise change request → purchase key → apply → verify               │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │          Monitoring         │  │           Planning          │  │        Key Operations       │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │      CloudIQ dashboard      │  │       Forecast review       │  │         Purchase key        │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │       Capacity alerts       │  │         Pre-buy keys        │  │         Download key        │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │       Threshold config      │  │           Raise CR          │  │        Apply to array       │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │        Dark cap view        │  │        Lead time plan       │  │        Verify unlock        │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        Monthly audit        │  │       Budget approval       │  │         Update CMDB         │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    Monthly review: check dark capacity remaining, update forecast, ensure pre-purchased keys ready    │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│   │    Frequency     │       Task       │       Owner       │       Tool       │      Output      │   │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   │      Daily       │   Alert triage   │    Storage ops    │     CloudIQ      │    Alert log     │   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │     Monthly      │  Capacity audit  │    Storage lead   │ CloudIQ + portal │ Forecast report  │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │    Quarterly     │ Key pre-purchase │    Storage lead   │ Licensing portal │   Keys on hand   │   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │    On-demand     │ Key application  │    Storage eng.   │  Array GUI/CLI   │  Capacity live   │   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                                                                                       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    Physical: dark drives/nodes on array already installed; key activates firmware to expose them      │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│                                                                                                       │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│    Dark capacity  = Installed but locked drives or nodes; appear as locked in array management        │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│    Threshold alert = CloudIQ fires when used capacity / total CoD capacity exceeds set percentage     │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│    Pre-buy key    = Purchasing CoD keys before threshold is hit; avoids procurement delay             │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│    Lead time      = Procurement approval plus Dell order processing; typically 1-5 business days      │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│    Change request = ITSM CR raised before CoD key application; documents capacity change reason       │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│    Capacity audit = Monthly review of all arrays: dark remaining, used, forecast, keys on hand        │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│    CMDB update    = After key applied, update CMDB with new licensed capacity per array               │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│    Verify unlock  = After key application, confirm in array GUI that new capacity is visible          │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│    Budget approval = Finance sign-off required for CoD key purchase; include in capacity plan         │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│    Keys on hand   = Purchased but unapplied CoD keys stored in licensing portal for quick use         │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│    Monthly audit  = Formal review; compare used vs dark vs keys on hand across all CoD arrays         │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│    Forecast review = Projecting when next CoD key will be needed based on growth trend                │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                                                                                       │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

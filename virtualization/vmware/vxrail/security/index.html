@@ -4458,62 +4458,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#security-model-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Security Model Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Authentication
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Authentication">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#vxrail-manager-accounts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VxRail Manager Accounts
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ldap-integration-active-directory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LDAP Integration (Active Directory)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vcenter-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vCenter Authentication
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#idrac-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4521,11 +4465,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -4850,7 +4789,7 @@
 Security reference for VxRail in the VMware product context. Covers iDRAC LDAP authentication, ESXi lockdown mode, vSAN encryption, Secure Boot, and audit logging.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────── VxRail — Security ──────────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────── VxRail — Security ──────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │         iDRAC LDAP/AD authentication with OOB-only VLAN access for hardware management        │   │
@@ -4906,116 +4845,113 @@ Security reference for VxRail in the VMware product context. Covers iDRAC LDAP a
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│                                                                                                       │
 <a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="security-model-overview">Security Model Overview<a class="headerlink" href="#security-model-overview" title="Permanent link">&para;</a></h2>
-<p>VxRail security combines vSphere/vSAN security (managed through vCenter) with VxRail-specific controls (managed through VxRail Manager). The Dell hardware layer adds iDRAC security as a third dimension.</p>
-<table>
-<thead>
-<tr>
-<th>Layer</th>
-<th>Security Controls</th>
-<th>Managed By</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VxRail Manager</td>
-<td>Admin accounts, API access, LCM access</td>
-<td>VxRail Plugin / direct login</td>
-</tr>
-<tr>
-<td>vSphere / vCenter</td>
-<td>Roles, permissions, lockdown mode, host profiles</td>
-<td>vCenter</td>
-</tr>
-<tr>
-<td>vSAN</td>
-<td>Encryption, storage policies</td>
-<td>vCenter / storage policy engine</td>
-</tr>
-<tr>
-<td>iDRAC</td>
-<td>Hardware OOB access, firmware security</td>
-<td>iDRAC UI / RACADM CLI</td>
-</tr>
-<tr>
-<td>Network</td>
-<td>VLANs, firewall, NSX (if deployed)</td>
-<td>Network team / NSX Manager</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
-<h3 id="vxrail-manager-accounts">VxRail Manager Accounts<a class="headerlink" href="#vxrail-manager-accounts" title="Permanent link">&para;</a></h3>
-<p>VxRail Manager has a local admin account (<code>mystic</code>) and supports LDAP integration.</p>
-<p><strong>Change the default mystic password immediately after initial deployment:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to VxRail Manager VM</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>mystic@&lt;vxrail-manager-ip&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>passwd<span class="w"> </span>mystic
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Also update via VxRail Plugin: System → User Management</span>
-</code></pre></div>
-<p>Store the new password in the organisation's secrets vault. The <code>mystic</code> account is the equivalent of an admin account — losing it requires Dell support-assisted recovery.</p>
-<h3 id="ldap-integration-active-directory">LDAP Integration (Active Directory)<a class="headerlink" href="#ldap-integration-active-directory" title="Permanent link">&para;</a></h3>
-<p>Configure AD authentication for VxRail Manager:</p>
-<p><strong>VxRail Plugin → System → User Management → LDAP → Configure</strong></p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>LDAP URL</td>
-<td><code>ldaps://ldap.example.local:636</code></td>
-</tr>
-<tr>
-<td>Base DN</td>
-<td><code>DC=corp,DC=local</code></td>
-</tr>
-<tr>
-<td>Bind DN</td>
-<td><code>CN=vxrailbind,OU=ServiceAccounts,DC=corp,DC=local</code></td>
-</tr>
-<tr>
-<td>Admin Group</td>
-<td><code>CN=VxRail-Admins,OU=Groups,DC=corp,DC=local</code></td>
-</tr>
-</tbody>
-</table>
-<p>Use LDAPS (port 636, TLS) rather than plain LDAP (port 389). Test connectivity before saving.</p>
-<h3 id="vcenter-authentication">vCenter Authentication<a class="headerlink" href="#vcenter-authentication" title="Permanent link">&para;</a></h3>
-<p>vCenter authentication for the VxRail cluster follows standard vSphere RBAC. See the vCenter security pages for SSO and LDAP configuration.</p>
-<p>The VxRail Plugin requires specific vCenter permissions to operate. A dedicated vCenter service account (<code>vxrail-vc-svc</code>) should be configured with the minimum required permissions rather than using <code>administrator@vsphere.local</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># PowerCLI — create a custom role for VxRail Manager vCenter integration</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;VxRail-Manager-Role&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="p">@(</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="s2">&quot;Host.Configuration.StoragePartitionConfiguration&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="s2">&quot;Host.Configuration.NetConfig&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="s2">&quot;Host.Configuration.FirmwareConfig&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="s2">&quot;VirtualMachine.Config.AddExistingDisk&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="s2">&quot;Datastore.Move&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="s2">&quot;Global.Health&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="p">)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># Assign role to the VxRail service account on the datacenter</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nb">New-VIPermission</span> <span class="p">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span> <span class="s2">&quot;DC-PROD&quot;</span><span class="p">)</span> <span class="p">\</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">-Principal</span> <span class="s2">&quot;CORP\vxrail-vc-svc&quot;</span> <span class="p">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="n">-Role</span> <span class="s2">&quot;VxRail-Manager-Role&quot;</span> <span class="p">\</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="n">-Propagate</span> <span class="nv">$true</span>
-</code></pre></div>
+┌────────────────────────────────────────── VxRail — Security ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         iDRAC LDAP/AD authentication with OOB-only VLAN access for hardware management        │   │
+│   │      ESXi lockdown mode (normal) with host profiles enforcement across all cluster nodes      │   │
+│   │     vCenter SSO for all management plane access; VxRail Manager TLS certificates enforced     │   │
+│   │      vSAN data-at-rest encryption with KMIP-compatible KMS integration for key management     │   │
+│   │      Secure Boot on all nodes; STIG alignment via host profiles; syslog forwarded to SIEM     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Authentication gates hardware access · access control limits management scope                      │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Authentication       │  │        Access Control       │  │          Encryption         │   │
+│   │        iDRAC LDAP/AD        │  │       RBAC via vCenter      │  │      vSAN data-at-rest      │   │
+│   │      ESXi lockdown mode     │  │       iDRAC user roles      │  │       iDRAC HTTPS only      │   │
+│   │         vCenter SSO         │  │       VxRail Mgr roles      │  │       Secure Boot ESXi      │   │
+│   │       VxRail Mgr local      │  │         LCM op roles        │  │        VxRail Mgr TLS       │   │
+│   │          iDRAC 2FA          │  │       Least privilege       │  │        iDRAC SSL cert       │   │
+│   │       Svc acct policy       │  │         Audit events        │  │          Syslog TLS         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Auth controls who accesses hardware · RBAC scopes management                                       │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Auth       │   Access Ctrl    │     Encryption    │    Hardening     │      Audit       │   │
+│   │    iDRAC LDAP    │   vCenter RBAC   │    vSAN encrypt   │   Secure Boot    │  vCenter events  │   │
+│   │  ESXi lockdown   │   iDRAC roles    │    iDRAC HTTPS    │   SSH disabled   │   iDRAC audit    │   │
+│   │   vCenter SSO    │   VxRail roles   │     VxRail TLS    │  Host profiles   │  Syslog to SIEM  │   │
+│   │    iDRAC 2FA     │ Least privilege  │   Cert rotation   │    STIG align    │  LCM log audit   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Dell PowerEdge servers · TPM 2.0 · NVMe/SSD/HDD · iDRAC OOB network · CA infrastructure              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  iDRAC             = Integrated Dell Remote Access Controller; LDAP/AD auth; OOB-only VLAN access     │
+│  Lockdown mode     = ESXi host setting preventing direct SSH/DCUI; all management via vCenter only    │
+│  vSAN encryption   = Data-at-rest encryption on vSAN datastore; keys managed by external KMIP KMS     │
+│  KMS/KMIP          = Key Management Server / protocol; external key store for vSAN and VM encryption  │
+│  Secure Boot       = UEFI feature verifying ESXi VIB signatures on all VxRail nodes at boot time      │
+│  Host Profile      = vCenter config template enforcing lockdown, NTP, syslog, and security settings   │
+│  VxRail Manager TLS = TLS certificate on VxRail Manager VM; used for API and plugin communications    │
+│  STIG alignment    = Defense Information Systems Agency hardening guide applied via host profiles     │
+│  OOB VLAN          = Out-of-band management VLAN restricted to iDRAC access only; no VM traffic       │
+│  LDAP/AD integration = iDRAC and vCenter authenticate against Active Directory for role mapping       │
+│  RBAC              = Role-Based Access Control; vCenter roles applied to VxRail management operations │
+│  2FA on iDRAC      = Two-factor authentication on iDRAC console; reduces OOB access risk              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Store the new password in the organisation&#39;s secrets vault. The `mystic` account is the equivalent of an admin account — losing it requires Dell support-assisted recovery.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### LDAP Integration (Active Directory)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Configure AD authentication for VxRail Manager:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>**VxRail Plugin → System → User Management → LDAP → Configure**
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Field | Example |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|---|---|
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| LDAP URL | `ldaps://ldap.example.local:636` |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Base DN | `DC=corp,DC=local` |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| Bind DN | `CN=vxrailbind,OU=ServiceAccounts,DC=corp,DC=local` |
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| Admin Group | `CN=VxRail-Admins,OU=Groups,DC=corp,DC=local` |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Use LDAPS (port 636, TLS) rather than plain LDAP (port 389). Test connectivity before saving.
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>### vCenter Authentication
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>vCenter authentication for the VxRail cluster follows standard vSphere RBAC. See the vCenter security pages for SSO and LDAP configuration.
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>The VxRail Plugin requires specific vCenter permissions to operate. A dedicated vCenter service account (`vxrail-vc-svc`) should be configured with the minimum required permissions rather than using `administrator@vsphere.local`.
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>```powershell
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a># PowerCLI — create a custom role for VxRail Manager vCenter integration
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>New-VIRole -Name &quot;VxRail-Manager-Role&quot; -Privilege (
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    Get-VIPrivilege -Id @(
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>        &quot;Host.Configuration.StoragePartitionConfiguration&quot;,
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>        &quot;Host.Configuration.NetConfig&quot;,
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>        &quot;Host.Configuration.FirmwareConfig&quot;,
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>        &quot;VirtualMachine.Config.AddExistingDisk&quot;,
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>        &quot;Datastore.Move&quot;,
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>        &quot;Global.Health&quot;
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    )
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>)
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a># Assign role to the VxRail service account on the datacenter
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>New-VIPermission \
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    -Entity (Get-Datacenter &quot;DC-PROD&quot;) \
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>    -Principal &quot;CORP\vxrail-vc-svc&quot; \
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>    -Role &quot;VxRail-Manager-Role&quot; \
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>    -Propagate $true
+</code></pre></div></p>
 <h3 id="idrac-authentication">iDRAC Authentication<a class="headerlink" href="#idrac-authentication" title="Permanent link">&para;</a></h3>
 <p>Each VxRail node has an iDRAC with its own authentication. Factory default credentials (<code>root</code> / <code>Calvin</code>) must be changed before connecting to the production network.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Via RACADM — change iDRAC root password</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Users.2.Password<span class="w"> </span><span class="s2">&quot;NewStr0ngP@ss!!&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Or configure LDAP/AD on iDRAC for centralised auth:</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.Enable<span class="w"> </span>Enabled
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.Server<span class="w"> </span><span class="s2">&quot;ldap.example.local&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.BaseDN<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Via RACADM — change iDRAC root password</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Users.2.Password<span class="w"> </span><span class="s2">&quot;NewStr0ngP@ss!!&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Or configure LDAP/AD on iDRAC for centralised auth:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.Enable<span class="w"> </span>Enabled
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.Server<span class="w"> </span><span class="s2">&quot;ldap.example.local&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.BaseDN<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span>
 </code></pre></div>
 <p>iDRAC access should be restricted to a dedicated OOB management network — not reachable from VM subnets.</p>
 <hr />
@@ -5075,11 +5011,11 @@ Security reference for VxRail in the VMware product context. Covers iDRAC LDAP a
 </table>
 <h3 id="host-lockdown-mode">Host Lockdown Mode<a class="headerlink" href="#host-lockdown-mode" title="Permanent link">&para;</a></h3>
 <p>Apply Normal Lockdown mode to all VxRail ESXi hosts. VxRail Manager requires connectivity to the hosts for LCM operations — this is handled via the vCenter API path, which is permitted under Normal Lockdown.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Enable Normal Lockdown on all VxRail hosts</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">EnterLockdownMode</span><span class="p">()</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Lockdown enabled: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Enable Normal Lockdown on all VxRail hosts</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">EnterLockdownMode</span><span class="p">()</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Lockdown enabled: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
 </code></pre></div>
 <p><strong>Exception users</strong>: Add the VxRail Manager service account to the ESXi exception list if VxRail Manager needs direct host access (required for certain LCM operations). Review VxRail documentation for the specific version.</p>
 <hr />
@@ -5087,9 +5023,9 @@ Security reference for VxRail in the VMware product context. Covers iDRAC LDAP a
 <h3 id="vsan-data-at-rest-encryption">vSAN Data-at-Rest Encryption<a class="headerlink" href="#vsan-data-at-rest-encryption" title="Permanent link">&para;</a></h3>
 <p>Enable vSAN encryption to protect data stored on node disks. Requires a Key Management Server (KMS) or vCenter Native Key Provider.</p>
 <p><strong>vCenter → Cluster → Configure → vSAN → Services → Encryption → Enable</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Enable vSAN encryption (PowerCLI)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c"># Ensure a KMS or NKP is already configured in vCenter</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">Set-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="n">-EncryptionEnabled</span> <span class="nv">$true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Enable vSAN encryption (PowerCLI)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c"># Ensure a KMS or NKP is already configured in vCenter</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">Set-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="n">-EncryptionEnabled</span> <span class="nv">$true</span>
 </code></pre></div>
 <p><strong>Warning</strong>: Enabling vSAN encryption on an existing cluster triggers a full disk reformat (data rebuild). This takes several hours depending on the amount of data. Ensure the cluster has sufficient capacity to tolerate nodes being in rebuild state.</p>
 <p>Before enabling:
@@ -5103,12 +5039,12 @@ Security reference for VxRail in the VMware product context. Covers iDRAC LDAP a
 <p>Enable this on all production VxRail clusters — the overhead is minimal on modern hardware (AES-NI accelerated).</p>
 <h3 id="idrac-secure-boot-and-firmware-verification">iDRAC Secure Boot and Firmware Verification<a class="headerlink" href="#idrac-secure-boot-and-firmware-verification" title="Permanent link">&para;</a></h3>
 <p>Ensure iDRAC Secure Boot is enabled to verify firmware signatures:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check Secure Boot status via RACADM</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>racadm<span class="w"> </span>get<span class="w"> </span>BIOS.SysProfileSettings.SecureBoot
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Expected: Enabled</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check iDRAC firmware version</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>racadm<span class="w"> </span>getversion<span class="w"> </span>-f<span class="w"> </span>idrac
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check Secure Boot status via RACADM</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>racadm<span class="w"> </span>get<span class="w"> </span>BIOS.SysProfileSettings.SecureBoot
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Expected: Enabled</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Check iDRAC firmware version</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>racadm<span class="w"> </span>getversion<span class="w"> </span>-f<span class="w"> </span>idrac
 </code></pre></div>
 <p>Keep iDRAC firmware current — Dell includes iDRAC firmware updates in VxRail LCM bundles, so staying on current LCM versions addresses iDRAC CVEs automatically.</p>
 <hr />
@@ -5157,10 +5093,10 @@ Security reference for VxRail in the VMware product context. Covers iDRAC LDAP a
 - All data is transmitted over TLS
 - Limit the types of data shared to hardware health only (not application-level data)
 - Review and confirm data sharing scope before enabling in regulated environments (PCI, HIPAA)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check SupportAssist status via API</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxrail-manager-ip&gt;/rest/vxm/v1/support-assist/status&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check SupportAssist status via API</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxrail-manager-ip&gt;/rest/vxm/v1/support-assist/status&quot;</span>
 </code></pre></div>
 
 

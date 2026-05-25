@@ -4677,56 +4677,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#key-concepts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Concepts
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#control-data-management-plane-separation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Control / Data / Management Plane Separation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nsx-manager-cluster" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NSX Manager Cluster
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="NSX Manager Cluster">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-surfaces" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API Surfaces
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#transport-nodes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5105,7 +5055,7 @@
 
 
 <h1 id="nsx-how-it-works">NSX — How It Works<a class="headerlink" href="#nsx-how-it-works" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── NSX Architecture — How It Works ───────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── NSX Architecture — How It Works ───────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │       NSX separates control, management, and data planes; overlay runs on each ESXi host      │   │
@@ -5158,106 +5108,71 @@
 <a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="key-concepts">Key Concepts<a class="headerlink" href="#key-concepts" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>NSX Manager cluster</strong> (3 nodes) — management, control, and policy plane</li>
-<li><strong>Transport Nodes</strong> — ESXi hosts and Edge VMs prepared with NSX kernel modules and TEP interfaces</li>
-<li><strong>TEP (Tunnel Endpoint)</strong> — VMkernel interface used for Geneve overlay encapsulation</li>
-<li><strong>Segments</strong> — logical Layer 2 networks (VNI-based); equivalent to VLANs but overlay-based</li>
-<li><strong>Tier-1 Gateways</strong> — distributed routing per tenant; run on every ESXi host</li>
-<li><strong>Tier-0 Gateways</strong> — north-south routing; run on Edge nodes, peer with physical network via BGP</li>
-<li><strong>DFW (Distributed Firewall)</strong> — stateful kernel-level firewall at every VM vNIC on every ESXi host</li>
-</ul>
-<hr />
-<h2 id="control-data-management-plane-separation">Control / Data / Management Plane Separation<a class="headerlink" href="#control-data-management-plane-separation" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Plane</th>
-<th>Components</th>
-<th>Failure Impact</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Management</td>
-<td>NSX Manager cluster, API, UI</td>
-<td>Cannot create or modify config; existing data plane continues</td>
-</tr>
-<tr>
-<td>Control</td>
-<td>NSX Manager controller (embedded)</td>
-<td>Transport nodes lose updates; existing tunnels continue until state drifts</td>
-</tr>
-<tr>
-<td>Data</td>
-<td>ESXi VMkernel, Edge node Fast Path</td>
-<td>VM traffic affected; management plane unaffected</td>
-</tr>
-</tbody>
-</table>
-<p>If all three NSX Manager nodes fail, VM-to-VM traffic on the overlay <strong>continues</strong>. The failure becomes visible only when new policies or routes cannot be pushed.</p>
-<hr />
-<h2 id="nsx-manager-cluster">NSX Manager Cluster<a class="headerlink" href="#nsx-manager-cluster" title="Permanent link">&para;</a></h2>
-<p>The NSX Manager cluster is three identical VMs forming an active-active cluster with a shared virtual IP (VIP). All three roles run on each node.</p>
-<table>
-<thead>
-<tr>
-<th>Role</th>
-<th>Function</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Management plane</td>
-<td>Hosts the UI and northbound REST API</td>
-</tr>
-<tr>
-<td>Control plane</td>
-<td>Distributes logical network state to transport nodes</td>
-</tr>
-<tr>
-<td>Policy plane</td>
-<td>Processes intent-based configuration (Policy API)</td>
-</tr>
-</tbody>
-</table>
-<p>The cluster uses Raft consensus (Corfu DB) — a majority (2/3) must be healthy for write operations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to any NSX Manager node</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nsxcli
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>get<span class="w"> </span>cluster<span class="w"> </span>status<span class="w">         </span><span class="c1"># Management: STABLE, Control: STABLE</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>get<span class="w"> </span>managers<span class="w">               </span><span class="c1"># Individual node reachability</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>get<span class="w"> </span>corfu-cluster<span class="w"> </span>status<span class="w">   </span><span class="c1"># Raft DB health</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>get<span class="w"> </span>services<span class="w">               </span><span class="c1"># Services on this node</span>
-</code></pre></div>
-<h3 id="api-surfaces">API Surfaces<a class="headerlink" href="#api-surfaces" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>API</th>
-<th>Base URL</th>
-<th>Use</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Policy API</td>
-<td><code>/policy/api/v1/infra/</code></td>
-<td>Intent-based; preferred for new automation</td>
-</tr>
-<tr>
-<td>Management Plane API (MP API)</td>
-<td><code>/api/v1/</code></td>
-<td>Direct object manipulation; legacy</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Authenticate and query cluster status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:Password123!&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="s2">&quot;https://nsx-manager.example.local/api/v1/cluster/status&quot;</span>
-</code></pre></div>
+┌─────────────────────────────────── NSX Architecture — How It Works ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       NSX separates control, management, and data planes; overlay runs on each ESXi host      │   │
+│   │      Control plane: NSX Manager (3-node cluster) pushes config to Transport Nodes via RPC     │   │
+│   │        Data plane: DLR runs on each host; Geneve encapsulates E-W traffic between TEPs        │   │
+│   │          North-South: SR on Edge Node routes to physical; BGP peers with ToR switches         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    NSX Manager config → Transport Node kernel modules → Geneve overlay → Edge SR → physical           │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Control Plane        │  │       Data Plane (E-W)      │  │          Edge (N-S)         │   │
+│   │       NSX Manager × 3       │  │       DLR on each host      │  │        Service Router       │   │
+│   │       Config RPC push       │  │        Geneve VNI tag       │  │          BGP to ToR         │   │
+│   │       TEP pool assign       │  │         TEP src/dst         │  │         SNAT / DNAT         │   │
+│   │        DFW rule push        │  │         DFW at vNIC         │  │          LB service         │   │
+│   │        Segment create       │  │       BUM replication       │  │        GRE/IPsec VPN        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    VM-to-VM same host: no Geneve; DFW filters and DLR forwards in-kernel directly                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Traffic type   │   Entry point    │        Path       │    Exit point    │     Protocol     │   │
+│   │  E-W same host   │     VM vNIC      │     DFW → DLR     │    Target VM     │  None/in-kernel  │   │
+│   │  E-W diff host   │     VM vNIC      │      DFW→TEP      │    TEP→DFW→VM    │ Geneve/UDP 6081  │   │
+│   │   N-S outbound   │    VM → T1 DR    │   T1 SR → T0 SR   │   ToR→upstream   │     BGP ECMP     │   │
+│   │   N-S inbound    │   ToR → T0 SR    │     T0 → T1 SR    │    DNAT → VM     │    BGP + SNAT    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: ESXi hosts · N-VDS/VDS with TEP vmknic · Edge VMs on bare-metal or VM form               │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    DLR           = Distributed Logical Router; runs as kernel module on every ESXi host               │
+│    SR            = Service Router; runs on Edge Node; handles stateful N-S services                   │
+│    TEP           = Tunnel End Point; vmknic IP used as Geneve encap src/dst per host                  │
+│    Geneve        = Generic Network Virtualization Encapsulation; NSX overlay protocol                 │
+│    VNI           = Virtual Network Identifier; 24-bit segment ID in Geneve header                     │
+│    DFW           = Distributed Firewall; stateful L4-L7 kernel-level filter at each vNIC              │
+│    BUM           = Broadcast/Unknown-unicast/Multicast; replicated via head-end or multicast          │
+│    T0 gateway    = Tier-0 Logical Router; provider-level; BGP peers with physical fabric              │
+│    T1 gateway    = Tier-1 Logical Router; tenant-level; connects segments to T0                       │
+│    BGP ECMP      = T0 uses ECMP over multiple Edge uplinks for active-active North-South              │
+│    N-VDS         = NSX-managed vSwitch; hosts TEP vmknic and overlay traffic                          │
+│    ToR           = Top-of-Rack physical switch; BGP peer for T0 gateway uplinks                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### API Surfaces
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| API | Base URL | Use |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|---|
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Policy API | `/policy/api/v1/infra/` | Intent-based; preferred for new automation |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Management Plane API (MP API) | `/api/v1/` | Direct object manipulation; legacy |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>```bash
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Authenticate and query cluster status
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>curl -sk -u &#39;admin:Password123!&#39; \
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  -H &quot;Accept: application/json&quot; \
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;https://nsx-manager.example.local/api/v1/cluster/status&quot;
+</code></pre></div></p>
 <hr />
 <h2 id="transport-nodes">Transport Nodes<a class="headerlink" href="#transport-nodes" title="Permanent link">&para;</a></h2>
 <h3 id="esxi-host-transport-nodes">ESXi Host Transport Nodes<a class="headerlink" href="#esxi-host-transport-nodes" title="Permanent link">&para;</a></h3>
@@ -5284,14 +5199,14 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify NSX VIBs on ESXi host</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify TEP IP is assigned</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span>vmk
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Confirm TEP reachability</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk&lt;n&gt;<span class="w"> </span>&lt;remote-tep-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify NSX VIBs on ESXi host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify TEP IP is assigned</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span>vmk
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Confirm TEP reachability</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk&lt;n&gt;<span class="w"> </span>&lt;remote-tep-ip&gt;
 </code></pre></div>
 <h3 id="edge-node-transport-nodes">Edge Node Transport Nodes<a class="headerlink" href="#edge-node-transport-nodes" title="Permanent link">&para;</a></h3>
 <p>Edge nodes are NSX-deployed VMs or bare-metal appliances hosting north-south gateway functions.</p>
@@ -5326,21 +5241,21 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to Edge node</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>get<span class="w"> </span>interfaces
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>get<span class="w"> </span>service<span class="w"> </span>dataplane<span class="w">   </span><span class="c1"># Confirm dataplane is running</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>get<span class="w"> </span>service<span class="w"> </span>router<span class="w">      </span><span class="c1"># Confirm routing engine is running</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to Edge node</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>get<span class="w"> </span>interfaces
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>get<span class="w"> </span>service<span class="w"> </span>dataplane<span class="w">   </span><span class="c1"># Confirm dataplane is running</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>get<span class="w"> </span>service<span class="w"> </span>router<span class="w">      </span><span class="c1"># Confirm routing engine is running</span>
 </code></pre></div>
 <hr />
 <h2 id="geneve-encapsulation">Geneve Encapsulation<a class="headerlink" href="#geneve-encapsulation" title="Permanent link">&para;</a></h2>
 <p>NSX uses Geneve (port 6081) — not VXLAN. The VNI identifies which logical segment a packet belongs to.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>[Outer ETH][Outer IP: TEP-src → TEP-dst][UDP 6081][Geneve VNI=5001][Inner ETH][Inner IP: VM-src → VM-dst][Payload]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>[Outer ETH][Outer IP: TEP-src → TEP-dst][UDP 6081][Geneve VNI=5001][Inner ETH][Inner IP: VM-src → VM-dst][Payload]
 </code></pre></div>
 <p>Geneve carries extensible metadata (security group tags, service chain IDs) inline — not possible with VXLAN.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify tunnel health from NSX Manager CLI</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>nsxcli
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status<span class="w"> </span>&lt;remote-tep-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify tunnel health from NSX Manager CLI</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nsxcli
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status<span class="w"> </span>&lt;remote-tep-ip&gt;
 </code></pre></div>
 <hr />
 <h2 id="transport-zones">Transport Zones<a class="headerlink" href="#transport-zones" title="Permanent link">&para;</a></h2>
@@ -5423,13 +5338,13 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check HA state from Edge node</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">set</span><span class="w"> </span>edge-cluster<span class="w"> </span>failover<span class="w">   </span><span class="c1"># Force failover from active Edge</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check HA state from Edge node</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">set</span><span class="w"> </span>edge-cluster<span class="w"> </span>failover<span class="w">   </span><span class="c1"># Force failover from active Edge</span>
 </code></pre></div>
 <h3 id="routing-flow-vm-to-external">Routing Flow — VM to External<a class="headerlink" href="#routing-flow-vm-to-external" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>VM → vNIC → DFW filter → T1 distributed instance (same ESXi host)
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  → T0 Service Router (Edge node) → Physical router (BGP peer) → Internet
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>VM → vNIC → DFW filter → T1 distributed instance (same ESXi host)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  → T0 Service Router (Edge node) → Physical router (BGP peer) → Internet
 </code></pre></div>
 <hr />
 <h2 id="edge-cluster">Edge Cluster<a class="headerlink" href="#edge-cluster" title="Permanent link">&para;</a></h2>
@@ -5518,17 +5433,17 @@
 </table>
 <p>Default rule (65535): <strong>DROP</strong> — do not change.</p>
 <h3 id="dfw-inspection-on-esxi-host">DFW Inspection on ESXi Host<a class="headerlink" href="#dfw-inspection-on-esxi-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List all DFW filters (one per VM vNIC)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>summarize-dvfilter
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Show rules applied to a vNIC filter</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Show rule hit counts</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>vsipioctl<span class="w"> </span>getstats<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Show security groups (address sets) in use</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>vsipioctl<span class="w"> </span>getaddrsets<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all DFW filters (one per VM vNIC)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>summarize-dvfilter
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Show rules applied to a vNIC filter</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Show rule hit counts</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>vsipioctl<span class="w"> </span>getstats<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Show security groups (address sets) in use</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>vsipioctl<span class="w"> </span>getaddrsets<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
 </code></pre></div>
 <hr />
 <h2 id="segments">Segments<a class="headerlink" href="#segments" title="Permanent link">&para;</a></h2>
@@ -5554,29 +5469,29 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Find the VNI of a segment</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>nsxcli
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>&lt;segment-id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>VNI
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Find the VNI of a segment</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>nsxcli
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>&lt;segment-id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>VNI
 </code></pre></div>
 <hr />
 <h2 id="ipam-and-dhcp">IPAM and DHCP<a class="headerlink" href="#ipam-and-dhcp" title="Permanent link">&para;</a></h2>
 <p>NSX includes built-in IPAM for IP pool management and a distributed DHCP server running on ESXi hosts — no dedicated DHCP VM required.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List IP pools</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools&quot;</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Check pool allocations</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools/&lt;pool-id&gt;/ip-allocations&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List IP pools</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools&quot;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Check pool allocations</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools/&lt;pool-id&gt;/ip-allocations&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="vpn-services">VPN Services<a class="headerlink" href="#vpn-services" title="Permanent link">&para;</a></h2>
 <p>NSX supports IPsec site-to-site VPN and L2 VPN on Edge nodes (T0 or T1 with Edge cluster).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check IPsec sessions from Edge CLI</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>get<span class="w"> </span>vpn<span class="w"> </span>ipsec<span class="w"> </span>session<span class="w"> </span>list
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Check L2 VPN sessions</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>get<span class="w"> </span>vpn<span class="w"> </span>l2vpn<span class="w"> </span>session<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check IPsec sessions from Edge CLI</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>get<span class="w"> </span>vpn<span class="w"> </span>ipsec<span class="w"> </span>session<span class="w"> </span>list
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Check L2 VPN sessions</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>get<span class="w"> </span>vpn<span class="w"> </span>l2vpn<span class="w"> </span>session<span class="w"> </span>list
 </code></pre></div>
 <table>
 <thead>
@@ -5693,8 +5608,8 @@
 <li><code>/var/log/vmware/nsx-controller/</code> — control plane logs</li>
 </ul>
 <p><strong>Edge node logs (SSH):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>get<span class="w"> </span>log-file<span class="w"> </span>syslog<span class="w"> </span>follow<span class="w">   </span><span class="c1"># live tail</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>get<span class="w"> </span>log-file<span class="w"> </span>auth.log<span class="w">        </span><span class="c1"># authentication events</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>get<span class="w"> </span>log-file<span class="w"> </span>syslog<span class="w"> </span>follow<span class="w">   </span><span class="c1"># live tail</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>get<span class="w"> </span>log-file<span class="w"> </span>auth.log<span class="w">        </span><span class="c1"># authentication events</span>
 </code></pre></div>
 
 

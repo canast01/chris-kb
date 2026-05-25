@@ -4857,7 +4857,7 @@
 
 
 <h1 id="site-recovery-manager-security">Site Recovery Manager — Security<a class="headerlink" href="#site-recovery-manager-security" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────── SRM — Security ────────────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────── SRM — Security ────────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │         vCenter SSO for SRM authentication; site pair credentials for cross-site trust        │   │
@@ -4913,6 +4913,117 @@
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│                                                                                                       │
 <a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+┌─────────────────────────────────────────── SRM — Security ────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         vCenter SSO for SRM authentication; site pair credentials for cross-site trust        │   │
+│   │      RBAC roles: admin / recovery execute / test operator / read-only for least privilege     │   │
+│   │     Certificate management for SRM servers; array replication auth; audit log for all ops     │   │
+│   │       Replication traffic encrypted with TLS; vSAN encryption at rest for DR datastores       │   │
+│   │       Test isolation network prevents recovery test VMs from reaching production systems      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Authentication controls SRM access · RBAC scopes recovery roles                                    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Authentication       │  │        Access Control       │  │          Encryption         │   │
+│   │       vCenter SSO auth      │  │       SRM admin: full       │  │          Replic TLS         │   │
+│   │        AD integration       │  │        Recovery exec        │  │      Array replic auth      │   │
+│   │        SRM admin role       │  │        Test exec only       │  │        SRM cert mgmt        │   │
+│   │       Site pair creds       │  │       Read-only audit       │  │        Test isolation       │   │
+│   │         Array creds         │  │         Custom roles        │  │         vSAN encr DR        │   │
+│   │       Cert management       │  │         vCenter RBAC        │  │        Audit log TLS        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Auth controls who uses SRM · RBAC limits recovery execution                                        │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Auth       │   Access Ctrl    │     Encryption    │    Hardening     │      Audit       │   │
+│   │   vCenter SSO    │    SRM admin     │     Replic TLS    │  Cert rotation   │  Recovery audit  │   │
+│   │  AD integration  │  Recovery exec   │     Array auth    │  Site pair cert  │     Test log     │   │
+│   │ Site pair creds  │    Test exec     │      SRM cert     │ Least privilege  │   Plan changes   │   │
+│   │   Array creds    │    Read-only     │     vSAN encr     │  Isolation net   │ GSS audit trail  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 servers (SRM VMs both sites) · vSAN/SAN · WAN link · AD domain · CA infrastructure               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vCenter SSO        = Single Sign-On; SRM authenticates all users via vCenter SSO domain              │
+│  Site pair          = Trusted connection between two SRM servers across protected and recovery sites  │
+│  Array-based replication = Storage array replicates LUNs/volumes; SRM integrates via SRA adapter      │
+│  vSphere Replication = Host-based replication using HBCR agent; RPO minimum 5 minutes                 │
+│  SRM RBAC           = Role-Based Access Control in SRM; roles: admin, recovery exec, test, read-only  │
+│  Recovery admin     = SRM role with full recovery plan and protection group management                │
+│  Recovery user      = SRM role that can execute recovery plans but not modify them                    │
+│  Test operator      = SRM role that can run test failovers only; cannot run real failover             │
+│  Certificate management = SRM server TLS cert lifecycle; must be CA-signed for site pair trust        │
+│  Audit log          = SRM records all recovery, test, reprotect, and admin operations                 │
+│  Test isolation network = Isolated port group used during test failover; blocks production access     │
+│  Least privilege    = Principle of assigning minimum SRM role needed for each operator function       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────────── SRM — Security ────────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │         vCenter SSO for SRM authentication; site pair credentials for cross-site trust        │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │      RBAC roles: admin / recovery execute / test operator / read-only for least privilege     │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │     Certificate management for SRM servers; array replication auth; audit log for all ops     │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │       Replication traffic encrypted with TLS; vSAN encryption at rest for DR datastores       │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │       Test isolation network prevents recovery test VMs from reaching production systems      │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    Authentication controls SRM access · RBAC scopes recovery roles                                    │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │        Authentication       │  │        Access Control       │  │          Encryption         │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │       vCenter SSO auth      │  │       SRM admin: full       │  │          Replic TLS         │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │        AD integration       │  │        Recovery exec        │  │      Array replic auth      │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │        SRM admin role       │  │        Test exec only       │  │        SRM cert mgmt        │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │       Site pair creds       │  │       Read-only audit       │  │        Test isolation       │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         Array creds         │  │         Custom roles        │  │         vSAN encr DR        │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │       Cert management       │  │         vCenter RBAC        │  │        Audit log TLS        │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    Auth controls who uses SRM · RBAC limits recovery execution                                        │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │       Auth       │   Access Ctrl    │     Encryption    │    Hardening     │      Audit       │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │   vCenter SSO    │    SRM admin     │     Replic TLS    │  Cert rotation   │  Recovery audit  │   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │  AD integration  │  Recovery exec   │     Array auth    │  Site pair cert  │     Test log     │   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   │ Site pair creds  │    Test exec     │      SRM cert     │ Least privilege  │   Plan changes   │   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│   │   Array creds    │    Read-only     │     vSAN encr     │  Isolation net   │ GSS audit trail  │   │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  x86 servers (SRM VMs both sites) · vSAN/SAN · WAN link · AD domain · CA infrastructure               │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│                                                                                                       │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                                                                                       │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  vCenter SSO        = Single Sign-On; SRM authenticates all users via vCenter SSO domain              │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Site pair          = Trusted connection between two SRM servers across protected and recovery sites  │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  Array-based replication = Storage array replicates LUNs/volumes; SRM integrates via SRA adapter      │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  vSphere Replication = Host-based replication using HBCR agent; RPO minimum 5 minutes                 │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  SRM RBAC           = Role-Based Access Control in SRM; roles: admin, recovery exec, test, read-only  │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  Recovery admin     = SRM role with full recovery plan and protection group management                │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  Recovery user      = SRM role that can execute recovery plans but not modify them                    │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  Test operator      = SRM role that can run test failovers only; cannot run real failover             │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│  Certificate management = SRM server TLS cert lifecycle; must be CA-signed for site pair trust        │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│  Audit log          = SRM records all recovery, test, reprotect, and admin operations                 │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│  Test isolation network = Isolated port group used during test failover; blocks production access     │
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│  Least privilege    = Principle of assigning minimum SRM role needed for each operator function       │
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│                                                                                                       │
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="authentication/">

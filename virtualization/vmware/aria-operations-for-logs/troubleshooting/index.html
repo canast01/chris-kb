@@ -4799,7 +4799,7 @@
 
 
 <h1 id="aria-ops-for-logs-troubleshooting">Aria Ops for Logs — Troubleshooting<a class="headerlink" href="#aria-ops-for-logs-troubleshooting" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── Aria Logs — Troubleshooting ─────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── Aria Logs — Troubleshooting ─────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │   Agents not sending logs: check agent connectivity, firewall rules, and agent configuration  │   │
@@ -4855,6 +4855,117 @@
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│                                                                                                       │
 <a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+┌───────────────────────────────────── Aria Logs — Troubleshooting ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Agents not sending logs: check agent connectivity, firewall rules, and agent configuration  │   │
+│   │    Missing log sources: verify syslog UDP/TCP port reachability and source IP configuration   │   │
+│   │     Disk full blocking ingestion: expand disk or reduce retention; clear oldest partitions    │   │
+│   │      Alert not firing: validate field extraction in content pack; check query match logic     │   │
+│   │     vRLI support bundle collects cluster and agent logs; attach to GSS case for escalation    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Common issues triage agent and source faults · diagnostics use logs and API                        │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Common Issues        │  │         Diagnostics         │  │          Escalation         │   │
+│   │      Agent not sending      │  │       Admin UI sources      │  │      vRLI support bndl      │   │
+│   │        Source missing       │  │       Agent log files       │  │        GSS case open        │   │
+│   │          Disk full          │  │     /var/log/loginsight     │  │       Agent config exp      │   │
+│   │        Alert not fire       │  │        REST API debug       │  │       Log sample coll       │   │
+│   │         Query empty         │  │        Source status        │  │        TAM escalation       │   │
+│   │        Forwarder err        │  │       Content pk test       │  │        Version matrix       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Common issues guide triage · diagnostics use source admin and log paths                            │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Issues      │   Diagnostics    │     Log Paths     │    Escalation    │     Recovery     │   │
+│   │   Agent silent   │  Agent log file  │/var/log/loginsight│   vRLI bundle    │  Restart agent   │   │
+│   │    Disk full     │  Source status   │ /var/log/li-server│   GSS P1 case    │   Expand disk    │   │
+│   │  Alert not fire  │   REST API dbg   │   /var/log/agent  │   TAM escalate   │   Retune alert   │   │
+│   │   Query empty    │ Content pk test  │  /var/log/server  │  Version matrix  │  Fix time range  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 VMs (cluster) · RAM DIMMs · Network NICs · Log storage · Syslog source hosts                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vRLI agent         = Host-based log forwarder; check agent service status and firewall on port 9000  │
+│  Syslog source      = Network device or host sending UDP/TCP syslog; verify source IP is allowed      │
+│  Disk retention     = Policy deleting oldest partitions at threshold; full disk blocks all ingestion  │
+│  Alert pipeline     = Log-match rule; fails silently if field extraction is incorrect in content pack │
+│  VLQL query         = Query returning empty if time range, field name, or syntax is incorrect         │
+│  Content pack       = Field extractor and dashboard bundle; test via UI to validate regex patterns    │
+│  Log forwarder      = SIEM stream; errors if destination unreachable or certificate mismatch          │
+│  Ingestion rate     = Events-per-second; drop to zero indicates cluster issue or source problem       │
+│  Cluster node health = Admin dashboard showing master and worker node status and disk usage           │
+│  REST API debug     = Query the vRLI API directly to bypass UI and validate field extraction          │
+│  Support bundle     = Full diagnostic archive: cluster logs, config, and event data for GSS review    │
+│  Agent configuration = JSON config file on host specifying cluster address, port, and log paths       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────── Aria Logs — Troubleshooting ─────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │   Agents not sending logs: check agent connectivity, firewall rules, and agent configuration  │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │    Missing log sources: verify syslog UDP/TCP port reachability and source IP configuration   │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │     Disk full blocking ingestion: expand disk or reduce retention; clear oldest partitions    │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │      Alert not firing: validate field extraction in content pack; check query match logic     │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │     vRLI support bundle collects cluster and agent logs; attach to GSS case for escalation    │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    Common issues triage agent and source faults · diagnostics use logs and API                        │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │        Common Issues        │  │         Diagnostics         │  │          Escalation         │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │      Agent not sending      │  │       Admin UI sources      │  │      vRLI support bndl      │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │        Source missing       │  │       Agent log files       │  │        GSS case open        │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │          Disk full          │  │     /var/log/loginsight     │  │       Agent config exp      │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        Alert not fire       │  │        REST API debug       │  │       Log sample coll       │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         Query empty         │  │        Source status        │  │        TAM escalation       │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │        Forwarder err        │  │       Content pk test       │  │        Version matrix       │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    Common issues guide triage · diagnostics use source admin and log paths                            │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │      Issues      │   Diagnostics    │     Log Paths     │    Escalation    │     Recovery     │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │   Agent silent   │  Agent log file  │/var/log/loginsight│   vRLI bundle    │  Restart agent   │   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │    Disk full     │  Source status   │ /var/log/li-server│   GSS P1 case    │   Expand disk    │   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   │  Alert not fire  │   REST API dbg   │   /var/log/agent  │   TAM escalate   │   Retune alert   │   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│   │   Query empty    │ Content pk test  │  /var/log/server  │  Version matrix  │  Fix time range  │   │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  x86 VMs (cluster) · RAM DIMMs · Network NICs · Log storage · Syslog source hosts                     │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│                                                                                                       │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                                                                                       │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  vRLI agent         = Host-based log forwarder; check agent service status and firewall on port 9000  │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Syslog source      = Network device or host sending UDP/TCP syslog; verify source IP is allowed      │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  Disk retention     = Policy deleting oldest partitions at threshold; full disk blocks all ingestion  │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  Alert pipeline     = Log-match rule; fails silently if field extraction is incorrect in content pack │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  VLQL query         = Query returning empty if time range, field name, or syntax is incorrect         │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  Content pack       = Field extractor and dashboard bundle; test via UI to validate regex patterns    │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  Log forwarder      = SIEM stream; errors if destination unreachable or certificate mismatch          │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  Ingestion rate     = Events-per-second; drop to zero indicates cluster issue or source problem       │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│  Cluster node health = Admin dashboard showing master and worker node status and disk usage           │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│  REST API debug     = Query the vRLI API directly to bypass UI and validate field extraction          │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│  Support bundle     = Full diagnostic archive: cluster logs, config, and event data for GSS review    │
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│  Agent configuration = JSON config file on host specifying cluster address, port, and log paths       │
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│                                                                                                       │
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="common-issues/">

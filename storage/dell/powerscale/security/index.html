@@ -4547,7 +4547,7 @@
 
 
 <h1 id="powerscale-security">PowerScale — Security<a class="headerlink" href="#powerscale-security" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── Dell PowerScale Security ───────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── Dell PowerScale Security ───────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │       PowerScale security: access zones isolate tenants; AD/LDAP/Kerberos for file auth       │   │
@@ -4600,6 +4600,111 @@
 <a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+┌────────────────────────────────────── Dell PowerScale Security ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       PowerScale security: access zones isolate tenants; AD/LDAP/Kerberos for file auth       │   │
+│   │        Access zones: each zone has own auth providers, IP pool, SMB shares, NFS exports       │   │
+│   │       SmartLock: WORM retention (compliance = tamper-proof; enterprise = admin override)      │   │
+│   │         Audit: protocol audit log per zone; CEE (Common Event Enabler) export to SIEM         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Client auth → access zone lookup → ACL / Unix perm check → SmartLock WORM → audit log              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Access Zones        │  │        Authentication       │  │       Data Protection       │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │        Per-zone auth        │  │         AD Kerberos         │  │        SmartLock WORM       │   │
+│   │       Isolated IP pool      │  │        LDAP provider        │  │       Compliance mode       │   │
+│   │       Per-zone shares       │  │         NIS provider        │  │       Enterprise mode       │   │
+│   │          RBAC roles         │  │        Local accounts       │  │        CEE audit log        │   │
+│   │        Zone isolation       │  │        SID / UID map        │  │         SIEM forward        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Zone auth configured → RBAC roles assigned → SmartLock retention set → audit enabled               │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   │     Control      │    Mechanism     │      Standard     │    Exception     │      Audit       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    File auth     │   AD Kerberos    │  All NAS clients  │  LDAP fallback   │   Auth events    │   │
+│   │    Admin auth    │    RBAC + AD     │   Named accounts  │Local break-glass │    Login log     │   │
+│   │       WORM       │    SmartLock     │  Compliance mode  │ Enterprise only  │  Retention log   │   │
+│   │    Audit log     │    CEE / SIEM    │    All file ops   │        —         │  Weekly review   │   │
+│                                                                                                       │
+│    Physical: SSH admin access on mgmt port; CEE agent on cluster node forwards audit events           │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Access zone    = Isolated namespace partition; own auth providers, IPs, shares, and exports        │
+│    SmartLock      = OneFS WORM; compliance = no override; enterprise = admin can override             │
+│    Compliance mode= SmartLock mode that prevents even root from deleting WORM-retained files          │
+│    Enterprise mode= SmartLock WORM with admin override capability; less strict than compliance        │
+│    CEE            = Common Event Enabler; OneFS audit log export agent for SIEM integration           │
+│    RBAC roles     = OneFS built-in roles: SystemAdmin, AuditAdmin, SecurityAdmin, BackupAdmin         │
+│    SID/UID map    = Identity mapping between Windows SID and Unix UID for mixed permissions           │
+│    Kerberos       = Protocol for mutual auth between AD domain and OneFS NFS/SMB clients              │
+│    Break-glass    = Local root account on OneFS node for emergency when AD unavailable                │
+│    Zone isolation = Cross-zone access is blocked; tenant A cannot access zone B data                  │
+│    NIS provider   = Legacy Unix auth; NIS maps used in mixed Unix environments                        │
+│    Retention log  = SmartLock audit record of file commit, retention date, and release events         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────── Dell PowerScale Security ───────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │       PowerScale security: access zones isolate tenants; AD/LDAP/Kerberos for file auth       │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │        Access zones: each zone has own auth providers, IP pool, SMB shares, NFS exports       │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │       SmartLock: WORM retention (compliance = tamper-proof; enterprise = admin override)      │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │         Audit: protocol audit log per zone; CEE (Common Event Enabler) export to SIEM         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│    Client auth → access zone lookup → ACL / Unix perm check → SmartLock WORM → audit log              │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │         Access Zones        │  │        Authentication       │  │       Data Protection       │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │        Per-zone auth        │  │         AD Kerberos         │  │        SmartLock WORM       │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │       Isolated IP pool      │  │        LDAP provider        │  │       Compliance mode       │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │       Per-zone shares       │  │         NIS provider        │  │       Enterprise mode       │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          RBAC roles         │  │        Local accounts       │  │        CEE audit log        │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │        Zone isolation       │  │        SID / UID map        │  │         SIEM forward        │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                                                                       │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│    Zone auth configured → RBAC roles assigned → SmartLock retention set → audit enabled               │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│   │     Control      │    Mechanism     │      Standard     │    Exception     │      Audit       │   │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │    File auth     │   AD Kerberos    │  All NAS clients  │  LDAP fallback   │   Auth events    │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │    Admin auth    │    RBAC + AD     │   Named accounts  │Local break-glass │    Login log     │   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │       WORM       │    SmartLock     │  Compliance mode  │ Enterprise only  │  Retention log   │   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   │    Audit log     │    CEE / SIEM    │    All file ops   │        —         │  Weekly review   │   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                                                                                       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    Physical: SSH admin access on mgmt port; CEE agent on cluster node forwards audit events           │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│                                                                                                       │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│    Access zone    = Isolated namespace partition; own auth providers, IPs, shares, and exports        │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│    SmartLock      = OneFS WORM; compliance = no override; enterprise = admin can override             │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│    Compliance mode= SmartLock mode that prevents even root from deleting WORM-retained files          │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│    Enterprise mode= SmartLock WORM with admin override capability; less strict than compliance        │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│    CEE            = Common Event Enabler; OneFS audit log export agent for SIEM integration           │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│    RBAC roles     = OneFS built-in roles: SystemAdmin, AuditAdmin, SecurityAdmin, BackupAdmin         │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│    SID/UID map    = Identity mapping between Windows SID and Unix UID for mixed permissions           │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│    Kerberos       = Protocol for mutual auth between AD domain and OneFS NFS/SMB clients              │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│    Break-glass    = Local root account on OneFS node for emergency when AD unavailable                │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│    Zone isolation = Cross-zone access is blocked; tenant A cannot access zone B data                  │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│    NIS provider   = Legacy Unix auth; NIS maps used in mixed Unix environments                        │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│    Retention log  = SmartLock audit record of file commit, retention date, and release events         │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                                                                                       │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="authentication/">

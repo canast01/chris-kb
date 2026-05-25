@@ -4189,23 +4189,75 @@
 
 
 <h1 id="host-inventory">Host Inventory<a class="headerlink" href="#host-inventory" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── vSphere — Host Inventory ───────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │    Per-ESXi-host record for lifecycle, capacity, and support — updated after each LCM cycle   │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │        Fields: hostname, cluster, hardware model, CPU (sockets/cores), RAM, ESXi build        │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │      Network: NIC count, VDS uplinks, NIC model; Storage: HBA count, HBA model, iDRAC IP      │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │      State: lockdown mode, maintenance mode, vSAN participation, host profile compliance      │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Hardware identity drives upgrade eligibility · ESXi build drives HCL compliance state              │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │           Identity          │  │           Hardware          │  │            State            │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │       Hostname (FQDN)       │  │      Model (PowerEdge)      │  │          ESXi build         │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │        Cluster member       │  │      CPU sockets/cores      │  │        Lockdown mode        │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │       vCenter managed       │  │        RAM (GB total)       │  │         Maint. mode         │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │        iDRAC IP addr        │  │       NIC count/model       │  │         vSAN member         │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │          Site/rack          │  │       HBA count/model       │  │          Profile OK         │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│    Hardware + state fields determine maintenance eligibility and capacity contribution                │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │       Host       │      Model       │     CPU / RAM     │    ESXi build    │      State       │   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │   esx-prod-01    │      R750xa      │    2x18c/1.5TB    │      8.0 U3      │      Active      │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │   esx-prod-02    │      R750xa      │    2x18c/1.5TB    │      8.0 U3      │      Active      │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │   esx-prod-03    │      R750xa      │    2x18c/1.5TB    │      8.0 U2      │   Needs patch    │   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│                                                                                                       │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│    Physical: Dell PowerEdge servers · iDRAC OOB · NIC/HBA PCIe cards · vSAN NVMe disks                │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│                                                                                                       │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│                                                                                                       │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    ESXi build    = Specific patch level (e.g. 8.0 U3 build 24022510); matches HCL entry               │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    Lockdown mode = ESXi blocks direct SSH/shell; all management via vCenter API only                  │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    Host profile  = vCenter config template enforcing NTP, syslog, lockdown, NIC teaming               │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    HBA           = Host Bus Adapter; FC card connecting ESXi host to SAN fabric                       │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    iDRAC         = Dell out-of-band management; independent of ESXi state for hardware ops            │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    vSAN member   = Host contributing local NVMe/SSD disks to the vSAN datastore pool                  │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    Maint. mode   = ESXi state where VMs are evacuated prior to host maintenance work                  │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    HCL           = Hardware Compatibility List; ESXi build + model + driver must be listed            │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    NIC teaming   = Multiple physical NICs bonded for redundancy and throughput on VDS                 │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    Profile OK    = Host configuration matches host profile; non-compliant hosts flagged               │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    Site/rack     = Physical location tag used for anti-affinity and failure domain config             │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│    CPU sockets   = Physical CPU count; drives vCPU overcommit capacity for the cluster                │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│                                                                                                       │
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <blockquote>
 <p>Part of the <a href="../">Inventory</a> reference.</p>
 </blockquote>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────┬──────────────────────┬───────────────────┬──────────┬───────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   Hostname      │  Cluster             │  Hardware Model   │  ESXi    │  State    │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├─────────────────┼──────────────────────┼───────────────────┼──────────┼───────────┤
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│ esx-prod-01     │ cl-prod-compute-01   │ Dell R750xa       │ 8.0 U3   │ Connected │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  IP:10.10.10.11 │  2S×32C / 1024GB RAM │ FC HBA (QLogic)   │          │           │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>├─────────────────┼──────────────────────┼───────────────────┼──────────┼───────────┤
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│ esx-prod-02     │ cl-prod-compute-01   │ Dell R750xa       │ 8.0 U3   │ Connected │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  IP:10.10.10.12 │  2S×32C / 1024GB RAM │ 4×25GbE NICs      │          │           │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>├─────────────────┼──────────────────────┼───────────────────┼──────────┼───────────┤
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│ esx-mgmt-01     │ cl-prod-mgmt-01      │ Dell R650         │ 8.0 U3   │ Connected │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  IP:10.10.10.21 │  2S×16C /  256GB RAM │ 2×25GbE NICs      │          │ vSAN node │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>└─────────────────┴──────────────────────┴───────────────────┴──────────┴───────────┘
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  Each host: vmk0=mgmt │ vmk1=vMotion │ vmk2=vSAN │ vmk3=NSX-overlay
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────┬──────────────────────┬───────────────────┬──────────┬───────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│   Hostname      │  Cluster             │  Hardware Model   │  ESXi    │  State    │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├─────────────────┼──────────────────────┼───────────────────┼──────────┼───────────┤
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│ esx-prod-01     │ cl-prod-compute-01   │ Dell R750xa       │ 8.0 U3   │ Connected │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  IP:10.10.10.11 │  2S×32C / 1024GB RAM │ FC HBA (QLogic)   │          │           │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>├─────────────────┼──────────────────────┼───────────────────┼──────────┼───────────┤
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│ esx-prod-02     │ cl-prod-compute-01   │ Dell R750xa       │ 8.0 U3   │ Connected │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│  IP:10.10.10.12 │  2S×32C / 1024GB RAM │ 4×25GbE NICs      │          │           │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>├─────────────────┼──────────────────────┼───────────────────┼──────────┼───────────┤
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│ esx-mgmt-01     │ cl-prod-mgmt-01      │ Dell R650         │ 8.0 U3   │ Connected │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│  IP:10.10.10.21 │  2S×16C /  256GB RAM │ 2×25GbE NICs      │          │ vSAN node │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>└─────────────────┴──────────────────────┴───────────────────┴──────────┴───────────┘
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  Each host: vmk0=mgmt │ vmk1=vMotion │ vmk2=vSAN │ vmk3=NSX-overlay
 </code></pre></div>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Track every ESXi host in the environment using the table format below. One row per physical host. Update after hardware changes, firmware updates, or cluster moves.</p>

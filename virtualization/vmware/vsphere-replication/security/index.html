@@ -4857,7 +4857,7 @@
 
 
 <h1 id="vsphere-replication-security">vSphere Replication — Security<a class="headerlink" href="#vsphere-replication-security" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── vSphere Replication — Security ────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── vSphere Replication — Security ────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │         vCenter SSO authentication for VR appliance management; RBAC via vCenter roles        │   │
@@ -4913,6 +4913,117 @@
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│                                                                                                       │
 <a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+┌─────────────────────────────────── vSphere Replication — Security ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         vCenter SSO authentication for VR appliance management; RBAC via vCenter roles        │   │
+│   │            Replication traffic encrypted over TLS between source VRS and target VRS           │   │
+│   │   Certificate management: VRMS and VRS certs signed by CA or vCenter CA; rotated on schedule  │   │
+│   │       Firewall rules: VRMS port 8043/443, VRS port 31031, vCenter port 443 between sites      │   │
+│   │    Audit: all replication config changes logged in vCenter Tasks and Events; syslog forward   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    vCenter SSO gates management · TLS encrypts replication traffic                                    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Authentication       │  │        Access Control       │  │          Encryption         │   │
+│   │         vCenter SSO         │  │         vCenter RBAC        │  │         Traffic TLS         │   │
+│   │       LDAP via vCenter      │  │          Admin role         │  │       Cert management       │   │
+│   │       VRMS local admin      │  │        Read-only role       │  │       CA-signed certs       │   │
+│   │         Plugin auth         │  │        Datastore perm       │  │          FIPS mode          │   │
+│   │       Site trust cert       │  │       Site admin roles      │  │       Compress+encrypt      │   │
+│   │       VAMI local auth       │  │        Firewall rules       │  │        Audit logging        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    SSO controls management access · RBAC scopes permissions                                           │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Auth       │   Access Ctrl    │     Encryption    │    Hardening     │      Audit       │   │
+│   │   vCenter SSO    │   vCenter RBAC   │    Traffic TLS    │  Cert rotation   │  vCenter tasks   │   │
+│   │   LDAP groups    │    Admin role    │   CA-signed cert  │  Firewall rules  │  Config events   │   │
+│   │    VRMS local    │  Read-only role  │     FIPS mode     │  Min-perm RBAC   │  Syslog forward  │   │
+│   │ Site trust cert  │  Firewall scope  │    Compress+enc   │  VAMI hardening  │  Site pair log   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 VMs (VRMS + VRS) · RAM DIMMs · WAN firewall · CA infrastructure · vCenter appliance              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vCenter SSO        = Single Sign-On; authenticates admin access to VR plugin within vCenter UI       │
+│  RBAC               = Role-Based Access Control; VR uses vCenter roles for permissions scoping        │
+│  Admin role         = Full VR management: configure, pause, resume, reconfigure replication           │
+│  Read-only role     = View replication status only; cannot configure or modify replication            │
+│  Traffic encryption = TLS between source and target VRS; enabled by default; FIPS mode optional       │
+│  VRMS certificate   = TLS cert for the VRMS management UI; signed by vCenter CA or external CA        │
+│  VRS certificate    = TLS cert for the VRS data path; must be trusted at both source and target sites │
+│  Site trust         = Certificate-based trust between source vCenter and target vCenter for VR pairing│
+│  VAMI               = Virtual Appliance Management Interface; admin UI for VRMS/VRS; secured with     │
+│  Firewall rules     = Required: 8043/443 for VRMS, 31031 for VRS data, 443 for vCenter communication  │
+│  Audit log          = All VR config changes logged in vCenter Tasks/Events; forwarded via syslog to   │
+│  FIPS 140-2         = Federal cryptographic standard; enabled for VR traffic encryption at cluster    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── vSphere Replication — Security ────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │         vCenter SSO authentication for VR appliance management; RBAC via vCenter roles        │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │            Replication traffic encrypted over TLS between source VRS and target VRS           │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │   Certificate management: VRMS and VRS certs signed by CA or vCenter CA; rotated on schedule  │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │       Firewall rules: VRMS port 8043/443, VRS port 31031, vCenter port 443 between sites      │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │    Audit: all replication config changes logged in vCenter Tasks and Events; syslog forward   │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    vCenter SSO gates management · TLS encrypts replication traffic                                    │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │        Authentication       │  │        Access Control       │  │          Encryption         │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │         vCenter SSO         │  │         vCenter RBAC        │  │         Traffic TLS         │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │       LDAP via vCenter      │  │          Admin role         │  │       Cert management       │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │       VRMS local admin      │  │        Read-only role       │  │       CA-signed certs       │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         Plugin auth         │  │        Datastore perm       │  │          FIPS mode          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │       Site trust cert       │  │       Site admin roles      │  │       Compress+encrypt      │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │       VAMI local auth       │  │        Firewall rules       │  │        Audit logging        │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    SSO controls management access · RBAC scopes permissions                                           │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │       Auth       │   Access Ctrl    │     Encryption    │    Hardening     │      Audit       │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │   vCenter SSO    │   vCenter RBAC   │    Traffic TLS    │  Cert rotation   │  vCenter tasks   │   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │   LDAP groups    │    Admin role    │   CA-signed cert  │  Firewall rules  │  Config events   │   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   │    VRMS local    │  Read-only role  │     FIPS mode     │  Min-perm RBAC   │  Syslog forward  │   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│   │ Site trust cert  │  Firewall scope  │    Compress+enc   │  VAMI hardening  │  Site pair log   │   │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  x86 VMs (VRMS + VRS) · RAM DIMMs · WAN firewall · CA infrastructure · vCenter appliance              │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│                                                                                                       │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                                                                                       │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  vCenter SSO        = Single Sign-On; authenticates admin access to VR plugin within vCenter UI       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  RBAC               = Role-Based Access Control; VR uses vCenter roles for permissions scoping        │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  Admin role         = Full VR management: configure, pause, resume, reconfigure replication           │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  Read-only role     = View replication status only; cannot configure or modify replication            │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  Traffic encryption = TLS between source and target VRS; enabled by default; FIPS mode optional       │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  VRMS certificate   = TLS cert for the VRMS management UI; signed by vCenter CA or external CA        │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  VRS certificate    = TLS cert for the VRS data path; must be trusted at both source and target sites │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  Site trust         = Certificate-based trust between source vCenter and target vCenter for VR pairing│
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│  VAMI               = Virtual Appliance Management Interface; admin UI for VRMS/VRS; secured with     │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│  Firewall rules     = Required: 8043/443 for VRMS, 31031 for VRS data, 443 for vCenter communication  │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│  Audit log          = All VR config changes logged in vCenter Tasks/Events; forwarded via syslog to   │
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│  FIPS 140-2         = Federal cryptographic standard; enabled for VR traffic encryption at cluster    │
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│                                                                                                       │
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="authentication/">
