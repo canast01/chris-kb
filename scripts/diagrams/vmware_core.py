@@ -3457,7 +3457,7 @@ def vcf_troubleshooting():
 
 @kb_diagram(
     'virt-ref-cluster-inventory',
-    'docs/virtualization/reference/inventory/Cluster Inventory/index.md',
+    'docs/virtualization/reference/inventory/cluster-inventory/index.md',
     'vSphere Cluster Inventory — fields, HA/DRS config, vSAN/NSX flags, capacity tracking',
 )
 def virt_ref_cluster_inventory():
@@ -3535,7 +3535,7 @@ def virt_ref_cluster_inventory():
 
 @kb_diagram(
     'virt-ref-datastore-inventory',
-    'docs/virtualization/reference/inventory/Datastore Inventory/index.md',
+    'docs/virtualization/reference/inventory/datastore-inventory/index.md',
     'vSphere Datastore Inventory — capacity, free space, type, connected hosts, VM count',
 )
 def virt_ref_datastore_inventory():
@@ -3613,7 +3613,7 @@ def virt_ref_datastore_inventory():
 
 @kb_diagram(
     'virt-ref-host-inventory',
-    'docs/virtualization/reference/inventory/Host Inventory/index.md',
+    'docs/virtualization/reference/inventory/host-inventory/index.md',
     'vSphere Host Inventory — hardware model, CPU/RAM, ESXi version, cluster, NIC/HBA config',
 )
 def virt_ref_host_inventory():
@@ -3691,7 +3691,7 @@ def virt_ref_host_inventory():
 
 @kb_diagram(
     'virt-ref-mgmt-tools',
-    'docs/virtualization/reference/inventory/Management Tools/index.md',
+    'docs/virtualization/reference/inventory/management-tools/index.md',
     'VMware Management Tools — vCenter, VxRail Manager, Aria Suite, NSX Manager, SDDC Manager',
 )
 def virt_ref_mgmt_tools():
@@ -3769,7 +3769,7 @@ def virt_ref_mgmt_tools():
 
 @kb_diagram(
     'virt-ref-network-inventory',
-    'docs/virtualization/reference/inventory/Network Inventory/index.md',
+    'docs/virtualization/reference/inventory/network-inventory/index.md',
     'vSphere Network Inventory — VDS switches, port groups, VLANs, uplinks, NSX segments',
 )
 def virt_ref_network_inventory():
@@ -3847,7 +3847,7 @@ def virt_ref_network_inventory():
 
 @kb_diagram(
     'virt-ref-version-inventory',
-    'docs/virtualization/reference/inventory/Version Inventory/index.md',
+    'docs/virtualization/reference/inventory/version-inventory/index.md',
     'VMware Platform Version Inventory — vCenter, ESXi, vSAN, NSX, VxRail, Aria Suite versions',
 )
 def virt_ref_version_inventory():
@@ -3925,7 +3925,7 @@ def virt_ref_version_inventory():
 
 @kb_diagram(
     'virt-std-access',
-    'docs/virtualization/reference/standards/Access Standard/index.md',
+    'docs/virtualization/reference/standards/access-standard/index.md',
     'vSphere Access Standard — RBAC roles, SSO, lockdown mode, service accounts, audit logging',
 )
 def virt_std_access():
@@ -4003,7 +4003,7 @@ def virt_std_access():
 
 @kb_diagram(
     'virt-std-cluster',
-    'docs/virtualization/reference/standards/Cluster Standard/index.md',
+    'docs/virtualization/reference/standards/cluster-standard/index.md',
     'vSphere Cluster Standard — HA admission control, DRS settings, EVC mode, capacity rules',
 )
 def virt_std_cluster():
@@ -4081,7 +4081,7 @@ def virt_std_cluster():
 
 @kb_diagram(
     'virt-std-datastore',
-    'docs/virtualization/reference/standards/Datastore Standard/index.md',
+    'docs/virtualization/reference/standards/datastore-standard/index.md',
     'vSphere Datastore Standard — storage policies, naming, sizing thresholds, vSAN rules',
 )
 def virt_std_datastore():
@@ -4159,7 +4159,7 @@ def virt_std_datastore():
 
 @kb_diagram(
     'virt-std-host-build',
-    'docs/virtualization/reference/standards/Host Build Standard/index.md',
+    'docs/virtualization/reference/standards/host-build-standard/index.md',
     'ESXi Host Build Standard — NTP, DNS, syslog, lockdown, NIC teaming, host profile',
 )
 def virt_std_host_build():
@@ -4237,7 +4237,7 @@ def virt_std_host_build():
 
 @kb_diagram(
     'virt-std-naming',
-    'docs/virtualization/reference/standards/Naming Standard/index.md',
+    'docs/virtualization/reference/standards/naming-standard/index.md',
     'vSphere Naming Standard — conventions for clusters, hosts, VMs, datastores, port groups',
 )
 def virt_std_naming():
@@ -4315,7 +4315,7 @@ def virt_std_naming():
 
 @kb_diagram(
     'virt-std-vm',
-    'docs/virtualization/reference/standards/VM Standard/index.md',
+    'docs/virtualization/reference/standards/vm-standard/index.md',
     'vSphere VM Standard — vHW version, CPU/RAM sizing tiers, snapshot policy, VMware Tools',
 )
 def virt_std_vm():

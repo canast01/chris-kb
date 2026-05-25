@@ -1,5 +1,59 @@
 # PowerScale — Standards
 
+```
+┌──────────────────────────── Dell PowerScale Architecture Design Standards ────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Design standards: minimum 4 nodes for production HA; FlexProtect N+2 for 3-node min      │   │
+│   │    Network: separate front-end client network and back-end InfiniBand/Ethernet node fabric    │   │
+│   │   SmartPool tiers: performance pool for hot data; archive pool for cold; policy-driven move   │   │
+│   │         SyncIQ: RPO ≥ minutes; define bandwidth throttle; separate replication IP pool        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Capacity model → node type selection → protection level → SmartPool policy → network design        │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Sizing Standards      │  │       Protection Stds       │  │      Network Standards      │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │       4 nodes min prod      │  │        N+2:1 default        │  │       Front/back split      │   │
+│   │       Mixed node pools      │  │        N+3:1 critical       │  │        25/100G front        │   │
+│   │        Cap plan +20%        │  │       Mirror for WORM       │  │       InfiniBand back       │   │
+│   │      F-series for perf      │  │       No degraded run       │  │       Separate repl IP      │   │
+│   │       A-series archive      │  │        Resync on add        │  │       SmartConnect DNS      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Node pool configured → FlexProtect set → SmartPool tier policy defined → test failover             │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   │     Standard     │       Rule       │     Rationale     │   Anti-pattern   │       Risk       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    Node count    │   4 nodes min    │    Tolerate N+2   │   3 nodes prod   │No failure margin │   │
+│   │    Protection    │  N+2:1 default   │   Two-fault tol.  │    N+1:1 only    │ Single fault tol │   │
+│   │     Network      │  Separate FE/BE  │   No contention   │  Shared fabric   │ Back-end impact  │   │
+│   │     Capacity     │  +20% headroom   │   Space for jobs  │    Full pool     │ SmartPool stall  │   │
+│                                                                                                       │
+│    Physical: nodes on ToR switches; back-end IB or 25G switch; separate mgmt VLAN                     │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    N+2:1         = FlexProtect level; tolerates simultaneous failure of 2 drives or 1 node            │
+│    N+3:1         = Three-fault-tolerant protection; for mission-critical or large node pools          │
+│    FlexProtect   = OneFS auto-protection; dynamically balances protection across available drives     │
+│    Front-end net = Client-facing Ethernet; SmartConnect IP pool for NFS/SMB client connections        │
+│    Back-end net  = Node-to-node InfiniBand or 25/100G Ethernet; carries metadata and data traffic     │
+│    Separate repl IP= SyncIQ uses dedicated IP pool; prevents replication from saturating client LAN   │
+│    Cap plan +20% = Keep 20% free in SmartPool; SmartPool jobs and snapshots need space headroom       │
+│    SmartPool stall= SmartPool tier migration stops when pool is 100% full; data at risk               │
+│    Resync on add = After adding nodes, OneFS rebalances data across the expanded pool                 │
+│    Mirror WORM   = SmartLock compliance volumes use mirroring for highest protection                  │
+│    ToR switch    = Top of Rack switch; connects node front-end ports to client network                │
+│    No degraded run= Do not operate cluster long-term in degraded state; add node or replace drive     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌──────────────────────────── Dell PowerScale Architecture Design Standards ────────────────────────────┐
 │                                                                                                       │

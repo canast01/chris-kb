@@ -56,89 +56,60 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-<div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="cli-reference/">
-  <strong>CLI Reference</strong>
-  <span>AWS CLI commands, syntax, and quick reference.</span>
-</a>
-
-<a class="kb-card" href="health-checks/">
-  <strong>Health Checks</strong>
-  <span>Service health, EC2 status, RDS availability, and CloudWatch alarm review.</span>
-</a>
-
-<a class="kb-card" href="procedures/">
-  <strong>Procedures</strong>
-  <span>Day-to-day operational tasks across compute, storage, and networking.</span>
-</a>
-
-<a class="kb-card" href="install-upgrade/">
-  <strong>Install & Upgrade</strong>
-  <span>AMI management, patching via Systems Manager, and service upgrades.</span>
-</a>
-
-<a class="kb-card" href="backup-restore/">
-  <strong>Backup & Restore</strong>
-  <span>AWS Backup jobs, restore procedures, and snapshot management.</span>
-</a>
-
-<a class="kb-card" href="scripts/">
-  <strong>Scripts</strong>
-  <span>Automation scripts and reusable AWS CLI code.</span>
-</a>
-
-</div>
-
-> Part of the [AWS](../index.md) reference.
-
----
-## Daily Checks
-
-
-| Check | Command | Notes |
-|---|---|---|
-| [ ] Check active AWS service health events | `aws health describe-events --filter eventStatusCodes=open` |  |
-| [ ] Review active CloudWatch alarms | `aws cloudwatch describe-alarms --state-value ALARM` |  |
-| [ ] Verify running EC2 instance health | `aws ec2 describe-instance-status --filter Name=instance-state-name,Values=running` |  |
-| [ ] Check RDS instance status | `aws rds describe-db-instances --query 'DBInstances[*].[DBInstanceIdentifier,DBInstanceStatus]'` |  |
-| [ ] Verify ELB target health | `aws elbv2 describe-target-health --target-group-arn <arn>` |  |
-| [ ] Review AWS Backup job status for the last 24 hours |  |  |
-| [ ] Check Cost Explorer for unexpected spend spikes vs. prior day/week |  |  |
-| [ ] Review CloudTrail for unexpected IAM changes or privilege escalati |  |  |
-
-## Health Check
-
-- [ ] Confirm AWS CLI identity resolves correctly
-- [ ] Verify all running EC2 instances report OK instance status
-- [ ] Confirm all RDS instances are in `available` state
-- [ ] Check all CloudWatch alarms — zero alarms in `ALARM` state expected
-- [ ] Verify ELB target group health shows all targets healthy
-- [ ] Confirm AWS Backup last job completed successfully
-- [ ] Check no VPN or Direct Connect tunnels are down
-- [ ] Review AWS Health Dashboard for any active or upcoming events
-
-```bash
-# Confirm caller identity
-aws sts get-caller-identity
-
-# EC2 instance status for all running instances
-aws ec2 describe-instance-status \
-  --filter Name=instance-state-name,Values=running \
-  --query 'InstanceStatuses[*].[InstanceId,InstanceStatus.Status,SystemStatus.Status]' \
-  --output table
-
-# RDS instance status
-aws rds describe-db-instances \
-  --query 'DBInstances[*].[DBInstanceIdentifier,DBInstanceStatus,Engine]' \
-  --output table
-
-# Active CloudWatch alarms
-aws cloudwatch describe-alarms \
-  --state-value ALARM \
-  --query 'MetricAlarms[*].[AlarmName,StateReason]' \
-  --output table
+┌─────────────────────────────────────── AWS Operations Overview ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │              AWS Operations — Health Checks, Procedures, Patching, and Automation             │   │
+│   │   Health Checks: EC2 status checks · RDS availability · CloudWatch alarm state · AWS Health   │   │
+│   │    Procedures: instance lifecycle, AMI management, EBS expansion, ASG scaling, RDS failover   │   │
+│   │  Patching: Systems Manager Patch Manager applies OS patches on schedule; compliance reporting │   │
+│   │      Backup/Restore: AWS Backup jobs · EBS snapshot restore · RDS point-in-time recovery      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Health checks prevent failures · Procedures execute changes safely                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Health Checks        │  │          Procedures         │  │          Automation         │   │
+│   │    EC2 status: 2/2 checks   │  │    Start/stop/reboot EC2    │  │    SSM Run Command: fleet   │   │
+│   │    RDS: available + IOPS    │  │    Resize: instance type    │  │  EventBridge: auto-trigger  │   │
+│   │    CW Alarms: OK vs ALARM   │  │   EBS: extend + resize fs   │  │    Lambda: remediation fn   │   │
+│   │    AWS Health: svc events   │  │    ASG: refresh instances   │  │  CloudFormation: IaC drift  │   │
+│   │   TGW + VPN: BGP sessions   │  │    RDS failover: promote    │  │   Step Functions: workflow  │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Health checks detect issues · Procedures resolve them                                              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Health Checks   │    Procedures    │      Patching     │  Backup/Restore  │     Scripts      │   │
+│   │   EC2 2/2 OK?    │   AMI: create    │   Patch baseline  │ Backup job: run  │  CLI: describe   │   │
+│   │  CW alarms: OK   │   EBS: extend    │    Patch window   │ EBS snap restore │   Boto3: boto3   │   │
+│   │  RDS: available  │   ASG: refresh   │  Compliance: view │     RDS PITR     │   SSM scripts    │   │
+│   │ AWS Health: evts │   RDS failover   │  Reboot if needed │ Cross-region: cp │     CDK / TF     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  EC2 hosts on Nitro · EBS storage fabric · RDS managed infrastructure · AZs for HA · VPC networking   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  EC2 status checks = System check (AWS infra) + instance check (OS/app); both must pass (2/2)         │
+│  AWS Health        = Personalised service health and maintenance events for your account and resources│
+│  Patch Manager     = SSM feature; applies OS patches per baseline; records compliance per instance    │
+│  Patch baseline    = Defines which patches to install; AWS-managed or custom per OS and severity      │
+│  AMI               = Amazon Machine Image; golden image snapshot; used for ASG instance refresh       │
+│  ASG instance refresh= Rolling replacement of instances in an ASG with a new launch template version  │
+│  EBS expansion     = Increase volume size; then extend filesystem (growpart + resize2fs or diskpart)  │
+│  RDS PITR          = Point-in-time recovery; restore RDS to any second within the retention window    │
+│  CloudFormation drift= Detects manual changes to stack resources not captured in the template         │
+│  Step Functions    = AWS serverless workflow orchestrator; chains Lambda, SSM, ECS tasks with retries │
+│  Run Command       = SSM feature executing commands/scripts on EC2 fleet; no SSH or VPN needed        │
+│  EventBridge rule  = Triggers Lambda/SSM/SQS on schedule or event pattern; enables auto-remediation   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Change Readiness

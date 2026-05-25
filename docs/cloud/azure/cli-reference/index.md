@@ -60,47 +60,60 @@ Commonly used Azure CLI (`az`) commands for managing compute, storage, networkin
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
----
-
-
-<div class="kb-grid kb-grid-1">
-
-<a class="kb-card" href="key-vault/">
-  <strong>Key Vault</strong>
-  <span>Key Vault notes, checks, commands, and references.</span>
-</a>
-
-<a class="kb-card" href="virtual-machines/">
-  <strong>Virtual Machines</strong>
-  <span>Virtual Machines notes, checks, commands, and references.</span>
-</a>
-
-</div>
-## Account & Subscriptions
-
-Authenticate, manage subscriptions, and work with resource groups. Resource groups are the fundamental organizing container in Azure — every resource lives in one.
-
-```bash
-# Login
-az login
-az login --service-principal -u <app_id> -p <password> --tenant <tenant>
-az login --identity   # managed identity (for VMs and services)
-
-# Subscriptions
-az account list --output table
-az account show
-az account set --subscription <id_or_name>
-
-# Current identity
-az ad signed-in-user show
-
-# Resource groups
-az group list
-az group list --output table
-az group show --name <rg>
-az group create --name <rg> --location eastus
-az group delete --name <rg> --yes
-az group list --query "[].{Name:name,Location:location,State:properties.provisioningState}" --output table
+┌───────────────────────────────────────── Azure CLI Reference ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                 Azure CLI — az command-line tool for managing Azure resources                 │   │
+│   │    Structured as: az <group> <command> [--options] — e.g. az vm list --resource-group myRG    │   │
+│   │  Auth: az login (browser) · az login --service-principal · az account set --subscription <id> │   │
+│   │              Output formats: --output json (default) | table | tsv | yaml | none              │   │
+│   │      Query: --query uses JMESPath; e.g. --query "[?powerState==`VM running`].name" -o tsv     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    az CLI organises by resource type — vm, network, storage, account, backup, monitor, identity, aks  │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Compute (VM/AKS)      │  │       Storage / Disks       │  │      Identity / Network     │   │
+│   │    az vm list/show/start    │  │    az storage account ls    │  │    az ad user/group list    │   │
+│   │    az vm stop/deallocate    │  │     az disk list/create     │  │   az role assignment list   │   │
+│   │     az vm resize/create     │  │      az snapshot create     │  │     az network vnet list    │   │
+│   │    az aks get-credentials   │  │   az storage blob up/down   │  │   az network nsg rule list  │   │
+│   │      az vm run-command      │  │    az keyvault secret get   │  │    az monitor alert list    │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Compute CLI manages VMs/AKS · Storage CLI handles blobs and disks                                  │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Account      │ Virtual Machines │      Storage      │    Networking    │   Backup / KV    │   │
+│   │     az login     │   vm list --rg   │    blob upload    │    vnet list     │  backup item ls  │   │
+│   │   account set    │  vm start/stop   │   blob download   │   nsg rule add   │  kv secret get   │   │
+│   │   account list   │    vm resize     │    disk create    │     lb list      │  backup protect  │   │
+│   │    sp create     │    vm run-cmd    │    snapshot cp    │   vnet peering   │   kv key list    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Azure Resource Manager API · Azure AD token endpoint · Azure CloudShell or local workstation         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Azure CLI v2     = Current az CLI; install via Homebrew/apt/pip; az --version to verify              │
+│  az login         = Browser-based interactive login; stores token in ~/.azure/; expires after 1 hour  │
+│  Service principal= Non-human identity; use az login --service-principal for automation               │
+│  az account set   = Switch active subscription; use with --subscription <name or id>                  │
+│  --resource-group = Required for most resource commands; shorthand --g; targets RG scope              │
+│  --query          = JMESPath filter on JSON output; e.g. [].name for list of resource names           │
+│  --output table   = Renders JSON as a formatted table; useful for terminal readability                │
+│  az vm run-command= Execute a script inside a VM via VM agent; works without SSH or port access       │
+│  az configure     = Set default resource group, output format, and location for the CLI session       │
+│  CloudShell       = Browser-based shell in Azure portal; pre-authenticated; az available by default   │
+│  --no-wait        = Submits a long-running operation without blocking the terminal; async execution   │
+│  az find          = AI-powered CLI helper; suggests relevant commands for a given scenario            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

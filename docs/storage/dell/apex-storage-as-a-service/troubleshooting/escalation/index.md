@@ -1,5 +1,59 @@
 # APEX Storage as a Service — Escalation
 
+```
+┌──────────────────────────────────── Dell Apex STaaS — Escalation ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Apex escalation: severity triage, SR creation, log collection, TAC engagement         │   │
+│   │           P1 (production down): call Dell immediately + open SR; 4-hour response SLA          │   │
+│   │       P2 (degraded): open SR online; 8-hour response; attach multipath and CloudIQ logs       │   │
+│   │             Collect before calling: host OS logs, CloudIQ bundle, SCG diagnostics             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Triage severity → collect logs → open SR → Dell responds → RCA → preventive action                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Severity          │  │       What to Collect       │  │          SR Process         │   │
+│   │        P1: prod down        │  │        multipath -ll        │  │       Apex Console SR       │   │
+│   │         P2: degraded        │  │        CloudIQ bundle       │  │        Phone + online       │   │
+│   │         P3: limited         │  │        dmesg / syslog       │  │        Online SR only       │   │
+│   │         P4: question        │  │        SCG diagnostic       │  │        Community/chat       │   │
+│   │         Escalate P1         │  │        CloudIQ events       │  │       Manager escalate      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Always note time of issue, affected volumes, and host count when opening SR                        │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Severity     │     Criteria     │    SLA respond    │     Contact      │    Escalation    │   │
+│   │        P1        │    Prod down     │      4 hours      │    Phone + SR    │   Exec if >4h    │   │
+│   │        P2        │     Degraded     │      8 hours      │    SR + phone    │    Mgr if >8h    │   │
+│   │        P3        │   Limited imp.   │   Next bus. day   │    SR online     │    SR comment    │   │
+│   │        P4        │     Question     │    Best effort    │   Portal/chat    │   None needed    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: collect cable/SFP photos for P1 hardware failures · note rack location                   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    P1 severity    = Production storage completely unavailable; call Dell 24x7 phone line              │
+│    P2 severity    = Production degraded (slow, one path lost); open SR + follow up by phone           │
+│    P3 severity    = Non-production or isolated issue; online SR; next business day response           │
+│    P4 severity    = General question or feature request; community or chat; no SLA                    │
+│    CloudIQ bundle = Downloadable diagnostic package from CloudIQ; attach to SR                        │
+│    SCG diagnostic = SCG built-in log collection; download from SCG web UI                             │
+│    dmesg          = Linux kernel ring buffer; shows SCSI errors, path events, I/O failures            │
+│    syslog         = System log; contains iSCSI daemon, multipath, and storage driver events           │
+│    Manager escalate = Requesting Dell TAC manager involvement if SLA is not being met                 │
+│    RCA            = Root Cause Analysis; Dell provides written cause and prevention plan              │
+│    Exec escalation = For P1 unresolved >4h; request to Dell account team for exec attention           │
+│    SR number      = Service Request ticket; record and share with all team members involved           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌──────────────────────────────────── Dell Apex STaaS — Escalation ─────────────────────────────────────┐
 │                                                                                                       │

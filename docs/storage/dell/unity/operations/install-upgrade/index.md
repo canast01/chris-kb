@@ -1,5 +1,59 @@
 # Unity — Install & Upgrade
 
+```
+┌─────────────────────────────────── Dell Unity Install and Upgrade ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Initial install: rack Unity → cable SPs and DAEs → configure via Unisphere wizard       │   │
+│   │       OE upgrade: download upgrade package → upload to Unity → health pre-check → commit      │   │
+│   │      Rolling upgrade: SP B reboots first → SP A takes all I/O → SP B ready → SP A reboots     │   │
+│   │            Non-disruptive: hosts continue I/O during upgrade; one SP always serving           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Health pre-check → upload OE package → commit → SP B upgrade/reboot → SP A upgrade/reboot          │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Initial Install       │  │          OE Upgrade         │  │        Add Drives/DAE       │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │        Rack and cable       │  │         Download OE         │  │        Cable new DAE        │   │
+│   │           Power on          │  │       Upload to array       │  │        Rescan drives        │   │
+│   │       Unisphere wizard      │  │        Pre-check run        │  │         Expand pool         │   │
+│   │        Network config       │  │         SP B upgrade        │  │        FAST VP rebal        │   │
+│   │          SCG enroll         │  │         SP A upgrade        │  │        Verify health        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    OE upgrade non-disruptive; hosts continue I/O; each SP takes ~15-20 min to reboot                  │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   │    Operation     │     Duration     │     Disruptive    │     Rollback     │      Notes       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │ Initial install  │    2–4 hours     │  Yes (new system) │       N/A        │  Follow wizard   │   │
+│   │    OE upgrade    │    30–60 min     │    No (rolling)   │  Prior OE image  │ Pre-check first  │   │
+│   │     DAE add      │      15 min      │         No        │    Remove DAE    │ Rescan required  │   │
+│   │    Drive add     │      5 min       │         No        │       N/A        │ Pool expand opt. │   │
+│                                                                                                       │
+│    Physical: SPE base unit; DAEs connect via SAS expansion cable from SP to first DAE chain           │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    OE             = Operating Environment; Unity OS upgrade package (.tgz file from Dell)             │
+│    Rolling upgrade= SP B upgraded first while SP A serves I/O; then roles swap for SP A upgrade       │
+│    Pre-check      = Automated health validation before upgrade commit; blocks on unresolved alerts    │
+│    Unisphere wizard= Web-based initial configuration wizard; run once after first power-on            │
+│    SPE            = Storage Processor Enclosure; base 2U chassis containing SP A and SP B             │
+│    DAE            = Disk Array Enclosure; 2U or 4U expansion shelf; chained from SPE                  │
+│    FAST VP rebal  = After adding drives, FAST VP distributes data across new capacity                 │
+│    Pool expand    = Add drives to existing storage pool; capacity available after rescan              │
+│    SCG enroll     = Register Unity with SCG after install for CloudIQ and phone-home support          │
+│    Rollback OE    = If upgrade fails mid-way, Unity can revert to previous OE version                 │
+│    SAS expansion  = Back-end SAS cabling between SPE and DAE; daisy-chain up to max DAEs              │
+│    15-20 min reboot= Each SP reboot time during OE upgrade; I/O served by partner SP                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌─────────────────────────────────── Dell Unity Install and Upgrade ────────────────────────────────────┐
 │                                                                                                       │

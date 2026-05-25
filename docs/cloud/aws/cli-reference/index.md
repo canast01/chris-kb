@@ -56,57 +56,60 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Commonly used AWS CLI commands for managing compute, storage, networking, identity, and monitoring. The AWS CLI is a command-line tool that talks directly to AWS APIs — everything you can do in the console, you can automate with the CLI.
-
-> Requires `aws configure` or environment variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`).
----
-
-
-<div class="kb-grid kb-grid-1">
-
-<a class="kb-card" href="ec2-instances/">
-  <strong>EC2 Instances</strong>
-  <span>EC2 Instances notes, checks, commands, and references.</span>
-</a>
-
-<a class="kb-card" href="ec2-storage/">
-  <strong>EC2 Storage</strong>
-  <span>EC2 Storage notes, checks, commands, and references.</span>
-</a>
-
-</div>
-## Identity & Access (IAM / STS)
-
-IAM (Identity and Access Management) controls who can do what in your AWS account. STS (Security Token Service) lets you temporarily assume a role — useful for cross-account access or giving scripts temporary credentials.
-
-```bash
-# Check who you are (current identity — always run this first to confirm the right account/role)
-aws sts get-caller-identity
-
-# IAM users
-aws iam list-users
-aws iam get-user --user-name <user>
-aws iam create-user --user-name <user>
-aws iam delete-user --user-name <user>
-
-# IAM groups
-aws iam list-groups
-aws iam add-user-to-group --user-name <user> --group-name <group>
-
-# IAM roles (a role is a set of permissions that can be assumed by a user, service, or another account)
-aws iam list-roles
-aws iam get-role --role-name <role>
-aws iam create-role --role-name <role> --assume-role-policy-document file://trust.json
-aws iam attach-role-policy --role-name <role> --policy-arn <arn>
-
-# Access keys (programmatic credentials for users)
-aws iam list-access-keys --user-name <user>
-aws iam create-access-key --user-name <user>
-aws iam delete-access-key --user-name <user> --access-key-id <id>
-
-# Assume role (get temporary credentials for a role)
-aws sts assume-role --role-arn <arn> --role-session-name session1
+┌────────────────────────────────────────── AWS CLI Reference ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                  AWS CLI — Command-Line Interface for AWS Service Management                  │   │
+│   │      Structured as: aws <service> <command> [--options] — e.g. aws ec2 describe-instances     │   │
+│   │        Auth: profiles in ~/.aws/credentials; assume-role; IAM Identity Center SSO login       │   │
+│   │          Output formats: --output json (default) | table | text | yaml | yaml-stream          │   │
+│   │       Pagination: --max-items / --starting-token; or --no-paginate for full result sets       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    AWS CLI organises commands by service — EC2, S3, IAM, RDS, EKS, SSM, CloudFormation, CloudWatch    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │     Compute (EC2/Lambda)    │  │     Storage (S3/EBS/EFS)    │  │      Identity (IAM/SSO)     │   │
+│   │    ec2 describe-instances   │  │    s3 ls / cp / sync / rm   │  │     iam list-users/roles    │   │
+│   │   ec2 start/stop-instances  │  │     ec2 describe-volumes    │  │   iam get-policy/document   │   │
+│   │     ec2 create-snapshot     │  │   ec2 create-volume/attach  │  │       sts assume-role       │   │
+│   │      lambda invoke/list     │  │   efs describe-filesystems  │  │      sso login / logout     │   │
+│   │      ssm start-session      │  │      s3api head-bucket      │  │    iam simulate-principal   │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Compute CLI manages instances · Storage CLI handles S3/EBS/EFS                                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    EC2 / SSM     │        S3        │        IAM        │    RDS / EKS     │    CloudWatch    │   │
+│   │describe-instances│ s3 sync src dst  │     list-roles    │ rds describe-db  │ get-metric-data  │   │
+│   │ssm start-session │  s3api list-obj  │    assume-role    │  eks get-token   │ put-metric-alarm │   │
+│   │  run-instances   │  cp --recursive  │   create-policy   │eks list-clusters │ describe-alarms  │   │
+│   │   send-command   │    rb --force    │    delete-role    │ rds failover-db  │ logs filter-log  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS Regions · API endpoints (HTTPS) · IAM authentication layer · CloudShell or local workstation     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  AWS CLI v2     = Current CLI version; install via pip or official pkg; aws --version to verify       │
+│  Named profile  = ~/.aws/credentials named section; use --profile name or AWS_PROFILE env var         │
+│  assume-role    = sts assume-role --role-arn ... --role-session-name; exports temp credentials        │
+│  --query        = JMESPath filter on JSON output; e.g. --query "Instances[*].InstanceId"              │
+│  --filter       = Server-side filter; e.g. --filters "Name=tag:Env,Values=prod" on describe calls     │
+│  --output table = Formats JSON output as ASCII table for human-readable inspection in terminal        │
+│  aws configure  = Interactive setup; writes region, key ID, secret, and output format to ~/.aws       │
+│  sso login      = Initiates browser-based IAM Identity Center login; caches SSO token locally         │
+│  --dry-run      = Validates permissions without executing; useful for IAM policy troubleshooting      │
+│  CloudShell     = Browser-based shell in AWS console; pre-authenticated, no local install needed      │
+│  --no-paginate  = Retrieves all pages of a paginated result in a single command call                  │
+│  --region       = Overrides default region for a single command; or set AWS_DEFAULT_REGION env var    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

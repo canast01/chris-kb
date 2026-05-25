@@ -61,44 +61,59 @@ vCenter Server is the management plane for VMware vSphere, deployed as the VCSA 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-| Deployment | Description | Use Case |
-|---|---|---|
-| Standard VCSA | Single appliance, embedded PSC and DB | Standard production |
-| vCenter HA (VCHA) | Active / Passive / Witness — 3 nodes | HA for the management plane |
-| Enhanced Linked Mode | Multiple vCenters sharing one SSO domain | Multi-site / large-scale |
-| vCenter Cloud Gateway | Connects on-prem to VMware Cloud | Hybrid cloud |
-
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Core services, VCHA, logical hierarchy, service startup order, sizing, ports, and logs.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Storage, NSX, identity, backup, and monitoring integrations.</span></a>
-<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Naming conventions, cluster baseline, HA/DRS settings, VM standards, and snapshot policy.</span></a>
-</div>
-
-## vCenter Server Deployment Topologies
-
-![vCenter Server Deployment Topologies](../../../../assets/vcenter-architecture-overview.svg)
-
----
-
-## vSphere Cluster Topology
-
-```mermaid
-graph TB
-  VCSA["vCenter Server Appliance\n(VCSA)"] --> CL["vSphere Cluster\nDRS · HA enabled"]
-  VCSA --> LCM["Lifecycle Manager\n(patching)"]
-  VCSA --> NSX["NSX Manager\n(optional)"]
-  CL --> ESX1["ESXi-01"] & ESX2["ESXi-02"] & ESX3["ESXi-03"] & ESX4["ESXi-04"]
-  ESX1 & ESX2 & ESX3 & ESX4 --> VDS["vSphere Distributed Switch\nVM Net · vMotion · Storage · Mgmt"]
-  VDS --> STORE["Shared Storage\nFlashArray · vSAN · NFS"]
-
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef store fill:#1d4ed8,stroke:#1e40af,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-
-  class VCSA,LCM,NSX mgmt
-  class CL,VDS net
-  class ESX1,ESX2,ESX3,ESX4 ctrl
-  class STORE store
+┌─────────────────────────────────────── vCenter — Architecture ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ VCSA — virtual appliance (Linux-based); PSC embedded since vCenter 7.0; no external PSC needed│   │
+│   │SSO domain provides identity federation; AD/LDAP identity sources for enterprise authentication│   │
+│   │   Inventory hierarchy: Datacenter > Cluster > Host > VM; permissions inherited down the tree  │   │
+│   │   vCenter HA: 3-node active/passive/witness; protects VCSA from host failure; same-site only  │   │
+│   │     VAMI (port 5480) manages appliance: network, time, backup, update, and service control    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works defines VCSA internals · integrations connect identity and tools                      │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         How It Works        │  │         Integrations        │  │       Design Standards      │   │
+│   │      VCSA appliance VM      │  │       AD/LDAP identity      │  │       VCSA sizing L/XL      │   │
+│   │       SSO domain: IdP       │  │        NSX-T: plugin        │  │        HA 3-node prod       │   │
+│   │      Inventory: DC>Clst     │  │      Aria Ops: adapter      │  │        Backup: daily        │   │
+│   │      vCenter HA: 3-node     │  │        LCM: built-in        │  │        NTP: 2 sources       │   │
+│   │         PSC embedded        │  │       Backup: SFTP/NFS      │  │      Cert: VMCA/custom      │   │
+│   │        VAMI: web mgmt       │  │       Aria Auto: cloud      │  │      SSO single domain      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    How-it-works defines VCSA and SSO · integrations connect identity and tools                        │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   How It Works   │   Integrations   │    Design Stds    │    Deployment    │     Key Stds     │   │
+│   │  VCSA appliance  │   AD/LDAP IdP    │   VCSA L sizing   │  Single vCenter  │  NTP 2 sources   │   │
+│   │    SSO domain    │   NSX-T plugin   │     HA 3-node     │   Linked mode    │   Cert policy    │   │
+│   │  Inventory hier  │ Aria Ops adapter │    Daily backup   │    Multi-site    │     RBAC std     │   │
+│   │    vCenter HA    │   Backup SFTP    │    VMCA/custom    │  Multi-vCenter   │  SSO domain std  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 server (VCSA VM target) · RAM DIMMs · Network NICs · Shared datastore · OOB management           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VCSA          = vCenter Server Appliance; Linux-based OVA deployed as a VM; single management plane  │
+│  SSO domain    = Single Sign-On domain (vsphere.local by default); identity hub for vSphere auth      │
+│  PSC           = Platform Services Controller; embedded in VCSA 7.0+; manages SSO, certs, licensing   │
+│  VMCA          = VMware Certificate Authority; built-in CA signing VCSA and host certificates         │
+│  vCenter HA    = 3-node VCSA cluster: active, passive, witness; automatic failover on host failure    │
+│  VAMI          = vCenter Appliance Management Interface; web UI on port 5480 for appliance operations │
+│  Linked Mode   = Multiple vCenters sharing SSO domain; unified inventory view across instances        │
+│  RBAC          = Role-Based Access Control; permissions set at inventory objects and inherited down   │
+│  Inventory hierarchy = DC > Cluster > Host > VM; permissions and policies propagate downward          │
+│  AD/LDAP       = Active Directory or LDAP identity source added to SSO for enterprise user auth       │
+│  File-based backup = VCSA periodic backup to SFTP or NFS; restores full appliance configuration       │
+│  Update Planner = vCenter tool that checks interoperability and schedules upgrade order               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

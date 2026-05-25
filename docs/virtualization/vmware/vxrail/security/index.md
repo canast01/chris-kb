@@ -61,34 +61,61 @@ Security reference for VxRail in the VMware product context. Covers iDRAC LDAP a
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Security Model Overview
-
-VxRail security combines vSphere/vSAN security (managed through vCenter) with VxRail-specific controls (managed through VxRail Manager). The Dell hardware layer adds iDRAC security as a third dimension.
-
-| Layer | Security Controls | Managed By |
-|---|---|---|
-| VxRail Manager | Admin accounts, API access, LCM access | VxRail Plugin / direct login |
-| vSphere / vCenter | Roles, permissions, lockdown mode, host profiles | vCenter |
-| vSAN | Encryption, storage policies | vCenter / storage policy engine |
-| iDRAC | Hardware OOB access, firmware security | iDRAC UI / RACADM CLI |
-| Network | VLANs, firewall, NSX (if deployed) | Network team / NSX Manager |
-
----
-
-## Authentication
-
-### VxRail Manager Accounts
-
-VxRail Manager has a local admin account (`mystic`) and supports LDAP integration.
-
-**Change the default mystic password immediately after initial deployment:**
-
-```bash
-# SSH to VxRail Manager VM
-ssh mystic@<vxrail-manager-ip>
-passwd mystic
-# Also update via VxRail Plugin: System → User Management
+┌────────────────────────────────────────── VxRail — Security ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         iDRAC LDAP/AD authentication with OOB-only VLAN access for hardware management        │   │
+│   │      ESXi lockdown mode (normal) with host profiles enforcement across all cluster nodes      │   │
+│   │     vCenter SSO for all management plane access; VxRail Manager TLS certificates enforced     │   │
+│   │      vSAN data-at-rest encryption with KMIP-compatible KMS integration for key management     │   │
+│   │      Secure Boot on all nodes; STIG alignment via host profiles; syslog forwarded to SIEM     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Authentication gates hardware access · access control limits management scope                      │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Authentication       │  │        Access Control       │  │          Encryption         │   │
+│   │        iDRAC LDAP/AD        │  │       RBAC via vCenter      │  │      vSAN data-at-rest      │   │
+│   │      ESXi lockdown mode     │  │       iDRAC user roles      │  │       iDRAC HTTPS only      │   │
+│   │         vCenter SSO         │  │       VxRail Mgr roles      │  │       Secure Boot ESXi      │   │
+│   │       VxRail Mgr local      │  │         LCM op roles        │  │        VxRail Mgr TLS       │   │
+│   │          iDRAC 2FA          │  │       Least privilege       │  │        iDRAC SSL cert       │   │
+│   │       Svc acct policy       │  │         Audit events        │  │          Syslog TLS         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Auth controls who accesses hardware · RBAC scopes management                                       │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Auth       │   Access Ctrl    │     Encryption    │    Hardening     │      Audit       │   │
+│   │    iDRAC LDAP    │   vCenter RBAC   │    vSAN encrypt   │   Secure Boot    │  vCenter events  │   │
+│   │  ESXi lockdown   │   iDRAC roles    │    iDRAC HTTPS    │   SSH disabled   │   iDRAC audit    │   │
+│   │   vCenter SSO    │   VxRail roles   │     VxRail TLS    │  Host profiles   │  Syslog to SIEM  │   │
+│   │    iDRAC 2FA     │ Least privilege  │   Cert rotation   │    STIG align    │  LCM log audit   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Dell PowerEdge servers · TPM 2.0 · NVMe/SSD/HDD · iDRAC OOB network · CA infrastructure              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  iDRAC             = Integrated Dell Remote Access Controller; LDAP/AD auth; OOB-only VLAN access     │
+│  Lockdown mode     = ESXi host setting preventing direct SSH/DCUI; all management via vCenter only    │
+│  vSAN encryption   = Data-at-rest encryption on vSAN datastore; keys managed by external KMIP KMS     │
+│  KMS/KMIP          = Key Management Server / protocol; external key store for vSAN and VM encryption  │
+│  Secure Boot       = UEFI feature verifying ESXi VIB signatures on all VxRail nodes at boot time      │
+│  Host Profile      = vCenter config template enforcing lockdown, NTP, syslog, and security settings   │
+│  VxRail Manager TLS = TLS certificate on VxRail Manager VM; used for API and plugin communications    │
+│  STIG alignment    = Defense Information Systems Agency hardening guide applied via host profiles     │
+│  OOB VLAN          = Out-of-band management VLAN restricted to iDRAC access only; no VM traffic       │
+│  LDAP/AD integration = iDRAC and vCenter authenticate against Active Directory for role mapping       │
+│  RBAC              = Role-Based Access Control; vCenter roles applied to VxRail management operations │
+│  2FA on iDRAC      = Two-factor authentication on iDRAC console; reduces OOB access risk              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Store the new password in the organisation's secrets vault. The `mystic` account is the equivalent of an admin account — losing it requires Dell support-assisted recovery.
