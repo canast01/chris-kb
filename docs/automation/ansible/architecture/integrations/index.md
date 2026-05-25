@@ -1,6 +1,6 @@
 # Ansible — Integrations
 
-> Part of the [Ansible Architecture](../) reference.
+> Part of the [Ansible Architecture](../index.md) reference.
 
 ## VMware vSphere
 

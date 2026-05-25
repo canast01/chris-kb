@@ -4,7 +4,7 @@
 Dell RASR (Recovery and System Restore) bare-metal recovery for Windows Server — WinPE boot media, sector-level image capture, and iDRAC virtual media integration.
 </div>
 
-![RASR Architecture](../../../../assets/rasr-architecture-overview.svg)
+![RASR Architecture](../../../assets/rasr-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Recovery workflow, WinPE environment, Dell hardware integration, and RASR vs alternatives.</span></a>

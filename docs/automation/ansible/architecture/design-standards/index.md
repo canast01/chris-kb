@@ -1,6 +1,6 @@
 # Ansible — Standards
 
-> Part of the [Ansible Architecture](../) reference.
+> Part of the [Ansible Architecture](../index.md) reference.
 
 ## Project Layout
 

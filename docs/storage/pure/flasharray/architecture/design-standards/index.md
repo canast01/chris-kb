@@ -77,7 +77,7 @@ Ordered steps for initial FlashArray setup:
 6. **Configure alert notifications** — set SMTP relay and admin email addresses
 7. **Configure syslog** — forward to central SIEM or log aggregator
 8. **Configure authentication** — join AD or configure LDAP; create role-mapped admin groups; disable default `pureuser` once validated
-9. **Apply security hardening** — see [Security](../../security/)
+9. **Apply security hardening** — see [Security](../../security/index.md)
 10. **Zone FC fabric** — create single-initiator, single-target zones for each host HBA to array target ports; or configure iSCSI discovery portals
 11. **Register hosts** — `purehost create <hostname>`, `purehost setifs --wwn <wwn> <hostname>`
 12. **Create host groups** — `purehgroup create <hgroupname>`, `purehgroup addhosts --hostlist <hosts> <hgroupname>`

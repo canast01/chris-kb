@@ -1,6 +1,6 @@
 # SRDF/S — Diagnostics
 
-> Part of the [SRDF/S Troubleshooting](../) reference.
+> Part of the [SRDF/S Troubleshooting](../index.md) reference.
 
 ---
 

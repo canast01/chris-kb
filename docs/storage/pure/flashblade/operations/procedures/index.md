@@ -20,7 +20,7 @@ FlashBlade NFS Filesystem Provisioning Flow
   └──────────────────────────────────────────────────────┘
 ```
 
-> Part of the [FlashBlade Operations](../) reference.
+> Part of the [FlashBlade Operations](../index.md) reference.
 
 ---
 

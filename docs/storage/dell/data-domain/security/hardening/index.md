@@ -236,7 +236,7 @@ adminaccess certificate show
 
 ## Encryption Hardening
 
-See the [Encryption](../encryption/) page for full D@RE configuration. Key hardening requirements:
+See the [Encryption](../encryption/index.md) page for full D@RE configuration. Key hardening requirements:
 
 ```bash
 # Confirm D@RE is enabled

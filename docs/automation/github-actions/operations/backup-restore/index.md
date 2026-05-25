@@ -1,6 +1,6 @@
 # GitHub Actions — Backup & Restore
 
-> Part of the [GitHub Actions Operations](../) reference.
+> Part of the [GitHub Actions Operations](../index.md) reference.
 
 ## What to Back Up
 

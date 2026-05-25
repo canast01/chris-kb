@@ -1,6 +1,6 @@
 # Scripts
 
-> Part of the [APEX Storage as a Service](../) reference.
+> Part of the [APEX Storage as a Service](../index.md) reference.
 
 ---
 ## Subscription Capacity Monitor

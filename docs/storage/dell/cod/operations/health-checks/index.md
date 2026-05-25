@@ -1,6 +1,6 @@
 # COD — Health Checks
 
-> Part of the [COD](../../) reference.
+> Part of the [COD](../../index.md) reference.
 
 ---
 

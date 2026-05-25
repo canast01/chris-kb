@@ -1,6 +1,6 @@
 # SnapMirror — Encryption
 
-> Part of the [SnapMirror Security](../) reference.
+> Part of the [SnapMirror Security](../index.md) reference.
 
 ---
 

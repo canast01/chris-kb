@@ -1,6 +1,6 @@
 # Keystone — Integrations
 
-> Part of the [Keystone Architecture](../) reference.
+> Part of the [Keystone Architecture](../index.md) reference.
 
 ---
 

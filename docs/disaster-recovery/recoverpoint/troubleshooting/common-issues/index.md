@@ -1,6 +1,6 @@
 # RecoverPoint — Common Issues
 
-> Part of the [RecoverPoint](../../) > [Troubleshooting](../) reference.
+> Part of the [RecoverPoint](../../index.md) > [Troubleshooting](../index.md) reference.
 
 ---
 

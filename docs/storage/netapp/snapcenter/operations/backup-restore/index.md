@@ -1,6 +1,6 @@
 # SnapCenter — Backup & Restore
 
-> Part of the [SnapCenter Operations](../) reference.
+> Part of the [SnapCenter Operations](../index.md) reference.
 
 ---
 

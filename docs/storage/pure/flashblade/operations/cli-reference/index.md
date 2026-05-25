@@ -15,7 +15,7 @@ purefb CLI Hierarchy
   └── support     — phone-home and diagnostics
 ```
 
-> Part of the [FlashBlade Operations](../) reference.
+> Part of the [FlashBlade Operations](../index.md) reference.
 
 Commonly used `purefb` commands for managing Pure Storage FlashBlade arrays. FlashBlade is a scale-out NAS and object storage platform — it serves NFS and SMB file shares as well as S3-compatible object storage.
 

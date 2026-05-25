@@ -1,6 +1,6 @@
 # MDS — CLI Reference
 
-> Part of the [Cisco MDS](../../) reference.
+> Part of the [Cisco MDS](../../index.md) reference.
 
 Commonly used NX-OS commands for managing Cisco MDS Fibre Channel switches. MDS runs NX-OS — the same operating system family as Cisco Nexus, so commands follow the `show / configure terminal / interface` pattern.
 

@@ -1,6 +1,6 @@
 # MDS — Health Checks
 
-> Part of the [Cisco MDS](../../) reference.
+> Part of the [Cisco MDS](../../index.md) reference.
 
 ---
 
@@ -149,7 +149,7 @@ show system resources
 show fcdomain domain-list vsan 10
 ```
 
-For automated health checks, see the [Scripts](../scripts/) page for the `mds_fabric_health.sh` and `mds_daily_check.sh` scripts.
+For automated health checks, see the [Scripts](../scripts/index.md) page for the `mds_fabric_health.sh` and `mds_daily_check.sh` scripts.
 
 ---
 

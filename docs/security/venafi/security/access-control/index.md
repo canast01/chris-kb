@@ -1,6 +1,6 @@
 # Venafi — Access Control
 
-> Part of the [Venafi](../../) reference.
+> Part of the [Venafi](../../index.md) reference.
 
 Least-privilege role assignment must be enforced, with service account permissions scoped to specific policy folders only. Separation of duties separates CA trust anchor management from day-to-day certificate operations.
 

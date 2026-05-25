@@ -20,7 +20,7 @@ FlashBlade Data Protection Tiers
 Restore: snapshot → create clone → mount → validate → promote
 ```
 
-> Part of the [FlashBlade Operations](../) reference.
+> Part of the [FlashBlade Operations](../index.md) reference.
 
 ---
 

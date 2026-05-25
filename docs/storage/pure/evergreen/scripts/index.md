@@ -1,6 +1,6 @@
 # Scripts
 
-> Part of the [Pure Storage Evergreen](../) reference.
+> Part of the [Pure Storage Evergreen](../index.md) reference.
 
 ```
 Evergreen Automation Flow

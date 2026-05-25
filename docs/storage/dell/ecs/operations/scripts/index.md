@@ -1,6 +1,6 @@
 # Dell ECS — Scripts
 
-> Part of the [Dell ECS](../../) reference.
+> Part of the [Dell ECS](../../index.md) reference.
 
 ---
 ## Node & Capacity Health Check

@@ -1,6 +1,6 @@
 # FabricOS — Scripts
 
-> Part of the [Operations](../) reference.
+> Part of the [Operations](../index.md) reference.
 
 ---
 

@@ -201,7 +201,7 @@ isi nfs exports view <export_id> | grep -i "security"
 isi nfs exports list -v | grep -E "Export|Security"
 ```
 
-`krb5p` requires a Kerberos infrastructure (Active Directory or MIT Kerberos KDC). Clients must have valid Kerberos tickets and system time within 5 minutes of the cluster and KDC. See [Authentication](../authentication/) for Kerberos setup.
+`krb5p` requires a Kerberos infrastructure (Active Directory or MIT Kerberos KDC). Clients must have valid Kerberos tickets and system time within 5 minutes of the cluster and KDC. See [Authentication](../authentication/index.md) for Kerberos setup.
 
 ---
 

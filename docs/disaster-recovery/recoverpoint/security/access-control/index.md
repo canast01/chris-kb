@@ -1,6 +1,6 @@
 # RecoverPoint — Access Control
 
-> Part of the [RecoverPoint](../../) > [Security](../) reference.
+> Part of the [RecoverPoint](../../index.md) > [Security](../index.md) reference.
 
 ---
 

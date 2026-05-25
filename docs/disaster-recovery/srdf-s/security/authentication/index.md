@@ -1,6 +1,6 @@
 # SRDF/S — Authentication
 
-> Part of the [SRDF/S Security](../) reference.
+> Part of the [SRDF/S Security](../index.md) reference.
 
 ---
 

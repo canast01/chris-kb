@@ -35,7 +35,7 @@ After a new RHEL/Ubuntu server is deployed from template:
 - [ ] Set hostname: `hostnamectl set-hostname <fqdn>`
 - [ ] Verify DNS forward and reverse resolution: `dig <fqdn>` and `dig -x <ip>`
 - [ ] Configure NTP: `chronyc sources -v` — confirm active sync
-- [ ] Join Active Directory: `realm join <domain>` (see [Integration](../../architecture/integrations/))
+- [ ] Join Active Directory: `realm join <domain>` (see [Integration](../../architecture/integrations/index.md))
 - [ ] Apply all available patches before production use
 - [ ] Install backup agent and register to backup server
 - [ ] Install monitoring agent (node_exporter, Aria agent)

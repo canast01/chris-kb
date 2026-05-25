@@ -1,6 +1,6 @@
 # SnapMirror — Integrations
 
-> Part of the [SnapMirror Architecture](../) reference.
+> Part of the [SnapMirror Architecture](../index.md) reference.
 
 ---
 

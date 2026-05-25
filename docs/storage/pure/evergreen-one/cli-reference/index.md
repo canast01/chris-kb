@@ -1,6 +1,6 @@
 # Pure Evergreen//One CLI Reference
 
-> Part of the [Evergreen//One](../) reference.
+> Part of the [Evergreen//One](../index.md) reference.
 ---
 
 ```
@@ -38,7 +38,7 @@ Pure Evergreen//One is Pure Storage's as-a-service (STaaS) subscription. Capacit
 
 Base URL: `https://api.pure1.purestorage.com/api/1.x`
 
-Authenticate as described in the [Pure Evergreen CLI Reference](../../evergreen/cli-reference/). Obtain a Bearer token via OAuth2 (RS256 JWT assertion using a Pure1 API Client).
+Authenticate as described in the [Pure Evergreen CLI Reference](../../evergreen/cli-reference/index.md). Obtain a Bearer token via OAuth2 (RS256 JWT assertion using a Pure1 API Client).
 
 ### List Subscriptions
 

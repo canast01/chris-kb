@@ -1,6 +1,6 @@
 # FabricOS — CLI Reference
 
-> Part of the [Operations](../) reference.
+> Part of the [Operations](../index.md) reference.
 
 Commonly used Brocade FOS commands for managing Fibre Channel SAN switches. Log in via SSH to the switch management IP. Most commands run without needing to enter a specific mode.
 

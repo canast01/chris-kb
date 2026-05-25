@@ -1,6 +1,6 @@
 # SANnav — Escalation
 
-> Part of the [SANnav](../../) reference.
+> Part of the [SANnav](../../index.md) reference.
 
 ---
 

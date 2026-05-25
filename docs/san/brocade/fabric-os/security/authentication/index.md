@@ -1,6 +1,6 @@
 # FabricOS — Authentication
 
-> Part of the [Security](../) reference.
+> Part of the [Security](../index.md) reference.
 
 ---
 

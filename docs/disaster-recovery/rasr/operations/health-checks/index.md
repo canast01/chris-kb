@@ -1,6 +1,6 @@
 # RASR — Health Checks
 
-> Part of the [RASR Operations](../) reference.
+> Part of the [RASR Operations](../index.md) reference.
 
 ---
 

@@ -1,6 +1,6 @@
 # SRDF/S — Standards
 
-> Part of the [SRDF/S Architecture](../) reference.
+> Part of the [SRDF/S Architecture](../index.md) reference.
 
 ---
 

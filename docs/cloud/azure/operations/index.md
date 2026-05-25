@@ -91,7 +91,7 @@
 
 </div>
 
-> Part of the [Azure](../) reference.
+> Part of the [Azure](../index.md) reference.
 
 ---
 ## Daily Checks

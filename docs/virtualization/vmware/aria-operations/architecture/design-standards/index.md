@@ -66,7 +66,7 @@ Aria Operations — Sizing and Deployment Reference
 
 - DNS A record and reverse (PTR) for every node
 - NTP configured on all nodes (drift < 1 second within cluster)
-- Valid TLS certificate (CA-signed recommended; see [Security](../../security/))
+- Valid TLS certificate (CA-signed recommended; see [Security](../../security/index.md))
 - SMTP relay configured for alert email delivery
 - AD/LDAP group mapped for RBAC roles
 
@@ -106,6 +106,6 @@ Aria Operations — Sizing and Deployment Reference
 
 ## Related Sections
 
-- [Architecture](../) — node roles and sizing
-- [Operations](../../operations/) — daily checks and health monitoring
-- [Security](../../security/) — RBAC roles and TLS
+- [Architecture](../index.md) — node roles and sizing
+- [Operations](../../operations/index.md) — daily checks and health monitoring
+- [Security](../../security/index.md) — RBAC roles and TLS

@@ -34,7 +34,7 @@ This page covers the end-to-end upgrade procedure for Confluence Data Center, in
 
 - [ ] Announce maintenance window to users
 - [ ] Freeze content changes (optional but recommended for large upgrades)
-- [ ] Verify backup is current and has been tested (see [Backup & Restore](../backup-restore/))
+- [ ] Verify backup is current and has been tested (see [Backup & Restore](../backup-restore/index.md))
 - [ ] Document current version: Admin > General Configuration > System Information
 - [ ] Export list of installed plugins and their versions
 - [ ] Record current heap settings (`setenv.sh`), Tomcat port config (`server.xml`)

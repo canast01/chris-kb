@@ -2,7 +2,7 @@
 
 > Known failure modes, symptoms, causes, and fixes.
 
-See also: [Troubleshooting](../) for full diagnostic procedures.
+See also: [Troubleshooting](../index.md) for full diagnostic procedures.
 
 ---
 

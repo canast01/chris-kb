@@ -16,7 +16,7 @@ FlashBlade Diagnostic Sequence
   Pure1 telemetry ──► Support case ──► upload diagnostic bundle
 ```
 
-> Part of the [FlashBlade Troubleshooting](../) reference.
+> Part of the [FlashBlade Troubleshooting](../index.md) reference.
 
 ---
 

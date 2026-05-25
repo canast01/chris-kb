@@ -17,7 +17,7 @@ FlashBlade Authentication — Data vs Management Plane
     └── API tokens (service accounts for automation)
 ```
 
-> Part of the [FlashBlade Security](../) reference.
+> Part of the [FlashBlade Security](../index.md) reference.
 
 ---
 

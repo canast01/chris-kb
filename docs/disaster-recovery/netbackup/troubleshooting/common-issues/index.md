@@ -1,6 +1,6 @@
 # NetBackup — Common Issues
 
-> Part of the [NetBackup Troubleshooting](../) reference.
+> Part of the [NetBackup Troubleshooting](../index.md) reference.
 
 ---
 

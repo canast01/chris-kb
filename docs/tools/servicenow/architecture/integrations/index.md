@@ -44,7 +44,7 @@ All MID Server communication originates **outbound from the MID Server** — no 
 
 ## REST API
 
-ServiceNow exposes a comprehensive REST API surface. The primary endpoints are documented in [CLI Reference](../../operations/cli-reference/).
+ServiceNow exposes a comprehensive REST API surface. The primary endpoints are documented in [CLI Reference](../../operations/cli-reference/index.md).
 
 ### Inbound REST (calls to ServiceNow)
 

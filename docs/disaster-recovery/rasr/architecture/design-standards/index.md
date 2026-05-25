@@ -1,6 +1,6 @@
 # RASR — Standards
 
-> Part of the [RASR Architecture](../) reference.
+> Part of the [RASR Architecture](../index.md) reference.
 
 ---
 

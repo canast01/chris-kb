@@ -1,6 +1,6 @@
 # Cisco DCNM — Authentication
 
-> Part of the [Cisco DCNM](../../) reference.
+> Part of the [Cisco DCNM](../../index.md) reference.
 
 ---
 
@@ -18,7 +18,7 @@ Managed under **Administration > Security > Local User Management**.
 
 1. Navigate to **Administration > Security > Local User Management > Add User**.
 2. Enter username, password, and email.
-3. Assign a role (see [Access Control](../access-control/)).
+3. Assign a role (see [Access Control](../access-control/index.md)).
 4. Click **Save**.
 
 ### Password Policy

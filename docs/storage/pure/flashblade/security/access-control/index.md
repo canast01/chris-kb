@@ -1,6 +1,6 @@
 # FlashBlade — Access Control
 
-> Part of the [FlashBlade Security](../) reference.
+> Part of the [FlashBlade Security](../index.md) reference.
 
 ---
 

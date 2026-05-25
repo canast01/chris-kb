@@ -109,6 +109,6 @@
 
 ## Related Sections
 
-- [Architecture](../) — cluster topology
-- [Security](../../security/) — RBAC and project-based access
-- [Operations](../../operations/) — health checks
+- [Architecture](../index.md) — cluster topology
+- [Security](../../security/index.md) — RBAC and project-based access
+- [Operations](../../operations/index.md) — health checks

@@ -1,6 +1,6 @@
 # SRM Architecture — Standards
 
-> Part of the [SRM](../../) reference.
+> Part of the [SRM](../../index.md) reference.
 
 ---
 

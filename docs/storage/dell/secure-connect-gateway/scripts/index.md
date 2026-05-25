@@ -1,6 +1,6 @@
 # Scripts
 
-> Part of the [Dell Secure Connect Gateway](../) reference.
+> Part of the [Dell Secure Connect Gateway](../index.md) reference.
 
 ---
 ## Connectivity Health Check

@@ -1,6 +1,6 @@
 # SRM Architecture — Integrations
 
-> Part of the [SRM](../../) reference.
+> Part of the [SRM](../../index.md) reference.
 
 ## Integration Points Overview
 

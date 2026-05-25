@@ -1,6 +1,6 @@
 # MDS — Install & Upgrade
 
-> Part of the [Cisco MDS](../../) reference.
+> Part of the [Cisco MDS](../../index.md) reference.
 
 ---
 

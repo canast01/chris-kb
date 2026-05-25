@@ -19,7 +19,7 @@ Controller refresh missed:
   Operating past support window voids Ever Modern guarantee
 ```
 
-> Part of the [Evergreen Operations](../) reference.
+> Part of the [Evergreen Operations](../index.md) reference.
 
 ---
 

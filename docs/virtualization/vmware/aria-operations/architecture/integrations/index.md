@@ -154,6 +154,6 @@ Requires: Aria Operations for Logs FQDN, admin credentials.
 
 ## Related Sections
 
-- [Security](../../security/) — RBAC and authentication
-- [Operations](../../operations/) — adapter health monitoring
-- [Troubleshooting](../../troubleshooting/) — adapter collection errors
+- [Security](../../security/index.md) — RBAC and authentication
+- [Operations](../../operations/index.md) — adapter health monitoring
+- [Troubleshooting](../../troubleshooting/index.md) — adapter collection errors

@@ -1,6 +1,6 @@
 # GitHub Actions — Escalation
 
-> Part of the [GitHub Actions Troubleshooting](../) reference.
+> Part of the [GitHub Actions Troubleshooting](../index.md) reference.
 
 ---
 

@@ -1,6 +1,6 @@
 # Secure Connect Gateway (SCG) — CLI Reference
 
-> Part of the [Secure Connect Gateway](../) reference.
+> Part of the [Secure Connect Gateway](../index.md) reference.
 ---
 
 Secure Connect Gateway (SCG) is Dell's remote support and telemetry gateway appliance, replacing the older SupportAssist Enterprise and ESRS (EMC Secure Remote Services) agents. It collects telemetry from registered Dell devices and forwards it to Dell's backend over an outbound HTTPS connection.

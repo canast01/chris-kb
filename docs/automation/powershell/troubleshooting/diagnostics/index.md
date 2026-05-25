@@ -1,6 +1,6 @@
 # PowerShell — Diagnostics
 
-> Part of the [PowerShell Troubleshooting](../) reference.
+> Part of the [PowerShell Troubleshooting](../index.md) reference.
 
 ---
 

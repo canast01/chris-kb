@@ -19,7 +19,7 @@ Pure Support Escalation Path — FlashBlade
   Pure TAC ──► Remote session / field engineer / blade dispatch
 ```
 
-> Part of the [FlashBlade Troubleshooting](../) reference.
+> Part of the [FlashBlade Troubleshooting](../index.md) reference.
 
 ---
 

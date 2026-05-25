@@ -1,6 +1,6 @@
 # SRDF/S — Common Issues
 
-> Part of the [SRDF/S Troubleshooting](../) reference.
+> Part of the [SRDF/S Troubleshooting](../index.md) reference.
 
 SRDF/S issues typically manifest as pair state transitions away from `Synchronized`, elevated host write latency, or unexpected failover splits. Because SRDF/S is synchronous, any WAN degradation **directly impacts production write latency** — treat RTT increases above 5ms as a storage incident, not purely a network event.
 

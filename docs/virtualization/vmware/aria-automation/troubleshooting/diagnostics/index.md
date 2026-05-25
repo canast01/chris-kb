@@ -197,5 +197,5 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 
 ## Related Sections
 
-- [Operations](../../operations/) — health checks and procedures
-- [Escalation](../escalation/) — opening vendor support cases
+- [Operations](../../operations/index.md) — health checks and procedures
+- [Escalation](../escalation/index.md) — opening vendor support cases

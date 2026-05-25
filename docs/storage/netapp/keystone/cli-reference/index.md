@@ -1,6 +1,6 @@
 # NetApp Keystone CLI Reference
 
-> Part of the [Keystone](../) reference.
+> Part of the [Keystone](../index.md) reference.
 ---
 
 ## Overview

@@ -1,6 +1,6 @@
 # Nexus Dashboard — Hardening
 
-> Part of the [Nexus Dashboard](../../) reference.
+> Part of the [Nexus Dashboard](../../index.md) reference.
 
 ---
 
@@ -31,7 +31,7 @@ Navigate to **Admin Console > Security > Local Users > admin > Change Password**
 
 The default ND deployment uses a self-signed certificate. Replace with a corporate CA certificate immediately after initial deployment — do not operate in production with the self-signed certificate.
 
-See [Encryption](../encryption/) for the full procedure. Key steps:
+See [Encryption](../encryption/index.md) for the full procedure. Key steps:
 
 ```bash
 # Generate CSR, get signed by corporate CA
@@ -74,7 +74,7 @@ sudo firewall-cmd --reload
 Do not run production with local accounts only. Configure LDAP, TACACS+, or SAML:
 
 1. Navigate to **Admin Console > Security > Authentication**.
-2. Configure LDAP or TACACS+ as described in [Authentication](../authentication/).
+2. Configure LDAP or TACACS+ as described in [Authentication](../authentication/index.md).
 3. Test authentication with an AD account before retiring local accounts.
 4. Retain exactly one local admin account as break-glass.
 

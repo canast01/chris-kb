@@ -1,6 +1,6 @@
 # Scripts
 
-> Part of the [Dell Unity](../../) reference.
+> Part of the [Dell Unity](../../index.md) reference.
 
 ---
 ## System Health Check

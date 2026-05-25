@@ -1,6 +1,6 @@
 # SnapMirror — Health Checks
 
-> Part of the [SnapMirror Operations](../) reference.
+> Part of the [SnapMirror Operations](../index.md) reference.
 
 ---
 

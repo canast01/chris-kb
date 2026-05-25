@@ -23,7 +23,7 @@ Purity//FB Non-Disruptive Upgrade (NDU)
   └──────────────────────────────────────────────────────┘
 ```
 
-> Part of the [FlashBlade Operations](../) reference.
+> Part of the [FlashBlade Operations](../index.md) reference.
 
 ---
 

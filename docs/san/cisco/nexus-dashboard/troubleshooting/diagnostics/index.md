@@ -1,6 +1,6 @@
 # Nexus Dashboard — Diagnostics
 
-> Part of the [Nexus Dashboard](../../) reference.
+> Part of the [Nexus Dashboard](../../index.md) reference.
 
 ---
 

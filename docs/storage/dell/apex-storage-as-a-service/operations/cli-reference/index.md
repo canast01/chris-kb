@@ -1,11 +1,11 @@
 # APEX Storage as a Service — API Reference
 
-> Part of the [APEX Storage as a Service](../) reference.
+> Part of the [APEX Storage as a Service](../index.md) reference.
 ---
 
 APEX Storage as a Service has no local CLI. All management is through the **Dell APEX Console** (web portal at console.dell.com) or the **Dell Technologies Cloud API** at `api.dell.com`. The API follows REST conventions and uses OAuth2 client credentials for authentication.
 
-APEX Block Storage surfaces in CloudIQ for performance and health monitoring — see the [CloudIQ](../../../cloudiq/) section for those endpoints.
+APEX Block Storage surfaces in CloudIQ for performance and health monitoring — see the [CloudIQ](../../../cloudiq/index.md) section for those endpoints.
 
 > **API base URL**: `https://api.dell.com`  
 > **Auth URL**: `https://api.dell.com/auth/oauth/v2/token`  
@@ -291,7 +291,7 @@ curl -s -X GET "${CIQ_BASE}/systems/${APEX_CIQ_ID}/capacity/forecast?days=90" \
   -H "Authorization: Bearer ${CIQ_TOKEN}" | python3 -m json.tool
 ```
 
-> APEX systems appear in CloudIQ with the model of the underlying hardware (e.g. `PowerStore 3200T`). Filter by type `POWERSTORE`, `POWERMAX`, or `UNITY_XT` depending on which APEX SKU is deployed. See the [CloudIQ](../../../cloudiq/) section for full CloudIQ API coverage.
+> APEX systems appear in CloudIQ with the model of the underlying hardware (e.g. `PowerStore 3200T`). Filter by type `POWERSTORE`, `POWERMAX`, or `UNITY_XT` depending on which APEX SKU is deployed. See the [CloudIQ](../../../cloudiq/index.md) section for full CloudIQ API coverage.
 
 ---
 

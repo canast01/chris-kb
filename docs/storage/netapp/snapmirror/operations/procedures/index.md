@@ -1,6 +1,6 @@
 # SnapMirror — Procedures
 
-> Part of the [SnapMirror Operations](../) reference.
+> Part of the [SnapMirror Operations](../index.md) reference.
 
 ---
 

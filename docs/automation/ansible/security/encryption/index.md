@@ -1,6 +1,6 @@
 # Ansible — Encryption
 
-> Part of the [Ansible Security](../) reference.
+> Part of the [Ansible Security](../index.md) reference.
 
 ## Ansible Vault
 

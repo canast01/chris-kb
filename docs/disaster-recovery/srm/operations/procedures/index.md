@@ -1,6 +1,6 @@
 # SRM Operations — Procedures
 
-> Part of the [SRM](../../) > [Operations](../) reference.
+> Part of the [SRM](../../index.md) > [Operations](../index.md) reference.
 
 VMware Live Site Recovery (formerly Site Recovery Manager) orchestrates disaster recovery workflows between two vCenter-managed sites. This page covers the full operational procedure set: creating protection groups, building recovery plans, running test failovers, performing planned migrations, executing emergency failovers, failing back, and re-protecting.
 

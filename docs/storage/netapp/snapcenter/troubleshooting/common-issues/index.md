@@ -1,6 +1,6 @@
 # SnapCenter — Common Issues
 
-> Part of the [SnapCenter Troubleshooting](../) reference.
+> Part of the [SnapCenter Troubleshooting](../index.md) reference.
 
 ---
 

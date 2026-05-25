@@ -1,6 +1,6 @@
 # Scripts
 
-> Part of the [Dell Flex on Demand](../) reference.
+> Part of the [Dell Flex on Demand](../index.md) reference.
 
 ---
 ## Metered Usage Reporter

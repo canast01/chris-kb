@@ -1,6 +1,6 @@
 # SRDF/S — Install & Upgrade
 
-> Part of the [SRDF/S Operations](../) reference.
+> Part of the [SRDF/S Operations](../index.md) reference.
 
 ---
 

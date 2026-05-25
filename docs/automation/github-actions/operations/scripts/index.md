@@ -1,6 +1,6 @@
 # GitHub Actions — Scripts
 
-> Part of the [GitHub Actions Operations](../) reference.
+> Part of the [GitHub Actions Operations](../index.md) reference.
 
 Utility scripts for managing GitHub Actions infrastructure — secrets rotation, runner health, artifact cleanup, and workflow monitoring.
 

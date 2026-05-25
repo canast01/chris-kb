@@ -81,7 +81,7 @@ Ordered steps for initial FlashBlade setup:
 7. **Configure alert notifications** — SMTP relay and admin email addresses
 8. **Configure syslog forwarding** — forward to SIEM or log aggregator
 9. **Configure authentication** — join AD for SMB and admin auth; configure LDAP for NFS UID/GID mapping; create role-mapped admin groups
-10. **Apply security hardening** — see [Security](../../security/)
+10. **Apply security hardening** — see [Security](../../security/index.md)
 11. **Create filesystems** — provision using naming convention; set capacity limits per team or workload
 12. **Configure NFS exports** — set export policies with source IP restrictions; configure NFSv4.1 pNFS if required
 13. **Configure SMB shares** — set share-level permissions mapped to AD groups; enable SMB encryption if required

@@ -1,6 +1,6 @@
 # VM Performance Issues
 
-> Part of the [Troubleshooting](../) hub.
+> Part of the [Troubleshooting](../index.md) hub.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐

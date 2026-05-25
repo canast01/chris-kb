@@ -173,6 +173,6 @@ curl -sk -H "Authorization: vRealizeOpsToken <token>" \
 
 ## Related Sections
 
-- [Operations](../) — operational runbooks
-- [Scripts](../scripts/) — automation using the API
-- [Troubleshooting](../../troubleshooting/) — diagnostic commands
+- [Operations](../index.md) — operational runbooks
+- [Scripts](../scripts/index.md) — automation using the API
+- [Troubleshooting](../../troubleshooting/index.md) — diagnostic commands

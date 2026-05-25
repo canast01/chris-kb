@@ -1,6 +1,6 @@
 # AWS — Install & Upgrade
 
-> Part of the [Operations](../) section.
+> Part of the [Operations](../index.md) section.
 
 ```
 ┌──────────────────────────────────────────────────────────┐

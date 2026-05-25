@@ -31,7 +31,7 @@
 
 > Service health, VM status, load balancer health, and monitor alert review.
 
-See also: [Operations](../) for the full daily checklist and incident triage procedures.
+See also: [Operations](../index.md) for the full daily checklist and incident triage procedures.
 
 ---
 

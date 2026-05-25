@@ -1,6 +1,6 @@
 # SRDF/A — Procedures
 
-> Part of the [SRDF/A](../../) reference.
+> Part of the [SRDF/A](../../index.md) reference.
 
 ---
 

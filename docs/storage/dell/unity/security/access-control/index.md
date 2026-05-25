@@ -282,4 +282,4 @@ Review the audit log regularly for:
 - Multiple failed login attempts (potential credential stuffing).
 - Privilege use — Administrator-role actions performed by accounts that should have Operator-level access.
 
-Forward audit events to a SIEM via syslog for long-term retention and alerting. See the [Authentication](../authentication/) page for syslog configuration.
+Forward audit events to a SIEM via syslog for long-term retention and alerting. See the [Authentication](../authentication/index.md) page for syslog configuration.

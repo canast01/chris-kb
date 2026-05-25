@@ -4,7 +4,7 @@
 Commvault architecture reference — CommServe topology, MediaAgent deduplication, storage library types, multi-site design, and port requirements.
 </div>
 
-![Commvault Architecture](../../../../assets/commvault-architecture-overview.svg)
+![Commvault Architecture](../../../assets/commvault-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>CommServe topology, MediaAgent dedup, storage library types, multi-site design, and port requirements.</span></a>

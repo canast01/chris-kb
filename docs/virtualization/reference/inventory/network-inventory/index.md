@@ -1,6 +1,6 @@
 # Network Inventory
 
-> Part of the [Inventory](../) reference.
+> Part of the [Inventory](../index.md) reference.
 
 ---
 

@@ -1,6 +1,6 @@
 # Operations
 
-> Part of the [Pure Storage Evergreen//One](../) reference.
+> Part of the [Pure Storage Evergreen//One](../index.md) reference.
 
 ---
 

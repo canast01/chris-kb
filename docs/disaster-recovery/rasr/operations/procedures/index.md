@@ -1,6 +1,6 @@
 # RASR — Procedures
 
-> Part of the [RASR Operations](../) reference.
+> Part of the [RASR Operations](../index.md) reference.
 
 ---
 

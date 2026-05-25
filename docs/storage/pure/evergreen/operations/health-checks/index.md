@@ -23,7 +23,7 @@ Evergreen Health Check — Daily Sequence
           PASS
 ```
 
-> Part of the [Evergreen Operations](../) reference.
+> Part of the [Evergreen Operations](../index.md) reference.
 
 ---
 

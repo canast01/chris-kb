@@ -1,6 +1,6 @@
 # GitHub Actions — Install & Upgrade
 
-> Part of the [GitHub Actions Operations](../) reference.
+> Part of the [GitHub Actions Operations](../index.md) reference.
 
 ---
 

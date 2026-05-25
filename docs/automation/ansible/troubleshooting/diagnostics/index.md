@@ -1,6 +1,6 @@
 # Ansible — Diagnostics
 
-> Part of the [Ansible Troubleshooting](../) reference.
+> Part of the [Ansible Troubleshooting](../index.md) reference.
 
 ## Diagnostic Workflow
 

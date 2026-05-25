@@ -1,6 +1,6 @@
 # Scripts
 
-> Part of the [PowerShell](../) reference.
+> Part of the [PowerShell](../index.md) reference.
 
 ---
 

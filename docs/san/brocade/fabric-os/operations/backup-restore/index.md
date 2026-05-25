@@ -1,6 +1,6 @@
 # FabricOS — Backup & Restore
 
-> Part of the [Operations](../) reference.
+> Part of the [Operations](../index.md) reference.
 
 ---
 
@@ -127,7 +127,7 @@ Store backups on a server outside the SAN fabric (not relying on FC connectivity
 
 ## Automated Backup with Ansible
 
-The Ansible playbook in the [Scripts](../scripts/) page automates nightly `configupload` across all switches. Key steps:
+The Ansible playbook in the [Scripts](../scripts/index.md) page automates nightly `configupload` across all switches. Key steps:
 
 1. Ensure SSH key-based authentication is configured from the Ansible control node to each switch.
 2. Set the `backup_server` variable to the SCP server IP and `backup_path` to the destination directory.

@@ -1,6 +1,6 @@
 # Cisco DCNM — Scripts
 
-> Part of the [Cisco DCNM](../../) reference.
+> Part of the [Cisco DCNM](../../index.md) reference.
 
 ---
 

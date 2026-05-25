@@ -16,7 +16,7 @@ Automation Architecture — FlashBlade
   FlashBlade Fabric Module ──► Blades
 ```
 
-> Part of the [FlashBlade Operations](../) reference.
+> Part of the [FlashBlade Operations](../index.md) reference.
 
 ---
 

@@ -1,6 +1,6 @@
 # Scripts
 
-> Part of the [NetApp Keystone](../) reference.
+> Part of the [NetApp Keystone](../index.md) reference.
 
 ---
 ## Keystone Collector Health Check (Bash)

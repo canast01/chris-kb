@@ -1,6 +1,6 @@
 # RecoverPoint — Standards
 
-> Part of the [RecoverPoint](../../) > [Architecture](../) reference.
+> Part of the [RecoverPoint](../../index.md) > [Architecture](../index.md) reference.
 
 ---
 

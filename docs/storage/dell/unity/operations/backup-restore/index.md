@@ -318,7 +318,7 @@ uemcli -d <ip> -u admin /prot/rep/session -id <session_id> show -detail | \
     grep -E "State|Current Lag|Last Sync"
 ```
 
-For DR procedures including planned failover, failback, and reverse replication, see the [Procedures](../procedures/) page.
+For DR procedures including planned failover, failback, and reverse replication, see the [Procedures](../procedures/index.md) page.
 
 ## Restore Validation
 

@@ -1,6 +1,6 @@
 # Keystone — Health Checks
 
-> Part of the [Keystone Operations](../) reference.
+> Part of the [Keystone Operations](../index.md) reference.
 
 ---
 

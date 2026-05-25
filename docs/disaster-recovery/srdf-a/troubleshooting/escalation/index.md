@@ -1,6 +1,6 @@
 # SRDF/A — Escalation
 
-> Part of the [SRDF/A](../../) reference.
+> Part of the [SRDF/A](../../index.md) reference.
 
 Dell SRDF/A support cases are opened via the Dell Support Portal (support.dell.com) under the relevant PowerMax array service tag. When opening a case, classify the severity appropriately: P1 for active replication failure with no workaround, P2 for degraded replication with workaround in place. Collect the required diagnostics before calling to accelerate triage.
 

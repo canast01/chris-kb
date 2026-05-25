@@ -1,6 +1,6 @@
 # PowerShell — Access Control
 
-> Part of the [PowerShell Security](../) reference.
+> Part of the [PowerShell Security](../index.md) reference.
 
 ---
 

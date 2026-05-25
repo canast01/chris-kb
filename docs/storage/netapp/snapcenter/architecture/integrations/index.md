@@ -1,6 +1,6 @@
 # SnapCenter — Integrations
 
-> Part of the [SnapCenter Architecture](../) reference.
+> Part of the [SnapCenter Architecture](../index.md) reference.
 
 ---
 

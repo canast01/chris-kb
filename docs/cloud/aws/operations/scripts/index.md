@@ -1,6 +1,6 @@
 # AWS — Scripts
 
-> Part of the [Operations](../) section.
+> Part of the [Operations](../index.md) section.
 
 ```
 ┌──────────────────────────────────────────────────────────┐

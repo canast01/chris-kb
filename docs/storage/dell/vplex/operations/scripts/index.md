@@ -1,6 +1,6 @@
 # Dell VPLEX — Scripts
 
-> Part of the [Dell VPLEX](../../) reference.
+> Part of the [Dell VPLEX](../../index.md) reference.
 
 ```mermaid
 flowchart LR

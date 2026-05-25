@@ -1,6 +1,6 @@
 # FabricOS — Escalation
 
-> Part of the [Troubleshooting](../) reference.
+> Part of the [Troubleshooting](../index.md) reference.
 
 ---
 

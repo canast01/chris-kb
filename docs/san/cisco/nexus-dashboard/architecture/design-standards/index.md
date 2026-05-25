@@ -54,7 +54,7 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-> Part of the [Nexus Dashboard](../../) reference.
+> Part of the [Nexus Dashboard](../../index.md) reference.
 
 ---
 
@@ -155,7 +155,7 @@ Apply this rule: **upgrade ND platform before upgrading hosted apps**. Never run
 
 ### Zone Naming (NDFC)
 
-Same conventions as DCNM standards apply — see [DCNM Standards](../../../cisco-dcnm/architecture/design-standards/) for the zone naming table. NDFC uses the same zone model as DCNM.
+Same conventions as DCNM standards apply — see [DCNM Standards](../../../cisco-dcnm/architecture/design-standards/index.md) for the zone naming table. NDFC uses the same zone model as DCNM.
 
 ### NDFC Fabric Template Standards
 

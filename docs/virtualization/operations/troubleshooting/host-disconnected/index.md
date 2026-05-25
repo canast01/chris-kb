@@ -1,6 +1,6 @@
 # Host Disconnected / Not Responding
 
-> Part of the [Troubleshooting](../) hub.
+> Part of the [Troubleshooting](../index.md) hub.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐

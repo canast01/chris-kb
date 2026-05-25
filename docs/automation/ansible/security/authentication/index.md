@@ -1,6 +1,6 @@
 # Ansible — Authentication
 
-> Part of the [Ansible Security](../) reference.
+> Part of the [Ansible Security](../index.md) reference.
 
 ## SSH Authentication (Linux Targets)
 

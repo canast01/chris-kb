@@ -1,6 +1,6 @@
 # Ansible — Access Control
 
-> Part of the [Ansible Security](../) reference.
+> Part of the [Ansible Security](../index.md) reference.
 
 ## AWX / AAP RBAC Model
 

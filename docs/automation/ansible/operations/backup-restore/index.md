@@ -1,6 +1,6 @@
 # Ansible — Backup & Restore
 
-> Part of the [Ansible Operations](../) reference.
+> Part of the [Ansible Operations](../index.md) reference.
 
 ## What to Back Up
 

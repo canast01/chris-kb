@@ -14,7 +14,7 @@ Dell EMC Support: [https://www.dell.com/support](https://www.dell.com/support)
 ## Opening a Case
 
 1. Confirm the VPLEX system is registered under your ProSupport contract in the Dell Support portal.
-2. Collect all diagnostic information listed in [Diagnostics](../diagnostics/) before opening the case.
+2. Collect all diagnostic information listed in [Diagnostics](../diagnostics/index.md) before opening the case.
 3. Go to [https://www.dell.com/support](https://www.dell.com/support) → **Contact Support** → **Create Service Request**.
 4. Select product: **Dell EMC VPLEX**.
 5. Enter the system serial number from `ll /engines/engine-1-1/`.

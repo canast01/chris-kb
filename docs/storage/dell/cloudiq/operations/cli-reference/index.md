@@ -1,6 +1,6 @@
 # CloudIQ REST API Reference
 
-> Part of the [CloudIQ](../../) reference.
+> Part of the [CloudIQ](../../index.md) reference.
 ---
 
 CloudIQ has no local CLI. All programmatic interaction is via the **CloudIQ REST API** at `https://cloudiq.apis.dell.com`. Authentication uses the OAuth2 **client credentials** flow. API keys (client ID + secret) are generated in the CloudIQ web portal under **Settings → API Keys**.

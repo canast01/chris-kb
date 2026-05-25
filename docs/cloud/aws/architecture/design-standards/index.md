@@ -1,6 +1,6 @@
 # AWS — Standards
 
-> Part of the [Architecture](../) section.
+> Part of the [Architecture](../index.md) section.
 
 ---
 

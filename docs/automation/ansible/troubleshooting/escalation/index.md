@@ -1,6 +1,6 @@
 # Ansible — Escalation
 
-> Part of the [Ansible Troubleshooting](../) reference.
+> Part of the [Ansible Troubleshooting](../index.md) reference.
 
 ## When to Escalate
 

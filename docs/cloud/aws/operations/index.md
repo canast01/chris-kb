@@ -91,7 +91,7 @@
 
 </div>
 
-> Part of the [AWS](../) reference.
+> Part of the [AWS](../index.md) reference.
 
 ---
 ## Daily Checks

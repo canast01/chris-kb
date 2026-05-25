@@ -1,6 +1,6 @@
 # SnapCenter — Access Control
 
-> Part of the [SnapCenter Security](../) reference.
+> Part of the [SnapCenter Security](../index.md) reference.
 
 ---
 

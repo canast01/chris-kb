@@ -1,6 +1,6 @@
 # AWS — Escalation
 
-> Part of the [Troubleshooting](../) section.
+> Part of the [Troubleshooting](../index.md) section.
 
 ---
 

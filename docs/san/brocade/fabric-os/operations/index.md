@@ -119,4 +119,4 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-> Part of the [Brocade Fabric OS](../) reference.
+> Part of the [Brocade Fabric OS](../index.md) reference.

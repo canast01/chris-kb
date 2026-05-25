@@ -1,6 +1,6 @@
 # Cisco DCNM — Encryption
 
-> Part of the [Cisco DCNM](../../) reference.
+> Part of the [Cisco DCNM](../../index.md) reference.
 
 ---
 
@@ -87,11 +87,11 @@ ssh-keygen -R <switch-ip> -f /root/.ssh/known_hosts
 
 ### DCNM to LDAP (LDAPS)
 
-Use port 636 (LDAPS). Configure as described in [Authentication](../authentication/). Plain LDAP on port 389 transmits bind credentials in cleartext — never use in production.
+Use port 636 (LDAPS). Configure as described in [Authentication](../authentication/index.md). Plain LDAP on port 389 transmits bind credentials in cleartext — never use in production.
 
 ### SNMP
 
-Configure SNMPv3 with `authPriv` (SHA authentication, AES-128 privacy) on all managed switches. See [Design Standards](../../architecture/design-standards/) for full switch-side SNMP configuration.
+Configure SNMPv3 with `authPriv` (SHA authentication, AES-128 privacy) on all managed switches. See [Design Standards](../../architecture/design-standards/index.md) for full switch-side SNMP configuration.
 
 ---
 

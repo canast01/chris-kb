@@ -19,7 +19,7 @@ Evergreen Integration Touchpoints
   └── Pure Account Team (renewal, refresh planning)
 ```
 
-> Part of the [Evergreen Architecture](../) reference.
+> Part of the [Evergreen Architecture](../index.md) reference.
 
 ---
 

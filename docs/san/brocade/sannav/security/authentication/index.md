@@ -1,6 +1,6 @@
 # SANnav — Authentication
 
-> Part of the [SANnav](../../) reference.
+> Part of the [SANnav](../../index.md) reference.
 
 ---
 
@@ -19,7 +19,7 @@ Local accounts are stored in the SANnav PostgreSQL database. Manage under **Admi
 1. Navigate to **Administration > User Management > Local Users > New User**.
 2. Enter username, full name, and email address.
 3. Set a strong initial password (meet SANnav's password policy: minimum 12 characters, upper/lower/number/special).
-4. Assign a role (see [Access Control](../access-control/)).
+4. Assign a role (see [Access Control](../access-control/index.md)).
 5. Click **Save**.
 
 ### Password Policy Configuration

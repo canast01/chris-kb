@@ -1,6 +1,6 @@
 # RASR — Common Issues
 
-> Part of the [RASR Troubleshooting](../) reference.
+> Part of the [RASR Troubleshooting](../index.md) reference.
 
 ---
 

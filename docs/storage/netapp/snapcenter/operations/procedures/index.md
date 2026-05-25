@@ -1,6 +1,6 @@
 # SnapCenter — Procedures
 
-> Part of the [SnapCenter Operations](../) reference.
+> Part of the [SnapCenter Operations](../index.md) reference.
 
 ---
 

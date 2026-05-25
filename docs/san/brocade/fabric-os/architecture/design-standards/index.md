@@ -1,6 +1,6 @@
 # FabricOS — Standards
 
-> Part of the [Architecture](../) reference.
+> Part of the [Architecture](../index.md) reference.
 
 ---
 

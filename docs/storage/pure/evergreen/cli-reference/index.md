@@ -17,7 +17,7 @@ Evergreen Management Interfaces
   └────────────────────────────────────────────────────┘
 ```
 
-> Part of the [Evergreen](../) reference.
+> Part of the [Evergreen](../index.md) reference.
 ---
 
 ## Overview

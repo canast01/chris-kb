@@ -1,6 +1,6 @@
 # Nexus Dashboard — Authentication
 
-> Part of the [Nexus Dashboard](../../) reference.
+> Part of the [Nexus Dashboard](../../index.md) reference.
 
 ---
 
@@ -19,7 +19,7 @@ Local accounts are managed under **Admin Console > Security > Local Users**.
 1. Navigate to **Admin Console > Security > Local Users > Add User**.
 2. Enter username, full name, and email.
 3. Set a strong initial password.
-4. Assign a role (see [Access Control](../access-control/)).
+4. Assign a role (see [Access Control](../access-control/index.md)).
 5. Click **Save**.
 
 ### Password Policy

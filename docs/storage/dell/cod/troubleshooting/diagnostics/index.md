@@ -1,6 +1,6 @@
 # COD — Diagnostics
 
-> Part of the [COD](../../) reference.
+> Part of the [COD](../../index.md) reference.
 
 ---
 

@@ -1,6 +1,6 @@
 # Nexus Dashboard — Common Issues
 
-> Part of the [Nexus Dashboard](../../) reference. For deeper diagnosis, see [Troubleshooting > Common Issues](../../troubleshooting/common-issues/).
+> Part of the [Nexus Dashboard](../../index.md) reference. For deeper diagnosis, see [Troubleshooting > Common Issues](../../troubleshooting/common-issues/index.md).
 
 ---
 

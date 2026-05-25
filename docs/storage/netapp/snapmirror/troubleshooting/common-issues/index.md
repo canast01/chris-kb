@@ -1,6 +1,6 @@
 # SnapMirror — Common Issues
 
-> Part of the [SnapMirror Troubleshooting](../) reference.
+> Part of the [SnapMirror Troubleshooting](../index.md) reference.
 
 ---
 

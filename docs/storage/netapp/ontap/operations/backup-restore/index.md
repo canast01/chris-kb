@@ -300,7 +300,7 @@ SnapCenter capabilities relevant to ONTAP:
 - Granular restore: file-level, LUN-level, or full volume restore from SnapCenter UI
 - Clone workflows: writable FlexClone provisioning from backups for dev/test
 
-See the [SnapCenter section](../../../snapcenter/) for full configuration and restore procedures.
+See the [SnapCenter section](../../../snapcenter/index.md) for full configuration and restore procedures.
 
 ---
 
@@ -313,7 +313,7 @@ Key configuration points:
 - Use a dedicated `vsadmin` service account with minimum required RBAC permissions
 - Configure SnapVault as the secondary target for Veeam backup jobs requiring off-array retention
 
-See the [Integrations](../../architecture/integrations/) page for configuration commands.
+See the [Integrations](../../architecture/integrations/index.md) page for configuration commands.
 
 ---
 

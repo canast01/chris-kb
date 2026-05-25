@@ -1,6 +1,6 @@
 # Scripts
 
-> Part of the [Dell Capacity on Demand](../) reference.
+> Part of the [Dell Capacity on Demand](../index.md) reference.
 
 ---
 ## Array Capacity vs. COD Reserve Reporter

@@ -1,6 +1,6 @@
 # Ansible — Procedures
 
-> Part of the [Ansible Operations](../) reference.
+> Part of the [Ansible Operations](../index.md) reference.
 
 ---
 

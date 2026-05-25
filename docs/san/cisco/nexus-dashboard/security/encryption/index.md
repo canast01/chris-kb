@@ -1,6 +1,6 @@
 # Nexus Dashboard — Encryption
 
-> Part of the [Nexus Dashboard](../../) reference.
+> Part of the [Nexus Dashboard](../../index.md) reference.
 
 ---
 
@@ -33,7 +33,7 @@ nmap --script ssl-enum-ciphers -p 443 nd-dc1.corp.example.com
 
 #### Replace the TLS Certificate
 
-See [Authentication](../authentication/) for the full certificate import and activation procedure. Summary:
+See [Authentication](../authentication/index.md) for the full certificate import and activation procedure. Summary:
 
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
@@ -60,7 +60,7 @@ NDFC uses SSH (port 22) for all configuration push operations to MDS switches. E
 - RSA keys ≥ 2048-bit: `show crypto key mypubkey rsa` on each MDS
 - NDFC stores switch host keys on first connection; if a switch is replaced, remove the old host key from NDFC: **NDFC > Fabrics > [Fabric] > Edit Switch > Reset Host Key**
 
-SNMP polling uses SNMPv3 with `authPriv` (SHA auth + AES-128 priv). Configure on managed switches per the [Design Standards](../../architecture/design-standards/) page.
+SNMP polling uses SNMPv3 with `authPriv` (SHA auth + AES-128 priv). Configure on managed switches per the [Design Standards](../../architecture/design-standards/index.md) page.
 
 ### ND Cluster Internal Communication
 

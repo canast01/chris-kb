@@ -2,7 +2,7 @@
 
 A documented performance baseline defines normal system behaviour, enabling accurate anomaly detection and meaningful alert thresholds.
 
-> See also: [Metrics Baseline](../../monitoring/metrics-baseline/) — similar coverage from the monitoring perspective.
+> See also: [Metrics Baseline](../../monitoring/metrics-baseline/index.md) — similar coverage from the monitoring perspective.
 
 ```
 ┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐

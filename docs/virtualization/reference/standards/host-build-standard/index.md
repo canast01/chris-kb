@@ -1,6 +1,6 @@
 # Host Build Standard
 
-> Part of the [Standards](../) reference.
+> Part of the [Standards](../index.md) reference.
 
 ---
 

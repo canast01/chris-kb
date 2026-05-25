@@ -1,6 +1,6 @@
 # Ansible — Install & Upgrade
 
-> Part of the [Ansible Operations](../) reference.
+> Part of the [Ansible Operations](../index.md) reference.
 
 ## Version Reference
 

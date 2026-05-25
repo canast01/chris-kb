@@ -1,6 +1,6 @@
 # SRDF/S — Escalation
 
-> Part of the [SRDF/S Troubleshooting](../) reference.
+> Part of the [SRDF/S Troubleshooting](../index.md) reference.
 
 Dell SRDF/S support cases are opened at support.dell.com under the relevant PowerMax array service tag. P1 cases (active production replication failure with data risk) trigger a 30-minute callback SLA under ProSupport Plus and Mission Critical contracts. Collect all required diagnostics before calling to avoid delays during triage.
 

@@ -17,7 +17,7 @@ FlashBlade Encryption Architecture
 └────────────────────────────────────────────────────────────┘
 ```
 
-> Part of the [FlashBlade Security](../) reference.
+> Part of the [FlashBlade Security](../index.md) reference.
 
 ---
 

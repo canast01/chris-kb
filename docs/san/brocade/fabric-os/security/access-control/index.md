@@ -1,6 +1,6 @@
 # FabricOS — Access Control
 
-> Part of the [Security](../) reference.
+> Part of the [Security](../index.md) reference.
 
 ---
 

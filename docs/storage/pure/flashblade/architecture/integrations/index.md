@@ -19,7 +19,7 @@ FlashBlade Integration Map
                                          (ActiveDR async repl)
 ```
 
-> Part of the [FlashBlade Architecture](../) reference.
+> Part of the [FlashBlade Architecture](../index.md) reference.
 
 ---
 

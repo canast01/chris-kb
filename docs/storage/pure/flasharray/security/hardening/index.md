@@ -114,7 +114,7 @@ pureadmin global enable --single-sign-on
 pureadmin global list
 ```
 
-See the [Authentication](../authentication/) page for full SAML configuration steps. SAML integration requires Purity//FA 6.0 or later.
+See the [Authentication](../authentication/index.md) page for full SAML configuration steps. SAML integration requires Purity//FA 6.0 or later.
 
 If SAML is not feasible in the short term, compensate with:
 - Named account controls and PAM vault for credential management
@@ -260,7 +260,7 @@ puredrive list --spec
 # Look for 'encryption_enabled: true' or equivalent in the output
 ```
 
-If KMIP external key management is required, configure it now. See [Encryption](../encryption/) for the full KMIP configuration procedure.
+If KMIP external key management is required, configure it now. See [Encryption](../encryption/index.md) for the full KMIP configuration procedure.
 
 ---
 

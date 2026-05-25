@@ -22,7 +22,7 @@ Replication issue:
   purefb replication list ──► lag / status ──► check network BW
 ```
 
-> Part of the [FlashBlade Operations](../) reference.
+> Part of the [FlashBlade Operations](../index.md) reference.
 
 ---
 

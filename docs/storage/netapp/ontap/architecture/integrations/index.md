@@ -12,7 +12,7 @@ ONTAP integrates with VMware vSphere at multiple layers:
 
 ## SnapCenter Plugin
 
-The SnapCenter Plug-in for VMware vSphere is deployed as a separate OVA and registered in vCenter. It provides VM-consistent and crash-consistent snapshot-based backup of VMs and vSphere datastores using ONTAP snapshots, and supports SnapVault replication for long-term retention. See the [SnapCenter section](../../../snapcenter/) for full coverage.
+The SnapCenter Plug-in for VMware vSphere is deployed as a separate OVA and registered in vCenter. It provides VM-consistent and crash-consistent snapshot-based backup of VMs and vSphere datastores using ONTAP snapshots, and supports SnapVault replication for long-term retention. See the [SnapCenter section](../../../snapcenter/index.md) for full coverage.
 
 ## Active Directory / CIFS Authentication
 

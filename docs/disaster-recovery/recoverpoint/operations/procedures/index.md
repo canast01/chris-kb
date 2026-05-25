@@ -1,6 +1,6 @@
 # RecoverPoint — Procedures
 
-> Part of the [RecoverPoint](../../) > [Operations](../) reference.
+> Part of the [RecoverPoint](../../index.md) > [Operations](../index.md) reference.
 
 ---
 

@@ -1,6 +1,6 @@
 # Ansible — Hardening
 
-> Part of the [Ansible Security](../) reference.
+> Part of the [Ansible Security](../index.md) reference.
 
 ## Control Node Hardening
 

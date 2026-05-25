@@ -1,6 +1,6 @@
 # FOD — Health Checks
 
-> Part of the [Flex on Demand](../../) reference.
+> Part of the [Flex on Demand](../../index.md) reference.
 
 ---
 

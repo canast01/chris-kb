@@ -1,6 +1,6 @@
 # GitHub Actions — Integrations
 
-> Part of the [GitHub Actions Architecture](../) reference.
+> Part of the [GitHub Actions Architecture](../index.md) reference.
 
 ## Cloud Providers
 

@@ -1,6 +1,6 @@
 # FlashBlade — Common Issues
 
-> Part of the [FlashBlade Troubleshooting](../) reference.
+> Part of the [FlashBlade Troubleshooting](../index.md) reference.
 
 ---
 

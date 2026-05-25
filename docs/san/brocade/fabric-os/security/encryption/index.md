@@ -1,6 +1,6 @@
 # FabricOS — Encryption
 
-> Part of the [Security](../) reference.
+> Part of the [Security](../index.md) reference.
 
 ---
 
@@ -259,6 +259,6 @@ configure
 
 Encryption settings work in conjunction with:
 
-- [Authentication](../authentication/) — RADIUS/TACACS+ for central identity
-- [Access Control](../access-control/) — IPfilter to limit management plane reachability
-- [Hardening](../hardening/) — Full hardening checklist referencing all security controls
+- [Authentication](../authentication/index.md) — RADIUS/TACACS+ for central identity
+- [Access Control](../access-control/index.md) — IPfilter to limit management plane reachability
+- [Hardening](../hardening/index.md) — Full hardening checklist referencing all security controls

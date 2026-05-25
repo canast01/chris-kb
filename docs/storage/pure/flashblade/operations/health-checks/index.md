@@ -20,7 +20,7 @@ FlashBlade Health Check Sequence
   Pure1 portal ──► Fleet-level anomaly check
 ```
 
-> Part of the [FlashBlade Operations](../) reference.
+> Part of the [FlashBlade Operations](../index.md) reference.
 
 ---
 

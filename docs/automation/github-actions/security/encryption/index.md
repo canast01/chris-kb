@@ -1,6 +1,6 @@
 # GitHub Actions — Encryption
 
-> Part of the [GitHub Actions Security](../) reference.
+> Part of the [GitHub Actions Security](../index.md) reference.
 
 ---
 

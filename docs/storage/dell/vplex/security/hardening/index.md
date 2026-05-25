@@ -71,7 +71,7 @@ flowchart TD
 
 ### Software and Patching
 
-- [ ] Maintain GeoSynchrony firmware on a supported release; refer to the version matrix in [Install & Upgrade](../../operations/install-upgrade/)
+- [ ] Maintain GeoSynchrony firmware on a supported release; refer to the version matrix in [Install & Upgrade](../../operations/install-upgrade/index.md)
 - [ ] Subscribe to Dell security advisories for VPLEX; review advisories before host OS or back-end array firmware upgrades
 - [ ] Upgrade GeoSynchrony and back-end array firmware in separate maintenance windows; do not combine changes that could interact
 - [ ] Test GeoSynchrony upgrades in a non-production environment or staging cluster before applying to production

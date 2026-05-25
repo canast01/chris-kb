@@ -1,6 +1,6 @@
 # SANnav — Encryption
 
-> Part of the [SANnav](../../) reference.
+> Part of the [SANnav](../../index.md) reference.
 
 ---
 
@@ -72,11 +72,11 @@ If the switch has a certificate from the corporate CA, it can be imported into t
 
 ### SANnav to LDAP (LDAPS)
 
-Configure port 636 (LDAPS) rather than 389 (plain LDAP) to encrypt LDAP traffic. See [Authentication](../authentication/) for CA certificate import steps.
+Configure port 636 (LDAPS) rather than 389 (plain LDAP) to encrypt LDAP traffic. See [Authentication](../authentication/index.md) for CA certificate import steps.
 
 ### SNMP
 
-SNMP v3 with `authPriv` security level encrypts SNMP traffic. Configure SNMPv3 on all managed switches using AES-128 or AES-256 for encryption. See the [Design Standards](../../architecture/design-standards/) page for switch-side SNMP configuration.
+SNMP v3 with `authPriv` security level encrypts SNMP traffic. Configure SNMPv3 on all managed switches using AES-128 or AES-256 for encryption. See the [Design Standards](../../architecture/design-standards/index.md) page for switch-side SNMP configuration.
 
 ---
 

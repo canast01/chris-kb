@@ -1,12 +1,12 @@
 # Cisco DCNM — Install & Upgrade
 
-> Part of the [Cisco DCNM](../../) reference.
+> Part of the [Cisco DCNM](../../index.md) reference.
 
 ---
 
 ## Overview
 
-DCNM 11.x is deployed as an OVA (VMware) or ISO (KVM/bare metal). This page covers fresh installation and in-place upgrade procedures. For migration from DCNM to NDFC, see the [Nexus Dashboard](../../../nexus-dashboard/) section.
+DCNM 11.x is deployed as an OVA (VMware) or ISO (KVM/bare metal). This page covers fresh installation and in-place upgrade procedures. For migration from DCNM to NDFC, see the [Nexus Dashboard](../../../nexus-dashboard/index.md) section.
 
 ---
 

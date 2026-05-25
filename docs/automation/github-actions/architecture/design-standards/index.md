@@ -1,6 +1,6 @@
 # GitHub Actions — Standards
 
-> Part of the [GitHub Actions Architecture](../) reference.
+> Part of the [GitHub Actions Architecture](../index.md) reference.
 
 ## Workflow File Structure
 

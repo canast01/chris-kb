@@ -1,6 +1,6 @@
 # Operations
 
-> Part of the [Secure Connect Gateway](../) reference.
+> Part of the [Secure Connect Gateway](../index.md) reference.
 
 ---
 ## Daily Checks

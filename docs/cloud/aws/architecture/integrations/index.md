@@ -1,6 +1,6 @@
 # AWS — Integrations
 
-> Part of the [Architecture](../) section.
+> Part of the [Architecture](../index.md) section.
 
 ---
 

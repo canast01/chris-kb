@@ -1,6 +1,6 @@
 # CloudIQ — Escalation
 
-> Part of the [CloudIQ](../../) reference.
+> Part of the [CloudIQ](../../index.md) reference.
 
 ---
 

@@ -1,6 +1,6 @@
 # SnapCenter — Authentication
 
-> Part of the [SnapCenter Security](../) reference.
+> Part of the [SnapCenter Security](../index.md) reference.
 
 ---
 
@@ -125,7 +125,7 @@ Set-SmCredential \
 
 ### Best Practices for ONTAP Service Account
 
-- Use a dedicated ONTAP account (`svc-snapcenter`) with a custom least-privilege RBAC role — see the [Access Control](../access-control/) page for the recommended ONTAP role definition
+- Use a dedicated ONTAP account (`svc-snapcenter`) with a custom least-privilege RBAC role — see the [Access Control](../access-control/index.md) page for the recommended ONTAP role definition
 - Do not use personal admin accounts or the built-in `admin` account for ONTAP connections in SnapCenter
 - Rotate the ONTAP service account password at least annually or when personnel change; update the credential in SnapCenter Credential Store after each rotation
 - If the ONTAP account is an AD-integrated ONTAP account, ensure the AD account follows the same lifecycle as the SnapCenter SAML accounts

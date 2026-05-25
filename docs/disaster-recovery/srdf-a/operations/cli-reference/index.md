@@ -1,6 +1,6 @@
 # SRDF/A — CLI Reference
 
-> Part of the [SRDF/A](../../) reference.
+> Part of the [SRDF/A](../../index.md) reference.
 ---
 
 ## Overview
