@@ -310,3 +310,8 @@ Get-WinEvent -FilterHashtable @{
 | Credential Guard status | `Get-ComputerInfo | Select DeviceGuard*` |
 | gMSA management | `New-ADServiceAccount`, `Install-ADServiceAccount` |
 | Authentication failures | Security log, Event ID 4625 |
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing

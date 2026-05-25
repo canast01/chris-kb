@@ -59,3 +59,8 @@ Get-WinEvent -ComputerName dc1 -FilterHashtable @{
     LogName='Security'; Id=4769
 } -MaxEvents 500 | Where-Object { $_.Message -match "0x17" } | Select-Object -First 10 TimeCreated, Message
 ```
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing

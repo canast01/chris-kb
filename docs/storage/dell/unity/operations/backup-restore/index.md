@@ -304,7 +304,7 @@ graph LR
 
 ## Replication as DR Protection
 
-Unity asynchronous replication provides RPO-based protection to a secondary Unity or PowerStore array. See the [CLI Reference — Replication](../cli-reference/#replication) section for full replication commands.
+Unity asynchronous replication provides RPO-based protection to a secondary Unity or PowerStore array. See the [CLI Reference — Replication](../cli-reference/index.md#replication) section for full replication commands.
 
 ```bash
 # Show replication sessions with last sync time

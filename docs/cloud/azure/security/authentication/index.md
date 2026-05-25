@@ -289,3 +289,8 @@ Get-ADSyncConnectorStatistics -ConnectorName "corp.local"
 | Federation (ADFS) | All auth goes to on-prem ADFS | ADFS MFA |
 
 PHS is the recommended mode for most organisations — it provides cloud-only authentication resilience if on-premises connectivity is lost.
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing

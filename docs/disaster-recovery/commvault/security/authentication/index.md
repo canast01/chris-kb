@@ -16,3 +16,8 @@ CommVault supports CyberArk Central Credential Provider (CCP) for runtime passwo
 3. Configure: CCP URL, app ID, safe name, object name
 
 Service account passwords never stored in CommVault config — retrieved from CyberArk at job runtime.
+---
+
+## Related Reference
+
+- [Standard SAML Configuration](../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

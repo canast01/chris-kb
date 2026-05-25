@@ -196,3 +196,9 @@ Authentication events also appear in ND platform logs:
 ssh ndadmin@nd-dc1-1.corp.example.com
 acs system logs --component security --tail 100 | grep -i "login\|auth"
 ```
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

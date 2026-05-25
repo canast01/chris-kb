@@ -445,3 +445,9 @@ ntpq -p
 ```
 
 Ensure all NFS clients with Kerberos mounts also use the same NTP source as the cluster and the domain controllers.
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

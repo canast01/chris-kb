@@ -305,3 +305,8 @@ Audit log location on NSX Manager: `/var/log/vmware/nsx-manager/audit.log`
 # View recent auth events on NSX Manager node
 tail -100 /var/log/vmware/nsx-manager/audit.log | grep -i "login\|auth\|role"
 ```
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing

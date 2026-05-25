@@ -153,3 +153,9 @@ Verify log ingestion in the SIEM within 24 hours of configuration. Set up SIEM a
 | Unisphere session timeout | Configure via Unisphere → Settings → Session; set to 15–30 minutes for production |
 | Concurrent sessions | Limit concurrent SSH sessions to VMS to reduce exposure; enforce via PAM if required |
 | MFA for SSH | Configure if the PAM infrastructure supports it (e.g., Duo PAM module); not natively provided by VPLEX |
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

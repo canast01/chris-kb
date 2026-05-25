@@ -241,3 +241,8 @@ NTP servers should be on the management network, reachable from the switch manag
 | SSH connection refused | `sshutil --show` — SSH enabled? | Enable SSH; check IPfilter is not blocking port 22 |
 | Certificate errors on SSH connection | Host key changed (after regen) | Clear known_hosts entry on management workstation |
 | TACACS+ authentication slow | TCP connection timeout | Check TACACS+ server reachability; firewall rules on port 49 |
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing

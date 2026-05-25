@@ -361,3 +361,9 @@ puresyslog list
 ```
 
 **SIEM integration note:** When forwarding to a SIEM, use TLS syslog (`tls://`) to protect log integrity in transit. Configure the SIEM to alert on repeated failed login attempts, API token creation by non-standard accounts, and SafeMode-related audit events.
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

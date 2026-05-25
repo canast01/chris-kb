@@ -116,3 +116,9 @@ Best practices:
 | REST API token expiry | Access: 15 min / Refresh: 24 hr | Automate refresh in any scripted API consumers |
 | Configuration backup encryption | General Options → Encrypt config backup | Store passphrase in secrets manager; test restore annually |
 | Guest credential scope | Per-job credentials, local admin on guest | Limit to jobs requiring application-aware processing |
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

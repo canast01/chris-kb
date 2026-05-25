@@ -285,3 +285,8 @@ curl -b cookie.txt -k \
 ```
 
 REST API sessions expire after the configured session timeout (default 30 minutes of inactivity). Service accounts used for automation should use session authentication to avoid repeated credential transmission.
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing

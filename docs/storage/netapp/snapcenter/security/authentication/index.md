@@ -206,3 +206,9 @@ curl -sk -X POST "https://snapcenter.example.com/api/4.9/auth/logout" \
 ```
 
 For automation scripts, always log out at the end of the script to invalidate the token. Do not hardcode credentials in scripts — retrieve them from a secrets vault at runtime.
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

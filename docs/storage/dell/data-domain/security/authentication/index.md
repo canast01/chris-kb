@@ -370,3 +370,8 @@ Forward the audit log to a SIEM with at minimum 12 months of retention. Authenti
 | Break-glass credentials stored in secure vault | | Procedural |
 | DD Boost users created per backup tool | | `ddboost user list` |
 | Syslog forwarding configured for audit log | | `log host show` |
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing

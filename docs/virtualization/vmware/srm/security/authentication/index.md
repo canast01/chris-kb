@@ -113,3 +113,9 @@ VRA VAMI (https://vra-protected.example.local:5480)
 If vCenter SSO is unavailable, SRM cannot authenticate users. SRM is not operational without vCenter.
 
 Recovery procedure: restore vCenter first, then SRM reconnects automatically. This is why vCenter must be included in DR plans — it is a dependency of SRM itself.
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

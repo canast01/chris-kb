@@ -164,3 +164,8 @@ keytool -importkeystore \
 openssl s_client -connect dcnm-dc1.corp.example.com:443 </dev/null 2>/dev/null \
   | openssl x509 -noout -subject -dates
 ```
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing

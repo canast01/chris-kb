@@ -75,3 +75,8 @@ Best practices:
 - **Use separate credentials per integration**: create one client credential per integration (Splunk, Grafana, ServiceNow, etc.) so that a compromised credential can be revoked without affecting other integrations.
 - **Scope by use case**: access tokens derived from client credentials inherit the role of the creating account. Create API accounts with the minimum required role (typically Viewer for monitoring integrations).
 - **Monitor credential usage**: review the CloudIQ audit log for API calls made with each credential to detect unusual access patterns.
+---
+
+## Related Reference
+
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

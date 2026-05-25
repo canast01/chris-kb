@@ -63,3 +63,9 @@ FOD metering access is managed through the underlying array management interface
 - **Unisphere**: local accounts or LDAP/AD integration. Use a dedicated read-only service account for FOD capacity monitoring automation.
 - **APEX Console**: Dell account-based authentication with optional SSO/federation via Azure AD or Okta.
 - **CloudIQ API**: OAuth2 client credentials for programmatic access to metered usage data.
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

@@ -51,3 +51,8 @@ PVWA Administration > Authentication Methods > RADIUS:
 - Shared secret: stored in CyberArk safe `CyberArk-Platform-Accounts`
 - Timeout: 60 seconds
 - Retries: 2
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing

@@ -228,3 +228,9 @@ Refer to the Dell PowerPath Management Suite Installation and Administration Gui
 | Solaris | Root or RBAC | Root (or RBAC profile) |
 | PowerPath/VE (ESXi) | vSphere authentication | vSphere Administrator or Storage Administrator role |
 | PPMS | Local account or LDAP/AD | PPMS Administrator role |
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

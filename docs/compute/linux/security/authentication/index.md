@@ -399,3 +399,8 @@ ausearch -m USER_CMD --success no --start today
 | Auth log (RHEL) | `journalctl _SYSTEMD_UNIT=sshd.service` |
 | Auth log (Ubuntu) | `/var/log/auth.log` |
 | Audit auth events | `ausearch -m USER_AUTH` |
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing

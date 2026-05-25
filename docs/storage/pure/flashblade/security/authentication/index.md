@@ -321,3 +321,9 @@ purefb audit list | grep -i "login\|auth\|token" | head -40
 - [ ] Confirm break-glass account credentials are current in the PAM vault
 - [ ] Confirm SAML SSO is functioning — log in with a domain account as a test
 - [ ] Review audit log for any unexpected login attempts or API token use from unrecognised source IPs
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

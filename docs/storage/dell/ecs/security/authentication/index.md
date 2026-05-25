@@ -171,3 +171,8 @@ ECS Portal → Settings → Syslog
 | Node status change to DEGRADED | ERROR | Immediate investigation |
 | Certificate expiry warning | WARNING | Schedule certificate renewal |
 | Namespace quota exceeded | WARNING | Increase quota or expire data |
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing

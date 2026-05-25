@@ -216,3 +216,8 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/smb_server" \
     "password": "<domain-admin-password>"
   }'
 ```
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing

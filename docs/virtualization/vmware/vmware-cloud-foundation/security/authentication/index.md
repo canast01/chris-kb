@@ -83,3 +83,9 @@ Credential rotation, password lifecycle, account ownership, and validation.
 | Avoid unsupported version combinations. | Avoid unsupported version combinations. |
 | Document exceptions. | Document exceptions. |
 | Validate after every change. | Validate after every change. |
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

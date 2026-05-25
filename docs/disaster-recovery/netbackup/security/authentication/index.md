@@ -162,3 +162,9 @@ NetBackup daemons run under specific OS accounts with minimum required permissio
 - Do not allow interactive login for `nbwebsvc` — set shell to `/sbin/nologin`
 - Audit `/usr/openv/netbackup/db/` ACLs — only `root` and `bpdbm` should write
 - Run `bpps -a` periodically to verify daemon process ownership has not drifted
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

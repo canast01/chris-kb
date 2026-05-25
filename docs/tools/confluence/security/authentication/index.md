@@ -202,3 +202,9 @@ grep -i "authentication failure\|invalid credentials\|failed login" \
 | LDAPS cert import | `keytool -import -keystore cacerts` |
 | REST API users | `GET /rest/api/user?type=known` |
 | Failed login check | `grep "authentication failure" atlassian-confluence.log` |
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

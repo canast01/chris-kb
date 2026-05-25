@@ -210,3 +210,8 @@ cmdkey /delete:targetname
 | Post-restore SSH keys | `rm /etc/ssh/ssh_host_* && ssh-keygen -A` |
 | Post-restore AD channel | `Test-ComputerSecureChannel -Repair` |
 | LAPS post-restore | `Get-LapsADPassword -Identity <computer>` |
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing

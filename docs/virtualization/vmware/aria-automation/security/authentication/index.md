@@ -154,3 +154,9 @@ requests.get("https://vra-prod-01.example.local/iaas/api/zones",
              headers={"Authorization": f"Bearer {token}"},
              verify="/etc/ssl/certs/ca-certificates.crt")
 ```
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

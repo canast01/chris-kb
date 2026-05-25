@@ -120,3 +120,8 @@ The ESXi replication service (hbrsvc) authenticates to the target VRA to establi
 | VRA VAMI session timeout | 30 minutes | Cannot be configured |
 | REST API token TTL | 300 seconds | Request new token for long-running scripts |
 | VRA SSH login | Key or password | Restrict to key-based only (see Hardening) |
+---
+
+## Related Reference
+
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

@@ -287,3 +287,8 @@ aws iam attach-user-policy \
 # CloudTrail alert: break-glass login triggers SNS → PagerDuty
 # Create CloudWatch alarm on metric filter for user: "break-glass-admin"
 ```
+---
+
+## Related Reference
+
+- [Standard SAML Configuration](../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

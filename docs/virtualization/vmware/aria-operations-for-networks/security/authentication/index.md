@@ -151,3 +151,9 @@ sudo systemctl restart hms
 | Service account tokens | 365 days | Rotate when personnel changes |
 
 Review active tokens quarterly (Settings → API Tokens) and revoke any with no recent activity.
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

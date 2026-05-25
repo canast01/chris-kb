@@ -171,3 +171,9 @@ Harbor UI → Administration → Configuration → Authentication
 # Only cluster-admins should run: tanzu cluster kubeconfig get --admin
 # Others use OIDC login: tanzu cluster kubeconfig get (no --admin flag)
 ```
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

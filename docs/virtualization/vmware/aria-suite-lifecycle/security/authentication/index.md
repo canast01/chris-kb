@@ -161,3 +161,9 @@ trust anchor lcm-ca.crt  # RHEL/Fedora
 | VIDM session timeout | 8 hours (configurable) | VIDM console → Policies → Session Policies |
 | Failed login lockout | 5 attempts (VIDM default) | VIDM console → Policies → Password Policies |
 | MFA enforcement | Via VIDM access policies | VIDM console → Policies → Access Policies |
+---
+
+## Related Reference
+
+- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements
