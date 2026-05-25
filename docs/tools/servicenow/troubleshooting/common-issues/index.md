@@ -11,7 +11,7 @@ Quick-reference troubleshooting guide for frequently encountered ServiceNow oper
 | 1 | [Slow instance performance](#1-slow-instance-performance) | P2–P3 | High query load, runaway script |
 | 2 | [MID Server disconnected](#2-mid-server-disconnected) | P2 | Network, service crash, auth failure |
 | 3 | [LDAP sync failures](#3-ldap-sync-failures) | P2–P3 | Connectivity, expired credentials |
-| 4 | [Workflow / Flow stalled](#4-workflow--flow-stalled) | P2–P3 | Unhandled error, condition loop |
+| 4 | [Workflow / Flow stalled](#4-workflow-flow-stalled) | P2–P3 | Unhandled error, condition loop |
 | 5 | [Import set failures](#5-import-set-failures) | P3 | Transform map error, data validation |
 | 6 | [Email notification failures](#6-email-notification-failures) | P2–P3 | SMTP config, template error, flood control |
 | 7 | [Scheduled job failures](#7-scheduled-job-failures) | P2–P3 | Script error, resource contention |

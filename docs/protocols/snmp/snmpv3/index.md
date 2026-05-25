@@ -1,3 +1,7 @@
+---
+title: SNMPv3
+---
+
 # SNMPv3
 
 SNMPv3 adds authentication and encryption to SNMP, replacing the plaintext community strings of v1/v2c.

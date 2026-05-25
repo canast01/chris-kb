@@ -1,3 +1,7 @@
+---
+title: Root Cause Analysis Template
+---
+
 # Root Cause Analysis Template
 
 ## Overview

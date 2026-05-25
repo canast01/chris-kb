@@ -1,3 +1,7 @@
+---
+title: Jira — Access Control
+---
+
 # Jira — Access Control
 
 Jira's access control model is layered: global permissions govern what users can do across the entire instance, project permission schemes govern per-project actions, and issue security schemes further restrict who can see individual issues.

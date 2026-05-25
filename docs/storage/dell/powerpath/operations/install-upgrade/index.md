@@ -1,3 +1,7 @@
+---
+title: PowerPath — Install & Upgrade
+---
+
 # PowerPath — Install & Upgrade
 
 ## Version and Release Matrix
