@@ -1,6 +1,6 @@
 # CloudIQ: Capacity Forecasting and Pool Utilisation
 
-```
+```text
 Capacity Analytics — CloudIQ
                                          ← 90-day warning
                    consumed              │

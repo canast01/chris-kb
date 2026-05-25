@@ -3,7 +3,7 @@
 
 AWS Elastic Load Balancer notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  ELB Traffic Flow                       │
 │                                                         │

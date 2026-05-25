@@ -1,6 +1,6 @@
 # NFS Mounts
 
-```
+```text
         CLIENT-SIDE MOUNT PROCESS
 ┌──────────────────────────────────────────────────────────────┐
 │  mount -t nfs -o vers=4.1,hard,rsize=1048576 \              │

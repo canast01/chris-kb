@@ -3,7 +3,7 @@
 
 Node hardware status, sensors, alerts, and serviceability checks.
 
-```
+```text
   ┌──────────────────────────────────────────────────┐
   │                  VxRail Node                     │
   │                                                  │

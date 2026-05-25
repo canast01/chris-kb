@@ -1,6 +1,6 @@
 # NTP Firewall Rules
 
-```
+```text
         NTP FIREWALL REQUIREMENTS
 ┌──────────────────────────────────────────────────────────────┐
 │  NTP CLIENT (server/device)                                  │
@@ -82,7 +82,7 @@ New-NetFirewallRule -DisplayName "NTP Inbound" -Direction Inbound `
 
 ## Cisco ASA / Firepower
 
-```
+```bash
 # Outbound NTP from inside
 access-list INSIDE_OUT extended permit udp any host <ntp-server> eq 123
 

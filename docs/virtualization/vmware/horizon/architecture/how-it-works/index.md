@@ -18,7 +18,7 @@ VMware Horizon is a broker-based VDI and published application delivery platform
 
 ### Component Interaction Diagram (text)
 
-```
+```text
 [User Endpoint]
      |
   Horizon Client
@@ -55,7 +55,7 @@ Instant Clone is the current standard for stateless desktop delivery. Each deskt
 - Pool refresh = push new golden image snapshot → new replica → new parent → all desktops replaced on next logoff
 
 **Instant Clone provisioning flow:**
-```
+```text
 Golden Image VM
   └─ Snapshot (published)
        └─ Replica VM (per datastore, read-only disk)
@@ -103,7 +103,7 @@ RDS (Remote Desktop Services) Farms host Windows Server (with Desktop Experience
 
 ### Internal Client (LAN)
 
-```
+```text
 1. User opens Horizon Client → enters Connection Server FQDN
 2. Horizon Client → HTTPS (443) → Connection Server
 3. Connection Server authenticates user against AD (Kerberos/LDAP)
@@ -117,7 +117,7 @@ RDS (Remote Desktop Services) Farms host Windows Server (with Desktop Experience
 
 ### External Client via UAG
 
-```
+```text
 1. User opens Horizon Client → enters UAG external FQDN
 2. Horizon Client → HTTPS (443) → UAG (DMZ)
 3. UAG forwards authentication request → Connection Server (internal, 443)
@@ -220,7 +220,7 @@ Instant Clone pools do **not** use traditional vCenter customization specs (sysp
 
 Horizon names these automatically:
 
-```
+```yaml
 Replica:  <pool-name>-replica-<timestamp>
 Parent:   <pool-name>-parent-<timestamp>
 Desktop:  <naming-pattern>-{n}   (e.g., WIN10-{n} → WIN10-001, WIN10-002)

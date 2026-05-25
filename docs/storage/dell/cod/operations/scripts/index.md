@@ -84,7 +84,7 @@ Open a terminal on the Solutions Enabler host (Linux).
 
 **Step 4 — Run the script**
 
-```
+```bash
 chmod +x cod_capacity_report.sh
 SID=000123456789 ./cod_capacity_report.sh
 ```
@@ -221,7 +221,7 @@ Open a terminal on the Solutions Enabler host.
 
 **Step 4 — Run the script**
 
-```
+```text
 SID=000123456789 WARN_PCT=80 CRIT_PCT=90 python3 cod_threshold_alerter.py
 ```
 
@@ -313,7 +313,7 @@ Open a terminal on your Ansible control node.
 
 **Step 4 — Run the script**
 
-```
+```text
 ansible-playbook -i inventory cod_capacity_audit.yml -e sid=000123456789
 ```
 
@@ -427,13 +427,13 @@ Write-Host "========================================"
 
 **Step 4 — Allow scripts to run (one-time)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\cod_license_query.ps1
 ```

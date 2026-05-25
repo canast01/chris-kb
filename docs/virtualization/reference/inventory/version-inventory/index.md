@@ -4,7 +4,7 @@
 
 ---
 
-```
+```text
 ┌──────────────────────┬─────────────┬─────────────┬────────────┬──────────────┐
 │   Component          │   Current   │   Target    │  EOL Date  │  Priority    │
 ├──────────────────────┼─────────────┼─────────────┼────────────┼──────────────┤
@@ -79,7 +79,7 @@ Track current and target versions across all VMware components. Use this page fo
 
 ### vCenter and ESXi
 
-```
+```text
 vCenter UI → Administration → Deployment → System Configuration → Nodes
 vCenter UI → Hosts and Clusters → Host → Summary tab (ESXi version)
 ```
@@ -93,6 +93,6 @@ Get-Cluster "cl-prod-compute-01" | Get-VMHost | Select Name, Version, Build | So
 
 ### NSX
 
-```
+```text
 NSX UI → System → Lifecycle Management → About NSX
 ```

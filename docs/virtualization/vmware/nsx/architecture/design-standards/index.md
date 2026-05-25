@@ -1,6 +1,6 @@
 # NSX — Design Standards
 
-```
+```text
 ┌───────────────────────────────── NSX Architecture — Design Standards ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -61,7 +61,7 @@ Consistent naming across NSX objects is critical for operational clarity. The fo
 
 ### NSX Manager Cluster
 
-```
+```text
 Format: nsx-<site>-<nn>
 Example: nsx-lon-01, nsx-lon-02, nsx-lon-03
 ```
@@ -70,7 +70,7 @@ The three-node NSX Manager cluster uses sequential numbering. Site codes should 
 
 ### Segments (Logical Switches)
 
-```
+```text
 Format: seg-<environment>-<function>-<vlan_or_subnet>
 Example: seg-prod-web-10.0.1.0
          seg-dev-db-10.1.3.0
@@ -79,7 +79,7 @@ Example: seg-prod-web-10.0.1.0
 
 VLAN-backed segments (for management or underlay traffic) should include the VLAN ID:
 
-```
+```text
 Format: seg-vlan-<vlan_id>-<function>
 Example: seg-vlan-100-management
          seg-vlan-200-tep
@@ -88,7 +88,7 @@ Example: seg-vlan-100-management
 
 ### Transport Zones
 
-```
+```text
 Format: tz-<type>-<scope>
 Example: tz-overlay-compute
          tz-vlan-edge
@@ -103,7 +103,7 @@ Example: tz-overlay-compute
 
 ### Tier-0 Gateways
 
-```
+```text
 Format: t0-<site>-<function>
 Example: t0-lon-prod
          t0-lon-dmz
@@ -114,7 +114,7 @@ Separate T0 gateways for production and DMZ allow independent routing table mana
 
 ### Tier-1 Gateways
 
-```
+```text
 Format: t1-<environment>-<tenant_or_application>
 Example: t1-prod-frontend
          t1-prod-database
@@ -125,7 +125,7 @@ Each T1 maps to a logical application boundary. A single T1 can connect multiple
 
 ### Edge Nodes and Edge Clusters
 
-```
+```text
 Format: edge-<site>-<nn>
          edge-cluster-<site>-<purpose>
 Example: edge-lon-01, edge-lon-02
@@ -136,7 +136,7 @@ Edge nodes must be deployed in pairs for HA. The edge cluster contains the pair.
 
 ### DFW Policies and Rules
 
-```
+```text
 DFW Category order (NSX-T built-in, top to bottom):
   Ethernet      — L2 rules
   Emergency     — Break-glass block rules

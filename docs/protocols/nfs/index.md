@@ -8,7 +8,7 @@ title: NFS
 Network File System (NFS) allows hosts to mount remote directories over TCP. Coverage includes version selection (NFSv3/4/4.1), export configuration, UID/GID permission mapping, mount option tuning (hard/soft, sync/async, rsize/wsize), and troubleshooting stale handles and mount failures.
 </div>
 
-```
+```text
         NFS ARCHITECTURE
 ┌─────────────────┐        TCP 2049        ┌──────────────────────┐
 │   NFS CLIENT    │                        │    NFS SERVER        │

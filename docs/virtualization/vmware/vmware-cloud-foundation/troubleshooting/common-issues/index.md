@@ -1,6 +1,6 @@
 # VCF Troubleshooting — Common Issues
 
-```
+```text
 VCF Common Failure Points — Quick Reference
 ┌─────────────────────────────────────────────────────┐
 │  Symptom                 → Primary Check            │

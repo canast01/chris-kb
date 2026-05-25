@@ -1,6 +1,6 @@
 # Change Management
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                    Change Management Process                         │
 │                                                                      │

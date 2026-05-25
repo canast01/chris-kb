@@ -219,7 +219,7 @@ dmesg | grep "apparmor=\"DENIED\""
 
 ### AppArmor Profile Structure
 
-```
+```bash
 # /etc/apparmor.d/usr.local.bin.myapp
 /usr/local/bin/myapp {
   # Allow read on config directory
@@ -244,7 +244,7 @@ See also: [Authentication — sudo configuration](../authentication/index.md#sud
 visudo   # Always use visudo — validates syntax on save
 ```
 
-```
+```bash
 # Separate duty: backup operator — only rsync and tar
 %backupops  ALL=(root) /usr/bin/rsync, /usr/bin/tar
 
@@ -270,7 +270,7 @@ sudo -l -U jsmith
 
 Restricts which users or groups can log in from which origins. Processed by `pam_access.so`.
 
-```
+```bash
 # /etc/security/access.conf format:
 # permission : users/groups : origins
 # + = allow, - = deny
@@ -290,7 +290,7 @@ Restricts which users or groups can log in from which origins. Processed by `pam
 - : ALL : ALL
 ```
 
-```
+```bash
 # /etc/pam.d/system-auth — enable pam_access
 account     required      pam_access.so
 ```

@@ -1,6 +1,6 @@
 # Aria Automation — Procedures
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Automation — Common Operational Tasks          │
 ├─────────────────────────────────────────────────────────────┤
@@ -68,14 +68,14 @@ Review **Design → Cloud Templates** monthly:
 2. Ensure all active templates have a description, owner, and version tag
 3. Connect templates to a Git content source for version history:
 
-```
+```text
 Infrastructure → Connections → Integrations → Add Git Integration
 ```
 
 Provide GitHub/GitLab URL, branch, and personal access token. Templates are then sync'd from the repository.
 
 Template naming convention:
-```
+```bash
 <team>-<resource-type>-<os/platform>-<size>
 # Examples:
 platform-vm-rhel9-small
@@ -125,7 +125,7 @@ kubectl logs -n prelude -l app=iaas-gateway --tail=100 | grep -i "error\|vcenter
 
 3. Add image mappings and flavor mappings for the new cloud zone:
 
-```
+```text
 Infrastructure → Configure → Image Mappings → add entry for new zone
 Infrastructure → Configure → Flavor Mappings → add entry for new zone
 ```
@@ -140,7 +140,7 @@ Approval policies require a manager or team lead to approve requests before prov
 
 **Create a policy:**
 
-```
+```bash
 Service Broker → Content & Policies → Policies → New Policy → Approval Policy
 ```
 
@@ -152,7 +152,7 @@ Configure:
 
 **Assign to catalog item:**
 
-```
+```bash
 Service Broker → Content → Catalog Items → select item → Policy → assign the approval policy
 ```
 
@@ -164,7 +164,7 @@ Test by requesting the catalog item as a non-admin user — an approval request 
 
 Action-Based Extensibility (ABX) actions are scripts (Python, Node.js, or PowerShell) that execute in response to event broker triggers.
 
-```
+```text
 Extensibility → Actions → New Action
 ```
 
@@ -193,7 +193,7 @@ def handler(context, inputs):
 
 Assign to an event broker subscription:
 
-```
+```text
 Extensibility → Subscriptions → New Subscription
 ```
 

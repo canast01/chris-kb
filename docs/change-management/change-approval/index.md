@@ -2,7 +2,7 @@
 
 Ensures all changes are assessed for risk and approved by the appropriate authority before implementation.
 
-```
+```text
 ┌──────────────┐   ┌──────────────────┐   ┌──────────────┐   ┌──────────────────┐
 │ Change       │   │  Risk Assessment │   │  CAB Review  │   │ Approve/Reject/  │
 │ Request      │   │                  │   │              │   │ Schedule         │
@@ -34,7 +34,7 @@ Ensures all changes are assessed for risk and approved by the appropriate author
 
 ## CAB Approval Workflow
 
-```
+```text
 Requester submits RFC
         ↓
 Technical review (peer / architect)

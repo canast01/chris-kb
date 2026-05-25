@@ -1,6 +1,6 @@
 # AWS Reserved Instances
 
-```
+```text
 Reserved Instances: On-Demand vs RI Pricing
 ──────────────────────────────────────────────────────────────
 

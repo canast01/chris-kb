@@ -21,7 +21,7 @@ symrdf -g <rdfg> query -v | grep "Minimum Cycle Time"
 
 ## SRDF Group Naming Convention
 
-```
+```text
 RDFG-<site-pair>-<app-tier>-<seq>
 ```
 
@@ -32,7 +32,7 @@ Examples:
 
 ## Device Group Naming
 
-```
+```text
 DG-<env>-<app>-<site>-<seq>
 ```
 
@@ -60,7 +60,7 @@ Maintain an SRDF group number allocation register in CMDB. Ranges:
 
 ## Bandwidth Sizing
 
-```
+```text
 Required bandwidth (MB/s) = peak_change_rate_MB_per_cycle / cycle_time_s × 1.20
 ```
 

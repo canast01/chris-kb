@@ -1,6 +1,6 @@
 # Pure Evergreen CLI Reference
 
-```
+```text
 Evergreen Management Interfaces
   ┌────────────────────────────────────────────────────┐
   │  Pure1 REST API                                    │

@@ -1,6 +1,6 @@
 # CloudWatch
 
-```
+```text
 CloudWatch CLI: Metrics → Alarms → Logs
 ──────────────────────────────────────────────────────────────
 

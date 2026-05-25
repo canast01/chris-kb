@@ -1,6 +1,6 @@
 # Aria Operations — Escalation
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │            Aria Operations Escalation Path                  │
 ├─────────────────────────────────────────────────────────────┤
@@ -39,7 +39,7 @@ Always attach a support bundle when opening a case.
 
 ### Via UI
 
-```
+```text
 Administration > Support > Generate Support Bundle
 ```
 

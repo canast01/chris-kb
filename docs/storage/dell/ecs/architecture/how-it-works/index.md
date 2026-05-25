@@ -52,7 +52,7 @@ Replication groups define which VDCs participate in geo-replication. Every names
 
 ## Namespace and Bucket Hierarchy
 
-```
+```text
 VDC
 └── Namespace (multi-tenancy boundary)
     ├── Assigned to one Replication Group

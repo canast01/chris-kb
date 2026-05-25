@@ -1,6 +1,6 @@
 # Horizon — Escalation
 
-```
+```text
   Escalation Path
 ┌──────────────────────────────────────────────────────────────┐
 │  Internal Triage (L1/L2)                                     │

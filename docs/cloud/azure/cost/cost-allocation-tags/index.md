@@ -2,7 +2,7 @@
 
 Tags are the primary mechanism for attributing Azure costs to teams, projects, environments, and cost centres.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │                  Cost Tag Flow                               │
 │                                                              │

@@ -6,7 +6,7 @@ Quick reference for common problems and resolutions.
 
 ### Switches Not Discovered / Stuck in "Unreachable"
 
-```
+```text
 Symptom: Switch shows "Unreachable" in Fabric → Switches
 ```
 
@@ -61,7 +61,7 @@ show fabric detail
 
 Direct CLI changes on switches bypass DCNM and cause out-of-sync status.
 
-```
+```text
 Resolution:
 1. Fabric → Switches → select affected switch → Resync
 2. Review diff — accept DCNM intent (overwrite manual change) or

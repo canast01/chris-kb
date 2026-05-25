@@ -2,7 +2,7 @@
 
 Track software entitlements, monitor utilisation against purchased seats, and prevent compliance violations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                      License Pool                           │
 │  Entitlements purchased: 500 seats                          │

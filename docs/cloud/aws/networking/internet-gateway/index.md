@@ -3,7 +3,7 @@
 
 AWS Internet Gateway notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                Internet Gateway (IGW)                   │
 │                                                         │

@@ -3,7 +3,7 @@
 
 AWS EventBridge notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                EventBridge Flow                         │
 │                                                         │

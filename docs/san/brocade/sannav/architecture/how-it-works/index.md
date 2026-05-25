@@ -9,7 +9,7 @@ Brocade SANnav is a SAN management platform delivered in two variants:
 
 ## Deployment Topology
 
-```
+```text
 ┌──────────────────────────────────────────────────────┐
 │                  SANnav Global View                  │
 │         (single VM, aggregates portal data)          │

@@ -1,6 +1,6 @@
 # VxRail Bundle Management
 
-```
+```text
 Bundle Lifecycle Flow
 ┌─────────────────────────────────────────────────────────────┐
 │  Dell Support Portal / Offline Source                       │

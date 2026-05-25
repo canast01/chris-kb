@@ -1,6 +1,6 @@
 # FlashBlade — Procedures
 
-```
+```text
 FlashBlade NFS Filesystem Provisioning Flow
   ┌──────────────────────────────────────────────────────┐
   │  Create filesystem (purefb fs create --size)         │

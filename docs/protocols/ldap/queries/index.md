@@ -1,6 +1,6 @@
 # LDAP Queries
 
-```
+```text
         LDAP QUERY STRUCTURE
 ┌──────────────────────────────────────────────────────────────┐
 │  ldapsearch -H ldap://dc01 -D "svc@corp.local" -w "pass"    │

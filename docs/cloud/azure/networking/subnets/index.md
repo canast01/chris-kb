@@ -2,7 +2,7 @@
 
 Subnets segment a Virtual Network address space into smaller ranges.
 
-```
+```text
 ┌───────────────────────────────────────────────────────────┐
 │               VNet  10.0.0.0/16                           │
 │                                                           │

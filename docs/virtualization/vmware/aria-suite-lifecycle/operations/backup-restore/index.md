@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle — Backup & Restore
 
-```
+```text
   LCM Backup Strategy
 ┌─────────────────────────────────────────────────────────────────┐
 │  What to Back Up              Method                            │

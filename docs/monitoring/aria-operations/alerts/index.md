@@ -1,6 +1,6 @@
 # Aria Operations: Alert Definitions and Policies
 
-```
+```text
 Alert Lifecycle — Aria Operations
 ┌──────────────────┐
 │ Metric threshold │  (symptom fires for N cycles)

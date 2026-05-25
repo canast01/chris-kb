@@ -1,6 +1,6 @@
 # Pure Storage Controller Upgrades
 
-```
+```text
 Ever Modern Controller Upgrade — Step by Step
   ┌────────────────────────────────────────────────────┐
   │  Pre-upgrade (customer):                           │

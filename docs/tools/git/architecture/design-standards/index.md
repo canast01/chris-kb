@@ -8,7 +8,7 @@ Commit message conventions, amending commits, squashing, and cherry-picking.
 
 Good commit messages make the log scannable and power automated changelogs.
 
-```
+```bash
 # Conventional Commits format
 <type>(<scope>): <short summary>
 

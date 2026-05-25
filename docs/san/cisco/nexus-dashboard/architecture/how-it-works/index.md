@@ -19,7 +19,7 @@ For SAN environments, NDFC is the primary application.
 
 Nexus Dashboard is deployed as a 3-node or 5-node cluster for high availability.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                  Nexus Dashboard Cluster (3 nodes)               │
 │  ┌────────────┐   ┌────────────┐   ┌────────────┐               │
@@ -61,7 +61,7 @@ Nexus Dashboard is deployed as a 3-node or 5-node cluster for high availability.
 
 A single ND cluster manages fabrics across multiple data centres. Each site is registered with the ND cluster and communicates via the data network.
 
-```
+```text
          ND Cluster (primary DC)
                │
     ┌──────────┴──────────┐

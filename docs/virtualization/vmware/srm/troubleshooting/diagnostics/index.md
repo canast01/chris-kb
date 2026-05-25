@@ -1,6 +1,6 @@
 # SRM — Diagnostics
 
-```
+```text
   SRM Diagnostic Data Sources
 ┌──────────────────────────────────────────────────────────────┐
 │  SRM Server (Windows)           SRM Appliance (Linux)        │
@@ -27,7 +27,7 @@
 ## SRM Log Locations
 
 **Windows SRM Server:**
-```
+```text
 C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\
   vmware-dr.log        # Main SRM log
   vmware-dr-*.log      # Rotated logs
@@ -44,7 +44,7 @@ ssh admin@srm-protected.example.local
 
 ## Collect SRM Support Bundle
 
-```
+```text
 Site Recovery → Summary → Download SRM Support Bundle
   Includes: SRM logs, configuration, site pairing state
   Download from both protected and recovery site SRM Servers
@@ -128,7 +128,7 @@ echo | openssl s_client -connect srm-protected.example.local:443 2>/dev/null \
 
 ## Review Recovery Plan Step Logs
 
-```
+```bash
 Site Recovery → Recovery Plans → [plan] → History → [run] → Steps
   Click any step to see detailed sub-step log
   Export history as CSV for external analysis

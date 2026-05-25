@@ -1,6 +1,6 @@
 # ESXi Encryption
 
-```
+```text
 ESXi Encryption Stack
 ┌─────────────────────────────────────────────────────────┐
 │  Key Provider                                           │

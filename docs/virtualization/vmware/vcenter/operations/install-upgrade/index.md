@@ -1,6 +1,6 @@
 # vCenter — Install & Upgrade
 
-```
+```text
 vSphere Upgrade Sequence
 ════════════════════════════════════════════════════════
 
@@ -65,7 +65,7 @@ Always verify at [Broadcom Product Lifecycle](https://support.broadcom.com/group
 
 Always upgrade in this sequence to maintain interoperability support:
 
-```
+```text
 1. vCenter Server (VCSA)          ← upgrade first, always
 2. vSAN (if applicable)           ← vSAN upgrade wizard in vCenter
 3. NSX Manager (if applicable)    ← must be compatible with new vCenter

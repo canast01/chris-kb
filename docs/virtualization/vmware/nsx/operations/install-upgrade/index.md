@@ -1,6 +1,6 @@
 # NSX — Install & Upgrade
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │              NSX Upgrade Sequence (Critical Order)          │
 ├─────────────────────────────────────────────────────────────┤
@@ -155,7 +155,7 @@ Test the connection before saving. The passphrase encrypts the backup bundle —
 
 Configure one pool per subnet:
 
-```
+```yaml
 Name: pool-tep-compute
 Subnet: 192.168.200.0/24
 Gateway: 192.168.200.1
@@ -211,7 +211,7 @@ get transport-node-status
 
 NSX components must be upgraded in this sequence:
 
-```
+```text
 1. NSX Manager (all 3 nodes) — control plane first
 2. Edge Nodes — north-south gateway impact; BGP reconverges
 3. ESXi Transport Nodes (host-by-host) — data plane impact; rolling
@@ -223,7 +223,7 @@ NSX components must be upgraded in this sequence:
 
 The upgrade coordinator upgrades one Manager node at a time. The cluster VIP migrates to an available node during each node's upgrade:
 
-```
+```text
 Upgrade node 1 → node 1 reboots (cluster VIP on node 2 or 3)
 Upgrade node 2 → node 2 reboots
 Upgrade node 3 → node 3 reboots

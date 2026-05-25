@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle — Standards
 
-```
+```text
   LCM Design Standards at a Glance
 ┌─────────────────────────────────────────────────────────────────┐
 │  Upgrade Order (strict)          Sizing (per environment)       │
@@ -27,7 +27,7 @@
 
 All LCM-managed appliances follow:
 
-```
+```text
 <product-short>-<env>-<node#>.<domain>
 ```
 

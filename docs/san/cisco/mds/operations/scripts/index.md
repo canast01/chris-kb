@@ -119,7 +119,7 @@ Edit these lines near the top of the script:
 
 **Step 4 — Make the script executable and run it**
 
-```
+```bash
 chmod +x mds_fabric_health.sh
 MDS_HOST=192.168.1.20 MDS_USER=admin ./mds_fabric_health.sh
 ```
@@ -278,7 +278,7 @@ Set these as environment variables, or edit the defaults at the top of the scrip
 
 **Step 4 — Run the script**
 
-```
+```text
 MDS_HOST=192.168.1.20 MDS_USER=admin EXPECTED_VSANS=10,20 python3 mds_flogi_report.py
 ```
 
@@ -401,7 +401,7 @@ exit $crits ? 2 : $warns ? 1 : 0;
 
 **Step 4 — Make the script executable and run it**
 
-```
+```bash
 chmod +x mds_zoning_audit.pl
 MDS_HOST=192.168.1.20 MDS_USER=admin perl mds_zoning_audit.pl
 ```
@@ -523,18 +523,18 @@ Edit these variables near the top of the script:
 
 **Step 4 — Make the script executable and run it manually first**
 
-```
+```bash
 chmod +x mds_interface_errors.sh
 MDS_HOST=192.168.1.20 MDS_USER=admin ./mds_interface_errors.sh
 ```
 
 **Step 5 — Schedule via cron (optional)**
 
-```
+```text
 crontab -e
 ```
 Add:
-```
+```text
 */15 * * * * MDS_HOST=192.168.1.20 MDS_USER=admin /opt/scripts/mds_interface_errors.sh >> /var/log/mds_errors.log 2>&1
 ```
 
@@ -641,7 +641,7 @@ Edit the `vars:` section:
 **Step 3 — Create an inventory file**
 
 Create a file called `inventory` next to the playbook:
-```
+```text
 [cisco_mds]
 mds1 ansible_host=192.168.1.20
 mds2 ansible_host=192.168.1.21
@@ -653,7 +653,7 @@ mds2 ansible_host=192.168.1.21
 
 **Step 5 — Run the playbook**
 
-```
+```text
 ansible-playbook -i inventory mds_backup.yml
 ```
 
@@ -759,7 +759,7 @@ Open the saved file and change these lines near the top:
 **Step 3 — Accept the SSH fingerprint first (one-time step)**
 
 Open Command Prompt and run:
-```
+```text
 plink.exe -ssh admin@192.168.1.20
 ```
 Type `y` when asked, then Ctrl+C. Do this once per switch.
@@ -770,7 +770,7 @@ Open **Command Prompt**: Windows key → search `cmd` → press Enter
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 mds-health.bat
 ```
@@ -908,7 +908,7 @@ You pass all values on the command line:
 **Step 3 — Accept the SSH fingerprint first (one-time step)**
 
 Open Command Prompt and run:
-```
+```text
 plink.exe -ssh admin@192.168.1.20
 ```
 Type `y` when asked, then Ctrl+C.
@@ -919,13 +919,13 @@ Windows key → search `PowerShell` → right-click → **Run as Administrator**
 
 **Step 5 — Allow scripts to run**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 6 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\mds-port-report.ps1 -MdsHost 192.168.1.20 -SshUser admin -PlinkPath "C:\Program Files\PuTTY\plink.exe"
 ```

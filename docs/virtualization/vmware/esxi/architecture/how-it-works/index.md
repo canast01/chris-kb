@@ -1,6 +1,6 @@
 # ESXi — How It Works
 
-```
+```text
 VMkernel Internals — Resource Stack
 ┌────────────────────────────────────────────────────────────┐
 │  VMkernel (bare-metal, no general OS underneath)           │

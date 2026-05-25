@@ -2,7 +2,7 @@
 
 Failure testing (chaos engineering) validates that systems fail gracefully, recover within expected RTO, and trigger correct alerting under controlled fault conditions.
 
-```
+```text
 ┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
 │ Failure          │   │ Observe Impact   │   │ Measure Recovery │   │ Document        │
 │ Injection        │   │                  │   │                  │   │ Baseline        │

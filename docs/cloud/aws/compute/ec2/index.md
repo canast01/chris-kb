@@ -3,7 +3,7 @@
 
 AWS EC2 notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  EC2 Instance Lifecycle                 │
 │                                                         │

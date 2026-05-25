@@ -318,7 +318,7 @@ curl -sk -u "admin:NSXAdminPassword" \
 
 Use the **vCenter Server Installer** (ISO mounted on a management workstation):
 
-```
+```text
 1. Mount VMware-VCSA-<version>.iso
 2. Run: installer/win32/installer.exe (Windows) or installer/mac/Installer.app
 3. Select "Restore"

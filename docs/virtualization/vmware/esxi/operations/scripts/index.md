@@ -1,6 +1,6 @@
 # ESXi Scripts
 
-```
+```text
 ESXi Automation Scripts — Tool Selection
 ┌───────────────────────────────────────────────────────┐
 │  Task                         Recommended Tool        │
@@ -166,13 +166,13 @@ Windows key → type `PowerShell` → right-click → **Run as Administrator**
 
 **Step 4 — Allow scripts to run (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\esxi_host_health.ps1
 ```

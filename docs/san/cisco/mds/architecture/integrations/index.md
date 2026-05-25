@@ -51,7 +51,7 @@ sequenceDiagram
 
 **Zone a new ESXi host:**
 
-```
+```bash
 # Step 1 — Find the host HBA WWPN after it logs in
 show flogi database vsan 10 | grep <host-ip-or-note>
 # Or check the host HBA WWPNs from the ESXi console:
@@ -77,7 +77,7 @@ zoneset activate name prod-zoneset vsan 10
 
 **Verify the host can see the storage:**
 
-```
+```text
 show zone member device-alias esxi-host01_hba0 vsan 10
 ```
 
@@ -87,7 +87,7 @@ show zone member device-alias esxi-host01_hba0 vsan 10
 
 PowerMax FA (Front-End Adapter) ports log into the MDS fabric. Each FA port is registered as a device alias.
 
-```
+```bash
 # Show PowerMax FA port registrations
 show flogi database vsan 10 | grep <powermax-wwpns>
 
@@ -105,7 +105,7 @@ For SRDF/A replication, the SRDF director ports on both arrays are zoned togethe
 
 Pure FlashArray target ports are registered as device aliases and zoned per host.
 
-```
+```bash
 # Pure array target ports (get WWPNs from Pure UI: Settings → SAN)
 device-alias database
   device-alias name pure-fa01_ct0.eth4 pwwn 52:4a:xx:xx:xx:xx:xx:xx
@@ -123,7 +123,7 @@ Pure recommends at least 2 target ports per host path for redundancy. Zone each 
 
 ## SNMP and Syslog
 
-```
+```bash
 # Configure SNMP v3 (preferred over v2c)
 snmp-server user <username> network-operator auth sha <auth-password> priv aes-128 <priv-password>
 snmp-server host <monitoring-server-ip> traps version 3 priv <username>

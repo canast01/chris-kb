@@ -136,7 +136,7 @@ $task.Settings | Select-Object RunOnlyIfNetworkAvailable, RunOnlyIfIdle, WakeToR
 
 ### Backup log shows VSS errors
 
-```
+```text
 Error: VSS writer reported failure — Microsoft Hyper-V VSS Writer / SQL Server VSS Writer
 ```
 

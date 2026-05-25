@@ -14,7 +14,7 @@ All models share the same Purity//FA OS, the same CLI and REST API surface, and 
 
 ## HA Topology
 
-```
+```text
   ┌─────────────────────────────────────────────────────────────────────┐
   │                     FlashArray Chassis                              │
   │                                                                     │

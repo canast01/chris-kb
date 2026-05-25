@@ -2,7 +2,7 @@
 
 ## Log Locations
 
-```
+```text
 Windows SRM Server:
   C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\vmware-dr.log
   C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\vmware-drconfig.log

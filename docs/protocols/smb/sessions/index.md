@@ -1,6 +1,6 @@
 # SMB Sessions
 
-```
+```text
         SMB SESSION ESTABLISHMENT
 ┌────────────┐                              ┌─────────────────┐
 │  Client    │                              │   SMB Server    │

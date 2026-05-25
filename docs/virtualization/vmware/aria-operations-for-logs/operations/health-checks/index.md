@@ -1,6 +1,6 @@
 # Aria Ops for Logs — Health Checks
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Ops for Logs Health Check Stack                │
 ├─────────────────────────────────────────────────────────────┤
@@ -120,7 +120,7 @@ curl -sk -u 'admin:<password>' \
 
 ### Notification Channel Test
 
-```
+```text
 Administration → Notification Channels → select channel → Test
 ```
 

@@ -129,7 +129,7 @@ symstat -type device -dev 0A1 -i 5 -c 3
 
 SRDF/S adds one WAN round trip to every host write. The relationship is approximately:
 
-```
+```text
 Effective write latency = local array write time + (WAN RTT / 2) + remote commit time
 ```
 

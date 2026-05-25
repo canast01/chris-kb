@@ -1,6 +1,6 @@
 # vSAN — Backup & Restore
 
-```
+```text
 BACKUP FLOW — vSAN VM TO TARGET
 
   VM (on vSAN Datastore)

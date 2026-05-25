@@ -2,7 +2,7 @@
 
 Build and operating standards for virtualization platforms.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                    Virtualization Standards Hub                         │
 ├──────────────────┬──────────────────┬──────────────────────────────────┤

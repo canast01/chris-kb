@@ -1,6 +1,6 @@
 # High CPU Troubleshooting
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                     High CPU Triage Flowchart                        │
 │                                                                      │

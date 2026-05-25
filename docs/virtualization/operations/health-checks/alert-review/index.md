@@ -1,6 +1,6 @@
 # Alert Health Check
 
-```
+```text
 Alert Review Flow
 ═══════════════════════════════════════════════════════════
 

@@ -37,7 +37,7 @@ sequenceDiagram
 
 PVWA Administration > LDAP Integration:
 
-```
+```text
 LDAP Host:   ldaps://dc01.corp.example.com:636
 Base DN:     DC=corp,DC=example,DC=com
 Bind DN:     CN=svc-cyberark-ldap,OU=Service Accounts,OU=Managed,DC=corp,DC=example,DC=com

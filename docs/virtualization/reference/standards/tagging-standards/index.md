@@ -2,7 +2,7 @@
 
 Consistent tagging supports ownership, billing, backup policy, patch scheduling, and compliance.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────────┐
 │               Required Tags — Applied at VM Creation                     │
 ├─────────────────────┬────────────────────────────────────────────────────┤

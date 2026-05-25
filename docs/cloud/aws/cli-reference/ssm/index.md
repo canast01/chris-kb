@@ -1,6 +1,6 @@
 # Systems Manager (SSM)
 
-```
+```text
 SSM CLI: Session · Command · Parameter Store · Patching
 ──────────────────────────────────────────────────────────────
 

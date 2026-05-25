@@ -52,7 +52,7 @@ symrdf -g <rdfg> query -v | grep -E "RTT|Latency"
 - Maximum 2,048 devices per SRDF group
 - Three-site design: SRDF/S to secondary (RPO=0), SRDF/A to tertiary (RPO=30s)
 
-```
+```text
 RDFG-S-<site-pair>-<tier>-<seq>
 ```
 
@@ -67,7 +67,7 @@ Examples:
 
 Every host write is replicated synchronously — bandwidth must sustain peak write throughput without queueing.
 
-```
+```text
 Required bandwidth (MB/s) = peak_write_throughput_MB_s × 1.25
 ```
 

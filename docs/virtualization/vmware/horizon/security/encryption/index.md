@@ -1,6 +1,6 @@
 # Horizon — Encryption
 
-```
+```text
   TLS Encryption Path: Client to Desktop
 ┌──────────────┐  TLS 1.2+   ┌───────────┐  TLS 1.2+  ┌──────────────────┐
 │  Horizon     │─────────────►│  UAG      │────────────►│  Connection      │
@@ -26,7 +26,7 @@
 | RDP (if enabled) | TLS 1.2 | Not recommended — use Blast or PCoIP |
 
 Set Blast cipher strength via Horizon group policy (ADMX templates):
-```
+```text
 Computer Configuration → Policies → VMware Blast
   Encryption Algorithms: AES-256-GCM:AES-128-GCM
   H264 Encoding: Enabled (reduce bandwidth without reducing encryption)
@@ -77,7 +77,7 @@ UAG requires separate certificates for:
 
 Clipboard direction can be restricted via GPO to prevent data exfiltration:
 
-```
+```yaml
 Group Policy → Computer Configuration → Policies → VMware Blast
   Clipboard Redirection:
     - Disabled: no clipboard between client and desktop
@@ -94,7 +94,7 @@ For high-security environments: set to "Client to Agent only" — users can copy
 
 USB traffic is tunneled through the Blast or PCoIP protocol connection (encrypted). Restrict USB device types via policy:
 
-```
+```text
 Group Policy → User Configuration → VMware Horizon Client Configuration → USB
   Allow USB Redirection: Enabled
   Exclude Device Family: Storage (block USB mass storage to prevent data exfiltration)
@@ -135,7 +135,7 @@ Restart-Service "VMware Horizon View Connection Server"
 
 Drive redirection (mapping client drives in the desktop) goes through the encrypted display protocol tunnel. To disable drive mapping entirely for compliance:
 
-```
+```text
 Group Policy → Computer Configuration → VMware Horizon Agent
   Drive Redirection: Disabled
 ```

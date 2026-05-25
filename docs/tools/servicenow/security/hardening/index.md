@@ -84,7 +84,7 @@ gs.info('Active admins (' + admins.length + '): ' + JSON.stringify(admins));
 
 ### Break-Glass Procedure
 
-```
+```yaml
 Account: snow-breakglass
 Storage: CyberArk Safe: SNOW-BreakGlass
 Access: PAM workflow — dual approval required

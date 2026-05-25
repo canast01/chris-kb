@@ -63,7 +63,7 @@ flowchart TD
 
 ### Log Format
 
-```
+```bash
 # atlassian-jira.log format:
 # TIMESTAMP  LEVEL  [THREAD] CLASS - MESSAGE
 2026-05-08 09:14:22,483 ERROR [http-nio-8080-exec-42 jira.action.IssueAction] - Unexpected error
@@ -414,7 +414,7 @@ Enable JMX in `setenv.sh` for external monitoring:
 ```
 
 Connect with JConsole or VisualVM:
-```
+```text
 jconsole <node-ip>:9999
 ```
 

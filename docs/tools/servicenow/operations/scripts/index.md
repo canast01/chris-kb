@@ -445,7 +445,7 @@ sys.exit(1 if issues > 0 else 0)
 
 **Example output:**
 
-```
+```text
 MID Server Status Report — 2026-05-08 08:00 UTC
 ================================================================
   mid-lon-prod-01                Up         validated=true  v=8.4.0.123      ip=10.10.1.200

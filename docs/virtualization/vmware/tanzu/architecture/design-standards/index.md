@@ -211,7 +211,7 @@ External database (PostgreSQL) and Redis are strongly recommended for Medium/Lar
 
 ### Harbor HA Architecture
 
-```
+```text
 Load Balancer (AVI or NSX-T)
     │
     ├── Harbor Core 1 (VM or pod)

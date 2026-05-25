@@ -3,7 +3,7 @@
 
 iDRAC access, hardware inventory, logs, alerts, and support evidence.
 
-```
+```text
   ┌──────────────────────────────────────────────────┐
   │                  VxRail Node                     │
   │  ┌────────────────────────────────────────────┐  │

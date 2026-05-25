@@ -1,6 +1,6 @@
 # NFS Troubleshooting
 
-```
+```text
         TRIAGE: STALE NFS HANDLE / MOUNT FAILURE
 ┌──────────────────────────────────────────────────────────────┐
 │  1. nc -zv <server> 2049 ── fail ──► firewall / routing     │

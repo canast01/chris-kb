@@ -3,7 +3,7 @@
 
 AWS Security Groups notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              Security Group (stateful firewall)         │
 │                                                         │

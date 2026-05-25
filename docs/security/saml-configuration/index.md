@@ -8,7 +8,7 @@ title: Standard SAML Configuration
 Canonical SAML 2.0 SSO reference for all KB-covered products. Covers SP/IdP concepts, attribute mapping, Azure AD (Entra ID) and Okta setup, security requirements, and troubleshooting. Product authentication pages link here for the shared baseline and document only their product-specific ACS URLs and entity IDs.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────┐
 │                     SAML 2.0 SSO Flow                               │
 │                                                                     │
@@ -90,7 +90,7 @@ The most common IdP across the estate. Follow this sequence for any new product 
 
 ### 1. Create the Enterprise Application
 
-```
+```text
 Azure Portal → Entra ID → Enterprise Applications
 → New Application → Create your own application
 → Name: "<Product> SAML SSO"  (e.g. "Jira SAML SSO")
@@ -100,7 +100,7 @@ Azure Portal → Entra ID → Enterprise Applications
 
 ### 2. Configure Single Sign-On
 
-```
+```text
 Enterprise App → Single sign-on → SAML
 ```
 
@@ -118,7 +118,7 @@ Enterprise App → Single sign-on → SAML
 
 Default claims to configure:
 
-```
+```text
 Unique User Identifier (Name ID):  user.mail
                                    (format: emailAddress)
 
@@ -132,7 +132,7 @@ Additional claims:
 
 ### 4. Download Metadata and Upload to Product
 
-```
+```text
 Certificate (Base64) → Download
 Federation Metadata XML → Download URL (copy, don't download)
 ```
@@ -141,7 +141,7 @@ Import either the certificate or the full metadata XML into the product's SAML c
 
 ### 5. Assign Users and Groups
 
-```
+```text
 Enterprise App → Users and Groups → Add user/group
 ```
 
@@ -153,7 +153,7 @@ Assign the relevant AD groups (not individual users). Only assigned users/groups
 
 ### 1. Create Application
 
-```
+```text
 Okta Admin → Applications → Create App Integration
 → SAML 2.0 → Next
 ```

@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle — Escalation
 
-```
+```text
   LCM Escalation Path
 ┌─────────────────────────────────────────────────────────────────┐
 │  Step 1: Collect upfront (avoids data-request delay)            │

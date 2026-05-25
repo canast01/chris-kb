@@ -3,7 +3,7 @@
 
 Failed or incomplete support bundle collection troubleshooting.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │         Support Bundle Failure Triage                │
   │                                                      │

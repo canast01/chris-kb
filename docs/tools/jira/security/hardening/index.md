@@ -32,7 +32,7 @@ curl -u "user@corp.example.com:API_TOKEN" \
 
 ### Break-Glass Admin Account
 
-```
+```yaml
 Account: jira-breakglass@corp.example.com
 Password: Stored in CyberArk / HashiCorp Vault
 MFA: TOTP code stored in Vault

@@ -281,7 +281,7 @@ symrdf -g 10 query -detail | grep "Invalid Tracks"
 
 Expected output during active resync:
 
-```
+```text
 Dev    Pair State    % Synced    Invalid Tracks
 ---    ----------    --------    --------------
 0A1    SyncInProg    73%         2,450
@@ -290,7 +290,7 @@ Dev    Pair State    % Synced    Invalid Tracks
 
 Expected output after completion:
 
-```
+```text
 Dev    Pair State     % Synced    Invalid Tracks
 ---    ----------     --------    --------------
 0A1    Synchronized   100%        0

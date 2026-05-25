@@ -1,6 +1,6 @@
 # Network Design
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────┐
 │                    Enterprise Network Design                        │
 │                                                                     │
@@ -154,7 +154,7 @@ All production servers and ESXi hosts connect to the network via LACP (802.3ad) 
 - Simplified cabling and configuration compared to traditional NIC teaming
 
 **Configuration example (Cisco NX-OS):**
-```
+```text
 interface port-channel 10
   description ESXi-Host-01
   switchport mode trunk

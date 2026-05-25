@@ -2,7 +2,7 @@
 
 Complete all items before starting any vSphere upgrade (vCenter, ESXi, vSAN, NSX).
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                 Pre-Upgrade Gate Checks                                  │
 ├─────────────────────────────┬────────────────────────────────────────────┤

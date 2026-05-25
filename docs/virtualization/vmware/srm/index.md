@@ -8,7 +8,7 @@ title: SRM
 Site Recovery Manager knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.
 </div>
 
-```
+```text
 ┌───────────────────────────────── VMware Site Recovery Manager Stack ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

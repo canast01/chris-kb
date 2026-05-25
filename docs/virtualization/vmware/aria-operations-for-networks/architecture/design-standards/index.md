@@ -1,6 +1,6 @@
 # Aria Operations for Networks — Design Standards
 
-```
+```text
 ┌──────────── Aria Networks Design: Sizing & Collector Placement ─────────────────┐
 │                                                                                  │
 │  Deployment size selection (Platform VM):                                        │

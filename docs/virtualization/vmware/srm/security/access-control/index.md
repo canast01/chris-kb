@@ -1,6 +1,6 @@
 # SRM — Access Control
 
-```
+```text
   SRM RBAC: Recovery Plan Roles → vCenter Permissions
 ┌──────────────────────────────────────────────────────────────┐
 │  AD Groups                SRM Roles (via vCenter Global Perms)│
@@ -38,7 +38,7 @@ SRM does not have its own user store. All authentication and authorization goes 
 
 These roles appear in vCenter after SRM is installed. Assign them via vCenter Permissions:
 
-```
+```text
 vCenter → Administration → Global Permissions → Add Permission
   User/Group: CORP\SRM-Admins
   Role: Site Recovery Administrator
@@ -63,14 +63,14 @@ Separate the configuration role (SRM-Admins) from the run role (SRM-DR-RunTeam) 
 
 SRA (Storage Replication Adapter) stores array credentials encrypted in SRM:
 
-```
+```text
 Site Recovery → Storage → Array Pairs → [pair] → Configure Adapter
   Array credentials: FlashArray management IP + API token
   Credentials are stored encrypted — only SRM can decrypt them
 ```
 
 Rotate SRA credentials:
-```
+```text
 1. Create new API token on storage array
 2. Site Recovery → Storage → Array Pairs → [pair] → Edit → update credentials
 3. Delete old API token from array
@@ -107,7 +107,7 @@ Block direct access from desktop VLANs. Use a dedicated management VLAN for SRM 
 ## Audit Trail
 
 SRM logs all actions to vCenter events:
-```
+```text
 vCenter → Monitor → Events → filter by "drm" (Site Recovery events prefix)
 ```
 

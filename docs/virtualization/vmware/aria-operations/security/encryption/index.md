@@ -1,6 +1,6 @@
 # Aria Operations — Encryption
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │            Aria Operations TLS Encryption Paths             │
 ├─────────────────────────────────────────────────────────────┤
@@ -35,7 +35,7 @@ Aria Operations ships with a self-signed certificate. Replace with a CA-signed c
 
 **Via UI:**
 
-```
+```text
 Administration → Certificates → Replace Certificate
 ```
 

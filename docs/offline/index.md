@@ -6,7 +6,7 @@ title: You're Offline
 
 No internet connection. Pages you've visited before are still available — use the navigation to browse cached content.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │                  Offline Access Flow                     │
 └─────────────────────────┬────────────────────────────────┘

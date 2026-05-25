@@ -2,7 +2,7 @@
 
 Azure Dashboards provide a shared, customisable view of Azure resource telemetry.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │                  Azure Dashboard Flow                        │
 │                                                              │

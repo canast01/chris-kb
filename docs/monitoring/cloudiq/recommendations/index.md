@@ -1,6 +1,6 @@
 # CloudIQ: Proactive Recommendations and Implementation Tracking
 
-```
+```text
 AI Recommendations — CloudIQ
 ┌──────────────────────────────────────┐
 │  Telemetry analysis identifies waste │

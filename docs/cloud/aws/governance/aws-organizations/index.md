@@ -1,6 +1,6 @@
 # AWS AWS Organizations
 
-```
+```text
 AWS Organizations: Root → OUs → Accounts → SCPs
 ──────────────────────────────────────────────────────────────
 

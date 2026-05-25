@@ -2,7 +2,7 @@
 
 > Part of the [Pure Storage Evergreen](../index.md) reference.
 
-```
+```text
 Evergreen Automation Flow
   Python script
   └── Pure1 REST API (JWT auth)
@@ -212,7 +212,7 @@ Open Ubuntu from the Start menu.
 
 **Step 4 — Set variables and run**
 
-```
+```bash
 pip install py-pure-client
 export FA_HOST=192.168.1.10
 export FA_API_TOKEN=your-token-here
@@ -407,13 +407,13 @@ else:
 
 **Step 3 — Open Command Prompt and install packages**
 
-```
+```bash
 pip install py-pure-client tabulate
 ```
 
 **Step 4 — Set variables and run**
 
-```
+```bash
 set FA_HOST=192.168.1.10
 set FA_API_TOKEN=your-token-here
 cd %USERPROFILE%\Desktop
@@ -626,7 +626,7 @@ Open Ubuntu from the Start menu.
 
 **Step 4 — Copy the files and run the playbook**
 
-```
+```bash
 cp /mnt/c/Users/YourName/Desktop/evergreen_pre_upgrade.yml ~/
 cp /mnt/c/Users/YourName/Desktop/flasharrays.yml ~/
 cd ~
@@ -803,13 +803,13 @@ Press the Windows key, type `PowerShell`, right-click **Windows PowerShell**, ch
 
 **Step 4 — Allow script execution (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\evergreen_usage_pure1.ps1
 ```

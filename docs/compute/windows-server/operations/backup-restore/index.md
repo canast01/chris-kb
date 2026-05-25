@@ -2,7 +2,7 @@
 
 Veeam Agent for Windows, Windows Server Backup, restore procedures, and validation steps.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │          Windows Backup & Restore Flow                   │
 ├──────────────────────────┬───────────────────────────────┤

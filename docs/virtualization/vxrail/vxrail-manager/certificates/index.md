@@ -3,7 +3,7 @@
 
 Certificate status, expiration review, renewal planning, and service impact.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │          VxRail Certificate Trust Chain              │
   │                                                      │

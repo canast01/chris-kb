@@ -1,6 +1,6 @@
 # VxRail Pre-Change Health Validation
 
-```
+```text
 Pre-Upgrade Checklist Flow
 ┌──────────────────────────────────────────────────────────────┐
 │  VxRail Manager         vCenter               vSAN           │

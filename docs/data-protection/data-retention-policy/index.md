@@ -103,7 +103,7 @@ Set-VBRJobScheduleOptions -Job (Get-VBRJob -Name "BKP-SQL-PROD-01") `
 
 ### Commvault — Storage Policy Retention Rules
 
-```
+```text
 CommCell Console → Storage Policy → Right-click Copy → Properties → Retention:
 
 Primary Copy (Hot):

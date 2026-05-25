@@ -139,7 +139,7 @@ Open WSL (Ubuntu from the Start menu), or open Git Bash.
 
 **Step 4 — Set variables and run**
 
-```
+```bash
 export ONTAP_HOST=192.168.1.100
 export ONTAP_USER=admin
 export ONTAP_PASS=yourpassword

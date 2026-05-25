@@ -86,7 +86,7 @@ rm /etc/<service>.conf.pre-<date>   # only after validation passes
 
 ## Rollback Decision Tree
 
-```
+```text
 Validation fails?
   ├─ Immediate: service down / error rate > 3×baseline
   │     → Roll back now; notify stakeholders

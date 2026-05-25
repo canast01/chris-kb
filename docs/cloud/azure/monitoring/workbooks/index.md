@@ -2,7 +2,7 @@
 
 Azure Monitor Workbooks are interactive, parameterised reports that combine text, queries, metrics, and visualisations in a single pane.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │                   Workbook Architecture                      │
 │                                                              │

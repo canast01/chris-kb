@@ -59,7 +59,7 @@ flowchart TD
 
 ### Zone Membership Model
 
-```
+```text
   Fabric (single switch domain or director)
   ┌─────────────────────────────────────────────────────────────────────────┐
   │  Active Zone Set: dc1-fabA-prod                                         │
@@ -93,7 +93,7 @@ flowchart TD
 
 ### Naming Convention
 
-```
+```yaml
   Alias:    <hostname>_<hbaN>               e.g.  esxi01_hba0
   Alias:    <array>_<controller>_<portN>    e.g.  fa01_ct0_p0
   Zone:     <host-alias>__<array-alias>     e.g.  esxi01_hba0__fa01_ct0_p0

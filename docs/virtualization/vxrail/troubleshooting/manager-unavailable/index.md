@@ -3,7 +3,7 @@
 
 VxRail Manager UI or service availability issues.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │         VxRail Manager Unavailable Triage            │
   │                                                      │

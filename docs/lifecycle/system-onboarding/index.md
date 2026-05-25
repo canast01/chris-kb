@@ -95,7 +95,7 @@ firewall-cmd --reload
 
 ### CyberArk PAM Registration
 
-```
+```yaml
 CyberArk UI: Accounts → Safes → <Environment>-Safe → Add Account
   Account type: Linux / Windows
   Platform:     LinuxSSH / WinServerLocal

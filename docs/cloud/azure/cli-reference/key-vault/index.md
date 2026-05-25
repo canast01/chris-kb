@@ -2,7 +2,7 @@
 
 > Part of the Azure CLI Reference.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │                   Key Vault CLI Flow                     │
 │                                                          │

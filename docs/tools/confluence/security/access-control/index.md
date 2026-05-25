@@ -11,7 +11,7 @@ Confluence has two levels of access control:
 
 Both are additive: a user must have space permission before page restrictions apply.
 
-```
+```text
 Hierarchy:
   Global Permissions (who can log in, create spaces)
       └── Space Permissions (who can access and edit within a space)
@@ -29,7 +29,7 @@ Global permissions control access to Confluence itself. Navigate to **General Co
 | Confluence System Administrators | Full admin access | `confluence-administrators` (2–4 accounts max) |
 | Confluence Administrators | Space and user management, not system settings | `confluence-power-users` |
 
-```
+```text
 Best practices for Global Permissions:
 - Grant "Can Use" to an AD group (e.g., "All Staff" or "confluence-users")
   — do NOT grant to "anonymous" (public access)
@@ -51,7 +51,7 @@ Space permissions are configured per-space. Navigate to the space > **Space Sett
 
 ### Group-Based Space Permissions
 
-```
+```yaml
 Recommended pattern — use AD groups, not individual users:
 - confluence-<space-key>-viewers  → View-only access
 - confluence-<space-key>-editors  → Create and edit pages
@@ -60,7 +60,7 @@ Recommended pattern — use AD groups, not individual users:
 Map these to AD groups via LDAP sync.
 ```
 
-```
+```yaml
 Example: IT Infrastructure space (space key: INFRA)
 - View: AD group "confluence-infra-viewers"    → All IT staff
 - Edit: AD group "confluence-infra-editors"    → Infrastructure engineers
@@ -93,7 +93,7 @@ Page restrictions limit who can view or edit individual pages, independent of sp
 2. Set **Viewing restricted to**: specific users or groups.
 3. Set **Editing restricted to**: specific users or groups.
 
-```
+```yaml
 When to use page restrictions:
 - HR or salary information within a general IT space
 - Security incident pages (restricted to Security team)
@@ -101,7 +101,7 @@ When to use page restrictions:
 - Draft pages not ready for general viewing
 ```
 
-```
+```text
 Avoid over-restricting individual pages — it creates maintenance overhead.
 Prefer separate restricted spaces for consistently sensitive content.
 ```
@@ -129,7 +129,7 @@ curl -u admin:password \
 
 Map Confluence groups to Active Directory groups via the LDAP directory configuration.
 
-```
+```yaml
 AD Group Design for Confluence:
 - GG-Confluence-Users          → Maps to: confluence-users (can log in)
 - GG-Confluence-Admins         → Maps to: confluence-administrators

@@ -1,6 +1,6 @@
 # DNS Zones
 
-```
+```text
         ZONE STRUCTURE
 ┌──────────────────────────────────────────────────────────────┐
 │  Forward zone: corp.local  (primary / AD-integrated)         │

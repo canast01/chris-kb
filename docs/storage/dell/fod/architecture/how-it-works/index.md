@@ -6,7 +6,7 @@ Dell Flex on Demand (FOD) is a consumption-based capacity model in which additio
 
 ## Metering Model
 
-```
+```text
 Total Installed Capacity (physically installed)
     │
     ├── Committed Baseline (licensed, always billed)

@@ -1,6 +1,6 @@
 # Aria Operations for Networks — Escalation
 
-```
+```text
 ┌──────────── Aria Networks Escalation Path ─────────────────────────────────────┐
 │                                                                                 │
 │  Pre-escalation (always collect first)                                          │

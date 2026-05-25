@@ -3,7 +3,7 @@
 
 AWS NAT Gateway notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  NAT Gateway Flow                       │
 │                                                         │

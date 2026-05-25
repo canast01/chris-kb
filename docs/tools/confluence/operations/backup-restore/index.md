@@ -63,7 +63,7 @@ curl -u admin:token \
 
 Location of generated backups:
 
-```
+```text
 <CONFLUENCE_HOME>/backups/
 ```
 

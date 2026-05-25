@@ -39,7 +39,7 @@ Maintain a stakeholder list specific to each maintenance window. Review before s
 ## Notification Templates
 
 **Advance notice:**
-```
+```yaml
 Subject: Scheduled Maintenance – <Service Name> – <Date> <Start Time> to <End Time> <TZ>
 
 We are performing scheduled maintenance on <service/system>.
@@ -53,7 +53,7 @@ If you have concerns about this window, please respond to this message by <date>
 ```
 
 **Completion notification:**
-```
+```yaml
 Subject: Maintenance Complete – <Service Name>
 
 Maintenance on <service/system> completed at <HH:MM TZ>.

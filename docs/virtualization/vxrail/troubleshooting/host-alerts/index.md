@@ -3,7 +3,7 @@
 
 ESXi host warnings, disconnected hosts, hardware alerts, and cluster impact.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │           VxRail Host Alert Triage Flow              │
   │                                                      │

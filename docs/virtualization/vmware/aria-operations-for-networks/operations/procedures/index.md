@@ -1,6 +1,6 @@
 # Aria Operations for Networks — Procedures
 
-```
+```text
 ┌──────────── Aria Networks Operational Procedure Flow ──────────────────────────┐
 │                                                                                 │
 │  Add data source (vCenter / NSX-T / physical switch)                            │
@@ -132,7 +132,7 @@ interface GigabitEthernet1/0/1
 
 Verify in AON within 5–10 minutes:
 
-```
+```bash
 # AON UI search
 flows where source = physical and time_range = "last 15 minutes"
 ```
@@ -169,7 +169,7 @@ In the application view, review:
 - **External flows**: to/from IPs outside the application definition
 
 Filter flows:
-```
+```text
 flows where destination application = "CRM-App" and destination port = 3306
 flows where source application = "CRM-App" and destination = internet
 ```

@@ -40,7 +40,7 @@ Confluence maps SAML attributes to user profile fields. Typical mapping:
 
 ### SAML Security Settings
 
-```
+```yaml
 Recommended SAML configuration:
 - Sign Authentication Requests: Enabled
 - Require Signed Assertions: Enabled
@@ -79,7 +79,7 @@ LDAP integration syncs user accounts and group memberships from Active Directory
 
 ### LDAP Security
 
-```
+```yaml
 LDAP hardening:
 - Always use LDAPS (port 636) — plain LDAP sends credentials in cleartext
 - Use a dedicated read-only service account for the LDAP bind
@@ -104,7 +104,7 @@ systemctl restart confluence
 
 Local accounts should be limited to break-glass admin accounts and system integration accounts.
 
-```
+```yaml
 Local account policy:
 - Minimum: 3 local accounts (primary sysadmin, secondary sysadmin, monitoring service account)
 - All local admin accounts: password managed in PAM vault
@@ -149,7 +149,7 @@ When using SAML SSO, configure MFA at the IdP:
 
 ### TOTP Plugin Configuration
 
-```
+```text
 Plugin configuration (Midori TOTP example):
 1. Install plugin from Marketplace
 2. Go to Administration > Two-Factor Authentication
@@ -161,7 +161,7 @@ Plugin configuration (Midori TOTP example):
 
 ## Session Management
 
-```
+```yaml
 Recommended session settings (General Configuration > Security Configuration):
 - Maximum Authentication Attempts: 5 (then lock account for 30 minutes)
 - Session Timeout: 480 minutes (8 hours) or match IdP session length

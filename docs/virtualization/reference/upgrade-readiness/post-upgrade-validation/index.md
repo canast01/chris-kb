@@ -2,7 +2,7 @@
 
 Complete all items after every upgrade (vCenter, ESXi, vSAN, NSX, VxRail). Document evidence for the change record.
 
-```
+```text
 ┌────────────────────────────────────────────────────────────────────────┐
 │              Post-Upgrade Validation Checklist                         │
 ├─────────────────────┬──────────────────────────────────────────────────┤

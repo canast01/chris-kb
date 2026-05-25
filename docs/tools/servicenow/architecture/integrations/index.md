@@ -50,7 +50,7 @@ ServiceNow exposes a comprehensive REST API surface. The primary endpoints are d
 
 External systems push data to ServiceNow via the Table API, Import Set API, or custom Scripted REST APIs.
 
-```
+```text
 POST https://<instance>.service-now.com/api/now/table/incident
 Authorization: Basic <base64>
 Content-Type: application/json
@@ -88,7 +88,7 @@ gs.log('PD response: ' + response.getStatusCode());
 
 Legacy integrations often use SOAP. ServiceNow auto-generates WSDL for every table:
 
-```
+```text
 https://<instance>.service-now.com/<table_name>.do?WSDL
 ```
 

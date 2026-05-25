@@ -1,6 +1,6 @@
 # NSX — Integrations
 
-```
+```text
 ┌─────────────────────────────────── NSX Architecture — Integrations ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -159,7 +159,7 @@ Tier-0 gateways peer with physical routers via eBGP (typically) or iBGP. The Edg
 
 ### Standard BGP Design
 
-```
+```text
 Physical Router (AS 65000)
     |  eBGP
 Edge Node Active (T0 Uplink)

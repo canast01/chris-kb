@@ -1,6 +1,6 @@
 # Tanzu — Install and Upgrade
 
-```
+```text
 ┌──────────────── Tanzu Upgrade Sequence ────────────────────────────────────────┐
 │                                                                                 │
 │  Step 1: vCenter upgrade (if upgrading vSphere)                                │
@@ -43,7 +43,7 @@
 
 ## Enable Workload Management on vSphere
 
-```
+```text
 vCenter → Workload Management → Get Started
   Step 1: Select Cluster (must be vSAN cluster or have compatible storage)
   Step 2: Control Plane Size: Tiny/Small/Medium/Large
@@ -117,7 +117,7 @@ tanzu cluster create --file workload-cluster.yaml
 
 ## Harbor Deployment (OVA)
 
-```
+```text
 vCenter → Deploy OVF Template → Harbor-<version>.ova
   Network: Management network
   Storage: shared NFS or vSAN datastore (images stored here)

@@ -1,6 +1,6 @@
 # FlashBlade — Scripts
 
-```
+```text
 Automation Architecture — FlashBlade
   Python / Bash / Ansible
              │
@@ -204,13 +204,13 @@ sys.exit(worst)
 **Step 3 — Open Command Prompt and install the package**
 
 Press the Windows key, type `cmd`, press Enter:
-```
+```bash
 pip install py-pure-client
 ```
 
 **Step 4 — Set variables and run**
 
-```
+```bash
 set FB_HOST=192.168.1.20
 set FB_API_TOKEN=your-token-here
 cd %USERPROFILE%\Desktop

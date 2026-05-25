@@ -1,6 +1,6 @@
 # Horizon — Scripts
 
-```
+```text
   Automation via PowerCLI / REST API
 ┌──────────────────────────────────────────────────────────┐
 │  Connect-HVServer ──► token/session                      │

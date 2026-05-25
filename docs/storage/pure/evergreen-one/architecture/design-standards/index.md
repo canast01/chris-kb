@@ -1,6 +1,6 @@
 # Evergreen//One — Design Standards
 
-```
+```text
   Capacity Planning                  Refresh Triggers
   ┌──────────────────────┐           ┌──────────────────────┐
   │ Current TiB          │           │ >90% committed ──►   │
@@ -41,14 +41,14 @@ The committed reserve is the minimum monthly TiB the customer commits to pay for
 
 ### Reserve Calculation
 
-```
+```text
 Committed Reserve (TiB) = (Current TiB × Growth Factor) × Safety Buffer
 Growth Factor = (1 + Monthly Growth Rate) ^ Contract Months
 Safety Buffer = 1.15 (15% above projected needs)
 ```
 
 Example:
-```
+```yaml
 Current: 50 TiB consumed
 Monthly growth rate: 2%
 Contract: 36 months
@@ -60,7 +60,7 @@ Reserve: 50 × 2.04 × 1.15 = 117 TiB committed
 
 The burst headroom defines the maximum TiB above reserve the array can serve before a capacity increase order is required. Set to at least 20% above the expected peak:
 
-```
+```text
 Burst Headroom = Committed Reserve × 0.20
 ```
 
@@ -153,7 +153,7 @@ Evergreen//One provides a 99.9999% availability SLA (approximately 32 seconds do
 
 ### Array Names
 
-```
+```text
 <site>-fa-<number>       # FlashArray
 <site>-fb-<number>       # FlashBlade
 ```
@@ -162,7 +162,7 @@ Examples: `lon-fa-01`, `ams-fb-01`
 
 ### Volume Names
 
-```
+```text
 <host>-<purpose>-<number>
 ```
 
@@ -170,7 +170,7 @@ Examples: `esxi-01-boot-01`, `sql-prod-data-01`, `oracle-asm-01`
 
 ### Host and Host Group Names
 
-```
+```text
 <hostname>               # Host: match the actual server hostname
 <cluster>-hg             # Host Group: cluster name + -hg
 ```
@@ -179,7 +179,7 @@ Examples: `esxi-01`, `vsan-cluster-hg`, `sql-prod-hg`
 
 ### Protection Group Names
 
-```
+```text
 <workload>-pg            # Protection group
 <source-site>-to-<dest-site>-pg   # Replication protection group
 ```

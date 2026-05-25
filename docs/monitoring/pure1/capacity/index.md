@@ -1,6 +1,6 @@
 # Pure1 — Capacity
 
-```
+```text
 Capacity Trending — Pure1
                                    threshold (80%)
                                    │

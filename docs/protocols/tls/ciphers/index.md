@@ -4,7 +4,7 @@ A cipher suite specifies the algorithms used for key exchange, authentication, e
 
 ## Cipher Suite Name Structure (TLS 1.2)
 
-```
+```text
 TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 │   │         │   │        │   │
 │   │         │   │        │   MAC (integrity)
@@ -16,7 +16,7 @@ TLS protocol prefix
 ```
 
 TLS 1.3 simplifies this — cipher suites only specify the symmetric cipher and hash:
-```
+```text
 TLS_AES_256_GCM_SHA384
 TLS_CHACHA20_POLY1305_SHA256
 ```
@@ -25,7 +25,7 @@ TLS_CHACHA20_POLY1305_SHA256
 
 ### TLS 1.3 (preferred — no choice needed, all are secure)
 
-```
+```text
 TLS_AES_256_GCM_SHA384
 TLS_AES_128_GCM_SHA256
 TLS_CHACHA20_POLY1305_SHA256
@@ -33,7 +33,7 @@ TLS_CHACHA20_POLY1305_SHA256
 
 ### TLS 1.2 — Allowed
 
-```
+```text
 TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
@@ -87,7 +87,7 @@ SSLHonorCipherOrder on
 
 ### HAProxy
 
-```
+```text
 bind *:443 ssl crt /etc/ssl/haproxy.pem \
   ciphers ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384 \
   no-sslv3 no-tlsv10 no-tlsv11

@@ -117,7 +117,7 @@ Standard deployment: 4+ nodes in a single physical location sharing one vSAN dat
 
 Two VxRail nodes with a vSAN Witness Appliance hosted remotely. Provides FTT=1 with only 2 physical nodes — suitable for branch office deployments.
 
-```
+```text
 Site A: Node 1 + Node 2
 Remote: vSAN Witness Appliance (1 vCPU, 8 GB RAM VM)
 ```

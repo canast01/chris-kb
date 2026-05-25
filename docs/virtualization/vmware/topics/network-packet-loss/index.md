@@ -1,6 +1,6 @@
 # Network Packet Loss Validation
 
-```
+```text
 ┌──────────── Network Packet Loss Triage Path ───────────────────────────────────┐
 │                                                                                 │
 │  Symptom: packet drops / slow vMotion / vSAN network errors                     │

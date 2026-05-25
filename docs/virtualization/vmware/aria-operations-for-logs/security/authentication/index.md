@@ -1,6 +1,6 @@
 # Aria Ops for Logs — Authentication
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Ops for Logs Authentication Flow               │
 ├─────────────────────────────────────────────────────────────┤
@@ -39,13 +39,13 @@ Use LDAPS (port 636) for production — plain LDAP (port 389) is not acceptable 
 
 **Import the domain CA certificate first:**
 
-```
+```text
 Administration → SSL → Import Certificate → paste root CA PEM
 ```
 
 **Configure AD:**
 
-```
+```text
 Administration → Authentication → Active Directory → Configure
 ```
 
@@ -65,7 +65,7 @@ Test the connection before saving — Aria Ops for Logs performs a test LDAP bin
 
 When deployed via LCM, VIDM is available as an SSO provider. For standalone deployments, configure VIDM integration manually:
 
-```
+```text
 Administration → Authentication → VMware Identity Manager
 ```
 

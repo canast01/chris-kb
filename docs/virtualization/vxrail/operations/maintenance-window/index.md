@@ -1,6 +1,6 @@
 # VxRail Maintenance Window
 
-```
+```text
 Maintenance Window Flow
 ┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐
 │  Pre-Maintenance │   │    Execute       │   │  Post-Validate   │

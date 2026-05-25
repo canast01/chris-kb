@@ -4,7 +4,7 @@
 Cisco Nexus Dashboard unified operations platform — architecture, NDFC/NDI services, fabric health, ACI integration, and operational runbooks.
 </div>
 
-```
+```text
 Nexus Dashboard — Fabric Monitoring
 ┌───────────────────────────────────────────┐
 │      ACI Fabric / NX-OS Fabric            │

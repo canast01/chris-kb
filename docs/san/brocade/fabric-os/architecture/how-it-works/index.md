@@ -38,7 +38,7 @@ Directors (X7-4 / X7-8) support non-disruptive firmware upgrades (HA chassis wit
 
 Standard dual-fabric design:
 
-```
+```text
 Fabric A:  Host HBA Port 0 → G620-SW01 → Storage Target (Fabric A ports)
 Fabric B:  Host HBA Port 1 → G620-SW02 → Storage Target (Fabric B ports)
 ```
@@ -75,7 +75,7 @@ portloginshow # FLOGI database — all logged-in devices
 | Peer zone | Multiple initiators share targets without seeing each other | Multi-host shared-target environments |
 
 **Single-initiator zone model (required):**
-```
+```yaml
 Zone: esxi01_hba0__pure_ct0_p0
   Member: esxi01_hba0   (WWPN: 10:00:00:00:c9:12:34:56)   ← one initiator only
   Member: pure_ct0_p0   (WWPN: 52:4a:93:7c:00:00:00:01)   ← one or more targets

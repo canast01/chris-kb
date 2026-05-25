@@ -1,6 +1,6 @@
 # Aria Ops for Logs — Backup & Restore
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Ops for Logs — Backup Approach                 │
 ├─────────────────────────────────────────────────────────────┤
@@ -113,7 +113,7 @@ Store these JSON files in version control alongside other infrastructure configu
 
 Long-term log retention beyond the default hot tier is configured via the archive feature. This is not a backup — it archives indexed logs to an NFS share for extended retention and compliance.
 
-```
+```text
 Administration → Archiving → Configure → enable NFS archive
 ```
 
@@ -152,7 +152,7 @@ curl -sk -u 'admin:<password>' \
 
 5. Verify log ingestion is active:
 
-```
+```text
 Administration → Cluster → each node should show state Active and ingestion rate > 0 events/sec
 ```
 

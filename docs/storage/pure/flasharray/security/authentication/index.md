@@ -1,6 +1,6 @@
 # FlashArray — Authentication
 
-```
+```text
 FlashArray Authentication Flow
   Human admin login:
     Browser/SSH ──► SAML SSO configured?

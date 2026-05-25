@@ -8,7 +8,7 @@ Access control in Git hosting platforms governs who can read, write, and adminis
 
 Git platforms implement access control at multiple layers:
 
-```
+```text
 Organisation / Instance level
   └── Team / Group level
         └── Repository level
@@ -142,7 +142,7 @@ cat .github/CODEOWNERS
 
 **Example CODEOWNERS file:**
 
-```
+```bash
 # Default owner for everything
 *                          @org/platform-team
 
@@ -243,7 +243,7 @@ gh api /orgs/{org}/actions/permissions/workflow \
 
 ## GitLab Group and Project Permissions
 
-```
+```text
 Instance level
   └── Group (namespace)
         └── Subgroup

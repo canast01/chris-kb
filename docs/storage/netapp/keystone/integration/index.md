@@ -25,7 +25,7 @@ Collector configuration is managed via a terminal UI (TUI) accessible on the Col
 
 Keystone exposes a REST API for programmatic consumption reporting and subscription visibility. Use for custom dashboards, ServiceNow integration, or automated capacity reports.
 
-```
+```bash
 # List subscriptions
 GET /api/keystone/v1/subscriptions
 

@@ -1,6 +1,6 @@
 # Infrastructure Health Monitoring
 
-```
+```text
 Health Monitoring Framework
 ┌──────────────────────────────────────────────────┐
 │  What to Monitor                                 │

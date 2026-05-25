@@ -15,7 +15,7 @@ PowerPath does not have its own RBAC system — access control is delegated enti
 
 Recommended sudoers entry for a monitoring service account on Linux:
 
-```
+```text
 svc-monitoring ALL=(root) NOPASSWD: /usr/sbin/powermt display dev=all, /usr/sbin/powermt display ports class=all, /usr/sbin/powermt check_registration
 ```
 

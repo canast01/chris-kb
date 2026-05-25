@@ -1,6 +1,6 @@
 # Pure Storage Operations — Alerts
 
-```
+```text
   Pure Alert Flow
 
   FlashArray / FlashBlade

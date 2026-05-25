@@ -319,7 +319,7 @@ curl -u "${JIRA_USER}:${JIRA_TOKEN}" \
 
 ### Syntax
 
-```
+```text
 <field> <operator> <value> [AND|OR <field> <operator> <value>] [ORDER BY <field> ASC|DESC]
 ```
 

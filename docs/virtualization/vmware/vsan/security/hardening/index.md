@@ -2,7 +2,7 @@
 
 vSAN hardening covers the security baseline configuration applied to the ESXi hosts that form the vSAN cluster, the vCenter managing the cluster, and the vSAN-specific settings. References: VMware vSphere Security Configuration Guide (Broadcom), DISA STIG for vSphere ESXi.
 
-```
+```text
 HARDENING LAYERS
 
   ┌──────────────────────────────────────────────────────┐

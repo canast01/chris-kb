@@ -1,6 +1,6 @@
 # FlashArray — Procedures
 
-```
+```text
 Host Volume Provisioning Flow
   ┌─────────────────────────────────────────────────────┐
   │  Zone FC fabric (single-initiator / single-target)  │

@@ -1,6 +1,6 @@
 # Pure Storage Evergreen Troubleshooting
 
-```
+```text
 Evergreen Troubleshooting Flow
   Symptom / alert
           │

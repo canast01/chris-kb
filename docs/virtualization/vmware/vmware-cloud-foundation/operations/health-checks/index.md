@@ -1,6 +1,6 @@
 # VCF — Health Checks
 
-```
+```text
 VCF Daily Health Check — Coverage Map
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager                                       │

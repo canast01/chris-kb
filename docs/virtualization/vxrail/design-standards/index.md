@@ -2,7 +2,7 @@
 
 > Part of the [VxRail](../index.md) reference.
 
-```
+```text
 VxRail Design Requirements — Key Standards
 ┌─────────────────────────────────────────────────────────────┐
 │  Network VLAN Separation (required)                         │
@@ -91,7 +91,7 @@ Jumbo frames (MTU 9000) must be configured end-to-end for vMotion and vSAN VLANs
 
 **Verify current bundle version:**
 
-```
+```text
 VxRail Manager → System → Software Versions → Current Bundle
 ```
 

@@ -1,6 +1,6 @@
 # EC2 — Instances
 
-```
+```text
 EC2 Instance CLI: State Management
 ──────────────────────────────────────────────────────────────
 

@@ -2,7 +2,7 @@
 
 Backup policies define when backups run, how many recovery points are retained, and at what tiers
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │                      Backup Policy                           │
 │                                                              │

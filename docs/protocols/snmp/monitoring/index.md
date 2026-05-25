@@ -2,7 +2,7 @@
 
 SNMP is the primary protocol for collecting metrics from network devices, storage arrays, and infrastructure components that do not expose native Prometheus endpoints. This page covers integrating SNMP with the main monitoring platforms.
 
-```
+```text
         SNMP MONITORING INTEGRATION
 ┌───────────────────────────────────────────────────────────────┐
 │  Infrastructure                                               │
@@ -85,7 +85,7 @@ scrape_configs:
 
 ## Zabbix SNMP Configuration
 
-```
+```bash
 # Add SNMP host in Zabbix:
 # Configuration → Hosts → Create host
 # Interface: SNMP, IP: <device-ip>, Port: 161

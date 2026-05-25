@@ -1,6 +1,6 @@
 # CloudIQ: Health Score, Component Status, and Connectivity
 
-```
+```text
 Health Score Composition
 ┌───────────────────────────────────────────┐
 │  Component Scores → Weighted System Score │

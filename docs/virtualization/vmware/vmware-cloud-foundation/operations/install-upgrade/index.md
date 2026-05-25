@@ -1,6 +1,6 @@
 # VCF Operations — Install & Upgrade
 
-```
+```text
 VCF Upgrade Flow — SDDC Manager Orchestration
 ┌─────────────────────────────────────────────────────┐
 │  Step 1: Bundle Acquisition                         │

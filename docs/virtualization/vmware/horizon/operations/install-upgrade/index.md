@@ -1,6 +1,6 @@
 # Horizon — Install and Upgrade
 
-```
+```text
   Upgrade Sequence (strictly ordered)
 ┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
 │  1. vCenter   │──►│  2. Connection│──►│  3. UAG       │──►│  4. Horizon   │

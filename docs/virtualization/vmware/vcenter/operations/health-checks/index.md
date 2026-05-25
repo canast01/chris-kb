@@ -1,6 +1,6 @@
 # vCenter — Health Checks
 
-```
+```text
 Health Check Coverage Map
 ════════════════════════════════════════════════════════
 

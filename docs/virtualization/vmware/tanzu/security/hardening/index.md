@@ -1,6 +1,6 @@
 # Tanzu — Hardening
 
-```
+```text
 ┌────────────────── Tanzu Hardening Controls ────────────────────────────────────┐
 │                                                                                 │
 │  Namespace Level                                                                │
@@ -141,7 +141,7 @@ spec:
 
 Block images with critical CVEs from being pulled:
 
-```
+```text
 Harbor UI → [Project] → Configuration
   Prevent vulnerable images from running: Yes
   Severity threshold: High

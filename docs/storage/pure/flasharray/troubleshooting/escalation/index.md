@@ -1,6 +1,6 @@
 # FlashArray — Escalation
 
-```
+```text
 Pure Support Escalation Path
   Array alert / incident
           │

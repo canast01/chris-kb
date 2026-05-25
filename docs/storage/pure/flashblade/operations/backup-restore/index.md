@@ -1,6 +1,6 @@
 # FlashBlade — Backup & Restore
 
-```
+```text
 FlashBlade Data Protection Tiers
   ┌────────────────────────────────────────────────────────────┐
   │  Local Snapshots (filesystem / bucket)                     │

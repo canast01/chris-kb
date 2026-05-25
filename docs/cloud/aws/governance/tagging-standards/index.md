@@ -1,6 +1,6 @@
 # AWS Tagging Standards
 
-```
+```text
 Tagging Standards: Mandatory Tags → Enforcement → Reporting
 ──────────────────────────────────────────────────────────────
 

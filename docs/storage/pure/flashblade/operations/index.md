@@ -1,6 +1,6 @@
 # FlashBlade — Operations
 
-```
+```text
 FlashBlade Day-to-Day Operations
   Pure1 Cloud ──► fleet health + AI alerts + capacity forecast
           │

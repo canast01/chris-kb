@@ -1,6 +1,6 @@
 # DNS Troubleshooting
 
-```
+```text
         TRIAGE: NSLOOKUP FAILS
 ┌──────────────────────────────────────────────────────────────┐
 │  1. nslookup host.example.local ── no answer ──► continue       │

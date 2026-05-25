@@ -1,6 +1,6 @@
 # FlashArray — Backup & Restore
 
-```
+```text
 FlashArray Data Protection Tiers
   ┌────────────────────────────────────────────────────────────┐
   │  Tier 1: Local Snapshots (Protection Groups)               │

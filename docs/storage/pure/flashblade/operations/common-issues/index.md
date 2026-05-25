@@ -1,6 +1,6 @@
 # FlashBlade — Common Issues
 
-```
+```text
 FlashBlade Triage Flow
   Alert / Symptom reported
           │

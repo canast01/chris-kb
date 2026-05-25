@@ -2,7 +2,7 @@
 
 iSCSI multipathing uses multiple network paths between initiator and target for redundancy and load distribution.
 
-```
+```text
         iSCSI MULTIPATH TOPOLOGY
 ┌─────────────────────────────────────────────────────────────────┐
 │   HOST                                                          │
@@ -23,7 +23,7 @@ iSCSI multipathing uses multiple network paths between initiator and target for 
 
 ## Recommended Network Layout
 
-```
+```text
 Server NIC0 → Storage VLAN A (10.10.1.x) → Array Port A
 Server NIC1 → Storage VLAN B (10.10.2.x) → Array Port B
 ```

@@ -197,7 +197,7 @@ Understanding the plan output symbols:
 | `-/+` | Resource must be destroyed and recreated |
 | `<=` | Data source will be read |
 
-```
+```bash
 # Example plan output snippet
   # aws_instance.web will be updated in-place
   ~ resource "aws_instance" "web" {

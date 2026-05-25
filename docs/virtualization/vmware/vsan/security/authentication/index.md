@@ -6,7 +6,7 @@ vSAN does not have its own authentication system. All access to vSAN management 
 
 ## Authentication Stack
 
-```
+```text
 User / Automation Client
         │
         ▼

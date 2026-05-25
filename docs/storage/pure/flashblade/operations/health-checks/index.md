@@ -1,6 +1,6 @@
 # FlashBlade — Health Checks
 
-```
+```text
 FlashBlade Health Check Sequence
   purefb alert list ──► Any active alerts?
          │

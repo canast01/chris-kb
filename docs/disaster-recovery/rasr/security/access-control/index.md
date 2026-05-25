@@ -87,7 +87,7 @@ racadm get iDRAC.LDAPRoleGroup
 
 Recovery USBs and ISOs must follow a strict custody chain to prevent unauthorised use.
 
-```
+```text
 Standard Operating Procedure — RASR Recovery Media:
 
 1. Media is stored in a locked DR cabinet; key held by DR manager
@@ -102,7 +102,7 @@ Standard Operating Procedure — RASR Recovery Media:
 
 Prevent unauthorised boot from recovery media by locking the boot order:
 
-```
+```yaml
 UEFI Configuration:
 - BIOS Setup Password:   Required to change boot order
 - Default boot order:    Internal HDD only
@@ -142,7 +142,7 @@ uemcli /prot/snap modify -id snap_001 -descr "RASR snap - restricted"
 
 ### Network Access to Snapshot Data
 
-```
+```yaml
 Snapshot data paths must be isolated:
 - Recovery LUNs presented only to the DR recovery host (not production hosts)
 - iSCSI or FC zoning restricts which initiators can see recovery targets
@@ -163,7 +163,7 @@ uemcli /net/iscsi/node show
 
 Automated recovery scripts and scheduled validation tasks should use the minimum required access.
 
-```
+```yaml
 Automated RASR service account policy:
 - Account: svc-rasr-prod, svc-rasr-uat (one per environment)
 - Array role: Operator (read snapshots, initiate restore) — not Administrator
@@ -195,7 +195,7 @@ All RASR recovery initiations must be gated by an approved change record. This i
 | Recovery execution | Operator initiates recovery; change record updated with start time |
 | Completion | Change record closed with result; snapshot inventory updated |
 
-```
+```yaml
 ServiceNow change record fields for RASR:
 - Assignment Group: DR Operations
 - Category: Recovery

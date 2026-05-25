@@ -229,7 +229,7 @@ Create or edit your inventory file (`inventory/hosts.yml`). The playbook expects
 | `load_warn` | 1-minute load average to warn at | Default: `4` |
 
 A simple inventory file looks like this:
-```
+```text
 [linux_servers]
 server01 ansible_host=192.168.1.10
 server02 ansible_host=192.168.1.11
@@ -244,7 +244,7 @@ router01 ansible_host=192.168.1.1
 
 **Step 4 — Run it**
 
-```
+```bash
 cd ~
 ansible-playbook infra-health-check.yml -i inventory/hosts.yml
 ```
@@ -392,7 +392,7 @@ Most values are passed on the command line with `-e`. Update defaults in the `va
 
 **Step 4 — Run it**
 
-```
+```bash
 cd ~
 ansible-playbook rolling-update.yml -i inventory/hosts.yml \
   -e "app_package=myapp app_version=2.3.1 lb_api_url=http://lb.example.com/api lb_token=YOUR_TOKEN"
@@ -561,7 +561,7 @@ Update the `vars:` section to match your environment:
 
 **Step 4 — Run it**
 
-```
+```bash
 cd ~
 ansible-playbook inventory-validate.yml -i inventory/hosts.yml
 ```
@@ -692,7 +692,7 @@ fi
 
 **Step 4 — Run it**
 
-```
+```bash
 export VAULT_PASSWORD_FILE=/path/to/vault-password.txt
 export DB_VARS_FILE=vars/db_secrets.yml
 export PLAYBOOK=playbooks/push-db-secret.yml

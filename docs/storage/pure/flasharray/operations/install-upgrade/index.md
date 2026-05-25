@@ -1,6 +1,6 @@
 # FlashArray — Install & Upgrade
 
-```
+```text
 Purity NDU Upgrade Sequence (non-disruptive)
   ┌──────────────────────────────────────────────────────┐
   │  1. Pre-check: purearray upgrade --check             │

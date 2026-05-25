@@ -1,6 +1,6 @@
 # FlashArray — Troubleshooting
 
-```
+```text
 FlashArray Triage Entry Points
   Alert type ──► purealert list
        │

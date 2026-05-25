@@ -2,7 +2,7 @@
 
 AD group design, GPO user rights, Just Enough Administration (JEA), LAPS, and built-in group review.
 
-```
+```text
 ┌────────────────────────────────────────────────────────┐
 │           Windows Access Control Model (AGDLP)         │
 └────────────────────────────────────────────────────────┘

@@ -1,6 +1,6 @@
 # Evergreen — Scripts
 
-```
+```text
   Pure Script Execution Paths
 
   Purity CLI (SSH)               Pure1 REST API

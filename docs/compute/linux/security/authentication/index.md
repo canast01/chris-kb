@@ -2,7 +2,7 @@
 
 PAM, SSH public key auth, SSSD/AD integration, sudo, and MFA configuration.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              Linux Authentication Flow                  │
 └───────────────────────┬─────────────────────────────────┘
@@ -58,7 +58,7 @@ awk -F: '$3 >= 1000 { print $1, $3, $7 }' /etc/passwd
 
 ### Password Policy — /etc/login.defs
 
-```
+```bash
 # /etc/login.defs — enforce organisation password age policy
 PASS_MAX_DAYS   90
 PASS_MIN_DAYS   1
@@ -101,7 +101,7 @@ PAM controls how programs authenticate users. Configuration lives in `/etc/pam.d
 
 ### Password Quality (pam_pwquality)
 
-```
+```bash
 # /etc/security/pwquality.conf
 minlen = 14
 minclass = 3
@@ -114,14 +114,14 @@ ocredit = -1
 dictcheck = 1
 ```
 
-```
+```bash
 # /etc/pam.d/system-auth — add pwquality to password section
 password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3
 ```
 
 ### Account Lockout (pam_faillock)
 
-```
+```bash
 # /etc/pam.d/system-auth — auth section (RHEL 8+)
 auth        required      pam_faillock.so preauth silent deny=5 unlock_time=900
 auth        sufficient    pam_unix.so nullok
@@ -143,7 +143,7 @@ faillock --user jsmith --reset
 
 ### Server Configuration
 
-```
+```bash
 # /etc/ssh/sshd_config — recommended hardened settings
 Protocol 2
 PermitRootLogin no
@@ -265,7 +265,7 @@ Always edit with `visudo` — it validates syntax before saving.
 visudo
 ```
 
-```
+```bash
 # /etc/sudoers — safe baseline
 Defaults    requiretty
 Defaults    use_pty
@@ -319,12 +319,12 @@ apt install -y libpam-google-authenticator   # Ubuntu
 google-authenticator --time-based --disallow-reuse --force --rate-limit=3 --rate-time=30 --window-size=3
 ```
 
-```
+```bash
 # /etc/pam.d/sshd — add TOTP requirement
 auth    required    pam_google_authenticator.so nullok
 ```
 
-```
+```bash
 # /etc/ssh/sshd_config — require both key and TOTP
 AuthenticationMethods publickey,keyboard-interactive
 ChallengeResponseAuthentication yes

@@ -1,6 +1,6 @@
 # FlashBlade — Integrations
 
-```
+```text
 FlashBlade Integration Map
 ┌──────────────────────────────────────────────────────────┐
 │                       FlashBlade                         │

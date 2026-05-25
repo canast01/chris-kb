@@ -1,6 +1,6 @@
 # Pure Storage Evergreen Vendor Support
 
-```
+```text
 Evergreen Support Touchpoints
   Pure1 phone-home ──► proactive monitoring + auto case creation
           │

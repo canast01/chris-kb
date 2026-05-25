@@ -1,6 +1,6 @@
 # Network Connectivity Troubleshooting
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                  Connectivity Triage Flowchart                       │
 │                                                                      │
@@ -134,7 +134,7 @@ esxcli network vswitch dvs vmware list
 
 ### Cisco
 
-```
+```text
 ! Show all trunk ports and allowed VLANs
 show interfaces trunk
 
@@ -198,7 +198,7 @@ ip route add 10.20.0.0/16 via 10.10.1.254 dev eth0
 
 ### Cisco
 
-```
+```text
 ! Show full routing table
 show ip route
 

@@ -6,7 +6,7 @@ title: Azure Backup and DR
 
 Backup and recovery notes for Azure Backup, Site Recovery, vaults, jobs, and restore validation.
 
-```
+```text
 ┌──────────────────────────────────── Azure Backup and DR Overview ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

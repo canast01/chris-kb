@@ -1,6 +1,6 @@
 # NSX Upgrade Readiness Checklist
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                  NSX Upgrade Sequence                                    │
 │                                                                          │

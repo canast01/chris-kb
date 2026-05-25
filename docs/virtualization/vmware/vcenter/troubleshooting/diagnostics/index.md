@@ -1,6 +1,6 @@
 # vCenter — Diagnostics
 
-```
+```text
 Diagnostic Chain — Priority Order
 ════════════════════════════════════════════════════════
 
@@ -333,7 +333,7 @@ Collect before escalating to Broadcom/VMware Support. The bundle includes all lo
 
 ### From VAMI (Recommended)
 
-```
+```text
 https://<vcenter>:5480 → Support → Create Support Bundle
 ```
 

@@ -4,7 +4,7 @@
 Dell APEX Storage as a Service — consumption-based on-premises storage managed by Dell. Covers architecture, operations, security, and troubleshooting for PowerStore, PowerScale, and PowerFlex deployed under the APEX STaaS model.
 </div>
 
-```
+```text
 ┌─────────────────────────────────── Dell Apex Storage as a Service ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

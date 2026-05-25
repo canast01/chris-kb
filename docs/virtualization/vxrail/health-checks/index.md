@@ -3,7 +3,7 @@
 
 VxRail Health Checks notes for infrastructure operations, support, health checks, and troubleshooting.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │              VxRail Health Check Gate                │
   └──────────────────────────────────────────────────────┘

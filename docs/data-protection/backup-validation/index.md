@@ -269,7 +269,7 @@ fi
 
 Generate and retain a validation report monthly. Minimum fields:
 
-```
+```text
 BACKUP VALIDATION REPORT
 Period:          YYYY-MM
 Prepared by:     <name>

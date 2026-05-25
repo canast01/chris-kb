@@ -1,6 +1,6 @@
 # vCenter — Backup & Restore
 
-```
+```text
 VCSA Backup & Restore Architecture
 ════════════════════════════════════════════════════════
 

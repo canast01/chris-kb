@@ -1,6 +1,6 @@
 # Aria Ops for Logs — Integrations
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Ops for Logs Integration Map                   │
 ├─────────────────────────────────────────────────────────────┤
@@ -33,7 +33,7 @@ Aria Operations for Logs integrates bi-directionally with Aria Operations:
 **Configure the integration:**
 
 In Aria Operations for Logs UI:
-```
+```text
 Administration → Integrations → Aria Operations → Add vRealize Operations Connection
 ```
 
@@ -51,7 +51,7 @@ In Aria Operations, the integration is reflected automatically — a "Logs" badg
 Configure vCenter to forward its own syslog and ESXi host syslog to Aria Ops for Logs:
 
 **Configure vCenter syslog via UI:**
-```
+```text
 vCenter → Administration → Syslog → Add Syslog Target
 ```
 - Protocol: UDP or TCP
@@ -105,7 +105,7 @@ curl -sk -u 'admin:<password>' -X POST \
 ```
 
 For NSX Edge nodes, apply the syslog configuration via a transport node profile or per-edge configuration in NSX-T Manager UI:
-```
+```text
 NSX-T UI → Fabric → Nodes → Edge Transport Nodes → select node → Syslog → Add
 ```
 
@@ -161,7 +161,7 @@ Get-Service -Name "VMware Log Insight Agent"
 
 Aria Ops for Logs can receive SNMP traps from network devices (switches, firewalls):
 
-```
+```text
 Administration → General → SNMP Traps → Enable SNMP Trap Receiver
 ```
 
@@ -192,7 +192,7 @@ Ensure firewall permits inbound traffic to Aria Ops for Logs on these ports from
 
 Aria Ops for Logs alert notifications can POST JSON payloads to external systems (ServiceNow, Slack, PagerDuty):
 
-```
+```text
 Administration → Notification Channels → Add Channel → Webhook
 ```
 

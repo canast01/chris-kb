@@ -1,6 +1,6 @@
 # vCenter — Integrations
 
-```
+```text
 vCenter Integration Map
 ════════════════════════════════════════════════════════
 
@@ -128,7 +128,7 @@ graph TD
 
 Connect vCenter SSO to AD so AD users/groups can be granted vSphere permissions:
 
-```
+```text
 vCenter → Administration → Single Sign On → Configuration → Identity Sources → Add
 Type: Active Directory (Integrated Windows Authentication) or LDAP/LDAPS
 ```

@@ -1,6 +1,6 @@
 # VCF — Design Standards
 
-```
+```text
 VCF Physical and Logical Design Requirements
 ┌─────────────────────────────────────────────────────┐
 │  Underlay Network (physical)                        │

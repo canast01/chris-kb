@@ -157,7 +157,7 @@ echo "Filesystem backup complete: ${BACKUP_DIR}/${TIMESTAMP}"
 
 ### What to Include
 
-```
+```text
 /var/atlassian/application-data/jira/shared/
 ├── attachments/          ← INCLUDE (primary data)
 ├── avatars/              ← INCLUDE
@@ -284,7 +284,7 @@ tail -f /opt/atlassian/jira/logs/catalina.out
 
 Expected startup log entries:
 
-```
+```text
 INFO  [main] Jira starting up...
 INFO  [main] Jira has been successfully started
 ```

@@ -2,7 +2,7 @@
 
 Fabric login is the process by which FC ports register with the fabric and establish communication paths.
 
-```
+```text
         FC LOGIN SEQUENCE
 ┌──────────┐        ┌───────────┐        ┌───────────┐
 │ Host HBA │        │ FC Switch │        │  Storage  │

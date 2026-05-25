@@ -3,7 +3,7 @@
 
 Power supply, thermal, fan, and environmental alert review.
 
-```
+```text
   ┌──────────────────────────────────────────────────┐
   │              VxRail Node Power/Cooling           │
   │                                                  │

@@ -4,7 +4,7 @@
 
 ---
 
-```
+```text
   FlashBlade Triage Flow
 
   Symptom

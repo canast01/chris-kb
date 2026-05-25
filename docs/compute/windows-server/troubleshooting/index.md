@@ -1,6 +1,6 @@
 # Windows Server — Troubleshooting
 
-```
+```text
 ┌───────────────────────────────────────────────────────┐
 │           Windows Server Triage Decision Tree         │
 └──────────────────────┬────────────────────────────────┘

@@ -2,7 +2,7 @@
 
 Veeam Agent for Linux backup jobs, restore procedures, and validation steps.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │               Linux Backup & Restore Flow               │
 ├─────────────────┬───────────────────┬───────────────────┤

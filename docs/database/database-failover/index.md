@@ -2,7 +2,7 @@
 
 Promote a standby/replica database to primary when the primary becomes unavailable. Follow the appropriate section for each platform.
 
-```
+```text
 ┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
 │ Primary Fails    │   │ Replica Promoted │   │  DNS Updated     │   │ App Reconnects  │
 │                  │   │                  │   │                  │   │                 │

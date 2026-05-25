@@ -2,7 +2,7 @@
 
 Pre-change checks confirm the platform is healthy before maintenance begins. Run these before any host maintenance, upgrade, or configuration change.
 
-```
+```text
 Pre-Change Baseline Sequence
 ═══════════════════════════════════════════════════════════
 

@@ -2,7 +2,7 @@
 
 Post-implementation checks to confirm a change achieved its intent, introduced no regressions, and the system is in a known-good state.
 
-```
+```text
 ┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
 │ Test Plan        │   │ Check Services   │   │  Confirm No      │   │    Close or     │
 │                  │   │                  │   │  Rollback Needed │   │    Rollback     │

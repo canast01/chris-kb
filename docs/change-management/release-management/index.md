@@ -2,7 +2,7 @@
 
 Coordinates planning, scheduling, and execution of software and infrastructure releases to minimise risk and ensure controlled delivery.
 
-```
+```text
 ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
 │  Plan    │  │  Build   │  │   Test   │  │  Deploy  │  │  Verify  │  │  Close   │
 │          │  │          │  │          │  │          │  │          │  │          │
@@ -32,7 +32,7 @@ Coordinates planning, scheduling, and execution of software and infrastructure r
 
 ## Release Lifecycle
 
-```
+```text
 1. Scope definition
    → Features/fixes identified; linked to tickets/epics
 

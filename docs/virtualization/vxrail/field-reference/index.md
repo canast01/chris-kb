@@ -3,7 +3,7 @@
 
 Core operational reference for VxRail infrastructure.
 
-```
+```text
   ┌────────────────────────────────────────────────────────┐
   │                VxRail Field Reference Map              │
   │                                                        │

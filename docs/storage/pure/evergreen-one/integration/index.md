@@ -1,6 +1,6 @@
 # Pure Storage Evergreen//One Integration
 
-```
+```text
   Evergreen//One Integration Landscape
 
   ┌───────────────┐   phonehome    ┌────────────────────┐

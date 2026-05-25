@@ -138,7 +138,7 @@ mysql -e "SHOW VARIABLES LIKE 'max_connections';"
 
 ## Troubleshooting Decision Tree
 
-```
+```text
 Query slow?
   ├─ EXPLAIN shows Seq Scan on large table → add index
   ├─ EXPLAIN shows correct index but slow → stale statistics → ANALYZE

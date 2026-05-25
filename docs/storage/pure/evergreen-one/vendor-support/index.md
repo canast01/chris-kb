@@ -1,6 +1,6 @@
 # Pure Storage Evergreen//One Vendor Support
 
-```
+```text
   Pure Support Case Flow
 
   ┌─────────────────────┐     ┌─────────────────────────┐

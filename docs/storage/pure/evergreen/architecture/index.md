@@ -4,7 +4,7 @@
 Architecture reference for Pure Storage Evergreen. Covers the non-disruptive controller refresh model, active-active HA, DirectFlash Modules, host connectivity, replication options, and subscription design standards.
 </div>
 
-```
+```text
 Evergreen Controller Refresh — Non-Disruptive
   Current generation controllers (CT0 / CT1)
   └── NVMe flash shelves (data at rest)

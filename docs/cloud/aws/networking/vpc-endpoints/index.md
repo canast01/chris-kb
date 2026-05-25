@@ -3,7 +3,7 @@
 
 AWS VPC Endpoints notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  VPC Endpoint Types                     │
 │                                                         │

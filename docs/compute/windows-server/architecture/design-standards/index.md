@@ -35,7 +35,7 @@ Examples:
 
 ## Active Directory OU Structure
 
-```
+```text
 domain.local
 └── Servers
     ├── Production

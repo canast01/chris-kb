@@ -1,6 +1,6 @@
 # vCenter Security — Authentication
 
-```
+```text
 SSO Authentication Flow
 ════════════════════════════════════════════════════════
 

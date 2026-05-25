@@ -2,7 +2,7 @@
 
 > Part of the [VxRail](../index.md) reference.
 
-```
+```text
   ┌──────────────────────────────────────────────────────────┐
   │                   VxRail Security Layers                 │
   │                                                          │
@@ -126,7 +126,7 @@ Get-Cluster | Get-View | Select -ExpandProperty ConfigurationEx | Select -Expand
 
 VxRail Manager orchestrates certificate replacement for both ESXi hosts and VxRail Manager itself.
 
-```
+```text
 VxRail Manager UI → System → Certificates → Replace Certificate
 ```
 

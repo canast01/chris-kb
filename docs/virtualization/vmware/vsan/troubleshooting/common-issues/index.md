@@ -43,7 +43,7 @@ Get-VsanClusterHealthSummary -Cluster (Get-Cluster "VSAN-LON-01") -FetchFromCach
 
 Step-by-step procedure for a failed vSAN disk or disk group.
 
-```
+```text
 VSAN DISK FAILS
          │
          ▼
@@ -114,7 +114,7 @@ VSAN DISK FAILS
 
 When a disk or host fails, vSAN rebuilds data across the remaining hosts. This puts extra I/O load on those hosts until the rebuild completes.
 
-```
+```text
 Normal vSAN:
 Host 1 ──── data copy 1
 Host 2 ──── data copy 2  ← redundancy

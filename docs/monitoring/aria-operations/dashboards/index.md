@@ -1,6 +1,6 @@
 # Aria Operations: Dashboards — Creating, Editing, and Sharing
 
-```
+```text
 Dashboard Hierarchy — Aria Operations
 ┌─────────────────────────────────────────┐
 │         Executive KPIs (top-level)      │

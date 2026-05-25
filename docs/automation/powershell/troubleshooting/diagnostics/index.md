@@ -80,7 +80,7 @@ Set-PSDebug -Off
 
 Sample trace output:
 
-```
+```yaml
 DEBUG:    1+ >>>> $result = Get-Widget -Name 'widget-01'
 DEBUG:    2+ >>>> if ($result.State -eq 'Active') {
 DEBUG:   Variable: result = @{Name=widget-01; State=Active}
@@ -152,7 +152,7 @@ Stop-Transcript
 
 For production environments, enforce transcript logging centrally:
 
-```
+```text
 Computer Configuration → Administrative Templates → Windows Components →
 Windows PowerShell → Turn on PowerShell Transcription
   → Enable: Yes

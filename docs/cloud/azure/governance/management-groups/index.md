@@ -24,7 +24,7 @@ A well-designed management group hierarchy mirrors your organisational structure
 
 ### Reference Hierarchy Pattern
 
-```
+```text
 Tenant Root Group
 ├── mg-platform          (shared services: networking, identity, monitoring)
 │   ├── sub-connectivity

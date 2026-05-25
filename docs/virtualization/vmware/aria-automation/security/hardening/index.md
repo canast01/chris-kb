@@ -1,6 +1,6 @@
 # Aria Automation — Hardening
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Automation Hardening Layers                    │
 ├──────────────────────┬──────────────────────────────────────┤
@@ -27,12 +27,12 @@
 
 The `admin` account is a local system account in the VIDM System Domain. Change its password immediately after deployment:
 
-```
+```text
 VAMI (https://vra-prod-01.example.local:5480) → Services → Change Admin Password
 ```
 
 Or via VIDM console:
-```
+```text
 VIDM → Users & Groups → Users → admin (System Domain) → Edit → Change Password
 ```
 
@@ -46,7 +46,7 @@ Replace the self-signed certificate with a CA-signed certificate before producti
 
 **Via LCM (preferred for LCM-managed deployments):**
 
-```
+```text
 LCM → Locker → import certificate → LCM → Lifecycle Operations → Aria Automation → Replace Certificate
 ```
 

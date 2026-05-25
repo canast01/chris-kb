@@ -2,7 +2,7 @@
 
 Document relationships between systems, applications, and services so that change impact, failure blast radius, and dependency chains are understood.
 
-```
+```text
 ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐
 │  Prod   │  │ Staging │  │   Dev   │  │   DR    │
 │ Full SLA│  │  High   │  │  Low    │  │ RTO/RPO │

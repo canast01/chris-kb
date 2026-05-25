@@ -1,6 +1,6 @@
 # Storage Latency Troubleshooting
 
-```
+```text
 ┌──────────── Storage Latency: VM to Array Triage Path ──────────────────────────┐
 │                                                                                 │
 │  VM shows slow I/O                                                              │

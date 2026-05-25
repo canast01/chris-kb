@@ -3,7 +3,7 @@
 
 VxRail is part of the virtualization platform. This page is for technical operations, troubleshooting, upgrade planning, and support handoff.
 
-```
+```text
   ┌──────────────────────────────────────────────────────────┐
   │                 VxRail Internals                         │
   │                                                          │

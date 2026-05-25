@@ -131,7 +131,7 @@ VPLEX Geo uses RecoverPoint to extend the VPLEX federation beyond the ≤5ms Met
 
 ### Architecture
 
-```
+```text
 Site A (Active)
   VPLEX Cluster-1
   RecoverPoint Splitter (integrated with VPLEX directors)

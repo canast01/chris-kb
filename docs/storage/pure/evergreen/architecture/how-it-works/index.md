@@ -1,6 +1,6 @@
 # Evergreen — How It Works
 
-```
+```text
 Evergreen — What's Included vs. Customer-Managed
 ┌────────────────────────────────────────────────────────────┐
 │  Included in Evergreen subscription                        │

@@ -2,7 +2,7 @@
 
 A Request for Change (RFC) documents a planned modification to infrastructure, applications, or configuration. Every non-standard change requires an RFC before implementation.
 
-```
+```text
 ┌──────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
 │  Raise RFC   │   │    Classify      │   │  Impact /        │   │    Assign /     │
 │              │   │                  │   │  Risk Assess     │   │    Submit       │
@@ -96,7 +96,7 @@ Standard changes are pre-approved recurring activities that do not require indiv
 
 ## RFC Status Lifecycle
 
-```
+```text
 Draft → Submitted → Under Review → Approved / Rejected / Deferred
                                          ↓
                                    Scheduled → In Progress → Completed / Rolled Back

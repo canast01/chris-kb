@@ -2,7 +2,7 @@
 
 A certificate chain (or chain of trust) links a server certificate back to a trusted root CA through one or more intermediate CAs.
 
-```
+```text
         CHAIN OF TRUST
 ┌──────────────────────────────────────────────────────────────┐
 │  depth=2  Root CA (self-signed)                              │
@@ -33,7 +33,7 @@ A certificate chain (or chain of trust) links a server certificate back to a tru
 
 ## Chain Structure
 
-```
+```text
 Root CA (self-signed, in OS/browser trust store)
   └── Intermediate CA (signed by Root CA)
         └── Server Certificate (signed by Intermediate CA)
@@ -107,7 +107,7 @@ SSLCACertificateFile  /etc/ssl/intermediate.crt  # or chain bundle
 
 ### HAProxy
 
-```
+```bash
 # HAProxy expects cert + key + chain in one PEM file
 cat server.crt intermediate.crt server.key > /etc/ssl/haproxy.pem
 ```

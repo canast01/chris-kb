@@ -109,7 +109,7 @@ if ($failed) {
 
 Test via iDRAC web UI (cannot be scripted without Redfish):
 
-```
+```text
 iDRAC → Configuration → Virtual Media → Verify ISO is mapped
 iDRAC → Overview → Boot → Boot Next = Virtual Optical Drive
 (Optional: perform test boot in next maintenance window)
@@ -160,7 +160,7 @@ $report | Sort-Object Status -Descending | Format-Table
 
 Document results monthly in the DR register:
 
-```
+```text
 Date: ___________  Performed by: ___________
 Servers checked: ___ / ___
 Servers passing all checks: ___ / ___

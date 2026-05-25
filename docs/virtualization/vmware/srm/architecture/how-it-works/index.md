@@ -10,7 +10,7 @@ SRM operates across two paired sites: a **protected site** (production) and a **
 
 The two SRM Servers form a **site pair**. Communication between them uses TCP 443 and TCP 9086. The pairing is authenticated via certificate thumbprint exchange — each site must trust the other's SSL certificate.
 
-```
+```text
 Protected Site                        Recovery Site
 ┌─────────────────────┐               ┌─────────────────────┐
 │  vCenter Server     │◄──── TCP 443 ─►│  vCenter Server     │
@@ -94,7 +94,7 @@ A Recovery Plan defines the exact steps SRM executes during failover. One Recove
 
 ### Recovery Plan Components
 
-```
+```text
 Recovery Plan
 ├── Protection Groups (one or more)
 ├── Priority Groups (1–5, executed sequentially)
@@ -130,7 +130,7 @@ Two approaches:
 
 **Subnet-level mapping** — define a source subnet and a target subnet. SRM translates any static IP in the source range to the corresponding address in the target range.
 
-```
+```text
 Source: 10.10.0.0/24  →  Target: 10.20.0.0/24
 VM at 10.10.0.50       →  Recovers at 10.20.0.50
 ```

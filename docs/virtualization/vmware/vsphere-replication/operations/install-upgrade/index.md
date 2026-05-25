@@ -1,6 +1,6 @@
 # vSphere Replication — Install and Upgrade
 
-```
+```text
   VR Deployment and Upgrade Workflow
 ┌──────────────────────────────────────────────────────────────┐
 │  Deploy VRA OVA ──► Register with vCenter ──► Pair sites     │
@@ -41,7 +41,7 @@
 
 Deploy a VRA at each site (protected site and recovery site):
 
-```
+```yaml
 vCenter → Deploy OVF Template
   Source: VMware-vSphere-Replication-<version>.ovf
 
@@ -77,7 +77,7 @@ vCenter → Deploy OVF Template
 
 After deployment, register VRA with vCenter:
 
-```
+```text
 VRA VAMI UI: https://vra-london.example.local:5480
   Configuration → vCenter Server
     vCenter Address: vcenter-london.example.local
@@ -95,7 +95,7 @@ After registration, VRA appears in vCenter → Site Recovery as a Replication Ap
 
 For environments with >500 replicated VMs, deploy additional VRS appliances:
 
-```
+```text
 vCenter → Site Recovery → vSphere Replication → Replication Servers → Deploy
 
   Same OVF as VRA, but select: Deploy as Replication Server
@@ -107,7 +107,7 @@ vCenter → Site Recovery → vSphere Replication → Replication Servers → De
 
 ## Pair Sites
 
-```
+```text
 vCenter (Protected Site) → Site Recovery → New Site Pair
   Remote vCenter: vcenter-amsterdam.example.local
   SSO credentials for remote vCenter: administrator@vsphere.local
@@ -117,7 +117,7 @@ vCenter (Protected Site) → Site Recovery → New Site Pair
 ```
 
 After pairing, configure replications on individual VMs:
-```
+```text
 vCenter → [VM] → right-click → Configure Replication
 ```
 

@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle — Scripts
 
-```
+```text
   LCM Automation Scripts
 ┌─────────────────────────────────────────────────────────────────┐
 │  Script                    Purpose                              │

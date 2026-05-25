@@ -1,6 +1,6 @@
 # Horizon — Authentication
 
-```
+```text
   Authentication Flow
 ┌────────────┐    ┌──────────────┐    ┌─────────────────────────────┐
 │  User      │    │  Workspace   │    │  Connection Server          │
@@ -32,7 +32,7 @@ Connection Server authenticates users against AD. The Connection Server must be 
 ```
 
 Configure AD domains in Horizon:
-```
+```text
 Horizon Console → Settings → Servers → Domains
   All trusted domains should appear automatically
   If not: Add Domain → enter domain name and service account credentials
@@ -42,7 +42,7 @@ Horizon Console → Settings → Servers → Domains
 
 ## Two-Factor Authentication (RADIUS / RSA SecurID)
 
-```
+```text
 Horizon Console → Settings → Servers → Connection Servers → [CS] → Edit → Authentication
   2-Factor Authentication: RADIUS
   Authentication Module: RadiusAuthModule
@@ -53,7 +53,7 @@ Horizon Console → Settings → Servers → Connection Servers → [CS] → Edi
 ```
 
 For RSA SecurID (hardware token):
-```
+```text
   2-Factor Authentication: SecurID
   Load RSA sdconf.rec (downloaded from RSA Authentication Manager)
 ```
@@ -64,7 +64,7 @@ For RSA SecurID (hardware token):
 
 SAML enables IdP-initiated SSO — users authenticate to Workspace ONE/vIDM and are passed to Horizon:
 
-```
+```text
 Horizon Console → Settings → Servers → Connection Servers → [CS] → Edit → Authentication
   Delegation of Authentication to VMware Identity Manager: Allowed or Required
   vIDM URL: https://vidm.example.local
@@ -80,7 +80,7 @@ SAML is required for:
 
 ## Smart Card / Certificate Authentication
 
-```
+```text
 Horizon Console → Settings → Servers → Connection Servers → [CS] → Edit → Authentication
   Smart Card Authentication: Required or Optional
   Certificate Revocation: Use CRL / OCSP (recommended)
@@ -95,7 +95,7 @@ Smart card authentication works with CAC, PIV, and software certificates. The cl
 
 True SSO eliminates the password prompt for desktop login after initial UAG authentication:
 
-```
+```yaml
 Requirements:
   - Microsoft Enterprise CA
   - Enrollment Server role (installed on same or separate Windows Server)
@@ -116,7 +116,7 @@ When enabled: user authenticates once at UAG (AD/SAML/RADIUS), receives short-li
 
 For kiosk/shared terminals with no personal authentication:
 
-```
+```text
 Horizon Console → Settings → Servers → Connection Servers → [CS] → Edit → Authentication
   Allow Unauthenticated Access: Enabled
 ```
@@ -127,7 +127,7 @@ Assign kiosk desktops to a dedicated pool with restricted internet access and no
 
 ## Session Timeout and Reauthentication
 
-```
+```text
 Horizon Console → Settings → Global Settings → General
   Session Timeout: 600 minutes (10 hours — adjust per policy)
   Disconnected Session Timeout: 60 minutes (log off disconnected sessions)
@@ -142,7 +142,7 @@ For high-security environments: set Reauthentication = Always and reduce timeout
 
 UAG can perform identity bridging for applications that require Kerberos authentication internally when users are authenticating externally via SAML:
 
-```
+```text
 UAG Admin UI → Edge Service Settings → Horizon → Advanced
   Identity Bridging: Enable
   Principal Name: UPN (user@corp.local)

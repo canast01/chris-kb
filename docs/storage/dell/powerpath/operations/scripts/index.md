@@ -114,7 +114,7 @@ Open a terminal on the Linux server with PowerPath installed.
 
 **Step 4 — Run the script**
 
-```
+```bash
 chmod +x powerpath_health_check.sh
 sudo EXPECTED_PATHS=4 ./powerpath_health_check.sh
 ```
@@ -225,7 +225,7 @@ Open a terminal on the Linux server with PowerPath installed.
 
 **Step 4 — Run the script**
 
-```
+```bash
 chmod +x powerpath_path_validator.pl
 sudo EXPECTED_PATHS=4 perl powerpath_path_validator.pl
 ```
@@ -350,13 +350,13 @@ Open a terminal on the Linux server with PowerPath installed.
 **Step 4 — Run the script**
 
 To check only (no changes made):
-```
+```bash
 chmod +x powerpath_policy_audit.sh
 sudo ./powerpath_policy_audit.sh
 ```
 
 To check and automatically fix any non-CLAROpt devices:
-```
+```bash
 sudo ./powerpath_policy_audit.sh --fix
 ```
 
@@ -435,14 +435,14 @@ echo ========================================
 **Step 3 — Accept the host key (one-time setup)**
 
 Open Command Prompt and run:
-```
+```text
 plink -ssh root@192.168.10.50
 ```
 Type `y` when prompted, then press Ctrl+C.
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 powerpath_remote_check.bat
 ```

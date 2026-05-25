@@ -85,7 +85,7 @@ git ls-tree -r --name-only HEAD
 
 ## Refs and Branches
 
-```
+```text
 .git/
 ├── HEAD                    → ref: refs/heads/main
 ├── refs/

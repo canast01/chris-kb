@@ -1,6 +1,6 @@
 # SRM — Health Checks
 
-```
+```text
   Health Check Chain
 ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
 │  Site Pairing    │    │  Protection      │    │  Recovery Plan   │
@@ -20,7 +20,7 @@
 
 ## Site Pairing Status
 
-```
+```text
 vCenter (Protected Site) → Site Recovery → Summary
   Site Pairing: should show "Connected" to recovery site
   SRM Server status: "Running" on both sites
@@ -37,7 +37,7 @@ Get-Service -ComputerName srm-recovery.example.local -Name "VMware vCenter Site 
 
 ## Protection Group Health
 
-```
+```text
 Site Recovery → Protection → Protection Groups
   All groups should show Status: OK
   Any warning or error: click group → View issues
@@ -60,7 +60,7 @@ foreach ($pg in $pgs) {
 
 All protected VMs must be within their configured RPO. VMs outside RPO appear in amber/red:
 
-```
+```text
 Site Recovery → Replication → vSphere Replication
   Filter by: RPO violation
   Any VMs shown: investigate immediately — replication is lagging
@@ -87,7 +87,7 @@ foreach ($pg in $pgs) {
 
 ## SRA Status (Array-Based Replication)
 
-```
+```bash
 Site Recovery → Storage → Array Pairs
   All array pairs should show: Enabled, Healthy
   Last discovery: recent timestamp
@@ -103,7 +103,7 @@ Site Recovery → Storage → Array Pairs
 
 Placeholder VMs must exist at the recovery site for each protected VM:
 
-```
+```bash
 vCenter (Recovery Site) → VMs and Templates
   Look for VMs with names matching protected VMs — these are placeholder VMs
   They appear as "shadow" VMs with minimal resources
@@ -118,7 +118,7 @@ vCenter (Recovery Site) → VMs and Templates
 
 Run the built-in pre-check before any recovery:
 
-```
+```text
 Site Recovery → Recovery Plans → [plan] → Test or Recover
   Step 1: Run validation checks (pre-check)
   Verify: no errors before proceeding
@@ -148,7 +148,7 @@ echo | openssl s_client -connect vra-protected.example.local:443 2>/dev/null \
 
 Run a test failover monthly on at least one non-critical Recovery Plan:
 
-```
+```yaml
 Site Recovery → Recovery Plans → [test-plan] → Test
   Mode: Test
   Network: isolated (do not connect test VMs to production network)

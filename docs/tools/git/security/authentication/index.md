@@ -130,7 +130,7 @@ EOF
 
 GitHub fine-grained PATs (2023+) restrict tokens to specific repositories and resource types. Prefer them over classic PATs.
 
-```
+```text
 Token expiry: 90 days maximum (enforce via org policy)
 Repository access: Selected repositories only
 Permissions: Contents: Read and write, Metadata: Read

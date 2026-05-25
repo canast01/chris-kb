@@ -3,7 +3,7 @@
 
 Physical NIC state, link status, uplinks, redundancy, and troubleshooting.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │                    VxRail Node                       │
   │  ┌───────────┐  ┌───────────┐  ┌───────────┐        │

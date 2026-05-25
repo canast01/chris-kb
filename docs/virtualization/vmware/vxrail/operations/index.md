@@ -4,7 +4,7 @@
 Day-to-day operational reference for VxRail in the VMware product context. Covers plugin health, LCM upgrade sequencing, cluster expansion, and SupportAssist automation.
 </div>
 
-```
+```text
 ┌───────────────────────────────────────── VxRail — Operations ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -425,7 +425,7 @@ Get-VMHostFirmware -VMHost "vxrail-node-01.example.local" \
 
 vCenter should be backed up via the VAMI (port 5480): **Backup → Configure → Schedule**. VxRail deployments with embedded vCenter must back up vCenter through the VAMI — VxRail Manager does not handle vCenter backup.
 
-```
+```yaml
 VAMI: https://<vcenter-ip>:5480 → Backup → Configure
 Protocol: SFTP
 Frequency: Daily

@@ -234,7 +234,7 @@ When PowerPath dead paths do not recover after `powermt restore`, the issue is i
 
 ### Brocade (FOS)
 
-```
+```bash
 # Port state for the switch port connected to the HBA
 portshow <port_number>
 
@@ -256,7 +256,7 @@ cfgshow
 
 ### Cisco MDS
 
-```
+```bash
 # Port state for the switch port connected to the HBA
 show interface fc1/4
 

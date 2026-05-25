@@ -38,7 +38,7 @@ Compare-Object $prodAdmins $ireAdmins -IncludeEqual | Where-Object {$_.SideIndic
 
 All IRE access routes through a dedicated jump host (PAW — Privileged Access Workstation):
 
-```
+```text
 Analyst → VPN (with MFA) → Jump Host → IRE Systems
                                       ↳ Session recording enabled
                                       ↳ Clipboard paste disabled

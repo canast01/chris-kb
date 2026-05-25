@@ -1,6 +1,6 @@
 # Aria Operations — Standards
 
-```
+```text
 Aria Operations — Sizing and Deployment Reference
 ┌─────────────────────────────────────────────────────┐
 │  Cluster Size Selection                             │

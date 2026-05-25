@@ -2,7 +2,7 @@
 
 Run this check weekly or after any significant workload addition.
 
-```
+```text
 Capacity Check Flow
 ═══════════════════════════════════════════════════════════
 

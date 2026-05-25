@@ -1,6 +1,6 @@
 # FlashBlade — Diagnostics
 
-```
+```text
 FlashBlade Diagnostic Sequence
   ┌──────────────────────────────────────────────────┐
   │  1. purefb array list       ─ version + capacity │

@@ -1,6 +1,6 @@
 # SMB Troubleshooting
 
-```
+```text
         TRIAGE: CANNOT ACCESS SMB SHARE
 ┌──────────────────────────────────────────────────────────────┐
 │  1. ping / Test-NetConnection -Port 445 ── fail ─► firewall  │

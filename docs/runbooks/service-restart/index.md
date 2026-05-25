@@ -9,7 +9,7 @@
 
 ## Process Flow
 
-```
+```text
   Service degraded or restart required
            │
            ▼

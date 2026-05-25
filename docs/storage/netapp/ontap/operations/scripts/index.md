@@ -157,7 +157,7 @@ Press the Windows key, type `cmd`, press Enter to open Command Prompt.
 **Step 4 — Install the required Perl module and set variables**
 
 In Command Prompt, type these lines one at a time:
-```
+```text
 cpan Net::SSH2
 set ONTAP_HOST=192.168.1.100
 set ONTAP_USER=admin
@@ -166,7 +166,7 @@ set ONTAP_PASS=yourpassword
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd %USERPROFILE%\Desktop
 perl ontap_health.pl
 ```
@@ -304,7 +304,7 @@ Press the Windows key, type `Git Bash`, press Enter.
 **Step 4 — Set variables and run the script**
 
 In Git Bash, type these lines one at a time:
-```
+```bash
 export ONTAP_HOST=192.168.1.100
 export ONTAP_USER=admin
 export ONTAP_PASS=yourpassword
@@ -476,7 +476,7 @@ Press the Windows key, type `cmd`, press Enter.
 
 **Step 4 — Install required packages and set variables**
 
-```
+```bash
 pip install paramiko tabulate
 set ONTAP_HOST=192.168.1.100
 set ONTAP_USER=admin
@@ -485,13 +485,13 @@ set ONTAP_PASS=yourpassword
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd %USERPROFILE%\Desktop
 python vol_reporter.py
 ```
 
 To also save results to a CSV file:
-```
+```bash
 python vol_reporter.py --csv volumes.csv
 ```
 
@@ -642,7 +642,7 @@ Open the WSL Ubuntu terminal from the Start menu.
 **Step 4 — Copy the file to WSL and run it**
 
 In the WSL terminal:
-```
+```bash
 cp /mnt/c/Users/YourName/Desktop/ontap_health.yml ~/
 cd ~
 ansible-playbook ontap_health.yml \
@@ -758,7 +758,7 @@ Press the Windows key, type `cmd`, press Enter.
 
 **Step 4 — Install the module and set variables**
 
-```
+```text
 cpan Net::SSH2
 set ONTAP_HOST=192.168.1.100
 set ONTAP_USER=admin
@@ -767,7 +767,7 @@ set ONTAP_PASS=yourpassword
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd %USERPROFILE%\Desktop
 perl agg_alert.pl
 ```
@@ -893,13 +893,13 @@ Press the Windows key, type `PowerShell`, right-click on **Windows PowerShell**,
 **Step 4 — Allow script execution (one-time per session)**
 
 Paste this in PowerShell before running:
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\ontap_health_rest.ps1
 ```
@@ -981,7 +981,7 @@ Open the saved file in Notepad and change these lines near the top:
 **Step 3 — First-time host key acceptance**
 
 Before running the batch file, you must tell plink to trust your cluster's SSH key. Open Command Prompt and run:
-```
+```text
 plink.exe -ssh admin@192.168.1.100
 ```
 When asked "Store key in cache?", type `y` and press Enter, then press Ctrl+C to exit.
@@ -989,7 +989,7 @@ When asked "Store key in cache?", type `y` and press Enter, then press Ctrl+C to
 **Step 4 — Run the script**
 
 You can double-click `ontap_vol_check.bat` on your Desktop, or open Command Prompt and run:
-```
+```bash
 cd %USERPROFILE%\Desktop
 ontap_vol_check.bat
 ```

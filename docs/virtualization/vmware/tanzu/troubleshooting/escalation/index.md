@@ -1,6 +1,6 @@
 # Tanzu — Escalation
 
-```
+```text
 ┌─────────────────── Tanzu Escalation Path ──────────────────────────────────────┐
 │                                                                                 │
 │  Issue identified                                                               │

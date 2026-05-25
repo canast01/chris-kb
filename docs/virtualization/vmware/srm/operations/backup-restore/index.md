@@ -1,6 +1,6 @@
 # SRM — Backup and Restore
 
-```
+```text
   SRM Backup Sources
 ┌──────────────────────────────────────────────────────────────┐
 │  vCenter VCSA Backup (covers most SRM config)                │
@@ -167,7 +167,7 @@ govc vm.power -on vr-appliance-01
 
 The VAMI provides a configuration export that captures network settings, registration info, and certificates:
 
-```
+```text
 https://<vr-appliance>:5480 → Administration → Backup
 ```
 

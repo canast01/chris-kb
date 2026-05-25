@@ -2,7 +2,7 @@
 
 CIS benchmark GPO controls, Windows Defender configuration, audit policy, GPO hardening baseline, and Security Compliance Manager (SCM).
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │              Windows Server Hardening Flow               │
 ├──────────────────────────────────────────────────────────┤

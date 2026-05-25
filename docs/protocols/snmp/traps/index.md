@@ -2,7 +2,7 @@
 
 SNMP traps are unsolicited notifications sent from a device to a trap receiver (NMS) when an event occurs
 
-```
+```text
         TRAP FLOW (device-initiated, async)
 ┌─────────────────────────────────────────────────────────────┐
 │  Device (switch/router/server)         NMS / trap receiver  │
@@ -54,7 +54,7 @@ systemctl restart snmpd
 
 ### Cisco IOS
 
-```
+```bash
 snmp-server enable traps
 snmp-server host <nms-ip> version 2c <community>
 
@@ -70,7 +70,7 @@ show snmp trap
 
 ### Arista EOS
 
-```
+```text
 snmp-server host <nms-ip> version 2c <community>
 snmp-server enable traps
 show snmp host
@@ -78,7 +78,7 @@ show snmp host
 
 ### Brocade FOS
 
-```
+```bash
 snmpconfig --set mibCapability
 # Enable trap categories via prompts
 

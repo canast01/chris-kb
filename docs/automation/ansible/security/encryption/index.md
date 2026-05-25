@@ -62,7 +62,7 @@ vault_db_password: !vault |
 
 ### Recommended Layout
 
-```
+```text
 group_vars/
 └── prod/
     ├── main.yml    # plaintext — references vault_ vars

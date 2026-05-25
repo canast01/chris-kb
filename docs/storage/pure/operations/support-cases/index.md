@@ -1,6 +1,6 @@
 # Pure Storage Support Cases
 
-```
+```text
   Pure Support Case Flow
 
   ┌───────────────────────────┐

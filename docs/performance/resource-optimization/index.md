@@ -2,7 +2,7 @@
 
 Identifying and right-sizing underutilised compute, storage, and cloud resources to reduce cost and improve efficiency.
 
-```
+```text
 ┌─────────────────────────────────┐   ┌──────────────┐   ┌─────────────┐   ┌──────────────┐
 │     Utilisation Metrics         │   │ Rightsizing  │   │   Reclaim   │   │ Cost Saving  │
 │                                 │   │              │   │             │   │              │

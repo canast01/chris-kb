@@ -1,6 +1,6 @@
 # Nexus Dashboard: Fabric Alerts, Severity, Acknowledgement, and Notification Policies
 
-```
+```text
 Alert Flow — Nexus Dashboard
 ┌──────────────────────────────┐
 │  Fabric event or threshold   │  (BGP flap, TCAM high, port error)

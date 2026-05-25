@@ -3,7 +3,7 @@
 
 AWS VPC Flow Logs notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  VPC Flow Logs                          │
 │                                                         │

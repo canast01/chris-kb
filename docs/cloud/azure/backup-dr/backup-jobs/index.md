@@ -2,7 +2,7 @@
 
 Azure Backup jobs represent discrete backup, restore, and configuration operations.
 
-```
+```text
   Trigger
      │
      ▼

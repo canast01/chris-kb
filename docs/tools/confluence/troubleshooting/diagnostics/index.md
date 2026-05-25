@@ -200,7 +200,7 @@ grep -A 20 "DEADLOCK" /tmp/threaddump_1_*.txt
 
 ### FastThreadLocal / Hazelcast Thread Names (Data Center)
 
-```
+```text
 hz.cluster-thread-X       — Hazelcast cluster communication
 Confluence-MainEventThread — Main event bus
 http-nio-8090-exec-N      — HTTP request handler threads

@@ -1,6 +1,6 @@
 # SRM — Common Issues
 
-```
+```text
   Triage Decision Tree
 ┌──────────────────────────────────────────────────────────────┐
 │  Site pairing broken?         Replication lag?               │

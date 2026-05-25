@@ -2,7 +2,7 @@
 
 Service accounts used for VMware platform integrations. All accounts must be vault-managed and reviewed quarterly.
 
-```
+```text
 ┌──────────────────────┬───────────────────────┬─────────────────┬──────────┬──────────┐
 │   Account            │  Target / Purpose     │  Role           │  Owner   │ Rotation   │
 ├──────────────────────┼───────────────────────┼─────────────────┼──────────┼──────────┤

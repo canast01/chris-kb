@@ -1,6 +1,6 @@
 # vCenter — Procedures
 
-```
+```text
 VCSA Procedure Flow — Maintenance Window
 ════════════════════════════════════════════════════════
 

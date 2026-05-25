@@ -2,7 +2,7 @@
 
 Live register of all VMs, their backup policy, and last verified restore test. Review monthly.
 
-```
+```text
 ┌──────────────┐   ┌──────────────────┐   ┌────────────────┐   ┌──────────────────┐
 │   VM List    │──►│   Backup Job     │──►│  Last Good     │──►│  RPO Compliance  │
 │              │   │                  │   │  Backup        │   │                  │

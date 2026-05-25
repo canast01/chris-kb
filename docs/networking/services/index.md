@@ -4,7 +4,7 @@
 Network services knowledge base covering DNS, load balancers, and network service management.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                     Network Services Overview                        │
 │                                                                      │

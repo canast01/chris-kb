@@ -1,6 +1,6 @@
 # Aria Automation — Encryption
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Automation Encryption Layers                   │
 ├─────────────────────────────────────────────────────────────┤
@@ -33,7 +33,7 @@ Sensitive values (passwords, API tokens, SSH keys) must not be stored as plainte
 
 Encrypted Property Groups store sensitive key-value pairs at the Aria Automation level. Values are encrypted at rest and never appear in deployment event logs or API responses.
 
-```
+```text
 Infrastructure → Configure → Property Groups → New Property Group → Encrypted
 ```
 
@@ -64,7 +64,7 @@ resources:
 
 For enterprise secrets management, configure Aria Automation to retrieve secrets from HashiCorp Vault at deployment time:
 
-```
+```text
 Infrastructure → Connections → Integrations → Add Integration → HashiCorp Vault
 ```
 
@@ -90,7 +90,7 @@ resources:
 
 For ABX actions, store secrets as **Action Constants** (encrypted at rest):
 
-```
+```text
 Extensibility → Actions → select action → Constants → Add
 ```
 

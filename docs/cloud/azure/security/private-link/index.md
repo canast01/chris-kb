@@ -1,6 +1,6 @@
 # Azure — Private Link
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────┐
 │                    Azure Private Link Flow                        │
 └──────────────────────────────────────────────────────────────────┘
@@ -42,7 +42,7 @@ Azure Private Link enables private connectivity to Azure PaaS services (Storage,
 
 ## Traffic Flow
 
-```
+```text
 App (in VNet) → resolves storage.blob.core.windows.net
                 → Private DNS Zone overrides → 10.1.0.5 (private endpoint IP)
                 → Traffic stays within VNet / Azure backbone

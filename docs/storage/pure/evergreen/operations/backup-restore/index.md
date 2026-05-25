@@ -1,6 +1,6 @@
 # Evergreen — Backup & Restore
 
-```
+```text
 Evergreen Configuration Backup + Restore
   Configuration export (before controller refresh / migration):
   ├── pureconfig list --all  ──► export array config to file

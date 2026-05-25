@@ -1,6 +1,6 @@
 # vSphere Replication — Health Checks
 
-```
+```text
   Health Check Chain
 ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
 │  VRA Status      │    │  VR Agents       │    │  Replication     │
@@ -19,7 +19,7 @@
 
 ## VRA and Site Pairing Status
 
-```
+```text
 vCenter → Site Recovery → Sites
   Both sites should show: Connected
   VRA status: Healthy (green)
@@ -38,7 +38,7 @@ curl -sk https://vra-london.example.local/api/rest/vr/health | python3 -m json.t
 
 ## Check All Replications for RPO Violations
 
-```
+```text
 vCenter → Site Recovery → Replications
   Status column: Green = within RPO
   Amber = approaching RPO limit (>75% of RPO elapsed)
@@ -80,7 +80,7 @@ df -h
 ```
 
 Target-site datastore containing replica VMDKs:
-```
+```bash
 vCenter (Target Site) → Datastore → check % used
 # Keep below 80% — VRA stops writing when datastore fills up
 ```
@@ -89,7 +89,7 @@ vCenter (Target Site) → Datastore → check % used
 
 ## VRS Health (if deployed)
 
-```
+```text
 vCenter → Site Recovery → vSphere Replication → Replication Servers
   Each VRS should show: Connected, Healthy
   VMs assigned to each VRS: should be balanced
@@ -135,12 +135,12 @@ echo | openssl s_client -connect vra-amsterdam.example.local:44046 2>/dev/null \
 ## Monthly DR Test Trigger
 
 Run a test recovery on at least one VR-protected VM monthly. For VMs managed by SRM:
-```
+```text
 SRM → Recovery Plans → [plan] → Test
 ```
 
 For standalone VR (without SRM):
-```
+```text
 vCenter → Site Recovery → Replications → [VM] → Recover
   Mode: Test (isolated network)
   After test: Delete the recovered test VM (do not clean up the replication)

@@ -2,7 +2,7 @@
 
 Entra ID (Azure AD) groups are the primary mechanism for managing access at scale.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │                  Entra ID Group Flow                         │
 │                                                              │
@@ -102,7 +102,7 @@ Get-AzADGroupMember -GroupObjectId <group-id>
 
 Dynamic groups evaluate rules against user attributes and update membership automatically.
 
-```
+```bash
 # All users in a department
 (user.department -eq "Engineering")
 

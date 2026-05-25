@@ -1,6 +1,6 @@
 # Aria Ops for Logs — Standards
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Ops for Logs — Cluster Design                  │
 ├─────────────────────────────────────────────────────────────┤
@@ -30,7 +30,7 @@
 
 Follow the same naming scheme as other LCM-managed appliances:
 
-```
+```text
 vrli-<env>-<node#>.<domain>
 ```
 
@@ -80,7 +80,7 @@ Add worker nodes to scale horizontally — ingestion capacity scales linearly wi
 | Cold (compliance archive) | 1–7 years | Object storage or tape |
 
 Configure retention:
-```
+```text
 Administration → General → Retention → set retention period in days
 Administration → Archiving → configure NFS archive target
 ```

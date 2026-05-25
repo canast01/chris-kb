@@ -1,6 +1,6 @@
 # Service Availability Monitoring
 
-```
+```text
 ┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
 │   Probe / Check  │   │ Availability %   │   │   SLA Report     │   │  Incident Log   │
 │                  │   │                  │   │                  │   │                 │
@@ -21,7 +21,7 @@
 
 ## Availability Calculation
 
-```
+```text
 Availability % = (Total time - Downtime) / Total time × 100
 
 99.9%  → 8.7 hours downtime/year (43.8 min/month)

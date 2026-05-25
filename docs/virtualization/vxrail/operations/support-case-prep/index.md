@@ -3,7 +3,7 @@
 
 Evidence, timeline, logs, screenshots, and clear issue summary for Dell support.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │            Dell Support Case Prep Flow               │
   │                                                      │

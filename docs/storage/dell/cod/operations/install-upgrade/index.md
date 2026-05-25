@@ -3,7 +3,7 @@
 
 COD entitlements are tracked in the Dell License Management Portal and are tied to a specific PowerMax frame serial number (SID). The lifecycle of a COD entitlement follows this path:
 
-```
+```text
 Purchase order confirmed
         │
         ▼

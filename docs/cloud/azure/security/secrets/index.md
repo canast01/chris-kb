@@ -4,7 +4,7 @@ Key Vault secrets store arbitrary string values — passwords, connection string
 
 ## Secret Structure
 
-```
+```text
 Vault: my-vault
   └── Secret: db-connection-string
         ├── Version: abc123  (current)  → "Server=sql01;User=app;Password=S3cr3t"
@@ -136,7 +136,7 @@ spec:
 
 Secret rotation is a manual process (or automated via Event Grid + Azure Functions):
 
-```
+```text
 Pattern: dual-secret rotation
   1. Generate new credential and write to secret (new version)
   2. Update application to use new version

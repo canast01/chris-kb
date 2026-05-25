@@ -3,7 +3,7 @@
 
 AWS Access Keys notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │               Access Keys — When to Use                 │
 │                                                         │

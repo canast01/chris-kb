@@ -227,7 +227,7 @@ multipath -r
 
 Key `/etc/multipath.conf` settings for Dell/EMC and Pure Storage:
 
-```
+```text
 defaults {
     polling_interval     5
     path_selector        "round-robin 0"

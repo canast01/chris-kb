@@ -1,6 +1,6 @@
 # Horizon — Backup and Restore
 
-```
+```text
   Backup Sources                        Backup Methods
 ┌─────────────────────┐               ┌────────────────────────────┐
 │  Connection Server  │──vdmexport───►│  LDIF file (pod config)    │
@@ -148,7 +148,7 @@ robocopy $src $dst /MIR /R:3 /W:5 /LOG:"D:\Logs\dem-backup-$(Get-Date -Format 'y
 
 **What is in the DEM Config Share:**
 
-```
+```text
 DEMConfig\
   General\          — Global DEM settings
   FlexEngine\       — FlexEngine policies (app settings capture, drive maps, etc.)

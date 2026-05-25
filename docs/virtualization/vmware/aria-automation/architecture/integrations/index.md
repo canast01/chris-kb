@@ -1,6 +1,6 @@
 # Aria Automation — Integrations
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │          Aria Automation Integration Topology               │
 ├─────────────────────────────────────────────────────────────┤
@@ -234,7 +234,7 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 
 Verify all integration endpoint connections regularly:
 
-```
+```text
 Infrastructure > Connections > Cloud Accounts  — check green status for all vCenter and NSX accounts
 Infrastructure > Connections > Integrations    — check all integration endpoints are reachable
 ```

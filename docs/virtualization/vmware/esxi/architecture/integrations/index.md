@@ -1,6 +1,6 @@
 # ESXi — Integrations
 
-```
+```text
 ESXi Integration Map
                     ┌─────────────────────┐
                     │  vCenter Server      │

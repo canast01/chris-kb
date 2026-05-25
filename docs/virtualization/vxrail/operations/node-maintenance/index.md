@@ -1,6 +1,6 @@
 # VxRail Node Maintenance Procedure
 
-```
+```text
 Node Maintenance Mode Lifecycle
 ┌──────────────────────────────────────────────────────────────┐
 │  Pre-check: cluster health green · vSAN resync acceptable    │

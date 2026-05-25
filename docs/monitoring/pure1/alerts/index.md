@@ -1,6 +1,6 @@
 # Pure1 — Alerts
 
-```
+```text
 Alert Pipeline — Pure1
 ┌──────────────┐
 │  Array event │  (hardware fault / capacity / replication lag)
@@ -107,14 +107,14 @@ for a in data.get('items', []):
 
 ### Email
 
-```
+```text
 Pure1 → Administration → Notification → Email
 Add individual or distribution list email addresses
 ```
 
 ### SNMP Traps
 
-```
+```bash
 Array CLI:
 puresnmp list          # show current SNMP config
 puresnmp set --manager <nms-ip> --community <community>
@@ -137,7 +137,7 @@ puresyslog add --address <syslog-ip> --port 514 --protocol udp
 
 ### Webhooks (FlashArray 6.3+)
 
-```
+```text
 Array UI → Settings → Notification → Webhooks → Add Webhook
 URL: https://your-endpoint/pure-webhook
 Events: hardware, capacity, replication, network

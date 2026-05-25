@@ -195,7 +195,7 @@ for e in data:
 
 SupportAssist enables Dell to proactively monitor the array and create automated service requests.
 
-```
+```text
 PowerStore → SupportAssist (ESRS) → Dell SRS Cloud → Dell Support
 ```
 

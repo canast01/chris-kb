@@ -1,6 +1,6 @@
 # Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation
 
-```
+```text
 AI Alert Flow — Dell AIOps
 ┌──────────────────────────────────────┐
 │  Telemetry anomaly detected          │

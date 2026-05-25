@@ -1,6 +1,6 @@
 # Pure Storage Evergreen Lifecycle
 
-```
+```text
 Evergreen Lifecycle Timeline
   Year 0 ──► Array installed, subscription starts
        │

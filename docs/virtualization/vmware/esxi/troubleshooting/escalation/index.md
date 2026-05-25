@@ -1,6 +1,6 @@
 # ESXi Escalation
 
-```
+```text
 ESXi Escalation Path — Broadcom Support
 ┌─────────────────────────────────────────────────────────┐
 │  Collect Before Calling                                 │

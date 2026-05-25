@@ -1,6 +1,6 @@
 # Horizon — Access Control
 
-```
+```text
   RBAC: AD Groups → Entitlements → Pools
 ┌──────────────┐    ┌───────────────────┐    ┌─────────────────────┐
 │ AD Groups    │    │ Horizon Roles      │    │ Desktop Pools /     │
@@ -32,7 +32,7 @@
 
 ## Assign Roles to AD Groups
 
-```
+```text
 Horizon Console → Settings → Administrators → Add Permission
   Add User or Group: select AD user or group
   Role: select appropriate role
@@ -53,7 +53,7 @@ Recommended mapping:
 
 Horizon supports scoping admin permissions to specific pools via Access Groups:
 
-```
+```text
 Horizon Console → Settings → Administrators → Access Groups → Create Group
   Name: Pool-Win10-Admins
   Assign pools: select specific desktop pools
@@ -71,7 +71,7 @@ This limits the admin to only the pools in the assigned Access Group.
 
 Control which users can access which pool:
 
-```
+```text
 Horizon Console → Inventory → Desktops → [pool] → Entitlements
   Add: CORP\Horizon-Pool-Win10 (AD security group)
   Remove users or groups who should no longer have access
@@ -87,7 +87,7 @@ App Volumes AppStacks are assigned to:
 - OUs
 - Computers
 
-```
+```yaml
 App Volumes Manager → AppStacks → [AppStack] → Assignments
   Add Assignment
     Type: Group
@@ -103,7 +103,7 @@ Writable volumes (user data disks) are assigned per-user or per-group with stora
 
 Restrict external UAG access by source IP (if applicable):
 
-```
+```text
 UAG Admin UI (port 9443) → Advanced Settings → Source IP Rules
   Allow: <corporate VPN IP range>
   Deny: All other
@@ -120,7 +120,7 @@ DMZ firewall rules:
 
 Horizon Connection Server connects to vCenter with a dedicated service account:
 
-```
+```yaml
 vCenter → Administration → Global Permissions → Add
   User: svc-horizon-vc@corp.local
   Role: Horizon Administrator (custom role with required privileges)
@@ -133,7 +133,7 @@ Required vCenter privileges for Horizon service account: documented in VMware Ho
 
 ## Audit Log Access
 
-```
+```text
 Horizon Console → Monitor → Events
   Filter by: Administrator, type: Configuration Change
 ```

@@ -16,7 +16,7 @@ Structured procedure for migrating workloads between platforms, hypervisors, dat
 
 ## Phase 1 — Planning
 
-```
+```yaml
 Migration Plan — <HOSTNAME> / <WORKLOAD>
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Source:           <platform, host, location>

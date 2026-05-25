@@ -2,7 +2,7 @@
 
 Use this when VMs are slow, I/O latency is elevated in monitoring, or vSAN latency alarms trigger.
 
-```
+```text
                Latency alert / VM storage slow
                               │
                               ▼

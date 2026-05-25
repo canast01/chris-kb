@@ -150,7 +150,7 @@ Consistent CI names enable reliable service mapping and automation. Apply these 
 
 ### General Format
 
-```
+```text
 <site>-<type>-<function>-<sequence>
 ```
 

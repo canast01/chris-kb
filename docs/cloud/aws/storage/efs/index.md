@@ -3,7 +3,7 @@
 
 AWS EFS notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  EFS Architecture                       │
 │                                                         │

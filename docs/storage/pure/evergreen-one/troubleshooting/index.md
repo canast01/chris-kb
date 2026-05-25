@@ -1,6 +1,6 @@
 # Pure Storage Evergreen//One Troubleshooting
 
-```
+```text
   Pure Triage Decision Tree
 
   Symptom

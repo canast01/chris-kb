@@ -111,7 +111,7 @@ Open a terminal or SSH into the SCG server.
 
 **Step 4 — Run the script**
 
-```
+```bash
 chmod +x scg_connectivity_check.sh
 SCG_PASS=yourpassword ./scg_connectivity_check.sh
 ```
@@ -247,7 +247,7 @@ if __name__ == "__main__":
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 set SCG_HOST=192.168.10.50
 set SCG_PASS=yourpassword
@@ -366,7 +366,7 @@ Open a terminal on your Ansible control node.
 
 **Step 4 — Run the script**
 
-```
+```text
 ansible-playbook -i inventory scg_status.yml --ask-vault-pass
 ```
 
@@ -442,7 +442,7 @@ echo ========================================
 **Step 3 — Accept the host key (one-time setup)**
 
 Open Command Prompt and run:
-```
+```text
 plink -ssh admin@192.168.10.50
 ```
 Type `y` when prompted, then press Ctrl+C.
@@ -453,7 +453,7 @@ Type `y` when prompted, then press Ctrl+C.
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 scg_connection_test.bat
 ```
@@ -583,13 +583,13 @@ Write-Host "========================================"
 
 **Step 4 — Allow scripts to run (one-time)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\scg_device_inventory.ps1
 ```

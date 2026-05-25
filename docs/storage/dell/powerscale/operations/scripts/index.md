@@ -100,7 +100,7 @@ On Linux/macOS, open a terminal. On Windows, use Git Bash or WSL.
 
 **Step 4 — Run it**
 
-```
+```bash
 cd /path/to/script
 PS_HOST=192.168.1.30 PS_USER=root perl powerscale_health_check.pl
 ```
@@ -214,7 +214,7 @@ On Linux/macOS, open a terminal. On Windows, use Git Bash or WSL.
 
 **Step 4 — Run it**
 
-```
+```bash
 cd /path/to/script
 PS_HOST=192.168.1.30 PS_USER=root ./powerscale_synciq_monitor.sh
 ```
@@ -321,12 +321,12 @@ exit 0
 **Run it**
 
 To print to the terminal:
-```
+```text
 PS_HOST=192.168.1.30 PS_USER=root ./powerscale_quota_report.sh
 ```
 
 To save as a CSV file:
-```
+```text
 PS_HOST=192.168.1.30 PS_USER=root ./powerscale_quota_report.sh > quota_report.csv
 ```
 

@@ -1,6 +1,6 @@
 # Aria Operations — Integration
 
-```
+```text
 Aria Operations — Adapter and Outbound Integration Map
 ┌─────────────────────────────────────────────────────┐
 │  Data Sources (Inbound Adapters)                    │
@@ -51,7 +51,7 @@ The vCenter / SDDC adapter is the core integration and is added during initial s
 
 **Add or verify via UI:**
 
-```
+```text
 Administration > Solutions > vCenter Adapter
 ```
 
@@ -67,7 +67,7 @@ Monitors NSX-T logical topology, transport nodes, and control plane health.
 
 **Configure:**
 
-```
+```text
 Administration > Solutions > NSX-T Adapter > Add Instance
 ```
 
@@ -75,7 +75,7 @@ Administration > Solutions > NSX-T Adapter > Add Instance
 
 ## Active Directory / LDAP Authentication
 
-```
+```text
 Administration > Access Control > Authentication Sources > Add Source
 ```
 
@@ -94,7 +94,7 @@ After adding the source, map AD groups to Aria Operations roles in **Access Cont
 
 ## SMTP (Alert Email)
 
-```
+```text
 Administration > Outbound Settings > Add Plugin > SMTP
 ```
 
@@ -113,7 +113,7 @@ Assign SMTP to notification rules: **Alerts > Notifications > Add Rule**
 
 Requires the **ServiceNow Notification Plugin** (available in the Aria Operations Marketplace or bundled).
 
-```
+```text
 Administration > Outbound Settings > Add Plugin > ServiceNow
 ```
 
@@ -132,7 +132,7 @@ Trigger: Add a notification rule targeting critical alerts → ServiceNow plugin
 
 For custom integrations (Slack, Teams, custom ITSM):
 
-```
+```text
 Administration > Outbound Settings > Add Plugin > REST Notification Plugin
 ```
 
@@ -144,7 +144,7 @@ Configure endpoint URL, method (POST), and body template using Aria Operations a
 
 Forward Aria Operations alerts to Aria Operations for Logs for correlation:
 
-```
+```text
 Administration > Solutions > Log Insight Adapter
 ```
 

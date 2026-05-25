@@ -61,7 +61,7 @@ Set-SmEmailNotification -SmtpServer mail.corp.domain.com -From snapcenter@corp.d
 
 SnapCenter exposes a full REST API for automation. The Swagger UI is at:
 
-```
+```text
 https://<snapcenter-server>:8146/swagger/
 ```
 

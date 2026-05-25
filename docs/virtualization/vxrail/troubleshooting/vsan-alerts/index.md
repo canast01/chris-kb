@@ -3,7 +3,7 @@
 
 vSAN health issues, object health, resync, capacity, and disk group problems.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │            vSAN Alert Triage Flow                    │
   │                                                      │

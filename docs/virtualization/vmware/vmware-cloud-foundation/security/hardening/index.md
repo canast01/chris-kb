@@ -1,6 +1,6 @@
 # VCF — Hardening
 
-```
+```text
 VCF Hardening — Network Access Control Model
 ┌─────────────────────────────────────────────────────┐
 │  Management Jump-Host / PAW                         │

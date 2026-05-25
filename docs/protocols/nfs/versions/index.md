@@ -1,6 +1,6 @@
 # NFS Versions
 
-```
+```text
         NFSv3 vs NFSv4 vs NFSv4.1 COMPARISON
 ┌─────────────────────┬──────────────┬──────────────┬──────────────┐
 │ Feature             │   NFSv3      │   NFSv4      │  NFSv4.1     │

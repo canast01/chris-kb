@@ -1,6 +1,6 @@
 # Aria Operations for Networks — Backup and Restore
 
-```
+```text
 ┌──────────── Aria Networks Backup: Config Snapshot Flow ────────────────────────┐
 │                                                                                 │
 │  What is backed up (config export):                                             │
@@ -116,7 +116,7 @@ else
 fi
 ```
 
-```
+```bash
 # crontab entry — runs daily at 02:00
 0 2 * * * /usr/local/bin/aon-backup.sh >> /var/log/aon-backup.log 2>&1
 ```

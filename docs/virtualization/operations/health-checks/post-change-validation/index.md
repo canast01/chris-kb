@@ -2,7 +2,7 @@
 
 Run these checks after any infrastructure change — maintenance, upgrade, patch, or configuration modification. Document evidence in the change record before closing.
 
-```
+```text
 Post-Change Validation Flow
 ═══════════════════════════════════════════════════════════
 

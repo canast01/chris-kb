@@ -1,6 +1,6 @@
 # Tanzu — Common Issues
 
-```
+```text
 ┌──────────────── Tanzu Triage: Issue by Layer ──────────────────────────────────┐
 │                                                                                 │
 │  Supervisor issues                                                              │

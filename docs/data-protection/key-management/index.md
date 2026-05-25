@@ -2,7 +2,7 @@
 
 Cryptographic key lifecycle management — generation, storage, distribution, rotation, and revocation.
 
-```
+```text
 ┌──────────┐   ┌──────────────────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐
 │ Generate │   │  Store               │   │  Rotate  │   │  Expire  │   │  Audit   │
 │          │   │                      │   │          │   │          │   │          │

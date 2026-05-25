@@ -1,6 +1,6 @@
 # Evergreen — Common Issues
 
-```
+```text
 Evergreen Common Issues — Triage
   Issue type
        │

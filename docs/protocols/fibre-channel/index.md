@@ -2,7 +2,7 @@
 
 High-speed serial protocol for Storage Area Network (SAN) connectivity between hosts and storage arrays.
 
-```
+```text
         FC END-TO-END PATH
 ┌────────┐    ┌─────┐    ┌──────────────┐    ┌─────┐    ┌─────────┐    ┌─────┐
 │  Host  │    │ HBA │    │  FC Switch A │    │ ISL │    │FC Switch│    │Array│

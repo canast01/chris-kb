@@ -1,6 +1,6 @@
 # Tanzu — Authentication
 
-```
+```text
 ┌──────────────── Tanzu Authentication Flow ─────────────────────────────────────┐
 │                                                                                 │
 │  User / CI/CD pipeline                                                          │
@@ -145,7 +145,7 @@ kubectl patch serviceaccount default -n production \
 
 ## OIDC for Harbor
 
-```
+```text
 Harbor UI → Administration → Configuration → Authentication
   Auth Mode: OIDC
   OIDC Provider Name: Workspace ONE

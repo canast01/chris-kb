@@ -152,7 +152,7 @@ cat /var/dcnm/version
 
 ## Support Case Description Template
 
-```
+```yaml
 Product: Cisco Data Center Network Manager (DCNM)
 Version: 11.x.x (from /var/dcnm/version)
 Deployment: Standalone / Native HA

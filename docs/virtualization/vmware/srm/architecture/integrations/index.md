@@ -1,6 +1,6 @@
 # SRM — Integrations
 
-```
+```text
   SRM Integration Points
 ┌──────────────┐   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
 │   vCenter    │   │  vSphere     │   │  Storage     │   │    NSX-T     │
@@ -235,7 +235,7 @@ When the protected and recovery sites use NSX-T, SRM uses **network mappings** t
 
 Standard mapping for traditional vSphere networking:
 
-```
+```text
 Protected Site: dvPortGroup-App-VLAN100
       ↓ maps to ↓
 Recovery Site:  dvPortGroup-App-VLAN200
@@ -247,7 +247,7 @@ Configure in SRM UI: Site Recovery → Inventory Mappings → Network → **Add 
 
 When using NSX-T overlay segments, segments have logical names (not tied to physical VLANs):
 
-```
+```text
 Protected Site: overlay-segment-app-tier  (NSX-T logical segment)
       ↓ maps to ↓
 Recovery Site:  overlay-segment-app-tier  (same name at recovery site, different segment ID)

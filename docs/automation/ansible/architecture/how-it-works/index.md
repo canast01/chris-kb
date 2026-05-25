@@ -124,7 +124,7 @@ sequenceDiagram
 
 Roles provide a structured, reusable packaging format bundling tasks, handlers, variables, templates, and files.
 
-```
+```text
 roles/
 └── nginx/
     ├── defaults/main.yml

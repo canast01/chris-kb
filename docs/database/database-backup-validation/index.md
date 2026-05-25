@@ -2,7 +2,7 @@
 
 Confirm database backups are completing successfully, files are intact, and restores work before they are needed in an actual incident.
 
-```
+```text
 ┌──────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
 │  Backup Job  │   │ Restore to Test  │   │  Validate Data   │   │ Compliance Rpt  │
 │              │   │                  │   │                  │   │                 │

@@ -1,6 +1,6 @@
 # Aria Operations for Networks — Integrations
 
-```
+```text
 ┌──────────── Aria Networks Integration Map ─────────────────────────────────────┐
 │                                                                                 │
 │  ┌─────────────┐  API (TCP 443)   ┌─────────────────────────────────────────┐  │
@@ -95,7 +95,7 @@ The Collector polls vCenter via the vSphere SOAP/REST API every 10 minutes.
 
 **Minimum vCenter privileges** for the AON service account:
 
-```
+```text
 System.Anonymous
 System.Read
 System.View
@@ -338,7 +338,7 @@ AON ingests Palo Alto traffic logs via two methods:
 
 PAN-OS: Device → Server Profiles → Syslog → Add
 
-```
+```yaml
 Name: AON-Syslog
 Syslog Server IP: 10.10.10.50
 Transport: UDP

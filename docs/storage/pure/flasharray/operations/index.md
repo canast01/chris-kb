@@ -1,6 +1,6 @@
 # FlashArray — Operations
 
-```
+```text
 FlashArray Day-to-Day Operations Flow
 ┌───────────────────────────────────────────────────────┐
 │  Pure1 Cloud                                          │

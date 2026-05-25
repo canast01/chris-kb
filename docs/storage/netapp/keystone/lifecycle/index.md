@@ -22,7 +22,7 @@ The Keystone Collector reports consumption telemetry continuously. NetApp aggreg
 - **Committed capacity charge**: flat monthly rate for the contracted committed capacity per tier
 - **Burst charge**: per-TB rate (higher than committed rate) applied to any usage above committed capacity during the billing period
 
-```
+```text
 Monthly Invoice = (Committed capacity × committed rate) + (Burst TiB × burst rate)
 ```
 

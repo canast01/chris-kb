@@ -42,7 +42,7 @@ Consistent naming across the vSphere inventory is critical for readability, auto
 
 ### vSphere HA Advanced Options (production)
 
-```
+```text
 das.failuredetectiontime = 15000
 das.isolationaddress0 = <gateway IP>
 das.isolationaddress1 = <secondary IP>
@@ -51,7 +51,7 @@ das.usedefaultisolationaddress = false
 
 ## Resource Pool Naming and Structure
 
-```
+```text
 Cluster Root
 ├── RP-PROD-CRITICAL   (Reservation: 40%, Limit: unlimited, Expandable: no)
 ├── RP-PROD-STANDARD   (Reservation: 20%, Limit: unlimited, Expandable: yes)
@@ -162,7 +162,7 @@ PCI passthrough and SR-IOV are permitted only for workloads with documented perf
 
 All VM disks must reside on a vSphere datastore with sufficient free space. Alert threshold is 80% capacity; hard limit for new provisioning is 85%.
 
-```
+```bash
 # Recommended disk layout
 Disk 1: OS        50 GB   thick eager zeroed
 Disk 2: Data      varies  thick eager zeroed

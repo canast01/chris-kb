@@ -2,7 +2,7 @@
 
 Reliability engineering systematically improves system resilience through redundancy, failure testing, and learning from incidents.
 
-```
+```text
 ┌──────────┐   ┌──────────┐   ┌──────────────┐   ┌──────────────────┐   ┌─────────────┐
 │   SLI    │   │   SLO    │   │ Error Budget │   │ Burn Rate Alert  │   │ Reliability │
 │          │   │          │   │              │   │                  │   │   Action    │

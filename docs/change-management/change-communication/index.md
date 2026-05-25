@@ -2,7 +2,7 @@
 
 Structured approach to notifying stakeholders before, during, and after changes to maintain trust and minimize surprise.
 
-```
+```text
 ┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
 │  Pre-change      │   │  Window Start    │   │ During Change    │   │  Post-change    │
 │  Notice          │   │  Announcement    │   │ Updates          │   │  Report         │
@@ -35,7 +35,7 @@ Structured approach to notifying stakeholders before, during, and after changes 
 
 ## Pre-Change Notification Template
 
-```
+```yaml
 Subject: [Planned Maintenance] <Service Name> — <Date> <Start Time> UTC
 
 Service:        <service-name>
@@ -51,7 +51,7 @@ If you have questions or concerns please reply by <date 2 days before window>.
 
 ## Window Start Announcement
 
-```
+```text
 [CHANGE-IN-PROGRESS] ITSM-XXXX
 Starting: <service-name> maintenance window now open
 Estimated end: <time UTC>
@@ -61,7 +61,7 @@ Updates in: #ops-alerts
 
 ## Completion Announcement
 
-```
+```yaml
 [CHANGE-COMPLETE] ITSM-XXXX — <service-name>
 Status: SUCCESS / FAILED / ROLLED BACK
 Duration: <actual duration>
@@ -71,7 +71,7 @@ Next steps: <monitoring period / follow-up ticket / none>
 
 ## Rollback Announcement
 
-```
+```bash
 [CHANGE-ROLLBACK] ITSM-XXXX
 Rolling back <service-name> change due to: <brief reason>
 Estimated rollback duration: <time>

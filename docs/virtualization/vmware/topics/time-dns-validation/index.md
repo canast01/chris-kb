@@ -1,6 +1,6 @@
 # DNS and NTP Validation
 
-```
+```text
 ┌──────────── NTP Stratum Hierarchy & DNS Forward/Reverse Validation ────────────┐
 │                                                                                 │
 │  NTP hierarchy                                                                  │

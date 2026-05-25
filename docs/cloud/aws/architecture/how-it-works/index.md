@@ -30,7 +30,7 @@ SCPs enforce guardrails: deny root access, enforce encryption, restrict regions 
 
 Hub-and-spoke via Transit Gateway:
 
-```
+```text
 On-Premises ←→ Direct Connect ←→ Transit Gateway
                                         │
               ┌─────────────────────────┼─────────────────────────┐
@@ -120,7 +120,7 @@ flowchart LR
     userData --> running["Instance Running"]
 ```
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │              AWS Request Flow (web workload)             │
 │                                                          │
@@ -139,7 +139,7 @@ flowchart LR
 
 ## IAM Structure
 
-```
+```text
 AWS Organizations SCPs (deny dangerous actions globally)
     │
 IAM Identity Center (SSO — maps AD groups to permission sets)

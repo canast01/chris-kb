@@ -8,7 +8,7 @@ PowerStore encrypts all data at rest using AES-256 encryption at the drive level
 
 PowerStore D@RE uses a two-tier key hierarchy:
 
-```
+```text
 Drive Encryption Keys (DEKs)
   └── Unique per NVMe SSD; generated and stored on the drive controller
 Key Encryption Keys (KEKs)

@@ -164,7 +164,7 @@ SupportAssist is Dell's call-home mechanism. When enabled, PowerStore automatica
 - Creates automated service requests for qualifying hardware faults (e.g., drive failure)
 - Enables Dell Support engineers to initiate remote support sessions
 
-```
+```text
 PowerStore → SupportAssist → ESRS/SRS Cloud → Dell Support
 ```
 

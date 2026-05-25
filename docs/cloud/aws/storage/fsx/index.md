@@ -3,7 +3,7 @@
 
 AWS FSx notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  FSx Variants                           │
 │                                                         │

@@ -52,7 +52,7 @@ esxcli hbr replication getstate -i <vmid>
 
 ## Data Flow
 
-```
+```text
 Source Site                                    Target Site
 -----------                                    -----------
 VM VMDK Write
@@ -152,7 +152,7 @@ At the target site, the VRA maintains multiple recovery point instances per VM. 
 - Storage overhead: base replica VMDK + (N × average changed data per cycle)
 - Instances are managed as a ring buffer — oldest is discarded when a new one is created and the max count is reached
 
-```
+```text
 Target Datastore Layout (per replicated VM):
   <VM-name>/
     <VM-name>.vmdk          ← base replica disk (merged latest state)
@@ -206,7 +206,7 @@ The VRS is an optional scale-out component deployed when VM count exceeds single
 
 ### VRS Architecture
 
-```
+```text
 Source Site ESXi Hosts
         |
         | TCP 31031 (replication data)

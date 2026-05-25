@@ -57,7 +57,7 @@ The recommended model for Linux: create a named storage administration account a
 
 **Sudoers configuration for a storage admin account:**
 
-```
+```bash
 # /etc/sudoers.d/powerpath
 # Storage admin — full powermt access
 svc-storage ALL=(root) NOPASSWD: /usr/sbin/powermt
@@ -65,7 +65,7 @@ svc-storage ALL=(root) NOPASSWD: /usr/sbin/powermt
 
 This grants the `svc-storage` account the ability to run any `powermt` subcommand. If tighter restriction is needed, specify individual commands:
 
-```
+```bash
 # /etc/sudoers.d/powerpath-monitoring
 # Read-only monitoring account — display and registration check only
 svc-monitoring ALL=(root) NOPASSWD: \
@@ -102,7 +102,7 @@ getent group storage-admins
 
 Hosts running PowerPath should enforce SSH key authentication and disable password-based SSH login for root:
 
-```
+```bash
 # /etc/ssh/sshd_config
 PermitRootLogin prohibit-password
 PasswordAuthentication no
@@ -140,7 +140,7 @@ VisibleExternalCommands = 'powermt display dev=all', 'powermt check_registration
 
 Windows Server hosts joined to Active Directory authenticate via Kerberos. Grant the relevant AD security group Local Administrator membership on PowerPath hosts via Group Policy:
 
-```
+```text
 Computer Configuration > Policies > Windows Settings >
 Security Settings > Restricted Groups >
 Add DOMAIN\Storage-Admins to local Administrators

@@ -1,6 +1,6 @@
 # DNS Records
 
-```
+```text
         COMMON RECORD TYPES
 ┌──────────────────────────────────────────────────────────────┐
 │  Forward zone: corp.local                                    │

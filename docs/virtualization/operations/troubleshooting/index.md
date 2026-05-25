@@ -1,6 +1,6 @@
 # Virtualization Troubleshooting
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │          VIRTUALIZATION TROUBLESHOOTING DECISION TREE           │
 └──────────────────────────┬──────────────────────────────────────┘

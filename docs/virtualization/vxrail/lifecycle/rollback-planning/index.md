@@ -1,6 +1,6 @@
 # VxRail Node Replacement Checklist
 
-```
+```text
 Rollback Decision Tree
 ┌──────────────────────────────────────────────────────────────┐
 │  LCM upgrade started                                         │

@@ -1,6 +1,6 @@
 # Aria Operations for Networks — Diagnostics
 
-```
+```text
 ┌────────────── Aria Networks Diagnostics: Support Bundle ───────────────────────┐
 │                                                                                 │
 │  Fastest path: UI ► Settings ► Support ► Download Support Bundle               │
@@ -33,7 +33,7 @@
 
 Collect the support bundle before opening a case — it includes Platform and Collector logs, system state, and configuration.
 
-```
+```text
 Settings → Support → Download Support Bundle
   Select: Platform + All Collectors
   Download and attach to VMware Support case

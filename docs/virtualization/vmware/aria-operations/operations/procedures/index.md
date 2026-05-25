@@ -1,6 +1,6 @@
 # Aria Operations — Procedures
 
-```
+```text
 Aria Operations — Alert Lifecycle
 ┌─────────────────────────────────────────────────────┐
 │  Alert Fires                                        │
@@ -65,7 +65,7 @@ curl -sk -X PATCH -H "Authorization: vRealizeOpsToken $TOKEN" \
 
 Create a maintenance schedule to suppress alerts for planned work:
 
-```
+```text
 Administration → Maintenance Schedules → Add Schedule
 ```
 
@@ -139,7 +139,7 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
 
 Custom alert definitions trigger when specific metric thresholds are breached.
 
-```
+```text
 Administration → Alert Settings → Alert Definitions → Add
 ```
 
@@ -156,7 +156,7 @@ Administration → Alert Settings → Alert Definitions → Add
 
 Apply the alert policy to an object group:
 
-```
+```text
 Administration → Alert Settings → Alert Policies → select policy → Apply to Groups
 ```
 
@@ -166,7 +166,7 @@ Administration → Alert Settings → Alert Policies → select policy → Apply
 
 Alert notifications route to email, ServiceNow, or webhook:
 
-```
+```text
 Alerts → Notifications → Add Notification Rule
 ```
 

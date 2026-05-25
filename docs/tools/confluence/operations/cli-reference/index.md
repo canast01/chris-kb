@@ -337,7 +337,7 @@ jmap -dump:format=b,file=/tmp/confluence-heap-$(date +%Y%m%d%H%M).hprof "$CONF_P
 
 Log levels can be changed at runtime without restart:
 
-```
+```text
 Admin > General Configuration > Logging and Profiling
 ```
 

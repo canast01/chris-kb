@@ -85,7 +85,7 @@ Administration → User Management → SAML 2.0 Single Sign-On
 
 ### Azure AD (Entra ID) Enterprise Application Setup
 
-```
+```yaml
 1. Azure Portal → Enterprise Applications → New Application → Jira SAML SSO
 2. Single sign-on → SAML
 3. Basic SAML Configuration:

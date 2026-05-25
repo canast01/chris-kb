@@ -3,7 +3,7 @@
 
 AWS Instance Recovery notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │               EC2 Instance Recovery Flow                │
 │                                                         │

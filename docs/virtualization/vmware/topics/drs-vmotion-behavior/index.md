@@ -1,6 +1,6 @@
 # DRS and vMotion Behavior
 
-```
+```text
 ┌──────────── DRS / vMotion: Imbalance to Migration ─────────────────────────────┐
 │                                                                                 │
 │  DRS evaluates cluster balance every 5 minutes                                  │

@@ -4,7 +4,7 @@
 Pure Storage Pure1 cloud-based management and analytics — SaaS architecture, AI-driven health scoring, capacity forecasting, and fleet management via REST API.
 </div>
 
-```
+```text
 Pure1 — Cloud Monitoring
 ┌────────────────┐    ┌────────────────┐
 │ FlashArray     │    │ FlashBlade     │

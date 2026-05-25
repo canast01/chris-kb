@@ -1,6 +1,6 @@
 # FlashBlade — CLI Reference
 
-```
+```text
 purefb CLI Hierarchy
   purefb
   ├── array       — system info, capacity, performance

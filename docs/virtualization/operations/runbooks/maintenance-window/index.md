@@ -2,7 +2,7 @@
 
 Use this for planned VMware work.
 
-```
+```text
 Maintenance Window Flow
 ═══════════════════════════════════════════════════════════
 

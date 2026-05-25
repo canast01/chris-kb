@@ -1,7 +1,7 @@
 # Public Key Infrastructure (PKI)
 ## PKI Architecture (Typical Enterprise)
 
-```
+```text
 Root CA (offline, air-gapped)
   └── Intermediate / Issuing CA (online, ADCS)
         ├── Server certificates (internal services)
@@ -11,7 +11,7 @@ Root CA (offline, air-gapped)
 
 ## TLS Handshake Flow
 
-```
+```text
   Client                                          Server
     │                                               │
     │── ClientHello ───────────────────────────────►│
@@ -41,7 +41,7 @@ Root CA (offline, air-gapped)
 
 ## Certificate Validation Chain
 
-```
+```text
   Browser / Client
        │  verify signature
        ▼

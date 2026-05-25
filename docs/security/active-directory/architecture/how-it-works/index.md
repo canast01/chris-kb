@@ -128,7 +128,7 @@ FSMO roles should be seized only if DC1 cannot be restored within 24 hours.
 
 The AD database file is `NTDS.DIT`:
 
-```
+```text
 Location: C:\Windows\NTDS\NTDS.DIT
 Log files: C:\Windows\NTDS\*.log (EDB transaction logs)
 SYSVOL:    C:\Windows\SYSVOL\sysvol\<domain>\
@@ -163,7 +163,7 @@ sequenceDiagram
 
 ## LDAP Bind Flow
 
-```
+```text
   Client                         Active Directory (LDAP)
     │                                      │
     │── TCP SYN ──────────────────────────►│  (port 389 / 636)

@@ -87,7 +87,7 @@ aws cloudwatch put-metric-alarm \
 
 ## Querying Logs with CloudWatch Insights
 
-```
+```bash
 # Find slowest invocations in the last 24 hours
 fields @timestamp, modelId, inputTokenCount, outputTokenCount, invocationLatency
 | filter invocationLatency > 5000

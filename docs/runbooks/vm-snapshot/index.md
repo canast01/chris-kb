@@ -12,7 +12,7 @@
 
 ## Process Flow
 
-```
+```text
   Change window starting
            │
            ▼

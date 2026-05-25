@@ -2,7 +2,7 @@
 
 Use this when there is an active VMware platform issue.
 
-```
+```text
 Incident Triage Flow
 ═══════════════════════════════════════════════════════════
 

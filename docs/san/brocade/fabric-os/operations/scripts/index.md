@@ -132,7 +132,7 @@ Edit these lines near the top of the script:
 
 **Step 4 — Make the script executable and run it**
 
-```
+```bash
 chmod +x brocade_fabric_health.sh
 SWITCH_HOST=192.168.1.10 SWITCH_USER=admin ./brocade_fabric_health.sh
 ```
@@ -281,12 +281,12 @@ exit scalar(@alerts) ? 1 : 0;
 
 **Step 3 — Make the script executable and schedule via cron**
 
-```
+```bash
 chmod +x /opt/scripts/brocade_port_error_monitor.pl
 ```
 
 Add to crontab (`crontab -e`):
-```
+```text
 */15 * * * * SWITCH_HOST=192.168.1.10 SWITCH_USER=admin /opt/scripts/brocade_port_error_monitor.pl >> /var/log/brocade_monitor.log 2>&1
 ```
 

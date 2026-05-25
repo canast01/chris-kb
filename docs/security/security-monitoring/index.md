@@ -56,7 +56,7 @@ auditctl -l
 ## Correlation Rules (SIEM Examples)
 
 **Brute force detection:**
-```
+```bash
 # >10 failed logons from same source in 5 minutes
 index=security EventCode=4625
 | stats count by src_ip, user
@@ -64,7 +64,7 @@ index=security EventCode=4625
 ```
 
 **Lateral movement — new admin account:**
-```
+```bash
 # Account created then added to privileged group within 60 minutes
 index=security (EventCode=4720 OR EventCode=4728)
 | transaction user maxspan=60m
@@ -72,7 +72,7 @@ index=security (EventCode=4720 OR EventCode=4728)
 ```
 
 **Off-hours privileged access:**
-```
+```text
 index=security EventCode=4648
 | eval hour=strftime(_time,"%H")
 | where hour < 6 OR hour > 20

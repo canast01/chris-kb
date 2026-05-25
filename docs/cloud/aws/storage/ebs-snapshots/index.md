@@ -3,7 +3,7 @@
 
 AWS EBS Snapshots notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  EBS Snapshot Flow                      │
 │                                                         │

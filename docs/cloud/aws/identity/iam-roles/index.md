@@ -3,7 +3,7 @@
 
 AWS IAM Roles notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  IAM Role Structure                     │
 │                                                         │

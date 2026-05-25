@@ -1,6 +1,6 @@
 # Horizon — Integrations
 
-```
+```text
 ┌──────────────┐   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
 │   Active     │   │   vCenter    │   │     NSX      │   │ Workspace ONE│
 │  Directory   │   │  (vSphere)   │   │  (segments)  │   │ Access/vIDM  │
@@ -44,7 +44,7 @@ nslookup _ldap._tcp.dc._msdcs.<your-domain>
 
 Templates are located in the Horizon install media under `VMware-Horizon-Extras-Bundle\GPO`:
 
-```
+```text
 VMware Horizon Client Configuration.admx
 VMware Horizon Agent Configuration.admx
 VMware DEM Configuration.admx
@@ -182,7 +182,7 @@ msiexec /i "App Volumes Agent.msi" /qn REBOOT=ReallySuppress ^
 
 ### AppStack VMDK Datastore Layout
 
-```
+```text
 [SAN-Datastore01] cloudvolumes/
   apps/
     Office365-2406.vmdk
@@ -223,7 +223,7 @@ New-SmbShare -Name "DEMConfig" -Path "D:\DEMConfig" `
 
 ### Config Share NTFS Permissions
 
-```
+```text
 CORP\Domain Users         — Read & Execute (This folder, subfolders, files)
 CORP\svc-dem-admin        — Full Control
 CORP\Horizon-Admins       — Full Control
@@ -274,7 +274,7 @@ tunnelExternalUrl=https://vdi.example.com:443
 - Health check: `HTTPS GET https://<uag-ip>:443/favicon.ico` → expect 200
 
 LB listener ports:
-```
+```text
 443/TCP    — HTTPS + Horizon tunnel
 8443/TCP   — Blast Extreme (TCP mode)
 8443/UDP   — Blast Extreme (UDP/adaptive transport)
@@ -322,7 +322,7 @@ In Horizon Admin: **Settings > Servers > Connection Servers > [Edit] > Authentic
 - `SAML Authenticator`: enter SAML metadata URL from IdP
 
 **SAML flow:**
-```
+```text
 1. User hits IdP portal (e.g., Workspace ONE)
 2. IdP authenticates user (MFA, LDAP, cert)
 3. IdP issues signed SAML assertion → redirects to Connection Server / UAG
@@ -343,14 +343,14 @@ For environments requiring endpoint detection on VDI desktops:
 
 **AV/EDR exclusions for Horizon directories:**
 
-```
+```text
 C:\Program Files\VMware\VMware View\Agent\
 C:\ProgramData\VMware\VDM\
 C:\Windows\Temp\vmware-viewcomposer-ga-new-*
 ```
 
 **App Volumes mount point exclusions (real-time scanning):**
-```
+```text
 \\?\Volume{*}\   (all volumes — or specifically App Volumes mount GUIDs)
 ```
 

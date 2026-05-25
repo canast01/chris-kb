@@ -11,7 +11,7 @@ Aria Operations for Networks (AON, formerly vRealize Network Insight / VRNi) con
 
 Collectors maintain a persistent TLS connection back to the Platform VM on TCP 443. All raw flow data, API-pulled topology, and parsed configs are shipped from Collector to Platform for indexing. The Platform VM is the sole persistent data store — Collectors hold no long-term state.
 
-```
+```text
 [ESXi hosts / vDS]   ──IPFIX/NetFlow──►  [Collector VM]  ──TLS 443──►  [Platform VM]
 [NSX-T Manager]      ──REST API──────►   [Collector VM]
 [vCenter Server]     ──REST API──────►   [Collector VM]
@@ -91,7 +91,7 @@ In the UI: **Plan & Assess → Micro-Segmentation → Applications → Select Ap
 
 Alternatively, query flows directly:
 
-```
+```text
 flows where destination port = 3306 and flow type = 'East-West'
 ```
 
@@ -115,7 +115,7 @@ Once an application is defined, AON analyzes all observed flows and recommends:
 **UI**: Plan & Assess → Micro-Segmentation → Recommended Rules tab
 
 The recommendation output includes:
-```
+```yaml
 Source Group: sg-web-tier
 Destination Group: sg-db-tier
 Port: TCP 3306

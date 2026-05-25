@@ -1,6 +1,6 @@
 # Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection
 
-```
+```text
 Proactive Insights — Dell AIOps
 ┌──────────────────────────────────────────────┐
 │  Correlate events across systems             │

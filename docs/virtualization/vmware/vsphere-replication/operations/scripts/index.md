@@ -1,6 +1,6 @@
 # vSphere Replication — Scripts
 
-```
+```text
   VR Automation via PowerCLI + REST API + Python
 ┌──────────────────────────────────────────────────────────────┐
 │  Reporting                       Alerting                    │

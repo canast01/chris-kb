@@ -8,7 +8,7 @@ Both the source-site VRA and the target-site VRA must register with their respec
 
 ### Registration Architecture
 
-```
+```text
 Source Site                          Target Site
 -----------                          -----------
 Source vCenter ◄──── VRA-src         Target vCenter ◄──── VRA-tgt
@@ -66,7 +66,7 @@ SRM communicates with VR exclusively via the VRA REST API on port 8043. SRM does
 
 ### Recovery Flow (SRM-Orchestrated)
 
-```
+```text
 SRM triggers recovery plan
          |
 SRM calls VR API: promote recovery point for each VM
@@ -111,7 +111,7 @@ Replication traffic uses the IP address configured on the VRA network interface 
 
 ### Network Design Recommendations
 
-```
+```text
 Site A                                 Site B
 ------                                 ------
 Management Network (VLAN 10)           Management Network (VLAN 10)
@@ -161,7 +161,7 @@ A single VM can be replicated to multiple target sites simultaneously. Each repl
 - RPO compliance is tracked per-target independently
 - Bandwidth requirement is multiplied by the number of targets
 
-```
+```text
 Source VM
     |
     ├──[TCP 31031]──► VRA at DR Site A (RPO 15 min, 3 instances)

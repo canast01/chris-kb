@@ -1,6 +1,6 @@
 # vSphere Replication — Diagnostics
 
-```
+```text
   VR Diagnostic Data Sources
 ┌─────────────────────────────────────────────────────────────────┐
 │  VRA Appliance (both sites)    ESXi Source Host                 │
@@ -45,7 +45,7 @@ journalctl -u nginx -f         # Follow nginx (API gateway) log
 
 ## Collect VRA Support Bundle
 
-```
+```text
 VRA VAMI (https://vra-london.example.local:5480)
   → Support → Generate Support Bundle → Download
 
@@ -137,7 +137,7 @@ echo | openssl s_client -connect vra-amsterdam.example.local:44046 2>/dev/null \
 
 ## Review Replication Task Status in vCenter
 
-```
+```text
 vCenter → Monitor → Recent Tasks
   Filter by: "vSphere Replication" or "HBR" in task description
   Stuck tasks: right-click → Cancel Task (only if truly stuck >30 min)

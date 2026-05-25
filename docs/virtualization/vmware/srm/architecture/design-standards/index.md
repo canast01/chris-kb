@@ -1,6 +1,6 @@
 # SRM — Design Standards
 
-```
+```text
   Replication Topology + Recovery Plan Structure
 ┌──────────────────────────────────────────────────────────────┐
 │  Protected Site               Recovery Site                  │
@@ -103,20 +103,20 @@ Guidelines:
 For every production VLAN at the protected site, create a corresponding port group at the recovery site. Common patterns:
 
 **Option A: Same VLAN IDs** — If WAN connectivity is re-routed and the recovery site switches can accommodate the same VLAN IDs:
-```
+```text
 Protected: dvPG-App-VLAN100  →  Recovery: dvPG-App-VLAN100
 Protected: dvPG-DB-VLAN200   →  Recovery: dvPG-DB-VLAN200
 ```
 VMs retain their IPs. Routing updates (BGP, static routes) redirect traffic to recovery site.
 
 **Option B: Different VLAN IDs, same IP subnets** — Recovery site uses different physical VLANs but same IP subnets (extended L3 or re-advertising the subnets):
-```
+```text
 Protected: dvPG-App-VLAN100 (10.10.0.0/24)  →  Recovery: dvPG-App-VLAN500 (10.10.0.0/24)
 ```
 No IP customization needed. Requires routing coordination.
 
 **Option C: Different subnets with IP re-addressing** — Recovery site uses entirely different IP ranges:
-```
+```text
 Protected: 10.10.0.0/24  →  Recovery: 10.20.0.0/24
 ```
 Requires SRM IP customization rules (subnet-level mapping). DNS updates required at recovery.
@@ -125,7 +125,7 @@ Requires SRM IP customization rules (subnet-level mapping). DNS updates required
 
 For test failovers, create isolated port groups with no uplink assignment:
 
-```
+```text
 dvPG-SRM-Test-App     (no uplink — isolated bubble)
 dvPG-SRM-Test-DB      (no uplink — isolated bubble)
 ```
@@ -140,7 +140,7 @@ Map protected-site production port groups → isolated test port groups in SRM's
 
 Best for large environments where subnets map cleanly between sites:
 
-```
+```text
 Source subnet: 10.10.0.0/24  →  Target subnet: 10.20.0.0/24
 ```
 
@@ -235,7 +235,7 @@ Do not put all VMs in a single monolithic Recovery Plan — this increases blast
 
 ### Bandwidth Estimation for VR
 
-```
+```text
 Required bandwidth (Mbps) = (Daily change rate GB × 8192) / (86400 × efficiency factor)
 Efficiency factor: 0.7 (compression enabled), 0.5 (no compression)
 

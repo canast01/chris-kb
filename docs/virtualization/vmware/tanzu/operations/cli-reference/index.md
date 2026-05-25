@@ -1,6 +1,6 @@
 # Tanzu — CLI Reference
 
-```
+```text
 ┌───────────────── Tanzu CLI Toolchain ──────────────────────────────────────────┐
 │                                                                                 │
 │  tanzu CLI                          kubectl                                     │

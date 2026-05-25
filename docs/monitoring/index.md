@@ -1,6 +1,6 @@
 # Monitoring
 
-```
+```text
 Monitoring Ecosystem
 ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
 │   Pure1     │  │ Aria Ops    │  │   CloudIQ   │

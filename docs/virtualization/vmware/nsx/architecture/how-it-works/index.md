@@ -1,6 +1,6 @@
 # NSX — How It Works
 
-```
+```text
 ┌─────────────────────────────────── NSX Architecture — How It Works ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -164,7 +164,7 @@ get service router      # Confirm routing engine is running
 
 NSX uses Geneve (port 6081) — not VXLAN. The VNI identifies which logical segment a packet belongs to.
 
-```
+```text
 [Outer ETH][Outer IP: TEP-src → TEP-dst][UDP 6081][Geneve VNI=5001][Inner ETH][Inner IP: VM-src → VM-dst][Payload]
 ```
 
@@ -228,7 +228,7 @@ set edge-cluster failover   # Force failover from active Edge
 
 ### Routing Flow — VM to External
 
-```
+```text
 VM → vNIC → DFW filter → T1 distributed instance (same ESXi host)
   → T0 Service Router (Edge node) → Physical router (BGP peer) → Internet
 ```

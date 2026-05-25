@@ -3,7 +3,7 @@
 
 Firmware versions, drift review, lifecycle alignment, and upgrade notes.
 
-```
+```text
   ┌────────────────────────────────────────────────────┐
   │            VxRail Firmware Inventory               │
   └────────────────────────────────────────────────────┘

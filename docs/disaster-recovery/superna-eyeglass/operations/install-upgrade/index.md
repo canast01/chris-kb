@@ -67,7 +67,7 @@ In-place upgrade support varies by version — check release notes before procee
 
 After any PowerScale OneFS upgrade, re-validate Eyeglass policy detection:
 
-```
+```text
 Post-OneFS upgrade checklist:
   1. Log in to Eyeglass Admin UI
   2. DR → Replication Policies → Rescan

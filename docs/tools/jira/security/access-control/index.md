@@ -10,7 +10,7 @@ Jira's access control model is layered: global permissions govern what users can
 
 ## Access Control Architecture
 
-```
+```text
 Global Permissions
   └── Project Permission Scheme (per project)
         ├── Project Roles (Developer, QA, PM, Viewer)
@@ -195,7 +195,7 @@ Maintain AD/LDAP group synchronisation as the source of truth. Avoid manually ad
 
 ### Recommended Group Structure
 
-```
+```text
 AD Group                        → Jira Mapping
 ──────────────────────────────────────────────
 GRP-Jira-Admins                → jira-administrators
@@ -263,7 +263,7 @@ curl -s -u "$TOKEN" \
 
 Jira automation rules run as a service account or as the rule owner. Always use a dedicated service account.
 
-```
+```text
 Jira Automation settings → Audit log → View all rule executions
 ```
 

@@ -1,6 +1,6 @@
 # Tanzu — Scripts
 
-```
+```text
 ┌───────────────── Tanzu Automation Scripts Overview ────────────────────────────┐
 │                                                                                 │
 │  kubectl / tanzu CLI automation                                                 │

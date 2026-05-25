@@ -1,6 +1,6 @@
 # VCF — Access Control
 
-```
+```text
 VCF RBAC Model — Role Assignment Flow
 ┌─────────────────────────────────────────────────────┐
 │  Active Directory                                   │

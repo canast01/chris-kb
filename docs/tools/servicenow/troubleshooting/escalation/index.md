@@ -66,7 +66,7 @@ Use this template when raising a case on the HI portal. A well-structured ticket
 
 ### P1 / P2 — Production Issue Template
 
-```
+```yaml
 SUBJECT: [PROD] [P1] Instance unavailable — login page not loading
 
 INSTANCE: mycompany.service-now.com
@@ -107,7 +107,7 @@ Secondary: [Platform Lead name + contact]
 
 ### P3 — Functional Issue Template
 
-```
+```yaml
 SUBJECT: [PROD] [P3] LDAP import scheduled job failing since 2026-05-06
 
 INSTANCE: mycompany.service-now.com

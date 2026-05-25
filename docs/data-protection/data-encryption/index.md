@@ -2,7 +2,7 @@
 
 Encryption protects data at rest, in transit, and during processing against unauthorised access.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────┐
 │                         Data Encryption Overview                    │
 ├───────────────────────┬─────────────────────────┬───────────────────┤

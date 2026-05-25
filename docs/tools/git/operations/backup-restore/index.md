@@ -80,7 +80,7 @@ done < "$REPOS_FILE"
 echo "=== Done: $(date -u '+%Y-%m-%dT%H:%M:%SZ') ==="
 ```
 
-```
+```bash
 # /etc/git-backup/repos.txt
 https://github.com/org/repo-a.git
 https://github.com/org/repo-b.git

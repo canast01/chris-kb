@@ -2,7 +2,7 @@
 
 Routine maintenance tasks to keep databases healthy: index optimisation, statistics refresh, log cleanup, and integrity checks.
 
-```
+```text
 ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐  ┌─────────────────┐
 │  Index Rebuild   │  │  Stats Update    │  │   Log Shrink     │  │ Vacuum/Analyze  │
 │                  │  │                  │  │                  │  │                 │

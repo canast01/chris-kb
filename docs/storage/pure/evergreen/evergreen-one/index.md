@@ -1,6 +1,6 @@
 # Pure Storage Evergreen//One
 
-```
+```text
   Evergreen//One Subscription Model
 
   Customer pays for consumed capacity (OpEx — no CapEx)
@@ -57,7 +57,7 @@ Pure proactively reports against committed SLAs. If a performance or availabilit
 
 ## Capacity Management
 
-```
+```text
 Pure1 → Analysis → Capacity
 ```
 

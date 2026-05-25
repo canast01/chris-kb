@@ -1,6 +1,6 @@
 # Aria Operations — Hardening
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │            Aria Operations Hardening Layers                 │
 ├─────────────────────────────────────────────────────────────┤
@@ -63,7 +63,7 @@ Never configure Active Directory over plain LDAP (port 389) in production. Use L
 
 Import the AD CA certificate before configuring the authentication source:
 
-```
+```text
 Administration → Certificates → Import Certificate → paste the root CA PEM
 ```
 

@@ -2,7 +2,7 @@
 
 > SSH to the vCenter appliance before running these commands.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                  vCenter Command Categories                             │
 ├──────────────────────┬──────────────────────────────────────────────────┤

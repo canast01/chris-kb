@@ -1,6 +1,6 @@
 # iSCSI Troubleshooting
 
-```
+```text
         TRIAGE: HOST CANNOT SEE iSCSI LUN
 ┌──────────────────────────────────────────────────────────────┐
 │  1. Ping target IP ───── fail ──► check VLAN, routing, NIC  │

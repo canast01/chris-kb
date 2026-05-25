@@ -75,7 +75,7 @@ network interface show -fields address,role | grep -v intercluster
 
 On the external firewall or network ACL, restrict TCP 11104 and 11105 to the specific intercluster LIF IP pairs only:
 
-```
+```bash
 # Example firewall rule (pseudocode — implement in your firewall platform)
 permit tcp <src-ic-lif-ip>/32 <dst-ic-lif-ip>/32 eq 11104
 permit tcp <src-ic-lif-ip>/32 <dst-ic-lif-ip>/32 eq 11105

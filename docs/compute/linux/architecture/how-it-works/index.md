@@ -42,7 +42,7 @@ graph TB
 
 Standard LVM partition layout — applied at provisioning via Kickstart or cloud-init:
 
-```
+```text
 /boot          512 MB      xfs     (separate /boot partition — not in LVM)
 VG: vg_system
   lv_root     20 GB       xfs     /

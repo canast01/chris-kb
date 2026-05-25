@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle — Common Issues
 
-```
+```text
   LCM Triage Decision Tree
 ┌─────────────────────────────────────────────────────────────────┐
 │  Symptom                  Check                  Fix            │

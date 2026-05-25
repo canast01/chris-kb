@@ -4,7 +4,7 @@
 
 Start here. OS first, then hypervisor, then storage/hardware.
 
-```
+```text
 USER SAYS VM IS SLOW
          │
          ▼
@@ -63,7 +63,7 @@ USER SAYS VM IS SLOW
 
 Use this when you need specific numbers to confirm whether a metric is a problem.
 
-```
+```text
 USER SAYS VM IS SLOW
          │
          ▼

@@ -1,6 +1,6 @@
 # VCF — Procedures
 
-```
+```text
 VCF Operational Procedures — Decision Map
 ┌─────────────────────────────────────────────────────┐
 │  Routine Operations                                 │
@@ -45,13 +45,13 @@ All VCF component upgrades must go through SDDC Manager LCM. Patching components
 2. Management domain: vCenter → ESXi → vSAN → NSX (in BOM order)
 3. Workload domains (in order)
 
-```
+```text
 SDDC Manager → Lifecycle Management → Upgrade → select target bundle → run pre-check → schedule
 ```
 
 ## SDDC Manager Backup
 
-```
+```text
 SDDC Manager → Administration → Backup → Configure (SFTP target recommended)
 ```
 
@@ -60,7 +60,7 @@ SDDC Manager → Administration → Backup → Configure (SFTP target recommende
 
 ## Password Management
 
-```
+```text
 SDDC Manager → Security → Password Management
 ```
 

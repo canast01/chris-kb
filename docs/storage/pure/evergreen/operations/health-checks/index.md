@@ -1,6 +1,6 @@
 # Evergreen — Health Checks
 
-```
+```text
 Evergreen Health Check — Daily Sequence
   Pure1 portal ──► All arrays green?
           │
@@ -35,7 +35,7 @@ Run from Pure1 UI or CLI. No impact to production.
 
 ### Via Pure1 UI
 
-```
+```text
 Pure1 → Arrays → select array → Overview tab
 
 Check:

@@ -1,6 +1,6 @@
 # VxRail LCM Failure Triage
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │          LCM Failure Triage Runbook                  │
   │                                                      │

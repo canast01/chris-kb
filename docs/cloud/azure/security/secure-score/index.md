@@ -1,6 +1,6 @@
 # Azure — Secure Score
 
-```
+```text
 ┌────────────────────────────────────────────────────────────────┐
 │                  Secure Score — How It Works                    │
 └────────────────────────────────────────────────────────────────┘
@@ -37,7 +37,7 @@ Microsoft Defender for Cloud Secure Score is a quantified measure of an Azure en
 
 ## Score Calculation
 
-```
+```text
 Secure Score = (Sum of points earned) / (Sum of max points) × 100%
 
 Points earned per control = max points × (healthy resources / total resources)
@@ -47,7 +47,7 @@ Security recommendations are grouped into **security controls** (e.g., "Enable M
 
 ## Viewing Secure Score
 
-```
+```text
 Microsoft Defender for Cloud → Secure posture → Secure score
 ```
 
@@ -126,7 +126,7 @@ az security assessment create \
 
 Defender for Cloud maps recommendations to compliance standards (CIS, NIST SP 800-53, ISO 27001, PCI DSS).
 
-```
+```text
 Defender for Cloud → Regulatory compliance → select standard → view controls and evidence
 ```
 

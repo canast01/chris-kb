@@ -1,6 +1,6 @@
 # Alert Management
 
-```
+```text
 Alert Lifecycle
 ┌─────────────┐
 │   Trigger   │  (threshold breach / anomaly / hardware fault)

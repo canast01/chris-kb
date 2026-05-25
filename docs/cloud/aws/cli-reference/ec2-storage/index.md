@@ -1,6 +1,6 @@
 # EC2 — Images, Volumes & Snapshots
 
-```
+```text
 EC2 Storage CLI: AMIs · EBS Volumes · Snapshots
 ──────────────────────────────────────────────────────────────
 

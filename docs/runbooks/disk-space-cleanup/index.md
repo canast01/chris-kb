@@ -9,7 +9,7 @@
 
 ## Process Flow
 
-```
+```text
   Alert: filesystem > 85% full
            │
            ▼

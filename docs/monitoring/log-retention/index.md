@@ -1,6 +1,6 @@
 # Log Retention Policy
 
-```
+```text
 Log Retention Tiers
 ┌─────────────────────────────────────────────────────┐
 │  Collect                                            │
@@ -60,7 +60,7 @@ logrotate -f /etc/logrotate.conf
 ```
 
 **Example custom rule (`/etc/logrotate.d/myapp`):**
-```
+```text
 /var/log/myapp/*.log {
     daily
     rotate 90

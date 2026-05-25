@@ -29,7 +29,7 @@ graph TD
 
 Top-level OUs are functional (Servers, Workstations, Users, Groups, Service Accounts). Geographic sub-OUs are used where region-specific GPO or delegation is required.
 
-```
+```text
 DC=corp,DC=example,DC=com
 ├── OU=Servers
 │   ├── OU=EMEA

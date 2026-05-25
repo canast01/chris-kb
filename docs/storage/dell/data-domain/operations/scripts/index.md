@@ -96,7 +96,7 @@ Open the saved file and change these values near the top:
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd ~/Desktop
 chmod +x dd_health_check.sh
 DD_HOST=192.168.10.50 DD_USER=sysadmin ./dd_health_check.sh
@@ -229,7 +229,7 @@ Open the saved file and change these values (or pass them as environment variabl
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 set DD_HOST=192.168.10.50
 set DD_USER=sysadmin
@@ -324,7 +324,7 @@ Open a terminal on your Ansible control node (Linux, macOS, or WSL).
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd /path/to/your/playbooks
 ansible-playbook -i inventory dd_daily_check.yml
 ```
@@ -434,7 +434,7 @@ fi
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd ~/Desktop
 chmod +x dd_ddboost_check.sh
 DD_HOST=192.168.10.50 DD_USER=sysadmin ./dd_ddboost_check.sh
@@ -519,7 +519,7 @@ Open the saved file and change these values near the top:
 **Step 3 — Accept the host key (one-time setup)**
 
 The very first time you connect, plink needs you to trust the server's fingerprint. Open Command Prompt and run:
-```
+```text
 plink -ssh sysadmin@192.168.10.50
 ```
 Type `y` when asked, then press Ctrl+C to exit. You only need to do this once.
@@ -530,7 +530,7 @@ Type `y` when asked, then press Ctrl+C to exit. You only need to do this once.
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 dd_health_check.bat
 ```
@@ -663,13 +663,13 @@ Open the saved file and change these three lines near the top:
 
 **Step 4 — Allow scripts to run (one-time)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\dd_health_rest.ps1
 ```

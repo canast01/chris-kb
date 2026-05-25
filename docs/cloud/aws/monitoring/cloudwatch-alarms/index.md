@@ -3,7 +3,7 @@
 
 AWS CloudWatch Alarms notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                CloudWatch Alarm States                  │
 │                                                         │

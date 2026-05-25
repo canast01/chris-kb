@@ -101,7 +101,7 @@ Confluence stores all content (pages, comments, attachments metadata) in its dat
 <!-- Ensure JDBC URL uses SSL -->
 ```
 
-```
+```bash
 # /var/atlassian/application-data/confluence/confluence.cfg.xml
 # Ensure the JDBC URL includes SSL parameters:
 jdbc:postgresql://dbserver.example.local:5432/confluence?ssl=true&sslmode=require
@@ -199,7 +199,7 @@ ls -la /tmp/test-decrypt.zip
 
 ## Cookie and Session Security
 
-```
+```yaml
 Confluence security properties (General Configuration > Security Configuration):
 - Secure flag on cookies: Enabled (cookies sent only over HTTPS)
 - HttpOnly flag: Enabled (JavaScript cannot read session cookies)

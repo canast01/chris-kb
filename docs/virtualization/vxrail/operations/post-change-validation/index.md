@@ -3,7 +3,7 @@
 
 Validation after lifecycle, hardware, configuration, or support changes.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │          Post-Change Validation Checklist            │
   │                                                      │

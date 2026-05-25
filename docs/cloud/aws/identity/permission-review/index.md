@@ -3,7 +3,7 @@
 
 AWS Permission Review notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │               Permission Review Process                 │
 │                                                         │

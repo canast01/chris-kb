@@ -1,6 +1,6 @@
 # FlashBlade — Hardening
 
-```
+```text
 FlashBlade Hardening Sequence
   1. Default credentials ──► rename/vault admin account
   2. Configure AD ──► SMB auth + admin group-to-role mapping

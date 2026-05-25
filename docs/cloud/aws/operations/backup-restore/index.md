@@ -1,6 +1,6 @@
 # AWS — Backup & Restore
 
-```
+```text
 AWS Backup & Restore Flow
 ──────────────────────────────────────────────────────────────
 

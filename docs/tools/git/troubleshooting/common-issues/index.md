@@ -38,7 +38,7 @@ git mergetool
 
 ### Conflict Marker Anatomy
 
-```
+```text
 <<<<<<< HEAD
 code from the current branch (the branch you merged INTO)
 =======
@@ -126,7 +126,7 @@ git switch main
 
 ## Push Rejected — Non-Fast-Forward
 
-```
+```yaml
 ! [rejected] main -> main (non-fast-forward)
 error: failed to push some refs to 'origin'
 hint: Updates were rejected because the tip of your current branch is behind
@@ -175,7 +175,7 @@ curl -X POST \
 
 ## Large File Errors
 
-```
+```text
 remote: error: File large-binary.bin is 150.00 MB; this exceeds GitHub's file size limit of 100.00 MB.
 remote: error: GH001: Large files detected. You may want to try Git Large File Storage.
 ```
@@ -232,7 +232,7 @@ git push --force-with-lease origin main
 
 ## Authentication Failures
 
-```
+```text
 remote: HTTP Basic: Access denied
 fatal: Authentication failed for 'https://gitlab.example.com/org/repo.git'
 ```
@@ -292,7 +292,7 @@ git config --global credential.helper osxkeychain   # or manager-core
 
 ## SSH Key Rejected
 
-```
+```text
 git@github.com: Permission denied (publickey).
 fatal: Could not read from remote repository.
 ```
@@ -371,7 +371,7 @@ Host gitlab.example.com
 
 ### Submodule Not Initialised
 
-```
+```text
 error: Server does not allow request for unadvertised object
 fatal: remote error: upload-pack: not our ref
 ```

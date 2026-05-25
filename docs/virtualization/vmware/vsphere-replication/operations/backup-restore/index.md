@@ -1,6 +1,6 @@
 # vSphere Replication — Backup and Restore
 
-```
+```text
   VR Backup Strategy
 ┌──────────────────────────────────────────────────────────────┐
 │  VRA Appliance                                               │
@@ -40,7 +40,7 @@
 
 Always take a snapshot before upgrading or making significant changes:
 
-```
+```yaml
 vCenter → [VRA VM] → Snapshots → Take Snapshot
   Name: Pre-Upgrade-VRA-<date>
   Description: Pre-upgrade snapshot — VRA version <current>
@@ -55,7 +55,7 @@ Delete snapshot after confirming upgrade is successful (within 48 hours).
 
 For a full appliance backup:
 
-```
+```text
 vCenter → [VRA VM] → right-click → Export OVF Template
   Format: Folder of files (OVF)
   Destination: <shared storage or SCP>
@@ -69,7 +69,7 @@ Store OVF in a location accessible from both sites. This captures VM disk state 
 
 When not using SRM, manual recovery from vSphere Replication:
 
-```
+```text
 vCenter (Target Site) → Site Recovery → Replications → [VM replication] → Recover
   Recovery type: Recovery to the configured target location
   Power state: Power on after recovery
@@ -91,7 +91,7 @@ Each replicated VM stores N recovery point instances on the target datastore (co
 - Older instances are replaced by newer ones automatically
 
 To change the number of recovery points:
-```
+```text
 vCenter → [VM] → right-click → Configure Replication → Edit
   Recovery point instances: 1–24
 ```
@@ -104,7 +104,7 @@ More instances = more disk space consumed at target site.
 
 If VRA appliance has an issue after a change:
 
-```
+```text
 vCenter → [VRA VM] → Snapshots → Manage Snapshots
   Select pre-change snapshot → Revert
   Power on VRA

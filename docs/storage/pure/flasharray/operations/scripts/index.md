@@ -1,6 +1,6 @@
 # FlashArray — Scripts
 
-```
+```text
 Automation Architecture — FlashArray
   Python / Bash / PowerShell / Ansible
              │
@@ -180,7 +180,7 @@ sys.exit(worst)
 
 **Requirements:** Python 3, network access to FlashArray management IP, FlashArray API token.
 
-```
+```bash
 pip install py-pure-client
 export FA_HOST=192.168.1.10
 export FA_API_TOKEN=your-token-here
@@ -295,7 +295,7 @@ print(f"{'='*70}\n")
 sys.exit(worst)
 ~~~
 
-```
+```bash
 export FA1_HOST=192.168.1.10
 export FA1_API_TOKEN=token-for-array1
 export FA2_HOST=192.168.1.11

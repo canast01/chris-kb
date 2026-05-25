@@ -1,6 +1,6 @@
 # NTP Sync State
 
-```
+```text
         SYNC STATE METRICS
 ┌──────────────────────────────────────────────────────────────┐
 │  chronyc tracking output                                     │
@@ -32,7 +32,7 @@ The sync state tells you whether a system's clock is actively tracking an NTP so
 chronyc tracking
 ```
 
-```
+```text
 Reference ID    : C0A80001 (ntp1.example.com)
 Stratum         : 3
 Ref time (UTC)  : Sun May 10 00:00:00 2026
@@ -62,7 +62,7 @@ Leap status     : Normal
 timedatectl status
 ```
 
-```
+```text
                Local time: Sun 2026-05-10 00:00:00 UTC
            Universal time: Sun 2026-05-10 00:00:00 UTC
                  RTC time: Sun 2026-05-10 00:00:00

@@ -23,7 +23,7 @@ Supervisor hosts can run two pod types:
 - **vSphere Pods** — OCI containers running directly on ESXi via CRX (Container Runtime for ESXi). Each pod gets its own lightweight VM-based isolation. No guest OS overhead. Uses same scheduling path as VMs.
 - **TKG Service VMs** — Full K8s node VMs provisioned by the TKG Service controller from a `TanzuKubernetesCluster` manifest. These appear as regular vSphere VMs managed by CAPI.
 
-```
+```text
 vCenter
   └── Workload Management
         └── Supervisor Cluster (K8s API)
@@ -112,7 +112,7 @@ Tanzu Kubernetes Grid standalone (TKG) uses Cluster API (CAPI) to provision and 
 
 ### Architecture Layers
 
-```
+```text
 tanzu CLI / kubectl
     │
     ▼
@@ -169,7 +169,7 @@ WORKER_MACHINE_COUNT: 5
 
 NSX-T provides overlay networking for both the Supervisor cluster and TKG workload clusters via Geneve encapsulation over standard VLAN uplinks.
 
-```
+```text
 Physical Network (uplink VLANs)
     │
 T0 Gateway (BGP/static to ToR switches)
@@ -194,7 +194,7 @@ Key NSX-T objects provisioned automatically:
 
 For environments without NSX-T. Uses vSphere Distributed Switch for pod/node networking, with AVI providing L4 load balancing only.
 
-```
+```text
 TKG Cluster (VDS networking)
     └── Service (type: LoadBalancer)
           └── AKO (Avi Kubernetes Operator — pod in kube-system)
@@ -271,7 +271,7 @@ Tanzu Application Platform implements a Cartographer-driven supply chain — a c
 
 ### Supply Chain Flow (source-test-scan-to-url)
 
-```
+```text
 Developer commits to Git
     │
     ▼
@@ -344,7 +344,7 @@ spec:
 
 ## Component Relationship Diagram
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                      vCenter Server                         │
 │  ┌───────────────────────────────────────────────────────┐  │

@@ -7,7 +7,7 @@ Pattern: `cod-<array-sid>-<capacity-tib>tib-<date>.xml`
 
 Examples:
 
-```
+```text
 cod-000123456789-50tib-20260115.xml
 cod-000987654321-100tib-20260301.xml
 ```

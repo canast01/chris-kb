@@ -108,7 +108,7 @@ All L2→L3 items, plus:
 
 Use this template when opening a ticket at [support.atlassian.com](https://support.atlassian.com):
 
-```
+```yaml
 Subject: [JIRA DC] <Brief description> — P<1/2/3/4>
 
 ## Environment
@@ -190,7 +190,7 @@ Secondary: Name, email, phone
 
 Send to stakeholders during an active P1/P2:
 
-```
+```yaml
 [JIRA INCIDENT] Status Update — HH:MM UTC
 
 SUMMARY: [One sentence — what is broken]
@@ -207,7 +207,7 @@ Contact: [on-call name] via [Slack channel / phone]
 
 ### Resolution Notification
 
-```
+```text
 [JIRA RESOLVED] — HH:MM UTC
 
 ISSUE: [Brief description]

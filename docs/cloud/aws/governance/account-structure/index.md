@@ -1,6 +1,6 @@
 # AWS Account Structure
 
-```
+```text
 AWS Account Structure: Management → OUs → Members
 ──────────────────────────────────────────────────────────────
 

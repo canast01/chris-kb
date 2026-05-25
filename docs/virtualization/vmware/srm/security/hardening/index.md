@@ -1,6 +1,6 @@
 # SRM — Hardening
 
-```
+```text
   SRM Hardening Controls
 ┌──────────────────────────────────────────────────────────────┐
 │  Network Restrictions        Access Controls                 │
@@ -70,7 +70,7 @@ pureapitoken create --name srm-failover --role storage_admin
 
 Rotate array credentials in SRM on a regular schedule (quarterly or when personnel changes):
 
-```
+```text
 1. Create new API token / password on storage array
 2. Site Recovery → Storage → Array Pairs → [pair] → Configure Adapter → Update credentials
 3. Test: Site Recovery → Storage → Array Pairs → Discover Devices (verify discovery succeeds)
@@ -84,7 +84,7 @@ Rotate array credentials in SRM on a regular schedule (quarterly or when personn
 
 Monthly testing is the single most effective hardening measure for DR:
 
-```
+```text
 Site Recovery → Recovery Plans → [plan] → Test
   Frequency: monthly minimum for critical plans, quarterly for non-critical
   Document: pass/fail, duration, issues found, actions taken
@@ -96,7 +96,7 @@ An untested recovery plan is not a recovery plan — it's a guess.
 
 ## Restrict Who Can Execute Recovery
 
-```
+```text
 vCenter → Administration → Global Permissions
   DR Run Team: Site Recovery Recovery Admin role (can execute plans, cannot configure)
   SRM Admins: Site Recovery Administrator role (can configure and execute)
@@ -110,7 +110,7 @@ Process: DR execution requires approval from two DR team members (documented in 
 
 Test failover uses an "isolated network" — verify it is truly isolated:
 
-```
+```text
 vCenter (Recovery Site) → Networking → [isolated portgroup] → 
   Verify: no uplinks assigned (isolated portgroup = no physical NIC)
   OR: dedicated VLAN with all-deny firewall rule at switch
@@ -139,7 +139,7 @@ w32tm /config /update
 
 ## Audit Recovery Plan Changes
 
-```
+```bash
 vCenter → Monitor → Events
   Filter: "drm" events (all SRM events)
   Alert on: Recovery Plan configuration changes, SRA credential updates

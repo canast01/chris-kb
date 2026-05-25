@@ -126,7 +126,7 @@ Predefined CI/CD variables:
 
 Reference Jira issues in commit messages; the GitHub for Jira app updates the issue automatically.
 
-```
+```yaml
 git commit -m "PROJ-123 Add retry logic for payment API
 
 - Exponential backoff with 3 retries

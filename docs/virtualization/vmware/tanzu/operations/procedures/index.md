@@ -1,6 +1,6 @@
 # Tanzu — Procedures
 
-```
+```text
 ┌──────────────── Tanzu Operational Procedure Flow ──────────────────────────────┐
 │                                                                                 │
 │  Create vSphere Namespace                                                       │
@@ -32,7 +32,7 @@
 
 ## Create a vSphere Namespace
 
-```
+```yaml
 vCenter → Workload Management → Namespaces → Create Namespace
   Cluster: select Supervisor cluster
   Name: team-alpha
@@ -158,7 +158,7 @@ curl -sk -X POST "https://harbor.example.local/api/v2.0/projects/team-alpha/memb
 
 ## Configure Pull-Through Cache in Harbor
 
-```
+```yaml
 Harbor UI → Administration → Registries → New Endpoint
   Provider: Docker Hub
   Name: docker-hub-proxy

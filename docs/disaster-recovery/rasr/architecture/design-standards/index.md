@@ -23,7 +23,7 @@ Always capture immediately after:
 
 ## Image Naming Convention
 
-```
+```text
 Format: <hostname>_<environment>_<date>_<sequence>
 
 Examples:
@@ -34,7 +34,7 @@ Examples:
 
 ## Network Share Layout
 
-```
+```text
 \\nas01\rasr-images\
   ├── prod\
   │     ├── app01\
@@ -51,7 +51,7 @@ Examples:
 
 ## Storage Sizing
 
-```
+```text
 Estimate per server:
   Compressed image size = OS volume used space × 0.5
   

@@ -1,6 +1,6 @@
 # ESXi — Health Checks
 
-```
+```text
 ESXi Health Check — Decision Flow
 ┌─────────────────────────────────────────────────────┐
 │  START: Daily / Pre-Change Health Sweep             │

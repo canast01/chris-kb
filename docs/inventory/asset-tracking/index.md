@@ -2,7 +2,7 @@
 
 Track hardware and cloud resources from procurement through decommission to maintain accurate inventory and prevent orphaned costs.
 
-```
+```text
 ┌──────────┐  ┌──────────┐  ┌──────────────┐  ┌──────────────────┐  ┌──────────────┐
 │ Discover │  │   Tag    │  │   Classify   │  │ Track Lifecycle  │  │ Decommission │
 │          │  │          │  │              │  │                  │  │              │
@@ -104,7 +104,7 @@ az disk list --query '[?diskState==`Unattached`] | [*].{Name:name,Size:diskSizeG
 
 ## Asset Lifecycle States
 
-```
+```text
 Ordered → Received → Configured → In Service → Decommission Pending → Wiped → Disposed / Returned
                                                                      ↓
                                                             Spares Pool (if reusable)

@@ -1,6 +1,6 @@
 # Windows Server — Operations
 
-```
+```text
 ┌──────────────────────────────────────────────────────┐
 │          Windows Server Operations Lifecycle         │
 ├───────────────┬──────────────┬───────────────────────┤

@@ -152,7 +152,7 @@ if __name__ == "__main__":
 **Requirements:** Python 3.7+, `pip install requests`, network access to ECS management on port 4443.
 
 **Usage:**
-```
+```text
 ECS_HOST=ecs01.example.com ECS_USER=sysadmin ECS_PASS=yourpassword python ecs_health_check.py
 ```
 
@@ -263,7 +263,7 @@ if __name__ == "__main__":
 ~~~
 
 **Usage:**
-```
+```text
 ECS_HOST=ecs01.example.com ECS_USER=sysadmin ECS_PASS=secret WARN_SIZE_GB=500 python ecs_bucket_audit.py
 ```
 

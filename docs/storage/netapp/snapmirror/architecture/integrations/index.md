@@ -24,7 +24,7 @@ SnapMirror replication operates natively between on-premises ONTAP clusters and 
 
 ONTAP provides a REST API for programmatic SnapMirror relationship management. Use for automation, monitoring dashboards, and ITSM integration.
 
-```
+```bash
 # List all SnapMirror relationships
 GET /api/snapmirror/relationships
 

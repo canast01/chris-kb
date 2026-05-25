@@ -1,6 +1,6 @@
 # VCF Security — Authentication
 
-```
+```text
 VCF Authentication Flow
 ┌─────────────────────────────────────────────────────┐
 │  Operator / Admin                                   │

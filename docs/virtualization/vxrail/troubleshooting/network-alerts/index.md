@@ -3,7 +3,7 @@
 
 VxRail networking symptoms, uplinks, VLANs, vmkernel checks, and connectivity validation.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │         VxRail Network Alert Triage Path             │
   │                                                      │

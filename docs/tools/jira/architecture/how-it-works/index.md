@@ -132,7 +132,7 @@ Jira requires a single shared relational database. Supported engines:
 
 All nodes mount a shared file system at the Jira shared home path (`/var/atlassian/application-data/jira/shared`). This share contains attachments, avatars, logos, export files, and plugin data.
 
-```
+```text
 /var/atlassian/application-data/jira/
 ├── shared/               ← NFS/SMB mount (all nodes)
 │   ├── attachments/
@@ -146,7 +146,7 @@ All nodes mount a shared file system at the Jira shared home path (`/var/atlassi
 
 NFS mount options:
 
-```
+```text
 nfs-server:/jira-shared /var/atlassian/application-data/jira/shared \
   nfs4 rw,sync,hard,intr,noatime,rsize=131072,wsize=131072 0 0
 ```

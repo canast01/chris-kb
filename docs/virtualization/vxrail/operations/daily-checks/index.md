@@ -1,6 +1,6 @@
 # VxRail Daily Checks
 
-```
+```text
 Daily Check Sequence
 ┌─────────────────────────────────────────────────────────────┐
 │  1. VxRail Manager                                          │

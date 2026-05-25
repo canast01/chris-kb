@@ -1,6 +1,6 @@
 # DNS Lookups
 
-```
+```text
         FORWARD vs REVERSE LOOKUPS
 ┌──────────────────────────────────────────────────────────────┐
 │  FORWARD LOOKUP (name → IP)                                  │

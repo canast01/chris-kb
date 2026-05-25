@@ -3,7 +3,7 @@
 
 AWS Subnets notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  Subnet Types                           │
 │                                                         │

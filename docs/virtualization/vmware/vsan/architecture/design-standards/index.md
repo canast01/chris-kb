@@ -31,7 +31,7 @@ Ping must succeed at the large packet size. If it fails, check switch port MTU, 
 
 vSAN requires a dedicated VMkernel port (vmk) on every host. All vSAN replication and storage I/O flows over this network.
 
-```
+```text
 ESXi Host
 ├── vmk0 — Management
 ├── vmk1 — vMotion
@@ -68,7 +68,7 @@ ESXi Host
 
 A vSAN stretched cluster spans two physical sites with a witness at a third location. Each site is a fault domain. FTT=1 RAID-1 places one mirror at each site, with the witness providing quorum arbitration.
 
-```
+```text
 Site A (preferred)          Site B (secondary)
 ┌─────────────────┐         ┌─────────────────┐
 │ ESXi-01         │         │ ESXi-03         │

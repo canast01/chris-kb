@@ -1,6 +1,6 @@
 # FlashArray — Diagnostics
 
-```
+```text
 FlashArray Diagnostic Sequence
   ┌──────────────────────────────────────────────────┐
   │  1. purearray list           ─ version + status  │
@@ -212,7 +212,7 @@ purenetwork list
 
 **FC port troubleshooting flow:**
 
-```
+```text
 Host reports path missing
     ↓
 pureport list --type fc
@@ -277,7 +277,7 @@ purehost list --connection | grep prod-oracle-data-01
 
 **Volume not visible on host — diagnostic flow:**
 
-```
+```text
 Host does not see volume
     ↓
 purehost list --connection
@@ -341,7 +341,7 @@ pureport monitor --bandwidth
 
 **High latency investigation flow:**
 
-```
+```text
 purearray monitor — note read/write latency and queue depth
     ↓
 purevol monitor --latency — identify which volumes have the highest latency
@@ -389,7 +389,7 @@ purepgroup list --schedule
 
 **Pod unhealthy or paused — diagnostic flow:**
 
-```
+```text
 purepod list — note the pod status and which arrays are members
     ↓
 Is the inter-array replication link up?
@@ -427,7 +427,7 @@ purepgroup list --space
 
 **Unexpected capacity growth — investigation flow:**
 
-```
+```text
 purearray list --space — confirm overall capacity % and snapshot %
     ↓
 puresnap list --space --sort size- — identify largest snapshot consumers

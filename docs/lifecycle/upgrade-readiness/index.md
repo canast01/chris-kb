@@ -129,7 +129,7 @@ Get-VM -Name "HOSTNAME" | Get-Snapshot | Select-Object Name, Created, SizeMB
 
 ## 7. Rollback Plan
 
-```
+```text
 Rollback Plan — CHG-XXXX
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 System:           <hostname>

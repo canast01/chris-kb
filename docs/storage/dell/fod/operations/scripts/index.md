@@ -126,7 +126,7 @@ if __name__ == "__main__":
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 set CLOUDIQ_TOKEN=eyJhbGciOiJSUzI1N...
 python fod_usage_reporter.py
@@ -214,7 +214,7 @@ fi
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd ~/Desktop
 chmod +x fod_burst_detect.sh
 export CLOUDIQ_TOKEN=eyJhbGciOiJSUzI1N...
@@ -313,7 +313,7 @@ Open a terminal on your Ansible control node.
 
 **Step 4 — Run the script**
 
-```
+```bash
 export CLOUDIQ_TOKEN=eyJhbGciOiJSUzI1N...
 ansible-playbook fod_audit.yml
 ```
@@ -434,13 +434,13 @@ Write-Host "========================================"
 
 **Step 4 — Allow scripts to run (one-time)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\fod_license_status.ps1
 ```

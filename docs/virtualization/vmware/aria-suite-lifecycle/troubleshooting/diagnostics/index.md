@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle — Diagnostics
 
-```
+```text
   LCM Diagnostic Data Sources
 ┌─────────────────────────────────────────────────────────────────┐
 │  LCM Appliance (SSH as root)       LCM API                      │

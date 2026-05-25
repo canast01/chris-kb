@@ -1,6 +1,6 @@
 # FC Troubleshooting
 
-```
+```text
         TRIAGE: HOST CANNOT SEE LUN
 ┌─────────────────────────────────────────────────────────────┐
 │  1. No LUN visible on host                                  │

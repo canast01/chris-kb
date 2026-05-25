@@ -287,7 +287,7 @@ ECS 3.9 introduced integration with Dell CloudIQ for cloud-based capacity analyt
 ECS generates SNMP traps and syslog messages for hardware and service health events. Integrate with your monitoring platform for 24/7 alerting.
 
 **Syslog configuration:**
-```
+```yaml
 ECS Portal → Settings → Syslog
   - Syslog server: <SIEM-or-syslog-aggregator-IP>
   - Port: 514 (UDP or TCP)
@@ -295,7 +295,7 @@ ECS Portal → Settings → Syslog
 ```
 
 **SNMP configuration:**
-```
+```yaml
 ECS Portal → Settings → SNMP
   - SNMP version: v3 (recommended); v2c for legacy monitoring systems
   - Community string (v2c): <monitoring-community>

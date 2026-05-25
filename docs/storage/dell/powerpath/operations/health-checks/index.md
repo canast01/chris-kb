@@ -85,7 +85,7 @@ powermt display dev=all
 ```
 
 Expected output per path:
-```
+```text
 ============================================================
 Pseudo name=hdisk3
 CLARiiON/VNX id=CX300-0123 [array_name]

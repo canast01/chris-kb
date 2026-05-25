@@ -3,7 +3,7 @@
 Snapshots are a write-redirect mechanism — they do not freeze data, they redirect writes to a delta disk. This has measurable performance and operational consequences.
 ## How Snapshots Work
 
-```
+```text
 Base VMDK (read-only once snapshot exists)
   └── Delta disk (-000001.vmdk) — all new writes go here
         └── Delta disk (-000002.vmdk) — if a second snapshot is taken

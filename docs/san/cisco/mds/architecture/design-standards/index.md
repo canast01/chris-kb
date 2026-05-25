@@ -6,7 +6,7 @@
 
 ## Switch Naming
 
-```
+```text
 <site>-mds-sw<nn>
 ```
 
@@ -33,7 +33,7 @@ Document VSAN assignments in CMDB. Never reuse a VSAN ID after decommission.
 
 ## Zone and Alias Naming
 
-```
+```text
 Zone:   <hostname>_<hba_port>-<arrayname>_<port>
 Alias:  <hostname>_<hba_port>   or   <arrayname>_<port>
 ```

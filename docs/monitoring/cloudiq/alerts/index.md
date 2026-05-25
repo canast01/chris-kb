@@ -1,6 +1,6 @@
 # CloudIQ: Alert Types, Severity, and Notification Configuration
 
-```
+```text
 Proactive Alert Flow — CloudIQ
 ┌─────────────────────────────┐
 │  System telemetry (SRS)     │  (PowerStore / PowerMax / PowerScale)

@@ -1,6 +1,6 @@
 # Pure Storage Evergreen//One Security
 
-```
+```text
   Pure Security Architecture
 
   ┌─────────────────────────────────────────────────┐

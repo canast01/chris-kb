@@ -90,7 +90,7 @@ RMAN> VALIDATE DATABASE;
 
 ## Escalation — If Malware Found
 
-```
+```text
 1. Halt all access to the clean room immediately.
 2. Preserve the infected restore point (do not delete — needed for forensics).
 3. Notify the IR lead and security team.

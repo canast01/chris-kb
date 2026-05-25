@@ -1,6 +1,6 @@
 # Dell AIOps: Actionable Recommendations and Implementation Tracking
 
-```
+```text
 Recommendations — Dell AIOps
 ┌──────────────────────────────────────────┐
 │  Analysis engine outputs                 │

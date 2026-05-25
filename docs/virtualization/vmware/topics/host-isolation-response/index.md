@@ -1,7 +1,7 @@
 
 # Host Isolation Response
 
-```
+```text
 ┌────────────── Host Isolation: Heartbeat Lost to VM Restart ────────────────────┐
 │                                                                                 │
 │  Normal operation:                                                              │

@@ -1,6 +1,6 @@
 # NFS Permissions
 
-```
+```text
         NFS PERMISSION LAYERS
 ┌──────────────────────────────────────────────────────────────┐
 │  Layer 1 — EXPORT OPTIONS (server /etc/exports)              │

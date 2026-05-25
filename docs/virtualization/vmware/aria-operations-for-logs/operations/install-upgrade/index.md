@@ -1,6 +1,6 @@
 # Aria Ops for Logs — Install & Upgrade
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Ops for Logs Upgrade Sequence                  │
 ├─────────────────────────────────────────────────────────────┤
@@ -110,7 +110,7 @@ For environments not managed by LCM, upgrades use a `.pak` upgrade bundle.
 
 **Upgrade via UI:**
 
-```
+```text
 Administration → Cluster → Upgrade → Upload PAK file
 ```
 

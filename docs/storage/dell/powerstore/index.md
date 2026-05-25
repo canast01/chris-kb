@@ -4,7 +4,7 @@
 Mid-range all-flash platform with active-active dual-node appliance architecture — inline dedup/compression, Metro Volume zero-RPO sync replication, NVMe-oF, vVols, and AppsOn (X-series).
 </div>
 
-```
+```text
 ┌─────────────────────────────── Dell PowerStore Mid-Range NVMe Storage ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

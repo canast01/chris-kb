@@ -2,7 +2,7 @@
 
 Data classification defines how sensitive information must be labelled, handled, stored, and shared.
 
-```
+```text
                          ┌──────────────────────────┐
                          │     Data Tagging Flow     │
                          └────────────┬─────────────┘

@@ -1,6 +1,6 @@
 # Tanzu — Access Control
 
-```
+```text
 ┌─────────────── Tanzu RBAC Layers ──────────────────────────────────────────────┐
 │                                                                                 │
 │  vSphere Namespace (Supervisor level)                                           │
@@ -39,7 +39,7 @@ vSphere Namespaces have three access levels, assigned in vCenter:
 | Edit | Deploy workloads, create PVCs — cannot delete clusters |
 | View | Read-only — inspect resources only |
 
-```
+```text
 vCenter → Workload Management → Namespaces → [namespace] → Permissions → Add
   User/Group: CORP\team-alpha-owners → Owner
   User/Group: CORP\team-alpha-devs → Edit

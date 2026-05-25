@@ -1,6 +1,6 @@
 # Aria Operations for Networks — Access Control
 
-```
+```text
 ┌──────────── Aria Networks RBAC Model ──────────────────────────────────────────┐
 │                                                                                 │
 │  Identity source ──► LDAP/AD or vIDM SAML                                      │
@@ -41,7 +41,7 @@
 
 ## LDAP / Active Directory Integration
 
-```
+```text
 Settings → Authentication → LDAP → Configure
 
   Server URL:     ldaps://dc01.example.local:636
@@ -55,7 +55,7 @@ Settings → Authentication → LDAP → Configure
 
 Map AD groups to roles:
 
-```
+```text
 Settings → Authentication → Role Mappings → Add Mapping
 
   CN=vRNI-Admins,OU=Groups,DC=corp,DC=local → Super Admin
@@ -71,12 +71,12 @@ Settings → Authentication → Role Mappings → Add Mapping
 Local users are managed via UI only (Settings → Users → Add User). The built-in `admin@local` account cannot be deleted.
 
 Change default admin password immediately after deployment:
-```
+```text
 Settings → My Account → Change Password
 ```
 
 Disable unused local accounts:
-```
+```text
 Settings → Users → [user] → Deactivate
 ```
 
@@ -86,7 +86,7 @@ Settings → Users → [user] → Deactivate
 
 Tokens authenticate REST API clients without using user credentials:
 
-```
+```yaml
 Settings → API Tokens → Generate Token
   Name:   <descriptive name>
   Role:   <minimum required role>
@@ -94,7 +94,7 @@ Settings → API Tokens → Generate Token
 ```
 
 Revoke tokens when no longer needed:
-```
+```text
 Settings → API Tokens → [token] → Revoke
 ```
 
@@ -126,7 +126,7 @@ Restrict Platform VM port 443 to management VLAN only — deny direct access fro
 
 ## vCenter Service Account (Minimum Privilege)
 
-```
+```text
 vCenter → Administration → Global Permissions → Add Permission
   User: svc-vrni-vc@corp.local
   Role: Read Only
@@ -137,7 +137,7 @@ vCenter → Administration → Global Permissions → Add Permission
 
 ## NSX-T Service Account (Minimum Privilege)
 
-```
+```text
 NSX-T Manager → System → User Management → Add User
   Username: svc-vrni-nsx
   Role: Auditor (read-only)
@@ -150,7 +150,7 @@ Never use NSX admin credentials — vRNI only reads topology. A separate account
 ## Audit Logging
 
 All admin actions are logged. Access via:
-```
+```text
 Settings → Audit Logs
 ```
 

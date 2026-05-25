@@ -1,6 +1,6 @@
 # AWS AWS Config
 
-```
+```text
 AWS Config: Resource Recording → Rules → Compliance
 ──────────────────────────────────────────────────────────────
 

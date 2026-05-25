@@ -1,6 +1,6 @@
 # Backup Failures Troubleshooting
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                    Backup Triage Flowchart                           │
 │                                                                      │

@@ -91,7 +91,7 @@ FlashBlade S3 access control uses a two-layer model: object store accounts own b
 
 ### Object Store Account Model
 
-```
+```text
 Organization
 └── Object Store Account (e.g., ml-platform)
     ├── User (e.g., svc-training-pipeline)

@@ -151,7 +151,7 @@ The OpenSSL CA directory structure must be backed up atomically (while no signin
 
 ### Typical OpenSSL CA Directory
 
-```
+```text
 /etc/ssl/CA/
 ├── ca.key          # CA private key — MUST be encrypted
 ├── ca.crt          # CA certificate (self-signed)
@@ -297,7 +297,7 @@ A key ceremony is the formal, witnessed procedure for generating or accessing a 
 
 ### Ceremony Log Template Fields
 
-```
+```text
 Date/Time (UTC):
 Location:
 CA Distinguished Name:

@@ -2,7 +2,7 @@
 
 Use this when a VM cannot communicate on the network — applies to both NSX-T overlay and standard vSphere networking.
 
-```
+```text
                      VM: Cannot communicate
                                │
                                ▼

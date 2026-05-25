@@ -1,6 +1,6 @@
 # Aria Operations — Health Checks
 
-```
+```text
 Aria Operations — Health Check Coverage Map
 ┌─────────────────────────────────────────────────────┐
 │  Cluster Node Health                                │
@@ -232,7 +232,7 @@ Via UI: **Optimize → Capacity Overview** — review which clusters or datastor
 
 Review alert policies monthly and tune noisy alert definitions:
 
-```
+```text
 Administration → Alert Settings → Alert Definitions
 ```
 

@@ -19,7 +19,7 @@ graph LR
   class ADMIN host
 ```
 
-```
+```text
 Total Installed Capacity (physical drives in chassis)
     │
     ├── Committed Active Capacity (baseline purchased)
@@ -51,7 +51,7 @@ COD does not change the HA characteristics of the array. The underlying redundan
 
 Pre-install COD capacity at the DR site equal to the production site's expected peak. Under normal operations only the baseline DR capacity is active. On failover or DR test, activate the COD to match full production capacity.
 
-```
+```text
 Production Site          DR Site
 ────────────────         ──────────────────────────────
 Active: 500 TiB    ──→   Active baseline: 200 TiB

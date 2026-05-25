@@ -3,7 +3,7 @@
 
 AWS AMIs notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                     AMI Architecture                    │
 │                                                         │

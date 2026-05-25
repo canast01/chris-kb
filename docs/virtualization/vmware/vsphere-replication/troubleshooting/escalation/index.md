@@ -1,6 +1,6 @@
 # vSphere Replication — Escalation
 
-```
+```text
   VR Escalation Path
 ┌─────────────────────────────────────────────────────────────────┐
 │  Step 1: Collect (both sites)                                   │

@@ -2,7 +2,7 @@
 
 Maintain visibility of vendor support agreements to ensure infrastructure components remain covered and renewals are actioned before expiry.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │                     Contract Register                        │
 │  Vendor │ Product │ SLA Tier │ Expiry │ Renewal Owner        │
@@ -103,7 +103,7 @@ curl -s "https://apidirect.dell.com/Contracts/v2/contracts?servicetag=<tag>" \
 
 ## Renewal Process
 
-```
+```text
 120 days out → Identify contracts expiring < 90 days; review scope (add/remove CIs)
 90 days out  → Request renewal quote from vendor; route to procurement
 60 days out  → Quote approved by management; PO raised

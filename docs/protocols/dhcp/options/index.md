@@ -1,6 +1,6 @@
 # DHCP Options
 
-```
+```text
         DHCP OPTION HIERARCHY (most specific wins)
 ┌──────────────────────────────────────────────────────────────┐
 │  Server-level options (apply to ALL scopes)                  │

@@ -114,7 +114,7 @@ Mounts the backup as a virtual volume and presents individual files.
 
 Overwrites the existing data at the original location. Requires the production VM/volume to be offline or protected by an exclusion list.
 
-```
+```text
 Subclient → Restore → In-Place → Overwrite existing data: Yes
 ```
 
@@ -122,7 +122,7 @@ Subclient → Restore → In-Place → Overwrite existing data: Yes
 
 Restores to an alternate destination — different VM, datastore, or file path.
 
-```
+```text
 Subclient → Restore → Out-of-Place → Specify destination client and path
 ```
 

@@ -4,7 +4,7 @@
 Project and operational management references — change management, maintenance windows, health checks, asset inventory, and operational templates.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                 Operational Management Frameworks                    │
 │                                                                      │

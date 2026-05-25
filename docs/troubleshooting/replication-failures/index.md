@@ -1,6 +1,6 @@
 # Replication Failures Troubleshooting
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                  Replication Triage Flowchart                        │
 │                                                                      │

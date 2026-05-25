@@ -8,7 +8,7 @@
 
 How traffic flows from an ESXi host through your core network out to AWS or Azure over a VPN tunnel.
 
-```
+```text
 ESXi Host (physical server)
    │
    ├── pNIC1 ──────────────────► Physical Switch A  ←── redundant switches
@@ -60,7 +60,7 @@ VM → pNIC1 or pNIC2 → Switch A or B → Core network
 
 Two ways to connect on-premises to cloud. VPN uses the public internet (encrypted). Direct Connect / ExpressRoute is a dedicated private line.
 
-```
+```text
 OPTION 1 — ON-PREMISES VPN (most common)
 
 ESXi Host
@@ -115,7 +115,7 @@ COMPARISON:
 
 Your data is wrapped inside an outer packet before it crosses the internet. Nobody outside can read the inner packet.
 
-```
+```text
 VPN Gateway (on-prem)
                                               │
 │  ← takes traffic from core network

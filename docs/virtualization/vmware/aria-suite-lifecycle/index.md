@@ -4,7 +4,7 @@
 Technical and operational reference for VMware Aria Suite Lifecycle Manager. Covers deployment, patching, certificate management, upgrade orchestration, and environment health for all Aria Suite products.
 </div>
 
-```
+```text
 ┌───────────────────────────────── Aria Suite Lifecycle Manager Stack ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

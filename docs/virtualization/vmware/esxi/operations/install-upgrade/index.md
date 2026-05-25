@@ -1,6 +1,6 @@
 # ESXi Install & Upgrade
 
-```
+```text
 ESXi Upgrade Flow — vLCM Rolling Cluster Upgrade
 ┌─────────────────────────────────────────────────────────┐
 │  Pre-Upgrade                                            │
@@ -68,7 +68,7 @@ Subscribe to [Broadcom Security Advisories](https://support.broadcom.com/web/ecx
 
 vLCM manages ESXi hosts using a **desired-state cluster image**:
 
-```
+```text
 Cluster Image = ESXi Base Version
               + Vendor Add-ons (OEM driver bundle)
               + Components (individual VIBs)
@@ -80,7 +80,7 @@ Cluster Image = ESXi Base Version
 3. **Remediate** — vLCM puts host in maintenance mode, applies image, reboots, exits maintenance mode
 
 Verify image depot is synced:
-```
+```text
 vCenter → Lifecycle Manager → Settings → Patch Setup → Sync Updates
 ```
 

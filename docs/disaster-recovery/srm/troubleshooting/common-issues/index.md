@@ -35,7 +35,7 @@ flowchart TD
 
 ## VM Not in Protection Group / `Not Ready` State
 
-```
+```text
 Cause: vSphere Replication synchronisation error or initial sync not complete
 ```
 
@@ -62,7 +62,7 @@ nc -zv <vr-appliance-recovery-ip> 31031
 
 ## SRA Communication Failure
 
-```
+```text
 Symptom: Array Manager shows "Error" or "Unknown" state in SRM UI
 ```
 
@@ -80,7 +80,7 @@ Symptom: Array Manager shows "Error" or "Unknown" state in SRM UI
 
 ## Recovery Plan Stuck `Running`
 
-```
+```text
 Cause: Custom script step timed out, or a VM failed to power on
 ```
 
@@ -91,7 +91,7 @@ Cause: Custom script step timed out, or a VM failed to power on
 
 ## Site Pair Shows `Error`
 
-```
+```text
 Cause: Certificate mismatch, vCenter connectivity, or credential expiry
 ```
 

@@ -1,6 +1,6 @@
 # Monitoring Dashboard Standards
 
-```
+```text
 Dashboard Design — Layout Standards
 ┌─────────────────────────────────────────────────┐
 │  Executive View          refresh: 1 hour        │
@@ -56,7 +56,7 @@ Dashboard Design — Layout Standards
 
 ## Naming Convention
 
-```
+```text
 <environment>-<system>-<metric>
 prod-storage-capacity
 prod-compute-cpu

@@ -1,6 +1,6 @@
 # Evergreen — Integrations
 
-```
+```text
 Evergreen Integration Touchpoints
   FlashArray / FlashBlade
           │  phone-home (HTTPS 443, always-on)

@@ -1,6 +1,6 @@
 # Evergreen — Operations
 
-```
+```text
 Evergreen Operations Touch Points
   Pure1 portal ──► daily subscription + health review
           │

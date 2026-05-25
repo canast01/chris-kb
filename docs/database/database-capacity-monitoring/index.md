@@ -2,7 +2,7 @@
 
 Track database storage growth, identify capacity risks early, and plan expansion before thresholds are breached.
 
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │             Database Storage Components             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────────────┐   │

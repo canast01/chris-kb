@@ -4,7 +4,7 @@
 
 SyncIQ policy names must be consistent between primary and DR clusters and follow the format:
 
-```
+```text
 <source-cluster>-<target-cluster>-<zone-or-path>
 ```
 

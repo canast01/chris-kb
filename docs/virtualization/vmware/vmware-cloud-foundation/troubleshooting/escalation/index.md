@@ -1,6 +1,6 @@
 # VCF Troubleshooting — Escalation
 
-```
+```text
 VCF Escalation Workflow
 ┌─────────────────────────────────────────────────────┐
 │  Before Opening SR — Collect:                       │

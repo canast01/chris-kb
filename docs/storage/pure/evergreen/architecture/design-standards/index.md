@@ -1,6 +1,6 @@
 # Evergreen — Design Standards
 
-```
+```text
 Evergreen Subscription Design Checklist
 ┌──────────────────────────────────────────────────────────┐
 │  Tier selection   │  //X / //C / //E — match workload    │

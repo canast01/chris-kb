@@ -1,6 +1,6 @@
 # SRM — CLI Reference
 
-```
+```text
   SRM CLI / API Access
 ┌──────────────────────────────────────────────────────────────┐
 │  SRM REST API (vCenter SSO token)                            │

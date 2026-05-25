@@ -1,6 +1,6 @@
 # Lambda
 
-```
+```text
 Lambda CLI: Deploy → Invoke → Monitor
 ──────────────────────────────────────────────────────────────
 

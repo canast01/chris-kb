@@ -1,6 +1,6 @@
 # Aria Ops for Logs — Common Issues
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Ops for Logs Issue Triage Flow                 │
 ├─────────────────────────────────────────────────────────────┤
@@ -74,7 +74,7 @@ Search for a specific host by name or IP and filter by log source appname:
 
 Quick searches for common ESXi problems:
 
-```
+```bash
 # Host connectivity lost
 text contains "lost connectivity" AND appname = "vpxa"
 

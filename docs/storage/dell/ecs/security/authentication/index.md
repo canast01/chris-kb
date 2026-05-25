@@ -153,7 +153,7 @@ ECS generates audit logs for all administrative actions and optionally for objec
 
 **Syslog forwarding:**
 
-```
+```yaml
 ECS Portal → Settings → Syslog
   - Syslog server: <SIEM-IP-or-FQDN>
   - Port: 514 (UDP) or 514/TCP

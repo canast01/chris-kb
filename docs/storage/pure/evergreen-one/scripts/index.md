@@ -4,7 +4,7 @@
 
 ---
 
-```
+```text
   Pure REST API Automation Flow
 
   Script / Cron job
@@ -203,13 +203,13 @@ else:
 
 **Step 3 — Open Command Prompt and install packages**
 
-```
+```bash
 pip install requests pyjwt cryptography tabulate
 ```
 
 **Step 4 — Set variables and run**
 
-```
+```bash
 set PURE1_APP_ID=pure1:apikey:abc123
 set PURE1_PRIVATE_KEY_FILE=C:\Users\YourName\Desktop\pure1_private_key.pem
 cd %USERPROFILE%\Desktop
@@ -432,13 +432,13 @@ else:
 
 **Step 3 — Open Command Prompt and install packages**
 
-```
+```bash
 pip install requests pyjwt cryptography tabulate
 ```
 
 **Step 4 — Set variables and run**
 
-```
+```bash
 set PURE1_APP_ID=pure1:apikey:abc123
 set PURE1_PRIVATE_KEY_FILE=C:\Users\YourName\Desktop\pure1_private_key.pem
 cd %USERPROFILE%\Desktop
@@ -624,7 +624,7 @@ Open Ubuntu from the Start menu.
 
 **Step 4 — Set variables and run**
 
-```
+```bash
 export PURE1_APP_ID="pure1:apikey:abc123"
 export PURE1_PRIVATE_KEY_FILE="/home/youruser/pure1_private_key.pem"
 export COMMITTED_TB=100
@@ -832,13 +832,13 @@ Press the Windows key, type `PowerShell`, right-click **Windows PowerShell**, ch
 
 **Step 4 — Allow script execution (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\eo1_subscription_check.ps1
 ```

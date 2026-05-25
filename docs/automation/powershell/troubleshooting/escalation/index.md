@@ -77,7 +77,7 @@ Collect and attach:
 
 ### 5. Ticket Template
 
-```
+```text
 ## Automation Failure Report
 
 **Script/Automation Name:**
@@ -90,12 +90,12 @@ Collect and attach:
 **Error Message:**
 ```
 (paste $Error[0].Exception.Message here)
-```
+```text
 
 **Stack Trace:**
 ```
 (paste $Error[0].ScriptStackTrace here)
-```
+```text
 
 **Recent Changes:**
 

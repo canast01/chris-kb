@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle — Hardening
 
-```
+```text
   LCM Hardening Controls
 ┌──────────────────────────────────────────────────────────────┐
 │  Credentials                 SSH                             │
@@ -39,7 +39,7 @@ Change the default `admin@local` password immediately after deployment:
 
 All product certificates must be managed through the LCM Locker — not by direct file replacement on appliances. Direct file replacement bypasses LCM's tracking and breaks upgrade workflows.
 
-```
+```text
 LCM → Locker → Certificates → Import Certificate
 ```
 

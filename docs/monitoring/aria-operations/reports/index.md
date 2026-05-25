@@ -1,6 +1,6 @@
 # Aria Operations: Scheduled Reports and PDF Export
 
-```
+```text
 Reports Pipeline — Aria Operations
 ┌──────────────────┐
 │ Report Template  │  (capacity / health / compliance / VM)

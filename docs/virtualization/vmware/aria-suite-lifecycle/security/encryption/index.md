@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle — Encryption
 
-```
+```text
   LCM Encryption Coverage
 ┌─────────────────────────────────────────────────────────────────┐
 │  Locker (certificate + secret vault)                            │
@@ -67,7 +67,7 @@ LCM can generate certificate signing requests for managed products, or you can s
 
 **Via UI:**
 
-```
+```text
 LCM → Locker → Certificates → Generate CSR
 ```
 
@@ -110,7 +110,7 @@ After the CA returns the signed certificate:
 
 **Via UI:**
 
-```
+```text
 LCM → Locker → Certificates → Import Certificate
 ```
 
@@ -175,7 +175,7 @@ openssl x509 -noout -text -in leaf.pem | grep "Public-Key"
 
 After importing the certificate into Locker, apply it to the product:
 
-```
+```text
 LCM → Lifecycle Operations → Environments → select environment → product card → Replace Certificate
 ```
 

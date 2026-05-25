@@ -3,7 +3,7 @@
 
 AWS IAM Policies notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │               IAM Policy Structure                      │
 │                                                         │

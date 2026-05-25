@@ -1,6 +1,6 @@
 # vCenter Troubleshooting — Common Issues
 
-```
+```text
 Symptom Triage Map
 ════════════════════════════════════════════════════════
 

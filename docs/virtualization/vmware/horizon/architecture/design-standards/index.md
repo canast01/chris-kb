@@ -1,6 +1,6 @@
 # Horizon — Design Standards
 
-```
+```text
   Pod Design (up to 7 Connection Servers, 10,000 IC desktops)
 ┌─────────────────────────────────────────────────────────────┐
 │  Load Balancer / DNS Round-Robin                            │
@@ -107,7 +107,7 @@ Apply a CPU over-commit ratio of 4:1 (vCPU:pCPU) for task workers, 3:1 for knowl
 | Child VM swap/memory | = Guest RAM | On same datastore; size accordingly |
 
 **Practical formula:**
-```
+```text
 Total datastore capacity = (Replica size × 1) + (N_desktops × avg_delta × 1.25)
 Example: 60 GB replica + (200 desktops × 5 GB delta × 1.25) = 60 + 1250 = 1,310 GB per datastore
 ```
@@ -127,7 +127,7 @@ Store AppStacks on a datastore accessible to all ESXi hosts in the cluster (shar
 
 Full Clone VMs are independent — no sharing:
 
-```
+```text
 Total = N_VMs × (OS_disk + swap + data_disk)
 Example: 50 VMs × (80 GB + 8 GB + 0 GB) = 4,400 GB
 ```
@@ -214,7 +214,7 @@ UAG supports 1-NIC, 2-NIC, or 3-NIC deployments:
 
 ### Snapshot Naming Convention
 
-```
+```text
 <OS>-<BaseVersion>-<PatchDate>-<Status>
 Examples:
   Win11-23H2-20240312-TESTED
@@ -224,7 +224,7 @@ Examples:
 
 ### Golden Image Update Process
 
-```
+```text
 1. Power on golden image VM (do not publish during update)
 2. Apply Windows updates, agent updates, application changes
 3. Run internal test checklist (logon, app launch, App Volumes attach)
@@ -269,7 +269,7 @@ CPA links multiple Horizon pods (at the same or different sites) into a single G
 
 ### Pools and Farms
 
-```
+```text
 Format: <SITE>-<PERSONA>-<OS>-<TYPE>
 Examples:
   LON-KW-W11-IC        London, Knowledge Worker, Win11, Instant Clone
@@ -280,7 +280,7 @@ Examples:
 
 ### Desktop VM Naming Pattern (Instant Clone)
 
-```
+```text
 Format: <SITE>-<PERSONA>-{n:fixed=3}
 Examples:
   LON-KW-{n:fixed=3}   → LON-KW-001, LON-KW-002, ..., LON-KW-200
@@ -289,7 +289,7 @@ Examples:
 
 ### Entitlement Groups (AD Groups)
 
-```
+```text
 Format: VDI-<PoolName>-Users
 Examples:
   VDI-LON-KW-W11-IC-Users
@@ -299,7 +299,7 @@ Examples:
 
 ### UAG Appliance Names
 
-```
+```text
 Format: uag-<site>-<index>
 Examples:
   uag-lon-01, uag-lon-02

@@ -46,7 +46,7 @@ uemcli /sys/setting show
 
 ### Array Management Network Isolation
 
-```
+```yaml
 Network segmentation for array management:
 - Array management ports (Unisphere) accessible only from:
   - DR management VLAN (10.10.20.0/24)
@@ -220,7 +220,7 @@ shred -vzn 3 /mnt/rasr-stage/*
 
 ### PXE Boot Environment Hardening
 
-```
+```yaml
 PXE-based RASR recovery hardening:
 - DHCP option 67 (bootfile) served only to authorised MAC addresses
 - TFTP server access restricted by IP source (management VLAN only)

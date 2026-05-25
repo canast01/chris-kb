@@ -6,7 +6,7 @@ title: SNMPv3
 
 SNMPv3 adds authentication and encryption to SNMP, replacing the plaintext community strings of v1/v2c.
 
-```
+```text
         SNMPv3 authPriv SECURITY MODEL (USM)
 ┌──────────────────────────────────────────────────────────────┐
 │  NMS                              Device agent               │
@@ -76,7 +76,7 @@ snmpget -v3 -u <username> -l authPriv \
 
 ## Cisco IOS
 
-```
+```bash
 # Create SNMPv3 user
 snmp-server group SNMPv3GROUP v3 priv
 snmp-server user <username> SNMPv3GROUP v3 auth sha <authpass> priv aes 128 <privpass>
@@ -93,7 +93,7 @@ show snmp group
 
 ## Arista EOS
 
-```
+```text
 snmp-server group SNMPv3GROUP v3 priv
 snmp-server user <username> SNMPv3GROUP v3 auth sha <authpass> priv aes <privpass>
 show snmp user
@@ -102,7 +102,7 @@ show snmp group
 
 ## SNMPv3 Trap / Inform (Cisco)
 
-```
+```bash
 # Send v3 traps to NMS
 snmp-server host <nms-ip> version 3 priv <username>
 snmp-server enable traps

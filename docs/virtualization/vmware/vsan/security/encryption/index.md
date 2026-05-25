@@ -12,7 +12,7 @@ vSAN D@RE encrypts all data written to disk at the disk group level, below the s
 
 **Key hierarchy:**
 
-```
+```text
 vCenter (Key Management Service client)
     └── KMS Server (Key Provider)
             └── Key Encryption Key (KEK) — per host

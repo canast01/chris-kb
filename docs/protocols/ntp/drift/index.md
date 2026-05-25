@@ -1,6 +1,6 @@
 # NTP Drift
 
-```
+```text
         CLOCK DRIFT AND NTP CORRECTION
 ┌──────────────────────────────────────────────────────────────┐
 │  Without NTP:                                                │

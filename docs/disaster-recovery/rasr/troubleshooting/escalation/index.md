@@ -139,7 +139,7 @@ When a production server is down and RASR recovery has failed:
    - Can the workload be failed over to DR site?
    - Invoke DR runbook for the affected service.
 
-```
+```text
 Emergency contact sequence:
 1. On-call ops → acknowledge within 15 min
 2. Infrastructure lead → engage within 30 min

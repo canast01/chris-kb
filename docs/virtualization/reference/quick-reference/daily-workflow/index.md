@@ -2,7 +2,7 @@
 
 A repeatable morning workflow to confirm the environment is healthy before the business day begins.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                   Daily Operations Sequence (~20 min)                    │
 ├───────────────────────────────────────────────────────────────────────── │

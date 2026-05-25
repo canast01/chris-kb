@@ -1,6 +1,6 @@
 # InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards
 
-```
+```text
 Performance Analytics — InsightIQ
 ┌──────────────────────────────────────────────┐
 │  PowerScale array metrics (30s collection)   │

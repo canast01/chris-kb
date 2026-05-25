@@ -3,7 +3,7 @@
 
 Useful VxRail Manager logs, collection patterns, timestamps, and case evidence.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │             VxRail Manager Log Sources               │
   │                                                      │

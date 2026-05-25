@@ -137,7 +137,7 @@ Open the saved file and update these values near the top:
 
 **Step 4 — Run it**
 
-```
+```bash
 cd ~/Desktop
 bash azure-health-check.sh
 ```
@@ -291,7 +291,7 @@ Open the saved file and update these values near the top:
 
 **Step 4 — Install packages and run**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 pip install azure-identity azure-mgmt-compute azure-mgmt-recoveryservicesbackup azure-mgmt-resource
 python azure_vm_compliance.py
@@ -464,7 +464,7 @@ Open the saved file and update these values near the top:
 
 **Step 4 — Install packages and run**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 pip install azure-identity azure-mgmt-costmanagement
 python azure_cost_spike.py
@@ -635,7 +635,7 @@ Open the saved file and update these values near the top:
 
 **Step 4 — Install packages and run**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 pip install azure-identity azure-mgmt-network
 python azure_nsg_audit.py
@@ -773,7 +773,7 @@ Open the file and update the `vars:` section:
 
 **Step 4 — Run it**
 
-```
+```bash
 cd ~
 ansible-playbook azure_dr_failover.yml
 ```
@@ -932,14 +932,14 @@ Open the saved file and update these values near the top:
 
 **Step 4 — Run it**
 
-```
+```bash
 cd ~/Desktop
 bash azure-snapshot-audit.sh
 ```
 
 To also delete old snapshots (use with caution — this is permanent):
 
-```
+```text
 bash azure-snapshot-audit.sh --delete
 ```
 
@@ -1093,7 +1093,7 @@ Open the saved file and update these values near the top:
 
 **Step 4 — Install packages and run**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 pip install azure-identity azure-mgmt-keyvault azure-keyvault-certificates
 python azure_cert_expiry.py
@@ -1275,7 +1275,7 @@ Open the file and update the `vars:` section:
 
 **Step 4 — Run it**
 
-```
+```bash
 cd ~
 ansible-playbook azure_infra_health.yml
 ```
@@ -1355,7 +1355,7 @@ Open the saved file and update these values near the top:
 
 **Step 4 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 azure-health-check.bat
 ```
@@ -1479,13 +1479,13 @@ Open the saved file and update these values at the top:
 
 **Step 4 — Allow scripts to run (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\azure-resource-health.ps1
 ```

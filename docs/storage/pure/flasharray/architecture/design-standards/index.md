@@ -1,6 +1,6 @@
 # FlashArray — Design Standards
 
-```
+```text
 FlashArray Design Checklist — Key Areas
 ┌──────────────────────────────────────────────────────────┐
 │  Naming         │  array / volume / host / pg conventions│

@@ -9,7 +9,7 @@
 
 ## Process Flow
 
-```
+```text
   Reboot request received
            │
            ▼

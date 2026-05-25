@@ -1,6 +1,6 @@
 # ESXi CLI Reference
 
-```
+```text
 ESXi CLI Tool Map
 ┌─────────────────────────────────────────────────────────┐
 │  esxcli — structured CLI for host management            │

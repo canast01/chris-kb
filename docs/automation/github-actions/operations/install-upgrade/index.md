@@ -12,7 +12,7 @@ Self-hosted runners do not auto-update by default (unlike GitHub-hosted runners)
 
 On each runner host, check the installed version:
 
-```
+```bash
 cd /opt/actions-runner   # or wherever the runner is installed
 ./config.sh --version
 ```
@@ -23,7 +23,7 @@ Compare against the latest release on the [actions/runner releases page](https:/
 
 Before stopping the runner service, drain any active jobs:
 
-```
+```bash
 sudo systemctl stop actions.runner.<org>-<name>.service
 ```
 
@@ -31,7 +31,7 @@ Wait for any in-flight workflow jobs to complete before proceeding. If runners a
 
 ### 3. Download and install the new runner package
 
-```
+```bash
 cd /opt/actions-runner
 curl -O -L https://github.com/actions/runner/releases/download/v<VERSION>/actions-runner-linux-x64-<VERSION>.tar.gz
 tar xzf ./actions-runner-linux-x64-<VERSION>.tar.gz
@@ -42,7 +42,7 @@ Re-registration is not required for in-place upgrades — the existing `.credent
 
 ### 4. Restart the runner service
 
-```
+```bash
 sudo systemctl start actions.runner.<org>-<name>.service
 sudo systemctl status actions.runner.<org>-<name>.service
 ```

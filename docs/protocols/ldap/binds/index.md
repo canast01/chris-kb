@@ -1,6 +1,6 @@
 # LDAP Binds
 
-```
+```text
         LDAP BIND TYPES
 ┌──────────────────────────────────────────────────────────────┐
 │  ANONYMOUS BIND                                              │

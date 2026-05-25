@@ -2,7 +2,7 @@
 
 > Part of the [VxRail](../index.md) reference.
 
-```
+```text
   ┌──────────────────────────────────────────────────────────┐
   │                  VxRail CLI / API Tree                   │
   │                                                          │

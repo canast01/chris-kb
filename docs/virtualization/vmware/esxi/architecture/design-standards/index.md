@@ -1,6 +1,6 @@
 # ESXi — Design Standards
 
-```
+```text
 ESXi Host Design Checklist — Standard Layout
 ┌──────────────────────────────────────────────────────────┐
 │  Naming & DNS                                            │
@@ -34,7 +34,7 @@ ESXi Host Design Checklist — Standard Layout
 
 All ESXi hosts use fully qualified domain names (FQDN) and must have matching forward and reverse DNS records:
 
-```
+```text
 Format: esxi-<nn>.<domain>
 Example: esxi-01.corp.example.com
          esxi-02.corp.example.com

@@ -1,6 +1,6 @@
 # Troubleshooting
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                   Troubleshooting Framework                          │
 │                                                                      │

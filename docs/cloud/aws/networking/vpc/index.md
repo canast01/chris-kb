@@ -6,7 +6,7 @@ An AWS Virtual Private Cloud (VPC) is your own isolated private network inside A
 
 ## VPC Anatomy
 
-```
+```text
 AWS VPC — Virtual Private Cloud
                                           │
 │  ← your own private section of AWS
@@ -61,7 +61,7 @@ AWS VPC — Virtual Private Cloud
 
 ## Subnet Types
 
-```
+```text
 PUBLIC SUBNET                    PRIVATE SUBNET
 ─────────────────                ─────────────────
 Has a route to IGW               No direct internet route
@@ -78,7 +78,7 @@ Traffic out: subnet → IGW → internet    Traffic out: subnet → NAT GW → I
 
 ## VPC to On-Premises — Connection Options
 
-```
+```text
 YOUR DATA CENTRE                 AWS
 ─────────────────                ─────────────────────────
 Core Network                     VPC

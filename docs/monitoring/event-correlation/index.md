@@ -1,6 +1,6 @@
 # Event Correlation
 
-```
+```text
 Event Correlation Flow
 ┌─────────────────────────────────────────────┐
 │  Multiple alerts arrive simultaneously      │
@@ -82,7 +82,7 @@ grep "May  5 14:0[0-9]" /var/log/messages /var/log/syslog /var/log/nginx/error.l
 ## SIEM Correlation Rules (Examples)
 
 **Graylog / Splunk — correlated alert logic:**
-```
+```bash
 # Multiple auth failures from same source within 5 minutes
 index=security sourcetype=auth action=failure
 | stats count by src_ip, user
@@ -99,7 +99,7 @@ index=infra (sourcetype=ontap OR sourcetype=os_ioerr)
 
 Document for each critical service:
 
-```
+```text
 Service: ERP Application
   → App server: app01, app02
       → Database: db01 (Oracle)

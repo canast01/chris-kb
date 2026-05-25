@@ -111,7 +111,7 @@ Each site requires a minimum of 2 RPAs per cluster for high availability. A clus
 
 ### Step 1 — Physical Connectivity
 
-```
+```text
 1. Rack and cable RPAs according to the site-specific cabling matrix.
 2. Connect RPA management ports to the management network switch.
 3. Connect RPA FC HBAs to SAN fabric (zone per the zoning design doc).
@@ -184,7 +184,7 @@ The array firmware natively splits writes inside the storage controller. No host
 
 **PowerMax array-based splitter workflow:**
 
-```
+```text
 1. RPAs zoned to PowerMax fabric zone.
 2. RPA WWNs added to a storage group via Unisphere.
 3. RecoverPoint Deployment Manager registers the array.
@@ -265,7 +265,7 @@ curl -sk -X POST "https://<vRPA-IP>/api/splitters/trust" \
 
 After splitters are configured, create Consistency Groups (CGs) to define what is replicated and how:
 
-```
+```text
 1. Unisphere for RecoverPoint → Add Consistency Group
 2. Name: CG-<app>-<source-site>-<target-site> (e.g., CG-ORACLE-DC1-DC2)
 3. Replication set: select source volumes (PowerMax LUNs or vRPA VMDKs)

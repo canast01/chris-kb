@@ -43,7 +43,7 @@ RP4VM integrates directly with vCenter, installing a vSphere plugin and a splitt
 
 ### Consistency Group Configuration
 
-```
+```yaml
 CG settings:
   - Production volumes: select VMDKs or datastores to protect
   - Replica volumes: select equivalent capacity at recovery site

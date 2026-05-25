@@ -8,7 +8,7 @@ Story structure, acceptance criteria, story points, epics, and estimation.
 
 A well-formed user story answers: who needs this, what they need, and why.
 
-```
+```text
 Title:    [Short description — verb + outcome]
 Format:   As a <role>, I want <capability> so that <benefit>
 
@@ -35,7 +35,7 @@ Required fields for a story ready for development:
 
 Acceptance criteria define when a story is complete. Use the Given/When/Then format or a plain checklist.
 
-```
+```bash
 # Given/When/Then format
 Given an S3 bucket with objects older than 30 days
 When the lifecycle policy runs
@@ -120,7 +120,7 @@ curl -u user:token -G \
 
 Split large stories using these patterns:
 
-```
+```bash
 # Patterns for splitting
 By workflow step:     One story per step in a user workflow
 By data type:         Separate stories for each entity/type

@@ -60,7 +60,7 @@ GIT_CURL_VERBOSE=1 git fetch origin 2>&1
 
 Example output excerpt:
 
-```
+```text
 16:42:01.123456 http.c:678             * Trying 140.82.121.4:443...
 16:42:01.234567 http.c:678             * Connected to github.com (140.82.121.4) port 443
 16:42:01.345678 http.c:678             * TLSv1.3, TLS handshake, Client hello (1):
@@ -160,7 +160,7 @@ ssh -vvvT -p 2222 git@gitlab.example.com
 
 ### What to Look for in SSH Debug Output
 
-```
+```yaml
 # Key being offered
 debug1: Offering public key: /Users/user/.ssh/id_ed25519 ED25519
 # Platform's response to the offered key:

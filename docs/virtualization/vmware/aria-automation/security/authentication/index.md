@@ -1,6 +1,6 @@
 # Aria Automation — Authentication
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Automation Authentication Flow                 │
 ├─────────────────────────────────────────────────────────────┤
@@ -29,7 +29,7 @@
 
 Aria Automation delegates all authentication to **Workspace ONE Access (VIDM)**. There is no standalone AD/LDAP connector in Aria Automation itself — VIDM acts as the identity broker between Aria Automation and Active Directory.
 
-```
+```text
 Browser → Aria Automation UI → VIDM (SAML redirect) → AD/LDAP → VIDM session → Aria Automation JWT
 API clients → Aria Automation /csp/gateway/am/api/login → VIDM credentials → Bearer token
 ```
@@ -42,7 +42,7 @@ VIDM is registered with Aria Automation during deployment (automatic when deploy
 
 **For standalone deployments:**
 
-```
+```text
 VAMI (https://vra-prod-01.example.local:5480) → Identity Provider → Configure VIDM
 ```
 

@@ -1,6 +1,6 @@
 # Pure1 — Array Health
 
-```
+```text
 Health Check Dashboard
 ┌─────────────────────────────────────────┐
 │              Pure1 Health View          │

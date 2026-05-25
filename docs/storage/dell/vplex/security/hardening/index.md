@@ -88,7 +88,7 @@ flowchart TD
 
 Apply the following to `/etc/ssh/sshd_config` on the VMS:
 
-```
+```bash
 # Disable password and empty-password authentication
 PasswordAuthentication no
 ChallengeResponseAuthentication no

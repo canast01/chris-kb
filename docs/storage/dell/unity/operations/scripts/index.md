@@ -116,7 +116,7 @@ On Linux/macOS, open a terminal. On Windows, use Git Bash or WSL.
 
 **Step 4 — Run it**
 
-```
+```bash
 cd /path/to/script
 UNITY_HOST=192.168.1.10 UNITY_USER=admin UNITY_PASS=secret ./unity_health_check.sh
 ```
@@ -225,7 +225,7 @@ On Linux/macOS, open a terminal. On Windows, install Git for Windows and use Git
 
 **Step 4 — Run it**
 
-```
+```bash
 cd /path/to/script
 UNITY_HOST=192.168.1.10 UNITY_USER=admin UNITY_PASS=secret perl unity_sp_monitor.pl
 ```
@@ -349,7 +349,7 @@ On Linux/macOS, open a terminal. On Windows, use Git Bash or WSL.
 
 **Step 4 — Run it**
 
-```
+```bash
 cd /path/to/script
 UNITY_HOST=192.168.1.10 UNITY_USER=admin UNITY_PASS=secret ./unity_repl_check.sh
 ```
@@ -469,7 +469,7 @@ Edit the `vars` section:
 | `vault_unity_pass` | Replace with your actual password (use Ansible Vault in production) |
 
 Create an inventory file (`inventory`) with:
-```
+```text
 unity ansible_host=your-unity-management-ip ansible_connection=local
 ```
 
@@ -479,7 +479,7 @@ On Linux/macOS, open a terminal. On Windows, use WSL or Git Bash.
 
 **Step 4 — Run it**
 
-```
+```bash
 cd /path/to/playbook
 ansible-playbook -i inventory unity_health.yml
 ```
@@ -657,13 +657,13 @@ Press **Windows key**, type `PowerShell`, right-click, choose **Run as Administr
 **Step 4 — Allow scripts to run (one-time, per session)**
 
 In PowerShell, run this once:
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\unity_health_check.ps1
 ```
@@ -760,7 +760,7 @@ Open the saved file in Notepad and change these lines:
 **Step 3 — Accept the host key (first time only)**
 
 Open Command Prompt and run:
-```
+```text
 plink -ssh admin@192.168.1.10
 ```
 When asked "Store key in cache?", type `y` and press Enter, then press Ctrl+C. You only need to do this once per Unity system.
@@ -771,7 +771,7 @@ Press **Windows key**, type `cmd`, press Enter to open Command Prompt.
 
 **Step 5 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 unity_capacity_check.bat
 ```

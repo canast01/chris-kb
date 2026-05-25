@@ -4,7 +4,7 @@
 Switching and routing knowledge base covering VLANs, inter-VLAN routing, BGP, OSPF, subnetting, and TCP/IP fundamentals.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                   Switching & Routing Topology                       │
 │                                                                      │

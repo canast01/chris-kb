@@ -1,6 +1,6 @@
 # Aria Operations for Networks — Health Checks
 
-```
+```text
 ┌──────────── Aria Networks Health Check Hierarchy ──────────────────────────────┐
 │                                                                                 │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
@@ -112,7 +112,7 @@ for ds in data.get('results', []):
 
 **UI search query** (in the search bar at top of screen):
 
-```
+```text
 flows where collector = "aon-collector-dc1" grouped by Flow Type
 ```
 
@@ -120,7 +120,7 @@ This returns a count of flows grouped by East-West / North-South. If the count i
 
 Additional flow verification queries:
 
-```
+```bash
 # Flows in the last 15 minutes
 flows where time_range = "last 15 minutes"
 
@@ -199,13 +199,13 @@ Alert at 60 days remaining — certificate replacement in AON requires a UI relo
 
 **UI search:** Search → type:
 
-```
+```text
 flows where collector = "aon-collector-dc1" and time_range = "last 5 minutes"
 ```
 
 Zero results indicates no flows are arriving at the Collector. Drill down:
 
-```
+```bash
 # Check if any flows exist at all (remove time constraint)
 flows where collector = "aon-collector-dc1"
 

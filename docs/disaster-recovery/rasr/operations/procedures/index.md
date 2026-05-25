@@ -54,7 +54,7 @@ Get-ChildItem $share | Sort-Object LastWriteTime -Descending | Select-Object -Fi
 
 ### Step-by-step
 
-```
+```text
 Step 1: Boot from RASR Media
 
   iDRAC → Configuration → Virtual Media → Map Drive → select rasr-media.iso
@@ -136,7 +136,7 @@ dism /Unmount-Image /MountDir:$mountPath /Discard
 
 **When:** New server generation added; RASR agent updated; media hasn't been rebuilt in 6 months.
 
-```
+```text
 RASR Console → Media → Create New Media
   → Select output: ISO file
   → Output path: \\nas01\rasr-images\media\rasr-media-15G-$(Get-Date -Format yyyyMM).iso

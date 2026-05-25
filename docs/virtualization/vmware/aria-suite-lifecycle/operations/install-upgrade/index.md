@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle — Install & Upgrade
 
-```
+```text
   LCM Upgrade Sequence (strict order)
 ┌─────────────────────────────────────────────────────────────────┐
 │  Step 1: LCM itself                                             │

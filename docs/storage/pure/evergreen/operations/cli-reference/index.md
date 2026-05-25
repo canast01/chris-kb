@@ -1,6 +1,6 @@
 # Evergreen — CLI Reference
 
-```
+```text
 Evergreen Management — CLI/API Access Points
   ┌────────────────────────────────────────────────────┐
   │  Pure1 REST API (jwt auth, api.pure1.purestorage)  │

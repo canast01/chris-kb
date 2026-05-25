@@ -1,6 +1,6 @@
 # Aria Operations for Networks — Scripts
 
-```
+```text
 ┌─────────────── Aria Networks REST API Scripts ─────────────────────────────────┐
 │                                                                                 │
 │  All scripts follow this pattern:                                               │

@@ -1,6 +1,6 @@
 # HA Admission Control
 
-```
+```text
 ┌──────────── HA Admission Control: Slot Size & Reserved Capacity ───────────────┐
 │                                                                                 │
 │  Step 1: Slot size calculation                                                  │

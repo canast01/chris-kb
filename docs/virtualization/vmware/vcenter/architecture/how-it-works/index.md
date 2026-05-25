@@ -70,7 +70,7 @@ graph LR
 
 ## Logical Hierarchy
 
-```
+```text
 vCenter Server
 └── Datacenter (DC-<site>)
     ├── Cluster (CL-<site>-<function>)

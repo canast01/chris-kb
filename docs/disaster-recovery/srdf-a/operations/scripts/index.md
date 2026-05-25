@@ -112,7 +112,7 @@ Pass as environment variables when running, or set defaults in the script:
 
 **Step 4 — Make the script executable and run it**
 
-```
+```bash
 chmod +x srdf-cycle-time-monitor.sh
 SID=000123456789 RDF_GROUP=1 ./srdf-cycle-time-monitor.sh
 ```
@@ -261,7 +261,7 @@ You pass values as command-line arguments:
 
 **Step 4 — Make the script executable and run it**
 
-```
+```bash
 chmod +x srdf-state-checker.pl
 perl srdf-state-checker.pl --sid 000123456789 --rdfg 1
 ```
@@ -419,7 +419,7 @@ log "Failover script complete. Log: ${LOGFILE}"
 
 **Step 4 — Test with dry-run first (recommended)**
 
-```
+```bash
 chmod +x srdf-planned-failover.sh
 SID=000123456789 RDF_GROUP=1 CG_NAME=MyAppCG ./srdf-planned-failover.sh --dry-run
 ```
@@ -428,7 +428,7 @@ The dry-run prints every command it would execute without making any changes.
 
 **Step 5 — Run the actual failover**
 
-```
+```text
 SID=000123456789 RDF_GROUP=1 CG_NAME=MyAppCG ./srdf-planned-failover.sh
 ```
 
@@ -567,7 +567,7 @@ log "Log: ${LOGFILE}"
 
 **Step 4 — Make the script executable and run it**
 
-```
+```bash
 chmod +x srdf-resync-after-dr-test.sh
 SID=000123456789 RDF_GROUP=1 CG_NAME=MyAppCG ./srdf-resync-after-dr-test.sh
 ```
@@ -732,13 +732,13 @@ Windows key → search `PowerShell` → right-click → **Run as Administrator**
 
 **Step 4 — Allow scripts to run**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\srdf-a-state-check-windows.ps1 -UnisphereHost 192.168.1.200 -UnisphereUser smc -UnispherePass MyPassword -SID 000123456789 -RdfGroup 1
 ```
@@ -837,7 +837,7 @@ Open the saved file and change these lines near the top:
 **Step 3 — Accept the SSH fingerprint first (one-time step)**
 
 Open Command Prompt and run:
-```
+```text
 plink.exe -ssh symadmin@192.168.1.50
 ```
 Type `y` when asked, then Ctrl+C. Do this once per SYMCLI host.
@@ -848,7 +848,7 @@ Open **Command Prompt**: Windows key → search `cmd` → press Enter
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 srdf-a-cycle-check.bat
 ```

@@ -3,7 +3,7 @@
 
 AWS CloudWatch notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                 CloudWatch Data Model                   │
 │                                                         │

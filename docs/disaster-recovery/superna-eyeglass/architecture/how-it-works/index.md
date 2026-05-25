@@ -61,7 +61,7 @@ RTO: typically 5–15 minutes for file services, depending on share count.
 
 Eyeglass continuously monitors and scores DR readiness at `https://<eyeglass-ip>` → DR → Readiness:
 
-```
+```text
 DR Readiness Score = 100% when:
   ✓ All SyncIQ policies in sync state (not lagging beyond RPO threshold)
   ✓ All SMB shares mirrored on DR cluster

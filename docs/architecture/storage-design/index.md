@@ -1,6 +1,6 @@
 # Storage Design
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                   Storage Design Decision Tree                       │
 │                                                                      │
@@ -159,7 +159,7 @@ Configure at least 2 independent paths for all storage connections:
 
 Capacity planning for storage must account for actual usable capacity, not raw capacity. Overhead from RAID, snapshots, metadata, and reserved space reduces usable capacity significantly.
 
-```
+```text
 Usable Capacity = Raw Capacity × RAID Efficiency × (1 − Overhead)
 ```
 
@@ -175,7 +175,7 @@ Where:
 - Target: leave 20% free space for performance and snapshots
 
 **Calculation:**
-```
+```bash
 Raw capacity:      6 hosts × 4 drives × 3.84 TB  = 92.16 TB raw
 RAID-1 efficiency: 92.16 TB × 50%                = 46.08 TB usable (before overhead)
 Snapshot + meta:   46.08 TB × (1 - 0.15)        = 39.17 TB after 15% overhead
@@ -193,7 +193,7 @@ Effective usable capacity: approximately **31 TB** from a 92 TB raw cluster.
 - RAID-5 (3+1 or 7+1 — varies by PowerMax generation and workload)
 - 15% reserved for TDEV thin provisioning over-subscription headroom
 
-```
+```text
 Raw capacity:  24 × 3.84 TB  = 92.16 TB raw
 RAID-5 (7+1): 92.16 × 87.5% = 80.64 TB usable
 Reserve 15%:  80.64 × 0.85  = 68.54 TB allocatable

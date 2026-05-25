@@ -4,7 +4,7 @@
 Veeam Backup & Replication — Backup Server scheduling, Proxy data movement via VADP or agent, and Scale-Out Backup Repository with immutable object storage offload.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                     Veeam Architecture                               │
 │                                                                      │

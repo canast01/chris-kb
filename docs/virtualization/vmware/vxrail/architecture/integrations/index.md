@@ -4,7 +4,7 @@
 VxRail integrates natively with vCenter, NSX-T, Aria Operations, and Dell SupportAssist. External CMDB and monitoring integrations consume the VxRail Manager REST API.
 </div>
 
-```
+```text
 ┌───────────────────────── VxRail Integration Map ───────────────────────────────┐
 │                                                                                 │
 │  ┌──────────────────┐      plugin       ┌──────────────────────────────────┐    │

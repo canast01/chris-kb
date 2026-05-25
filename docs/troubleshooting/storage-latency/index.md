@@ -1,6 +1,6 @@
 # Storage Latency Troubleshooting
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                   Storage Latency Triage Flow                        │
 │                                                                      │

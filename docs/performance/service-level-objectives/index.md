@@ -2,7 +2,7 @@
 
 SLOs define quantitative targets for service reliability and performance. They form the basis for alerting thresholds, capacity decisions, and on-call escalation.
 
-```
+```text
 ┌──────────────┐   ┌──────────────┐   ┌──────────────────┐   ┌─────────────────────┐
 │ Define SLO   │   │ Measure SLI  │   │ Calculate Error  │   │   Review Cadence    │
 │ Target       │   │              │   │ Budget           │   │                     │
@@ -45,7 +45,7 @@ Set SLOs internally; only publish SLAs externally when commercially required.
 
 ## Error Budget
 
-```
+```text
 Error budget = (1 - SLO target) × time period
 
 Example: 99.9% SLO for 30 days

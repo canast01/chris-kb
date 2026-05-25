@@ -1,6 +1,6 @@
 # Recovery Behavior Expectations
 
-```
+```text
 ┌──────────── Host Failure: Recovery Sequence & Timing ──────────────────────────┐
 │                                                                                 │
 │  Host fails (power/hardware/network)                                            │

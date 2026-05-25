@@ -1,6 +1,6 @@
 # Pure Storage Evergreen Integration
 
-```
+```text
 Pure1 Integration Flow (Evergreen)
   FlashArray / FlashBlade
   └── phone-home (HTTPS 443 outbound, always-on)

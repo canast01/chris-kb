@@ -1,6 +1,6 @@
 # SRM — Scripts
 
-```
+```text
   SRM Automation via PowerCLI + REST API
 ┌──────────────────────────────────────────────────────────────┐
 │  Connect-SrmServer ──► $srm.ExtensionData.*                  │

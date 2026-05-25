@@ -101,7 +101,7 @@ fi
 ~~~
 
 **Usage:**
-```
+```text
 VPLEX_HOST=192.168.1.20 VPLEX_USER=service ./vplex_device_health.sh
 ```
 
@@ -174,7 +174,7 @@ else { print "OK: All consistency groups are in-sync.\n"; exit 0; }
 ~~~
 
 **Usage:**
-```
+```text
 VPLEX_HOST=192.168.1.20 VPLEX_USER=service perl vplex_cg_monitor.pl
 ```
 

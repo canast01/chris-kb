@@ -1,6 +1,6 @@
 # Tanzu — Health Checks
 
-```
+```text
 ┌─────────────── Tanzu Health Check Hierarchy ───────────────────────────────────┐
 │                                                                                 │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
@@ -33,7 +33,7 @@
 
 ## Supervisor Cluster Health
 
-```
+```text
 vCenter → Workload Management → Supervisor Clusters
   Status: Running (green checkmark)
   Control Plane VMs: 3 VMs all in "Running" state

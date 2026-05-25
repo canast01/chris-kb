@@ -4,7 +4,7 @@
 
 ## Project Layout
 
-```
+```text
 ansible-project/
 ├── ansible.cfg
 ├── requirements.yml
@@ -76,7 +76,7 @@ db_password: "{{ vault_db_password }}"  # plaintext reference
 
 ### Templates and Files
 
-```
+```text
 templates/nginx.conf.j2      # .j2 suffix for all Jinja2 templates
 tasks/packages.yml           # domain concept, not a verb
 tasks/config.yml

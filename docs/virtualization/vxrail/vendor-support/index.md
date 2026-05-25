@@ -2,7 +2,7 @@
 
 > Part of the [VxRail](../index.md) reference.
 
-```
+```text
   ┌──────────────────────────────────────────────────────────┐
   │               VxRail Vendor Support Flow                 │
   │                                                          │
@@ -54,7 +54,7 @@ Dell support for VxRail is accessed via the Dell support portal. Service request
 
 The support bundle collects logs from all nodes, vCenter, VxRail Manager, and vSAN traces in a single operation.
 
-```
+```text
 VxRail Manager UI → System → Support → Generate Support Bundle
 → Select all nodes → Generate
 → Download the bundle once complete (may take 10–20 minutes for large clusters)
@@ -85,7 +85,7 @@ SupportAssist (formerly Secure Remote Services) auto-generates Dell support case
 
 **Verify SupportAssist is active:**
 
-```
+```text
 VxRail Manager UI → System → Support → SupportAssist
 → Status should show: Connected
 → Check Last Heartbeat timestamp — should be within 24 hours
@@ -93,7 +93,7 @@ VxRail Manager UI → System → Support → SupportAssist
 
 **Test SupportAssist:**
 
-```
+```text
 VxRail Manager → System → Support → SupportAssist → Run Test
 → Confirm a test SR appears in the Dell support portal within a few minutes
 ```
@@ -119,7 +119,7 @@ If SupportAssist shows disconnected, check:
 
 Before any lifecycle operation, verify the target VxRail bundle version against the VxRail Compatibility Matrix:
 
-```
+```text
 Dell Technologies Interoperability Matrix (IMT)
 → Select VxRail → current version → check compatible vSphere, vSAN, NSX versions
 ```

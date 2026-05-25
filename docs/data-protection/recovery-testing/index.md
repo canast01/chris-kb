@@ -149,7 +149,7 @@ flowchart TD
 
 ## Test Report Template
 
-```
+```text
 RECOVERY TEST REPORT
 
 Test Reference:    RT-2026-006
@@ -230,7 +230,7 @@ DataLabs is ideal for:
 
 IntelliSnap integrates with array-level snapshots (NetApp SnapVault, PowerMax TimeFinder, Pure FlashArray) for near-instant recovery testing.
 
-```
+```text
 CommCell Console → Client Computers → <SQL Server> → iDataAgent → Backup Sets
   → Right-click subclient → Snap Recovery (Test Mount)
 

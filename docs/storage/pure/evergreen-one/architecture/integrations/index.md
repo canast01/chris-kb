@@ -1,6 +1,6 @@
 # Evergreen//One — Integrations
 
-```
+```text
   FlashArray / FlashBlade
   ┌────────────────────────────────────────────────┐
   │  Management plane                              │

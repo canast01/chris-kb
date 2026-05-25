@@ -4,7 +4,7 @@
 Infrastructure lifecycle management covering installation, upgrade, patching, decommission, and EOL tracking across platforms.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                    System Lifecycle Stages                           │
 │                                                                      │

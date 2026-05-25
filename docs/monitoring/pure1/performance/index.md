@@ -1,6 +1,6 @@
 # Pure1 — Performance
 
-```
+```text
 Performance Data Flow — Pure1
 ┌──────────────────────────┐
 │  Array (FlashArray/FB)   │
@@ -101,7 +101,7 @@ curl -s "https://api.pure1.purestorage.com/api/1.latest/metrics/history?names=vo
 
 High latency on a Pure FlashArray usually originates from the host side, not the array. Investigate in this order:
 
-```
+```text
 1. Check array latency: purearray list --performance
    → If array latency OK (< 1ms) → problem is host-side or network
 

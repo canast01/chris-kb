@@ -1,6 +1,6 @@
 # vCenter — CLI Reference (PowerCLI & DCLI)
 
-```
+```text
 vCenter CLI Interfaces
 ════════════════════════════════════════════════════════
 

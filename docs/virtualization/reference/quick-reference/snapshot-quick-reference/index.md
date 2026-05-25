@@ -1,6 +1,6 @@
 # VMware Snapshot Quick Reference
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────────┐
 │  Snapshot Chain — Impact on VM I/O                                       │
 │                                                                          │

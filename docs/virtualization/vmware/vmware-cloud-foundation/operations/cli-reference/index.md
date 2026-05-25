@@ -1,6 +1,6 @@
 # VCF Operations — CLI Reference
 
-```
+```text
 VCF CLI Tool Map — Where to Run What
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager Appliance (SSH: vcf user → sudo)      │

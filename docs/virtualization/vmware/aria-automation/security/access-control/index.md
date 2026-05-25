@@ -1,6 +1,6 @@
 # Aria Automation — Access Control
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Automation RBAC Model                          │
 ├─────────────────────────────────────────────────────────────┤
@@ -51,7 +51,7 @@ Roles are assigned to groups (AD groups synced via VIDM), not individuals.
 
 **Add a group to a project:**
 
-```
+```text
 Infrastructure → Administration → Projects → select project → Members → Add Members
 ```
 
@@ -72,7 +72,7 @@ Projects are the primary isolation boundary in Aria Automation.
 
 **Create a project:**
 
-```
+```text
 Infrastructure → Administration → Projects → New Project
 ```
 
@@ -100,7 +100,7 @@ Catalog items are shared to projects — a template not shared to a project is n
 
 **Share a catalog item:**
 
-```
+```bash
 Service Broker → Content & Policies → Content Sharing → New Content Sharing Policy
 ```
 
@@ -116,7 +116,7 @@ Approval policies add a human approval gate before provisioning.
 
 **Create and assign an approval policy:**
 
-```
+```bash
 Service Broker → Content & Policies → Policies → New Policy → Approval Policy
 ```
 

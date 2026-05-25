@@ -25,7 +25,7 @@ All evidence must include a timestamp (either in the content itself or in the fi
 
 Use a consistent naming convention so evidence can be located quickly.
 
-```
+```text
 <date>_<type>_<system>_<context>.<ext>
 
 Examples:

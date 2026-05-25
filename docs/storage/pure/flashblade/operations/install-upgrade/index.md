@@ -1,6 +1,6 @@
 # FlashBlade — Install & Upgrade
 
-```
+```text
 Purity//FB Non-Disruptive Upgrade (NDU)
   ┌──────────────────────────────────────────────────────┐
   │  1. Review release notes + Pure1 upgrade planning    │

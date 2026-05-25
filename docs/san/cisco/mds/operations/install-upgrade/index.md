@@ -51,7 +51,7 @@ If ISSU prerequisites are not met, fall back to `install all` in a maintenance w
 
 **Upgrade steps:**
 
-```
+```bash
 # Step 1 — Copy the target NX-OS image to the switch bootflash
 copy scp://<server>/<path>/nxos.bin bootflash:
 
@@ -79,7 +79,7 @@ show zoneset active   # zoning intact
 
 EPLD (FPGA firmware) upgrades are required for some major NX-OS version transitions and for hardware compatibility.
 
-```
+```bash
 # Check current EPLD versions
 show version module all  # includes module EPLD version
 
@@ -100,7 +100,7 @@ When adding a new MDS switch to an existing fabric:
 3. Connect the ISL — the new switch will join the fabric.
 4. Verify the new switch appears in `show topology`:
 
-```
+```text
 show topology
 show fcdomain domain-list vsan 10
 ```
@@ -114,7 +114,7 @@ show fcdomain domain-list vsan 10
 
 When removing a switch from the fabric:
 
-```
+```bash
 # Step 1 — Move all host and storage ports to other switches
 # Step 2 — Disable the ISL port-channels to isolate the switch from the fabric
 interface port-channel1

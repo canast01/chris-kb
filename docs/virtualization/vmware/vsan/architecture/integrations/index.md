@@ -1,6 +1,6 @@
 # vSAN — Integrations
 
-```
+```text
 vSAN INTEGRATION MAP
 
   ┌────────────────────────────────────────────────────────┐

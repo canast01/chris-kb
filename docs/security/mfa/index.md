@@ -10,7 +10,7 @@ MFA adds an additional authentication factor beyond passwords to protect account
 
 ## MFA Authentication Flow
 
-```
+```text
   User                  Identity Provider (IdP)          MFA Service           Application
     │                            │                            │                     │
     │── Username + Password ────►│                            │                     │
@@ -33,7 +33,7 @@ MFA adds an additional authentication factor beyond passwords to protect account
 
 ## TOTP vs Push Comparison
 
-```
+```text
   TOTP (Time-based OTP)                Push Notification
   ──────────────────────────────────   ─────────────────────────────────────────
   User generates 6-digit code          IdP sends push to registered device

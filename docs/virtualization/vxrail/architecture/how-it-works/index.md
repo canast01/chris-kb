@@ -1,6 +1,6 @@
 # VxRail — How It Works
 
-```
+```text
 VxRail LCM Flow — How It Works
 ┌─────────────────────────────────────────────────────────────┐
 │  VxRail Manager (VM on cluster)                             │

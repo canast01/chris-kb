@@ -1,6 +1,6 @@
 # ESXi — Hardening
 
-```
+```text
 ESXi Host Hardening Layers
 ┌─────────────────────────────────────────────────────────┐
 │  1. Network Attack Surface Reduction                    │

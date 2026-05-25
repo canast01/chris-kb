@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle — Access Control
 
-```
+```text
   LCM RBAC — AD Groups → LCM Roles
 ┌─────────────────────────────────────────────────────────────────┐
 │  AD (via VIDM sync)          LCM Roles                          │
@@ -35,7 +35,7 @@ LCM uses a role-based access control model backed by Workspace ONE Access (VIDM)
 
 ## Configuring Role Assignments
 
-```
+```text
 LCM → Settings → Access Control → Add Role Assignment
 ```
 

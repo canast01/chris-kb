@@ -1,6 +1,6 @@
 # Maintenance Risk Validation
 
-```
+```text
 ┌──────────── Pre-Maintenance Risk Validation: Gate Checks ──────────────────────┐
 │                                                                                 │
 │  Gate 1: vSAN health                                                            │

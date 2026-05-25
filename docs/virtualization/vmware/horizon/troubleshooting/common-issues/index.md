@@ -1,6 +1,6 @@
 # Horizon — Common Issues
 
-```
+```text
   Triage Decision Tree
 ┌─────────────────────────────────────────────────────────────┐
 │  Login issue?          Blank screen?       Slow login?       │

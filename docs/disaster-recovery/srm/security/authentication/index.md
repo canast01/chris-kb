@@ -4,7 +4,7 @@
 
 The SRM site pair connection uses a service account on each vCenter:
 
-```
+```text
 Account: svc-srm-pair@domain.local
 Privileges: SRM plug-in permissions + read access to vCenter inventory
 ```

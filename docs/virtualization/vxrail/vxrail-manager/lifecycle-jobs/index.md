@@ -3,7 +3,7 @@
 
 Lifecycle task review, bundle status, failed jobs, and retry planning.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │               VxRail LCM Job Flow                    │
   │                                                      │

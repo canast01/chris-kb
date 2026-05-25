@@ -1,6 +1,6 @@
 # Authentication Failures Troubleshooting
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                   Auth Failure Triage Flow                           │
 │                                                                      │
@@ -317,7 +317,7 @@ Escalate to Active Directory / Identity team when:
 
 ## Quick Reference: Time Sync Verification Chain
 
-```
+```text
 Authoritative NTP (Stratum 1)
         ↓
 PDC Emulator DC (Stratum 2) ← All DCs sync here

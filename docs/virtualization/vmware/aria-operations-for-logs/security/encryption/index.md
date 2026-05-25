@@ -1,6 +1,6 @@
 # Aria Ops for Logs — Encryption
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Ops for Logs Encryption Layers                 │
 ├─────────────────────────────────────────────────────────────┤
@@ -29,7 +29,7 @@ Aria Operations for Logs ships with a self-signed certificate. Replace it with a
 
 **Via UI:**
 
-```
+```text
 Administration → SSL → Replace Certificate
 ```
 

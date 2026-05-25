@@ -1,6 +1,6 @@
 # vSAN — Install & Upgrade
 
-```
+```text
 VSAN UPGRADE SEQUENCE (host-by-host rolling)
 
   Pre-checks

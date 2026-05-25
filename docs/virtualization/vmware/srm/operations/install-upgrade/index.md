@@ -1,6 +1,6 @@
 # SRM — Install and Upgrade
 
-```
+```text
   SRM Upgrade Sequence (strictly ordered)
 ┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
 │  1. vCenter   │──►│  2. SRM Server│──►│  3. SRA       │──►│  4. VR        │
@@ -54,7 +54,7 @@ Install SRM on both sites before pairing. Site pairing is done from the vCenter 
 
 Deploy VRA OVA at both the protected and recovery sites:
 
-```
+```yaml
 vCenter → Deploy OVF Template → VMware-vSphere-Replication-<version>.ovf
   Network: Management network (must reach vCenter and remote VRA)
   IP: static IP (DHCP not recommended)
@@ -67,7 +67,7 @@ Post-deploy:
 ```
 
 Pair VRA appliances:
-```
+```text
 vCenter (Protected) → Site Recovery → New Site Pair
   Remote vCenter: vcenter-recovery.example.local
   Remote VRA: vra-recovery.example.local
@@ -100,7 +100,7 @@ Pure_Storage_SRA_<version>.exe /silent
 
 After SRM is installed on both sites and VRA/SRA is deployed:
 
-```
+```text
 vCenter (Protected Site) → Site Recovery → New Site Pair
   Remote vCenter: vcenter-recovery.example.local
   Site Recovery Manager: srm-recovery.example.local
@@ -109,7 +109,7 @@ vCenter (Protected Site) → Site Recovery → New Site Pair
 ```
 
 After pairing, configure inventory mappings:
-```
+```text
 Site Recovery → Site Pair → Configure → Inventory Mappings
   Network mappings: protected networks → recovery networks
   Resource mappings: protected cluster/RP → recovery cluster/RP

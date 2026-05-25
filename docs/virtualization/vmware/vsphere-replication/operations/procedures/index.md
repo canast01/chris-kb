@@ -1,6 +1,6 @@
 # vSphere Replication — Procedures
 
-```
+```text
   Key Operational Procedures
 ┌──────────────────────────────────────────────────────────────┐
 │  Configure Replication           Monitor + Manage            │
@@ -26,7 +26,7 @@
 
 ## Configure Replication on a VM
 
-```
+```yaml
 vCenter → [VM] → right-click → vSphere Replication → Configure
 
   Step 1: Target site
@@ -56,7 +56,7 @@ Initial sync begins immediately. Monitor in Site Recovery → Replications.
 
 ## Change RPO for a Replicated VM
 
-```
+```text
 vCenter → Site Recovery → Replications → [VM] → right-click → Edit
   RPO: change to new value
   → OK → effective immediately
@@ -82,12 +82,12 @@ For vSphere Replication-based SRM protection:
 
 Pause replication temporarily (e.g., during storage maintenance):
 
-```
+```text
 vCenter → Site Recovery → Replications → [VM] → right-click → Pause
 ```
 
 Resume:
-```
+```bash
 vCenter → Site Recovery → Replications → [VM] → right-click → Resume
 # VM resumes from last sync point — only delta changes replicated after resume
 ```
@@ -98,7 +98,7 @@ vCenter → Site Recovery → Replications → [VM] → right-click → Resume
 
 For recovery without SRM — manual process:
 
-```
+```text
 vCenter (Target Site) → Site Recovery → Replications → [VM]
   → Recover
     Recovery type: Recovery (destructive — intended for actual DR)
@@ -118,7 +118,7 @@ After recovery, the replication relationship is terminated. Re-configure replica
 
 Move replica files to a different datastore at the target site:
 
-```
+```text
 vCenter → Site Recovery → Replications → [VM] → right-click → Edit
   Target Location: change to new datastore
   → OK
@@ -130,7 +130,7 @@ VR migrates the replica files to the new datastore during the next sync cycle. N
 
 ## Remove Replication from a VM
 
-```
+```text
 vCenter → Site Recovery → Replications → [VM] → right-click → Remove Replication
   Remove replica files: Yes (clean up .vrepl/.hbr files from target) — recommended
   OR: No (keep files — useful if you plan to use them as a seed for re-configuration)
@@ -144,7 +144,7 @@ After removing, the replica VMDK files on the target datastore are deleted (if "
 
 For VMs with large disks, the initial full sync can take many hours. Schedule during off-peak:
 
-```
+```text
 vCenter → Site Recovery → Replications → [VM] → Sync Now
 ```
 
@@ -156,7 +156,7 @@ This triggers an out-of-schedule sync. The VM must not be powered off during syn
 
 When a VRA is handling >400 VMs:
 
-```
+```text
 vCenter → Site Recovery → vSphere Replication → Replication Servers → Deploy VRS
 
 After deploying VRS, reassign VMs to VRS:

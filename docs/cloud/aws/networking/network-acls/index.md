@@ -3,7 +3,7 @@
 
 AWS Network ACLs notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              Network ACL (stateless, per subnet)        │
 │                                                         │

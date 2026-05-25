@@ -1,6 +1,6 @@
 # vCenter — Escalation
 
-```
+```text
 Escalation Path — Broadcom / VMware Support
 ════════════════════════════════════════════════════════
 
@@ -67,12 +67,12 @@ Ensure your Broadcom account is linked to your company's entitlement. Contact yo
 ### Log Bundle Collection
 
 **From vCenter VAMI (recommended):**
-```
+```text
 https://<vcenter>:5480 → Support → Create Support Bundle
 ```
 
 **From vCenter UI:**
-```
+```text
 vSphere Client → Administration → Deployment → System Configuration → Export System Logs
 ```
 
@@ -89,7 +89,7 @@ vm-support
 ```
 
 **NSX Manager support bundle** (if NSX issue involved):
-```
+```text
 NSX Manager UI → System → Support Bundle → Generate
 ```
 

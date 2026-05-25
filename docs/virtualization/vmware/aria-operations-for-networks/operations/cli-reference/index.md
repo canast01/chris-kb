@@ -1,6 +1,6 @@
 # Aria Operations for Networks — CLI Reference
 
-```
+```text
 ┌─────────────── Aria Networks CLI: Platform & Collector ────────────────────────┐
 │                                                                                 │
 │  Platform VM (ssh ubuntu@aon-platform)                                          │
@@ -65,7 +65,7 @@ sudo /home/ubuntu/support/show-version.sh
 ```
 
 Output format:
-```
+```yaml
 Product: VMware Aria Operations for Networks
 Version: 6.14.0
 Build: 23456789

@@ -6,7 +6,7 @@
 
 ## Switch Naming
 
-```
+```text
 <site>-san-sw<nn>
 ```
 
@@ -36,7 +36,7 @@ Document domain ID assignments in the SAN design register in CMDB.
 
 ## Zone and Alias Naming
 
-```
+```text
 Zone:   <hostname>_<hba_port>-<arrayname>_<target_port>
 Alias:  <hostname>_<hba_port>   or   <arrayname>_<target_port>
 ```

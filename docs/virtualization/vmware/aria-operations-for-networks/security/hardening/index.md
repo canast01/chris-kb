@@ -1,6 +1,6 @@
 # Aria Operations for Networks — Hardening
 
-```
+```text
 ┌──────────── Aria Networks Hardening Checklist ─────────────────────────────────┐
 │                                                                                 │
 │  Post-deployment (critical actions)                                             │
@@ -67,13 +67,13 @@ Firewall rule: allow TCP 22 to Platform VM and Collector VMs from jump host subn
 ## Least-Privilege Service Accounts
 
 **vCenter (read-only):**
-```
+```text
 vCenter → Administration → Global Permissions → Add
   User: svc-vrni-vc@corp.local | Role: Read Only | Propagate: Yes
 ```
 
 **NSX-T (read-only):**
-```
+```text
 NSX-T → System → User Management → Add User
   Username: svc-vrni-nsx | Role: Auditor
 ```
@@ -111,7 +111,7 @@ sudo nginx -t && sudo systemctl reload nginx
 
 ## SIEM / Syslog Integration
 
-```
+```yaml
 Settings → Notifications → Syslog
   Protocol: TCP
   Host: siem.example.local

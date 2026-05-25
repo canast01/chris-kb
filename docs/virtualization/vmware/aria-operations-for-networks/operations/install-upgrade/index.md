@@ -1,6 +1,6 @@
 # Aria Operations for Networks — Install and Upgrade
 
-```
+```text
 ┌──────────── Aria Networks Upgrade Sequence ────────────────────────────────────┐
 │                                                                                 │
 │  Pre-upgrade                                                                    │
@@ -186,7 +186,7 @@ NSX-T data source auto-discovers VNIs, segments, and DFW rules within the first 
 
 **Always upgrade Platform VM before Collector VMs.** A newer Collector cannot communicate with an older Platform. Upgrading Collectors first will cause them to disconnect and lose flow data during the window.
 
-```
+```text
 Correct order:
 1. Snapshot Platform VM
 2. Upgrade Platform VM

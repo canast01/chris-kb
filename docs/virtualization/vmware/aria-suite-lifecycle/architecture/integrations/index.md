@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle — Integrations
 
-```
+```text
   LCM Integration Map
 ┌─────────────────────────────────────────────────────────────────┐
 │  Identity              Compute                  Storage          │
@@ -49,7 +49,7 @@ LCM requires vCenter to deploy and manage OVA-based product appliances:
 3. Select target datacenter, cluster, and datastore during product deployment
 
 Required vCenter permissions for the LCM service account:
-```
+```text
 Virtual Machine Power User (or equivalent)
 Datastore — AllocateSpace
 Network — Assign

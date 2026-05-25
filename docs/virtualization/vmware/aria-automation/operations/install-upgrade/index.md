@@ -1,6 +1,6 @@
 # Aria Automation — Install & Upgrade
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Automation Upgrade Sequence (ASLM)             │
 ├─────────────────────────────────────────────────────────────┤
@@ -64,7 +64,7 @@ The Easy Installer ISO automates the end-to-end deployment of LCM + VIDM + Aria 
 
 If LCM is already deployed and Aria Automation needs to be added:
 
-```
+```text
 LCM → Lifecycle Operations → Environments → select or create environment → Add Product → Aria Automation
 ```
 
@@ -110,7 +110,7 @@ For environments not managed by LCM:
 
 **Via VAMI:**
 
-```
+```text
 https://<vra-fqdn>:5480 → Lifecycle Management → System Upgrade → Upload PAK file
 ```
 

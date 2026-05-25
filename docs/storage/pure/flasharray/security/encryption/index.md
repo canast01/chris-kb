@@ -1,6 +1,6 @@
 # FlashArray — Encryption
 
-```
+```text
 FlashArray Encryption Architecture
 ┌────────────────────────────────────────────────────────────┐
 │  Data at Rest (always-on, no config required)              │

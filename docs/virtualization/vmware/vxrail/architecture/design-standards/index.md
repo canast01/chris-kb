@@ -4,7 +4,7 @@
 Node count requirements, cluster naming, vSAN policy standards, network design rules, and configuration baselines for VxRail HCI deployments.
 </div>
 
-```
+```text
 ┌──────────────── VxRail Design: Rack Layout & Network Standards ─────────────────┐
 │                                                                                  │
 │   Rack A                              Rack B                                    │

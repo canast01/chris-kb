@@ -2,7 +2,7 @@
 
 Upgrade planning, pre-checks, rollback planning, and post-upgrade validation.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                  Upgrade Readiness Flow                                  │
 ├───────────────┬──────────────────┬───────────────┬────────────────────  │

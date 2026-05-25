@@ -3,7 +3,7 @@
 
 VxRail Support Notes notes for infrastructure operations, support, health checks, and troubleshooting.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │            VxRail Support Notes Workflow             │
   │                                                      │

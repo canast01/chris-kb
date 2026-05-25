@@ -31,7 +31,7 @@ Do not skip an update cycle — if there is nothing new to report, send an updat
 ## Communication Templates
 
 **Initial notification:**
-```
+```text
 [P1 INCIDENT] <Service Name> degraded — <brief description>
 Time detected: <HH:MM TZ>
 Impact: <user-facing description>
@@ -42,7 +42,7 @@ Incident bridge: <link/number>
 ```
 
 **Ongoing update:**
-```
+```text
 [P1 UPDATE] <Service Name> — <HH:MM TZ>
 Current status: Investigating / Identified / Implementing fix
 What we know: <1-2 sentences>
@@ -51,7 +51,7 @@ Next update: <HH:MM TZ>
 ```
 
 **Resolution:**
-```
+```bash
 [P1 RESOLVED] <Service Name> — <HH:MM TZ>
 Service restored at: <HH:MM TZ>
 Duration: <X hours Y minutes>

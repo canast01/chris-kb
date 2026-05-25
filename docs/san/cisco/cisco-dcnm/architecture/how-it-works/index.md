@@ -14,7 +14,7 @@ Single DCNM server. Suitable for environments up to approximately 1,000 managed 
 
 Two DCNM servers (active + standby) with shared external database (Oracle or PostgreSQL). Requires a Virtual IP (VIP) for client access.
 
-```
+```text
 ┌─────────────────┐         ┌─────────────────┐
 │  DCNM Active    │◄──────►│  DCNM Standby   │
 │  10.10.5.10     │  HA sync│  10.10.5.11     │

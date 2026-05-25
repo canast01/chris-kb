@@ -2,7 +2,7 @@
 
 An SNMP community string is a plaintext password used in SNMPv1 and SNMPv2c to authenticate read or write access to a device's management information base (MIB).
 
-```
+```text
         COMMUNITY STRING FLOW (SNMPv1/v2c)
 ┌─────────────────────────────────────────────────────────────┐
 │  NMS (monitoring server)        Device (switch/router)      │
@@ -53,7 +53,7 @@ snmpwalk -v2c -c monitoring-ro localhost system
 
 ## Cisco IOS
 
-```
+```bash
 # Read-only community with ACL restriction
 ip access-list standard SNMP-MGMT
  permit 10.10.0.0 0.0.255.255
@@ -71,7 +71,7 @@ show snmp community
 
 ## Arista EOS
 
-```
+```text
 snmp-server community <community-string> ro
 snmp-server community <community-string> view system-view ro
 show snmp community
@@ -79,7 +79,7 @@ show snmp community
 
 ## Brocade FOS
 
-```
+```bash
 snmpconfig --set snmpv1
 # Follow prompts to set community strings and access list
 snmpconfig --show snmpv1

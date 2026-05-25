@@ -9,7 +9,7 @@
 
 ## Process Flow
 
-```
+```text
   Ticket received: account locked
            │
            ▼

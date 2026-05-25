@@ -55,7 +55,7 @@ Quantisation reduces model size at the cost of some accuracy. For most tasks, Q4
 
 Modelfiles let you create custom model variants with modified system prompts, parameters, or adapters.
 
-```
+```yaml
 # Modelfile for a focused code review assistant
 FROM codellama:13b
 

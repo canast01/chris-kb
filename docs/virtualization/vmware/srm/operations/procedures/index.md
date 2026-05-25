@@ -1,6 +1,6 @@
 # SRM — Procedures
 
-```
+```text
   Test Failover vs Actual Failover
 ┌──────────────────────────────────────────────────────────────┐
 │  Test Failover (non-disruptive)                              │
@@ -28,7 +28,7 @@
 
 ## Create a Protection Group (Array-Based Replication)
 
-```
+```text
 vCenter (Protected Site) → Site Recovery → Protection → Protection Groups → New
 
   Type: Array Based Replication
@@ -45,7 +45,7 @@ The protection group will include all VMs on the replicated datastores.
 
 ## Create a Protection Group (vSphere Replication)
 
-```
+```yaml
 Site Recovery → Protection → Protection Groups → New
 
   Type: vSphere Replication groups
@@ -58,7 +58,7 @@ Site Recovery → Protection → Protection Groups → New
 
 ## Create a Recovery Plan
 
-```
+```text
 Site Recovery → Recovery → Recovery Plans → New
 
   Name: SQL-DR-Plan
@@ -83,7 +83,7 @@ Site Recovery → Recovery → Recovery Plans → New
 
 Test failover powers on VMs in an isolated bubble network — production is unaffected.
 
-```
+```text
 Site Recovery → Recovery Plans → [plan] → Test
   Confirm: Test
   Monitor progress: Site Recovery → Recovery Plans → [plan] → History → [current run]
@@ -104,7 +104,7 @@ Cleanup (mandatory — must clean up before running another test or real recover
 
 Both sites are available. VMs are gracefully shut down at protected site, replicated, and powered on at recovery site.
 
-```
+```yaml
 Site Recovery → Recovery Plans → [plan] → Run
   Type: Planned Migration
   Confirm: check "I understand this will shut down VMs at the protected site"
@@ -120,7 +120,7 @@ Post-migration:
 
 ## Run a Disaster Recovery (Protected Site Down)
 
-```
+```yaml
 Site Recovery → Recovery Plans → [plan] → Run
   Type: Disaster Recovery
   Confirm: acknowledge data loss risk (last sync point used)
@@ -135,7 +135,7 @@ Note: VMs at protected site must be considered "lost" — do NOT try to power th
 
 After the protected site is restored and ready:
 
-```
+```text
 1. Re-protect VMs at recovery site (reverse replication direction):
    Site Recovery → Protection → Protection Groups → [group] → Reprotect
    This configures replication from recovery site back to protected site
@@ -151,13 +151,13 @@ After the protected site is restored and ready:
 ## Add a VM to an Existing Protection Group
 
 For ABR protection groups: add the VM to the storage replication group on the array, then rediscover:
-```
+```text
 Site Recovery → Protection → [PG] → Discover Devices
 ```
 The new VM appears automatically if it is on a replicated datastore.
 
 For vSphere Replication groups: configure VR on the VM first, then:
-```
+```text
 Site Recovery → Protection → [PG] → Add VMs
 ```
 
@@ -165,7 +165,7 @@ Site Recovery → Protection → [PG] → Add VMs
 
 ## Change RPO on a vSphere Replication VM
 
-```
+```text
 vCenter (Protected Site) → [VM] → right-click → Configure Replication → Edit
   RPO: change from current value (minimum 5 minutes, maximum 24 hours)
   Save → replication schedule updates immediately
@@ -175,7 +175,7 @@ vCenter (Protected Site) → [VM] → right-click → Configure Replication → 
 
 ## Remove VM from Protection (Decommission)
 
-```
+```text
 1. Remove VM from Protection Group:
    Site Recovery → Protection → [PG] → VMs → [VM] → Remove
 

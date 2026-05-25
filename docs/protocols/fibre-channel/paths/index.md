@@ -2,7 +2,7 @@
 
 A path is a complete end-to-end connection from an HBA port through the fabric to a storage target port.
 
-```
+```text
         DUAL-FABRIC MULTIPATH TOPOLOGY (4 paths to 1 LUN)
                 ┌─────────────┐
                 │    HOST     │
@@ -31,7 +31,7 @@ A path is a complete end-to-end connection from an HBA port through the fabric t
 
 ## Path Architecture
 
-```
+```text
 Host HBA0 (WWPN-A) → Fabric A → Array Port CT-A0 → LUN
 Host HBA1 (WWPN-B) → Fabric B → Array Port CT-B0 → LUN
 ```

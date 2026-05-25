@@ -4,7 +4,7 @@ Sizing guidelines, design standards, and best practices.
 
 ## Naming Convention
 
-```
+```text
 <site>-<role>-<nn>
 ```
 
@@ -197,7 +197,7 @@ SSH daemon configuration is enforced via the `ssh_baseline` Ansible role.
 
 sudo is configured via `/etc/sudoers.d/` drop-in files only. The base `/etc/sudoers` must not be modified directly. Engineers receive sudo via AD group membership; service accounts get targeted command whitelists.
 
-```
+```bash
 # /etc/sudoers.d/ops-admins
 %ops-admins ALL=(ALL) NOPASSWD: ALL
 

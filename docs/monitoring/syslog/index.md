@@ -1,6 +1,6 @@
 # Syslog and Centralized Logging
 
-```
+```text
 Syslog Flow
 ┌─────────────────────────────────────────────────┐
 │  Device (facility.severity)                     │
@@ -28,7 +28,7 @@ Syslog Flow
 
 ## Architecture Overview
 
-```
+```text
 Hosts (rsyslog / syslog-ng / journald)
     → Syslog server / SIEM (Splunk / Graylog / ELK / Syslog-NG)
         → Long-term archive (object storage / NFS)
@@ -136,7 +136,7 @@ journalctl -f -u <service>
 ```
 
 **Graylog / Splunk search examples:**
-```
+```bash
 # Graylog GELF query
 source:<hostname> AND level:<4 AND facility:daemon
 

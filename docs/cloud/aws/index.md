@@ -8,7 +8,7 @@ title: AWS
 Amazon Web Services knowledge base covering compute, storage, networking, identity, monitoring, backup, security, governance, and cost management. Includes architecture references, operational procedures, CLI commands, and troubleshooting guides.
 </div>
 
-```
+```text
 ┌───────────────────────────────────────── AWS Platform Stack ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -1,6 +1,6 @@
 # VCF — Integrations
 
-```
+```text
 VCF Integration Topology
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager (integration hub)                      │
@@ -88,7 +88,7 @@ SDDC Manager uses AD for operator authentication. Each workload domain vCenter i
 
 **Add AD identity source to SDDC Manager:**
 
-```
+```text
 SDDC Manager → Administration → Single Sign-On
 → Add Identity Source → Active Directory over LDAP
 → Enter domain FQDN, LDAPS server, bind account DN and password
@@ -97,7 +97,7 @@ SDDC Manager → Administration → Single Sign-On
 
 **Assign roles to AD groups:**
 
-```
+```text
 SDDC Manager → Administration → Users and Groups
 → Add → enter AD group name → assign ADMIN / OPERATOR / VIEWER role
 ```
@@ -136,7 +136,7 @@ VCF does not provide a native VM backup solution. VM backup is handled at the vC
 
 **SDDC Manager configuration backup** (separate from VM data backup):
 
-```
+```text
 SDDC Manager → Administration → Backup → Configure
 → Set SFTP target → schedule daily → retain 7+ restore points
 ```
@@ -145,7 +145,7 @@ SDDC Manager → Administration → Backup → Configure
 
 ## SIEM and Syslog Integration
 
-```
+```text
 SDDC Manager → Administration → Syslog → Add Syslog Server
 → Protocol: TLS (recommended) or UDP/TCP → Port: 6514 or 514
 ```

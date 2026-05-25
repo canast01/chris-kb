@@ -1,6 +1,6 @@
 # vSphere Replication — Authentication
 
-```
+```text
   VR Authentication Architecture
 ┌──────────────────────────────────────────────────────────────┐
 │  User / Script            vCenter SSO           VRA          │
@@ -28,7 +28,7 @@
 
 VRA authenticates to vCenter using vCenter SSO credentials provided during initial registration. End-users authenticate to VR features through vCenter — no separate VR login.
 
-```
+```yaml
 VRA VAMI → Configuration → vCenter Server
   vCenter: vcenter-london.example.local
   Username: administrator@vsphere.local
@@ -44,7 +44,7 @@ If vCenter SSO credentials change, update VRA registration with new credentials.
 
 VRA appliances authenticate to each other using their SSL certificates. When pairing sites:
 
-```
+```text
 vCenter → Site Recovery → New Site Pair
   → Presents remote VRA certificate thumbprint for acceptance
   Accept thumbprint → stored in local vCenter database
@@ -52,7 +52,7 @@ vCenter → Site Recovery → New Site Pair
 
 If either VRA certificate is replaced after pairing, the pairing must be updated:
 
-```
+```bash
 Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
 # OR: delete and re-create the site pair
 ```
@@ -63,7 +63,7 @@ Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
 
 The VRA VAMI admin account is local to the appliance, separate from vCenter SSO:
 
-```
+```text
 VRA VAMI (https://vra-london.example.local:5480)
   Username: admin
   Password: set during OVA deployment

@@ -75,7 +75,7 @@ ECS ships with self-signed certificates for both the Management API (port 4443) 
 
 ### TLS Version and Cipher Configuration
 
-```
+```yaml
 ECS Portal → Settings → Security → SSL/TLS Settings
   - Minimum TLS version: TLS 1.2 (disable TLS 1.0 and 1.1)
   - Cipher suites: Remove RC4, DES, 3DES, and NULL ciphers
@@ -99,7 +99,7 @@ openssl s_client -connect <ecs-node>:9021 -tls1_2 </dev/null 2>&1 | grep -E "CON
 
 Disable HTTP (port 9021 plain HTTP) in production. Only HTTPS should be accessible for S3 clients.
 
-```
+```text
 ECS Portal → Settings → Security → Object Access
   - Disable HTTP access: enabled
   - Force HTTPS only: enabled
@@ -155,7 +155,7 @@ curl -s -k -X POST \
 
 **External KMIP configuration:**
 
-```
+```yaml
 ECS Portal → Settings → Key Management
   - KMIP server hostname/IP: <kmip-server-fqdn>
   - KMIP port: 5696 (standard KMIP port)

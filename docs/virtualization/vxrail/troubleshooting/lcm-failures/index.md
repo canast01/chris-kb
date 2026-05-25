@@ -3,7 +3,7 @@
 
 Lifecycle Manager failures, pre-check errors, upgrade stops, and recovery workflow.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │           VxRail LCM Failure Triage                  │
   │                                                      │

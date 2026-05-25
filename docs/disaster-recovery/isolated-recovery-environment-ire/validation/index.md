@@ -77,7 +77,7 @@ Business owners test against a defined scenario list. Scenarios must be agreed b
 | Email send/receive | Mail | Send test email from IRE mail relay; confirm delivery |
 | Critical data records | Database | Verify records present up to the chosen recovery point |
 
-```
+```yaml
 Business validation sign-off form:
   - System: ___________________
   - Recovery point tested: ___________________

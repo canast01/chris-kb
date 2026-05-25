@@ -2,7 +2,7 @@
 
 LUKS/dm-crypt full-disk encryption, NBDE (Network Bound Disk Encryption), TLS for services, and encrypted volume management.
 
-```
+```text
 ┌────────────────────────────────────────────────────────┐
 │                Linux Encryption Layers                 │
 ├────────────────────────────────────────────────────────┤
@@ -86,7 +86,7 @@ cryptsetup luksChangeKey /dev/sdb
 blkid /dev/sdb
 ```
 
-```
+```bash
 # /etc/crypttab — maps the encrypted device to a name at boot
 # Format: name  device-or-UUID  key-file  options
 secure-data  UUID=a1b2c3d4-e5f6-7890-abcd-ef1234567890  none  luks
@@ -95,7 +95,7 @@ secure-data  UUID=a1b2c3d4-e5f6-7890-abcd-ef1234567890  none  luks
 secure-data  UUID=a1b2c3d4-e5f6-7890-abcd-ef1234567890  /root/keyfile  luks
 ```
 
-```
+```bash
 # /etc/fstab — mount the mapped device
 /dev/mapper/secure-data  /mnt/secure-data  xfs  defaults,_netdev  0 0
 ```

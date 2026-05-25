@@ -1,6 +1,6 @@
 # vCenter Security — Hardening
 
-```
+```text
 vCenter Hardening Layers
 ════════════════════════════════════════════════════════
 
@@ -215,7 +215,7 @@ Default event retention is 30 days. Extend for compliance:
 
 ### Syslog Forwarding to SIEM
 
-```
+```text
 VAMI (https://<vcenter>:5480) → Syslog → Add Syslog Server
 Protocol: TLS (preferred)
 Port: 6514 (TLS) or 514 (UDP)

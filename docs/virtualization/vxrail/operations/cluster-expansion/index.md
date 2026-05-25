@@ -1,6 +1,6 @@
 # VxRail Cluster Expansion
 
-```
+```text
 Add Node Flow
 ┌──────────────────────────────────────────────────────────────┐
 │  Planning                                                    │

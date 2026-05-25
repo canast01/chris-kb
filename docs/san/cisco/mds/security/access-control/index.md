@@ -132,7 +132,7 @@ aaa accounting default group TACACS-SERVERS
 
 TACACS+ can return the NX-OS role as an AV-pair in the authorization response, eliminating the need for local role configuration:
 
-```
+```bash
 # Cisco AV-pair in TACACS+ user profile (ISE / TACACS+ server config):
 cisco-av-pair = shell:roles*"network-admin"
 ```

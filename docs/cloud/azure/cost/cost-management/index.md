@@ -1,6 +1,6 @@
 # Azure Cost Management
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │              Azure Cost Management Flow                  │
 │                                                          │

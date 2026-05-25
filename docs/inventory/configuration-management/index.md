@@ -2,7 +2,7 @@
 
 Track, baseline, and enforce system configurations across infrastructure to prevent drift and maintain compliance.
 
-```
+```text
 ┌─────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
 │  CI Discovery   │   │  Relationships   │   │  Change Impact   │   │     Audit       │
 │                 │   │                  │   │                  │   │                 │

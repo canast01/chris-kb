@@ -1,6 +1,6 @@
 # Pure Storage Evergreen//One Standards
 
-```
+```text
   Naming & Configuration Standards
 
   Object       Pattern                   Example

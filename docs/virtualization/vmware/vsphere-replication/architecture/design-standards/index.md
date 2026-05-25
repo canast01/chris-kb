@@ -1,6 +1,6 @@
 # vSphere Replication — Design Standards
 
-```
+```text
   Sizing and Bandwidth Design
 ┌──────────────────────────────────────────────────────────────┐
 │  VRA sizing                                                  │
@@ -51,7 +51,7 @@ A single VRA can handle up to 500 replicated VMs. Above 500, deploy vSphere Repl
 
 Use this formula to estimate replication bandwidth:
 
-```
+```text
 Required bandwidth (Mbps) = (Daily change rate in GB × 8) / (86400 × RPO in seconds)
 
 Example:
@@ -85,7 +85,7 @@ Rule of thumb: assume 1–2 Mbps per VM for typical enterprise workloads with 1-
 
 ## Target Datastore Sizing
 
-```
+```text
 Target datastore required space per VM =
   Source disk size + (N recovery point instances × average delta size)
 

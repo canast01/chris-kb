@@ -1,6 +1,6 @@
 # ESXi Backup & Restore
 
-```
+```text
 ESXi Backup & Restore Flow
 ┌────────────────────────────────────────────────────────┐
 │  ESXi Host Configuration Backup                        │

@@ -38,7 +38,7 @@ Pattern: `mtree-<backup-tool>-<client-group>`
 
 Examples:
 
-```
+```text
 mtree-veeam-prod
 mtree-veeam-dev
 mtree-netbackup-ora
@@ -56,7 +56,7 @@ Pattern: `su-<backup-tool>-<client-group>`
 
 Examples:
 
-```
+```text
 su-veeam-prod
 su-netbackup-ora
 su-commvault-sql
@@ -70,7 +70,7 @@ Pattern: `<src-dd-hostname>-to-<dst-dd-hostname>-<mtree-name>`
 
 Example:
 
-```
+```text
 dd9900-prod-to-dd6400-dr-mtree-veeam-prod
 ```
 
@@ -113,7 +113,7 @@ Pattern: `ddboost-<backup-tool>`
 
 Examples:
 
-```
+```text
 ddboost-veeam
 ddboost-netbackup
 ddboost-commvault

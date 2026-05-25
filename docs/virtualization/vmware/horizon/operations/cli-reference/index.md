@@ -1,6 +1,6 @@
 # Horizon — CLI Reference
 
-```
+```text
   Horizon CLI Tools
 ┌──────────────────────────────────────────────────────────────────┐
 │  vdmadmin.exe          │  vdmexport / vdmimport                  │
@@ -25,7 +25,7 @@
 ## vdmadmin.exe
 
 `vdmadmin.exe` is the primary command-line admin tool for Connection Server. Located at:
-```
+```text
 C:\Program Files\VMware\VMware View\Server\tools\bin\vdmadmin.exe
 ```
 

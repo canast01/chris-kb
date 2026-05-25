@@ -198,7 +198,7 @@ PowerStore supports non-disruptive import from the following Dell legacy platfor
 
 ### Import Process Overview
 
-```
+```text
 1. Pre-migration health check
    └── Source and target both show green in CloudIQ or Unisphere
 2. Import session creation

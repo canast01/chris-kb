@@ -28,7 +28,7 @@ Venafi TPP permissions are scoped to **policy folders** — the organizational u
 
 **Recommended folder structure:**
 
-```
+```text
 Policy/
 ├── Production/
 │   ├── Internal-PKI/

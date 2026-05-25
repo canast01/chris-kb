@@ -31,7 +31,7 @@ Access: `https://<instance>.service-now.com/stats.do`
 
 **System Information:**
 
-```
+```text
 Instance Build:         Yokohama Patch 5
 Node ID:                app-node-02
 Instance started:       2026-05-01 03:14:22 UTC
@@ -49,7 +49,7 @@ JVM version:            17.0.11
 
 **Threads:**
 
-```
+```text
 Worker threads (busy/total):   12 / 40     <- aim for < 80%
 Scheduler threads (running):    3
 DB connections (active/max):   18 / 50
@@ -86,7 +86,7 @@ Look for threads showing the same script or Business Rule name repeatedly across
 
 Example stack trace pattern indicating a Business Rule loop:
 
-```
+```text
 "GlideWorker-42" BLOCKED
   at com.glide.db.DBSynchronizer.lock(DBSynchronizer.java:...)
   at com.glide.db.DBSynchronizer.acquire(...)
@@ -163,7 +163,7 @@ MID Server logs are stored on the host running the MID Server agent.
 
 **Linux:**
 
-```
+```text
 /opt/servicenow/mid/agent/logs/
 ├── agent0.log.0          # Current log (active)
 ├── agent0.log.1          # Previous rotation
@@ -173,7 +173,7 @@ MID Server logs are stored on the host running the MID Server agent.
 
 **Windows:**
 
-```
+```text
 C:\ServiceNow\MID Server\agent\logs\
 ├── agent0.log.0
 ├── agent0.log.1
@@ -227,7 +227,7 @@ Available debug options:
 
 **To enable for your own session:**
 
-```
+```text
 https://<instance>.service-now.com/session_debug.do
 ```
 
@@ -273,7 +273,7 @@ From **System Logs > All** — filter to the time window of the issue, export as
 
 ### HI Portal Ticket Template
 
-```
+```yaml
 Subject: [Instance: mycompany] <Short description of issue>
 
 Instance: mycompany.service-now.com

@@ -1,6 +1,6 @@
 # AWS Savings Plans
 
-```
+```text
 Savings Plans: Commitment vs Flexibility
 ──────────────────────────────────────────────────────────────
 

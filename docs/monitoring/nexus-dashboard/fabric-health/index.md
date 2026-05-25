@@ -1,6 +1,6 @@
 # Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry
 
-```
+```text
 Fabric Health — Nexus Dashboard
 ┌──────────────────────────────────────────────┐
 │  Spine/Leaf Status   BGP Sessions   VTEPs    │

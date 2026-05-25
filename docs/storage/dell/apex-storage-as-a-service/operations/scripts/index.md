@@ -147,7 +147,7 @@ if __name__ == "__main__":
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 set APEX_CLIENT_ID=your-client-id
 set APEX_CLIENT_SECRET=your-client-secret
@@ -280,7 +280,7 @@ if __name__ == "__main__":
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 set APEX_CLIENT_ID=your-client-id
 set APEX_CLIENT_SECRET=your-client-secret
@@ -393,7 +393,7 @@ Open a terminal on your Ansible control node.
 
 **Step 4 — Run the script**
 
-```
+```bash
 export APEX_CLIENT_ID=your-client-id
 export APEX_CLIENT_SECRET=your-client-secret
 ansible-playbook apex_health.yml
@@ -1007,13 +1007,13 @@ if ($Flagged -gt 0) {
 
 **Step 4 — Allow scripts to run (one-time)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\apex_capacity_report.ps1
 ```

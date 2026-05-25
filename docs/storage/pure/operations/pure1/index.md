@@ -1,6 +1,6 @@
 # Pure1 Cloud Management
 
-```
+```text
   Pure1 — Phone-Home to Cloud Analytics
 
   FlashArray / FlashBlade               Pure1 Cloud

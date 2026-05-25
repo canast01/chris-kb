@@ -1,6 +1,6 @@
 # Performance Metrics Baseline
 
-```
+```text
 Baseline Process
 ┌──────────────────────────────────────────────┐
 │  Capture normal behaviour (30-day rolling)   │
@@ -89,7 +89,7 @@ purecli volume list --performance    # per-volume latency, IOPS, BW
 
 Record for each system / service:
 
-```
+```text
 System:          app-db01
 Date captured:   YYYY-MM-DD
 Period:          Mon–Fri business hours, 4 weeks

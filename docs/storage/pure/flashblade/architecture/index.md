@@ -4,7 +4,7 @@
 Architecture reference for Pure Storage FlashBlade. Covers the scale-out blade model, Purity//FB data services, NFS/SMB/S3/HDFS protocol support, HA through blade redundancy, ActiveDR and ActiveCluster replication, and design standards.
 </div>
 
-```
+```text
 FlashBlade Architecture — Component Relationships
   Storage Blades ──────────────────────────────────────
   (each blade: NVMe flash + CPU + RAM — independent node)

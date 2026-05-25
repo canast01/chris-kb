@@ -4,7 +4,7 @@ title: IAM
 
 # Identity & Access (IAM / STS)
 
-```
+```text
 IAM CLI: Users · Roles · Policies · STS
 ──────────────────────────────────────────────────────────────
 

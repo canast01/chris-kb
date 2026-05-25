@@ -1,6 +1,6 @@
 # Aria Ops for Logs — Procedures
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Ops for Logs — Key Operational Tasks           │
 ├──────────────────────────────┬──────────────────────────────┤
@@ -26,7 +26,7 @@
 
 ### Host Disconnect Events
 
-```
+```text
 lost connectivity to the server
 not responding
 connection refused
@@ -34,7 +34,7 @@ connection refused
 
 ### vCenter Authentication Failures
 
-```
+```text
 Failed to authenticate
 Login failed
 password incorrect
@@ -43,7 +43,7 @@ SessionManager
 
 ### Certificate Errors
 
-```
+```text
 certificate
 SSL
 handshake failed
@@ -53,7 +53,7 @@ STS
 
 ### vMotion Failures
 
-```
+```text
 vmotion
 migration failed
 VMotionFailed
@@ -61,7 +61,7 @@ VMotionFailed
 
 ### HA Events
 
-```
+```text
 HA failover
 ha.vm.restart
 failover started
@@ -70,7 +70,7 @@ admission control
 
 ### DRS Events
 
-```
+```text
 DRS
 migration recommended
 load balance
@@ -78,7 +78,7 @@ load balance
 
 ### Datastore Errors
 
-```
+```text
 datastore
 SCSI error
 APD
@@ -89,7 +89,7 @@ VMFS
 
 ### vSAN Errors
 
-```
+```text
 vsan
 disk group
 resync
@@ -99,7 +99,7 @@ storage compliance
 
 ### NSX Errors
 
-```
+```text
 nsx
 transport node
 edge
@@ -150,7 +150,7 @@ curl -sk -X PUT -u admin:<password> \
 
 Alerts are built on the same query language used in Interactive Analytics:
 
-```
+```bash
 # Alert on SSH failed logins (count > 10 in 5 min)
 text contains "Failed password" AND hostname contains "prod-" 
 

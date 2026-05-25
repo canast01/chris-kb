@@ -8,7 +8,7 @@ Branch naming conventions, creating and deleting branches, tracking remotes, and
 
 Consistent naming makes automation and review easier.
 
-```
+```bash
 # Common prefixes
 feature/  — New functionality (feature/add-login-page)
 fix/      — Bug fixes (fix/null-pointer-on-startup)

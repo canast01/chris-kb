@@ -1,6 +1,6 @@
 # Aria Operations — Backup & Restore
 
-```
+```text
 Aria Operations — Backup Architecture
 ┌─────────────────────────────────────────────────────┐
 │  Aria Operations Cluster                            │
@@ -46,7 +46,7 @@ Aria Operations provides a built-in **file-based backup** mechanism that writes 
 
 **Via UI:**
 
-```
+```text
 Administration → Backup/Restore → External Location → Add Location
 ```
 
@@ -58,7 +58,7 @@ Provide:
 
 **Schedule:**
 
-```
+```text
 Administration → Backup/Restore → Backup → Enable Scheduled Backup
 ```
 
@@ -135,7 +135,7 @@ Restore replaces the current cluster configuration with the backup. This is a de
 
 **Via UI:**
 
-```
+```text
 Administration → Backup/Restore → Restore → select backup → Restore
 ```
 
@@ -154,7 +154,7 @@ vracli restore --backup-id <backup-timestamp-id>
 2. Navigate to **Administration → Solutions** — confirm all adapters are listed
 3. Re-enter credentials for all cloud accounts and adapters:
 
-```
+```text
 Administration → Solutions → select adapter → Edit Instance → update credentials → Test Connection
 ```
 

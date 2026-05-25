@@ -1,6 +1,6 @@
 # VxRail Firmware
 
-```
+```text
 VxRail Firmware Stack (bottom to top)
 ┌──────────────────────────────────────────────────────────────┐
 │  Hardware Layer                                              │

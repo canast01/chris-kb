@@ -4,7 +4,7 @@
 Dell AIOps monitoring platform — architecture, anomaly detection, recommendations, alerting, and operational runbooks.
 </div>
 
-```
+```text
 Dell AIOps (CloudIQ AI) Architecture
 ┌──────────────────────────────────────────────┐
 │   Dell Infrastructure Telemetry              │

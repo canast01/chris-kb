@@ -3,7 +3,7 @@
 
 AWS Lambda notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                    Lambda Flow                          │
 │                                                         │

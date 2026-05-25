@@ -14,7 +14,7 @@ RASR (Recovery and System Restore) is Dell's bare-metal recovery tool for Window
 | Recovery Media | Bootable WinPE USB drive or ISO; contains RASR engine and Dell hardware drivers |
 | Network Recovery Share | SMB share where recovery images are stored and retrieved |
 
-```
+```text
 Protected Windows Server
 ├── RASR Agent (RASRAgent Windows service)
 ├── RASR Console (GUI in Windows)

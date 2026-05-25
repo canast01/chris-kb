@@ -6,7 +6,7 @@ Admin account hardening, plugin/marketplace control, audit log configuration, an
 
 The `confluence-administrators` group has full access to all spaces, settings, and user data. Its membership must be tightly controlled.
 
-```
+```yaml
 Administrator account policy:
 - Maximum 3–4 accounts in confluence-administrators
 - All admin accounts use LDAP/SSO — no local admin accounts (except break-glass)
@@ -67,7 +67,7 @@ Plugins (apps) extend Confluence functionality but can introduce security risks.
 
 ### Plugin Management Policy
 
-```
+```yaml
 Plugin policy:
 - Only install plugins from the Atlassian Marketplace (verified by Atlassian)
 - All new plugins require a security review before installation in production
@@ -116,7 +116,7 @@ Confluence's audit log records significant administrative and content events.
 
 Navigate to **Administration** > **Audit Log** > **Configure**.
 
-```
+```yaml
 Audit log settings:
 - Coverage level: Advanced (captures more detail than Base)
 - Retention: 12 months minimum

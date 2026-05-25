@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle — Authentication
 
-```
+```text
   LCM Authentication Architecture
 ┌─────────────────────────────────────────────────────────────────┐
 │  Interactive Users                                              │
@@ -27,7 +27,7 @@
 
 LCM uses **Workspace ONE Access (VIDM)** as the primary identity provider for web UI and API access. A local `admin` account exists as a break-glass fallback and for initial setup before VIDM is registered.
 
-```
+```text
 Browser → LCM UI → VIDM (SAML/OAuth2 redirect) → AD/LDAP → LCM session token
 API clients → LCM /lcm/authz/api/v2/login → Basic auth → Bearer token
 ```
@@ -40,7 +40,7 @@ All interactive users should authenticate through VIDM. VIDM can be federated wi
 
 **Register VIDM with LCM:**
 
-```
+```text
 LCM → Settings → Identity Manager → Configure
 ```
 
@@ -80,7 +80,7 @@ LCM does not connect to AD directly. AD group membership is resolved through VID
 
 **Map AD groups to LCM roles:**
 
-```
+```text
 LCM → Settings → Access Control → Add Role Assignment
 ```
 

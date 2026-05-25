@@ -1,6 +1,6 @@
 # NTFS Permissions
 
-```
+```text
         NTFS ACL STRUCTURE
 ┌──────────────────────────────────────────────────────────────┐
 │  C:\Shares\Finance  (folder object)                          │

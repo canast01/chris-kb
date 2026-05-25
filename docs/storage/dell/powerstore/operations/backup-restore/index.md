@@ -4,7 +4,7 @@
 
 PowerStore data protection is layered: native snapshots and replication provide first-line protection; external backup tools provide secondary copies. Use both — snapshots enable fast local restores; backup copies provide offsite protection and long-term retention.
 
-```
+```text
 Protection Layers (outer to inner)
 ├── 1. External Backup (Veeam / PPDM / Commvault)
 │      Offsite copy; long-term retention; covers volume + data
@@ -161,7 +161,7 @@ Recommended service account for Veeam:
 
 PPDM provides application-aware protection for VMs and databases on PowerStore:
 
-```
+```text
 PPDM Workflow:
 1. PPDM discovers VMs via vCenter API
 2. PPDM coordinates application quiesce (VMware Tools or pre/post scripts)
@@ -180,7 +180,7 @@ PPDM configuration for PowerStore:
 
 Commvault IntelliSnap uses the PowerStore REST API to create application-consistent snapshots via snap engines:
 
-```
+```text
 Commvault Snap Engine for Dell PowerStore:
 1. CommServe coordinates application quiesce (SQL Agent, Oracle Agent, etc.)
 2. Snap Engine calls PowerStore REST API to create a volume snapshot
@@ -192,7 +192,7 @@ Commvault Snap Engine for Dell PowerStore:
 
 ### VM Restore from Veeam
 
-```
+```text
 Veeam Restore Options (in order of speed):
 1. Instant VM Recovery — starts VM directly from Veeam repository; fastest
 2. Restore to Original Location — overwrites current VM; data consistency depends on backup type

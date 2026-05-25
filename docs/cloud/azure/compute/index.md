@@ -4,7 +4,7 @@
 Azure Compute articles, operational checks, troubleshooting notes, and references.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────── Azure Compute Overview ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

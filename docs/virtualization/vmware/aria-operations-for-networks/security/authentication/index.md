@@ -1,6 +1,6 @@
 # Aria Operations for Networks — Authentication
 
-```
+```text
 ┌──────────── Aria Networks Authentication: vIDM SSO Flow ───────────────────────┐
 │                                                                                 │
 │  Method 1: Local (break-glass)                                                  │
@@ -49,7 +49,7 @@ Password policy (Settings → Security):
 - Lockout: 5 failed attempts → 30-minute lockout
 
 Change password:
-```
+```text
 Settings → My Account → Change Password
 ```
 
@@ -57,7 +57,7 @@ Settings → My Account → Change Password
 
 ## LDAP / Active Directory
 
-```
+```text
 Settings → Authentication → LDAP → Configure
 
   Server URL:     ldaps://dc01.example.local:636
@@ -77,7 +77,7 @@ After LDAP is configured, add Role Mappings (Settings → Authentication → Rol
 
 ## SAML / VMware Identity Manager
 
-```
+```text
 Settings → Authentication → SAML
 
   IdP Metadata URL: https://vidm.example.local/SAAS/API/1.0/GET/metadata/idp.xml

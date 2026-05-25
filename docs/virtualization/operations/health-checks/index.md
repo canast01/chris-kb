@@ -2,7 +2,7 @@
 
 Reusable health checks for virtualization operations.
 
-```
+```text
 Health Check Flows
 ═══════════════════════════════════════════════════════════
 

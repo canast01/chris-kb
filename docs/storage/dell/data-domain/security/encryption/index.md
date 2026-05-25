@@ -45,7 +45,7 @@ encryption show config
 
 Sample output of `encryption status`:
 
-```
+```text
 Encryption                        : Enabled
 Encryption Strength               : aes-256
 FIPS Mode                         : Enabled

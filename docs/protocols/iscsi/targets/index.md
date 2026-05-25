@@ -2,7 +2,7 @@
 
 An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway, or software target — that presents LUNs to initiators.
 
-```
+```text
         iSCSI TARGET STRUCTURE
 ┌──────────────────────────────────────────────────────────┐
 │  Storage Array / Target                                  │
@@ -30,7 +30,7 @@ An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway
 
 ## Target Address Format
 
-```
+```text
 iqn.2020-01.com.purestorage:flasharray-m70-ct0   (target IQN)
 192.168.10.10:3260                                 (portal — IP:port)
 ```

@@ -2,7 +2,7 @@
 
 When a VM is reported as slow, check these in order:
 
-```
+```text
 ┌──────────────┬───────────────────────────┬──────────────────────────────┐
 │  Metric      │  esxtop Field / Location  │  Threshold / Action          │
 ├──────────────┼───────────────────────────┼──────────────────────────────┤

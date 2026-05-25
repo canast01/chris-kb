@@ -3,7 +3,7 @@
 
 AWS S3 Lifecycle notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  S3 Lifecycle Transitions               │
 │                                                         │

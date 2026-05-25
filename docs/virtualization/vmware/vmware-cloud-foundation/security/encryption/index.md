@@ -1,6 +1,6 @@
 # VCF — Encryption
 
-```
+```text
 VCF Encryption — Certificate and Data Flow
 ┌─────────────────────────────────────────────────────┐
 │  TLS Certificate Lifecycle (via SDDC Manager)       │
@@ -37,7 +37,7 @@ VCF Encryption — Certificate and Data Flow
 
 All VCF component certificates are managed through SDDC Manager. Do not replace certificates directly through component UIs — SDDC Manager will lose track of the state.
 
-```
+```text
 SDDC Manager → Security → Certificate Management
 ```
 

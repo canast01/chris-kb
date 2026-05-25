@@ -1,6 +1,6 @@
 # vSphere Replication — Access Control
 
-```
+```text
   vSphere Replication RBAC (via vCenter)
 ┌──────────────────────────────────────────────────────────────┐
 │  AD Groups              vCenter Custom Roles                  │
@@ -39,7 +39,7 @@ vSphere Replication has no separate user store. All access control is managed th
 
 ## Recommended Role Assignments
 
-```
+```text
 vCenter → Administration → Roles → Create Custom Role
 
 Role: VR-Operator
@@ -56,7 +56,7 @@ Role: VR-Recovery
     Virtual machine → Interaction → Power On
 ```
 
-```
+```yaml
 vCenter → Administration → Global Permissions → Add Permission
   Group: CORP\VR-Operators → Role: VR-Operator
   Group: CORP\DR-Recovery-Team → Role: VR-Recovery
@@ -75,7 +75,7 @@ The VRA appliance has its own local admin account, separate from vCenter:
 | `root` | SSH access for deep debugging — restrict via firewall |
 
 Change default admin password immediately after deployment:
-```
+```text
 VRA VAMI → Administration → Change Admin Password
 ```
 
@@ -113,7 +113,7 @@ These are in addition to SRM's standard vCenter privileges (documented in SRM in
 
 All VR recovery operations are logged as vCenter events. Monitor:
 
-```
+```text
 vCenter → Monitor → Events → filter by "vr." (vSphere Replication events prefix)
 ```
 

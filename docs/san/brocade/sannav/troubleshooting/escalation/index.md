@@ -141,7 +141,7 @@ If a case is not making progress:
 
 Use the following template as the case description when opening a new SANnav support case:
 
-```
+```yaml
 Product: SANnav Management Portal
 Version: 2.x.x (sannav version output)
 Hypervisor: VMware ESXi 7.0 U3

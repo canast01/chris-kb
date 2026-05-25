@@ -3,7 +3,7 @@
 
 AWS CloudWatch Logs notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │               CloudWatch Logs Structure                 │
 │                                                         │

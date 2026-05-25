@@ -4,7 +4,7 @@
 Veritas NetBackup enterprise backup — three-tier architecture with Primary Server catalog, Media Servers for data movement, and MSDP deduplication with AIR image replication.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                    NetBackup Architecture                            │
 │                                                                      │

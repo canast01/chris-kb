@@ -3,7 +3,7 @@
 
 AWS Patch Manager notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  Patch Manager Flow                     │
 │                                                         │

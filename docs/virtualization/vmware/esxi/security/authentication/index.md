@@ -1,6 +1,6 @@
 # ESXi — Authentication
 
-```
+```text
 ESXi Authentication Paths
 ┌──────────────────────────────────────────────────────────┐
 │  Recommended Path (day-to-day)                           │

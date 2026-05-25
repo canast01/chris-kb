@@ -65,7 +65,7 @@ boxmgmt
 
 The `boxmgmt` interface is menu-driven. Navigate by number. Common menu paths:
 
-```
+```text
 1 → System Management
 2 → Cluster Management
 3 → Group (CG) Management

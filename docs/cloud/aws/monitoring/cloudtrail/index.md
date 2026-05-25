@@ -3,7 +3,7 @@
 
 AWS CloudTrail notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │               CloudTrail Architecture                   │
 │                                                         │

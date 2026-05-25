@@ -6,7 +6,7 @@
 
 OSA uses a two-tier model within each disk group: a dedicated flash cache device and one or more capacity devices.
 
-```
+```text
 ESXi Host (OSA)
 └── Disk Group 1
     ├── Cache SSD (NVMe or SATA SSD) — write buffer + read cache
@@ -25,7 +25,7 @@ ESXi Host (OSA)
 
 ESA eliminates the separate cache tier. Every NVMe device contributes directly to capacity with inline compression enabled by default.
 
-```
+```text
 ESXi Host (ESA)
 └── Storage Pool
     ├── NVMe Device 1 (capacity + performance)
@@ -58,7 +58,7 @@ vSAN stores **objects** — logical storage containers distributed across the cl
 
 ### Object Placement — FTT=1 RAID-1
 
-```
+```text
 VM VMDK Object
 ├── Component A → ESXi-01, Disk Group 1
 ├── Component B → ESXi-02, Disk Group 1  (mirror)
@@ -67,7 +67,7 @@ VM VMDK Object
 
 ### Object Placement — FTT=1 RAID-5 (4 hosts minimum)
 
-```
+```text
 VM VMDK Object
 ├── Data stripe 1 → ESXi-01
 ├── Data stripe 2 → ESXi-02

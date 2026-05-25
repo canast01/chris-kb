@@ -4,7 +4,7 @@
 Technical and operational reference for VMware Aria Operations. Covers performance monitoring, capacity management, compliance, alerting, dashboards, and troubleshooting across vSphere, vSAN, NSX, and Aria-managed infrastructure.
 </div>
 
-```
+```text
 ┌──────────────────────────────────── Aria Operations (vROps) Stack ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

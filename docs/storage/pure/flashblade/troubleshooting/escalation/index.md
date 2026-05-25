@@ -1,6 +1,6 @@
 # FlashBlade — Escalation
 
-```
+```text
 Pure Support Escalation Path — FlashBlade
   Blade failure / incident
           │

@@ -3,7 +3,7 @@
 
 AWS Route 53 notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                Route 53 Architecture                    │
 │                                                         │

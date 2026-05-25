@@ -4,7 +4,7 @@
 
 Use this page to review host, hardware, vSAN, and cluster health by node.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │            Node Health Review Workflow               │
   │                                                      │

@@ -1,6 +1,6 @@
 # vCenter Security — Encryption
 
-```
+```text
 vSphere Encryption Key Flow
 ════════════════════════════════════════════════════════
 

@@ -64,7 +64,7 @@ lynis audit system > /tmp/lynis-report.txt 2>&1
 
 Apply via `/etc/sysctl.d/99-hardening.conf`. Load with `sysctl --system`.
 
-```
+```text
 # /etc/sysctl.d/99-hardening.conf
 
 # ── Network hardening ────────────────────────────────────────────────────────
@@ -156,7 +156,7 @@ systemctl enable --now auditd
 
 Place rules in `/etc/audit/rules.d/99-hardening.rules`. Loaded by `augenrules --load`.
 
-```
+```text
 # /etc/audit/rules.d/99-hardening.rules
 
 # Delete all existing rules first
@@ -249,7 +249,7 @@ aureport --auth --start today
 
 ## Login Policy — /etc/login.defs
 
-```
+```bash
 # /etc/login.defs — password aging and account policy
 
 PASS_MAX_DAYS   90        # Maximum days before password must be changed
@@ -272,7 +272,7 @@ SHA_CRYPT_MAX_ROUNDS 100000
 
 ## PAM Password Policy
 
-```
+```text
 # /etc/pam.d/system-auth — full hardened stack
 
 # ── auth ─────────────────────────────────────────────────────────────────────
@@ -313,7 +313,7 @@ session     optional      pam_sss.so
 
 ### /etc/fstab Mount Options
 
-```
+```bash
 # /etc/fstab — secure mount options for sensitive filesystems
 /dev/mapper/data  /var/tmp   xfs  defaults,nodev,nosuid,noexec  0 0
 /dev/mapper/data  /tmp       xfs  defaults,nodev,nosuid,noexec  0 0
@@ -331,7 +331,7 @@ mount -o remount,noexec,nosuid,nodev /tmp
 
 ### Disable Unused Filesystems
 
-```
+```bash
 # /etc/modprobe.d/hardening.conf — prevent loading unused filesystem modules
 install cramfs /bin/true
 install freevxfs /bin/true

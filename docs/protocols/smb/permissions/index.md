@@ -1,6 +1,6 @@
 # SMB Share Permissions
 
-```
+```text
         TWO-LAYER PERMISSION MODEL
 ┌──────────────────────────────────────────────────────────────┐
 │  Network client accesses \\server\Finance                    │
@@ -77,7 +77,7 @@ net share
 
 Effective access for a network user equals the intersection (most restrictive) of share and NTFS permissions.
 
-```
+```yaml
 Effective = MIN(Share Permission, NTFS Permission)
 
 Example A:

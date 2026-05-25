@@ -1,6 +1,6 @@
 # vSphere Replication — Common Issues
 
-```
+```text
   VR Triage Decision Tree
 ┌─────────────────────────────────────────────────────────────────┐
 │  Symptom                  Check                  Fix            │
@@ -155,7 +155,7 @@ sudo journalctl --vacuum-size=500M
 ```
 
 VRA appliance disk should be on a thin-provisioned VMDK — expand via vCenter if needed:
-```
+```bash
 vCenter → [VRA VM] → Edit Settings → Disk → increase size
 Then expand filesystem inside VRA:
   sudo growpart /dev/sda 1

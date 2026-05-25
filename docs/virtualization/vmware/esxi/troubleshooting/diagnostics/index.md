@@ -1,6 +1,6 @@
 # ESXi Diagnostics
 
-```
+```text
 ESXi Diagnostic Data Sources
 ┌──────────────────────────────────────────────────────────┐
 │  vSphere Client (GUI)                                    │

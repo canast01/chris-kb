@@ -1,6 +1,6 @@
 # FlashArray — Security
 
-```
+```text
 FlashArray Security Layers
 ┌──────────────────────────────────────────────────────────┐
 │  Identity & Auth                                         │

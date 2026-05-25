@@ -3,7 +3,7 @@
 
 AWS Cross-Account Access notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │               Cross-Account Role Assumption             │
 │                                                         │

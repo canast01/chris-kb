@@ -1,6 +1,6 @@
 # AWS Compliance Review
 
-```
+```text
 Compliance Review: Config → Security Hub → Remediation
 ──────────────────────────────────────────────────────────────
 

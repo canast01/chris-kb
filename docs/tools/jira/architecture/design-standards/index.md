@@ -27,7 +27,7 @@ Consistent project keys and names reduce confusion, simplify JQL queries, and en
 
 ### Project Name Format
 
-```
+```text
 <Team/Domain> — <Product/Initiative>
 ```
 
@@ -55,7 +55,7 @@ Define a fixed set of project categories in `Admin → Project Categories`:
 
 Define a shared global Issue Type Scheme applied to all engineering projects:
 
-```
+```text
 Epic
 └── Story
     └── Task / Sub-task
@@ -279,7 +279,7 @@ Define two baseline schemes:
 
 Configure via Jira Automation for escalation beyond the notification scheme:
 
-```
+```yaml
 Trigger:   Scheduled (every 1 hour)
 Condition: issue matches: priority = Critical AND status != Done
            AND created < -4h
@@ -316,7 +316,7 @@ Each team should maintain a shared dashboard with the following gadgets:
 
 ### Dashboard Naming Convention
 
-```
+```text
 [SCOPE] - [TEAM/PROJECT] - [PURPOSE]
 
 Examples:

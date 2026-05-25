@@ -1,6 +1,6 @@
 # Cluster Failure Domains
 
-```
+```text
 ┌──────────────── Failure Domain Layers: Stretched Cluster & Fault Domains ──────┐
 │                                                                                 │
 │  Availability Zone / Site level                                                 │

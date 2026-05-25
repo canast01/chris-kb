@@ -4,7 +4,7 @@
 
 ---
 
-```
+```text
   Pure Operational Procedure Flow
 
   Provision volume          Snapshot / Replication

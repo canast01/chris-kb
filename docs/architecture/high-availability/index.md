@@ -1,6 +1,6 @@
 # High Availability Design
 
-```
+```text
 ┌────────────────────────────────────────────────────────────────────┐
 │                    HA Layers — Defence in Depth                    │
 │                                                                    │
@@ -134,7 +134,7 @@ vSphere HA provides automatic VM restart on surviving hosts when a host fails. I
 **Admission Control Policy**
 Set admission control to reserve capacity for N host failures. For a 6-host cluster tolerating 1 failure, reserve 1/6 of total cluster resources (CPU + memory).
 
-```
+```text
 Reserved capacity = (1 / total_hosts) × cluster_resources
 ```
 

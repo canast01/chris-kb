@@ -27,7 +27,7 @@ graph TB
 
 Hub-and-spoke topology with Azure Firewall in the hub controlling east-west and internet-bound traffic:
 
-```
+```text
 On-Premises ←→ ExpressRoute ←→ Hub VNet (Connectivity subscription)
                                     │
                    ┌────────────────┼────────────────┐
@@ -129,7 +129,7 @@ sequenceDiagram
 
 ## Identity Architecture
 
-```
+```text
 Entra ID (cloud identity plane)
     │
     ├── Azure AD Connect sync ←── On-premises AD (source of truth)

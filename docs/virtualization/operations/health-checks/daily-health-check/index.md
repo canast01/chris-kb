@@ -2,7 +2,7 @@
 
 Morning checks covering all components that can silently degrade overnight. Target: complete in under 15 minutes.
 
-```
+```text
 Morning Check Sequence
 ═══════════════════════════════════════════════════════════
 

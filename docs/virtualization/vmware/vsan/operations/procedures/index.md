@@ -2,7 +2,7 @@
 
 Operational how-to guides for day-to-day vSAN management. Each section covers a specific task area with concrete steps, commands, and validation.
 
-```
+```text
 KEY PROCEDURE FLOWS
 
   DISK REPLACEMENT (capacity disk)          HOST MAINTENANCE MODE

@@ -130,7 +130,7 @@ For ServiceNow cloud instances, the upgrade is performed by ServiceNow's automat
 
 Log in to `https://hi.service-now.com` and raise an upgrade request:
 
-```
+```yaml
 Category: Instance Upgrade
 Instance: mycompany-dev.service-now.com
 Target version: Yokohama

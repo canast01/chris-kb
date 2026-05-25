@@ -1,6 +1,6 @@
 # vSphere Replication — Encryption
 
-```
+```text
   VR Encryption Coverage
 ┌───────────────────────────────────────────────────────────────┐
 │  Traffic Path                       Encryption                │
@@ -41,7 +41,7 @@
 
 Enable encryption when configuring or editing a replication:
 
-```
+```text
 vCenter → [VM] → right-click → Configure/Edit Replication
   Encryption: Enable Replication Traffic Encryption
   Algorithm: AES-256 (automatic)
@@ -83,7 +83,7 @@ VRA ships with a self-signed certificate. Replace with a CA-signed certificate:
 
 ### Replace via VRA VAMI
 
-```
+```text
 https://vra-london.example.local:5480 → SSL → Upload Certificate
   Upload: PEM certificate (server cert + chain)
   Upload: PEM private key (no passphrase)
@@ -103,7 +103,7 @@ curl -sk -X PUT "https://vra-london.example.local/api/rest/vr/ssl/certificate" \
 ```
 
 After replacing the VRA certificate, update the thumbprint stored in the site pair:
-```
+```text
 Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
 ```
 

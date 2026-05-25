@@ -14,7 +14,7 @@ ECS nodes are standardised appliance configurations (ECS U-Series, CX-Series). R
 
 **Usable capacity formula:**
 
-```
+```text
 Raw capacity = nodes × disks_per_node × disk_size_TB
 EC overhead factor = 1.33 (for 12+4); 1.20 (for 10+2)
 Metadata/journal reservation = 30% of raw after EC

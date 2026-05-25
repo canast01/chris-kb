@@ -151,7 +151,7 @@ Set these as environment variables before running:
 
 **Step 4 — Run the script**
 
-```
+```text
 RP_HOST=192.168.1.100 RP_USER=admin RP_PASS=MyPassword python3 rp-cg-health.py
 ```
 
@@ -335,19 +335,19 @@ log "Log: ${LOGFILE}"
 
 **Step 4 — Make the script executable**
 
-```
+```bash
 chmod +x rp-dr-test-failover.sh
 ```
 
 **Step 5 — Run the DR test (enables image access)**
 
-```
+```text
 RP_HOST=192.168.1.100 RP_USER=admin RP_PASS=MyPassword CG_NAME="MyAppCG" ./rp-dr-test-failover.sh
 ```
 
 **Step 6 — Run the rollback when finished (resumes replication)**
 
-```
+```text
 RP_HOST=192.168.1.100 RP_USER=admin RP_PASS=MyPassword CG_NAME="MyAppCG" ./rp-dr-test-failover.sh --rollback
 ```
 
@@ -518,7 +518,7 @@ sys.exit(exit_code)
 
 **Step 4 — Run the script**
 
-```
+```text
 RP_HOST=192.168.1.100 RP_USER=admin RP_PASS=MyPassword python3 rp-rpo-compliance.py
 ```
 
@@ -685,13 +685,13 @@ Windows key → search `PowerShell` → right-click → **Run as Administrator**
 
 **Step 4 — Allow scripts to run**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\rp-cg-status-windows.ps1 -RpaHost 192.168.1.100 -RpUser admin -RpPass MyPassword
 ```
@@ -780,7 +780,7 @@ Open the saved file and change these lines:
 **Step 3 — Accept the SSH fingerprint first (one-time step)**
 
 Open Command Prompt and run:
-```
+```text
 plink.exe -ssh admin@192.168.1.100
 ```
 Type `y` when asked to accept the fingerprint, then Ctrl+C. Do this once per RPA.
@@ -791,7 +791,7 @@ Open **Command Prompt**: Windows key → search `cmd` → press Enter
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 rp-cg-health.bat
 ```

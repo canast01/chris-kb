@@ -9,7 +9,7 @@
 
 ## Renewal Timeline
 
-```
+```text
   30 days to expiry ──► Begin renewal process (this runbook)
   14 days to expiry ──► Escalate if renewal not yet complete
    7 days to expiry ──► Emergency change; on-call engineer engaged
@@ -18,7 +18,7 @@
 
 ## Process Flow
 
-```
+```text
   Expiry alert triggered (30-day threshold)
            │
            ▼

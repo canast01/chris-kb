@@ -1,6 +1,6 @@
 # Aria Automation — Backup & Restore
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │           Aria Automation Backup Flow                       │
 ├─────────────────────────────────────────────────────────────┤
@@ -60,7 +60,7 @@ Aria Automation backup uses a built-in tool that exports the platform configurat
 
 Open `https://<vra-fqdn>:5480` in a browser.
 
-```
+```text
 Lifecycle Management → Backup → Add Backup Location
 ```
 
@@ -92,7 +92,7 @@ vracli backup status  # show status of the latest backup
 
 ## Scheduling Automatic Backups
 
-```
+```text
 VAMI → Lifecycle Management → Backup → Schedule
 ```
 
@@ -115,7 +115,7 @@ Restore from backup replaces the entire Aria Automation platform state. All conf
 
 **Via VAMI:**
 
-```
+```text
 VAMI → Lifecycle Management → Backup → Restore → select backup → enter passphrase → Restore
 ```
 

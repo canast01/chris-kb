@@ -1,6 +1,6 @@
 # SRM — Encryption
 
-```
+```text
   TLS Encryption Coverage
 ┌───────────────────────────────────────────────────────────────┐
 │  Traffic Path                        Encryption               │
@@ -38,7 +38,7 @@
 
 VR replication can encrypt data in transit between source ESXi and target VRA:
 
-```
+```text
 vCenter → [VM] → right-click → Configure Replication → Edit
   Enable Replication Data Encryption: Yes
   (adds AES-256 encryption to the replication stream)
@@ -81,7 +81,7 @@ $cert.Thumbprint
 ```
 
 After replacing the SRM Server cert, update the thumbprint at the remote site:
-```
+```text
 Recovery Site → Site Recovery → Site Pair → Edit → Accept new thumbprint
 ```
 

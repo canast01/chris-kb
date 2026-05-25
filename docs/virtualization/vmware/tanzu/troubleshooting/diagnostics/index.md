@@ -1,6 +1,6 @@
 # Tanzu — Diagnostics
 
-```
+```text
 ┌─────────────────── Tanzu Diagnostics: Command Map ─────────────────────────────┐
 │                                                                                 │
 │  Cluster-level                                                                  │

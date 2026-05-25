@@ -1,6 +1,6 @@
 # Aria Ops for Logs — Hardening
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Ops for Logs Hardening Layers                  │
 ├──────────────────────┬──────────────────────────────────────┤
@@ -28,7 +28,7 @@
 
 Change the `admin` password immediately after completing the setup wizard:
 
-```
+```text
 Administration → Authentication → Local Users → admin → Edit → Change Password
 ```
 
@@ -42,7 +42,7 @@ Administration → Authentication → Local Users → admin → Edit → Change 
 
 Before any log sources or users connect, replace the default self-signed certificate:
 
-```
+```text
 Administration → SSL → Replace Certificate
 ```
 

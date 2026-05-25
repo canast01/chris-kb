@@ -1,6 +1,6 @@
 # Aria Operations — Authentication
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │          Aria Operations Authentication Flow                │
 ├─────────────────────────────────────────────────────────────┤
@@ -45,7 +45,7 @@ Aria Operations supports multiple authentication sources. Users can authenticate
 
 **Via UI:**
 
-```
+```text
 Administration → Authentication Sources → Add Source
 ```
 
@@ -66,7 +66,7 @@ Provide:
 
 **Test the LDAP connection:**
 
-```
+```text
 Administration → Authentication Sources → select source → Test
 ```
 
@@ -78,7 +78,7 @@ Expected result: "Connection successful — X users found."
 
 After adding the AD source, import groups to assign roles:
 
-```
+```text
 Administration → Access Control → User Groups → Import Groups from Source
 ```
 
@@ -86,7 +86,7 @@ Search for the group name (e.g., `GG-VROPS-Admins`) → select → Import.
 
 Assign a role to the imported group:
 
-```
+```text
 Administration → Access Control → User Groups → select group → Assign Role → select role
 ```
 
@@ -103,7 +103,7 @@ Administration → Access Control → User Groups → select group → Assign Ro
 
 When Aria Operations is deployed and managed by LCM, VIDM is automatically registered as the SSO provider. For standalone deployments:
 
-```
+```text
 Administration → Global Settings → Authentication → Enable SSO → Configure VIDM
 ```
 

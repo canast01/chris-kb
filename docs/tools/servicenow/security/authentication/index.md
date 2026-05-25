@@ -66,7 +66,7 @@ System Properties → SSO → Multi-Provider SSO → Identity Providers
 
 ### ServiceNow SP Metadata
 
-```
+```text
 Entity ID: https://<instance>.service-now.com
 ACS URL:   https://<instance>.service-now.com/navpage.do
            https://<instance>.service-now.com/saml_redirect.do (alternative)
@@ -75,7 +75,7 @@ SLO URL:   https://<instance>.service-now.com/logout.do
 
 ### Azure AD (Entra ID) Enterprise Application Setup
 
-```
+```yaml
 1. Azure Portal → Enterprise Applications → New Application
 2. Search: "ServiceNow" → Add
 3. Single sign-on → SAML
@@ -215,7 +215,7 @@ System Security → Multi-Factor Authentication
 
 ### Enforcing MFA via Azure AD Conditional Access
 
-```
+```text
 Azure AD → Security → Conditional Access → New Policy
 Name: "Require MFA for ServiceNow"
 Assignments:

@@ -1,6 +1,6 @@
 # AWS — CLI Reference
 
-```
+```text
 AWS CLI Daily Ops: Top Commands
 ──────────────────────────────────────────────────────────────
 

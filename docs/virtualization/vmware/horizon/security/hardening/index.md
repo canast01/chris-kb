@@ -1,6 +1,6 @@
 # Horizon — Hardening
 
-```
+```text
   Hardening Checklist Coverage
 ┌──────────────────────────────────────────────────────────────┐
 │  Connection Server          UAG                              │
@@ -81,7 +81,7 @@ Stop-Service -Name "XblAuthManager" -ErrorAction SilentlyContinue
 
 ## USB Redirection Policy
 
-```
+```text
 Group Policy → Computer Configuration → VMware Horizon Agent
   USB Redirection Enabled: No (disable entirely for highly regulated desktops)
   OR:
@@ -93,7 +93,7 @@ Group Policy → Computer Configuration → VMware Horizon Agent
 
 ## Clipboard Direction Restriction
 
-```
+```text
 Group Policy → Computer Configuration → VMware Blast → Clipboard
   Clipboard Direction: Client to Agent only
   (Users can paste into the desktop but cannot copy out — prevents data exfiltration)
@@ -105,7 +105,7 @@ For kiosk or shared-terminal pools: set to Disabled entirely.
 
 ## Drive Mapping Restriction
 
-```
+```text
 Group Policy → Computer Configuration → VMware Horizon Agent
   Client Drive Redirection: Disabled
 ```
@@ -118,7 +118,7 @@ Prevents users from mapping their local drives into the virtual desktop — elim
 
 Connection Server should not be accessible directly from desktop VMs:
 
-```
+```text
 locked.properties:
   checkOrigin=true
   allowedHosts=<management-subnet>
@@ -130,7 +130,7 @@ Physical server hosting Connection Server should not be on the same VLAN as desk
 
 ## Monitor Admin Events
 
-```
+```bash
 Horizon Console → Monitor → Events
   Filter: Role = Administrator, Action = Configuration Change
   Export to CSV for audit trail

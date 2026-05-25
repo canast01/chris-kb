@@ -25,7 +25,7 @@ The Vault Server Key (`server.key`) is the master encryption key. Without it, th
 
 ### Location
 
-```
+```text
 <Vault install path>\PrivateArk\Server\
 ├── server.key        # Server private key (AES-256 encrypted at rest)
 ├── recpub.key        # Recovery public key
@@ -139,7 +139,7 @@ Platform definitions, safe templates, and LDAP/user configurations should be exp
 
 ### Export Platforms
 
-```
+```text
 PVWA → Administration → Platform Management → Export Platform → Download ZIP
 ```
 
@@ -208,7 +208,7 @@ BackupVaultPort=1858
 
 From the Vault server console or PrivateArk Client:
 
-```
+```text
 Administration → Vault Parameters → DR Replication
 ```
 

@@ -3,7 +3,7 @@
 
 Support bundle creation, evidence capture, case attachment, and collection issues.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │              VxRail Support Bundle Flow              │
   │                                                      │

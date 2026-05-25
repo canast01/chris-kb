@@ -1,6 +1,6 @@
 # FlashArray — Common Issues
 
-```
+```text
 FlashArray Triage Flow
   Alert / Symptom reported
           │

@@ -3,7 +3,7 @@
 
 AWS Systems Manager notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │               Systems Manager Architecture              │
 │                                                         │

@@ -6,7 +6,7 @@ title: LDAP
 
 Lightweight Directory Access Protocol — directory service query and authentication for infrastructure and applications.
 
-```
+```text
         LDAP DIRECTORY INFORMATION TREE (DIT)
 ┌──────────────────────────────────────────────────────────────┐
 │  dc=company,dc=com           (domain root)                   │

@@ -1,6 +1,6 @@
 # Aria Operations — Install & Upgrade
 
-```
+```text
 Aria Operations — Upgrade Paths
 ┌─────────────────────────────────────────────────────┐
 │  Option A: Aria Suite Lifecycle (Recommended)       │

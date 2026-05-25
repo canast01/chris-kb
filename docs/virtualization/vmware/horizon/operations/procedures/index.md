@@ -1,6 +1,6 @@
 # Horizon — Procedures
 
-```
+```text
   Common Operational Procedures
 ┌──────────────────────────────────────────────────────────────┐
 │  Create Pool     │  Push Image      │  Manage Sessions       │
@@ -29,7 +29,7 @@
 
 **Prerequisites:** Golden image VM with Horizon Agent installed, parent snapshot taken, vCenter service account configured.
 
-```
+```yaml
 Horizon Console → Inventory → Desktops → Add Desktop Pool
   Type: Automated Desktop Pool
   User Assignment: Floating or Dedicated
@@ -49,7 +49,7 @@ Horizon Console → Inventory → Desktops → Add Desktop Pool
 
 ## Entitle an AD Group to a Pool
 
-```
+```text
 Horizon Console → Inventory → Desktops → [pool name] → Entitlements
   Add Entitlement → select AD group or user
   e.g.: CORP\Horizon-Pool-Win10 → Add
@@ -61,7 +61,7 @@ Users in the group can now connect to the pool from Horizon Client or HTML acces
 
 ## Push a Golden Image Update to an Instant Clone Pool
 
-```
+```yaml
 Horizon Console → Inventory → Desktops → [pool name] → Edit
   Advanced Storage → Change Parent VM or Snapshot
   Select: new parent snapshot
@@ -83,7 +83,7 @@ VMware-Horizon-Connection-Server-x86_64-<version>.exe /silent /norestart `
 ```
 
 After install:
-```
+```text
 Horizon Console → Settings → Servers → Connection Servers
   New server should appear — verify green status
   Install/replace SSL certificate to match other Connection Servers
@@ -95,7 +95,7 @@ Horizon Console → Settings → Servers → Connection Servers
 
 UAG Admin UI (https://uag.example.local:9443):
 
-```
+```text
 Configure Manually
   Network Settings: set IPs for each NIC (Internet, Management, Backend)
   Edge Service Settings → Horizon → Enable
@@ -118,7 +118,7 @@ echo | openssl s_client -connect horizon-cs01.example.local:443 2>/dev/null \
 
 True SSO allows users to authenticate once at UAG (via SAML/AD) and get a short-lived certificate for desktop login — no password re-entry.
 
-```
+```yaml
 Requirements:
   - VMware Identity Manager (vIDM) or Workspace ONE
   - Microsoft CA (Enterprise CA) for certificate template
@@ -134,7 +134,7 @@ Horizon Console → Settings → True SSO
 
 ## Add an App Volumes AppStack to a Pool
 
-```
+```text
 App Volumes Manager → AppStacks → [AppStack name] → Assign
   Assignment type: Group
   AD Group: CORP\AppStack-AdobeReader
@@ -167,7 +167,7 @@ Remove-HVDesktop -VMName "win10-042" -Confirm:$false
 
 DEM manages user profile and environment settings. Configure import/export policies:
 
-```
+```bash
 DEM Management Console → User Environment → [configuration] → Condition
   Set condition to: always apply (or per AD group membership)
   Import on login: Yes
@@ -180,7 +180,7 @@ For roaming profile migration from legacy profiles, configure DEM import from th
 
 ## Decommission a Desktop Pool
 
-```
+```powershell
 Horizon Console → Inventory → Desktops → [pool] → Disable
   Disable provisioning: prevent new desktops from being created
   Remove entitlements: prevent new sessions

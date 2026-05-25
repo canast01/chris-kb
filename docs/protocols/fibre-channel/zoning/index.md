@@ -2,7 +2,7 @@
 
 Zoning restricts which initiators (HBAs) can communicate with which targets (storage ports) in a Fibre Channel fabric.
 
-```
+```text
         ZONING: INITIATOR + TARGET → ZONE → ZONE SET → FABRIC
 ┌─────────────────────────────────────────────────────────────────┐
 │  Zone: esxi01_pure01_ctA1                                       │

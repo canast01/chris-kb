@@ -2,7 +2,7 @@
 
 An iSCSI session is a logical connection between an initiator and a target, established after discovery.
 
-```
+```text
         SESSION SETUP SEQUENCE
 ┌──────────────┐                         ┌──────────────────┐
 │  Initiator   │                         │     Target       │

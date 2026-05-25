@@ -169,7 +169,7 @@ dir Z:\
 
 ### Recommended Share Structure
 
-```
+```text
 \\nas01\rasr-images\
   ├── SERVER01\
   │     ├── SERVER01_20260101_Full.rasr

@@ -1,6 +1,6 @@
 # Resource Contention Modeling
 
-```
+```text
 ┌──────────── Resource Contention Hierarchy ─────────────────────────────────────┐
 │                                                                                 │
 │  CPU Contention                                                                 │

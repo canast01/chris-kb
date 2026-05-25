@@ -1,6 +1,6 @@
 # FlashBlade — Design Standards
 
-```
+```text
 FlashBlade Design Checklist
 ┌───────────────────────────────────────────────────────────┐
 │  Naming          │  filesystem / bucket / account pattern │

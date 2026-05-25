@@ -138,7 +138,7 @@ if __name__ == "__main__":
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 set CLOUDIQ_CLIENT_ID=your-client-id
 set CLOUDIQ_CLIENT_SECRET=your-client-secret
@@ -285,7 +285,7 @@ if __name__ == "__main__":
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 set CLOUDIQ_CLIENT_ID=your-client-id
 set CLOUDIQ_CLIENT_SECRET=your-client-secret
@@ -395,7 +395,7 @@ Open a terminal on your Ansible control node.
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd /path/to/your/playbooks
 export CLOUDIQ_CLIENT_ID=your-client-id
 export CLOUDIQ_CLIENT_SECRET=your-client-secret
@@ -510,13 +510,13 @@ if ($Critical -gt 0) {
 
 **Step 4 — Allow scripts to run (one-time)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\cloudiq_alert_summary.ps1
 ```
@@ -635,13 +635,13 @@ if ($Degraded -gt 0) {
 
 **Step 4 — Allow scripts to run (one-time)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\cloudiq_system_health.ps1
 ```

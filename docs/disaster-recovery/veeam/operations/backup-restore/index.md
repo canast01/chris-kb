@@ -44,7 +44,7 @@ flowchart TD
 
 Instant VM Recovery mounts the backup directly from the Veeam repository and starts the VM immediately. Use this when RTO is critical.
 
-```
+```text
 Veeam Console → Home → Restore → VMware vSphere VMs →
   Instant Recovery → select backup → select restore point →
   select target host/datastore → Power on target VM automatically → Finish
@@ -63,7 +63,7 @@ Start-VBRInstantVMRecovery -RestorePoint $rp -TargetServer "esx01.corp.example.c
 
 **After stabilisation — migrate from backup to production:**
 
-```
+```text
 Veeam Console → Home → Instant Recovery → select running recovery →
   Migrate to Production → select datastore → Run migration
 ```
@@ -76,7 +76,7 @@ This performs a Storage vMotion in the background. The VM remains live throughou
 
 Full VM Restore copies the backup to a production datastore. Use for planned recoveries or when instant recovery is not required.
 
-```
+```text
 Veeam Console → Home → Restore → VMware vSphere VMs →
   Entire VM Restore → select backup → select restore point →
   Original location or New location → select ESXi host and datastore →
@@ -99,7 +99,7 @@ Start-VBRRestoreVM -RestorePoint $rp -ToOriginalLocation -RecoveryOptions $optio
 
 Restore individual files from any Windows or Linux guest backup without mounting the full VM.
 
-```
+```text
 Veeam Console → Home → Restore → Guest Files → Windows / Linux →
   select backup → select restore point → browse guest file system →
   right-click file → Restore to original location / Keep / Overwrite
@@ -120,7 +120,7 @@ $session = Start-VBRWindowsFileRestore -RestorePoint $rp
 
 ### Exchange Mailbox Recovery
 
-```
+```text
 Veeam Console → Home → Restore → Microsoft Exchange Items →
   select Exchange server backup → browse mailbox → select items →
   Restore to: Original mailbox / PST export / Another mailbox
@@ -128,7 +128,7 @@ Veeam Console → Home → Restore → Microsoft Exchange Items →
 
 ### SQL Database Recovery
 
-```
+```text
 Veeam Console → Home → Restore → Microsoft SQL Server Items →
   select SQL server backup → select database → select restore point →
   Restore to original location / Restore to another server
@@ -147,7 +147,7 @@ Start-VBRSQLDatabaseRestore -RestorePoint $rp `
 
 ### Active Directory Object Recovery
 
-```
+```text
 Veeam Console → Home → Restore → Microsoft Active Directory Items →
   select Domain Controller backup → browse AD → select object →
   Restore to original location (will re-hydrate in AD)
@@ -159,14 +159,14 @@ Veeam Console → Home → Restore → Microsoft Active Directory Items →
 
 DataLabs allows testing restores in an isolated sandbox without touching production.
 
-```
+```text
 Veeam Console → Inventory → Virtual Labs → Run Recovery Verification →
   select backup → select VMs to test → select lab → Run verification
 ```
 
 **Scheduled SureBackup jobs automate this for all production backups:**
 
-```
+```text
 Veeam Console → Home → Jobs → SureBackup Job →
   configure virtual lab, application group, and backup job →
   set schedule (weekly recommended)

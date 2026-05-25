@@ -74,7 +74,7 @@ flowchart TD
 
 ### VSAN and Zone Model
 
-```
+```text
   MDS Switch (VSAN 10 — Fabric A)
   ┌─────────────────────────────────────────────────────────────────────────┐
   │  Active Zone Set: dc1-fabA-prod                                         │
@@ -107,7 +107,7 @@ flowchart TD
 
 ### Naming Convention
 
-```
+```text
   Device alias:  <hostname>_<hbaN>              e.g.  esxi01_hba0
   Device alias:  <array>_<ctrl>_<portN>         e.g.  fa01_ct0_p0
   Zone:          <host-alias>__<array-alias>    e.g.  esxi01_hba0__fa01_ct0_p0
@@ -116,7 +116,7 @@ flowchart TD
 
 ### View Current State
 
-```
+```text
 switch# show zoneset active vsan 10
 switch# show zone vsan 10
 switch# show device-alias database
@@ -127,7 +127,7 @@ switch# show zone status vsan 10
 
 ### Device Aliases
 
-```
+```text
 switch# device-alias database
 switch(config-device-alias-db)# device-alias name esxi01_hba0 pwwn 10:00:00:90:fa:12:34:56
 switch(config-device-alias-db)# device-alias name fa01_ct0_p0 pwwn 52:4a:93:7c:00:00:00:01
@@ -138,7 +138,7 @@ switch# device-alias commit
 
 ### Create and Manage Zones
 
-```
+```bash
 # Create zone and add members
 switch# zone name esxi01_hba0__fa01_ct0_p0 vsan 10
 switch(config-zone)# member device-alias esxi01_hba0
@@ -154,7 +154,7 @@ switch(config-zone)# exit
 
 ### Zone Set Management
 
-```
+```bash
 # Create zone set and add zones
 switch# zoneset name dc1-fabA-prod vsan 10
 switch(config-zoneset)# member esxi01_hba0__fa01_ct0_p0
@@ -171,7 +171,7 @@ switch# copy running-config startup-config
 
 ### Enhanced Zoning (recommended)
 
-```
+```bash
 # Enable enhanced zoning — default-deny for non-zoned devices
 switch# zone mode enhanced vsan 10
 
@@ -182,7 +182,7 @@ switch# show zone status vsan 10
 
 ### Example: Zone a New Host to FlashArray
 
-```
+```bash
 # 1. Add device aliases
 switch# device-alias database
 switch(config-device-alias-db)# device-alias name web01_hba0 pwwn 10:00:00:90:fa:ab:cd:ef
@@ -211,7 +211,7 @@ switch# copy running-config startup-config
 
 ### VSAN Membership
 
-```
+```bash
 # Show which ports are in a VSAN
 switch# show vsan 10 membership
 
@@ -235,7 +235,7 @@ switch# copy running-config startup-config
 
 ### Zone Audit
 
-```
+```bash
 # List all zones in VSAN — review for multi-initiator zones
 switch# show zone vsan 10
 

@@ -1,6 +1,6 @@
 # Tanzu — Backup and Restore
 
-```
+```text
 ┌────────────────────── Tanzu Backup Flow ───────────────────────────────────────┐
 │                                                                                 │
 │  Supervisor (vCenter VCSA)                                                      │

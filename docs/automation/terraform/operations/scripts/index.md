@@ -233,7 +233,7 @@ Set these environment variables before running (or export them in your shell):
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd ~/Desktop
 TF_DIR=/path/to/your/terraform TF_WORKSPACE=default ./tf-drift-detect.sh
 ```
@@ -374,14 +374,14 @@ log "Log: ${LOGFILE}"
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd ~/Desktop
 TF_DIR=/path/to/your/terraform ./tf-multi-workspace-deploy.sh
 ```
 
 To run a destroy instead:
 
-```
+```text
 TF_DIR=/path/to/your/terraform ./tf-multi-workspace-deploy.sh --destroy
 ```
 
@@ -507,7 +507,7 @@ endlocal
 
 **Step 3 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 tf-plan-apply.bat
 ```
@@ -613,7 +613,7 @@ Save the script as `tf-state-audit.ps1` in your Terraform project folder or Desk
 
 **Step 2 — Open PowerShell and navigate to your Terraform project**
 
-```
+```bash
 cd C:\path\to\your\terraform\project
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .\tf-state-audit.ps1

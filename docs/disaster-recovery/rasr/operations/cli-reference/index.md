@@ -4,13 +4,13 @@
 
 `rasrutil.exe` is the main command-line tool for RASR operations on a running Windows Server. It is located at:
 
-```
+```text
 C:\Program Files\Dell\RASR\rasrutil.exe
 ```
 
 ### Syntax
 
-```
+```text
 rasrutil.exe /command [options]
 ```
 
@@ -20,7 +20,7 @@ rasrutil.exe /command [options]
 
 ### /backup — Create System Image
 
-```
+```text
 rasrutil.exe /backup /dest <destination> [options]
 ```
 
@@ -62,7 +62,7 @@ rasrutil.exe /backup /dest \\nas01\rasr-images\SERVER01 ^
 
 ### /restore — Restore System Image
 
-```
+```text
 rasrutil.exe /restore /source <image_path> [options]
 ```
 
@@ -85,7 +85,7 @@ rasrutil.exe /restore /source \\nas01\rasr-images\SERVER01\SERVER01_20260501.ras
 
 ### /listimages — List Available Images
 
-```
+```text
 rasrutil.exe /listimages /source <path> [/user <user>] [/pass <pass>]
 ```
 
@@ -98,7 +98,7 @@ rasrutil.exe /listimages /source \\nas01\rasr-images\SERVER01 ^
 
 **Output:**
 
-```
+```text
 Image File               Created              Size        Description
 SERVER01_20260501.rasr   2026-05-01 02:14     48.3 GB     Weekly full
 SERVER01_20260408.rasr   2026-04-08 02:11     47.1 GB     Weekly full
@@ -108,7 +108,7 @@ SERVER01_20260408.rasr   2026-04-08 02:11     47.1 GB     Weekly full
 
 ### /verify — Verify Image Integrity
 
-```
+```text
 rasrutil.exe /verify /source <image_path> [/user <user>] [/pass <pass>]
 ```
 
@@ -125,7 +125,7 @@ Returns exit code `0` on success, non-zero on failure.
 
 ### /deleteimage — Remove an Image
 
-```
+```text
 rasrutil.exe /deleteimage /source <image_path> [/user <user>] [/pass <pass>]
 ```
 
@@ -138,7 +138,7 @@ rasrutil.exe /deleteimage /source \\nas01\rasr-images\SERVER01\SERVER01_20260201
 
 ### /createmedia — Create RASR Boot Media
 
-```
+```text
 rasrutil.exe /createmedia /dest <drive_letter|iso_path>
 ```
 

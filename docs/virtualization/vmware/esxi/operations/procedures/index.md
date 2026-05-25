@@ -1,6 +1,6 @@
 # ESXi — Procedures
 
-```
+```text
 ESXi Maintenance Window — Procedure Flow
 ┌───────────────────────────────────────────────────────┐
 │  PRE-CHECKS                                           │

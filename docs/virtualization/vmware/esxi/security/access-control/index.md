@@ -1,6 +1,6 @@
 # ESXi Access Control
 
-```
+```text
 ESXi Access Control Model
 ┌──────────────────────────────────────────────────────┐
 │  vCenter (Primary path — day-to-day operations)      │

@@ -6,7 +6,7 @@ ServiceNow access control is enforced through Access Control Lists (ACLs), Roles
 
 ## Access Control Architecture
 
-```
+```text
 Role
   └── Group (users are assigned to groups)
         └── User
@@ -71,7 +71,7 @@ Groups serve as containers for users and role assignments.
 
 ### Group Structure
 
-```
+```text
 Platform Groups (synced from AD):
   SNOW-Administrators        → admin role
   SNOW-ITSM-Agents           → itil role
@@ -110,7 +110,7 @@ ACLs define who can perform which operations on which data. Navigate to: System 
 
 ### ACL Structure
 
-```
+```yaml
 Name:       <operation>_<table>_<field>
 Operation:  read, write, create, delete, execute
 Object:     Table name (e.g., incident, change_request)

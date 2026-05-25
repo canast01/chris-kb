@@ -8,7 +8,7 @@ Consistent Terraform standards prevent state corruption, make code reviewable, a
 
 ### Root module (single environment)
 
-```
+```text
 infra/
 ├── main.tf            # Primary resource definitions
 ├── variables.tf       # Input variable declarations
@@ -23,7 +23,7 @@ infra/
 
 ### Multi-environment layout (recommended)
 
-```
+```text
 infra/
 ├── modules/
 │   ├── vpc/

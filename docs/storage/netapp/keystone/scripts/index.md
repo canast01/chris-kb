@@ -131,7 +131,7 @@ exit $worst
 **Step 3 — Copy the script to the Keystone Collector server**
 
 From Windows, open Command Prompt and use SCP to copy the file:
-```
+```bash
 scp %USERPROFILE%\Desktop\keystone_health.sh youruser@collector-server:/home/youruser/
 ```
 
@@ -140,7 +140,7 @@ Or use WinSCP (winscp.net — free tool) to drag and drop the file.
 **Step 4 — Run the script on the collector server**
 
 SSH into the collector server (use PuTTY or Windows Terminal) and run:
-```
+```text
 bash keystone_health.sh
 ```
 
@@ -309,7 +309,7 @@ Press the Windows key, type `cmd`, press Enter.
 
 **Step 4 — Install required packages and set variables**
 
-```
+```bash
 pip install requests tabulate
 set API_KEY=your-api-key-here
 set SUBSCRIPTION_ID=your-subscription-id
@@ -317,7 +317,7 @@ set SUBSCRIPTION_ID=your-subscription-id
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd %USERPROFILE%\Desktop
 python keystone_usage.py
 ```
@@ -441,7 +441,7 @@ Open the Ubuntu app from the Start menu.
 
 **Step 4 — Set variables and run**
 
-```
+```bash
 export ONTAP_HOST=192.168.1.100
 export ONTAP_USER=admin
 export ONTAP_PASS=yourpassword
@@ -607,13 +607,13 @@ Press the Windows key, type `PowerShell`, right-click **Windows PowerShell**, ch
 
 **Step 4 — Allow script execution (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\keystone_usage_rest.ps1
 ```
@@ -770,13 +770,13 @@ Press the Windows key, type `PowerShell`, right-click **Windows PowerShell**, ch
 
 **Step 4 — Allow script execution (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\keystone_trending.ps1
 ```

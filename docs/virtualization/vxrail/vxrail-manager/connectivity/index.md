@@ -3,7 +3,7 @@
 
 Connectivity to vCenter, hosts, Dell services, DNS, NTP, and support endpoints.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │         VxRail Manager Connectivity Map              │
   │                                                      │

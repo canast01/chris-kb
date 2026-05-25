@@ -1,6 +1,6 @@
 # DNS Resolution Failures
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                     DNS Triage Flowchart                             │
 │                                                                      │

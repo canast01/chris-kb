@@ -1,6 +1,6 @@
 # DHCP Reservations
 
-```
+```text
         RESERVATION: MAC → FIXED IP
 ┌──────────────────────────────────────────────────────────────┐
 │  DHCP Scope: 192.168.10.0/24                                 │

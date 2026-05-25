@@ -1,6 +1,6 @@
 # Pure Storage Evergreen Security
 
-```
+```text
 Evergreen Security Controls
 ┌──────────────────────────────────────────────────────────┐
 │  Same FlashArray/FlashBlade security model applies       │

@@ -7,7 +7,7 @@ title: IAM
 
 AWS IAM notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  IAM Entity Hierarchy                   │
 │                                                         │

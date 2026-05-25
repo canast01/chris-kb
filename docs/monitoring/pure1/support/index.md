@@ -1,6 +1,6 @@
 # Pure1 — Support
 
-```
+```text
 Support Flow — Pure1
 ┌─────────────────────────────┐
 │  Pure1 (cloud monitoring)   │
@@ -131,7 +131,7 @@ puresupport list | grep log_forwarding
 
 ## Escalation Path
 
-```
+```text
 L1 Support Case (portal / phone)
   ↓ if unresolved after agreed time
 L2 Senior Support Engineer (request via case notes)

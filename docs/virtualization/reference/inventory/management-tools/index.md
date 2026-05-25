@@ -57,7 +57,7 @@ Document all management plane tools in the VMware environment — URLs, versions
 
 ## Tool Registration and Integration Map
 
-```
+```text
 vCenter <─── NSX Manager (integrated)
    │
    ├─── VxRail Manager (registered)

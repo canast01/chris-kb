@@ -1,6 +1,6 @@
 # SMB Shares
 
-```
+```text
         SHARE TYPES AND UNC PATH STRUCTURE
 ┌──────────────────────────────────────────────────────────────┐
 │  \\server\Finance          ◄── standard share (visible)      │

@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle — CLI Reference
 
-```
+```text
   LCM CLI Coverage (SSH to LCM as root)
 ┌─────────────────────────────────────────────────────────────────┐
 │  vracli sub-commands                                            │

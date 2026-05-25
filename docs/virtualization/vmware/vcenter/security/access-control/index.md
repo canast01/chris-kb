@@ -1,6 +1,6 @@
 # vCenter Security — Access Control
 
-```
+```text
 RBAC Permission Model
 ════════════════════════════════════════════════════════
 
@@ -98,7 +98,7 @@ Create custom roles for least-privilege: **Administration → Roles → New**
 ### Common Custom Role Patterns
 
 **Backup Operator** — minimum privileges for VADP-based backup:
-```
+```text
 VirtualMachine.Interact.CreateScreenshot
 VirtualMachine.State.CreateSnapshot
 VirtualMachine.State.RemoveSnapshot
@@ -111,7 +111,7 @@ Global.EnableMethods
 ```
 
 **VM Operator** — day-to-day VM management without storage or host access:
-```
+```text
 VirtualMachine.Interact.PowerOn
 VirtualMachine.Interact.PowerOff
 VirtualMachine.Interact.Reset
@@ -122,7 +122,7 @@ VirtualMachine.State.RemoveSnapshot
 ```
 
 **Read-Only + Performance** — monitoring access including performance counters:
-```
+```text
 System.Read
 System.Anonymous
 System.View
@@ -130,7 +130,7 @@ Performance.ModifyIntervals (optional, for custom stat intervals)
 ```
 
 **NSX Integration Service Account**:
-```
+```text
 Host.Config.Network
 Host.Config.Patch
 Host.Inventory.EditCluster
@@ -199,7 +199,7 @@ Adjust retention at **Administration → vCenter Server Settings → Statistics*
 
 Forward vCenter audit events to SIEM/syslog aggregator:
 
-```
+```text
 VAMI (https://<vcenter>:5480) → Syslog → Add Syslog Server
 Protocol: TLS (preferred) / UDP / TCP
 Port: 514 (UDP), 6514 (TLS)

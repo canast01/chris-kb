@@ -34,7 +34,7 @@ Collect all of the following **before** contacting L3 or Atlassian. Providing th
 
 ### Required for All Escalations
 
-```
+```text
 [ ] Confluence version (Admin > System Information > Confluence Version)
 [ ] Deployment type: Server / Data Center / Cloud
 [ ] Number of cluster nodes (DC)
@@ -91,7 +91,7 @@ psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
 
 Use this template when raising a ticket at [support.atlassian.com](https://support.atlassian.com).
 
-```
+```yaml
 SUMMARY:
 [One-line description — e.g. "Confluence DC: Search returns no results after upgrade to 9.1.0"]
 

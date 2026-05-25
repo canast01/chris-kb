@@ -157,7 +157,7 @@ tail -f /var/atlassian/application-data/confluence/logs/atlassian-confluence.log
 
 Expected log output during upgrade:
 
-```
+```text
 INFO  [main] [DatabaseUpgradeTask] Running upgrade task: UpgradeTask_Build_XXXXX
 INFO  [main] [DatabaseUpgradeTask] Upgrade task completed in 12345ms
 INFO  [main] [ConfluenceBootstrapManager] Bootstrap complete

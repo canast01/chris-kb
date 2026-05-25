@@ -150,7 +150,7 @@ ENTRYPOINT ["python", "-m", "widget_automation"]
 
 ## Project Layout
 
-```
+```text
 widget-automation/
 ├── pyproject.toml
 ├── poetry.lock

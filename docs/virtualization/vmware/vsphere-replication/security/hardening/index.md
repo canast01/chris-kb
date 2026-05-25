@@ -1,6 +1,6 @@
 # vSphere Replication — Hardening
 
-```
+```text
   VR Hardening Controls
 ┌──────────────────────────────────────────────────────────────┐
 │  Credentials                 Network Restrictions            │
@@ -82,7 +82,7 @@ sudo iptables -A INPUT -p tcp --dport 31031 -j DROP
 
 ## Least-Privilege VR Service Account
 
-```
+```yaml
 vCenter → Administration → Roles → Create Custom Role
   Name: VR-ServiceAccount
   Privileges:
@@ -104,7 +104,7 @@ Keep the Recovery privilege in a separate role assigned only to the DR team.
 
 ## Enable Encryption for WAN Replications
 
-```
+```text
 vCenter → Site Recovery → Replications → [VM] → Edit
   Encryption: Enable
 ```
@@ -117,7 +117,7 @@ Enable for all VMs replicating over untrusted WAN links. For same-datacenter rep
 
 Monthly test is the most important operational security measure — an untested DR capability is not a capability:
 
-```
+```text
 vCenter → Site Recovery → Replications → [VM]
   → Recover → Test mode
   Use isolated network (no access to production)
@@ -140,7 +140,7 @@ echo | openssl s_client -connect vra-london.example.local:443 2>/dev/null \
 ```
 
 After rotating VRA certificate at either site:
-```
+```text
 Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
 ```
 

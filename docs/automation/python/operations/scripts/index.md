@@ -201,7 +201,7 @@ Open Command Prompt: press `Windows key`, type `cmd`, press Enter.
 
 **Step 4 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 run-py-script.bat
 ```
@@ -384,13 +384,13 @@ Press `Windows key`, type `PowerShell`, right-click **Windows PowerShell**, and 
 
 In the PowerShell window, paste and press Enter:
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\setup-python-env.ps1
 ```

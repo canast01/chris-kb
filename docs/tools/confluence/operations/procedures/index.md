@@ -39,7 +39,7 @@ Page creation tips: always set a parent page to avoid orphaning, use descriptive
 
 Macros extend page functionality with dynamic content. Insert via `/macro-name` in the editor.
 
-```
+```text
 /toc          — Table of contents (auto-generated from headings)
 /children     — List child pages dynamically
 /include      — Embed another page inline
@@ -238,7 +238,7 @@ Mastering CQL search syntax, filtering results, saved searches, and label-based 
 
 Confluence Query Language (CQL) powers advanced search. Access it via **Search → Advanced Search**.
 
-```
+```bash
 # Pages in a space modified in the last 30 days
 space = "ENG" AND lastModified > "2025-04-01" AND type = page
 
@@ -269,7 +269,7 @@ space IN ("ENG", "OPS") AND label = "on-call" AND status = current
 
 ## Filtering by Content Type and Dates
 
-```
+```bash
 # Filter by content type
 type IN (page, blogpost, comment, attachment)
 

@@ -1,6 +1,6 @@
 # Time Synchronization
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                      NTP Hierarchy                                   │
 │                                                                      │
@@ -147,7 +147,7 @@ done
 
 ## NTP Hierarchy for On-Premises
 
-```
+```text
 Internet NTP (pool.ntp.org, time.cloudflare.com)
         ↓
   Internal NTP relay servers (2× for redundancy)

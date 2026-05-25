@@ -1,6 +1,6 @@
 # AWS Cost Anomaly Detection
 
-```
+```text
 Cost Anomaly Detection: ML Baseline → Alert → Triage
 ──────────────────────────────────────────────────────────────
 

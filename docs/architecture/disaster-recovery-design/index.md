@@ -1,6 +1,6 @@
 # Disaster Recovery Design
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                     DR Design Framework                              │
 │                                                                      │

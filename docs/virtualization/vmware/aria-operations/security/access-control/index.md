@@ -1,6 +1,6 @@
 # Aria Operations — Access Control
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │             Aria Operations RBAC Model                      │
 ├─────────────────────────────────────────────────────────────┤
@@ -52,7 +52,7 @@ Beyond role-level access, Aria Operations supports **object permissions** to res
 
 Create an object permission policy:
 
-```
+```text
 Administration → Access Control → Object Permissions → Add Permission
 ```
 
@@ -66,14 +66,14 @@ Example use case: Assign the `Operator` role with a scope limited to `DC-LON` �
 
 ## Configuring LDAP Groups
 
-```
+```text
 Administration → Authentication Sources → (configure AD source first — see Authentication page)
 Administration → Access Control → User Groups → Import Groups from Source
 ```
 
 Search for the AD group by name or DN, select, and import. The group appears in the User Groups list. Assign a role:
 
-```
+```text
 Administration → Access Control → User Groups → select group → Assign Role → select role → Save
 ```
 
@@ -89,7 +89,7 @@ Administration → Access Control → User Groups → select group → Assign Ro
 
 ## Creating a Service Account for API Access
 
-```
+```text
 Administration → Access Control → User Accounts → Add → Local User
 ```
 

@@ -154,7 +154,7 @@ Tags are enforced via Azure Policy `Require tag on resources`. Any resource miss
 
 Subscriptions are organised by workload and environment, not by team. Each production workload gets a dedicated subscription to enforce blast radius isolation.
 
-```
+```text
 Management Group: Corp
 ├── Platform
 │   ├── sub-connectivity-prod       # Hub networking, ExpressRoute, DNS

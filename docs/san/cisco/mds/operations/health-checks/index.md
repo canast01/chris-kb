@@ -38,7 +38,7 @@ show version
 
 Each FC interface appears as a line with state, VSAN, mode, speed, and connected port FCID.
 
-```
+```text
 fc1/1    10     up      F      32000   auto  on   0x010200
 fc1/2    10     up      F      32000   auto  on   0x010400
 fc1/3    --     down    --     --      auto  --   --
@@ -55,7 +55,7 @@ fc1/5    10     trunking TE    32000   auto  on   --
 
 ### show flogi database
 
-```
+```text
 show flogi database vsan 10
 
 ---------------------------------------------------------------------------
@@ -70,7 +70,7 @@ Compare the list against the expected device register (CMDB or SAN design spread
 
 ### show environment
 
-```
+```text
 show environment
 
 Fan:

@@ -1,6 +1,6 @@
 # Aria Ops for Logs — Access Control
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Ops for Logs RBAC Model                        │
 ├─────────────────────────────────────────────────────────────┤
@@ -38,7 +38,7 @@ Aria Operations for Logs uses a simple two-tier RBAC model: users are either adm
 
 ## Configuring Active Directory Integration
 
-```
+```text
 Administration → Authentication → Active Directory → Configure
 ```
 
@@ -50,7 +50,7 @@ Provide:
 - **Bind password**: stored in CyberArk or vault; retrieved during configuration
 
 Import the domain CA certificate before configuring LDAPS:
-```
+```text
 Administration → SSL → Import Certificate → paste the root CA PEM
 ```
 
@@ -60,7 +60,7 @@ Administration → SSL → Import Certificate → paste the root CA PEM
 
 After AD is configured, map AD groups to Aria Ops for Logs roles:
 
-```
+```text
 Administration → Authentication → Active Directory → Group Access
 ```
 
@@ -78,7 +78,7 @@ Users who are members of multiple groups receive the highest-privilege role from
 
 Local accounts are used for break-glass access and service accounts. Manage via:
 
-```
+```text
 Administration → Authentication → Local Users → Add User
 ```
 

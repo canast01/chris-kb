@@ -2,7 +2,7 @@
 
 Use this when a vSphere host shows `Not Responding` or `Disconnected` in vCenter.
 
-```
+```text
                     Host: Not Responding / Disconnected
                                │
                                ▼

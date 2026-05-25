@@ -163,7 +163,7 @@ networkSettings:
 
 ### AVI Service Engine Placement
 
-```
+```text
 AVI Controller (VM — 3 nodes for HA)
   └── Service Engine Group
         ├── Service Engine 1 (VM on ESXi host 1)
@@ -230,7 +230,7 @@ kubectl get csidriver csi.vsphere.vmware.com -o jsonpath='{.metadata.annotations
 
 Pinniped provides OIDC/LDAP authentication for TKG workload clusters. The Pinniped Supervisor (a separate K8s deployment, often on the management cluster) federates external identity providers and issues cluster-scoped tokens.
 
-```
+```text
 User → kubectl → kubeconfig (OIDC issuer = Pinniped Supervisor)
   └── Pinniped Concierge (runs in workload cluster)
         └── Token exchange → Pinniped Supervisor
@@ -308,7 +308,7 @@ kubectl vsphere login \
 
 Configure Harbor to proxy upstream registries so air-gapped or rate-limited environments can transparently pull images:
 
-```
+```text
 Developer/CI pulls: harbor.example.com/dockerhub-proxy/library/nginx:latest
   └── Harbor checks local cache
         ├── Cache hit → serve from Harbor
@@ -342,7 +342,7 @@ curl -u admin:Harbor12345 \
 
 ### Block Images with Critical CVEs (Replication and Deploy Gate)
 
-```
+```text
 Harbor Project → Configuration → Deployment Security → Severity: Critical
 → Prevents images with unscanned or Critical CVEs from being pulled
 → Effective for all users except Project Admin

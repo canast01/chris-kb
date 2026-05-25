@@ -1,6 +1,6 @@
 # VCF — How It Works
 
-```
+```text
 VCF Bring-Up and Lifecycle Flow
 ┌──────────────────────────────────────────────────────┐
 │  Cloud Builder (bring-up tool)                       │
@@ -105,7 +105,7 @@ LCM is the upgrade engine. SDDC Manager downloads bundles from the depot (online
 
 ### Upgrade Flow
 
-```
+```text
 1. Download bundle from depot (or upload from offline file)
 2. Run Precheck — validates DNS, NTP, certs, vSAN health, password status
 3. Review precheck results — resolve any WARN or ERROR items
@@ -146,7 +146,7 @@ curl -sk https://depot.vmware.com/PROD2/evo/vmw/index.xml | head -20
 
 SDDC Manager centrally manages credentials for all components. Passwords rotate on a configurable schedule.
 
-```
+```text
 SDDC Manager → Security → Password Management
 → Select component → Rotate Password
 ```
@@ -172,7 +172,7 @@ curl -sk -u 'admin@local:password' \
 
 SDDC Manager manages TLS certificates for all components using VMCA (embedded) or a third-party CA.
 
-```
+```text
 SDDC Manager → Security → Certificate Management
 → View expiry per component → Renew or Replace
 ```
@@ -203,7 +203,7 @@ Network pools pre-allocate IP ranges that SDDC Manager assigns to VMkernel adapt
 | vSAN | vmk2 | Yes |
 | NSX TEP | vmkX | Yes |
 
-```
+```text
 SDDC Manager → Network Settings → Network Pools
 → Create pool → specify VLAN, subnet, gateway, IP range
 ```
@@ -216,7 +216,7 @@ Each workload domain references a network pool at provisioning time. Pool exhaus
 
 New hosts are onboarded into SDDC Manager before being assigned to a workload domain.
 
-```
+```text
 1. Rack and cable host; configure BIOS baseline
 2. Install ESXi (or use Auto Deploy)
 3. Set management IP, FQDN, DNS — must resolve forward and reverse

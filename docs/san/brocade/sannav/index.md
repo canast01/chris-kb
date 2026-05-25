@@ -4,7 +4,7 @@
 Brocade SANnav management platform knowledge base covering fabric discovery, monitoring, inventory, alerts, reports, and troubleshooting for Brocade Fibre Channel environments.
 </div>
 
-```
+```text
 ┌──────────────────────────────── Brocade SANnav — Management Platform ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

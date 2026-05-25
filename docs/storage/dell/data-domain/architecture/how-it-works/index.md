@@ -24,7 +24,7 @@ graph TB
 
 ## DDFS (Data Domain File System)
 
-```
+```text
 DDFS
 ├── Namespace (MTrees: /data/col1/<name>)
 │   ├── MTree: mtree-veeam-prod

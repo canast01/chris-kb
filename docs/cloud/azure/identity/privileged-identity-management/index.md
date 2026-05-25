@@ -4,7 +4,7 @@ PIM provides just-in-time (JIT) privileged access to Azure resources and Entra I
 
 ## Access Model
 
-```
+```text
 Without PIM:  Principal → [Permanent assignment] → Role → Resource
 With PIM:     Principal → [Eligible assignment] → Activate (JIT, time-limited) → Role → Resource
 ```
@@ -44,7 +44,7 @@ sequenceDiagram
 
 ### Portal
 
-```
+```text
 Entra Portal → Privileged Identity Management → Azure resources
 → Select scope → Manage → Assignments → Add assignments
 → Role → Member → Assignment type: Eligible → Duration → Assign
@@ -95,13 +95,13 @@ Configure via: **PIM → Azure resources → scope → Settings → select role 
 
 PIM can manage group membership using the same JIT model. Assign users as eligible for group membership — useful when group membership controls access to non-Azure systems.
 
-```
+```text
 PIM → Groups → select group → Manage → Assignments → Add assignments → Eligible member
 ```
 
 ## Audit and Access Reviews
 
-```
+```text
 PIM → Audit history — all activations, approvals, and denials with timestamps and IP addresses
 
 PIM → Access reviews → New access review → scope eligible/active assignments for periodic review

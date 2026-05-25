@@ -3,7 +3,7 @@
 
 AWS Auto Scaling notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  Auto Scaling Group Flow                │
 │                                                         │

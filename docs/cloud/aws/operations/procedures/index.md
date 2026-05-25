@@ -2,7 +2,7 @@
 
 > Part of the [Operations](../index.md) section.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │           AWS Operational Procedures Workflow            │
 └──────────────────────────────────────────────────────────┘

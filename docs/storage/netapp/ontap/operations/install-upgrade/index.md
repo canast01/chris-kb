@@ -23,7 +23,7 @@ ONTAP follows a major.minor.patch versioning model. Upgrade rules:
 - **Automated Non-Disruptive Upgrade (ANDU)**: preferred method; orchestrated by ONTAP itself, upgrades one node at a time via takeover/giveback
 - Always check the [ONTAP Upgrade Advisor in BlueXP](https://bluexp.netapp.com) for the exact recommended path and any pre-upgrade blockers before beginning
 
-```
+```text
 9.10.1 → 9.11.1 → 9.12.1 → 9.13.1 → 9.14.1 → 9.15.1
          (patch updates within each minor release are always allowed)
 ```

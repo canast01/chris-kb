@@ -1,6 +1,6 @@
 # FlashArray — Health Checks
 
-```
+```text
 FlashArray Health Check Sequence
   purealert list ──► Any error/warning alerts?
          │

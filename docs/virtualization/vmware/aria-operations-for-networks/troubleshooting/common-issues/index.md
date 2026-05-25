@@ -1,6 +1,6 @@
 # Aria Operations for Networks — Common Issues
 
-```
+```text
 ┌──────────── Aria Networks Triage by Symptom ───────────────────────────────────┐
 │                                                                                 │
 │  Collector Disconnected                                                         │
@@ -53,7 +53,7 @@ sudo journalctl --vacuum-size=1G   # free journal space
 ```
 
 If pairing key was regenerated:
-```
+```text
 Platform UI → Settings → Infrastructure → Collectors → Generate New Pairing Key
 Redeploy Collector OVA → enter new pairing key
 ```
@@ -177,7 +177,7 @@ Redeploy Collector OVA → enter new pairing key
 
 **Symptoms:** Banner "License has expired" on login; data collection may be halted
 
-```
+```text
 Settings → License → Enter new license key
 ```
 

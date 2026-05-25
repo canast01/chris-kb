@@ -90,7 +90,7 @@ Recurring clones are configured by raising a request with **ServiceNow Support**
 
 Information to provide in the HI request:
 
-```
+```yaml
 Subject: Schedule Recurring Clone - <instance-name>
 
 - Source instance: <prod-instance>.service-now.com

@@ -1,6 +1,6 @@
 # FlashBlade — Troubleshooting
 
-```
+```text
 FlashBlade Triage Entry Points
   Alert type ──► purefb alert list
        │

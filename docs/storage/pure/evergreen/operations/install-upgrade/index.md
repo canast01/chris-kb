@@ -1,6 +1,6 @@
 # Evergreen — Install & Upgrade
 
-```
+```text
 Evergreen Upgrade Types
   ┌────────────────────────────────────────────────────────┐
   │  Purity NDU Software Upgrade                           │

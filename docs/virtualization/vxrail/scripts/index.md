@@ -2,7 +2,7 @@
 
 > Part of the [VxRail](../index.md) reference.
 
-```
+```text
   ┌──────────────────────────────────────────────────────────┐
   │               VxRail Automation Flow                     │
   │                                                          │
@@ -157,13 +157,13 @@ Windows key → search `PowerShell` → right-click → **Run as Administrator**
 
 **Step 4 — Allow scripts to run**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\vxrail-cluster-health.ps1 -VxRailMgrHost 192.168.1.50 -VxRailUser admin -VxRailPass MyPassword
 ```
@@ -305,7 +305,7 @@ Set these environment variables before running (replace the example values):
 
 **Step 4 — Make the script executable and run it**
 
-```
+```bash
 chmod +x vxrail-lcm-readiness.sh
 VXRAIL_MGR_HOST=192.168.1.50 VXRAIL_USER=admin VXRAIL_PASS=MyPassword ./vxrail-lcm-readiness.sh
 ```
@@ -434,7 +434,7 @@ fi
 
 **Step 4 — Make the script executable and run it**
 
-```
+```bash
 chmod +x vxrail-node-hardware.sh
 VXRAIL_MGR_HOST=192.168.1.50 VXRAIL_USER=admin VXRAIL_PASS=MyPassword ./vxrail-node-hardware.sh
 ```
@@ -584,7 +584,7 @@ You can pass variables on the command line with `-e`, or set environment variabl
 
 **Step 4 — Run the playbook**
 
-```
+```bash
 cd /path/to/your/file
 ansible-playbook vxrail-health.yml -e "vxrail_mgr=192.168.1.50 vxrail_user=admin vxrail_pass=MyPassword"
 ```
@@ -725,13 +725,13 @@ Windows key → search `PowerShell` → right-click → **Run as Administrator**
 
 **Step 4 — Allow scripts to run**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\vxrail-health-windows.ps1 -VxrailMgr 192.168.1.50 -VxUser admin -VxPass MyPassword
 ```
@@ -816,7 +816,7 @@ If plink is not in your system PATH, change `set PLINK=plink.exe` to `set PLINK=
 **Step 3 — Accept the SSH fingerprint first (one-time step)**
 
 Open Command Prompt and run:
-```
+```text
 plink.exe -ssh mystic@192.168.1.50
 ```
 Type `y` when asked to accept the fingerprint, then press Ctrl+C to disconnect. You only need to do this once per host.
@@ -827,7 +827,7 @@ Open **Command Prompt**: Windows key → search `cmd` → press Enter
 
 **Step 5 — Run the script**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 vxrail-node-status.bat
 ```

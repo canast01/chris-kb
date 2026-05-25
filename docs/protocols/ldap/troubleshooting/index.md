@@ -1,6 +1,6 @@
 # LDAP Troubleshooting
 
-```
+```text
         TRIAGE: LDAP BIND FAILS
 ┌──────────────────────────────────────────────────────────────┐
 │  1. Resolve DC name                                          │

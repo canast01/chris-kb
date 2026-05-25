@@ -19,7 +19,7 @@ Exam gotcha: Bicep compiles to ARM; they are functionally equivalent for Azure d
 
 RBAC assignments are inherited downward:
 
-```
+```text
 Management Group
   └── Subscription
         └── Resource Group

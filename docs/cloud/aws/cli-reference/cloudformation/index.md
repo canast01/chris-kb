@@ -1,6 +1,6 @@
 # CloudFormation
 
-```
+```text
 CloudFormation CLI: Stack Lifecycle
 ──────────────────────────────────────────────────────────────
 

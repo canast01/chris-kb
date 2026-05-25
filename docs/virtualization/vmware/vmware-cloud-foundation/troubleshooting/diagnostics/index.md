@@ -42,7 +42,7 @@ flowchart TD
 
 ### Log Directory Structure
 
-```
+```text
 /var/log/vmware/vcf/
 ├── domainmanager/
 │   ├── domainmanager.log         # Domain lifecycle operations

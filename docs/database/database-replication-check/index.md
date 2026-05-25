@@ -2,7 +2,7 @@
 
 Verify replication health, lag, and data consistency across primary and replica nodes.
 
-```
+```text
 ┌──────────────────────┐        WAL / binlog stream        ┌──────────────────────┐
 │       Primary        │──────────────────────────────────►│       Replica        │
 │                      │                                   │                      │

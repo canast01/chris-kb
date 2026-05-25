@@ -2,7 +2,7 @@
 
 > Part of the [Operations](../index.md) section.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │          boto3 / AWS CLI Automation Patterns             │
 └──────────────────────────────────────────────────────────┘
@@ -137,7 +137,7 @@ Open the saved file and update these values near the top:
 
 **Step 4 — Run it**
 
-```
+```bash
 cd ~/Desktop
 bash aws-health-check.sh
 ```
@@ -327,7 +327,7 @@ Open the saved file and update these values near the top:
 
 **Step 4 — Install the required package and run**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 pip install boto3
 python ec2_audit.py
@@ -530,7 +530,7 @@ This script uses your default AWS credentials automatically — no variables to 
 
 **Step 4 — Install the required package and run**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 pip install boto3
 python s3_audit.py
@@ -646,7 +646,7 @@ Open the saved file and update these values near the top:
 
 **Step 4 — Run it**
 
-```
+```bash
 cd ~/Desktop
 bash aws-cost-report.sh
 ```
@@ -789,7 +789,7 @@ Open the saved file and update these values in the `vars:` section:
 
 **Step 4 — Run it**
 
-```
+```bash
 cd ~
 ansible-playbook ec2_dr_failover.yml
 ```
@@ -957,7 +957,7 @@ The thresholds near the top can be adjusted:
 
 **Step 4 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 pip install boto3
 python iam_key_audit.py
@@ -965,7 +965,7 @@ python iam_key_audit.py
 
 To also deactivate stale keys (use with caution):
 
-```
+```bash
 python iam_key_audit.py --deactivate
 ```
 
@@ -1064,7 +1064,7 @@ PYEOF
 
 **Step 4 — Run it**
 
-```
+```bash
 cd ~/Desktop
 bash cloudwatch-check.sh
 ```
@@ -1199,7 +1199,7 @@ Checks EC2 instance states, RDS status, ELB health, S3 bucket replication, and R
 
 **Step 4 — Run it**
 
-```
+```bash
 cd ~
 ansible-playbook aws_infra_health.yml
 ```
@@ -1281,7 +1281,7 @@ pause
 
 **Step 4 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 aws-health-check.bat
 ```
@@ -1407,13 +1407,13 @@ if ($flagged.Count -gt 0) {
 
 **Step 4 — Allow scripts to run (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\aws-s3-inventory.ps1
 ```

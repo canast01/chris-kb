@@ -1,6 +1,6 @@
 # NFS Exports
 
-```
+```text
         SERVER-SIDE EXPORT CONFIGURATION
 ┌──────────────────────────────────────────────────────────────┐
 │  /etc/exports                                                │
@@ -27,7 +27,7 @@ NFS exports are defined in `/etc/exports` on Linux servers. Each line specifies 
 
 ## /etc/exports Syntax
 
-```
+```text
 /path/to/export  client_spec(options)
 ```
 

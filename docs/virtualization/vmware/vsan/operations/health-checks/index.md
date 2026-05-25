@@ -1,6 +1,6 @@
 # vSAN — Health Checks
 
-```
+```text
 vSAN HEALTH CHECK SCOPE
 
   ┌───────────────────────────────────────────────────────┐

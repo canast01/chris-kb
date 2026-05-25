@@ -1,6 +1,6 @@
 # DHCP Failover
 
-```
+```text
         DHCP FAILOVER MODES
 ┌──────────────────────────────────────────────────────────────┐
 │  LOAD BALANCE (50/50 split):                                 │

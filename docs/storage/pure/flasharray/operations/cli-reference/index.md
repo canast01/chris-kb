@@ -1,6 +1,6 @@
 # FlashArray — CLI Reference
 
-```
+```text
 Purity CLI Hierarchy
   purity
   ├── purearray   — array identity, NTP, DNS, upgrade, phonehome

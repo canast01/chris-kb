@@ -1,6 +1,6 @@
 # AWS Cost Explorer / Billing
 
-```
+```text
 Cost Explorer Billing: Account → Breakdown → Report
 ──────────────────────────────────────────────────────────────
 

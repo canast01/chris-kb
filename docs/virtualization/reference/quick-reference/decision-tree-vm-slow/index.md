@@ -1,6 +1,6 @@
 # VM Slow Decision Tree
 
-```
+```text
                          VM reported slow
                                │
                                ▼

@@ -161,7 +161,7 @@ syslogadmin --show
 
 Brocade FabricOS sends syslog at facility `LOCAL1` (by default). Configure the SIEM to accept and parse this facility. Log format includes:
 
-```
+```text
 <timestamp> <switch-hostname> RASLOG: <severity> [<module>/<id>] <message>
 ```
 

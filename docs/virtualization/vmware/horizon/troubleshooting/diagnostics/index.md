@@ -1,6 +1,6 @@
 # Horizon — Diagnostics
 
-```
+```text
   Diagnostic Data Sources
 ┌──────────────────────────────────────────────────────────────┐
 │  Connection Server                UAG                        │
@@ -42,7 +42,7 @@ Get-Content "C:\ProgramData\VMware\VDM\logs\debug-2024-01-01.txt" -Wait -Tail 50
 
 ## Collect Horizon Support Bundle
 
-```
+```text
 Horizon Console → Help → Download Support Bundle
   Selects logs from all Connection Servers in the pod
   Downloads as ZIP — attach to VMware Support case
@@ -158,7 +158,7 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 
 For diagnosing in-session performance (latency, frame rate, bandwidth):
 
-```
+```text
 Inside a Blast session: Ctrl+Alt+Shift+P → opens Performance Tracker overlay
 Displays: frames per second, bandwidth, latency, packet loss
 ```

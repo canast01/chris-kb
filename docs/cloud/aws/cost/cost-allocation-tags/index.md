@@ -1,6 +1,6 @@
 # AWS Cost Allocation Tags
 
-```
+```text
 Cost Allocation Tags: Tag → Activate → Report
 ──────────────────────────────────────────────────────────────
 

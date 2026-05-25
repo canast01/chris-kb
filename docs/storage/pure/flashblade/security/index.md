@@ -1,6 +1,6 @@
 # FlashBlade — Security
 
-```
+```text
 FlashBlade Security Layers
 ┌──────────────────────────────────────────────────────────┐
 │  Identity & Auth                                         │

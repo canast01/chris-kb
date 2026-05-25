@@ -1,6 +1,6 @@
 # Aria Operations: Capacity Analytics and Rightsizing
 
-```
+```text
 Capacity Model — Aria Operations
 ┌──────────────────────────────────────────┐
 │         Capacity Analytics Engine        │

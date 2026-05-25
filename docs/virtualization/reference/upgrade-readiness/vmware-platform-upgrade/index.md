@@ -2,7 +2,7 @@
 
 This procedure covers a full VMware platform upgrade including vCenter, ESXi, vSAN, NSX, and VCF-related components.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────────┐
 │            VMware Platform Upgrade Order                                 │
 │                                                                          │

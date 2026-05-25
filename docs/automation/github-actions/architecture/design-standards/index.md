@@ -4,7 +4,7 @@
 
 ## Workflow File Structure
 
-```
+```text
 .github/
 └── workflows/
     ├── ci.yml          # lint, test, build on every push/PR

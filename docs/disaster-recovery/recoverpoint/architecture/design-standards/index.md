@@ -8,7 +8,7 @@
 
 ### Consistency Groups
 
-```
+```text
 CG-<app>-<env>
 ```
 
@@ -27,7 +27,7 @@ Examples:
 
 ### Journal Volume Names
 
-```
+```text
 JRN-<CG-name>-<PROD|DR>
 ```
 
@@ -35,7 +35,7 @@ Example: `JRN-CG-ORACLE-PROD-DR`
 
 ### RPA Cluster Names
 
-```
+```text
 RPAC-<site>-<number>
 ```
 

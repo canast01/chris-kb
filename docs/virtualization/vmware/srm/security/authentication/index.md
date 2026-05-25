@@ -1,6 +1,6 @@
 # SRM — Authentication
 
-```
+```text
   SRM Authentication Chain
 ┌──────────────────────────────────────────────────────────────┐
 │  User / Script           vCenter SSO          SRM Server     │
@@ -40,7 +40,7 @@ $srm = Connect-SrmServer -SrmServerAddress srm-protected.example.local
 
 SRM sites authenticate to each other using the SRM Server's SSL certificates. When pairing sites:
 
-```
+```text
 Site Recovery → New Site Pair
   Remote vCenter FQDN → enter
   Remote SRM Server FQDN → enter
@@ -52,7 +52,7 @@ The certificate thumbprint is permanently stored — if either site's certificat
 
 ### Re-establishing Pairing After Cert Rotation
 
-```
+```text
 Site Recovery → Site Pair → [pair] → Edit
   Update thumbprints if cert changed
   OR: delete and re-create site pair
@@ -64,7 +64,7 @@ Site Recovery → Site Pair → [pair] → Edit
 
 SRAs authenticate to storage arrays using credentials stored in SRM:
 
-```
+```text
 Site Recovery → Storage → Array Pairs → [pair] → Adapter Configuration
   FlashArray: management IP + API token (preferred over username/password)
   Other arrays: management IP + username/password
@@ -100,7 +100,7 @@ curl -sk -H "vmware-api-session-id: $TOKEN" \
 VRA appliances authenticate to each other and to vCenter using certificates. The VRA registers with vCenter using vCenter SSO credentials provided during initial configuration.
 
 If vCenter certificate is replaced, re-register VRA:
-```
+```text
 VRA VAMI (https://vra-protected.example.local:5480)
   Configuration → vCenter Server → Reconfigure
   Re-enter vCenter credentials

@@ -1,6 +1,6 @@
 # SRM — Escalation
 
-```
+```text
   Escalation Path
 ┌──────────────────────────────────────────────────────────────┐
 │  Collect (both sites):                                       │

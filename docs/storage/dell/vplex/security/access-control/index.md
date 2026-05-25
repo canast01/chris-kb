@@ -57,7 +57,7 @@ Host access to VPLEX virtual volumes is exclusively controlled via storage views
 
 ### Storage View Access Model
 
-```
+```text
 Host HBA (WWN)
     → FC Zone (SAN fabric)
         → VPLEX Front-End Port

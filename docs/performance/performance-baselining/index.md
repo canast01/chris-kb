@@ -4,7 +4,7 @@ A documented performance baseline defines normal system behaviour, enabling accu
 
 > See also: [Metrics Baseline](../../monitoring/metrics-baseline/index.md) — similar coverage from the monitoring perspective.
 
-```
+```text
 ┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
 │ Collect Metrics  │   │ Establish Normal │   │  Store Baseline  │   │ Compare Current │
 │                  │   │                  │   │                  │   │  vs Baseline    │
@@ -86,7 +86,7 @@ psql -c "SELECT query, mean_exec_time, calls FROM pg_stat_statements ORDER BY me
 
 ## Documenting the Baseline
 
-```
+```yaml
 System:         web-prod-01
 Date:           2026-05-06
 Period:         30 days (Mon–Fri 08:00–18:00 business hours)

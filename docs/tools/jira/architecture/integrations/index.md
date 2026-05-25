@@ -65,7 +65,7 @@ Enter the Confluence base URL. Both instances must be able to reach each other o
 
 The **Jira Issues macro** embeds live issue data in Confluence pages:
 
-```
+```text
 {jira:key=PROJ-123}
 {jira:jql=project = PROJ AND sprint in openSprints()}
 ```
@@ -114,7 +114,7 @@ Capabilities enabled:
 
 Enforce via branch protection rules or Git hooks:
 
-```
+```bash
 <type>/<issue-key>-<short-description>
 
 # Examples
@@ -125,7 +125,7 @@ chore/OPS-789-update-dependencies
 
 ### Commit Message Convention
 
-```
+```bash
 <issue-key>: <imperative summary>
 
 # Examples
@@ -325,7 +325,7 @@ Jira retries failed webhooks up to 10 times with exponential backoff. Failed del
 
 Key settings:
 
-```
+```yaml
 Hostname:               ad.example.com
 Port:                   636 (LDAPS) or 389 (LDAP)
 Use SSL:                true (required for prod)
@@ -347,7 +347,7 @@ Group Members Attr:     member
 
 ### LDAP Sync Schedule
 
-```
+```text
 Synchronise Every:   60 minutes
 ```
 
@@ -377,7 +377,7 @@ Jira Data Center supports SAML 2.0 SP-initiated SSO.
 | Redirect URL | `https://jira.example.com/plugins/servlet/saml/auth` |
 
 **SP Metadata URL** (provide to IdP):
-```
+```text
 https://jira.example.com/plugins/servlet/saml/metadata
 ```
 
@@ -410,7 +410,7 @@ Common IdP configurations:
 
 ### Example: Jira Automation Rule — Transition Jira Issue on SNOW Resolve
 
-```
+```yaml
 Trigger:  Incoming webhook (from ServiceNow)
 Condition: {{webhookData.state}} equals "resolved"
 Action:   Transition issue → Done

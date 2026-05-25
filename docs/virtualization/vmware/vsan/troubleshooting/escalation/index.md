@@ -2,7 +2,7 @@
 
 Guidance on when to escalate vSAN incidents to VMware (Broadcom) support, what to collect before opening a case, and how to manage escalation effectively.
 
-```
+```text
 ESCALATION PATH
 
   vSAN incident detected
@@ -110,7 +110,7 @@ cp /tmp/vsan_cluster_state.txt \
 
 Prepare the following information before submitting the case:
 
-```
+```bash
 Environment:
   vSphere version:         e.g. 8.0 U2
   vSAN version / mode:     e.g. 8.0 U2 ESA / OSA

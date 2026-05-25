@@ -1,6 +1,6 @@
 # vCenter Upgrade Readiness Checklist
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                   vCenter Upgrade Flow                                   │
 │                                                                          │

@@ -4,7 +4,7 @@
 
 Define a dedicated `DR-Operator` role in vCenter with only the privileges required for SRM operations:
 
-```
+```yaml
 Privileges to include:
   Site Recovery Manager:
     - Site Recovery.Manage

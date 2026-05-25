@@ -1,6 +1,6 @@
 # NTP Sources
 
-```
+```text
         SOURCE SELECTION AND PREFERENCE
 ┌─────────────────────────────────────────────────────────────┐
 │  /etc/chrony.conf                                           │
@@ -25,7 +25,7 @@ An NTP source is a time server that the local daemon polls to correct the system
 
 ## Stratum Hierarchy
 
-```
+```text
 Stratum 0 — atomic clock / GPS receiver (hardware reference)
 Stratum 1 — directly connected to stratum 0 (public NTP servers)
 Stratum 2 — synced from stratum 1 (most enterprise NTP servers)
@@ -50,7 +50,7 @@ chronyc sources -v
 # Last sample — offset and error estimate
 ```
 
-```
+```text
 MS Name/IP address         Stratum Poll Reach Last Rx Last sample
 ==================================================================
 ^* ntp1.example.com              2   6   377    23   -1.2ms[  -1.1ms] +/- 4.5ms

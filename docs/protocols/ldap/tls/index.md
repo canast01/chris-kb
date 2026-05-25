@@ -4,7 +4,7 @@ title: TLS
 
 # LDAP TLS (LDAPS)
 
-```
+```text
         STARTTLS vs LDAPS
 ┌──────────────────────────────────────────────────────────────┐
 │  STARTTLS (port 389 → upgrade to TLS)                        │

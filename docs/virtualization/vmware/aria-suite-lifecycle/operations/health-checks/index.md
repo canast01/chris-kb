@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle — Health Checks
 
-```
+```text
   LCM Health Check Chain
 ┌─────────────────────────────────────────────────────────────────┐
 │  LCM Appliance           Locker              Environments        │

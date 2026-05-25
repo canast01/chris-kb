@@ -1,6 +1,6 @@
 # AWS Service Control Policies
 
-```
+```text
 SCPs: Org Root → OU → Account → IAM Policy evaluation
 ──────────────────────────────────────────────────────────────
 

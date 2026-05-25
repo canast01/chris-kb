@@ -1,6 +1,6 @@
 # Directory Integration
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────┐
 │                  AD / LDAP Integration Flow                         │
 │                                                                     │

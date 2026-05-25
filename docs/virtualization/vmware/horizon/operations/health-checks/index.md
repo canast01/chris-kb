@@ -1,6 +1,6 @@
 # Horizon — Health Checks
 
-```
+```text
   Health Check Chain
 ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
 │  Connection      │    │  Composer /      │    │  vCenter         │
@@ -27,7 +27,7 @@
 
 ## Connection Server Dashboard
 
-```
+```text
 Horizon Console → Dashboard → Summary
   Global health indicator: Green = all services healthy
   vCenter connection: should show Connected
@@ -39,7 +39,7 @@ Horizon Console → Dashboard → Summary
 
 ## Desktop Pool Health
 
-```
+```yaml
 Horizon Console → Inventory → Desktops
   For each pool, check:
     - Available: desktops ready to accept new sessions
@@ -88,7 +88,7 @@ nc -vz uag.example.local 4172
 
 ## App Volumes Manager Health
 
-```
+```text
 App Volumes Manager UI → Activity → Current Activity
   No stuck attachments or detachments
 App Volumes Manager UI → Infrastructure → Managers

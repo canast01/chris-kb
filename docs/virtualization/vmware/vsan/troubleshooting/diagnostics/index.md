@@ -2,7 +2,7 @@
 
 Diagnostic procedures for vSAN performance, object health, network issues, and disk failures. Use this page when initial health checks do not identify the root cause and deeper investigation is required.
 
-```
+```text
 DIAGNOSTIC TOOL CHAIN
 
   Incident

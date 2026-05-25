@@ -1,6 +1,6 @@
 # FlashBlade — Encryption
 
-```
+```text
 FlashBlade Encryption Architecture
 ┌────────────────────────────────────────────────────────────┐
 │  Data at Rest (always-on)                                  │

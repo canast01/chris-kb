@@ -1,6 +1,6 @@
 # Aria Operations for Networks — Encryption
 
-```
+```text
 ┌──────────── Aria Networks TLS & Encryption Layers ────────────────────────────┐
 │                                                                                │
 │  Data in Transit                                                               │
@@ -64,7 +64,7 @@ vRNI ships with a self-signed certificate. Replace with a CA-signed certificate 
 
 ### Replace via UI
 
-```
+```text
 Settings → SSL Certificate → Upload Certificate
   Upload: PEM certificate chain (server cert + intermediate CAs)
   Upload: Private key (PEM, no passphrase)
@@ -123,6 +123,6 @@ nmap --script ssl-enum-ciphers -p 443 vrni.example.local
 vRNI encrypts all data source credentials (vCenter, NSX, physical device passwords) in its internal database. The encryption key is tied to the Platform VM instance. Do not copy the Platform VM VMDK to another host — credentials will not decrypt without the original key material.
 
 Update stored credentials when source system passwords change:
-```
+```text
 Settings → Data Sources → [source] → Edit → update password → Save
 ```

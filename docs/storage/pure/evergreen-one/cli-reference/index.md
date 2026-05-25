@@ -3,7 +3,7 @@
 > Part of the [Evergreen//One](../index.md) reference.
 ---
 
-```
+```text
   Subscription & Capacity Management — Command Flow
 
   Pure1 REST API                    Per-Array CLI (SSH)

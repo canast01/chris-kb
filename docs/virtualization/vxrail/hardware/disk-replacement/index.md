@@ -3,7 +3,7 @@
 
 Disk fault workflow, vSAN impact, replacement validation, and vendor handoff.
 
-```
+```text
   ┌──────────────────────────────────────────────────┐
   │           VxRail Disk Replacement Flow           │
   └──────────────────────────────────────────────────┘

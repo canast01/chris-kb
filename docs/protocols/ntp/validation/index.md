@@ -1,6 +1,6 @@
 # NTP Validation
 
-```
+```text
         VALIDATION CHECKLIST
 ┌──────────────────────────────────────────────────────────────┐
 │  chronyc tracking                                            │

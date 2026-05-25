@@ -2,7 +2,7 @@
 
 Capacity forecasting predicts when a resource will be exhausted based on historical trend data, enabling proactive expansion before impact occurs.
 
-```
+```text
 ┌─────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
 │  Collect Trend  │   │  Forecast Model  │   │ Threshold Alert  │   │   Plan Action   │
 │                 │   │                  │   │                  │   │                 │
@@ -21,7 +21,7 @@ Capacity forecasting predicts when a resource will be exhausted based on histori
 
 ## Forecasting Model
 
-```
+```text
 Days to exhaustion = (Current capacity - Current usage) / Growth rate per day
 ```
 

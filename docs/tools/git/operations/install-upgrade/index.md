@@ -120,7 +120,7 @@ GitLab requires upgrading through specific stop versions. Check the [GitLab upgr
 
 Example: 15.4 → 17.1 requires:
 
-```
+```text
 15.4 → 15.11.x → 16.0.x → 16.3.x → 16.11.x → 17.1.x
 ```
 

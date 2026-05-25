@@ -1,6 +1,6 @@
 # Service Integrations
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                    Service Integration Map                           │
 │                                                                      │

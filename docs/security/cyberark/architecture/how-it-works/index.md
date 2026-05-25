@@ -38,7 +38,7 @@ graph TB
 
 ## Network Topology
 
-```
+```text
 [Admin workstation / PAW]
          |
          | HTTPS (443)

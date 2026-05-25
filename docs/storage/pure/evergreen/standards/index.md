@@ -1,6 +1,6 @@
 # Pure Storage Evergreen Standards
 
-```
+```text
 Evergreen Standards — Object Naming and Design
 ┌──────────────────────────────────────────────────────────┐
 │  Array    │  <site>-fa-<nn>   e.g. lon-fa-01             │

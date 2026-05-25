@@ -1,6 +1,6 @@
 # Aria Operations — Scripts
 
-```
+```text
 Aria Operations API — Script Interaction Pattern
 ┌─────────────────────────────────────────────────────┐
 │  Script / Automation Pipeline                       │

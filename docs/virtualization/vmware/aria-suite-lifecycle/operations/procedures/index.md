@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle — Procedures
 
-```
+```text
   LCM Common Procedures
 ┌─────────────────────────────────────────────────────────────────┐
 │  Deploy Product           Replace Certificate                   │
@@ -105,7 +105,7 @@ When a service account password is changed at source (vCenter, AD, database):
 
 ## Add a vCenter Server to LCM
 
-```
+```text
 LCM → Settings → vCenter Server → Add vCenter Server
 ```
 
@@ -145,7 +145,7 @@ When promoting content (dashboards, blueprints, templates) from a lower environm
 
 If VIDM was deployed separately (not via Easy Installer) or needs to be re-registered:
 
-```
+```text
 LCM → Settings → Identity Manager → Configure
 ```
 

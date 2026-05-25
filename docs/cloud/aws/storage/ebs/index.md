@@ -3,7 +3,7 @@
 
 AWS EBS notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                EBS Volume Architecture                  │
 │                                                         │

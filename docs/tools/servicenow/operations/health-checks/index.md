@@ -121,7 +121,7 @@ Navigate to: **System Scheduler > Scheduled Jobs**
 
 Filter for jobs in **Error** state:
 
-```
+```text
 state = error
 ```
 
@@ -245,7 +245,7 @@ Review for patterns:
 
 Record daily health check results in a shared log (ticket, spreadsheet, or knowledge article):
 
-```
+```yaml
 Date: 2026-05-08
 Checked by: C. Anastasiadis
 Instance: mycompany.service-now.com

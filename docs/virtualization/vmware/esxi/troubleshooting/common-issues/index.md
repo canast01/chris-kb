@@ -1,6 +1,6 @@
 # ESXi — Common Issues
 
-```
+```text
 ESXi Common Issue Resolution Paths
 ┌────────────────────────────────────────────────────────┐
 │  Host Disconnected from vCenter                        │

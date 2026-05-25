@@ -146,7 +146,7 @@ acs system logs --component upgrade --tail 200 > /tmp/upgrade-log.txt
 
 ## Support Case Description Template
 
-```
+```yaml
 Product: Cisco Nexus Dashboard
 Platform version: 3.x.x (acs version output)
 NDFC version: 12.x.x (acs apps status output)

@@ -1,6 +1,6 @@
 # VxRail Post-Upgrade Validation
 
-```
+```text
 Post-Upgrade Validation Sequence
 ┌────────────┐     ┌────────────┐     ┌────────────┐     ┌────────────┐
 │  Services  │     │   Health   │     │    VMs     │     │    Docs    │

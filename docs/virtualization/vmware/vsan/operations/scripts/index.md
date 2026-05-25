@@ -1,6 +1,6 @@
 # vSAN — Scripts
 
-```
+```text
 AUTOMATION FLOW
 
   Operator / Scheduler
@@ -151,20 +151,20 @@ Windows key → type `PowerShell` → right-click → **Run as Administrator**
 
 **Step 4 — Allow scripts to run (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\vsan_cluster_health.ps1
 ```
 
 **What you should see**
 
-```
+```text
 === vSAN Health Check: vSAN-Cluster ===
 
 [PASS    ] vSAN Health Service up-to-date
@@ -288,20 +288,20 @@ Windows key → type `PowerShell` → right-click → **Run as Administrator**
 
 **Step 4 — Allow scripts to run (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\vsan_diskgroup_report.ps1
 ```
 
 **What you should see**
 
-```
+```text
 Host                      DiskGroup            Cache GB CacheHealth   Total GB  Used GB  Free GB  Used% Status
 ---------------------------------------------------------------------------------------------------------
 esxi-01.company.local     DiskGroup-1               400 ok               3072     2200      872  71.6% WARNING
@@ -461,7 +461,7 @@ Windows key → type `cmd` → press Enter
 
 **Step 4 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 python vsan_object_health.py
 ```
@@ -469,14 +469,14 @@ python vsan_object_health.py
 **What you should see**
 
 If everything is healthy:
-```
+```text
 === vSAN Object Health: vSAN-Cluster ===
 
 All vSAN-backed VM objects appear accessible.
 ```
 
 If issues are found:
-```
+```text
 VM                             Type       Label                     State
 ---------------------------------------------------------------------------
 web-server-broken              vmdk       Hard disk 1               inaccessible
@@ -595,20 +595,20 @@ Windows key → type `PowerShell` → right-click → **Run as Administrator**
 
 **Step 4 — Allow scripts to run (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\vsan_perf_baseline.ps1
 ```
 
 **What you should see**
 
-```
+```text
 === vSAN Performance Baseline: vSAN-Cluster ===
 Period: 2026-05-05T14:30:00 → 2026-05-06T14:30:00
 
@@ -890,20 +890,20 @@ Windows key → type `PowerShell` → right-click → **Run as Administrator**
 
 **Step 4 — Allow scripts to run (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\vsan_health_windows.ps1
 ```
 
 **What you should see**
 
-```
+```text
 Connected to vCenter: vcenter.company.local
 
 === vSAN Cluster Health Summary ===
@@ -993,7 +993,7 @@ echo === vSAN check complete ===
 
 Before the batch script will work, you must accept the host's SSH fingerprint once. Open Command Prompt and run:
 
-```
+```text
 "C:\Program Files\PuTTY\plink.exe" -ssh root@192.168.1.100
 ```
 
@@ -1025,14 +1025,14 @@ Windows key → type `cmd` → press Enter
 
 You can double-click the `.bat` file on your Desktop, or run it from Command Prompt:
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 vsan_diskgroup_check.bat
 ```
 
 **What you should see**
 
-```
+```text
 === vSAN Disk Group Status Check: 192.168.1.100 ===
 
 --- vSAN Storage Disk List ---

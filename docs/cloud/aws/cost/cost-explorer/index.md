@@ -1,6 +1,6 @@
 # AWS Cost Explorer
 
-```
+```text
 Cost Explorer: Usage Graph → Filter → Forecast
 ──────────────────────────────────────────────────────────────
 

@@ -29,7 +29,7 @@ Enterprise infrastructure architecture design guides covering high availability 
 </div>
 
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────┐
 │                    Enterprise Infrastructure Overview               │
 │                                                                     │

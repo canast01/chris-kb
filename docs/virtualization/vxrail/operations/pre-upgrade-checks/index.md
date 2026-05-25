@@ -4,7 +4,7 @@
 
 Use this page before VxRail lifecycle upgrades or firmware updates.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │             Pre-Upgrade Check Gate                   │
   │                                                      │

@@ -1,6 +1,6 @@
 # FlashBlade — Authentication
 
-```
+```text
 FlashBlade Authentication — Data vs Management Plane
   Management plane (GUI / API / CLI):
     Browser ──► SAML SSO (IdP) ──► MFA ──► Purity//FB RBAC

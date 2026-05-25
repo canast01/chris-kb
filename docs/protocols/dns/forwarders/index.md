@@ -1,6 +1,6 @@
 # DNS Forwarders
 
-```
+```text
         FORWARDER RESOLUTION FLOW
 ┌──────────────────────────────────────────────────────────────┐
 │  Internal DNS (DC)            External / Upstream            │

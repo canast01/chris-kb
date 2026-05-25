@@ -17,7 +17,7 @@ RASR is managed through the Dell EMC array management interface (Unisphere, iDRA
 
 ### Unisphere for Unity / PowerStore
 
-```
+```yaml
 Authentication requirements:
 - Minimum: local accounts with strong passwords (20+ character)
 - Preferred: LDAP/AD integration with role-based access
@@ -41,7 +41,7 @@ uemcli /sys/setting show
 
 RASR often uses iDRAC for out-of-band access to trigger or monitor recovery operations.
 
-```
+```yaml
 iDRAC authentication hardening:
 - Disable default iDRAC credentials (root/calvin) immediately after deployment
 - Integrate iDRAC with Active Directory via LDAP
@@ -90,7 +90,7 @@ RASR recovery media (USB drives, ISO images, PXE boot images) must be protected 
 
 Recovery from bootable RASR media requires BIOS/UEFI boot. Protect this path:
 
-```
+```yaml
 BIOS/UEFI hardening:
 - Set UEFI administrator password to prevent boot order changes
 - Restrict boot order to internal drive; allow USB/PXE only when authorised
@@ -113,7 +113,7 @@ When a RASR recovery is initiated, the process must require multi-party authenti
 
 ### Four-Eyes / Dual-Control Procedure
 
-```
+```text
 Recovery authorisation workflow:
 1. Recovery requester raises a change record (ServiceNow / Jira)
 2. Change is approved by the system owner or DR manager
@@ -124,7 +124,7 @@ Recovery authorisation workflow:
 
 ### Service Account for Automated RASR Operations
 
-```
+```yaml
 Automated RASR tasks (e.g., scheduled snapshot validation) use dedicated service accounts:
 - One service account per environment (prod, UAT, DR)
 - Minimum privilege: snapshot read and recovery initiation only

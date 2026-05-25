@@ -179,7 +179,7 @@ Configure a legal warning banner for the SANnav web UI:
 1. Navigate to **Administration > Security Settings > Login Banner**.
 2. Enter the banner text:
 
-```
+```text
 WARNING: This system is for authorized use only.
 All connections are monitored and recorded.
 Unauthorized access or use is prohibited and may be subject to legal action.

@@ -178,13 +178,13 @@ The server names are passed when you run the script — no editing needed inside
 
 **Step 4 — Allow scripts to run (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\windows-health-check.ps1 -Servers server01,server02
 ```
@@ -327,13 +327,13 @@ The parameters are optional — the defaults are usually fine:
 
 **Step 4 — Allow scripts to run (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\ad-user-audit.ps1 -OutputDir C:\Reports
 ```
@@ -520,13 +520,13 @@ Parameters are passed on the command line:
 
 **Step 4 — Allow scripts to run (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\cert-expiry-monitor.ps1 -Servers webserver01,webserver02 -SmtpServer smtp.example.com -AlertEmail ops@example.com
 ```
@@ -695,20 +695,20 @@ Edit the `$ServiceMap` section inside the script to match your environment:
 
 **Step 4 — Allow scripts to run (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\service-health-monitor.ps1
 ```
 
 To also try restarting any stopped automatic services:
 
-```
+```text
 .\service-health-monitor.ps1 -AttemptRestart $true
 ```
 
@@ -793,7 +793,7 @@ Open the saved file and update these values near the top:
 
 **Step 4 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 ps-runner.bat
 ```
@@ -933,13 +933,13 @@ The `$RequiredModules` list near the top can be edited to add or remove modules:
 
 **Step 4 — Allow scripts to run (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\Install-InfraModules.ps1
 ```

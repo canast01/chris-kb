@@ -26,7 +26,7 @@ graph TB
 
 ## Data Flow
 
-```
+```text
 Client (backup agent)
     │
     ▼ CVLT network (TCP 8403)

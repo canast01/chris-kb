@@ -103,7 +103,7 @@ group enable-replication --gname <cg_name>
 
 ## Journal Sizing
 
-```
+```text
 Journal size (GB) = Write rate (MB/s) × 3600 × Retention hours / 1024
 
 Example: 50 MB/s write rate, 4-hour retention

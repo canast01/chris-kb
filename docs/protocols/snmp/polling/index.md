@@ -2,7 +2,7 @@
 
 SNMP polling is the process of an NMS periodically querying devices to collect metrics.
 
-```
+```text
         SNMP POLLING CYCLE
 ┌─────────────────────────────────────────────────────────────┐
 │  NMS (every 60s)              Device agent                  │

@@ -64,7 +64,7 @@ graph TD
 
 Roles are assigned to individual users or to LDAP/AD groups:
 
-```
+```yaml
 Unisphere → Settings → Security → Users → Add User
   - Select: Local User or LDAP User
   - Assign: Role
@@ -84,7 +84,7 @@ curl -sk -u admin:password \
 
 Map Active Directory groups to Unisphere roles so that group membership in AD automatically confers the appropriate role:
 
-```
+```yaml
 Unisphere → Settings → Security → LDAP → Role Mapping
   - Group DN: CN=GRP-PowerMax-StorageAdmins,OU=Groups,DC=corp,DC=example,DC=com
   - Role: StorageAdmin

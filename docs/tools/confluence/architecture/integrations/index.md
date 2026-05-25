@@ -15,7 +15,7 @@ The Confluence–Jira integration is Atlassian's flagship integration and runs b
 3. On the Jira side, accept the incoming link and grant **Trusted Application** or **OAuth** authentication
 4. Choose **2-legged OAuth (2LO)** for service-account-style access without per-user consent
 
-```
+```text
 Confluence Admin URL:
   https://confluence.example.com/admin/applinks/listApplicationLinks.action
 ```
@@ -34,7 +34,7 @@ Confluence Admin URL:
 
 Insert via `/jira` shortcut in the editor. Key parameters:
 
-```
+```yaml
 Server: <linked Jira instance>
 JQL: project = OPS AND issuetype = Bug AND status != Done
 Columns: key, summary, status, assignee, priority
@@ -80,7 +80,7 @@ For Cloud deployments, the **Atlassian for GitHub** app in the GitHub Marketplac
 
 Embed syntax-highlighted code blocks referencing repository content:
 
-```
+```yaml
 Macro: Code Block
 Language: bash / python / yaml / java
 Title: deploy.sh
@@ -284,7 +284,7 @@ curl -H "Authorization: Bearer <PAT>" \
 
 CQL is analogous to Jira's JQL for searching content:
 
-```
+```bash
 # Pages modified in the last 7 days in the OPS space
 space = "OPS" AND type = page AND lastModified >= "-7d"
 

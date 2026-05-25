@@ -1,6 +1,6 @@
 # FlashArray — Hardening
 
-```
+```text
 FlashArray Hardening Sequence
   1. Change defaults ──► rename/vault pureuser, create named admins
   2. Configure AD/LDAP ──► group-to-role mapping

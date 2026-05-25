@@ -7,7 +7,7 @@ Certificate policy standards enforced through the Venafi policy tree. All certif
 
 Policy folders use lowercase-hyphenated names. Certificate objects (leaf nodes) use the FQDN as the object name.
 
-```
+```text
 \VED\Policy\
 ├── internal\
 │   ├── production\          e.g., \VED\Policy\internal\production\servers\
@@ -113,7 +113,7 @@ flowchart TD
 
 ### Internal Production (Auto-Issue)
 
-```
+```text
 Requestor submits CSR via Venafi UI or API
          |
          v
@@ -132,7 +132,7 @@ Venafi stores certificate, notifies requestor
 
 ### External Public (Manual Approval)
 
-```
+```text
 Requestor submits CSR via Venafi UI or API
          |
          v

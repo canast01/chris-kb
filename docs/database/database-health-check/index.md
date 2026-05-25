@@ -2,7 +2,7 @@
 
 Verify database availability, connectivity, replication status, and resource utilization across common platforms.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────┐
 │                      DB Health Dashboard                         │
 ├──────────────┬───────────────┬────────────────┬──────────────────┤

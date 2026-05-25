@@ -1,6 +1,6 @@
 # DHCP Leases
 
-```
+```text
         LEASE LIFECYCLE AND RENEWAL TIMERS
 ┌──────────────────────────────────────────────────────────────┐
 │  Lease duration: 8 days (example)                            │

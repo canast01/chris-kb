@@ -4,7 +4,7 @@ This KB is built for practical infrastructure work.
 
 Use it when you need quick notes, runbooks, checks, standards, commands, or troubleshooting paths.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────┐
 │                      KB Navigation                                  │
 └────────────────────────────────┬────────────────────────────────────┘

@@ -2,7 +2,7 @@
 
 VxRail upgrades include VMware software, Dell firmware, drivers, and VxRail-specific lifecycle validation. Use VxRail Manager and the approved upgrade bundle — do not treat a VxRail upgrade like a standard ESXi upgrade.
 
-```
+```text
 VxRail Upgrade Sequence
 ┌─────────────────────────────────────────────────────────────┐
 │  Phase 1: Plan          Phase 2: Pre-checks                 │
@@ -119,7 +119,7 @@ Collect before starting:
 
 Save with standard name:
 
-```
+```text
 vxrail-support-bundle-CLUSTERNAME-YYYY-MM-DD.zip
 ```
 

@@ -1,6 +1,6 @@
 # Aria Automation — Health Checks
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │         Aria Automation Health Check Stack                  │
 ├─────────────────────────────────────────────────────────────┤
@@ -40,7 +40,7 @@
 
 All vCenter and NSX cloud accounts must show a green status indicator:
 
-```
+```text
 Infrastructure → Connections → Cloud Accounts
 ```
 
@@ -80,7 +80,7 @@ kubectl describe pod -n prelude <pod-name>
 
 ### Review Deployment Event Log
 
-```
+```text
 Deployments → All Deployments → filter by "Failed" status
 ```
 
@@ -101,7 +101,7 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 
 Review and action approval requests older than 5 business days:
 
-```
+```text
 Catalog → Deployments → Pending Approvals
 ```
 
@@ -113,7 +113,7 @@ Escalate stale requests (user not responding) or reject if the requester has lef
 
 Check whether any projects are approaching their VM or CPU/memory quota limits:
 
-```
+```text
 Infrastructure → Administration → Projects → select project → Quota
 ```
 
@@ -123,7 +123,7 @@ Projects at >80% quota will start failing new deployments without a clear error 
 
 ### Deployment Lease Expiry
 
-```
+```text
 Deployments → All Deployments → filter by lease expiry in next 7 days
 ```
 

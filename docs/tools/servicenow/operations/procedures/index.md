@@ -6,7 +6,7 @@ Incident lifecycle, SLA management, assignment rules, and escalation procedures.
 
 ## Incident Lifecycle
 
-```
+```yaml
 New → In Progress → On Hold → Resolved → Closed
 
 New:         Ticket created; not yet assigned or acknowledged
@@ -151,7 +151,7 @@ Change request workflow, change types (normal, standard, emergency), and CAB pro
 
 Key fields to populate when raising a change:
 
-```
+```yaml
 Category:         Infrastructure / Application / Network / Security
 Risk:             Low / Medium / High / Critical
 Impact:           1 (Enterprise) to 4 (Minimal)
@@ -186,7 +186,7 @@ curl -u user:token \
 
 ## Normal Change Workflow
 
-```
+```yaml
 Draft → Assess → Authorize → Scheduled → Implement → Review → Closed
 
 Draft:      Requester fills in all fields and attachments
@@ -264,7 +264,7 @@ Service catalog, request items, approval workflows, and fulfillment tracking.
 
 The Service Catalog is the self-service portal where users submit requests for IT services.
 
-```
+```text
 Structure:
   Service Catalog
   └── Category (e.g., Infrastructure, Access, Software)
@@ -431,7 +431,7 @@ curl -u user:token -X PATCH \
 
 Good work notes make handoffs seamless and post-incident reviews accurate.
 
-```
+```bash
 # Good work note format
 [14:35 UTC] Checked nginx access logs — confirmed 503s starting 14:28 UTC
 [14:40 UTC] Correlated with deployment at 14:25 UTC by @jsmith

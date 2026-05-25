@@ -2,7 +2,7 @@
 
 Verify version compatibility across the full VMware stack before any upgrade. Upgrading out of order or with incompatible versions causes silent failures and unsupported configurations.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                     Compatibility Check Matrix                           │
 ├─────────────────────────┬────────────────────────────────────────────────┤

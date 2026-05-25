@@ -1,6 +1,6 @@
 # InsightIQ: Scheduled Reports, CSV Export, and SLA Reporting
 
-```
+```text
 Scheduled Reports — InsightIQ
 ┌─────────────────────────────────────────┐
 │  Report template configured             │

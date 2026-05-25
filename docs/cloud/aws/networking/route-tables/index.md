@@ -3,7 +3,7 @@
 
 AWS Route Tables notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  Route Table Entries                    │
 │                                                         │

@@ -3,7 +3,7 @@
 
 AWS Health notes for day-to-day infrastructure operations.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  AWS Health Overview                    │
 │                                                         │

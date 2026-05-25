@@ -40,7 +40,7 @@ Register the ONTAP cluster in Veeam under Storage Infrastructure using the clust
 
 ONTAP exposes a full RESTful API available at:
 
-```
+```text
 https://<cluster-mgmt-lif>/api
 ```
 

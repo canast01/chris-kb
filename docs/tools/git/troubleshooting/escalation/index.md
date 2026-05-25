@@ -68,7 +68,7 @@ Escalate to L2 immediately (skip L1 timer) for:
 
 Open tickets at: **https://support.github.com/contact**
 
-```
+```yaml
 Subject: [P1] GHES 3.13 — Gitaly service unavailable, all git operations failing
 
 Environment:
@@ -117,7 +117,7 @@ Release scheduled for 17:00 UTC today is at risk.
 
 Open tickets at: **https://support.gitlab.com** (requires valid license)
 
-```
+```yaml
 Subject: [P1] GitLab 17.0 — Repository corruption detected on 3 projects
 
 License: EE Ultimate — License ID: xxxxx

@@ -4,7 +4,7 @@
 Network security knowledge base covering firewalls, VPN, rule validation, and network access control.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                      Network Security Zones                          │
 │                                                                      │

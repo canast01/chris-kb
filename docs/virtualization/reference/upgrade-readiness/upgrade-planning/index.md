@@ -2,7 +2,7 @@
 
 Upgrade planning should start before the maintenance window.
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                   Upgrade Planning Checklist                             │
 ├──────────────────────────┬───────────────────────────────────────────────┤

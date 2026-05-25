@@ -1,6 +1,6 @@
 # FlashArray — Integrations
 
-```
+```text
 FlashArray Integration Map
 ┌──────────────────────────────────────────────────────────────┐
 │                        FlashArray                            │

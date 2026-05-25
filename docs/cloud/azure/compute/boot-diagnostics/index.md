@@ -140,7 +140,7 @@ az vm get-instance-view \
 
 On Windows VMs, the Serial Console connects to the Special Administration Console.
 
-```
+```bash
 # In SAC, type the following to open a command prompt channel:
 cmd
 

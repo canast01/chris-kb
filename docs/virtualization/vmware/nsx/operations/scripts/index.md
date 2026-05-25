@@ -1,6 +1,6 @@
 # NSX — Scripts
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │              NSX Automation: Script → REST API → Result     │
 ├─────────────────────────────────────────────────────────────┤
@@ -168,14 +168,14 @@ Windows key → type `cmd` → press Enter
 
 **Step 4 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 python nsxt_health_check.py
 ```
 
 **What you should see**
 
-```
+```text
 === NSX-T System Health Check: 192.168.1.200 ===
 
   [PASS] Management cluster                             STABLE
@@ -331,14 +331,14 @@ Windows key → type `cmd` → press Enter
 
 **Step 4 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 python nsxt_transport_node_monitor.py
 ```
 
 **What you should see**
 
-```
+```text
 === NSX-T Transport Node Status Monitor: 192.168.1.200 ===
 Transport nodes found: 8
 
@@ -471,7 +471,7 @@ NSX_HOST="192.168.1.200" NSX_USER="admin" NSX_PASS="YourPassword" ~/nsxt_dfw_aud
 
 **What you should see**
 
-```
+```text
 === NSX-T DFW Rule Audit ===
 Manager: 192.168.1.200
 2026-05-06T14:30:00Z
@@ -628,14 +628,14 @@ Windows key → type `cmd` → press Enter
 
 **Step 4 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 python nsxt_gateway_health.py
 ```
 
 **What you should see**
 
-```
+```text
 === NSX-T Segment and Gateway Health: 192.168.1.200 ===
 
 --- Segments ---
@@ -982,20 +982,20 @@ Windows key → type `PowerShell` → right-click → **Run as Administrator**
 
 **Step 4 — Allow scripts to run (one-time per session)**
 
-```
+```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 **Step 5 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 .\nsxt_rest_health.ps1
 ```
 
 **What you should see**
 
-```
+```yaml
 === NSX-T Manager Health Check: 192.168.1.200 ===
 (2026-05-06 14:30:22)
 
@@ -1077,7 +1077,7 @@ echo === NSX-T check complete ===
 
 **Step 1 — Accept the SSH fingerprint (one-time setup)**
 
-```
+```text
 "C:\Program Files\PuTTY\plink.exe" -ssh admin@192.168.1.200
 ```
 
@@ -1101,7 +1101,7 @@ When asked "Store key in cache?", type `y` and press Enter. Once connected, pres
 
 **Step 4 — Run it**
 
-```
+```bash
 cd C:\Users\YourName\Desktop
 nsxt_plink_check.bat
 ```

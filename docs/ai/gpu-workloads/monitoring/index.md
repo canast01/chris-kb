@@ -77,7 +77,7 @@ scrape_configs:
 
 Key DCGM Prometheus metrics:
 
-```
+```text
 DCGM_FI_DEV_GPU_UTIL           # GPU utilisation %
 DCGM_FI_DEV_MEM_COPY_UTIL      # Memory bandwidth utilisation %
 DCGM_FI_DEV_FB_USED            # Framebuffer memory used (MiB)

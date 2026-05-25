@@ -1,6 +1,6 @@
 # vSphere Replication — CLI Reference
 
-```
+```text
   VR CLI and API Access
 ┌──────────────────────────────────────────────────────────────┐
 │  VRA Appliance SSH                                           │
@@ -138,7 +138,7 @@ vmkping -I vmk1 vra-amsterdam.example.local
 
 When you need a VM to sync immediately regardless of scheduled interval:
 
-```
+```text
 vCenter → Site Recovery → Replications → [VM] → Sync Now
 ```
 

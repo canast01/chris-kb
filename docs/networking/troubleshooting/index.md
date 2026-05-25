@@ -4,7 +4,7 @@
 Network troubleshooting knowledge base covering connectivity testing, packet loss diagnosis, path tracing, and reachability validation.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                     Network Triage Flowchart                         │
 │                                                                      │

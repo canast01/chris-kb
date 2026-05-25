@@ -60,7 +60,7 @@ GPU compute for AI/ML workloads runs on the NVIDIA CUDA platform (driver, CUDA t
 
 ### VRAM Sizing Formula
 
-```
+```text
 VRAM required ≈ (parameters × bytes_per_param) ÷ 0.85
 
 Bytes per parameter:

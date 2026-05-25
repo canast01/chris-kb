@@ -3,7 +3,7 @@
 
 VxRail Manager service status, UI access, alerts, and management plane checks.
 
-```
+```text
   ┌──────────────────────────────────────────────────────┐
   │          VxRail Manager Service Health               │
   │                                                      │

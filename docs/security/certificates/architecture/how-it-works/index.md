@@ -102,7 +102,7 @@ Restart-Service CertSvc
 
 Auto-enrollment automatically issues and renews certificates to domain members without user interaction.
 
-```
+```yaml
 GPO Path: Computer Configuration > Windows Settings > Security Settings >
           Public Key Policies > Certificate Services Client - Auto-Enrollment
 

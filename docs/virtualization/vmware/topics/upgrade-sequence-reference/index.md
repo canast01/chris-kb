@@ -1,6 +1,6 @@
 # Upgrade Sequence Reference
 
-```
+```text
 ┌──────────── VMware Component Upgrade Order ────────────────────────────────────┐
 │                                                                                 │
 │  1. Aria Suite Lifecycle (LCM)  ◄── always first if LCM is used                │
@@ -32,7 +32,7 @@
 
 Upgrading VMware components in the wrong order causes compatibility failures, plugin breakage, and in worst cases requires rollback. Always follow this sequence:
 
-```
+```text
 1. Aria Suite Lifecycle (LCM)        ← Always first if LCM is used
 2. Workspace ONE Access (VIDM)       ← Must precede Aria product upgrades
 3. vCenter Server                    ← Must precede ESXi upgrades
@@ -61,7 +61,7 @@ Upgrading VMware components in the wrong order causes compatibility failures, pl
 
 In a VCF environment, SDDC Manager controls the upgrade sequence — do not manually upgrade components:
 
-```
+```text
 1. SDDC Manager        ← Upgrade via SDDC Manager UI
 2. VCF bundles downloaded
 3. vCenter (orchestrated by SDDC Manager)

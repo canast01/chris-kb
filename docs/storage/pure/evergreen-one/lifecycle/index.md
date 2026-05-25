@@ -1,6 +1,6 @@
 # Pure Storage Evergreen//One Lifecycle
 
-```
+```text
   Contract Lifecycle
   ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐
   │ Contract │──►│Provision │──►│ Operate  │──►│  Renew / │

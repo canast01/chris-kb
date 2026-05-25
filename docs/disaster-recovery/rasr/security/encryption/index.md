@@ -56,7 +56,7 @@ uemcli /sys/security/keymanage/kmip create \
 
 Using an external KMIP-compliant KMS (such as Thales CipherTrust or HashiCorp Vault Enterprise) separates encryption keys from the storage array.
 
-```
+```yaml
 KMIP integration requirements:
 - KMS must be highly available (cluster of 2+ nodes)
 - Mutual TLS authentication between array and KMS

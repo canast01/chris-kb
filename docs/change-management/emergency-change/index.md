@@ -2,7 +2,7 @@
 
 Emergency changes bypass the standard CAB cycle to address active outages or critical security incidents. All approvals and documentation occur during or immediately after implementation.
 
-```
+```text
 ┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
 │ Detect Incident  │   │ Emergency CAB    │   │   Implement      │   │  Post-Review    │
 │                  │   │ Approval         │   │                  │   │                 │
@@ -48,7 +48,7 @@ Emergency changes bypass the standard CAB cycle to address active outages or cri
 
 ## Implementation
 
-```
+```text
 1. Start implementation timer (log in ticket)
 2. Apply fix / change
 3. Validate recovery (service health, smoke tests)

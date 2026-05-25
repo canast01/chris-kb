@@ -1,6 +1,6 @@
 # VPC & Networking
 
-```
+```text
 VPC CLI: Network Resource Hierarchy
 ──────────────────────────────────────────────────────────────
 

@@ -29,7 +29,7 @@ Never invent verbs like `Check-`, `Validate-`, `Process-`, or `Run-`. Use `Test-
 
 ## Module Structure
 
-```
+```text
 MyModule/
 ├── MyModule.psd1           # Manifest (required)
 ├── MyModule.psm1           # Root module: loads Public + Private

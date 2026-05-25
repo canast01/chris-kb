@@ -1,6 +1,6 @@
 # Tanzu — Encryption
 
-```
+```text
 ┌────────────────── Tanzu Encryption Layers ─────────────────────────────────────┐
 │                                                                                 │
 │  Data at Rest                                                                   │
@@ -97,7 +97,7 @@ EOF
 
 Apply an encrypted storage policy to protect PV data at rest:
 
-```
+```text
 vCenter → Policies and Profiles → VM Storage Policies → Create
   Policy Name: vsan-encrypted
   Component: Encryption → Enable Encryption

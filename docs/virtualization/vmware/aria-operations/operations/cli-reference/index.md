@@ -1,6 +1,6 @@
 # Aria Operations — CLI Reference
 
-```
+```text
 Aria Operations — CLI Command Reference Map
 ┌─────────────────────────────────────────────────────┐
 │  SSH: admin@<aria-ops-primary-fqdn>                 │
