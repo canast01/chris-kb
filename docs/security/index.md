@@ -24,6 +24,13 @@
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
+## Shared Reference
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="ldap-integration/"><strong>Standard LDAP Integration</strong><span>Canonical LDAP/AD field reference, service account standards, TLS requirements, connectivity testing, and common issues.</span></a>
+<a class="kb-card" href="saml-configuration/"><strong>Standard SAML Configuration</strong><span>SAML 2.0 SSO reference: SP/IdP setup, Azure AD and Okta steps, attribute mapping, security requirements, and troubleshooting.</span></a>
+</div>
+
 ## Platforms
 
 <div class="kb-grid kb-grid-3">
