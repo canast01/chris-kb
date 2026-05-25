@@ -85,7 +85,7 @@ Runbook Selection Flow
   <span>Triage failed or missed VM backups — Veeam job errors, repository issues, and snapshot cleanup.</span>
 </a>
 
-<a class="kb-card" href="vCenter-outage/">
+<a class="kb-card" href="vcenter-outage/">
   <strong>vCenter Outage</strong>
   <span>Triage vCenter unavailability — VCSA services, VCHA failover, and host connectivity in standalone mode.</span>
 </a>

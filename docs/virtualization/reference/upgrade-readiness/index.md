@@ -51,12 +51,12 @@ Upgrade planning, pre-checks, rollback planning, and post-upgrade validation.
 </a>
 
 
-<a class="kb-card" href="NSX-upgrade/">
+<a class="kb-card" href="nsx-upgrade/">
   <strong>NSX Upgrade</strong>
   <span>NSX Manager and edge node upgrade sequence, pre-checks, and validation steps.</span>
 </a>
 
-<a class="kb-card" href="vCenter-upgrade/">
+<a class="kb-card" href="vcenter-upgrade/">
   <strong>vCenter Upgrade</strong>
   <span>vCenter VCSA upgrade procedure, pre-backup, SSH steps, and post-upgrade checks.</span>
 </a>
