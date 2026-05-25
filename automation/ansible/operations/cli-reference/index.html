@@ -3791,28 +3791,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#playbook-execution-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Playbook Execution Flow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#role-directory-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Role Directory Structure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#ansible-ad-hoc" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4081,7 +4059,7 @@
 <p>Install with <code>pip install ansible</code> or your distro's package manager. Requires SSH access to managed hosts and a valid inventory file.</p>
 </blockquote>
 <h2 id="control-node-and-inventory-topology">Control Node and Inventory Topology<a class="headerlink" href="#control-node-and-inventory-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
+<p><pre class="mermaid"><code>graph TD
     controlNode["Control Node\n(ansible + python)"]
     inventoryFile["Inventory\n(INI / YAML / Dynamic)"]
     vaultSecrets["Vault Secrets\n(ansible-vault)"]
@@ -4100,218 +4078,241 @@
     groupDB --&gt;|SSH| db01["db01"]
     groupDB --&gt;|SSH| db02["db02"]
     groupNet --&gt;|SSH| router01["router01"]</code></pre>
-<h2 id="playbook-execution-flow">Playbook Execution Flow<a class="headerlink" href="#playbook-execution-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    parseInv["Parse Inventory"] --&gt; gatherFacts["Gather Facts"]
-    gatherFacts --&gt; preTasks["pre_tasks"]
-    preTasks --&gt; taskLoop["Task Loop\n(loop / when / register)"]
-    taskLoop --&gt; runModule["Run Module\non managed host"]
-    runModule --&gt; notifyHandler["notify:\nHandler"]
-    notifyHandler --&gt; postTasks["post_tasks"]
-    postTasks --&gt; flushHandlers["Flush Handlers\n(run once)"]
-    flushHandlers --&gt; report["Play Recap\n(ok / changed / failed)"]</code></pre>
-<h2 id="role-directory-structure">Role Directory Structure<a class="headerlink" href="#role-directory-structure" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    role["roles/nginx/"]
-    role --&gt; tasks["tasks/\n  main.yml"]
-    role --&gt; handlers["handlers/\n  main.yml"]
-    role --&gt; templates["templates/\n  nginx.conf.j2"]
-    role --&gt; files["files/\n  index.html"]
-    role --&gt; vars["vars/\n  main.yml (high priority)"]
-    role --&gt; defaults["defaults/\n  main.yml (overridable)"]
-    role --&gt; meta["meta/\n  main.yml (deps)"]
-    role --&gt; readme["README.md"]</code></pre>
+┌─────────────────────────────────────── Ansible — CLI Reference ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Ansible CLI tools: ansible, ansible-playbook, ansible-inventory, ansible-vault, ansible-galaxy│   │
+│   │            ansible-playbook: primary command; runs a playbook against an inventory            │   │
+│   │     Common flags: -i (inventory), -l (limit), --tags, --check, --diff, -v/-vvv (verbosity)    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               ansible-playbook               │  │               ansible (ad-hoc)              │   │
+│   │          ansible-playbook site.yml           │  │             ansible all -m ping             │   │
+│   │              -i inventories/prod/            │  │        ansible web -m shell -a uptime       │   │
+│   │          -l webservers --tags deploy         │  │             ansible db -m setup             │   │
+│   │                 --check --diff               │  │           ansible all -m reboot -b          │   │
+│   │               -e "version=1.2.3"             │  │               -b = become (sudo)            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                ansible-vault                 │  │                ansible-galaxy               │   │
+│   │        ansible-vault encrypt vars.yml        │  │        ansible-galaxy install <role>        │   │
+│   │        ansible-vault decrypt vars.yml        │  │      ansible-galaxy collection install      │   │
+│   │         ansible-vault rekey vars.yml         │  │             ansible-galaxy list             │   │
+│   │         ansible-vault view vars.yml          │  │       requirements.yml for pinned deps      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     -v / -vvv   = verbosity levels; -vvv shows module args and return values for debugging    │   │
+│   │      --limit / -l= restrict to matching hosts or groups; supports patterns: web[1:3], !db     │   │
+│   │    --extra-vars = -e "key=value"; highest precedence; override any inventory/role variable    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Role Directory Structure
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```mermaid
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>graph TD
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    role[&quot;roles/nginx/&quot;]
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    role --&gt; tasks[&quot;tasks/\n  main.yml&quot;]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    role --&gt; handlers[&quot;handlers/\n  main.yml&quot;]
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    role --&gt; templates[&quot;templates/\n  nginx.conf.j2&quot;]
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    role --&gt; files[&quot;files/\n  index.html&quot;]
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    role --&gt; vars[&quot;vars/\n  main.yml (high priority)&quot;]
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    role --&gt; defaults[&quot;defaults/\n  main.yml (overridable)&quot;]
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    role --&gt; meta[&quot;meta/\n  main.yml (deps)&quot;]
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    role --&gt; readme[&quot;README.md&quot;]
+</code></pre></div></p>
 <hr />
 <h2 id="ansible-ad-hoc">ansible (Ad-Hoc)<a class="headerlink" href="#ansible-ad-hoc" title="Permanent link">&para;</a></h2>
 <p>Run a single module directly against hosts without writing a playbook. Useful for quick checks, one-off operations, and testing connectivity before running a full playbook.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Ping all hosts</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>ping
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Run shell command</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>shell<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;uptime&quot;</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span><span class="nb">command</span><span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;hostname&quot;</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Copy a file</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>copy<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;src=file.txt dest=/tmp/file.txt&quot;</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Install package</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>package<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;name=curl state=present&quot;</span><span class="w"> </span>--become
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Gather facts</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>setup
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>setup<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;filter=ansible_distribution*&quot;</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Target specific groups or hosts</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>ansible<span class="w"> </span>webservers<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>ping
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>ansible<span class="w"> </span><span class="s1">&#39;web*&#39;</span><span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>ping<span class="w">         </span><span class="c1"># wildcard host pattern</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>ansible<span class="w"> </span><span class="s1">&#39;all:!db&#39;</span><span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>ping<span class="w">      </span><span class="c1"># all except db group</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Ping all hosts</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>ping
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Run shell command</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>shell<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;uptime&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span><span class="nb">command</span><span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;hostname&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Copy a file</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>copy<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;src=file.txt dest=/tmp/file.txt&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Install package</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>package<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;name=curl state=present&quot;</span><span class="w"> </span>--become
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Gather facts</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>setup
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>setup<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;filter=ansible_distribution*&quot;</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Target specific groups or hosts</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>ansible<span class="w"> </span>webservers<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>ping
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>ansible<span class="w"> </span><span class="s1">&#39;web*&#39;</span><span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>ping<span class="w">         </span><span class="c1"># wildcard host pattern</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>ansible<span class="w"> </span><span class="s1">&#39;all:!db&#39;</span><span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>-m<span class="w"> </span>ping<span class="w">      </span><span class="c1"># all except db group</span>
 </code></pre></div>
 <hr />
 <h2 id="ansible-playbook">ansible-playbook<a class="headerlink" href="#ansible-playbook" title="Permanent link">&para;</a></h2>
 <p>Run a playbook against an inventory. Playbooks are YAML files that define a sequence of tasks. Use check mode to preview changes before applying them.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Run a playbook</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ansible-playbook<span class="w"> </span>playbook.yml
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>playbook.yml
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Dry run (check mode)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--check
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--check<span class="w"> </span>--diff
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Limit to specific hosts / groups</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--limit<span class="w"> </span>webservers
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--limit<span class="w"> </span>host1,host2
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Extra variables</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;env=prod&quot;</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;@vars.yml&quot;</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Tags</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--tags<span class="w"> </span>deploy
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--skip-tags<span class="w"> </span>cleanup
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--list-tags
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Step through tasks</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--step
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--start-at-task<span class="w"> </span><span class="s2">&quot;task name&quot;</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1"># Verbosity</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>-v
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>-vvv
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1"># Become / privilege escalation</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--become
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--become-user<span class="w"> </span>root
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="c1"># List tasks / hosts</span>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--list-tasks
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--list-hosts
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Run a playbook</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ansible-playbook<span class="w"> </span>playbook.yml
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>playbook.yml
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Dry run (check mode)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--check
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--check<span class="w"> </span>--diff
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Limit to specific hosts / groups</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--limit<span class="w"> </span>webservers
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--limit<span class="w"> </span>host1,host2
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Extra variables</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;env=prod&quot;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;@vars.yml&quot;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Tags</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--tags<span class="w"> </span>deploy
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--skip-tags<span class="w"> </span>cleanup
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--list-tags
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># Step through tasks</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--step
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--start-at-task<span class="w"> </span><span class="s2">&quot;task name&quot;</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1"># Verbosity</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>-v
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>-vvv
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="c1"># Become / privilege escalation</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--become
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--become-user<span class="w"> </span>root
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="c1"># List tasks / hosts</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--list-tasks
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--list-hosts
 </code></pre></div>
 <hr />
 <h2 id="ansible-inventory">ansible-inventory<a class="headerlink" href="#ansible-inventory" title="Permanent link">&para;</a></h2>
 <p>Inspect your inventory — list all hosts, view group membership, and show variables assigned to specific hosts. Essential for debugging inventory plugin configurations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all hosts and groups in JSON</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ansible-inventory<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>--list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Tree view of groups and hosts</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ansible-inventory<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>--graph
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Show all variables for a specific host</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ansible-inventory<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>--host<span class="w"> </span>&lt;hostname&gt;
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># YAML output (easier to read than JSON)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>ansible-inventory<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>--list<span class="w"> </span>--yaml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all hosts and groups in JSON</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ansible-inventory<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>--list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Tree view of groups and hosts</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ansible-inventory<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>--graph
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Show all variables for a specific host</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ansible-inventory<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>--host<span class="w"> </span>&lt;hostname&gt;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># YAML output (easier to read than JSON)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ansible-inventory<span class="w"> </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span>--list<span class="w"> </span>--yaml
 </code></pre></div>
 <hr />
 <h2 id="ansible-galaxy">ansible-galaxy<a class="headerlink" href="#ansible-galaxy" title="Permanent link">&para;</a></h2>
 <p>Install and manage roles and collections from Ansible Galaxy (the community hub) or private Automation Hub.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Install role</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ansible-galaxy<span class="w"> </span>install<span class="w"> </span>&lt;author&gt;.&lt;role&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ansible-galaxy<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Install collection</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>&lt;namespace&gt;.&lt;collection&gt;
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># List installed roles / collections</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>ansible-galaxy<span class="w"> </span>list
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>list
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Init new role</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>ansible-galaxy<span class="w"> </span>init<span class="w"> </span>&lt;role_name&gt;
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Search</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>ansible-galaxy<span class="w"> </span>search<span class="w"> </span>&lt;keyword&gt;
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>ansible-galaxy<span class="w"> </span>role<span class="w"> </span>info<span class="w"> </span>&lt;author&gt;.&lt;role&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Install role</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ansible-galaxy<span class="w"> </span>install<span class="w"> </span>&lt;author&gt;.&lt;role&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ansible-galaxy<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Install collection</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>&lt;namespace&gt;.&lt;collection&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># List installed roles / collections</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>ansible-galaxy<span class="w"> </span>list
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>list
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Init new role</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>ansible-galaxy<span class="w"> </span>init<span class="w"> </span>&lt;role_name&gt;
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Search</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>ansible-galaxy<span class="w"> </span>search<span class="w"> </span>&lt;keyword&gt;
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>ansible-galaxy<span class="w"> </span>role<span class="w"> </span>info<span class="w"> </span>&lt;author&gt;.&lt;role&gt;
 </code></pre></div>
 <hr />
 <h2 id="ansible-vault">ansible-vault<a class="headerlink" href="#ansible-vault" title="Permanent link">&para;</a></h2>
 <p>Encrypt sensitive data (passwords, API keys, certificates) in playbooks and variable files. Vault-encrypted content can be stored safely in version control.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create encrypted file</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ansible-vault<span class="w"> </span>create<span class="w"> </span>secrets.yml
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Encrypt existing file</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ansible-vault<span class="w"> </span>encrypt<span class="w"> </span>secrets.yml
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Decrypt</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>ansible-vault<span class="w"> </span>decrypt<span class="w"> </span>secrets.yml
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># View without decrypting to disk</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ansible-vault<span class="w"> </span>view<span class="w"> </span>secrets.yml
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Edit in place</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>ansible-vault<span class="w"> </span>edit<span class="w"> </span>secrets.yml
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Encrypt a string inline</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>ansible-vault<span class="w"> </span>encrypt_string<span class="w"> </span><span class="s1">&#39;mysecret&#39;</span><span class="w"> </span>--name<span class="w"> </span><span class="s1">&#39;db_password&#39;</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Rekey (change password)</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>ansible-vault<span class="w"> </span>rekey<span class="w"> </span>secrets.yml
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># Run playbook with vault</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--ask-vault-pass
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--vault-password-file<span class="w"> </span>~/.vault_pass
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Create encrypted file</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ansible-vault<span class="w"> </span>create<span class="w"> </span>secrets.yml
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Encrypt existing file</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ansible-vault<span class="w"> </span>encrypt<span class="w"> </span>secrets.yml
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Decrypt</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ansible-vault<span class="w"> </span>decrypt<span class="w"> </span>secrets.yml
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># View without decrypting to disk</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ansible-vault<span class="w"> </span>view<span class="w"> </span>secrets.yml
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Edit in place</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ansible-vault<span class="w"> </span>edit<span class="w"> </span>secrets.yml
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Encrypt a string inline</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>ansible-vault<span class="w"> </span>encrypt_string<span class="w"> </span><span class="s1">&#39;mysecret&#39;</span><span class="w"> </span>--name<span class="w"> </span><span class="s1">&#39;db_password&#39;</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Rekey (change password)</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>ansible-vault<span class="w"> </span>rekey<span class="w"> </span>secrets.yml
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># Run playbook with vault</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--ask-vault-pass
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--vault-password-file<span class="w"> </span>~/.vault_pass
 </code></pre></div>
 <hr />
 <h2 id="tools-lint-config">Tools, Lint &amp; Config<a class="headerlink" href="#tools-lint-config" title="Permanent link">&para;</a></h2>
 <p>Supporting tools for code quality, documentation, and configuration inspection.</p>
 <h3 id="ansible-lint">ansible-lint<a class="headerlink" href="#ansible-lint" title="Permanent link">&para;</a></h3>
 <p>Checks playbooks and roles for best-practice violations and common mistakes. Run before committing playbook changes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Lint a playbook</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ansible-lint<span class="w"> </span>playbook.yml
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Lint a role</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ansible-lint<span class="w"> </span>roles/myrole/
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># List rules</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ansible-lint<span class="w"> </span>--list-rules
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Skip specific rules</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ansible-lint<span class="w"> </span>playbook.yml<span class="w"> </span>--skip-list<span class="w"> </span>rule-id-1,rule-id-2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Lint a playbook</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ansible-lint<span class="w"> </span>playbook.yml
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Lint a role</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ansible-lint<span class="w"> </span>roles/myrole/
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># List rules</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ansible-lint<span class="w"> </span>--list-rules
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Skip specific rules</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ansible-lint<span class="w"> </span>playbook.yml<span class="w"> </span>--skip-list<span class="w"> </span>rule-id-1,rule-id-2
 </code></pre></div>
 <h3 id="ansible-doc">ansible-doc<a class="headerlink" href="#ansible-doc" title="Permanent link">&para;</a></h3>
 <p>Browse built-in module documentation from the command line — no browser needed.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Show module documentation</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ansible-doc<span class="w"> </span>copy
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ansible-doc<span class="w"> </span>package
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ansible-doc<span class="w"> </span>yum
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># List all available modules</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>ansible-doc<span class="w"> </span>-l
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Filter by type</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>ansible-doc<span class="w"> </span>-t<span class="w"> </span>connection<span class="w"> </span>-l
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ansible-doc<span class="w"> </span>-t<span class="w"> </span>lookup<span class="w"> </span>-l
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Show module documentation</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ansible-doc<span class="w"> </span>copy
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ansible-doc<span class="w"> </span>package
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>ansible-doc<span class="w"> </span>yum
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># List all available modules</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>ansible-doc<span class="w"> </span>-l
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Filter by type</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>ansible-doc<span class="w"> </span>-t<span class="w"> </span>connection<span class="w"> </span>-l
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ansible-doc<span class="w"> </span>-t<span class="w"> </span>lookup<span class="w"> </span>-l
 </code></pre></div>
 <h3 id="ansible-config">ansible-config<a class="headerlink" href="#ansible-config" title="Permanent link">&para;</a></h3>
 <p>Inspect Ansible's effective configuration — useful when troubleshooting unexpected behavior.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Show current config</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ansible-config<span class="w"> </span>view
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ansible-config<span class="w"> </span>dump
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Show non-default settings</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>ansible-config<span class="w"> </span>dump<span class="w"> </span>--only-changed
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># List all config options</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>ansible-config<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Show current config</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ansible-config<span class="w"> </span>view
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ansible-config<span class="w"> </span>dump
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Show non-default settings</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>ansible-config<span class="w"> </span>dump<span class="w"> </span>--only-changed
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># List all config options</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>ansible-config<span class="w"> </span>list
 </code></pre></div>
 <h3 id="common-patterns">Common Patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Test connectivity before running</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ansible<span class="w"> </span>all<span class="w"> </span>-m<span class="w"> </span>ping<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ansible-playbook<span class="w"> </span>site.yml
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Run with SSH key</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--private-key<span class="w"> </span>~/.ssh/id_ed25519
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Use specific user</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>-u<span class="w"> </span>admin
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Parallel execution (default is 5 forks)</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>-f<span class="w"> </span><span class="m">20</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># CI/CD pattern</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span>--vault-password-file<span class="w"> </span>~/.vault_pass<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span>--check<span class="w"> </span>--diff
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Test connectivity before running</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ansible<span class="w"> </span>all<span class="w"> </span>-m<span class="w"> </span>ping<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ansible-playbook<span class="w"> </span>site.yml
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Run with SSH key</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>--private-key<span class="w"> </span>~/.ssh/id_ed25519
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Use specific user</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>-u<span class="w"> </span>admin
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Parallel execution (default is 5 forks)</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span>-f<span class="w"> </span><span class="m">20</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># CI/CD pattern</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>ansible-playbook<span class="w"> </span>playbook.yml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">  </span>-i<span class="w"> </span>inventory.ini<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">  </span>--vault-password-file<span class="w"> </span>~/.vault_pass<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">  </span>--check<span class="w"> </span>--diff
 </code></pre></div>
 
 

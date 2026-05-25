@@ -4149,28 +4149,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#backup-job-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backup Job Design
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ddb-deduplication-database-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DDB (Deduplication Database) Standards
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#vmware-vsphere-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4408,7 +4386,7 @@
 </table>
 <p>Configure via SLA Plans in Command Center (preferred for FR32+) or directly in Storage Policy (legacy).</p>
 <h3 id="capacity-planning-flow">Capacity Planning Flow<a class="headerlink" href="#capacity-planning-flow" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     input(["Input: source data size\n+ daily change rate"])
     input --&gt; calcFull["Calculate full backup size\n= source × (1 / dedup ratio)"]
     calcFull --&gt; calcDaily["Calculate daily incremental\n= source × change rate\n× (1 / dedup ratio)"]
@@ -4422,48 +4400,63 @@
     classDef terminal fill:#15803d,stroke:#166534,color:#fff
     class calcFull,calcDaily,calcRetention,calcPrimary,calcSecondary,ddbSize,alert action
     class input terminal</code></pre>
-<h2 id="backup-job-design">Backup Job Design<a class="headerlink" href="#backup-job-design" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Each Storage Policy must have:</li>
-<li>A primary copy (performance tier disk with dedup)</li>
-<li>A secondary copy (off-site or cloud, separate schedule) in the same policy</li>
-<li>Do not rely on manual auxiliary copy jobs — secondary copies should be scheduled automatically</li>
-<li>Synthetic full schedule recommended weekly (no additional storage reads from client)</li>
-</ul>
-<h2 id="ddb-deduplication-database-standards">DDB (Deduplication Database) Standards<a class="headerlink" href="#ddb-deduplication-database-standards" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Standard</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DDB storage</td>
-<td>Dedicated SSD LUN — never share with OS or backup data</td>
-</tr>
-<tr>
-<td>DDB free space</td>
-<td>Minimum 20% free at all times; alert at 30%</td>
-</tr>
-<tr>
-<td>Single DDB capacity</td>
-<td>Maximum 60TB deduped data per DDB</td>
-</tr>
-<tr>
-<td>DDB backup</td>
-<td>Daily via CommServe backup job</td>
-</tr>
-<tr>
-<td>DDB validation</td>
-<td>Monthly integrity check via DDB Verification job</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check DDB utilisation</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">qoperation</span> <span class="n">execute</span> <span class="n">-af</span> <span class="n">ListDDB</span><span class="p">.</span><span class="n">xml</span>
-</code></pre></div>
+┌────────────────────────── Commvault Design Standards — Sizing and Topology ───────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Design Principles                                       │   │
+│   │                 Separate CommServe and MediaAgent roles onto dedicated servers                │   │
+│   │         Place MediaAgents close to data sources (same site/rack) to reduce WAN traffic        │   │
+│   │         Size DDB on fast local NVMe: 1 GB DDB per 1 TB source data (post-dedup ratio)         │   │
+│   │           Minimum 2 MA per site for redundancy; use MA groups for automatic failover          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Component sizing drives performance; under-sized MA is the most common bottleneck                  │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               CommServe Sizing               │  │              MediaAgent Sizing              │   │
+│   │          CPU: 8-16 vCPU (SQL-heavy)          │  │        CPU: 16-32 vCPU for throughput       │   │
+│   │      RAM: 32-64 GB for large CommCells       │  │          RAM: 16-32 GB + DDB cache          │   │
+│   │          SQL: NVMe RAID-10 for CSDB          │  │       DDB: NVMe SSD, separate from OS       │   │
+│   │       NIC: 10 GbE for GUI/CLI traffic        │  │         NIC: 25 GbE for data streams        │   │
+│   │         OS: Windows Server 2019/2022         │  │         OS: Windows or Linux (RHEL)         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Storage policy design directly impacts restore time and dedup efficiency                           │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Storage Design    │       Retention       │        Network        │        HA / DR        │   │
+│   │   Primary: fast disk  │     Daily: 30 days    │      Backup VLAN      │      DR CommServe     │   │
+│   │ Secondary: tape/cloud │    Weekly: 12 weeks   │     10/25 GbE NIC     │    SQL log shipping   │   │
+│   │  Dedup ratio 5:1-20:1 │   Monthly: 12 months  │     QoS throttling    │    CommCell DR site   │   │
+│   │  WORM for compliance  │     Yearly archive    │     Firewall proxy    │      RPO &lt; 1 hour     │   │
+│   │  Cloud tier: S3/Blob  │    Legal hold caps    │    Bandwidth limits   │     RTO &lt; 4 hours     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  CommServe: physical server preferred; avoid shared VMs for production CommCells                      │
+│  DDB drives: enterprise NVMe (Samsung PM9A3 / Intel P4510); avoid SAS/SATA for DDB                    │
+│  Backup network: dedicated 10/25 GbE switch; separate from production VLAN                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CommCell DR    = Passive CommServe replica at secondary site for CS failover                         │
+│  DDB Resync     = Process to rebuild DDB fingerprint index from library chunks                        │
+│  Storage Policy = Container linking subclients to libraries with retention and copy rules             │
+│  Dedup Ratio    = Ratio of source data size to post-dedup storage consumed                            │
+│  MA Group       = Named pool of MediaAgents for load balancing and failover                           │
+│  Primary Copy   = First storage policy copy; used for fast restores                                   │
+│  Secondary Copy = Aux-copy destination (tape or cloud) for long-term retention                        │
+│  WORM           = Write Once Read Many; immutable storage for compliance locks                        │
+│  RPO            = Recovery Point Objective; max acceptable data loss (time since last backup)         │
+│  RTO            = Recovery Time Objective; max acceptable time to complete restore                    │
+│  Bandwidth Cap  = Throttle on MA data transfer rate to protect production network                     │
+│  SQL Log Ship   = SQL Server log shipping replicating CSDB to DR CommServe                            │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h2 id="vmware-vsphere-standards">VMware vSphere Standards<a class="headerlink" href="#vmware-vsphere-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

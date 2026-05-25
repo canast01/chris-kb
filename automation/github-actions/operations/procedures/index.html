@@ -3792,17 +3792,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#reusable-workflows" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reusable Workflows
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#concurrency-control" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4239,7 +4228,7 @@
 </blockquote>
 <hr />
 <h2 id="workflows">Workflows<a class="headerlink" href="#workflows" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     trigger(["Trigger Event\npush / pull_request\nschedule / workflow_dispatch"])
     runner["Runner\nubuntu-24.04\nself-hosted"]
     jobA["Job: build\nCheckout → Install → Test → Build"]
@@ -4255,44 +4244,42 @@
     artifacts --&gt; jobC
     jobB --&gt;|"all matrix legs pass"| jobC
     jobC --&gt; deploy</code></pre>
-<p>Workflows live in <code>.github/workflows/</code> and are YAML files with a defined structure.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># .github/workflows/ci.yml</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CI Pipeline</span><span class="w">          </span><span class="c1"># displayed in the Actions UI</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">on</span><span class="p">:</span><span class="w">                        </span><span class="c1"># event triggers</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">push</span><span class="p">:</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
+┌───────────────────────────────────── GitHub Actions — Procedures ─────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Common GitHub Actions procedures: secret rotation, runner re-registration, workflow migration │   │
+│   │ Secret rotation: update secret value via gh CLI or UI; workflows pick up new value on next run│   │
+│   │       Runner re-registration: remove stale runner, generate new token, re-run config.sh       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Secret Rotation                │  │            Runner Re-registration           │   │
+│   │          1. Generate new credential          │  │            1. Stop runner service           │   │
+│   │        2. gh secret set NAME -b <val>        │  │               2. ./svc.sh stop              │   │
+│   │             3. Test workflow run             │  │        3. ./config.sh remove --token        │   │
+│   │           4. Revoke old credential           │  │        4. Get new registration token        │   │
+│   │          5. Document rotation date           │  │         5. ./config.sh --url --token        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Registration token = short-lived (1 hour) token from GitHub used to register a new runner   │   │
+│   │      Remove token       = token used to cleanly deregister a runner from GitHub settings      │   │
+│   │    Workflow migration  = copy YAML to new repo; re-inject secrets; test before retiring old   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Reusable Workflows
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```mermaid
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>flowchart LR
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    mainWf[&quot;main.yml\nCalling workflow&quot;]
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    reuseWf[&quot;reusable-deploy.yml\nworkflow_call trigger&quot;]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    stagingEnv[&quot;environment: staging\nDeploy secrets injected&quot;]
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    prodEnv[&quot;environment: production\nRequires reviewer approval&quot;]
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nt">env</span><span class="p">:</span><span class="w">                       </span><span class="c1"># workflow-level environment variables</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="nt">NODE_ENV</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nt">jobs</span><span class="p">:</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="nt">test</span><span class="p">:</span><span class="w">                    </span><span class="c1"># job ID (no spaces)</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Tests</span><span class="w">        </span><span class="c1"># display name</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-24.04</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="nt">env</span><span class="p">:</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">      </span><span class="nt">LOG_LEVEL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">debug</span><span class="w">     </span><span class="c1"># job-level env vars</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run tests</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">        </span><span class="nt">env</span><span class="p">:</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">          </span><span class="nt">CI</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">         </span><span class="c1"># step-level env vars</span>
-</code></pre></div>
-<h3 id="reusable-workflows">Reusable Workflows<a class="headerlink" href="#reusable-workflows" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart LR
-    mainWf["main.yml\nCalling workflow"]
-    reuseWf["reusable-deploy.yml\nworkflow_call trigger"]
-    stagingEnv["environment: staging\nDeploy secrets injected"]
-    prodEnv["environment: production\nRequires reviewer approval"]
-
-    mainWf --&gt;|"jobs.deploy-staging.uses\nwith: environment=staging"| reuseWf
-    mainWf --&gt;|"jobs.deploy-prod.uses\nwith: environment=production"| reuseWf
-    reuseWf --&gt; stagingEnv
-    reuseWf --&gt; prodEnv</code></pre>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    mainWf --&gt;|&quot;jobs.deploy-staging.uses\nwith: environment=staging&quot;| reuseWf
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    mainWf --&gt;|&quot;jobs.deploy-prod.uses\nwith: environment=production&quot;| reuseWf
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    reuseWf --&gt; stagingEnv
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    reuseWf --&gt; prodEnv
+</code></pre></div></p>
 <p>Reusable workflows reduce duplication by calling one workflow from another.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># .github/workflows/reusable-deploy.yml (called workflow)</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reusable Deploy</span>

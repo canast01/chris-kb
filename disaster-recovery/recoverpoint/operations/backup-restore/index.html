@@ -4328,112 +4328,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#accessing-a-specific-journal-point-image-access" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Accessing a Specific Journal Point (Image Access)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Accessing a Specific Journal Point (Image Access)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#image-access-read-only" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Image Access — Read-Only
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#image-access-writeable-virtual-access-test-copy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Image Access — Writeable (Virtual Access / Test Copy)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#failover-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Failover Procedure
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Failover Procedure">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pre-failover-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pre-Failover Checklist
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#performing-failover" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Performing Failover
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cli-failover" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CLI Failover
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#failback-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Failback Procedure
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Failback Procedure">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
   <a href="#failback-steps" class="md-nav__link">
     <span class="md-ellipsis">
@@ -4701,7 +4595,7 @@
 <li>Click <strong>OK</strong>.</li>
 </ol>
 <h3 id="via-cli-boxmgmt-rpsc">Via CLI (boxmgmt / rpsc)<a class="headerlink" href="#via-cli-boxmgmt-rpsc" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Connect to RecoverPoint appliance</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Connect to RecoverPoint appliance</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@rpa01.example.com
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List consistency groups</span>
@@ -4713,88 +4607,73 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List bookmarks for a CG</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>get_bookmarks<span class="w"> </span>--cg<span class="w"> </span><span class="s2">&quot;CG_PROD_SQL&quot;</span>
 </code></pre></div>
-<hr />
-<h2 id="accessing-a-specific-journal-point-image-access">Accessing a Specific Journal Point (Image Access)<a class="headerlink" href="#accessing-a-specific-journal-point-image-access" title="Permanent link">&para;</a></h2>
-<p>Image access mounts a historical journal point as a read-only (or writeable test copy) volume. The production replication continues unaffected.</p>
-<h3 id="image-access-read-only">Image Access — Read-Only<a class="headerlink" href="#image-access-read-only" title="Permanent link">&para;</a></h3>
-<p>Use to inspect data at a specific point in time, validate recovery content, or mount for testing.</p>
-<ol>
-<li><strong>Consistency Groups</strong> → select CG → <strong>Image Access</strong>.</li>
-<li>Select the access type: <strong>Logged Access</strong> (read-only).</li>
-<li>Choose the recovery point:</li>
-<li><strong>Latest Image</strong></li>
-<li><strong>By Bookmark</strong> — select bookmark name</li>
-<li><strong>By Date/Time</strong> — specify the exact timestamp</li>
-<li>Click <strong>Enable</strong>.</li>
-<li>The image is mounted on the designated access host. The volume appears as a normal disk.</li>
-<li>Perform validation.</li>
-<li>Click <strong>Disable</strong> to release the image when done. Replication automatically resumes from the point it was at.</li>
-</ol>
-<h3 id="image-access-writeable-virtual-access-test-copy">Image Access — Writeable (Virtual Access / Test Copy)<a class="headerlink" href="#image-access-writeable-virtual-access-test-copy" title="Permanent link">&para;</a></h3>
-<p>Provides a writeable snapshot — writes go to a separate delta storage, not into the journal.</p>
-<ol>
-<li><strong>Consistency Groups</strong> → <strong>Image Access</strong> → select <strong>Virtual Access with Roll</strong>.</li>
-<li>Choose the recovery point.</li>
-<li>Click <strong>Enable</strong>.</li>
-<li>The image is presented as a writeable volume on the access host.</li>
-<li>After testing, <strong>Disable</strong> discards all writes made during the test session.</li>
-</ol>
-<hr />
-<h2 id="failover-procedure">Failover Procedure<a class="headerlink" href="#failover-procedure" title="Permanent link">&para;</a></h2>
-<p>Failover permanently promotes the DR replica to production. Use only when the primary site is confirmed unavailable.</p>
-<h3 id="pre-failover-checklist">Pre-Failover Checklist<a class="headerlink" href="#pre-failover-checklist" title="Permanent link">&para;</a></h3>
-<ul>
-<li>[ ] Confirm primary site is unrecoverable (not a brief network outage).</li>
-<li>[ ] Identify the latest consistent journal image.</li>
-<li>[ ] Notify application owners — failover involves a brief I/O pause.</li>
-<li>[ ] Confirm DR site storage and compute are ready to accept production load.</li>
-</ul>
-<h3 id="performing-failover">Performing Failover<a class="headerlink" href="#performing-failover" title="Permanent link">&para;</a></h3>
-<ol>
-<li><strong>Consistency Groups</strong> → select the CG(s) to fail over.</li>
-<li>Click <strong>Failover</strong> → confirm the warning.</li>
-<li>Select the recovery image:</li>
-<li><strong>Latest Image</strong> (lowest RPO)</li>
-<li><strong>Named Bookmark</strong> (for a clean pre-incident state)</li>
-<li>Click <strong>Confirm Failover</strong>.</li>
-<li>RecoverPoint:</li>
-<li>Freezes new I/O to the journal.</li>
-<li>Applies all journal entries up to the selected point.</li>
-<li>Presents the volume(s) to the DR hosts.</li>
-<li>Start DR workloads on the recovered volumes.</li>
-</ol>
-<h3 id="cli-failover">CLI Failover<a class="headerlink" href="#cli-failover" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List CG state</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>get_cg_state<span class="w"> </span>--cg<span class="w"> </span><span class="s2">&quot;CG_PROD_SQL&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Failover to latest image</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>failover<span class="w"> </span>--cg<span class="w"> </span><span class="s2">&quot;CG_PROD_SQL&quot;</span><span class="w"> </span>--image<span class="w"> </span>LATEST
+┌─────────────────────────────────── RecoverPoint — Backup &amp; Restore ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │RecoverPoint provides CDP-based recovery; no traditional backup agent needed for replicated VMs│   │
+│   │Recovery options: image access (non-disruptive), test copy, failover, and restore to production│   │
+│   │  RPA config backup: export system settings from Unisphere; store off-site after every change  │   │
+│   │              Recovery granularity: any point in journal window, or named bookmark             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Recovery flow: select CG ──► choose point-in-time ──► image access or failover ──► validate        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Recovery Methods               │  │                Config Backup                │   │
+│   │           Image access (read-only)           │  │           Export system config XML          │   │
+│   │          Image access (r/w enabled)          │  │           Store after every change          │   │
+│   │           Test copy (bubble VLAN)            │  │            RPA appliance snapshot           │   │
+│   │           Failover (prod cutover)            │  │             Re-import on rebuild            │   │
+│   │         Failback (resync + cutback)          │  │              Test import on lab             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: failover powers on replica VMs at DR site; requires pre-configured VM networks and IP poo│
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Image access     = Non-disruptive mount of journal image; source VMs continue running unchanged    │
+│    Read/write image = Enable writes to image copy; journal paused; useful for data mining recovery    │
+│    Test copy        = Full VM boot of replica in isolated bubble network; validates recoverability    │
+│    Failover         = Commit image to replica; power on VMs at DR site; redirect production traffic   │
+│    Failback         = After failover; reverse replicate from DR to prod; restore original direction   │
+│    Bookmark         = Named time marker; set before patching, app changes, or maintenance windows     │
+│    Config export    = Unisphere → System → Export Config; saves all CG definitions and RPA settings   │
+│    Journal rollback = Roll journal pointer back to earlier timestamp; expose older write sequence     │
+│    Bubble VLAN      = Isolated portgroup; test copy VMs powered on here; no prod network access       │
+│    RPO validation   = Confirm lag at time of failover; determines actual data loss window             │
+│    Resync           = After failback; re-establish replication from production to DR direction        │
+│    Recovery point   = Specific second-level timestamp in journal window chosen for recovery           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Failback Procedure
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>After the primary site is recovered, fail back from DR to primary.
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Failover to a specific bookmark</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>failover<span class="w"> </span>--cg<span class="w"> </span><span class="s2">&quot;CG_PROD_SQL&quot;</span><span class="w"> </span>--bookmark<span class="w"> </span><span class="s2">&quot;Pre-Incident-2026-05-07&quot;</span>
-</code></pre></div>
-<hr />
-<h2 id="failback-procedure">Failback Procedure<a class="headerlink" href="#failback-procedure" title="Permanent link">&para;</a></h2>
-<p>After the primary site is recovered, fail back from DR to primary.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Primary as Primary Site
-    participant RP as RecoverPoint
-    participant DR as DR Site
-
-    Note over DR: DR is running production (post-failover)
-
-    Primary-&gt;&gt;RP: Primary site restored — initiate failback
-    RP-&gt;&gt;RP: Establish reverse replication (DR→Primary)
-    RP-&gt;&gt;Primary: Sync delta changes from DR to Primary
-    Note over RP: Full sync or delta sync depending on state
-
-    RP-&gt;&gt;Primary: Sync complete — confirm cutover window
-    Primary-&gt;&gt;RP: Initiate failback cutover
-    RP-&gt;&gt;DR: Quiesce I/O on DR volumes briefly
-    RP-&gt;&gt;Primary: Promote Primary volumes
-    RP-&gt;&gt;RP: Flip replication direction (Primary→DR)
-    DR-&gt;&gt;RP: DR resumes as replica
-    Primary-&gt;&gt;Primary: Restart production workloads</code></pre>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```mermaid
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sequenceDiagram
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    participant Primary as Primary Site
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    participant RP as RecoverPoint
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    participant DR as DR Site
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    Note over DR: DR is running production (post-failover)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    Primary-&gt;&gt;RP: Primary site restored — initiate failback
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    RP-&gt;&gt;RP: Establish reverse replication (DR→Primary)
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    RP-&gt;&gt;Primary: Sync delta changes from DR to Primary
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    Note over RP: Full sync or delta sync depending on state
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    RP-&gt;&gt;Primary: Sync complete — confirm cutover window
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    Primary-&gt;&gt;RP: Initiate failback cutover
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    RP-&gt;&gt;DR: Quiesce I/O on DR volumes briefly
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    RP-&gt;&gt;Primary: Promote Primary volumes
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    RP-&gt;&gt;RP: Flip replication direction (Primary→DR)
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    DR-&gt;&gt;RP: DR resumes as replica
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    Primary-&gt;&gt;Primary: Restart production workloads
+</code></pre></div></p>
 <h3 id="failback-steps">Failback Steps<a class="headerlink" href="#failback-steps" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Confirm the primary site is healthy and volumes are accessible.</li>

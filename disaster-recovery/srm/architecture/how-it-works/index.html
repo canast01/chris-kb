@@ -4132,39 +4132,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#site-pair-connectivity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Site Pair Connectivity
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recovery-plan-boot-sequence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recovery Plan Boot Sequence
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#recovery-plan-modes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4356,7 +4323,7 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>VMware Site Recovery Manager (SRM) is a DR orchestration platform deployed as a vCenter plugin on both the protected and recovery sites. It automates VM failover by coordinating storage presentation, VM registration, power-on sequencing, IP customisation, and custom scripts — without manual intervention at the storage or compute layer. SRM supports both array-based replication (via SRAs) and built-in vSphere Replication.</p>
 <h2 id="topology">Topology<a class="headerlink" href="#topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
+<p><pre class="mermaid"><code>graph LR
   VC_A["vCenter A\n+ SRM Server A + SRA"] --&gt; STG_A[("Storage A")]
   VC_B["vCenter B\n+ SRM Server B + SRA"] --&gt; STG_B[("Storage B")]
   VC_A &lt;--&gt;|"SRM pairing"| VC_B
@@ -4372,84 +4339,61 @@
   class STG_A,STG_B store
   class H_A host
   class H_B dr</code></pre>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SRM Server</td>
-<td>Orchestration engine; deployed as a plugin on each vCenter</td>
-</tr>
-<tr>
-<td>Site Pair</td>
-<td>Bidirectional trust relationship between two SRM instances</td>
-</tr>
-<tr>
-<td>Protection Group</td>
-<td>Set of VMs or datastores to be failed over together</td>
-</tr>
-<tr>
-<td>Recovery Plan</td>
-<td>Ordered workflow defining failover steps, power-on sequence, and customisations</td>
-</tr>
-<tr>
-<td>SRA (Storage Replication Adapter)</td>
-<td>Vendor-supplied plugin translating SRM commands to array APIs</td>
-</tr>
-<tr>
-<td>vSphere Replication</td>
-<td>Built-in per-VM replication engine (alternative to array-based SRAs)</td>
-</tr>
-</tbody>
-</table>
-<h2 id="site-pair-connectivity">Site Pair Connectivity<a class="headerlink" href="#site-pair-connectivity" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Port</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>TCP 443</td>
-<td>vCenter and SRM API communication</td>
-</tr>
-<tr>
-<td>TCP 8095</td>
-<td>SRM server-to-server communication</td>
-</tr>
-<tr>
-<td>TCP 9086</td>
-<td>vSphere Replication data channel (if using vSphere Replication)</td>
-</tr>
-<tr>
-<td>TCP 44046</td>
-<td>vSphere Replication traffic (source appliance to target)</td>
-</tr>
-</tbody>
-</table>
-<h2 id="recovery-plan-boot-sequence">Recovery Plan Boot Sequence<a class="headerlink" href="#recovery-plan-boot-sequence" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    trigger(["Failover triggered\n(test or real)"])
-    trigger --&gt; s1["Storage presentation\nSRA or vSphere Replication\nexposes replica datastores"]
-    s1 --&gt; s2["VM re-registration\nSRM registers VMs from\nreplica datastores in recovery vCenter"]
-    s2 --&gt; s3["Power on — Infra tier\nDomain Controllers, DNS"]
-    s3 --&gt; s4["Power on — DB tier\nDatabase servers"]
-    s4 --&gt; s5["Power on — APP tier\nApplication servers"]
-    s5 --&gt; s6["Power on — WEB tier\nLoad balancers, web front-ends"]
-    s6 --&gt; s7["IP customisation\n+ custom script steps"]
-    s7 --&gt; done(["Recovery plan\ncomplete"])
-
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    class s1,s2,s3,s4,s5,s6,s7 action
-    class trigger,done terminal</code></pre>
+┌───────────────────────────────────────── SRM — How It Works ──────────────────────────────────────────┐
+│                                                                                                       │
+│    SRM data flow — from source to target through the protection pipeline:                             │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 1  Source / Production System                                 │   │
+│   │       SRM Server (Protected) — vCenter plugin at production site; manages protection groups   │   │
+│   │                 Host writes are intercepted or snapshotted by the SRM agent/proxy             │   │
+│   │                  Changed blocks tracked via CBT / journal / delta-set mechanism               │   │
+│   │                 Consistency ensured at quiesce point before data transfer begins              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Changed data forwarded to the SRM engine — compression and encryption applied in transit           │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                         2  SRM Engine                                         │   │
+│   │              SRM Server (Recovery)  — vCenter plugin at DR site; runs recovery plans          │   │
+│   │                    Data compressed, deduplicated, and encrypted before storage                │   │
+│   │                  Metadata catalog updated; job status reported to control plane               │   │
+│   │                                          srm-cli vm list                                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     3  Target / Repository                                    │   │
+│   │      SRA (Storage Replication Adapter) — translates SRM calls to array replication commands   │   │
+│   │                  Recovery point written; retention policy applied automatically               │   │
+│   │                                   Restore: srm-cli recovery run                               │   │
+│   │                     RTO driven by target storage performance and data volume                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h2 id="recovery-plan-modes">Recovery Plan Modes<a class="headerlink" href="#recovery-plan-modes" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

@@ -3733,28 +3733,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#get-credential" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Get-Credential
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#storing-credentials-securely" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storing Credentials Securely
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#secretmanagement-module" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3926,7 +3904,7 @@
 </blockquote>
 <hr />
 <h2 id="powershell-credential-storage-and-flow">PowerShell Credential Storage and Flow<a class="headerlink" href="#powershell-credential-storage-and-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
+<p><pre class="mermaid"><code>graph TD
     interactiveUser["Interactive Session\n(user present)"]
     scheduledJob["Scheduled Task\n(unattended)"]
     prodScript["Production Script\n(enterprise)"]
@@ -3951,45 +3929,57 @@
     secretMgmt --&gt; psCred
     azKeyVault --&gt; psCred
     psCred --&gt; cmdlet</code></pre>
-<h2 id="get-credential">Get-Credential<a class="headerlink" href="#get-credential" title="Permanent link">&para;</a></h2>
-<p><code>Get-Credential</code> prompts for a username and password and returns a <code>PSCredential</code> object. This is the standard way to pass credentials to cmdlets without storing them in plain text.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Prompt for credentials interactively</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Get-Credential</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Pre-populate the username (password still prompted)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Get-Credential</span> <span class="n">-UserName</span> <span class="s1">&#39;domain\admin&#39;</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Pass to a cmdlet</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Credential</span> <span class="nv">$cred</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Invoke-Command</span> <span class="n">-ComputerName</span> <span class="n">server01</span> <span class="n">-Credential</span> <span class="nv">$cred</span> <span class="n">-ScriptBlock</span> <span class="p">{</span> <span class="n">hostname</span> <span class="p">}</span>
-</code></pre></div>
-<h2 id="storing-credentials-securely">Storing Credentials Securely<a class="headerlink" href="#storing-credentials-securely" title="Permanent link">&para;</a></h2>
-<p>Use <code>Export-Clixml</code> to save credentials encrypted with the current user's Windows Data Protection API (DPAPI) key. Only the same user on the same machine can decrypt the file.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Save credential to disk (encrypted — current user only)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Get-Credential</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">$cred</span> <span class="p">|</span> <span class="nb">Export-Clixml</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">Secrets</span><span class="p">\</span><span class="n">vcenter-cred</span><span class="p">.</span><span class="n">xml</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Load credential from disk</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Import-Clixml</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">Secrets</span><span class="p">\</span><span class="n">vcenter-cred</span><span class="p">.</span><span class="n">xml</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Use in a script (no interactive prompt)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Credential</span> <span class="nv">$cred</span>
-</code></pre></div>
+┌───────────────────────────────────── PowerShell — Authentication ─────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ PowerShell authentication: Kerberos (domain), NTLM (fallback), certificate-based for remoting │   │
+│   │     Service principal: use certificate auth for Azure/cloud (no password rotation needed)     │   │
+│   │  Secrets in scripts: use SecretManagement module; back-ends: KeyVault, SecretStore, CyberArk  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Remoting Auth                 │  │              Secret Management              │   │
+│   │       Kerberos: domain joined default        │  │       Install-Module SecretManagement       │   │
+│   │       NTLM: workgroup or cross-domain        │  │        Register-SecretVault -Name AKV       │   │
+│   │        Certificate: mutual TLS WinRM         │  │         Get-Secret -Name MyPassword         │   │
+│   │       CredSSP: avoid (double-hop only)       │  │        No ConvertTo-SecureString -Key       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      SecretManagement = PS module; abstraction layer for secret retrieval; vault-agnostic     │   │
+│   │  CredSSP          = delegates credentials to remote host; security risk; use Kerberos or JEA  │   │
+│   │  Managed Identity = Azure-side auth; PS running in Azure VM can get token without credentials │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Storing Credentials Securely
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Use `Export-Clixml` to save credentials encrypted with the current user&#39;s Windows Data Protection API (DPAPI) key. Only the same user on the same machine can decrypt the file.
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```powershell
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Save credential to disk (encrypted — current user only)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>$cred = Get-Credential
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>$cred | Export-Clixml -Path C:\Secrets\vcenter-cred.xml
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Load credential from disk
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>$cred = Import-Clixml -Path C:\Secrets\vcenter-cred.xml
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Use in a script (no interactive prompt)
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Connect-VIServer -Server vcenter.example.com -Credential $cred
+</code></pre></div></p>
 <h2 id="secretmanagement-module">SecretManagement Module<a class="headerlink" href="#secretmanagement-module" title="Permanent link">&para;</a></h2>
 <p>The <code>Microsoft.PowerShell.SecretManagement</code> module provides a consistent interface for storing and retrieving secrets from vaults.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Install SecretManagement and the local vault extension</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">PowerShell</span><span class="p">.</span><span class="n">SecretManagement</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">PowerShell</span><span class="p">.</span><span class="n">SecretStore</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Register the local vault</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Register-SecretVault</span> <span class="n">-Name</span> <span class="n">LocalVault</span> <span class="n">-ModuleName</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">PowerShell</span><span class="p">.</span><span class="n">SecretStore</span> <span class="n">-DefaultVault</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Store a secret</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">Set-Secret</span> <span class="n">-Name</span> <span class="n">VCenterPassword</span> <span class="n">-Secret</span> <span class="s1">&#39;P@ssword1&#39;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c"># Retrieve a secret</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nv">$pass</span> <span class="p">=</span> <span class="nb">Get-Secret</span> <span class="n">-Name</span> <span class="n">VCenterPassword</span> <span class="n">-AsPlainText</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="no">[PSCredential]</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nb">Get-Secret</span> <span class="n">-Name</span> <span class="n">VCenterPassword</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Install SecretManagement and the local vault extension</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">PowerShell</span><span class="p">.</span><span class="n">SecretManagement</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">PowerShell</span><span class="p">.</span><span class="n">SecretStore</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Register the local vault</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">Register-SecretVault</span> <span class="n">-Name</span> <span class="n">LocalVault</span> <span class="n">-ModuleName</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">PowerShell</span><span class="p">.</span><span class="n">SecretStore</span> <span class="n">-DefaultVault</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Store a secret</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Set-Secret</span> <span class="n">-Name</span> <span class="n">VCenterPassword</span> <span class="n">-Secret</span> <span class="s1">&#39;P@ssword1&#39;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># Retrieve a secret</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nv">$pass</span> <span class="p">=</span> <span class="nb">Get-Secret</span> <span class="n">-Name</span> <span class="n">VCenterPassword</span> <span class="n">-AsPlainText</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="no">[PSCredential]</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nb">Get-Secret</span> <span class="n">-Name</span> <span class="n">VCenterPassword</span><span class="p">))</span>
 </code></pre></div>
 <h2 id="authentication-reference">Authentication Reference<a class="headerlink" href="#authentication-reference" title="Permanent link">&para;</a></h2>
 <table>

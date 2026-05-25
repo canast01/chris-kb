@@ -4218,7 +4218,51 @@
 VMware Site Recovery Manager DR orchestration — vCenter plugin that automates storage presentation, VM registration, power-on sequencing, and IP customisation across a site pair.
 </div>
 
-<p><img alt="SRM Architecture" src="../../../assets/srm-architecture-overview.svg" /></p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── SRM — Architecture ──────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                  SRM — Component Architecture                                 │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │     SRM Server (Protected) — vCenter plugin at production site; manages protection groups     │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │            SRM Server (Recovery)  — vCenter plugin at DR site; runs recovery plans            │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │     SRA (Storage Replication Adapter) — translates SRM calls to array replication commands    │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │                Ports: 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) · 443 (vCenter)                │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    Three-tier component model — control plane, data plane, and management                             │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                          ▼                        ▼                        ▼                          │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │        Control Plane        │  │          Data Plane         │  │          Management         │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │ SRM Server (Protected) — vCe│  │ SRM Server (Recovery)  — vCe│  │ Protection Group      — set │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │          Scheduling         │  │      Replication/Backup     │  │       443 (SRM HTTPS)       │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │         Policy mgmt         │  │        Data movement        │  │           REST API          │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │          Catalog/DB         │  │        Dedup/compress       │  │             RBAC            │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │          Job engine         │  │    9086 (SRM-SRM pairing)   │  │           Alerting          │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<img alt="SRM Architecture" src="../../../assets/srm-architecture-overview.svg" /></p>
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Site pair topology, recovery plan boot sequence, recovery modes, SRAs, and vSphere Replication.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Dell EMC, Pure Storage, and NetApp SRA integrations; vSphere Replication appliance.</span></a>
@@ -4259,22 +4303,6 @@ VMware Site Recovery Manager DR orchestration — vCenter plugin that automates 
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>graph LR
-  VC_A["vCenter A\n+ SRM Server A + SRA"] --&gt; STG_A[("Storage A")]
-  VC_B["vCenter B\n+ SRM Server B + SRA"] --&gt; STG_B[("Storage B")]
-  VC_A &lt;--&gt;|"SRM pairing\nTCP 443 / 8095"| VC_B
-  STG_A --&gt;|"array replication\nor vSphere Replication"| STG_B
-  H_A(["Production VMs\nSite A"]) --&gt; VC_A
-  H_B(["DR VMs\nSite B"]) -.-&gt; VC_B
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class VC_A ctrl
-  class VC_B dr
-  class STG_A,STG_B store
-  class H_A host
-  class H_B dr</code></pre>
 
 
 

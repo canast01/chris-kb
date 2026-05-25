@@ -4218,7 +4218,51 @@
 Dell RASR (Recovery and System Restore) bare-metal recovery for Windows Server — WinPE boot media, sector-level image capture, and iDRAC virtual media integration.
 </div>
 
-<p><img alt="RASR Architecture" src="../../../assets/rasr-architecture-overview.svg" /></p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── RASR — Architecture ─────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                 RASR — Component Architecture                                 │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │          Vault Appliance      — air-gapped PowerStore/DD in isolated network segment          │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │         CyberSense Engine    — ML-based malware and corruption detection on vault data        │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │         PowerProtect Manager — orchestrates replication jobs, retention, and recovery         │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │               Ports: 443 (PPDM REST API) · 2049 (NFS vault) · 9080 (CyberSense)               │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    Three-tier component model — control plane, data plane, and management                             │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                          ▼                        ▼                        ▼                          │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │        Control Plane        │  │          Data Plane         │  │          Management         │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │ Vault Appliance      — air-g│  │ CyberSense Engine    — ML-ba│  │ Vault Lock           — immut│   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │          Scheduling         │  │      Replication/Backup     │  │     443 (PPDM REST API)     │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │         Policy mgmt         │  │        Data movement        │  │           REST API          │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │          Catalog/DB         │  │        Dedup/compress       │  │             RBAC            │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │          Job engine         │  │       2049 (NFS vault)      │  │           Alerting          │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<img alt="RASR Architecture" src="../../../assets/rasr-architecture-overview.svg" /></p>
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Recovery workflow, WinPE environment, Dell hardware integration, and RASR vs alternatives.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>iDRAC virtual media, OpenManage, and network share integration.</span></a>
@@ -4255,18 +4299,6 @@ Dell RASR (Recovery and System Restore) bare-metal recovery for Windows Server �
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart TD
-  FAIL(["Server Failure"]) --&gt; IDRAC["iDRAC mounts RASR ISO\n(virtual media)"]
-  IDRAC --&gt; WINPE["WinPE Environment\nloads PERC + NIC drivers"]
-  WINPE --&gt; MAP["Map SMB share\nnet use Z: \\\\nas\\rasr-images"]
-  MAP --&gt; SEL["Select recovery image"]
-  SEL --&gt; REST["Image written to disk\npartition table restored"]
-  REST --&gt; BOOT["Reboot → Windows starts\nfrom restored image"]
-  BOOT --&gt; VALID(["Post-restore validation"])
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef terminal fill:#15803d,stroke:#166534,color:#fff
-  class IDRAC,WINPE,MAP,SEL,REST,BOOT action
-  class FAIL,VALID terminal</code></pre>
 
 
 

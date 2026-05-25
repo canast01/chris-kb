@@ -4323,50 +4323,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#version-compatibility" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Version Compatibility
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#eeb-emergency-engineering-binary-tracking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        EEB (Emergency Engineering Binary) Tracking
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pre-upgrade-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pre-Upgrade Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-upgrade-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Upgrade Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#migration-physical-master-to-appliance" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4564,7 +4520,7 @@
 <p>Check lifecycle dates at: <a href="https://sort.veritas.com">sort.veritas.com</a> → EOL dates.</p>
 <h2 id="upgrade-order">Upgrade Order<a class="headerlink" href="#upgrade-order" title="Permanent link">&para;</a></h2>
 <h3 id="upgrade-dependency-chain">Upgrade Dependency Chain<a class="headerlink" href="#upgrade-dependency-chain" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     start(["Start upgrade window"])
     start --&gt; catBackup["Force catalog backup\nbpbackup -i -h &lt;master&gt; -p NBU_Catalog_Backup\nVerify completion"]
     catBackup --&gt; catOK{"Catalog backup\ncomplete?"}
@@ -4585,95 +4541,57 @@
     class catOK decision
     class halt warn
     class start,done terminal</code></pre>
-<p><strong>Critical: always upgrade Master Server first.</strong></p>
-<ol>
-<li>
-<p><strong>Pre-upgrade</strong>: Run catalog backup; verify it completes successfully
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>bpbackup<span class="w"> </span>-i<span class="w"> </span>-h<span class="w"> </span>&lt;master_server&gt;<span class="w"> </span>-p<span class="w"> </span>NBU_Catalog_Backup<span class="w">   </span><span class="c1"># Force catalog backup</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>bperror<span class="w"> </span>-r<span class="w"> </span>-backstat<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20<span class="w">                        </span><span class="c1"># Verify recent backup success</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Upgrade Master Server</strong> — download installer from Veritas portal; run upgrade wizard</p>
-</li>
-<li>
-<p><strong>Upgrade Media Servers</strong> — one at a time; verify connectivity after each:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>bpclntcmd<span class="w"> </span>-hn<span class="w"> </span>&lt;media_server&gt;<span class="w"> </span>-chk<span class="w">   </span><span class="c1"># Verify after each media server upgrade</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Upgrade Clients</strong> — deploy via push from NetBackup Admin Console or manual installation</p>
-</li>
-</ol>
-<h2 id="version-compatibility">Version Compatibility<a class="headerlink" href="#version-compatibility" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Scenario</th>
-<th>Supported?</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Client N-1 behind Master</td>
-<td>Supported — upgrade within next cycle</td>
-</tr>
-<tr>
-<td>Client N-2 behind Master</td>
-<td>Not supported — immediate upgrade required</td>
-</tr>
-<tr>
-<td>Media Server N-1 behind Master</td>
-<td>Supported</td>
-</tr>
-<tr>
-<td>OpsCenter different version from Master</td>
-<td>Not supported — must match</td>
-</tr>
-</tbody>
-</table>
-<h2 id="eeb-emergency-engineering-binary-tracking">EEB (Emergency Engineering Binary) Tracking<a class="headerlink" href="#eeb-emergency-engineering-binary-tracking" title="Permanent link">&para;</a></h2>
-<p>Maintain an EEB register:</p>
-<table>
-<thead>
-<tr>
-<th>EEB ID</th>
-<th>Version Targeted</th>
-<th>Issue Fixed</th>
-<th>Applied Date</th>
-<th>Superseded By</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>EEB-XXXXXX</td>
-<td>10.1</td>
-<td><description></td>
-<td><date></td>
-<td>MR10.1.1</td>
-</tr>
-</tbody>
-</table>
-<p>EEBs are not cumulative — re-apply after each maintenance release if not yet superseded.</p>
-<h2 id="pre-upgrade-checklist">Pre-Upgrade Checklist<a class="headerlink" href="#pre-upgrade-checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All backup jobs complete (no active jobs)</li>
-<li>[ ] Full catalog backup completed and verified</li>
-<li>[ ] EEB register reviewed — note which EEBs will be superseded by this upgrade</li>
-<li>[ ] Compatibility confirmed for all integrated systems (vCenter version, Data Domain OS, OST plugin versions)</li>
-<li>[ ] Rollback plan: catalog backup can restore previous state if upgrade fails</li>
-</ul>
-<h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check NBU version across master and media servers</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bpclntcmd<span class="w"> </span>-self<span class="w">   </span><span class="c1"># On each server</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>/usr/openv/netbackup/bin/version<span class="w">   </span><span class="c1"># Version file</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Run test backup after upgrade</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>bpbackup<span class="w"> </span>-p<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>-s<span class="w"> </span>&lt;schedule_name&gt;<span class="w"> </span>-h<span class="w"> </span>&lt;client&gt;
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Verify catalog integrity post-upgrade</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>bpdbm<span class="w"> </span>-consistency_check<span class="w">   </span><span class="c1"># Check for catalog corruption</span>
-</code></pre></div>
+┌──────────────────────────────────── NetBackup — Install &amp; Upgrade ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                             NetBackup — Installation Prerequisites                            │   │
+│   │             OS: supported Linux or Windows Server (see vendor compatibility matrix)           │   │
+│   │               Network: 443 (Web UI) · 1556 (vnetd) — ensure firewall allows these             │   │
+│   │             Auth: NBU CA host-ID certificates; AD/LDAP for web UI login; RBAC roles           │   │
+│   │  Storage: Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connec│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        Install Sequence                                       │   │
+│   │                  1  Deploy control plane component and configure network access               │   │
+│   │                          2  Configure storage and network connectivity                        │   │
+│   │                        3  Install agent/proxy/splitter on protected hosts                     │   │
+│   │                      4  Register sources and configure protection policies                    │   │
+│   │                        5  Run first job; verify completion; test restore                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        Upgrade Sequence                                       │   │
+│   │                 1  Review release notes and compatibility matrix before upgrade               │   │
+│   │                   2  Snapshot or backup the control plane VM before upgrading                 │   │
+│   │                  3  Upgrade control plane first, then proxies/agents/appliances               │   │
+│   │                       4  Validate jobs resume automatically after upgrade                     │   │
+│   │                        5  Document version change and update CMDB record                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+│  Media Server  = data mover between client and storage; can be co-located with master                 │
+│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h2 id="migration-physical-master-to-appliance">Migration: Physical Master to Appliance<a class="headerlink" href="#migration-physical-master-to-appliance" title="Permanent link">&para;</a></h2>
 <p>Migrating from physical NetBackup installation to a NetBackup appliance requires catalog migration — do NOT upgrade and migrate in the same maintenance window:</p>
 <ol>

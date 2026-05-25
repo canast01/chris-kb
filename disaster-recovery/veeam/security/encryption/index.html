@@ -4176,30 +4176,8 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#immutable-backups" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Immutable Backups
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Immutable Backups">
+    <nav class="md-nav" aria-label="Backup Encryption">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#linux-hardened-repository" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Linux Hardened Repository
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#s3-object-lock-sobr-capacity-tier" class="md-nav__link">
@@ -4364,24 +4342,50 @@
 <h1 id="veeam-encryption">Veeam — Encryption<a class="headerlink" href="#veeam-encryption" title="Permanent link">&para;</a></h1>
 <h2 id="backup-encryption">Backup Encryption<a class="headerlink" href="#backup-encryption" title="Permanent link">&para;</a></h2>
 <p>Enable AES-256 encryption per backup job:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># VBR console: Job Properties → Storage → Enable backup file encryption</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># VBR console: Job Properties → Storage → Enable backup file encryption</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># Enter encryption password — stored in VBR config DB</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c"># Export encryption keys after creation: Main Menu → Manage Passwords → Export</span>
 </code></pre></div>
-<p><strong>Key management is critical</strong>: loss of the encryption key = unrecoverable backup data.
-Store exported keys in CyberArk or an offline safe, separate from the VBR server.</p>
-<h2 id="immutable-backups">Immutable Backups<a class="headerlink" href="#immutable-backups" title="Permanent link">&para;</a></h2>
-<p>Protect against ransomware by making backup files immutable:</p>
-<h3 id="linux-hardened-repository">Linux Hardened Repository<a class="headerlink" href="#linux-hardened-repository" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify immutability is active on backup files</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># (Veeam sets this automatically via chattr on the repository)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>lsattr<span class="w"> </span>/mnt/backup/<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Look for &#39;i&#39; flag: ----i----------- ./backup.vbk</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># The VBR service account must be non-root on the hardened repo</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># VBR connects with a limited account; root SSH login should be disabled</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>grep<span class="w"> </span>PermitRootLogin<span class="w"> </span>/etc/ssh/sshd_config<span class="w">   </span><span class="c1"># Must show: no</span>
-</code></pre></div>
+┌───────────────────────────────────────── Veeam — Encryption ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                Veeam — Encryption Configuration                               │   │
+│   │  AES-256 backup encryption (key stored in Veeam config DB); TLS on all management; WORM repos │   │
+│   │              In-transit: TLS 1.2+ for all management; data channel also encrypted             │   │
+│   │              At-rest: AES-256 on repository or vault storage; key managed by KMS              │   │
+│   │               Key lifecycle: generate → use → rotate (annual) → retire → destroy              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  In-Transit                  │  │                   At-Rest                   │   │
+│   │              TLS 1.2+ (minimum)              │  │              AES-256 encryption             │   │
+│   │         9419 (Veeam REST API) HTTPS          │  │              KMS key management             │   │
+│   │             Mutual TLS internal              │  │               WORM / immutable              │   │
+│   │             Cert rotation annual             │  │             Key rotation annual             │   │
+│   │             No plain-text admin              │  │               Audit key access              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
+│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
+│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
+│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
+│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
+│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
+│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
+│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
+│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
+│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
+│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
+│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
+│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
+│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h3 id="s3-object-lock-sobr-capacity-tier">S3 Object Lock (SOBR Capacity Tier)<a class="headerlink" href="#s3-object-lock-sobr-capacity-tier" title="Permanent link">&para;</a></h3>
 <p>Configure Object Lock in <code>Compliance</code> mode:
 - VBR console → SOBR → Capacity Tier → Enable immutability

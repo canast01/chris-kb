@@ -3954,56 +3954,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#technical-validation-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Technical Validation Checklist
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Technical Validation Checklist">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#infrastructure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Infrastructure
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#application" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Application
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#database" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Database
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#business-validation-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4165,90 +4115,58 @@
 <h1 id="ire-validation">IRE — Validation<a class="headerlink" href="#ire-validation" title="Permanent link">&para;</a></h1>
 <p>Validation is the final gate before restored systems return to production. It covers technical verification (application health, data integrity) and business verification (data completeness, process functionality).</p>
 <h2 id="validation-gates">Validation Gates<a class="headerlink" href="#validation-gates" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
+<p><pre class="mermaid"><code>flowchart LR
     SCAN["Malware Scan\n(IR team)"] --&gt; TECH["Technical Validation\n(infra team)"]
     TECH --&gt; BIZ["Business Validation\n(app owners)"]
     BIZ --&gt; DRTEST["DR Test\n(simulated failover)"]
     DRTEST --&gt; SIGNOFF["DR Lead Sign-Off\n(written approval)"]
     SIGNOFF --&gt; PROD["Reintroduce to Production"]</code></pre>
-<p>No stage can be skipped. Each must produce documented evidence before proceeding.</p>
-<h2 id="technical-validation-checklist">Technical Validation Checklist<a class="headerlink" href="#technical-validation-checklist" title="Permanent link">&para;</a></h2>
-<h3 id="infrastructure">Infrastructure<a class="headerlink" href="#infrastructure" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Pass condition</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VM is running and reachable</td>
-<td><code>ping &lt;ire-vm-ip&gt;</code> from jump host</td>
-<td>Response within 2ms (IRE-internal)</td>
-</tr>
-<tr>
-<td>OS started without errors</td>
-<td><code>journalctl -b -p err</code> / Event Viewer</td>
-<td>No critical errors at startup</td>
-</tr>
-<tr>
-<td>All expected services running</td>
-<td><code>systemctl list-units --state=failed</code></td>
-<td>0 failed units</td>
-</tr>
-<tr>
-<td>Disk space adequate</td>
-<td><code>df -h</code> / <code>Get-PSDrive</code></td>
-<td>&gt; 20% free on all volumes</td>
-</tr>
-<tr>
-<td>Network interfaces up</td>
-<td><code>ip a</code> / <code>Get-NetAdapter</code></td>
-<td>All expected NICs in UP state</td>
-</tr>
-<tr>
-<td>DNS resolution working (IRE-internal)</td>
-<td><code>nslookup &lt;ire-hostname&gt; &lt;ire-dns-server&gt;</code></td>
-<td>Resolves correctly</td>
-</tr>
-<tr>
-<td>No unexpected outbound connections</td>
-<td><code>ss -tnp</code> / <code>netstat -an</code></td>
-<td>No connections to production or internet IPs</td>
-</tr>
-</tbody>
-</table>
-<h3 id="application">Application<a class="headerlink" href="#application" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># HTTP health check</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://&lt;ire-app-host&gt;:&lt;port&gt;/health<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check application log for errors at startup</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/app/app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception\|fatal&quot;</span>
+┌─────────────────────────────────────────── IRE Validation ────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      IRE Validation — application testing, data integrity checks, sign-off before cutback     │   │
+│   │                   See product-specific sub-sections for detailed procedures                   │   │
+│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
+│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
+│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Production site · DR site · Replication link · Management network · Vault network                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
+│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
+│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
+│  Failback      = returning operations to production site after DR resolved                            │
+│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
+│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
+│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
+│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
+│  DR Test       = planned failover test; validates RTO without real disaster                           │
+│  Replication   = continuous or periodic data copy to secondary site or vault                          │
+│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
+│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Database
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```sql
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>-- SQL Server: verify no corruption
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>DBCC CHECKDB (&#39;recovered_db&#39;) WITH NO_INFOMSGS;
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Verify application can reach its database (IRE instance)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>psql<span class="w"> </span>-h<span class="w"> </span>&lt;ire-db-host&gt;<span class="w"> </span>-U<span class="w"> </span>&lt;app-user&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;db-name&gt;<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT 1;&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;DB PASS&quot;</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check certificate is valid (IRE cert — not production)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ire-app-host&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-</code></pre></div>
-<h3 id="database">Database<a class="headerlink" href="#database" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- SQL Server: verify no corruption</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">DBCC</span><span class="w"> </span><span class="n">CHECKDB</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;recovered_db&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">NO_INFOMSGS</span><span class="p">;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">-- Check row counts match expected (compare against pre-incident baseline)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">TABLE_NAME</span><span class="p">,</span><span class="w"> </span><span class="n">TABLE_ROWS</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">TABLES</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">TABLE_SCHEMA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;recovered_db&#39;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">TABLE_ROWS</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1">-- PostgreSQL: check for bloat or corruption</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">schemaname</span><span class="p">,</span><span class="w"> </span><span class="n">tablename</span><span class="p">,</span><span class="w"> </span><span class="n">n_live_tup</span><span class="p">,</span><span class="w"> </span><span class="n">n_dead_tup</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_user_tables</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">n_dead_tup</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
-</code></pre></div>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>-- Check row counts match expected (compare against pre-incident baseline)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>SELECT TABLE_NAME, TABLE_ROWS
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>FROM information_schema.TABLES
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>WHERE TABLE_SCHEMA = &#39;recovered_db&#39;
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ORDER BY TABLE_ROWS DESC;
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>-- PostgreSQL: check for bloat or corruption
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>SELECT schemaname, tablename, n_live_tup, n_dead_tup
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>FROM pg_stat_user_tables
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>ORDER BY n_dead_tup DESC LIMIT 20;
+</code></pre></div></p>
 <h2 id="business-validation-checklist">Business Validation Checklist<a class="headerlink" href="#business-validation-checklist" title="Permanent link">&para;</a></h2>
 <p>Business owners test against a defined scenario list. Scenarios must be agreed before the incident.</p>
 <table>
@@ -4292,13 +4210,13 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">Business validation sign-off form</span><span class="p">:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">System</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">___________________</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Recovery point tested</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">___________________</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Test scenarios passed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">___ / ___</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Data loss acceptable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Yes / No</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Approved by (app owner)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">___________________</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Date/time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">___________________</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">Business validation sign-off form</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">System</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">___________________</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Recovery point tested</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">___________________</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Test scenarios passed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">___ / ___</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Data loss acceptable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Yes / No</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Approved by (app owner)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">___________________</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Date/time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">___________________</span>
 </code></pre></div>
 <h2 id="rto-rpo-measurement">RTO / RPO Measurement<a class="headerlink" href="#rto-rpo-measurement" title="Permanent link">&para;</a></h2>
 <p>Record actual recovery metrics for post-incident review:</p>
@@ -4338,13 +4256,13 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Log timestamps throughout the process</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;+%Y-%m-%dT%H:%M:%SZ&#39;</span><span class="k">)</span><span class="s2"> IRE activation declared&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/ire-timeline.log
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;+%Y-%m-%dT%H:%M:%SZ&#39;</span><span class="k">)</span><span class="s2"> Backup retrieval complete&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/ire-timeline.log
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;+%Y-%m-%dT%H:%M:%SZ&#39;</span><span class="k">)</span><span class="s2"> Restore to IRE complete&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/ire-timeline.log
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;+%Y-%m-%dT%H:%M:%SZ&#39;</span><span class="k">)</span><span class="s2"> Malware scan complete — clean&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/ire-timeline.log
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;+%Y-%m-%dT%H:%M:%SZ&#39;</span><span class="k">)</span><span class="s2"> Business validation complete&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/ire-timeline.log
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;+%Y-%m-%dT%H:%M:%SZ&#39;</span><span class="k">)</span><span class="s2"> Production cutover complete&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/ire-timeline.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Log timestamps throughout the process</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;+%Y-%m-%dT%H:%M:%SZ&#39;</span><span class="k">)</span><span class="s2"> IRE activation declared&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/ire-timeline.log
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;+%Y-%m-%dT%H:%M:%SZ&#39;</span><span class="k">)</span><span class="s2"> Backup retrieval complete&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/ire-timeline.log
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;+%Y-%m-%dT%H:%M:%SZ&#39;</span><span class="k">)</span><span class="s2"> Restore to IRE complete&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/ire-timeline.log
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;+%Y-%m-%dT%H:%M:%SZ&#39;</span><span class="k">)</span><span class="s2"> Malware scan complete — clean&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/ire-timeline.log
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;+%Y-%m-%dT%H:%M:%SZ&#39;</span><span class="k">)</span><span class="s2"> Business validation complete&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/ire-timeline.log
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;+%Y-%m-%dT%H:%M:%SZ&#39;</span><span class="k">)</span><span class="s2"> Production cutover complete&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/ire-timeline.log
 </code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>

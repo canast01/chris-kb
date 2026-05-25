@@ -4121,17 +4121,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#journal-overflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Journal Overflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#splitter-communication-failure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4327,96 +4316,58 @@
 <h2 id="cg-in-error-state">CG in Error State<a class="headerlink" href="#cg-in-error-state" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong> CG status shows <code>Error</code> or <code>Communication Problem</code> in the RecoverPoint Management Application (RPMA).</p>
 <p><strong>Diagnostic Steps:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Via boxmgmt SSH to RPA</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Via boxmgmt SSH to RPA</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_cg<span class="w"> </span>&lt;CG-name&gt;
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>boxmgmt<span class="w"> </span>list<span class="w"> </span>cg
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>status
 </code></pre></div>
-<p><strong>Common causes:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Cause</th>
-<th>Why it happens</th>
-<th>Resolution</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Journal volume full</td>
-<td>Write rate exceeds journal drain rate (link or bandwidth issue)</td>
-<td>Expand journal LUN or reduce retention window</td>
-</tr>
-<tr>
-<td>WAN link down</td>
-<td>Inter-site network outage; writes accumulate in local journal</td>
-<td>Restore connectivity; RP will resume replication automatically once link recovers</td>
-</tr>
-<tr>
-<td>Splitter communication failure</td>
-<td>Splitter lost contact with RPA due to network or array issue</td>
-<td>See Splitter section below</td>
-</tr>
-<tr>
-<td>RPA node offline</td>
-<td>Hardware fault or hypervisor issue on the RPA VM</td>
-<td>Check RPA cluster health; redistribute CGs if node is failed</td>
-</tr>
-<tr>
-<td>Storage path failure</td>
-<td>Zoning or masking change removed RPA access to journal LUNs</td>
-<td>Verify zoning and array paths to journal volumes</td>
-</tr>
-</tbody>
-</table>
-<pre class="mermaid"><code>flowchart TD
-    cgError["CG in ERROR State"]
-    checkAlarms["Check RPA Alarms\nalarms list"]
-    alarmPresent{"Active\nAlarms?"}
-    checkJournal["Check Journal\njournals list"]
-    journalFull{"Journal &gt; 90%\nor Full?"}
-    checkLink["Check Inter-site Link\nlinks statistics"]
-    linkDown{"Link\nDown?"}
-    checkSplitter["Check Splitter\nboxmgmt splitter status"]
-    splitterFault{"Splitter\nFault?"}
-    checkRPA["Check RPA Node Health\nsystem status"]
-    expandJournal["Expand Journal\nand resume replication"]
-    restoreLink["Restore Network Connectivity\nRP resumes automatically"]
-    fixSplitter["Restart Splitter\nor rezone initiators"]
-    fixRPA["Redistribute CGs\nto healthy RPA nodes"]
-    resolveAlarm["Resolve Alarm\nper alarm detail"]
-    monitorCG["Monitor CG Return\nto ACTIVE state"]
-
-    cgError --&gt; checkAlarms
-    checkAlarms --&gt; alarmPresent
-    alarmPresent --&gt;|"Yes"| resolveAlarm
-    alarmPresent --&gt;|"No"| checkJournal
-    resolveAlarm --&gt; monitorCG
-    checkJournal --&gt; journalFull
-    journalFull --&gt;|"Yes"| expandJournal
-    journalFull --&gt;|"No"| checkLink
-    expandJournal --&gt; monitorCG
-    checkLink --&gt; linkDown
-    linkDown --&gt;|"Yes"| restoreLink
-    linkDown --&gt;|"No"| checkSplitter
-    restoreLink --&gt; monitorCG
-    checkSplitter --&gt; splitterFault
-    splitterFault --&gt;|"Yes"| fixSplitter
-    splitterFault --&gt;|"No"| checkRPA
-    fixSplitter --&gt; monitorCG
-    checkRPA --&gt; fixRPA
-    fixRPA --&gt; monitorCG
-
-    style cgError fill:#be123c,color:#fff
-    style monitorCG fill:#15803d,color:#fff
-    style expandJournal fill:#b45309,color:#fff
-    style restoreLink fill:#b45309,color:#fff</code></pre>
-<hr />
-<h2 id="journal-overflow">Journal Overflow<a class="headerlink" href="#journal-overflow" title="Permanent link">&para;</a></h2>
-<p><strong>Symptoms:</strong> CG RPO alarm triggered; journal shows &gt; 90% utilization.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>boxmgmt<span class="w"> </span>journal<span class="w"> </span>list
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>boxmgmt<span class="w"> </span>journal<span class="w"> </span>status<span class="w"> </span>&lt;journal-name&gt;
-</code></pre></div>
+┌──────────────────────────────────── RecoverPoint — Common Issues ─────────────────────────────────────┐
+│                                                                                                       │
+│   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
+│   │     High lag     │  WAN congestion  │ get compression s │throttle or upgra │   get all rpas   │   │
+│   │   CG suspended   │   journal full   │ check journal cap │expand journal vo │  get journal st  │   │
+│   │ Splitter offline │ESXi host restart │ vSphere events lo │re-register split │  get splitter i  │   │
+│   │   Image stuck    │stale image acces │ image access disa │  force release   │  get all groups  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     General Triage Pattern                                    │   │
+│   │          Is the issue new or recurring? New = recent change; Recurring = config problem       │   │
+│   │             Is it isolated to one source or all? Isolated = agent; All = server/repo          │   │
+│   │                          Check logs first: image access enable/disable                        │   │
+│   │                    If unresolved in 2h: open vendor case with full log bundle                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  RPA virtual appliances on ESXi · Journal volumes on storage array · WAN link between sites           │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPA           = RecoverPoint Appliance — virtual appliance managing journal and replication          │
+│  Splitter      = intercepts host I/O at hypervisor or array level; sends copy to RPA                  │
+│  Journal       = write-order-consistent storage capturing all writes for point-in-time access         │
+│  Consistency Group= set of volumes protected together; writes are applied in order across all         │
+│  Bookmark      = named marker in journal; enables deterministic recovery to a known state             │
+│  Image Access  = mounting a journal point-in-time image to a host for testing or recovery             │
+│  Failover      = activating the replica at the recovery site; breaks replication relationship         │
+│  Test Copy     = non-disruptive image access for validation without breaking replication              │
+│  RPO           = Recovery Point Objective; how much data loss is acceptable; CDP = near-zero          │
+│  RTO           = Recovery Time Objective; time from failover to service restored                      │
+│  Reverse       = after failover, replicates from recovery site back to re-sync production             │
+│  Splitter Lag  = delay between host write and journal commit; monitor for replication health          │
+│  CDP           = Continuous Data Protection; every write journaled, not just scheduled snaps          │
+│  Distributed CG= consistency group spanning volumes on multiple storage arrays                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Journal Overflow
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>**Symptoms:** CG RPO alarm triggered; journal shows &gt; 90% utilization.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>boxmgmt journal list
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>boxmgmt journal status &lt;journal-name&gt;
+</code></pre></div></p>
 <p><strong>Resolution:</strong>
 1. Identify which CG is generating excess writes
 2. Expand journal volume (can be done non-disruptively on most arrays)

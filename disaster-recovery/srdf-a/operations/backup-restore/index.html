@@ -4318,56 +4318,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#query-rdf-state" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Query RDF State
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#srdfa-failover-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SRDF/A Failover Procedure
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="SRDF/A Failover Procedure">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pre-failover-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pre-Failover Requirements
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#failover-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Failover Steps
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#failover-with-storage-group-sg-based-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4679,83 +4629,99 @@
 <h2 id="symcli-command-reference">SYMCLI Command Reference<a class="headerlink" href="#symcli-command-reference" title="Permanent link">&para;</a></h2>
 <p>All SRDF operations use <code>symrdf</code> from the <strong>Symmetrix Command Line Interface (SYMCLI)</strong> suite.</p>
 <h3 id="environment-setup">Environment Setup<a class="headerlink" href="#environment-setup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Set the Symmetrix/VMAX SID (array serial number)</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Set the Symmetrix/VMAX SID (array serial number)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SYMCLI_SID</span><span class="o">=</span><span class="m">000123456789</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Or use -sid flag on each command</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;rdf_group&gt;
 </code></pre></div>
-<h3 id="query-rdf-state">Query RDF State<a class="headerlink" href="#query-rdf-state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Query status of all devices in an RDF device group</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;rdf_group_name&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Example output fields:</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Device  Sym  RDF St  R1 St  R2 St  Mode    RPO</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># 0100    DEV  RDF1    WD     WD     ASYNC   00:00:03</span>
-</code></pre></div>
-<p><strong>Device states to understand:</strong></p>
-<table>
-<thead>
-<tr>
-<th>State</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>WD</code> (Write Disabled)</td>
-<td>R2 is synchronized and write-protected</td>
-</tr>
-<tr>
-<td><code>NR</code> (Not Ready)</td>
-<td>Device offline or not accessible</td>
-</tr>
-<tr>
-<td><code>RW</code> (Read/Write)</td>
-<td>Device is accessible for reads and writes (post-failover)</td>
-</tr>
-<tr>
-<td><code>Suspended</code></td>
-<td>Replication paused</td>
-</tr>
-<tr>
-<td><code>Failed Over</code></td>
-<td>Failover has occurred; R1 link broken</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="srdfa-failover-procedure">SRDF/A Failover Procedure<a class="headerlink" href="#srdfa-failover-procedure" title="Permanent link">&para;</a></h2>
-<h3 id="pre-failover-requirements">Pre-Failover Requirements<a class="headerlink" href="#pre-failover-requirements" title="Permanent link">&para;</a></h3>
-<ul>
-<li>[ ] Confirm R1 (source) site is unavailable or inaccessible.</li>
-<li>[ ] Identify the latest consistent delta set received at R2.</li>
-<li>[ ] Coordinate with application owners — failover causes brief I/O disruption on R2.</li>
-<li>[ ] Confirm R2 storage and compute infrastructure is operational.</li>
-</ul>
-<h3 id="failover-steps">Failover Steps<a class="headerlink" href="#failover-steps" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Verify current SRDF state — confirm it is not in a transient state</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># 2. Execute failover — promotes R2 devices to RW, isolates from R1</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>failover<span class="w"> </span>-force
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># 3. Confirm R2 devices are now RW and R1 link shows &quot;Failed Over&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># 4. Present R2 volumes to DR hosts (if not using host-based failover automation)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># This step is environment-specific — SRM, host scripts, or manual masking</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># 5. Start production workloads on DR site</span>
-</code></pre></div>
+┌────────────────────────────────────── SRDF/A — Backup &amp; Restore ──────────────────────────────────────┐
+│                                                                                                       │
+│    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Backup (Protection)              │  │              Restore (Recovery)             │   │
+│   │               symrdf establish               │  │          symrdf failover / failback         │   │
+│   │              Quiesce source I/O              │  │            Select recovery point            │   │
+│   │             Take snapshot / CBT              │  │           Mount or copy to target           │   │
+│   │           Transfer changed blocks            │  │              Validate integrity             │   │
+│   │             Commit to repository             │  │             Restart application             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                      Key SRDF/A Commands                                      │   │
+│   │                                Backup trigger  : symrdf establish                             │   │
+│   │                           List points     : symrdf failover / failback                        │   │
+│   │                                  Health status   : symrdf query                               │   │
+│   │                                 Retention mgmt  : symrdf verify                               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
+│  R1            = source SRDF volume on production array; host writes flow here                        │
+│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
+│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
+│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
+│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
+│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
+│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
+│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
+│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
+│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
+│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
+│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
+│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Device states to understand:**
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| State | Meaning |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| `WD` (Write Disabled) | R2 is synchronized and write-protected |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| `NR` (Not Ready) | Device offline or not accessible |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| `RW` (Read/Write) | Device is accessible for reads and writes (post-failover) |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| `Suspended` | Replication paused |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| `Failed Over` | Failover has occurred; R1 link broken |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>---
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>## SRDF/A Failover Procedure
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>### Pre-Failover Requirements
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>- [ ] Confirm R1 (source) site is unavailable or inaccessible.
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>- [ ] Identify the latest consistent delta set received at R2.
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>- [ ] Coordinate with application owners — failover causes brief I/O disruption on R2.
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>- [ ] Confirm R2 storage and compute infrastructure is operational.
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>### Failover Steps
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>```bash
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a># 1. Verify current SRDF state — confirm it is not in a transient state
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>symrdf query -g PROD_RDF_GROUP
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a># 2. Execute failover — promotes R2 devices to RW, isolates from R1
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>symrdf -g PROD_RDF_GROUP failover -force
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a># 3. Confirm R2 devices are now RW and R1 link shows &quot;Failed Over&quot;
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>symrdf query -g PROD_RDF_GROUP
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a># 4. Present R2 volumes to DR hosts (if not using host-based failover automation)
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a># This step is environment-specific — SRM, host scripts, or manual masking
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a># 5. Start production workloads on DR site
+</code></pre></div></p>
 <p><strong>Important:</strong> The <code>-force</code> flag is required when R1 is inaccessible and the link cannot confirm synchronization. Without it, <code>symrdf failover</code> will refuse to proceed if the link is already down.</p>
 <h3 id="failover-with-storage-group-sg-based-management">Failover with Storage Group (SG-based management)<a class="headerlink" href="#failover-with-storage-group-sg-based-management" title="Permanent link">&para;</a></h3>
 <p>In modern VMAX/PowerMax environments, RDF operations are performed at the Storage Group level:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Storage Group failover (preferred for VMAX3/PowerMax)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>failover<span class="w"> </span>-force
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Query by storage group</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>query
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Storage Group failover (preferred for VMAX3/PowerMax)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>failover<span class="w"> </span>-force
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Query by storage group</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>query
 </code></pre></div>
 <hr />
 <h2 id="srdfa-vs-srdfs-differences">SRDF/A vs SRDF/S Differences<a class="headerlink" href="#srdfa-vs-srdfs-differences" title="Permanent link">&para;</a></h2>
@@ -4804,32 +4770,32 @@
 <h2 id="re-establishing-replication-after-recovery">Re-establishing Replication After Recovery<a class="headerlink" href="#re-establishing-replication-after-recovery" title="Permanent link">&para;</a></h2>
 <p>After the primary (R1) site is restored, reverse the replication or re-establish the original direction.</p>
 <h3 id="option-a-establish-reverse-direction-dr-to-production">Option A: Establish (Reverse Direction, DR to Production)<a class="headerlink" href="#option-a-establish-reverse-direction-dr-to-production" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Re-establish SRDF from R2 (current production) back to R1 (recovered site)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># This syncs changes made on R2 back to R1</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>establish<span class="w"> </span>-force
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Monitor sync state</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Wait until: R1 St = WD, R2 St = WD (synchronized)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Re-establish SRDF from R2 (current production) back to R1 (recovered site)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># This syncs changes made on R2 back to R1</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>establish<span class="w"> </span>-force
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Monitor sync state</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Wait until: R1 St = WD, R2 St = WD (synchronized)</span>
 </code></pre></div>
 <h3 id="option-b-restore-full-resync-production-to-dr">Option B: Restore (Full Resync, Production to DR)<a class="headerlink" href="#option-b-restore-full-resync-production-to-dr" title="Permanent link">&para;</a></h3>
 <p>After a full recovery where R1 is rebuilt from scratch:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Restore re-syncs R1 from R2 in full</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>restore<span class="w"> </span>-force
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Monitor</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Restore re-syncs R1 from R2 in full</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>restore<span class="w"> </span>-force
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Monitor</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP
 </code></pre></div>
 <h3 id="option-c-failback-to-r1-after-failover">Option C: Failback to R1 After Failover<a class="headerlink" href="#option-c-failback-to-r1-after-failover" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Ensure R1 site volumes are accessible and array is healthy</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># 2. Perform a &#39;failover&#39; back in the original direction (now R2→R1)</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>failover<span class="w"> </span>-force
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># 3. Flip replication direction so R1 is again the source</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>establish
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># 4. Monitor until synchronized</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Ensure R1 site volumes are accessible and array is healthy</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># 2. Perform a &#39;failover&#39; back in the original direction (now R2→R1)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>failover<span class="w"> </span>-force
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># 3. Flip replication direction so R1 is again the source</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>establish
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># 4. Monitor until synchronized</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP
 </code></pre></div>
 <hr />
 <h2 id="srdfa-failover-flowchart">SRDF/A Failover Flowchart<a class="headerlink" href="#srdfa-failover-flowchart" title="Permanent link">&para;</a></h2>
@@ -4868,20 +4834,20 @@
 <hr />
 <h2 id="validation-with-symrdf-query">Validation with symrdf query<a class="headerlink" href="#validation-with-symrdf-query" title="Permanent link">&para;</a></h2>
 <p>After any SRDF operation, validate the state thoroughly before declaring recovery complete.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Detailed query — shows RPO, link state, device state</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>-detail
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check RDF group information</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_number&gt;<span class="w"> </span>-detail
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Verify RDF director status on the array</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>all
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Check RPO for async groups</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>verify<span class="w"> </span>-consistent
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Alert if RPO exceeds threshold</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RPO|Mode&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Detailed query — shows RPO, link state, device state</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>-detail
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check RDF group information</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_number&gt;<span class="w"> </span>-detail
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Verify RDF director status on the array</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>all
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Check RPO for async groups</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>verify<span class="w"> </span>-consistent
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Alert if RPO exceeds threshold</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RPO|Mode&quot;</span>
 </code></pre></div>
 <h3 id="expected-states-at-each-stage">Expected States at Each Stage<a class="headerlink" href="#expected-states-at-each-stage" title="Permanent link">&para;</a></h3>
 <table>

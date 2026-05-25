@@ -4120,72 +4120,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#vmware-site-recovery-manager-srm" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VMware Site Recovery Manager (SRM)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dell-unisphere-and-srdfa-monitoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dell Unisphere and SRDF/A Monitoring
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#aria-operations-for-storage-powermax-management-pack" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Aria Operations for Storage (PowerMax Management Pack)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#backup-from-r2-srdfa-offload" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backup from R2 (SRDF/A Offload)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recoverpoint-co-existence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RecoverPoint Co-existence
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#symcli-integration-points" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SYMCLI Integration Points
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -4336,7 +4270,7 @@
 </blockquote>
 <hr />
 <h2 id="srm-integration-topology">SRM Integration Topology<a class="headerlink" href="#srm-integration-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
+<p><pre class="mermaid"><code>graph TD
     subgraph prodSite ["Production Site"]
         srmProd["SRM Server\n(Protected Site)"]
         sra1["Dell SRA\n(SRM Plugin)"]
@@ -4359,82 +4293,82 @@
 
     r1array --&gt;|"SRDF/A async replication"| r2array
     srmProd &lt;--&gt;|"SRM pairing channel"| srmDr</code></pre>
-<h2 id="vmware-site-recovery-manager-srm">VMware Site Recovery Manager (SRM)<a class="headerlink" href="#vmware-site-recovery-manager-srm" title="Permanent link">&para;</a></h2>
-<p>SRDF/A integrates with VMware SRM via the <strong>Dell EMC Storage Replication Adapter (SRA)</strong>, enabling automated orchestration of SRDF failover as part of SRM Recovery Plans.</p>
-<p><strong>Setup steps:</strong></p>
-<ol>
-<li>Install the Dell SRA on both protected-site and recovery-site SRM servers.</li>
-<li>In SRM, configure the array manager on both sites by providing PowerMax Unisphere credentials.</li>
-<li>SRM discovers SRDF groups via the SRA and lists available replicated datastores.</li>
-<li>Create <strong>Protection Groups</strong> in SRM — map each SRDF device group to an SRM protection group.</li>
-<li>Create a <strong>Recovery Plan</strong> that defines the power-on order, IP customisation rules, and pre/post scripts.</li>
-<li>Run <strong>Test Failover</strong> (non-disruptive — SRM creates a temporary snapshot on R2 and powers on VMs in a test bubble network).</li>
-</ol>
-<p><strong>Key operational notes:</strong></p>
-<ul>
-<li>SRM test failover uses SnapVX on the R2 devices — ensure SnapVX capacity exists on the DR array.</li>
-<li>SRM and SRDF/A must agree on which SRDF groups are protected — do not add or remove devices from an SRDF group while an SRM protection group references it without updating SRM.</li>
-<li>SRDF group suspension during maintenance should be coordinated with SRM — SRM health checks will alarm if the SRDF pair state is not "Consistent" or "Synchronized."</li>
-</ul>
-<hr />
-<h2 id="dell-unisphere-and-srdfa-monitoring">Dell Unisphere and SRDF/A Monitoring<a class="headerlink" href="#dell-unisphere-and-srdfa-monitoring" title="Permanent link">&para;</a></h2>
-<p>Unisphere for PowerMax provides the primary monitoring interface for SRDF/A health:</p>
-<ul>
-<li><strong>Storage → Replication → SRDF Groups</strong> — shows pair state, cycle time, and delta mark count per group.</li>
-<li><strong>Performance → SRDF</strong> — historical bandwidth and latency metrics.</li>
-<li><strong>Alerts</strong> — configure threshold alerts for:</li>
-<li>Cycle time exceeding the RPO target (e.g., &gt; 60s for a 30s cycle target)</li>
-<li>Delta mark count growing (indicates link cannot keep pace with writes)</li>
-<li>Pair state moving to Transmit Idle or Suspended</li>
-</ul>
-<hr />
-<h2 id="aria-operations-for-storage-powermax-management-pack">Aria Operations for Storage (PowerMax Management Pack)<a class="headerlink" href="#aria-operations-for-storage-powermax-management-pack" title="Permanent link">&para;</a></h2>
-<p>The Dell PowerMax management pack for Aria Operations surfaces SRDF/A metrics directly in the Aria dashboard:</p>
-<ul>
-<li>SRDF group health (consistent / degraded / failed)</li>
-<li>RPO lag in seconds</li>
-<li>Delta set queue depth</li>
-<li>WAN link utilisation</li>
-</ul>
-<p>Configure alerts in Aria to page on-call when the SRDF/A lag exceeds the agreed RPO threshold.</p>
-<hr />
-<h2 id="backup-from-r2-srdfa-offload">Backup from R2 (SRDF/A Offload)<a class="headerlink" href="#backup-from-r2-srdfa-offload" title="Permanent link">&para;</a></h2>
-<p>Rather than running backup agents against production (R1) volumes, backups can be taken from R2 (DR site) to avoid production I/O impact.</p>
-<p><strong>Approach using SnapVX on R2:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a consistent snapshot of all R2 devices in the device group</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symsnap<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>establish<span class="w"> </span>-name<span class="w"> </span>BACKUP_&lt;date&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Mount the snapshot on a backup host (using symclone or direct mount)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Run the backup from the mounted snapshot</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Terminate the snapshot after backup completes</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>symsnap<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>terminate<span class="w"> </span>-name<span class="w"> </span>BACKUP_&lt;date&gt;
-</code></pre></div>
-<p>This pattern ensures production I/O is not affected by backup processing and provides a consistent point-in-time copy independent of the SRDF/A cycle boundary.</p>
-<p><strong>Important:</strong> Confirm the R2 SRDF/A pair is in a consistent state before creating the snapshot — taking a snapshot mid-cycle may capture a transitional state.</p>
-<hr />
-<h2 id="recoverpoint-co-existence">RecoverPoint Co-existence<a class="headerlink" href="#recoverpoint-co-existence" title="Permanent link">&para;</a></h2>
-<p>RecoverPoint (RP) journaling and SRDF/A can co-exist on the same PowerMax array provided:</p>
-<ul>
-<li>RecoverPoint journal volumes are <strong>not in the same SRDF device groups</strong> as SRDF/A volumes.</li>
-<li>RP-protected LUNs use separate SRDF groups if they also require SRDF replication (cascaded protection).</li>
-<li>Zone isolation prevents RP I/O splitters from interfering with SRDF director ports.</li>
-</ul>
-<p>Consult Dell Professional Services before deploying RecoverPoint and SRDF/A on the same array if the configuration is non-trivial.</p>
-<hr />
-<h2 id="symcli-integration-points">SYMCLI Integration Points<a class="headerlink" href="#symcli-integration-points" title="Permanent link">&para;</a></h2>
-<p>SRDF/A can be scripted via SYMCLI for automated pre/post hooks in SRM and DR runbooks:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Query all SRDF/A pairs for a device group</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Suspend SRDF/A before maintenance (pre-hook in SRM custom scripts)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-noprompt
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Resume after maintenance (post-hook)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Verify pair state after resume before confirming maintenance complete</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>verify<span class="w"> </span>-consistent
-</code></pre></div>
+┌───────────────────────────────── SRDF/A — Architecture Integrations ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                              SRDF/A — External Integration Points                             │   │
+│   │  Auth: Symmetrix/PowerMax admin credentials; Solutions Enabler (SYMAPI); role-based Unisphere │   │
+│   │                 Storage: connected via FC dark fiber / DWDM · FCIP (TCP 3225)                 │   │
+│   │            Monitoring: SNMP traps / syslog / REST API to ITSM and alerting systems            │   │
+│   │      Encryption: SRDF encryption at the FA/RF port level; Unisphere HTTPS; SE service TLS     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                        ▼                        ▼                          │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Identity          │  │           Storage           │  │          Monitoring         │   │
+│   │          AD / LDAP          │  │     FC dark fiber / DWDM    │  │        SNMP / syslog        │   │
+│   │           SAML SSO          │  │       FCIP (TCP 3225)       │  │         REST webhook        │   │
+│   │          RBAC roles         │  │       NFS / iSCSI / FC      │  │         Email alerts        │   │
+│   │         MFA optional        │  │       Dedup appliance       │  │          ServiceNow         │   │
+│   │          Cert auth          │  │        Object storage       │  │          Prometheus         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
+│  R1            = source SRDF volume on production array; host writes flow here                        │
+│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
+│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
+│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
+│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
+│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
+│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
+│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
+│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
+│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
+│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
+│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
+│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>This pattern ensures production I/O is not affected by backup processing and provides a consistent point-in-time copy independent of the SRDF/A cycle boundary.
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>**Important:** Confirm the R2 SRDF/A pair is in a consistent state before creating the snapshot — taking a snapshot mid-cycle may capture a transitional state.
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>---
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>## RecoverPoint Co-existence
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>RecoverPoint (RP) journaling and SRDF/A can co-exist on the same PowerMax array provided:
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>- RecoverPoint journal volumes are **not in the same SRDF device groups** as SRDF/A volumes.
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>- RP-protected LUNs use separate SRDF groups if they also require SRDF replication (cascaded protection).
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>- Zone isolation prevents RP I/O splitters from interfering with SRDF director ports.
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>Consult Dell Professional Services before deploying RecoverPoint and SRDF/A on the same array if the configuration is non-trivial.
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>---
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>## SYMCLI Integration Points
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>SRDF/A can be scripted via SYMCLI for automated pre/post hooks in SRM and DR runbooks:
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>```bash
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a># Query all SRDF/A pairs for a device group
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a># Suspend SRDF/A before maintenance (pre-hook in SRM custom scripts)
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; suspend -noprompt
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a># Resume after maintenance (post-hook)
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resume -noprompt
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a># Verify pair state after resume before confirming maintenance complete
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; verify -consistent
+</code></pre></div></p>
 
 
 

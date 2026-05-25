@@ -4218,7 +4218,51 @@
 Veritas NetBackup three-tier architecture — Primary Server catalog and scheduling, Media Servers for data movement, and Clients with backup agents.
 </div>
 
-<p><img alt="NetBackup Architecture" src="../../../assets/netbackup-architecture-overview.svg" /></p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── NetBackup — Architecture ───────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                               NetBackup — Component Architecture                              │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │             Master Server     — scheduler, catalog, policy engine, job controller             │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │             Media Server      — data mover, dedup engine, storage unit management             │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │          Client Agent      — installed on protected host; sends data to media server          │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │                       Ports: 443 (Web UI) · 1556 (vnetd) · 13724 (bprd)                       │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    Three-tier component model — control plane, data plane, and management                             │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                          ▼                        ▼                        ▼                          │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │        Control Plane        │  │          Data Plane         │  │          Management         │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │ Master Server     — schedule│  │ Media Server      — data mov│  │ NetBackup Web UI  — browser │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │          Scheduling         │  │      Replication/Backup     │  │         443 (Web UI)        │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │         Policy mgmt         │  │        Data movement        │  │           REST API          │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │          Catalog/DB         │  │        Dedup/compress       │  │             RBAC            │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │          Job engine         │  │         1556 (vnetd)        │  │           Alerting          │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Media Server  = data mover between client and storage; can be co-located with master                 │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<img alt="NetBackup Architecture" src="../../../assets/netbackup-architecture-overview.svg" /></p>
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Three-tier topology, key processes, storage units, catalog backup, and sizing.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>VMware VADP, Oracle RMAN, NDMP, and cloud storage integrations.</span></a>
@@ -4255,23 +4299,6 @@ Veritas NetBackup three-tier architecture — Primary Server catalog and schedul
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>graph TB
-  MASTER["Primary Server\nCatalog · Scheduler · EMM DB"] --&gt;|"TCP 1556 policy/job control"| MS1["Media Server 1\nSite A"]
-  MASTER --&gt; MS2["Media Server 2\nSite B / DR"]
-  MS1 --&gt; MSDP1[("MSDP Pool\nSite A")]
-  MS2 --&gt; MSDP2[("MSDP Pool\nSite B")]
-  MSDP1 --&gt;|"AIR replication"| MSDP2
-  MSDP2 --&gt;|"SLP copy"| CLOUD[("Cloud Storage\nlong-term archive")]
-  CLIENT1(["VMware VADP host"]) --&gt;|"TCP 13724 bpcd"| MS1
-  CLIENT2(["Oracle / MSSQL agent"]) --&gt;|"TCP 13724 bpcd"| MS1
-  classDef master fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef media fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef store fill:#b45309,stroke:#92400e,color:#fff
-  classDef client fill:#15803d,stroke:#166534,color:#fff
-  class MASTER master
-  class MS1,MS2 media
-  class MSDP1,MSDP2,CLOUD store
-  class CLIENT1,CLIENT2 client</code></pre>
 
 
 

@@ -3965,89 +3965,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#clean-room-build-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clean Room Build Standards
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Clean Room Build Standards">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#compute" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compute
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#networking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Networking
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#storage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#malware-scanning-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Malware Scanning Procedure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-validation-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Validation Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#database-integrity-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Database Integrity Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#escalation-if-malware-found" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4204,7 +4121,7 @@
 - Encrypted files that appear intact but are inaccessible.</p>
 <p>The clean room is where analysis occurs. Data and systems are treated as suspect until proven clean.</p>
 <h2 id="clean-room-architecture">Clean Room Architecture<a class="headerlink" href="#clean-room-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
+<p><pre class="mermaid"><code>graph LR
     BACKUP["Immutable Backup Copy"] --&gt; RESTORE["Restore to\nIRE Staging"]
     RESTORE --&gt; SCAN["Malware Scan\n(offline AV + forensics)"]
     SCAN --&gt;|"Clean"| CLEANROOM["Clean Room\n(validated data)"]
@@ -4212,105 +4129,66 @@
     CLEANROOM --&gt; VALIDATE["Business Validation\n(app team testing)"]
     VALIDATE --&gt;|"Approved"| REINTRODUCE["Reintroduce to Production"]
     VALIDATE --&gt;|"Issues found"| RESTORE</code></pre>
-<h2 id="clean-room-build-standards">Clean Room Build Standards<a class="headerlink" href="#clean-room-build-standards" title="Permanent link">&para;</a></h2>
-<h3 id="compute">Compute<a class="headerlink" href="#compute" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Fresh OS deployment from known-good media (not a clone of production).</li>
-<li>No production software agents installed (backup agents, monitoring, SIEM).</li>
-<li>All patches applied before use.</li>
-<li>Snapshot the clean OS state before loading any recovered data — revert between test cycles.</li>
-</ul>
-<h3 id="networking">Networking<a class="headerlink" href="#networking" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Clean room hosts on a dedicated subnet within the IRE.</li>
-<li>No outbound internet access (prevents C2 beacon from any surviving malware).</li>
-<li>DNS resolution pointing to IRE-internal DNS only.</li>
-<li>Inbound access limited to the jump host and authorised analyst workstations.</li>
-</ul>
-<h3 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Recovered data mounted read-only initially.</li>
-<li>Scanning tools installed locally — do not send files to cloud-based scanning.</li>
-<li>Write access only granted after clean verification.</li>
-</ul>
-<h2 id="malware-scanning-procedure">Malware Scanning Procedure<a class="headerlink" href="#malware-scanning-procedure" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Example: ClamAV offline scan of mounted recovery volume (Linux)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Install ClamAV and update definitions (from offline mirror or pre-downloaded)</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>clamscan<span class="w"> </span>--recursive<span class="w"> </span>--infected<span class="w"> </span>--log<span class="o">=</span>/var/log/ire-scan-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.log<span class="w"> </span>/mnt/recovery-volume
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Scan for known ransomware IOCs</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>clamscan<span class="w"> </span>--database<span class="o">=</span>/opt/ir-signatures/<span class="w"> </span>--recursive<span class="w"> </span>/mnt/recovery-volume
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Windows: offline AV scan using Windows Defender (from WinPE)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>MpCmdRun.exe<span class="w"> </span>-Scan<span class="w"> </span>-ScanType<span class="w"> </span><span class="m">3</span><span class="w"> </span>-File<span class="w"> </span>D:<span class="se">\r</span>ecovery-volume
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Generate file hash manifest for integrity verification</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>find<span class="w"> </span>/mnt/recovery-volume<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-exec<span class="w"> </span>sha256sum<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span>&gt;<span class="w"> </span>/var/log/ire-hash-manifest-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
-</code></pre></div>
-<h2 id="data-validation-checklist">Data Validation Checklist<a class="headerlink" href="#data-validation-checklist" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Step</th>
-<th>Owner</th>
-<th>Pass condition</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>AV scan complete</td>
-<td>IR team</td>
-<td>0 detections or all detections reviewed and cleared</td>
-</tr>
-<tr>
-<td>File integrity check</td>
-<td>IR team</td>
-<td>Hash manifest matches backup catalogue</td>
-</tr>
-<tr>
-<td>Encrypted file check</td>
-<td>IR team</td>
-<td>No files in known encrypted extensions (<code>.locky</code>, <code>.ryuk</code>, etc.)</td>
-</tr>
-<tr>
-<td>Application startup test</td>
-<td>App team</td>
-<td>Application starts and reaches health check endpoint</td>
-</tr>
-<tr>
-<td>Database consistency check</td>
-<td>DBA</td>
-<td>No corruption reported (DBCC CHECKDB / pg_dump test)</td>
-</tr>
-<tr>
-<td>Data completeness</td>
-<td>Business owner</td>
-<td>Critical records present up to the chosen recovery point</td>
-</tr>
-<tr>
-<td>Sign-off</td>
-<td>DR lead</td>
-<td>Written approval before data leaves clean room</td>
-</tr>
-</tbody>
-</table>
-<h2 id="database-integrity-checks">Database Integrity Checks<a class="headerlink" href="#database-integrity-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- SQL Server: check for corruption</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">DBCC</span><span class="w"> </span><span class="n">CHECKDB</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;YourDatabase&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">NO_INFOMSGS</span><span class="p">,</span><span class="w"> </span><span class="n">ALL_ERRORMSGS</span><span class="p">;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">-- PostgreSQL: test dump (will fail if corrupted)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">pg_dump</span><span class="w"> </span><span class="o">-</span><span class="n">h</span><span class="w"> </span><span class="n">localhost</span><span class="w"> </span><span class="o">-</span><span class="n">U</span><span class="w"> </span><span class="n">postgres</span><span class="w"> </span><span class="o">-</span><span class="n">d</span><span class="w"> </span><span class="n">recovered_db</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="k">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">echo</span><span class="w"> </span><span class="ss">&quot;Dump OK&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">-- Oracle: check data file integrity</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">RMAN</span><span class="o">&gt;</span><span class="w"> </span><span class="n">VALIDATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="p">;</span>
-</code></pre></div>
+┌─────────────────────────────────────────── IRE Clean Room ────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         IRE Clean Room — isolated ESXi + vCenter + workstations for validated recovery        │   │
+│   │                   See product-specific sub-sections for detailed procedures                   │   │
+│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
+│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
+│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Production site · DR site · Replication link · Management network · Vault network                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
+│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
+│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
+│  Failback      = returning operations to production site after DR resolved                            │
+│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
+│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
+│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
+│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
+│  DR Test       = planned failover test; validates RTO without real disaster                           │
+│  Replication   = continuous or periodic data copy to secondary site or vault                          │
+│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
+│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Data Validation Checklist
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Step | Owner | Pass condition |
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|---|---|---|
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| AV scan complete | IR team | 0 detections or all detections reviewed and cleared |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| File integrity check | IR team | Hash manifest matches backup catalogue |
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| Encrypted file check | IR team | No files in known encrypted extensions (`.locky`, `.ryuk`, etc.) |
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| Application startup test | App team | Application starts and reaches health check endpoint |
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Database consistency check | DBA | No corruption reported (DBCC CHECKDB / pg_dump test) |
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| Data completeness | Business owner | Critical records present up to the chosen recovery point |
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| Sign-off | DR lead | Written approval before data leaves clean room |
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>## Database Integrity Checks
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>```sql
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>-- SQL Server: check for corruption
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>DBCC CHECKDB (&#39;YourDatabase&#39;) WITH NO_INFOMSGS, ALL_ERRORMSGS;
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>-- PostgreSQL: test dump (will fail if corrupted)
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>pg_dump -h localhost -U postgres -d recovered_db &gt; /dev/null &amp;&amp; echo &quot;Dump OK&quot;
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>-- Oracle: check data file integrity
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>RMAN&gt; VALIDATE DATABASE;
+</code></pre></div></p>
 <h2 id="escalation-if-malware-found">Escalation — If Malware Found<a class="headerlink" href="#escalation-if-malware-found" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. Halt all access to the clean room immediately.
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>2. Preserve the infected restore point (do not delete — needed for forensics).
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>3. Notify the IR lead and security team.
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>4. Roll back the clean room hosts to pre-scan snapshot.
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>5. Identify an earlier, cleaner restore point and repeat the process.
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>6. Document IOCs found for threat hunting in production.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. Halt all access to the clean room immediately.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2. Preserve the infected restore point (do not delete — needed for forensics).
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>3. Notify the IR lead and security team.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>4. Roll back the clean room hosts to pre-scan snapshot.
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>5. Identify an earlier, cleaner restore point and repeat the process.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>6. Document IOCs found for threat hunting in production.
 </code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>

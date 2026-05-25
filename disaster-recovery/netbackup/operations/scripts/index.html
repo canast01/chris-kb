@@ -4420,7 +4420,47 @@
 
 
 <h1 id="netbackup-scripts">NetBackup Scripts<a class="headerlink" href="#netbackup-scripts" title="Permanent link">&para;</a></h1>
-<p>Automation scripts for NetBackup use the <code>admincmd</code> CLI tools and are typically scheduled via cron on the Master Server. All scripts should write output to a dated log under <code>/opt/netbackup/scripts/logs/</code> and send alerts via email or a syslog forwarder when thresholds are breached. Scripts should be owned by <code>root</code> and executable only by the backup service account.</p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── NetBackup — Scripts ─────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                 NetBackup — Automation Scripts                                │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │             Scripts automate routine NetBackup operations — run via cron or CI/CD             │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │               Always store credentials in vault (not in script); log all output               │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │                 Test scripts in non-production before scheduling in production                │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │                        Scope scripts to least-privilege service account                       │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │          Status / Reporting Scripts          │  │              Automation Scripts             │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │           Job success rate report            │  │            Auto-expire old points           │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │              Capacity trending               │  │          Auto-add new VMs to policy         │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │            SLA compliance report             │  │          Nightly DR test validation         │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │             RPO / RTO dashboard              │  │             Alert on job failure            │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │               nbpemreq / bpps                │  │             tpconfig / nbstlutil            │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Media Server  = data mover between client and storage; can be co-located with master                 │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+Automation scripts for NetBackup use the <code>admincmd</code> CLI tools and are typically scheduled via cron on the Master Server. All scripts should write output to a dated log under <code>/opt/netbackup/scripts/logs/</code> and send alerts via email or a syslog forwarder when thresholds are breached. Scripts should be owned by <code>root</code> and executable only by the backup service account.</p>
 <table>
 <thead>
 <tr>

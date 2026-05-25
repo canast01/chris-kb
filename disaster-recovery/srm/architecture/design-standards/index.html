@@ -4337,6 +4337,49 @@
 
 
 <h1 id="srm-architecture-standards">SRM Architecture — Standards<a class="headerlink" href="#srm-architecture-standards" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────── SRM — Design Standards ────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │              Sizing Guidelines               │  │               HA Requirements               │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │         Deduplicate where supported          │  │           N+1 component redundancy          │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │          Bandwidth: 10 GbE minimum           │  │          Heartbeat / health monitor         │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │          Storage: 130% of raw data           │  │          Separate mgmt / data VLANs         │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │         Latency: &lt; 10 ms to storage          │  │          Out-of-band access (IPMI)          │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │           CPU: 8+ vCPU for engine            │  │          Anti-affinity VM placement         │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│    Ports: 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) · 443 (vCenter)                                    │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │                                   Standard SRM Design Rules                                   │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │Encryption enabled on all channels: SRM management TLS; replication encryption controlled by ar│   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│                                                                                                       │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <blockquote>
 <p>Part of the <a href="../../">SRM</a> reference.</p>
 </blockquote>
@@ -4405,29 +4448,6 @@
 </tbody>
 </table>
 <h3 id="protection-group-to-recovery-plan-mapping">Protection Group to Recovery Plan Mapping<a class="headerlink" href="#protection-group-to-recovery-plan-mapping" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart LR
-    subgraph p1Tier [Priority 1 — SRDF/S Sync]
-        pgDB["PG-DB-DC1DC2\n(Oracle, MSSQL)"]
-        pgInfra["PG-INFRA-DC1DC2\n(AD, DNS)"]
-    end
-    subgraph p2Tier [Priority 2 — vSphere Replication]
-        pgApp["PG-APP-DC1DC2\n(Business apps)"]
-        pgFile["PG-FILE-DC1DC2\n(File servers)"]
-    end
-    subgraph p3Tier [Priority 3 — Async array rep]
-        pgDev["PG-DEV-DC1DC2\n(Dev mirrors)"]
-    end
-
-    pgDB --&gt; rpP1["RP-P1-CRITICAL\nRTO &lt; 15 min"]
-    pgInfra --&gt; rpP1
-    pgApp --&gt; rpP2["RP-P2-BUSINESS\nRTO &lt; 1 hr"]
-    pgFile --&gt; rpP2
-    pgDev --&gt; rpP3["RP-P3-NONCRIT\nRTO &lt; 4 hr"]
-
-    classDef pg fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef rp fill:#2563eb,stroke:#1d4ed8,color:#fff
-    class pgDB,pgInfra,pgApp,pgFile,pgDev pg
-    class rpP1,rpP2,rpP3 rp</code></pre>
 <h2 id="recovery-plan-design">Recovery Plan Design<a class="headerlink" href="#recovery-plan-design" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Power-on sequence is mandatory: infrastructure VMs (DC, DNS) → DB tier → APP tier → WEB tier</li>

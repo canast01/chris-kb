@@ -3675,28 +3675,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#execution-policy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Execution Policy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#module-not-found-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Module Not Found Errors
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#powershell-remoting-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3879,7 +3857,7 @@
 </blockquote>
 <hr />
 <h2 id="powershell-troubleshooting-decision-flow">PowerShell Troubleshooting Decision Flow<a class="headerlink" href="#powershell-troubleshooting-decision-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     failure["Script Error\nor Unexpected Behaviour"]
     failure --&gt; errType{"Error type?"}
     errType --&gt;|Execution policy\nblocked| checkPolicy["Get-ExecutionPolicy -List\ncheck all scopes"]
@@ -3893,133 +3871,120 @@
     checkCred --&gt; refreshCred["Get-Credential again\nor Import-Clixml new file"]
     errType --&gt;|Script logic\nundefined var| strictMode["Set-StrictMode -Version Latest\nadd breakpoint()"]
     strictMode --&gt; stepDebug["Set-PSBreakpoint\nstep through execution"]</code></pre>
-<h2 id="execution-policy">Execution Policy<a class="headerlink" href="#execution-policy" title="Permanent link">&para;</a></h2>
-<p>Execution policy errors are the most common first-run obstacle on Windows.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check the current effective execution policy</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-ExecutionPolicy</span> <span class="n">-List</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Set for current user (most common — no admin required)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Set-ExecutionPolicy</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">-ExecutionPolicy</span> <span class="n">RemoteSigned</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Set for the current process only (temporary, safe)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Set-ExecutionPolicy</span> <span class="n">-Scope</span> <span class="k">Process</span> <span class="n">-ExecutionPolicy</span> <span class="n">Bypass</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Unblock a downloaded script without changing policy</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Unblock-File</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">deploy</span><span class="p">.</span><span class="n">ps1</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># Check if a file is blocked (from the internet zone)</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Get-Item</span> <span class="n">C</span><span class="p">:\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">deploy</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-Stream</span> <span class="s1">&#39;*&#39;</span>
-</code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Policy</th>
-<th>Behaviour</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Restricted</code></td>
-<td>No scripts allowed (Windows default)</td>
-</tr>
-<tr>
-<td><code>AllSigned</code></td>
-<td>Only scripts signed by a trusted publisher</td>
-</tr>
-<tr>
-<td><code>RemoteSigned</code></td>
-<td>Remote scripts need a signature; local scripts run freely</td>
-</tr>
-<tr>
-<td><code>Unrestricted</code></td>
-<td>All scripts run; remote scripts prompt for confirmation</td>
-</tr>
-<tr>
-<td><code>Bypass</code></td>
-<td>Nothing blocked, no warnings</td>
-</tr>
-</tbody>
-</table>
-<h2 id="module-not-found-errors">Module Not Found Errors<a class="headerlink" href="#module-not-found-errors" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Confirm the module is installed</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-InstalledModule</span> <span class="n">-Name</span> <span class="n">ActiveDirectory</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Check PSModulePath</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">$env:PSModulePath</span> <span class="n">-split</span> <span class="s1">&#39;;&#39;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Add a custom module path permanently (current user)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nv">$profilePath</span> <span class="p">=</span> <span class="no">[System.Environment]</span><span class="p">::</span><span class="n">GetFolderPath</span><span class="p">(</span><span class="s1">&#39;MyDocuments&#39;</span><span class="p">)</span> <span class="p">+</span> <span class="s1">&#39;\PowerShell\Modules&#39;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="no">[Environment]</span><span class="p">::</span><span class="n">SetEnvironmentVariable</span><span class="p">(</span><span class="s1">&#39;PSModulePath&#39;</span><span class="p">,</span> <span class="s2">&quot;$env:PSModulePath;$profilePath&quot;</span><span class="p">,</span> <span class="s1">&#39;User&#39;</span><span class="p">)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># Diagnose import failure with verbose output</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">Import-Module</span> <span class="n">-Name</span> <span class="n">MyModule</span> <span class="n">-Verbose</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c"># Check for .NET dependency issues</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="no">[System.AppDomain]</span><span class="p">::</span><span class="n">CurrentDomain</span><span class="p">.</span><span class="n">GetAssemblies</span><span class="p">()</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">Location</span> <span class="o">-like</span> <span class="s1">&#39;*MyModule*&#39;</span>
-</code></pre></div>
+┌───────────────────────────────────── PowerShell — Common Issues ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                       Most frequent PowerShell failures and their fixes                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               Issue: Script cannot be loaded because running scripts is disabled              │   │
+│   │                    Fix: Set-ExecutionPolicy RemoteSigned -Scope CurrentUser                   │   │
+│   │         Note: use -Scope Process for temporary bypass without changing machine policy         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 Issue: WinRM Access is denied                                 │   │
+│   │      Cause A: user not in WinRM access DACL → fix: Set-PSSessionConfiguration permissions     │   │
+│   │      Cause B: account locked or password expired → fix: unlock AD account, reset password     │   │
+│   │              Cause C: HTTPS cert invalid → fix: renew cert, update WinRM listener             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                           Issue: Module not found after installation                          │   │
+│   │      Cause A: installed under different user scope → fix: Install-Module -Scope AllUsers      │   │
+│   │      Cause B: PSModulePath does not include install directory → fix: add path to env var      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>| Policy | Behaviour |
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|---|---|
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| `Restricted` | No scripts allowed (Windows default) |
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>| `AllSigned` | Only scripts signed by a trusted publisher |
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| `RemoteSigned` | Remote scripts need a signature; local scripts run freely |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| `Unrestricted` | All scripts run; remote scripts prompt for confirmation |
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| `Bypass` | Nothing blocked, no warnings |
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>## Module Not Found Errors
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>```powershell
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># Confirm the module is installed
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>Get-InstalledModule -Name ActiveDirectory -ErrorAction SilentlyContinue
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a># Check PSModulePath
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>$env:PSModulePath -split &#39;;&#39;
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Add a custom module path permanently (current user)
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>$profilePath = [System.Environment]::GetFolderPath(&#39;MyDocuments&#39;) + &#39;\PowerShell\Modules&#39;
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>[Environment]::SetEnvironmentVariable(&#39;PSModulePath&#39;, &quot;$env:PSModulePath;$profilePath&quot;, &#39;User&#39;)
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a># Diagnose import failure with verbose output
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>Import-Module -Name MyModule -Verbose -ErrorAction Stop
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a># Check for .NET dependency issues
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>[System.AppDomain]::CurrentDomain.GetAssemblies() | Where-Object Location -like &#39;*MyModule*&#39;
+</code></pre></div></p>
 <h2 id="powershell-remoting-issues">PowerShell Remoting Issues<a class="headerlink" href="#powershell-remoting-issues" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Enable remoting on a target machine (run as admin on the target)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Enable-PSRemoting</span> <span class="n">-Force</span> <span class="n">-SkipNetworkProfileCheck</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Test connectivity before running commands</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Test-WSMan</span> <span class="n">-ComputerName</span> <span class="n">server01</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">server01</span> <span class="n">-Port</span> <span class="n">5985</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Test basic remote session</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">New-PSSession</span> <span class="n">-ComputerName</span> <span class="n">server01</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Invoke-Command</span> <span class="n">-Session</span> <span class="nv">$session</span> <span class="n">-ScriptBlock</span> <span class="p">{</span> <span class="n">hostname</span> <span class="p">}</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">Remove-PSSession</span> <span class="nv">$session</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># Diagnose firewall — WinRM ports</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c"># HTTP:  5985</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c"># HTTPS: 5986</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="nb">Get-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&quot;Windows Remote Management*&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Enabled</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c"># Use SSL for secure remoting</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="nv">$sessionOption</span> <span class="p">=</span> <span class="nb">New-PSSessionOption</span> <span class="n">-SkipCACheck</span> <span class="n">-SkipCNCheck</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="nb">New-PSSession</span> <span class="n">-ComputerName</span> <span class="n">server01</span> <span class="n">-UseSSL</span> <span class="n">-SessionOption</span> <span class="nv">$sessionOption</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Enable remoting on a target machine (run as admin on the target)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Enable-PSRemoting</span> <span class="n">-Force</span> <span class="n">-SkipNetworkProfileCheck</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Test connectivity before running commands</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Test-WSMan</span> <span class="n">-ComputerName</span> <span class="n">server01</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">server01</span> <span class="n">-Port</span> <span class="n">5985</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Test basic remote session</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">New-PSSession</span> <span class="n">-ComputerName</span> <span class="n">server01</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">Invoke-Command</span> <span class="n">-Session</span> <span class="nv">$session</span> <span class="n">-ScriptBlock</span> <span class="p">{</span> <span class="n">hostname</span> <span class="p">}</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Remove-PSSession</span> <span class="nv">$session</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c"># Diagnose firewall — WinRM ports</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c"># HTTP:  5985</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c"># HTTPS: 5986</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="nb">Get-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&quot;Windows Remote Management*&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Enabled</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c"># Use SSL for secure remoting</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="nv">$sessionOption</span> <span class="p">=</span> <span class="nb">New-PSSessionOption</span> <span class="n">-SkipCACheck</span> <span class="n">-SkipCNCheck</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="nb">New-PSSession</span> <span class="n">-ComputerName</span> <span class="n">server01</span> <span class="n">-UseSSL</span> <span class="n">-SessionOption</span> <span class="nv">$sessionOption</span>
 </code></pre></div>
 <h2 id="debugging-scripts">Debugging Scripts<a class="headerlink" href="#debugging-scripts" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Set strict mode to catch undefined variables and functions</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Set-StrictMode</span> <span class="n">-Version</span> <span class="n">Latest</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Use Write-Debug statements (only show when $DebugPreference = &#39;Continue&#39;)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">$DebugPreference</span> <span class="p">=</span> <span class="s1">&#39;Continue&#39;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">Write-Debug</span> <span class="s2">&quot;Variable value: $myVar&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Breakpoints for interactive debugging</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Set-PSBreakpoint</span> <span class="n">-Script</span> <span class="n">C</span><span class="p">:\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">deploy</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-Line</span> <span class="n">42</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">Set-PSBreakpoint</span> <span class="n">-Variable</span> <span class="n">myVar</span> <span class="n">-Mode</span> <span class="n">ReadWrite</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># Step through script in VS Code</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c"># Set a breakpoint then press F5 or use the Debug panel</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c"># Trace execution</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="nb">Set-PSDebug</span> <span class="n">-Trace</span> <span class="n">1</span>   <span class="c"># trace each line</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="nb">Set-PSDebug</span> <span class="n">-Trace</span> <span class="n">0</span>   <span class="c"># disable tracing</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c"># Error handling pattern</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="k">try</span> <span class="p">{</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    <span class="nb">Get-Content</span> <span class="n">-Path</span> <span class="s1">&#39;nonexistent.txt&#39;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="p">}</span> <span class="k">catch</span> <span class="no">[System.IO.FileNotFoundException]</span> <span class="p">{</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    <span class="nb">Write-Error</span> <span class="s2">&quot;File not found: $_&quot;</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>    <span class="nb">Write-Error</span> <span class="s2">&quot;Unexpected error: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>    <span class="nb">Write-Verbose</span> <span class="s2">&quot;Cleanup complete&quot;</span>
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Set strict mode to catch undefined variables and functions</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Set-StrictMode</span> <span class="n">-Version</span> <span class="n">Latest</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Use Write-Debug statements (only show when $DebugPreference = &#39;Continue&#39;)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">$DebugPreference</span> <span class="p">=</span> <span class="s1">&#39;Continue&#39;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Write-Debug</span> <span class="s2">&quot;Variable value: $myVar&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Breakpoints for interactive debugging</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">Set-PSBreakpoint</span> <span class="n">-Script</span> <span class="n">C</span><span class="p">:\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">deploy</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-Line</span> <span class="n">42</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Set-PSBreakpoint</span> <span class="n">-Variable</span> <span class="n">myVar</span> <span class="n">-Mode</span> <span class="n">ReadWrite</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c"># Step through script in VS Code</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># Set a breakpoint then press F5 or use the Debug panel</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c"># Trace execution</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="nb">Set-PSDebug</span> <span class="n">-Trace</span> <span class="n">1</span>   <span class="c"># trace each line</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="nb">Set-PSDebug</span> <span class="n">-Trace</span> <span class="n">0</span>   <span class="c"># disable tracing</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c"># Error handling pattern</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    <span class="nb">Get-Content</span> <span class="n">-Path</span> <span class="s1">&#39;nonexistent.txt&#39;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="p">}</span> <span class="k">catch</span> <span class="no">[System.IO.FileNotFoundException]</span> <span class="p">{</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>    <span class="nb">Write-Error</span> <span class="s2">&quot;File not found: $_&quot;</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>    <span class="nb">Write-Error</span> <span class="s2">&quot;Unexpected error: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>    <span class="nb">Write-Verbose</span> <span class="s2">&quot;Cleanup complete&quot;</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="common-error-reference">Common Error Reference<a class="headerlink" href="#common-error-reference" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># View full error details from $Error automatic variable</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$Error</span><span class="p">[</span><span class="n">0</span><span class="p">]</span> <span class="p">|</span> <span class="nb">Format-List</span> <span class="p">*</span> <span class="n">-Force</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$Error</span><span class="p">[</span><span class="n">0</span><span class="p">].</span><span class="n">Exception</span><span class="p">.</span><span class="n">InnerException</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Check exit code of external tools</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">ping</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">1</span><span class="p">.</span><span class="n">1</span> <span class="n">-n</span> <span class="n">1</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nv">$LASTEXITCODE</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c"># Suppress errors for optional operations</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nb">Get-Process</span> <span class="n">-Name</span> <span class="n">nonexistent</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># View full error details from $Error automatic variable</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$Error</span><span class="p">[</span><span class="n">0</span><span class="p">]</span> <span class="p">|</span> <span class="nb">Format-List</span> <span class="p">*</span> <span class="n">-Force</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$Error</span><span class="p">[</span><span class="n">0</span><span class="p">].</span><span class="n">Exception</span><span class="p">.</span><span class="n">InnerException</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Check exit code of external tools</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">ping</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">1</span><span class="p">.</span><span class="n">1</span> <span class="n">-n</span> <span class="n">1</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nv">$LASTEXITCODE</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># Suppress errors for optional operations</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">Get-Process</span> <span class="n">-Name</span> <span class="n">nonexistent</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
 </code></pre></div>
 
 

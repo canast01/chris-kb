@@ -4334,6 +4334,46 @@
 
 
 <h1 id="srdfa-authentication">SRDF/A — Authentication<a class="headerlink" href="#srdfa-authentication" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────── SRDF/A — Authentication ───────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                SRDF/A — Authentication Methods                                │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │     Symmetrix/PowerMax admin credentials; Solutions Enabler (SYMAPI); role-based Unisphere    │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │               Management UI: HTTPS on FC dark fiber / DWDM — browser-based login              │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │               API: bearer token or service account; rotate credentials quarterly              │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │                 Inter-component: certificate-based mutual TLS between engines                 │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │                 Human Access                 │  │                Machine Access               │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │            AD / LDAP integration             │  │               Service account               │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │              SAML SSO optional               │  │               API key / token               │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │                 MFA via IdP                  │  │               Certificate auth              │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │            Session timeout 15 min            │  │              Rotate every 90 d              │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │              Audit login events              │  │             Vault-stored secrets            │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  R1            = source SRDF volume on production array; host writes flow here                        │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <blockquote>
 <p>Part of the <a href="../../">SRDF/A</a> reference.</p>
 </blockquote>
@@ -4347,7 +4387,7 @@
 <hr />
 <h2 id="service-account-policy">Service Account Policy<a class="headerlink" href="#service-account-policy" title="Permanent link">&para;</a></h2>
 <p>Create a dedicated service account per automation system; never use the root Solutions Enabler account:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>symauth<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>add<span class="w"> </span>-username<span class="w"> </span>svc_dr_automation<span class="w"> </span>-role<span class="w"> </span>StorageAdmin<span class="w"> </span>-scope<span class="w"> </span>rdfg:&lt;group_number&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symauth<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>add<span class="w"> </span>-username<span class="w"> </span>svc_dr_automation<span class="w"> </span>-role<span class="w"> </span>StorageAdmin<span class="w"> </span>-scope<span class="w"> </span>rdfg:&lt;group_number&gt;
 </code></pre></div>
 <p>Each automation system (monitoring, SRM, runbook scripts) should use a dedicated account scoped to the minimum required RDF groups and roles.</p>
 

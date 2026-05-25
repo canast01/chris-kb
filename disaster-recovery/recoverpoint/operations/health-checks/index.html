@@ -4317,28 +4317,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rest-api-health-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        REST API Health Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rpo-violation-triage-decision-tree" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RPO Violation Triage Decision Tree
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#rpo-compliance-check" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4610,7 +4588,7 @@
 </table>
 <hr />
 <h2 id="daily-health-check-commands">Daily Health Check Commands<a class="headerlink" href="#daily-health-check-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to RPA cluster management IP</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to RPA cluster management IP</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@&lt;rpa-cluster-ip&gt;
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># RPA cluster and node health</span>
@@ -4634,88 +4612,90 @@
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Cluster quorum state</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>cluster<span class="w"> </span>quorum<span class="w"> </span>check
 </code></pre></div>
-<hr />
-<h2 id="rest-api-health-checks">REST API Health Checks<a class="headerlink" href="#rest-api-health-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">RP</span><span class="o">=</span><span class="s2">&quot;https://&lt;rpa-mgmt-ip&gt;/fapi/rest/5_1&quot;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">AUTH</span><span class="o">=</span><span class="s2">&quot;-u admin:password --insecure&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Cluster health summary</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RP</span><span class="s2">/cluster/all_clusters_details&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s2">for c in data.get(&#39;clustersDetails&#39;, []):</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s2">    print(f\&quot;Cluster: {c.get(&#39;name&#39;,&#39;?&#39;)}  Quorum: {c.get(&#39;quorum&#39;,&#39;?&#39;)}\&quot;)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s2">&quot;</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># All CGs — state and lag</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RP</span><span class="s2">/group/all_groups_details&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s2">for g in data.get(&#39;innerSet&#39;, []):</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s2">    print(f\&quot;CG={g.get(&#39;name&#39;,&#39;?&#39;):30s}  enabled={g.get(&#39;enabled&#39;,&#39;?&#39;)}\&quot;)</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s2">&quot;</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Show all CGs and their replication state</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="nv">RPAPI</span><span class="o">=</span><span class="s2">&quot;https://&lt;rpa_mgmt_ip&gt;/rest/v1&quot;</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="nv">RP_TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;base64_encoded_credentials&gt;&quot;</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="si">${</span><span class="nv">RP_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">RPAPI</span><span class="si">}</span><span class="s2">/clusters&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.clusters[] | {name: .name, health: .healthState}&#39;</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1"># REST API: list all CGs and their replication state</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="si">${</span><span class="nv">RP_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">RPAPI</span><span class="si">}</span><span class="s2">/groups&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.innerSets[] | {name: .name, state: .replicationState, rpo: .RPO}&#39;</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="c1"># RPA node states</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RP</span><span class="s2">/rp/all_rps_details&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="s2">for r in data.get(&#39;innerSet&#39;, []):</span>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="s2">    print(f\&quot;RPA {r.get(&#39;rpUID&#39;,{}).get(&#39;id&#39;,&#39;?&#39;)}  state={r.get(&#39;rpState&#39;,&#39;?&#39;)}\&quot;)</span>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="s2">&quot;</span>
-</code></pre></div>
-<hr />
-<h2 id="rpo-violation-triage-decision-tree">RPO Violation Triage Decision Tree<a class="headerlink" href="#rpo-violation-triage-decision-tree" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    rpoAlert["RPO Violation Alert\nLag exceeds threshold"]
-    checkCGState["Check CG State\ngroups status detail"]
-    cgActive{"CG\nState?"}
-    cgError["CG in ERROR\nor PAUSED"]
-    cgActive2["CG ACTIVE\nbut lagging"]
-    checkJournal["Check Journal Utilization\njournals list"]
-    journalHigh{"Journal &gt; 70%?"}
-    checkLink["Check Inter-site Link\nlinks statistics"]
-    linkSaturated{"Link Bandwidth\nSaturated?"}
-    checkWriteRate["Check Write Rate\nIdentify high-write application"]
-    expandJournal["Expand Journal\nor reduce retention window"]
-    engageNetwork["Engage Network Team\nIncrease WAN bandwidth or QoS"]
-    checkRPALoad["Check RPA Load\nsystem status\nDistribute CGs if overloaded"]
-    monitorRPO["Monitor RPO Recovery\nevery 5 minutes"]
-    resolved["RPO Within SLA\nClose Alert"]
-
-    rpoAlert --&gt; checkCGState
-    checkCGState --&gt; cgActive
-    cgActive --&gt;|"ERROR / PAUSED"| cgError
-    cgActive --&gt;|"ACTIVE"| cgActive2
-    cgError --&gt; checkJournal
-    cgActive2 --&gt; checkLink
-    checkJournal --&gt; journalHigh
-    journalHigh --&gt;|"Yes"| expandJournal
-    journalHigh --&gt;|"No"| checkLink
-    expandJournal --&gt; monitorRPO
-    checkLink --&gt; linkSaturated
-    linkSaturated --&gt;|"Yes"| engageNetwork
-    linkSaturated --&gt;|"No"| checkWriteRate
-    engageNetwork --&gt; monitorRPO
-    checkWriteRate --&gt; checkRPALoad
-    checkRPALoad --&gt; monitorRPO
-    monitorRPO --&gt;|"RPO recovering"| resolved
-
-    style rpoAlert fill:#be123c,color:#fff
-    style resolved fill:#15803d,color:#fff
-    style cgError fill:#be123c,color:#fff
-    style expandJournal fill:#b45309,color:#fff
-    style engageNetwork fill:#b45309,color:#fff</code></pre>
+┌──────────────────────────────────── RecoverPoint — Health Checks ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Health check cadence: daily CG lag/journal, weekly test copy, monthly failover drill     │   │
+│   │       Critical alerts: CG in error state, journal &gt;90% full, RPA node failure, link down      │   │
+│   │         Check sources: Unisphere for RP, vCenter plugin, SNMP traps, REST API polling         │   │
+│   │            Baseline: all CGs Active; lag &lt;30 s; journal &lt;70%; all RPA nodes Online            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          RPA Health         │  │          CG Health          │  │         Link Health         │   │
+│   │      Node state: Online     │  │        State: Active        │  │        Link state: Up       │   │
+│   │          CPU &lt; 80%          │  │         Lag &lt; 30 sec        │  │       Latency &lt; 100 ms      │   │
+│   │         Memory &lt; 85%        │  │        Journal &lt; 70%        │  │        Packet loss 0%       │   │
+│   │          Fan/PSU OK         │  │       Splitter loaded       │  │        BW util &lt; 80%        │   │
+│   │          NTP synced         │  │        No errors 24 h       │  │        Compression OK       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: RPA hardware health viewable in Unisphere; splitter state visible per ESXi host          │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    CG state Active  = Replication is running; writes being journaled; lag within RPO target           │
+│    Lag (RPO lag)    = Seconds between last source write and journal apply on target; primary KPI      │
+│    Journal fill %   = Consumed / allocated journal VMDK; &gt;90% causes CG to pause replication          │
+│    Splitter loaded  = ESXi kernel module active; check per host in Unisphere splitter view            │
+│    SNMP traps       = RPA sends traps to NMS on CG error, journal fill, and RPA node failure          │
+│    Link utilisation = WAN replication bandwidth; sustained &gt;80% may cause lag increase                │
+│    NTP sync         = Critical for journal timestamps and cross-site consistency; must be in sync     │
+│    Packet loss      = Any loss on replication link degrades throughput; investigate immediately       │
+│    RPA node failure = Surviving RPA takes over all CGs; CGs continue with reduced throughput          │
+│    Unisphere alert  = Red badge in Unisphere dashboard; drill down to CG, link, or hardware           │
+│    REST poll        = GET /system/clusters; /groups; /links; use for monitoring integration           │
+│    Monthly drill    = Full failover test with VM power-on at DR site; documents RTO achieved          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## RPO Violation Triage Decision Tree
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```mermaid
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>flowchart TD
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    rpoAlert[&quot;RPO Violation Alert\nLag exceeds threshold&quot;]
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    checkCGState[&quot;Check CG State\ngroups status detail&quot;]
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    cgActive{&quot;CG\nState?&quot;}
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    cgError[&quot;CG in ERROR\nor PAUSED&quot;]
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    cgActive2[&quot;CG ACTIVE\nbut lagging&quot;]
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    checkJournal[&quot;Check Journal Utilization\njournals list&quot;]
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    journalHigh{&quot;Journal &gt; 70%?&quot;}
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    checkLink[&quot;Check Inter-site Link\nlinks statistics&quot;]
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    linkSaturated{&quot;Link Bandwidth\nSaturated?&quot;}
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    checkWriteRate[&quot;Check Write Rate\nIdentify high-write application&quot;]
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    expandJournal[&quot;Expand Journal\nor reduce retention window&quot;]
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    engageNetwork[&quot;Engage Network Team\nIncrease WAN bandwidth or QoS&quot;]
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    checkRPALoad[&quot;Check RPA Load\nsystem status\nDistribute CGs if overloaded&quot;]
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    monitorRPO[&quot;Monitor RPO Recovery\nevery 5 minutes&quot;]
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    resolved[&quot;RPO Within SLA\nClose Alert&quot;]
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    rpoAlert --&gt; checkCGState
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    checkCGState --&gt; cgActive
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    cgActive --&gt;|&quot;ERROR / PAUSED&quot;| cgError
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    cgActive --&gt;|&quot;ACTIVE&quot;| cgActive2
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    cgError --&gt; checkJournal
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    cgActive2 --&gt; checkLink
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    checkJournal --&gt; journalHigh
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    journalHigh --&gt;|&quot;Yes&quot;| expandJournal
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    journalHigh --&gt;|&quot;No&quot;| checkLink
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    expandJournal --&gt; monitorRPO
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    checkLink --&gt; linkSaturated
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    linkSaturated --&gt;|&quot;Yes&quot;| engageNetwork
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>    linkSaturated --&gt;|&quot;No&quot;| checkWriteRate
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>    engageNetwork --&gt; monitorRPO
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    checkWriteRate --&gt; checkRPALoad
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    checkRPALoad --&gt; monitorRPO
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    monitorRPO --&gt;|&quot;RPO recovering&quot;| resolved
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>    style rpoAlert fill:#be123c,color:#fff
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>    style resolved fill:#15803d,color:#fff
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>    style cgError fill:#be123c,color:#fff
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>    style expandJournal fill:#b45309,color:#fff
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>    style engageNetwork fill:#b45309,color:#fff
+</code></pre></div></p>
 <h2 id="rpo-compliance-check">RPO Compliance Check<a class="headerlink" href="#rpo-compliance-check" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check per-CG RPO against current lag (SSH)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>group<span class="w"> </span>status<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;

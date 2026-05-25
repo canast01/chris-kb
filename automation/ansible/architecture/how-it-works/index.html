@@ -3617,39 +3617,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#control-node" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Control Node
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#managed-nodes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Managed Nodes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#inventory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Inventory
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#playbooks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3915,78 +3882,50 @@
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart LR
+<p><pre class="mermaid"><code>flowchart LR
     CN[Control Node\nAnsible installed] --&gt;|SSH| MN1[Linux Host]
     CN --&gt;|SSH| MN2[Network Device\nCisco / Juniper]
     CN --&gt;|WinRM or SSH| MN3[Windows Host]
     CN --&gt;|HTTPS API| MN4[Cloud API\nAWS / Azure / vSphere]
     CN --&gt;|SSH| MN5[Linux Host]</code></pre>
-<hr />
-<h2 id="control-node">Control Node<a class="headerlink" href="#control-node" title="Permanent link">&para;</a></h2>
-<p>The control node is the machine where Ansible is installed and all automation is initiated.</p>
-<p>Requirements:</p>
-<ul>
-<li>Python 3.10+ (ansible-core 2.16+ requirement)</li>
-<li>Linux, macOS, or WSL2 — Windows is not supported natively as a control node</li>
-<li>SSH client available in PATH</li>
-<li>Network path to managed nodes on port 22 (or configured alternative)</li>
-</ul>
-<h2 id="managed-nodes">Managed Nodes<a class="headerlink" href="#managed-nodes" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>OS Family</th>
-<th>Connection Method</th>
-<th>Python Required on Node</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Linux / Unix</td>
-<td>SSH</td>
-<td>Yes — Python 2.7 or 3.5+</td>
-</tr>
-<tr>
-<td>Windows</td>
-<td>WinRM or SSH</td>
-<td>No — PowerShell used instead</td>
-</tr>
-<tr>
-<td>Network devices (NX-OS, IOS-XE, EOS)</td>
-<td>SSH or HTTPAPI</td>
-<td>No — modules run on control node</td>
-</tr>
-<tr>
-<td>Cloud APIs (AWS, Azure, GCP)</td>
-<td>HTTPS</td>
-<td>No — API calls, no SSH needed</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="inventory">Inventory<a class="headerlink" href="#inventory" title="Permanent link">&para;</a></h2>
-<p>The inventory is the source of truth for which hosts exist and how they are grouped. Ansible supports static files in INI or YAML formats, and dynamic inventory plugins that query external systems at runtime.</p>
-<pre class="mermaid"><code>graph TD
-    INV[Inventory Source\nstatic or dynamic] --&gt; G1[Group: webservers]
-    INV --&gt; G2[Group: databases]
-    INV --&gt; G3[Group: all]
-    G1 --&gt; H1[web01.prod.example.com]
-    G1 --&gt; H2[web02.prod.example.com]
-    G2 --&gt; H3[db01.prod.example.com]
-    G3 -.-&gt;|implicit| H1
-    G3 -.-&gt;|implicit| H2
-    G3 -.-&gt;|implicit| H3</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">[webservers]</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="na">web01.prod.example.com</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="na">web02.prod.example.com</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">[databases]</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="na">db01.prod.example.com ansible_user</span><span class="o">=</span><span class="s">postgres</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="k">[prod:children]</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="na">webservers</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="na">databases</span>
-</code></pre></div>
+┌─────────────────────────────────────── Ansible — How It Works ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Execution flow: ansible-playbook reads inventory + playbook → connects to hosts → runs tasks │   │
+│   │      Each task calls a module; module code is transferred to the remote host and executed     │   │
+│   │  Results returned as JSON; Ansible evaluates changed/ok/failed; handlers notified on changed  │   │
+│   │       AWX wraps this: stores credentials, queues jobs, streams events to UI in real time      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Step 1: Parse        │  │       Step 2: Connect       │  │       Step 3: Execute       │   │
+│   │        Load inventory       │  │        SSH/WinRM open       │  │     Module runs on host     │   │
+│   │     Parse playbook YAML     │  │     Gather facts (setup)    │  │     JSON result returned    │   │
+│   │      Resolve variables      │  │     Multiplexed SSH conn    │  │    changed / ok / failed    │   │
+│   │     Apply filters/limits    │  │    Fork N hosts parallel    │  │      Handlers triggered     │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Gather facts     = module: setup; collects OS, IP, memory, disk, fqdn for use in templates  │   │
+│   │Check mode       = --check flag; simulates changes without applying; modules report what would │   │
+│   │    Diff mode        = --diff flag; shows before/after for file edits; combine with --check    │   │
+│   │  Fork             = max parallel host connections; default 5; increase for large inventories  │   │
+│   │ Serial           = limit hosts per batch in rolling update; e.g. serial: 1 for canary deploys │   │
+│   │       delegate_to      = run task on a different host (e.g. register DNS on a jump host)      │   │
+│   │        when             = conditional expression; task skipped when condition is False        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```ini
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>[webservers]
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>web01.prod.example.com
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>web02.prod.example.com
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>[databases]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>db01.prod.example.com ansible_user=postgres
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>[prod:children]
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>webservers
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>databases
+</code></pre></div></p>
 <hr />
 <h2 id="playbooks">Playbooks<a class="headerlink" href="#playbooks" title="Permanent link">&para;</a></h2>
 <p>Playbooks are YAML files that define ordered sets of plays. Each play maps a set of hosts to a list of tasks.</p>

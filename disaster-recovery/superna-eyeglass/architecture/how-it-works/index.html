@@ -4132,39 +4132,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#failover-execution-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Failover Execution Flow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dr-readiness-dashboard" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DR Readiness Dashboard
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#connectivity" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4356,7 +4323,7 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Superna Eyeglass is a DR orchestration platform purpose-built for NetApp PowerScale (Isilon). It automates the share, quota, and DNS reconfiguration steps that previously required hours of manual work during a SyncIQ failover. Eyeglass continuously monitors DR readiness and scores it at 100% only when all shares, exports, quotas, and DNS zones are aligned between primary and DR clusters.</p>
 <h2 id="component-topology">Component Topology<a class="headerlink" href="#component-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
+<p><pre class="mermaid"><code>graph LR
   PS_A["PowerScale Cluster A\n(production)"] --&gt;|"SyncIQ policy"| PS_B["PowerScale Cluster B\n(DR)"]
   EG["Superna Eyeglass\nDR Assistant"] --&gt;|"monitors SyncIQ"| PS_A
   EG --&gt;|"orchestrates failover\naccess zone migration"| PS_B
@@ -4370,72 +4337,75 @@
   class PS_B dr
   class EG mgmt
   class ADMIN,DNS host</code></pre>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Role</th>
-<th>Location</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Eyeglass Primary Appliance</td>
-<td>Monitor SyncIQ policies; sync share/quota config; DR orchestration control plane</td>
-<td>Primary site</td>
-</tr>
-<tr>
-<td>Eyeglass DR Appliance</td>
-<td>Standby orchestration node; activates when primary site unavailable</td>
-<td>DR site</td>
-</tr>
-<tr>
-<td>PowerScale SyncIQ</td>
-<td>Underlying data replication engine</td>
-<td>Both sites</td>
-</tr>
-<tr>
-<td>DNS Integration</td>
-<td>Automated DNS zone cutover during failover</td>
-<td>Primary / DR DNS servers</td>
-</tr>
-<tr>
-<td>Eyeglass Admin UI</td>
-<td>Web-based management (port 443)</td>
-<td>Accessed from management network</td>
-</tr>
-</tbody>
-</table>
-<h2 id="failover-execution-flow">Failover Execution Flow<a class="headerlink" href="#failover-execution-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    actor Admin
-    participant EG as Eyeglass DR Assistant
-    participant ProdPS as Production PowerScale
-    participant DRPS as DR PowerScale
-    participant DNS as DNS Server
-
-    Admin-&gt;&gt;EG: egcli drfailover --policy POL-NAS-PROD --confirm
-    EG-&gt;&gt;ProdPS: Pause / break SyncIQ replication
-    ProdPS--&gt;&gt;EG: SyncIQ stopped
-    EG-&gt;&gt;DRPS: Activate access zones
-    EG-&gt;&gt;DRPS: Apply NFS exports + SMB shares
-    EG-&gt;&gt;DRPS: Apply quota policies
-    EG-&gt;&gt;DNS: Update SmartConnect zone delegation → DR VIPs
-    DNS--&gt;&gt;EG: DNS updated
-    EG--&gt;&gt;Admin: Failover complete — notify via SNMP/email
-    Note over DRPS: Clients now resolve to DR cluster</code></pre>
-<p>RTO: typically 5–15 minutes for file services, depending on share count.</p>
-<h2 id="dr-readiness-dashboard">DR Readiness Dashboard<a class="headerlink" href="#dr-readiness-dashboard" title="Permanent link">&para;</a></h2>
-<p>Eyeglass continuously monitors and scores DR readiness at <code>https://&lt;eyeglass-ip&gt;</code> → DR → Readiness:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>DR Readiness Score = 100% when:
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  ✓ All SyncIQ policies in sync state (not lagging beyond RPO threshold)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  ✓ All SMB shares mirrored on DR cluster
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  ✓ All NFS exports mirrored on DR cluster
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  ✓ All quotas aligned between primary and DR cluster
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  ✓ DNS zones pre-configured for cutover
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  ✓ Both Eyeglass appliances healthy and communicating
-</code></pre></div>
+┌─────────────────────────────────── Superna Eyeglass — How It Works ───────────────────────────────────┐
+│                                                                                                       │
+│    Superna Eyeglass data flow — from source to target through the protection pipeline:                │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 1  Source / Production System                                 │   │
+│   │             Eyeglass Appliance   — VM monitoring PowerScale clusters; REST API-driven         │   │
+│   │          Host writes are intercepted or snapshotted by the Superna Eyeglass agent/proxy       │   │
+│   │                  Changed blocks tracked via CBT / journal / delta-set mechanism               │   │
+│   │                 Consistency ensured at quiesce point before data transfer begins              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Changed data forwarded to the Superna Eyeglass engine — compression and encryption applied in trans│
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                   2  Superna Eyeglass Engine                                  │   │
+│   │     RAPA Engine          — Ransomware Protection with Automated Response; quarantine on dete  │   │
+│   │                    Data compressed, deduplicated, and encrypted before storage                │   │
+│   │                  Metadata catalog updated; job status reported to control plane               │   │
+│   │                                          igls quota list                                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     3  Target / Repository                                    │   │
+│   │       DFS Namespace Mgr    — Windows DFS-N failover automation; transparent client redirect   │   │
+│   │                  Recovery point written; retention policy applied automatically               │   │
+│   │                                     Restore: igls dr runbook                                  │   │
+│   │                     RTO driven by target storage performance and data volume                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
+│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
+│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
+│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
+│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
+│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
+│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
+│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
+│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
+│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
+│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
+│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
+│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
+│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>RTO: typically 5–15 minutes for file services, depending on share count.
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## DR Readiness Dashboard
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Eyeglass continuously monitors and scores DR readiness at `https://&lt;eyeglass-ip&gt;` → DR → Readiness:
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```text
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>DR Readiness Score = 100% when:
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  ✓ All SyncIQ policies in sync state (not lagging beyond RPO threshold)
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  ✓ All SMB shares mirrored on DR cluster
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  ✓ All NFS exports mirrored on DR cluster
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  ✓ All quotas aligned between primary and DR cluster
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  ✓ DNS zones pre-configured for cutover
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  ✓ Both Eyeglass appliances healthy and communicating
+</code></pre></div></p>
 <h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

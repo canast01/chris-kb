@@ -4292,52 +4292,8 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#failover" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Failover
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Failover">
+    <nav class="md-nav" aria-label="Pre-Change Checklist Before Maintenance on SRDF/S Arrays">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#planned-failover-flowchart" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Planned Failover Flowchart
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pre-failover-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pre-Failover Checklist
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#planned-failover-procedure-for-srdfs" class="md-nav__link">
@@ -4412,7 +4368,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#overview_1" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
         Overview
@@ -4710,122 +4666,73 @@
 <hr />
 <h2 id="pre-change-checklist-before-maintenance-on-srdfs-arrays">Pre-Change Checklist Before Maintenance on SRDF/S Arrays<a class="headerlink" href="#pre-change-checklist-before-maintenance-on-srdfs-arrays" title="Permanent link">&para;</a></h2>
 <p>Complete this checklist and record results in the change ticket before any maintenance that touches R1 or R2 array hardware, firmware, or SRDF configuration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Capture baseline state before the window</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Capture baseline state before the window</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf_s_prechange_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.txt
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/srdf_s_prechange_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.txt
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify<span class="w"> </span>-synchronized
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Baseline captured at </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
 </code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>All SRDF/S pairs are <code>Synchronized</code></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>WAN RTT is within baseline (≤5 ms)</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>SRDF link ports are <code>Online</code> on R1 and R2</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>SYMCLI access confirmed on both R1 and R2 SE hosts</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>RDF group number, R1 SID, R2 SID documented</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Application owners notified of potential write latency impact</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>DR site team is available and contactable during the window</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Rollback plan documented (what to do if maintenance causes pair to go <code>Invalid</code>)</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Pre-change pair state baseline captured to file</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Change ticket number recorded</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="failover">Failover<a class="headerlink" href="#failover" title="Permanent link">&para;</a></h2>
-<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
-<p>SRDF/S failover transfers I/O ownership from the R1 (source) volume to the R2 (target) volume on the remote PowerMax array. Because SRDF/S is synchronous, every write acknowledged to the host has already been committed on both sides, so RPO at the moment of failover is zero. Failover is invoked when the primary site is unavailable or during a planned DR test.</p>
-<h3 id="planned-failover-flowchart">Planned Failover Flowchart<a class="headerlink" href="#planned-failover-flowchart" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TD
-    start["Planned Failover Initiated\n(maintenance, DR test, or migration)"]
-    quiesceApps["Quiesce Applications at Primary Site\n(application owner confirms)"]
-    verifySynced["Verify All Pairs Synchronized\nsymrdf -sid r1sid -rdfg rdfg verify -synchronized"]
-    captureBaseline["Capture Pre-Failover Baseline\nsymrdf query -g dgname &gt; /tmp/prestate.txt"]
-    initiateFailover["Initiate Failover\nsymrdf -sid r1sid -rdfg rdfg -g dgname failover"]
-    confirmFailedOver["Confirm Failed Over State\nsymrdf query -g dgname"]
-    presentR2["Present R2 LUNs to DR Hosts\n(storage masking / zoning)"]
-    startApps["Start Applications at DR Site\n(DR application team)"]
-    validate["Validate Application Connectivity\nand Data Integrity"]
-    complete["Failover Complete\nDocument RTO in change ticket"]
-
-    start --&gt; quiesceApps
-    quiesceApps --&gt; verifySynced
-    verifySynced --&gt; captureBaseline
-    captureBaseline --&gt; initiateFailover
-    initiateFailover --&gt; confirmFailedOver
-    confirmFailedOver --&gt; presentR2
-    presentR2 --&gt; startApps
-    startApps --&gt; validate
-    validate --&gt; complete
-
-    style start fill:#2563eb,color:#fff
-    style complete fill:#15803d,color:#fff
-    style initiateFailover fill:#b45309,color:#fff
-    style verifySynced fill:#7c3aed,color:#fff</code></pre>
-<p>Two modes exist: <strong>failover</strong> (splits the pair and makes R2 read/write) and <strong>failover -establish</strong> (for a planned switch where the primary site remains available and replication is immediately reversed).</p>
-<h3 id="pre-failover-checklist">Pre-Failover Checklist<a class="headerlink" href="#pre-failover-checklist" title="Permanent link">&para;</a></h3>
-<p>Before initiating failover confirm the following on the R1 (source) array:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Confirm all pairs in the group are Synchronized</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show detailed pair state and track percent</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span>-detail
+┌───────────────────────────────────────── SRDF/S — Procedures ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Routine Procedures              │  │                DR Procedures                │   │
+│   │          Add new protection source           │  │              Initiate failover              │   │
+│   │           Modify retention policy            │  │               Validate replica              │   │
+│   │          Expire old recover points           │  │              Redirect host I/O              │   │
+│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
+│   │           Service account rotation           │  │            Failback to production           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                             Change Control Requirements for SRDF/S                            │   │
+│   │           All changes to protection policies require change ticket with rollback plan         │   │
+│   │                      Failover tests must be scheduled in maintenance window                   │   │
+│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
+│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (&lt; 200 km) · RF director ports │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
+│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
+│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
+│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
+│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
+│  RTO           = Recovery Time Objective; SRDF/S failover typically &lt; 5 minutes manual, &lt; 1 min       │
+│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
+│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
+│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
+│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
+│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
+│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
+│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
+│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Two modes exist: **failover** (splits the pair and makes R2 read/write) and **failover -establish** (for a planned switch where the primary site remains available and replication is immediately reversed).
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Pre-Failover Checklist
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Before initiating failover confirm the following on the R1 (source) array:
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List all RDFG groups on the array</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>all
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Confirm RDF director port status</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-dir<span class="w"> </span>all<span class="w"> </span>-rdf
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Show device-level SRDF info for the group</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>list<span class="w"> </span>-v
-</code></pre></div>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Confirm all pairs in the group are Synchronized
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>symrdf -g 10 query
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Show detailed pair state and track percent
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>symrdf -g 10 query -detail
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># List all RDFG groups on the array
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>symcfg list -rdfg all
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># Confirm RDF director port status
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>symcfg list -dir all -rdf
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># Show device-level SRDF info for the group
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>symrdf -g 10 list -v
+</code></pre></div></p>
 <p>Do not proceed if any device shows <code>SyncInProg</code>, <code>Transmit Idle</code>, or a track count above zero unless the business decision is to accept data loss.</p>
 <h3 id="planned-failover-procedure-for-srdfs">Planned Failover Procedure for SRDF/S<a class="headerlink" href="#planned-failover-procedure-for-srdfs" title="Permanent link">&para;</a></h3>
 <p>A planned failover is initiated when the primary site is taken offline deliberately (e.g., planned maintenance, site power work, or a DR test). Because SRDF/S is synchronous, R2 is always current at the point of failover.</p>
@@ -4962,7 +4869,7 @@
     r1--&gt;&gt;ops: State: Synchronized
     ops-&gt;&gt;app: Maintenance window closed</code></pre>
 <h2 id="resync">Resync<a class="headerlink" href="#resync" title="Permanent link">&para;</a></h2>
-<h3 id="overview_1">Overview<a class="headerlink" href="#overview_1" title="Permanent link">&para;</a></h3>
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
 <p>Resynchronization restores a fully synchronized SRDF/S pair after the pair has been suspended, split, or failed over. The resync process copies changed tracks from one volume back to the other, making both sides identical again. The direction of the copy depends on which operation preceded the resync.</p>
 <ul>
 <li>After <strong>Suspend/Resume</strong>: pairs re-sync R1 to R2 automatically on <code>resume</code>.</li>

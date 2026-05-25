@@ -3805,16 +3805,30 @@
 
 
 <h1 id="python-automation-escalation">Python Automation — Escalation<a class="headerlink" href="#python-automation-escalation" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── Python — Escalation ─────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │      Escalate Python issues: CPython bugs (bugs.python.org), library bugs (GitHub issues)     │   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │     boto3/botocore issues: github.com/boto/boto3; include AWS region, service, error code     │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │   Internal escalation: infra team for network/SSL issues; security team for secret exposure   │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │             Escalation Triggers              │  │                Info to Gather               │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │         Dependency CVE found in prod         │  │               pip list output               │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │          CPython segfault or crash           │  │              python3 --version              │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │        API returning unexpected data         │  │         Full traceback + request log        │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │      Secret potentially exposed in log       │  │        Affected secret names + scope        │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │          SSL broken after OS update          │  │            openssl version output           │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │ CVE response  = rotate affected secret immediately; audit access logs for the exposure window │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │    CPython bugs  = bugs.python.org; include minimal reproducible script and Python version    │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │  boto3 issues  = github.com/boto/boto3/issues; label: needs-triage; include service + region  │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="escalation-workflow">Escalation Workflow<a class="headerlink" href="#escalation-workflow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    issue["Script Failure\nor Production Impact"]
-    selfDiagnose["Work through\nCommon Issues &amp; Diagnostics"]
-    resolved{"Resolved?"}
-    selfDiagnose --&gt; resolved
-    resolved --&gt;|Yes| done["Issue closed"]
-    resolved --&gt;|No| gatherInfo["Gather escalation info:\n• Full traceback\n• python3 --version\n• pip show &lt;package&gt;\n• Exact command used\n• Time of first failure\n• Recent changes"]
-    gatherInfo --&gt; raiseTicket["Raise ticket / page:\n• Summary + impact\n• Error (code block)\n• Environment details\n• Reproduction steps\n• What was already tried"]
-    issue --&gt; selfDiagnose</code></pre>
 <h2 id="when-to-escalate">When to Escalate<a class="headerlink" href="#when-to-escalate" title="Permanent link">&para;</a></h2>
 <p>Escalate when:</p>
 <ul>

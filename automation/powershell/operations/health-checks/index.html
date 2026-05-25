@@ -3848,28 +3848,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -4016,7 +3994,7 @@
 
 <h1 id="powershell-health-checks">PowerShell — Health Checks<a class="headerlink" href="#powershell-health-checks" title="Permanent link">&para;</a></h1>
 <h2 id="powershell-environment-health-check-flow">PowerShell Environment Health Check Flow<a class="headerlink" href="#powershell-environment-health-check-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     start["Start Health Check"]
     checkVersion["$PSVersionTable\nExpected PS version?"]
     checkPolicy["Get-ExecutionPolicy\nRemoteSigned or better?"]
@@ -4043,84 +4021,28 @@
     checkTasks --&gt; checkLogs
     checkLogs --&gt;|None| healthy
     checkLogs --&gt;|Errors| alertLogs</code></pre>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Verify scheduled PowerShell tasks are not disabled</td>
-<td><code>Get-ScheduledTask | Where-Object {$_.State -eq 'Disabled'}</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check execution policy on managed hosts</td>
-<td><code>Get-ExecutionPolicy -List</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review script error logs and transcript files for failed scheduled</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Confirm PSGallery or internal module feed is accessible</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Validate service account credentials used by scheduled scripts are</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review PowerShell event log for script block logging errors</td>
-<td><code>Get-WinEvent -LogName 'Microsoft-Windows-PowerShell/Operational' -MaxEvents 50</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Confirm WinRM is running on remote targets if remoting is in use</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] PowerShell version is at expected level on all managed hosts</li>
-<li>[ ] Execution policy permits script execution</li>
-<li>[ ] Required modules are installed and at expected versions</li>
-<li>[ ] Service accounts used by scheduled tasks have valid, non-expired credentials</li>
-<li>[ ] WinRM service is running and reachable on remote targets</li>
-<li>[ ] Transcript logging path is writable and recent transcripts exist</li>
-<li>[ ] PSGallery or internal feed is reachable from the control host</li>
-<li>[ ] No errors in the PowerShell operational event log from the last 24 hours</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># PowerShell version</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$PSVersionTable</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Execution policy (all scopes)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-ExecutionPolicy</span> <span class="n">-List</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Installed modules</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Scheduled tasks — flag disabled tasks</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Get-ScheduledTask</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">State</span> <span class="o">-eq</span> <span class="s1">&#39;Disabled&#39;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  <span class="nb">Select-Object</span> <span class="n">TaskName</span><span class="p">,</span> <span class="n">TaskPath</span><span class="p">,</span> <span class="n">State</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c"># Test WinRM connectivity to a remote host</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">Test-WSMan</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c"># Last 50 PowerShell operational log entries</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s1">&#39;Microsoft-Windows-PowerShell/Operational&#39;</span> <span class="n">-MaxEvents</span> <span class="n">50</span> <span class="p">|</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LevelDisplayName</span> <span class="n">-in</span> <span class="s1">&#39;Error&#39;</span><span class="p">,</span><span class="s1">&#39;Warning&#39;</span> <span class="p">}</span>
-</code></pre></div>
+┌───────────────────────────────────── PowerShell — Health Checks ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  PowerShell health checks: verify PS version, remoting, module currency, and script execution │   │
+│   │      Check: $PSVersionTable.PSVersion, Test-WSMan, Get-PSRepository, PSScriptAnalyzer run     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Version and Environment            │  │               Remoting Health               │   │
+│   │          $PSVersionTable.PSVersion           │  │            Test-WSMan <hostname>            │   │
+│   │          Get-Module -ListAvailable           │  │        Test-NetConnection -port 5985        │   │
+│   │       Get-InstalledModule (PSGallery)        │  │          Get-PSSessionConfiguration         │   │
+│   │          Get-ExecutionPolicy -List           │  │            winrm get winrm/config           │   │
+│   │        Invoke-ScriptAnalyzer -Path .         │  │          Check JEA endpoints active         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           $PSVersionTable = hash table with PS version, OS, runtime, and build info           │   │
+│   │     Test-WSMan      = validates WinRM connectivity and config on remote host; returns XML     │   │
+│   │ExecutionPolicy = check per scope: Process, CurrentUser, LocalMachine; Restricted blocks all .p│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 
 
 

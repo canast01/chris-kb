@@ -4296,45 +4296,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#syntax" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Syntax
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Commands
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Commands">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#backup-create-system-image" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        /backup — Create System Image
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#restore-restore-system-image" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4635,16 +4596,60 @@
 <h1 id="rasr-cli-reference">RASR — CLI Reference<a class="headerlink" href="#rasr-cli-reference" title="Permanent link">&para;</a></h1>
 <h2 id="rasrutilexe-primary-command-line-interface">rasrutil.exe — Primary Command-Line Interface<a class="headerlink" href="#rasrutilexe-primary-command-line-interface" title="Permanent link">&para;</a></h2>
 <p><code>rasrutil.exe</code> is the main command-line tool for RASR operations on a running Windows Server. It is located at:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>C:\Program Files\Dell\RASR\rasrutil.exe
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>C:\Program Files\Dell\RASR\rasrutil.exe
 </code></pre></div>
-<h3 id="syntax">Syntax<a class="headerlink" href="#syntax" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>rasrutil.exe /command [options]
-</code></pre></div>
-<hr />
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<h3 id="backup-create-system-image">/backup — Create System Image<a class="headerlink" href="#backup-create-system-image" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>rasrutil.exe /backup /dest &lt;destination&gt; [options]
-</code></pre></div>
+┌──────────────────────────────────────── RASR — CLI Reference ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                    RASR — Command Reference                                   │   │
+│   │           Use these commands for routine operations, scripting, and troubleshooting           │   │
+│   │                                        cr_vault_cli sync                                      │   │
+│   │                                       cr_vault_cli status                                     │   │
+│   │                                         cybersense scan                                       │   │
+│   │                                       vault lock / unlock                                     │   │
+│   │                                         ppdm recover vm                                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Ports: 443 (PPDM REST API) · 2049 (NFS vault) · 9080 (CyberSense)                                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Command Categories                                      │   │
+│   │                  Status / Query  — check current state, list jobs, show config                │   │
+│   │                  Operations      — start, stop, failover, restore, sync, expire               │   │
+│   │                Configuration   — add/modify policies, schedules, storage targets              │   │
+│   │               Diagnostics     — collect logs, run health checks, test connectivity            │   │
+│   │                  Scripting       — REST API or CLI for automation and reporting               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Commands
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### /backup — Create System Image
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```text
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>rasrutil.exe /backup /dest &lt;destination&gt; [options]
+</code></pre></div></p>
 <p><strong>Required:</strong></p>
 <table>
 <thead>
@@ -4700,21 +4705,21 @@
 </tbody>
 </table>
 <p><strong>Examples:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>:: Backup to network share with authentication and compression
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>rasrutil.exe /backup /dest \\nas01\rasr-images\SERVER01 ^
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  /user CORP\svc-rasr /pass S3cr3t! /compress ^
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  /log C:\Logs\rasr.log /description &quot;Pre-patch baseline 2026-05-08&quot;
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>:: Backup only the system volume to local USB
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>rasrutil.exe /backup /dest E:\images /volumes C /compress
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>:: Backup with exclusion of temp files
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>rasrutil.exe /backup /dest \\nas01\rasr-images\SERVER01 ^
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  /compress /exclude C:\Temp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>:: Backup to network share with authentication and compression
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>rasrutil.exe /backup /dest \\nas01\rasr-images\SERVER01 ^
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  /user CORP\svc-rasr /pass S3cr3t! /compress ^
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  /log C:\Logs\rasr.log /description &quot;Pre-patch baseline 2026-05-08&quot;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>:: Backup only the system volume to local USB
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>rasrutil.exe /backup /dest E:\images /volumes C /compress
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>:: Backup with exclusion of temp files
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>rasrutil.exe /backup /dest \\nas01\rasr-images\SERVER01 ^
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  /compress /exclude C:\Temp
 </code></pre></div>
 <hr />
 <h3 id="restore-restore-system-image">/restore — Restore System Image<a class="headerlink" href="#restore-restore-system-image" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>rasrutil.exe /restore /source &lt;image_path&gt; [options]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>rasrutil.exe /restore /source &lt;image_path&gt; [options]
 </code></pre></div>
 <table>
 <thead>
@@ -4747,48 +4752,48 @@
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>rasrutil.exe /restore /source \\nas01\rasr-images\SERVER01\SERVER01_20260501.rasr ^
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  /target 0 /user CORP\svc-rasr /pass S3cr3t!
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>rasrutil.exe /restore /source \\nas01\rasr-images\SERVER01\SERVER01_20260501.rasr ^
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  /target 0 /user CORP\svc-rasr /pass S3cr3t!
 </code></pre></div>
 <hr />
 <h3 id="listimages-list-available-images">/listimages — List Available Images<a class="headerlink" href="#listimages-list-available-images" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>rasrutil.exe /listimages /source &lt;path&gt; [/user &lt;user&gt;] [/pass &lt;pass&gt;]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>rasrutil.exe /listimages /source &lt;path&gt; [/user &lt;user&gt;] [/pass &lt;pass&gt;]
 </code></pre></div>
 <p>Lists all RASR images in the specified directory.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>rasrutil.exe /listimages /source \\nas01\rasr-images\SERVER01 ^
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  /user CORP\svc-rasr /pass S3cr3t!
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>rasrutil.exe /listimages /source \\nas01\rasr-images\SERVER01 ^
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  /user CORP\svc-rasr /pass S3cr3t!
 </code></pre></div>
 <p><strong>Output:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Image File               Created              Size        Description
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>SERVER01_20260501.rasr   2026-05-01 02:14     48.3 GB     Weekly full
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>SERVER01_20260408.rasr   2026-04-08 02:11     47.1 GB     Weekly full
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Image File               Created              Size        Description
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>SERVER01_20260501.rasr   2026-05-01 02:14     48.3 GB     Weekly full
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>SERVER01_20260408.rasr   2026-04-08 02:11     47.1 GB     Weekly full
 </code></pre></div>
 <hr />
 <h3 id="verify-verify-image-integrity">/verify — Verify Image Integrity<a class="headerlink" href="#verify-verify-image-integrity" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>rasrutil.exe /verify /source &lt;image_path&gt; [/user &lt;user&gt;] [/pass &lt;pass&gt;]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>rasrutil.exe /verify /source &lt;image_path&gt; [/user &lt;user&gt;] [/pass &lt;pass&gt;]
 </code></pre></div>
 <p>Verifies the checksum and structural integrity of an image file without performing a restore.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>rasrutil.exe /verify /source \\nas01\rasr-images\SERVER01\SERVER01_20260501.rasr ^
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  /user CORP\svc-rasr /pass S3cr3t!
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>rasrutil.exe /verify /source \\nas01\rasr-images\SERVER01\SERVER01_20260501.rasr ^
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  /user CORP\svc-rasr /pass S3cr3t!
 </code></pre></div>
 <p>Returns exit code <code>0</code> on success, non-zero on failure.</p>
 <hr />
 <h3 id="deleteimage-remove-an-image">/deleteimage — Remove an Image<a class="headerlink" href="#deleteimage-remove-an-image" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>rasrutil.exe /deleteimage /source &lt;image_path&gt; [/user &lt;user&gt;] [/pass &lt;pass&gt;]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>rasrutil.exe /deleteimage /source &lt;image_path&gt; [/user &lt;user&gt;] [/pass &lt;pass&gt;]
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>rasrutil.exe /deleteimage /source \\nas01\rasr-images\SERVER01\SERVER01_20260201.rasr ^
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  /user CORP\svc-rasr /pass S3cr3t!
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>rasrutil.exe /deleteimage /source \\nas01\rasr-images\SERVER01\SERVER01_20260201.rasr ^
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  /user CORP\svc-rasr /pass S3cr3t!
 </code></pre></div>
 <hr />
 <h3 id="createmedia-create-rasr-boot-media">/createmedia — Create RASR Boot Media<a class="headerlink" href="#createmedia-create-rasr-boot-media" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>rasrutil.exe /createmedia /dest &lt;drive_letter|iso_path&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>rasrutil.exe /createmedia /dest &lt;drive_letter|iso_path&gt;
 </code></pre></div>
 <p>Creates a bootable RASR USB drive or ISO file.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>:: Create bootable USB
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>rasrutil.exe /createmedia /dest F:
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>:: Create ISO file
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>rasrutil.exe /createmedia /dest C:\RASR\RASR_WinSrv2022.iso
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>:: Create bootable USB
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>rasrutil.exe /createmedia /dest F:
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>:: Create ISO file
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>rasrutil.exe /createmedia /dest C:\RASR\RASR_WinSrv2022.iso
 </code></pre></div>
 <hr />
 <h2 id="exit-codes">Exit Codes<a class="headerlink" href="#exit-codes" title="Permanent link">&para;</a></h2>
@@ -4838,82 +4843,82 @@
 <h2 id="winpe-shell-commands">WinPE Shell Commands<a class="headerlink" href="#winpe-shell-commands" title="Permanent link">&para;</a></h2>
 <p>When booted into the RASR WinPE recovery environment, the following commands are available. All standard WinPE commands apply plus the RASR-specific tools.</p>
 <h3 id="network-and-share-access">Network and Share Access<a class="headerlink" href="#network-and-share-access" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>:: Configure network interface (if DHCP not available)
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>netsh interface ip set address &quot;Ethernet&quot; static 10.0.1.100 255.255.255.0 10.0.1.1
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>netsh interface ip set dns &quot;Ethernet&quot; static 10.0.1.10
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>:: Map network share for image access
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>net use Z: \\nas01.example.com\rasr-images /user:CORP\svc-rasr P@ssw0rd!
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>:: Verify connectivity
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>ping nas01.example.com
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>dir Z:\
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>:: Configure network interface (if DHCP not available)
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>netsh interface ip set address &quot;Ethernet&quot; static 10.0.1.100 255.255.255.0 10.0.1.1
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>netsh interface ip set dns &quot;Ethernet&quot; static 10.0.1.10
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>:: Map network share for image access
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>net use Z: \\nas01.example.com\rasr-images /user:CORP\svc-rasr P@ssw0rd!
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>:: Verify connectivity
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>ping nas01.example.com
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>dir Z:\
 </code></pre></div>
 <h3 id="disk-operations">Disk Operations<a class="headerlink" href="#disk-operations" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>:: List disks
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>diskpart
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  list disk
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>  exit
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>:: Identify partitions on target disk
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>diskpart
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>  select disk 0
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>  list partition
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>  exit
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>:: List disks
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>diskpart
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  list disk
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  exit
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>:: Identify partitions on target disk
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>diskpart
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>  select disk 0
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>  list partition
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>  exit
 </code></pre></div>
 <h3 id="launch-rasr-wizard-manually">Launch RASR Wizard Manually<a class="headerlink" href="#launch-rasr-wizard-manually" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>:: If wizard did not auto-start
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>X:\Dell\RASR\rasrwizard.exe
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>:: Or run CLI restore from WinPE
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>X:\Dell\RASR\rasrutil.exe /restore /source Z:\SERVER01\SERVER01_20260501.rasr /target 0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>:: If wizard did not auto-start
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>X:\Dell\RASR\rasrwizard.exe
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>:: Or run CLI restore from WinPE
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>X:\Dell\RASR\rasrutil.exe /restore /source Z:\SERVER01\SERVER01_20260501.rasr /target 0
 </code></pre></div>
 <h3 id="winpe-utility-commands">WinPE Utility Commands<a class="headerlink" href="#winpe-utility-commands" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>:: Test network reachability
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>ping -t 10.0.1.10
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>:: Check IP configuration
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>ipconfig /all
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>:: View event log (limited in WinPE)
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>wevtutil qe System /c:20 /f:text
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>:: Edit files (notepad available in RASR WinPE)
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>notepad X:\Dell\RASR\rasr.conf
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>:: Restart WinPE session
-<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>wpeutil reboot
-<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>
-<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>:: Shut down
-<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>wpeutil shutdown
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>:: Test network reachability
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>ping -t 10.0.1.10
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>:: Check IP configuration
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>ipconfig /all
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>:: View event log (limited in WinPE)
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>wevtutil qe System /c:20 /f:text
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>:: Edit files (notepad available in RASR WinPE)
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>notepad X:\Dell\RASR\rasr.conf
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>:: Restart WinPE session
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>wpeutil reboot
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>:: Shut down
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>wpeutil shutdown
 </code></pre></div>
 <hr />
 <h2 id="scripted-backup-creation">Scripted Backup Creation<a class="headerlink" href="#scripted-backup-creation" title="Permanent link">&para;</a></h2>
 <p>The following batch script can be called from Task Scheduler or a configuration management tool to perform a RASR backup with error handling:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="p">@</span><span class="k">echo</span> off
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">setlocal</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="k">set</span> <span class="nv">SERVER</span><span class="p">=</span><span class="nv">%COMPUTERNAME%</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="k">set</span> <span class="nv">SHARE</span><span class="p">=</span>\\nas01.example.com\rasr-images\<span class="nv">%SERVER%</span>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="k">set</span> <span class="nv">USER</span><span class="p">=</span>CORP\svc-rasr
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="k">set</span> <span class="nv">PASS</span><span class="p">=</span>S3cr3t!
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="k">set</span> <span class="nv">LOG</span><span class="p">=</span>C:\Logs\rasr-backup_<span class="nv">%date:~-4,4%%date:~-7,2%%date:~-10,2%</span>.log
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="k">set</span> <span class="nv">RASR</span><span class="p">=</span>C:\Program Files\Dell\RASR\rasrutil.exe
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="k">echo</span> [<span class="nv">%date%</span> <span class="nv">%time%</span>] Starting RASR backup <span class="p">&gt;&gt;</span> <span class="nv">%LOG%</span>
-<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>
-<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="s2">&quot;</span><span class="nv">%RASR%</span><span class="s2">&quot;</span> /backup /dest <span class="s2">&quot;</span><span class="nv">%SHARE%</span><span class="s2">&quot;</span> /user <span class="nv">%USER%</span> /pass <span class="nv">%PASS%</span> /compress /log <span class="s2">&quot;</span><span class="nv">%LOG%</span><span class="s2">&quot;</span>
-<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>
-<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a><span class="k">if</span> <span class="nv">%errorlevel%</span> <span class="ow">equ</span> 0 <span class="p">(</span>
-<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>    <span class="k">echo</span> [<span class="nv">%date%</span> <span class="nv">%time%</span>] Backup completed successfully <span class="p">&gt;&gt;</span> <span class="nv">%LOG%</span>
-<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>    <span class="k">exit</span> /b 0
-<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a><span class="p">)</span> <span class="k">else</span> <span class="p">(</span>
-<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>    <span class="k">echo</span> [<span class="nv">%date%</span> <span class="nv">%time%</span>] Backup FAILED with error code <span class="nv">%errorlevel%</span> <span class="p">&gt;&gt;</span> <span class="nv">%LOG%</span>
-<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>    <span class="p">:</span><span class="c1">: Send alert (example: write to event log)</span>
-<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>    eventcreate /T ERROR /ID 9001 /L APPLICATION /SO RASR <span class="se">^</span>
-<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a><span class="se"> </span>       /D <span class="s2">&quot;RASR backup failed with exit code </span><span class="nv">%errorlevel%</span><span class="s2">&quot;</span>
-<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>    <span class="k">exit</span> /b <span class="nv">%errorlevel%</span>
-<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="p">@</span><span class="k">echo</span> off
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="k">setlocal</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">set</span> <span class="nv">SERVER</span><span class="p">=</span><span class="nv">%COMPUTERNAME%</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">set</span> <span class="nv">SHARE</span><span class="p">=</span>\\nas01.example.com\rasr-images\<span class="nv">%SERVER%</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="k">set</span> <span class="nv">USER</span><span class="p">=</span>CORP\svc-rasr
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="k">set</span> <span class="nv">PASS</span><span class="p">=</span>S3cr3t!
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="k">set</span> <span class="nv">LOG</span><span class="p">=</span>C:\Logs\rasr-backup_<span class="nv">%date:~-4,4%%date:~-7,2%%date:~-10,2%</span>.log
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="k">set</span> <span class="nv">RASR</span><span class="p">=</span>C:\Program Files\Dell\RASR\rasrutil.exe
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="k">echo</span> [<span class="nv">%date%</span> <span class="nv">%time%</span>] Starting RASR backup <span class="p">&gt;&gt;</span> <span class="nv">%LOG%</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="s2">&quot;</span><span class="nv">%RASR%</span><span class="s2">&quot;</span> /backup /dest <span class="s2">&quot;</span><span class="nv">%SHARE%</span><span class="s2">&quot;</span> /user <span class="nv">%USER%</span> /pass <span class="nv">%PASS%</span> /compress /log <span class="s2">&quot;</span><span class="nv">%LOG%</span><span class="s2">&quot;</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="k">if</span> <span class="nv">%errorlevel%</span> <span class="ow">equ</span> 0 <span class="p">(</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>    <span class="k">echo</span> [<span class="nv">%date%</span> <span class="nv">%time%</span>] Backup completed successfully <span class="p">&gt;&gt;</span> <span class="nv">%LOG%</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>    <span class="k">exit</span> /b 0
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a><span class="p">)</span> <span class="k">else</span> <span class="p">(</span>
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>    <span class="k">echo</span> [<span class="nv">%date%</span> <span class="nv">%time%</span>] Backup FAILED with error code <span class="nv">%errorlevel%</span> <span class="p">&gt;&gt;</span> <span class="nv">%LOG%</span>
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>    <span class="p">:</span><span class="c1">: Send alert (example: write to event log)</span>
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>    eventcreate /T ERROR /ID 9001 /L APPLICATION /SO RASR <span class="se">^</span>
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a><span class="se"> </span>       /D <span class="s2">&quot;RASR backup failed with exit code </span><span class="nv">%errorlevel%</span><span class="s2">&quot;</span>
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a>    <span class="k">exit</span> /b <span class="nv">%errorlevel%</span>
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="image-management-commands-reference">Image Management Commands Reference<a class="headerlink" href="#image-management-commands-reference" title="Permanent link">&para;</a></h2>

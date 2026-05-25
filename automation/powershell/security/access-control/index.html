@@ -3733,28 +3733,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#execution-policy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Execution Policy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#just-enough-administration-jea" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Just Enough Administration (JEA)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#rbac-with-active-directory-groups" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3926,7 +3904,7 @@
 </blockquote>
 <hr />
 <h2 id="powershell-access-control-architecture">PowerShell Access Control Architecture<a class="headerlink" href="#powershell-access-control-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
+<p><pre class="mermaid"><code>graph TD
     user["User / Script\n(caller)"]
     execPolicy["Execution Policy\n(RemoteSigned / AllSigned)"]
     jea["JEA Endpoint\n(Register-PSSessionConfiguration)"]
@@ -3943,81 +3921,69 @@
     user --&gt; adGroup
     adGroup --&gt;|Member| svcAccount
     svcAccount --&gt; transcript</code></pre>
-<h2 id="execution-policy">Execution Policy<a class="headerlink" href="#execution-policy" title="Permanent link">&para;</a></h2>
-<p>Execution policy controls which scripts PowerShell will run. It is not a security boundary — it can be bypassed — but it prevents accidental script execution.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check the current effective execution policy</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-ExecutionPolicy</span> <span class="n">-List</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Set for current user (most common — no admin required)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Set-ExecutionPolicy</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">-ExecutionPolicy</span> <span class="n">RemoteSigned</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Set for the current process only (temporary, safe)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Set-ExecutionPolicy</span> <span class="n">-Scope</span> <span class="k">Process</span> <span class="n">-ExecutionPolicy</span> <span class="n">Bypass</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Unblock a downloaded script without changing policy</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Unblock-File</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">deploy</span><span class="p">.</span><span class="n">ps1</span>
-</code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Policy</th>
-<th>Behaviour</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Restricted</code></td>
-<td>No scripts allowed (Windows default)</td>
-</tr>
-<tr>
-<td><code>AllSigned</code></td>
-<td>Only scripts signed by a trusted publisher</td>
-</tr>
-<tr>
-<td><code>RemoteSigned</code></td>
-<td>Remote scripts need a signature; local scripts run freely</td>
-</tr>
-<tr>
-<td><code>Unrestricted</code></td>
-<td>All scripts run; remote scripts prompt for confirmation</td>
-</tr>
-<tr>
-<td><code>Bypass</code></td>
-<td>Nothing blocked, no warnings</td>
-</tr>
-</tbody>
-</table>
-<h2 id="just-enough-administration-jea">Just Enough Administration (JEA)<a class="headerlink" href="#just-enough-administration-jea" title="Permanent link">&para;</a></h2>
-<p>JEA restricts what cmdlets a user can run in a remote session, without giving full admin rights.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Create a role capability file</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">New-PSRoleCapabilityFile</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">JEA</span><span class="p">\</span><span class="n">WebAdminRole</span><span class="p">.</span><span class="n">psrc</span> <span class="p">`</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">-VisibleCmdlets</span> <span class="s1">&#39;Get-WebSite&#39;</span><span class="p">,</span> <span class="s1">&#39;Restart-WebAppPool&#39;</span> <span class="p">`</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">-VisibleFunctions</span> <span class="s1">&#39;Get-ServiceStatus&#39;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># Create a session configuration</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">New-PSSessionConfigurationFile</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">JEA</span><span class="p">\</span><span class="n">WebAdmin</span><span class="p">.</span><span class="n">pssc</span> <span class="p">`</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">-SessionType</span> <span class="n">RestrictedRemoteServer</span> <span class="p">`</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">-RoleDefinitions</span> <span class="p">@{</span> <span class="s1">&#39;DOMAIN\WebAdmins&#39;</span> <span class="p">=</span> <span class="p">@{</span> <span class="n">RoleCapabilities</span> <span class="p">=</span> <span class="s1">&#39;WebAdminRole&#39;</span> <span class="p">}</span> <span class="p">}</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># Register the JEA endpoint</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">Register-PSSessionConfiguration</span> <span class="n">-Name</span> <span class="n">WebAdmin</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">JEA</span><span class="p">\</span><span class="n">WebAdmin</span><span class="p">.</span><span class="n">pssc</span> <span class="n">-Force</span>
-</code></pre></div>
+┌───────────────────────────────────── PowerShell — Access Control ─────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   PowerShell access control: who can run scripts, remoting access, JEA capability delegation  │   │
+│   │          WinRM access: WS-Management ACL; restrict to security groups, not all users          │   │
+│   │  JEA: define role capabilities (.psrc); register session config (.pssc); assign via AD groups │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             WinRM Access Control             │  │              JEA Configuration              │   │
+│   │       Set-PSSessionConfiguration DACL        │  │           New-PSRoleCapabilityFile          │   │
+│   │            Grant to AD group only            │  │        New-PSSessionConfigurationFile       │   │
+│   │        Deny interactive logon to SVC         │  │       Register-PSSessionConfiguration       │   │
+│   │         HTTPS WinRM: port 5986 only          │  │       Test-PSSessionConfigurationFile       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  DACL         = Discretionary ACL on PS session config; controls which identities can connect │   │
+│   │.psrc file   = Role Capability file; defines VisibleCmdlets, VisibleFunctions, VisibleProviders│   │
+│   │       .pssc file   = Session Configuration file; maps AD groups to role capability files      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>| Policy | Behaviour |
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|---|---|
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| `Restricted` | No scripts allowed (Windows default) |
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>| `AllSigned` | Only scripts signed by a trusted publisher |
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| `RemoteSigned` | Remote scripts need a signature; local scripts run freely |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| `Unrestricted` | All scripts run; remote scripts prompt for confirmation |
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| `Bypass` | Nothing blocked, no warnings |
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>## Just Enough Administration (JEA)
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>JEA restricts what cmdlets a user can run in a remote session, without giving full admin rights.
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>```powershell
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># Create a role capability file
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>New-PSRoleCapabilityFile -Path C:\JEA\WebAdminRole.psrc `
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    -VisibleCmdlets &#39;Get-WebSite&#39;, &#39;Restart-WebAppPool&#39; `
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    -VisibleFunctions &#39;Get-ServiceStatus&#39;
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a># Create a session configuration
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>New-PSSessionConfigurationFile -Path C:\JEA\WebAdmin.pssc `
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    -SessionType RestrictedRemoteServer `
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    -RoleDefinitions @{ &#39;DOMAIN\WebAdmins&#39; = @{ RoleCapabilities = &#39;WebAdminRole&#39; } }
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a># Register the JEA endpoint
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>Register-PSSessionConfiguration -Name WebAdmin -Path C:\JEA\WebAdmin.pssc -Force
+</code></pre></div></p>
 <h2 id="rbac-with-active-directory-groups">RBAC with Active Directory Groups<a class="headerlink" href="#rbac-with-active-directory-groups" title="Permanent link">&para;</a></h2>
 <p>Scope script access by checking group membership at runtime.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check if the current user is in an AD group</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">function</span> <span class="nb">Test-GroupMembership</span> <span class="p">{</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="k">param</span><span class="p">(</span><span class="no">[string]</span><span class="nv">$GroupName</span><span class="p">)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nv">$user</span> <span class="p">=</span> <span class="no">[System.Security.Principal.WindowsIdentity]</span><span class="p">::</span><span class="n">GetCurrent</span><span class="p">()</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="nv">$principal</span> <span class="p">=</span> <span class="no">[System.Security.Principal.WindowsPrincipal]</span><span class="nv">$user</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nv">$group</span> <span class="p">=</span> <span class="no">[System.Security.Principal.NTAccount]</span><span class="nv">$GroupName</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="nv">$sid</span> <span class="p">=</span> <span class="nv">$group</span><span class="p">.</span><span class="n">Translate</span><span class="p">(</span><span class="no">[System.Security.Principal.SecurityIdentifier]</span><span class="p">)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="nv">$principal</span><span class="p">.</span><span class="n">IsInRole</span><span class="p">(</span><span class="nv">$sid</span><span class="p">)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">}</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="p">(</span><span class="nb">Test-GroupMembership</span> <span class="s1">&#39;DOMAIN\Operators&#39;</span><span class="p">))</span> <span class="p">{</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="nb">Write-Error</span> <span class="s2">&quot;Access denied — requires Operators group membership&quot;</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">exit</span> <span class="n">1</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check if the current user is in an AD group</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">function</span> <span class="nb">Test-GroupMembership</span> <span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="k">param</span><span class="p">(</span><span class="no">[string]</span><span class="nv">$GroupName</span><span class="p">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="nv">$user</span> <span class="p">=</span> <span class="no">[System.Security.Principal.WindowsIdentity]</span><span class="p">::</span><span class="n">GetCurrent</span><span class="p">()</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="nv">$principal</span> <span class="p">=</span> <span class="no">[System.Security.Principal.WindowsPrincipal]</span><span class="nv">$user</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="nv">$group</span> <span class="p">=</span> <span class="no">[System.Security.Principal.NTAccount]</span><span class="nv">$GroupName</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="nv">$sid</span> <span class="p">=</span> <span class="nv">$group</span><span class="p">.</span><span class="n">Translate</span><span class="p">(</span><span class="no">[System.Security.Principal.SecurityIdentifier]</span><span class="p">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="nv">$principal</span><span class="p">.</span><span class="n">IsInRole</span><span class="p">(</span><span class="nv">$sid</span><span class="p">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">}</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="p">(</span><span class="nb">Test-GroupMembership</span> <span class="s1">&#39;DOMAIN\Operators&#39;</span><span class="p">))</span> <span class="p">{</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="nb">Write-Error</span> <span class="s2">&quot;Access denied — requires Operators group membership&quot;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="n">exit</span> <span class="n">1</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="least-privilege-reference">Least Privilege Reference<a class="headerlink" href="#least-privilege-reference" title="Permanent link">&para;</a></h2>
 <table>

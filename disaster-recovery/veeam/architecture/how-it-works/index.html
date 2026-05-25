@@ -4132,39 +4132,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#backup-proxy-transport-modes-vmware" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backup Proxy Transport Modes (VMware)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scale-out-backup-repository-sobr" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scale-Out Backup Repository (SOBR)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#supported-platforms" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4356,7 +4323,7 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Veeam Backup &amp; Replication provides backup, replication, recovery, and disaster recovery for virtual, physical, and cloud workloads. The Backup Server manages scheduling and configuration. Backup Proxies perform data movement via VMware VADP or agent-based reads. The Scale-Out Backup Repository (SOBR) provides tiered storage — fast disk for short-term, object storage for long-term.</p>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
+<p><pre class="mermaid"><code>graph TB
   VBR["Veeam Backup &amp; Replication Server"] --&gt; PROXY["Backup Proxy\n(data mover)"]
   PROXY --&gt; REPO[("Backup Repository\nSOBR / immutable")]
   VCTR(["VMware vCenter\nsource VMs"]) --&gt; PROXY
@@ -4371,81 +4338,61 @@
   class REPO,TAPE store
   class VCTR,ADMIN host
   class OBJ cloud</code></pre>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Role</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Backup Server</td>
-<td>Management, scheduler, config DB</td>
-<td>Windows Server; SQL Express (≤500 VMs) or full SQL Server</td>
-</tr>
-<tr>
-<td>Backup Proxy</td>
-<td>Data mover (reads VM data via VADP or agent)</td>
-<td>One or more per site; scale for throughput</td>
-</tr>
-<tr>
-<td>Backup Repository</td>
-<td>Target storage for backup files (.vbk/.vib)</td>
-<td>Linux / Windows / NAS / hardened Linux</td>
-</tr>
-<tr>
-<td>Scale-Out Backup Repository (SOBR)</td>
-<td>Logical pool across multiple repos</td>
-<td>Performance tier (fast disk) + capacity tier (object storage)</td>
-</tr>
-<tr>
-<td>WAN Accelerator</td>
-<td>Remote replication deduplication</td>
-<td>Source/target pairs — only for VM replication jobs</td>
-</tr>
-<tr>
-<td>Veeam ONE</td>
-<td>Monitoring, alerting, reporting</td>
-<td>Separate server; integrates with VBR via DB</td>
-</tr>
-</tbody>
-</table>
-<h2 id="backup-proxy-transport-modes-vmware">Backup Proxy Transport Modes (VMware)<a class="headerlink" href="#backup-proxy-transport-modes-vmware" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Hot-add (SAN)</strong>: Proxy VM attached to the production datastore — highest throughput; preferred</li>
-<li><strong>Direct NFS</strong>: For NFS datastores — bypasses ESXi, directly reads NFS</li>
-<li><strong>Network (NBD)</strong>: Fallback when SAN/NFS not available — slowest</li>
-</ul>
-<p>Deploy minimum 2 proxies per site for redundancy and parallel job capacity.</p>
-<h2 id="scale-out-backup-repository-sobr">Scale-Out Backup Repository (SOBR)<a class="headerlink" href="#scale-out-backup-repository-sobr" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    job(["Backup Job\n(daily run)"])
-
-    subgraph sobr [Scale-Out Backup Repository]
-        direction TB
-        pe1[("Performance Extent 1\nfast disk — NFS / XFS\n0-14 days")]
-        pe2[("Performance Extent 2\nfast disk — second node\n0-14 days")]
-        ct[("Capacity Tier\nS3-compatible object storage\n14+ days — immutable")]
-        pe1 --&gt;|"auto-offload\nafter threshold"| ct
-        pe2 --&gt;|"auto-offload"| ct
-    end
-
-    job --&gt; pe1
-    job --&gt; pe2
-
-    ct --&gt;|"archive tier\nS3 Glacier"| glacier[("Glacier / Archive\nyearly retention")]
-
-    classDef peNode fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef ctNode fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef archNode fill:#0f766e,stroke:#0d5f58,color:#fff
-    classDef src fill:#15803d,stroke:#166534,color:#fff
-    class pe1,pe2 peNode
-    class ct ctNode
-    class glacier archNode
-    class job src</code></pre>
+┌──────────────────────────────────────── Veeam — How It Works ─────────────────────────────────────────┐
+│                                                                                                       │
+│    Veeam data flow — from source to target through the protection pipeline:                           │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 1  Source / Production System                                 │   │
+│   │            Veeam Backup Server — scheduler, job engine, catalog, REST API (port 9419)         │   │
+│   │                Host writes are intercepted or snapshotted by the Veeam agent/proxy            │   │
+│   │                  Changed blocks tracked via CBT / journal / delta-set mechanism               │   │
+│   │                 Consistency ensured at quiesce point before data transfer begins              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Changed data forwarded to the Veeam engine — compression and encryption applied in transit         │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        2  Veeam Engine                                        │   │
+│   │        Backup Proxy        — data mover; VMware VADP for CBT snapshots; SAN/NAS/LAN modes     │   │
+│   │                    Data compressed, deduplicated, and encrypted before storage                │   │
+│   │                  Metadata catalog updated; job status reported to control plane               │   │
+│   │                                     Add-VBRJob / Start-VBRJob                                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     3  Target / Repository                                    │   │
+│   │         Backup Repository   — target storage: SOBR, CIFS/NFS, S3 object, dedup appliance      │   │
+│   │                  Recovery point written; retention policy applied automatically               │   │
+│   │                                   Restore: Get-VBRRestorePoint                                │   │
+│   │                     RTO driven by target storage performance and data volume                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
+│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
+│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
+│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
+│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
+│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
+│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
+│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
+│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
+│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
+│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
+│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
+│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
+│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h2 id="supported-platforms">Supported Platforms<a class="headerlink" href="#supported-platforms" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

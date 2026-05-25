@@ -4132,50 +4132,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#synchronous-write-commit-sequence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Synchronous Write Commit Sequence
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pair-states" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pair States
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#rtt-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4345,7 +4301,7 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>SRDF/S (Synchronous) provides zero-data-loss replication between two PowerMax arrays. Every host write is committed to both the source (R1) and target (R2) before an acknowledgement is returned to the host. This guarantees RPO = 0 at the cost of write latency, which is directly proportional to inter-site round-trip time (RTT). Use case: financial transaction systems, active-active cluster workloads, and DR configurations where RPO = 0 is contractually required.</p>
 <h2 id="write-commit-model">Write Commit Model<a class="headerlink" href="#write-commit-model" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
+<p><pre class="mermaid"><code>graph LR
   PM_A["PowerMax Primary\nSite A — R1"] --&gt;|"SRDF/S synchronous\n(≤10ms RTT)"| PM_B["PowerMax Secondary\nSite B — R2"]
   PM_A --&gt; HA(["Production Hosts\nSite A"])
   PM_B -.-&gt;|"read-only\n(Synchronized state)"| HB(["Standby Hosts\nSite B"])
@@ -4356,126 +4312,112 @@
   class PM_B dr
   class HA host
   class HB dr</code></pre>
-<h2 id="synchronous-write-commit-sequence">Synchronous Write Commit Sequence<a class="headerlink" href="#synchronous-write-commit-sequence" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant host as Production Host
-    participant r1 as PowerMax R1 (Site A)
-    participant link as SRDF Link (FCIP / FC)
-    participant r2 as PowerMax R2 (Site B)
-
-    host-&gt;&gt;r1: Write I/O request
-    r1-&gt;&gt;link: Forward write to R2 (synchronous)
-    link-&gt;&gt;r2: Deliver write
-    r2--&gt;&gt;r1: Acknowledge write committed
-    r1--&gt;&gt;host: Acknowledge I/O complete
-
-    Note over r1,r2: Both arrays commit before host ACK
-    Note over link: WAN RTT directly adds to host write latency</code></pre>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>R1 device</td>
-<td>Source (production) SRDF device; hosts write to R1</td>
-</tr>
-<tr>
-<td>R2 device</td>
-<td>Target (DR) SRDF device; read-only during normal operation</td>
-</tr>
-<tr>
-<td>SRDF Director Ports</td>
-<td>Dedicated RDF ports on each PowerMax carrying replication traffic</td>
-</tr>
-<tr>
-<td>SRDF Groups (RDFG)</td>
-<td>Logical groupings of device pairs replicating together as a consistency group</td>
-</tr>
-<tr>
-<td>Device Pairs</td>
-<td>One R1 device mapped to one R2 device of identical size</td>
-</tr>
-<tr>
-<td>Solutions Enabler (SE)</td>
-<td>Dell management CLI host with gatekeeper LUN access for SYMCLI operations</td>
-</tr>
-</tbody>
-</table>
-<h2 id="pair-states">Pair States<a class="headerlink" href="#pair-states" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Pair State</th>
-<th>Description</th>
-<th>Host Write Impact</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Synchronized</td>
-<td>R1 and R2 are identical; every R1 write goes synchronously to R2</td>
-<td>Full protection, RPO = 0</td>
-</tr>
-<tr>
-<td>SyncInProg</td>
-<td>Initial or resync copy in progress</td>
-<td>R1 writable; R2 not consistent</td>
-</tr>
-<tr>
-<td>Suspended</td>
-<td>Replication paused; R1 continues without mirroring</td>
-<td>R1 writable; R2 stale</td>
-</tr>
-<tr>
-<td>Failed Over</td>
-<td>R1 unavailable; R2 is now writable</td>
-<td>R2 takes production I/O</td>
-</tr>
-<tr>
-<td>Split</td>
-<td>Pair manually split; both volumes are independent</td>
-<td>Both writable; no replication</td>
-</tr>
-<tr>
-<td>Partitioned</td>
-<td>RDF link interrupted; pair state indeterminate</td>
-<td>Depends on link recovery</td>
-</tr>
-</tbody>
-</table>
-<h2 id="key-commands">Key Commands<a class="headerlink" href="#key-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Summary query for all devices in an RDFG group</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Detailed output including track counts and link state</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span>-detail
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Find any device not in Synchronized state</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Synchronized
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check RDF director and port status</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-dir<span class="w"> </span>all<span class="w"> </span>-rdf
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Suspend replication (planned maintenance)</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-noprompt
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Resume from Suspended back to Synchronized</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span>resume<span class="w"> </span>-noprompt
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Establish (initial sync or re-establish after split)</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span>establish<span class="w"> </span>-noprompt
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Failover (manual, when R1 is unavailable)</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span>failover<span class="w"> </span>-noprompt
+┌──────────────────────────────────────── SRDF/S — How It Works ────────────────────────────────────────┐
+│                                                                                                       │
+│    SRDF/S data flow — from source to target through the protection pipeline:                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 1  Source / Production System                                 │   │
+│   │           R1 Volume (Source)  — production PowerMax; write holds until R2 acknowledges        │   │
+│   │               Host writes are intercepted or snapshotted by the SRDF/S agent/proxy            │   │
+│   │                  Changed blocks tracked via CBT / journal / delta-set mechanism               │   │
+│   │                 Consistency ensured at quiesce point before data transfer begins              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Changed data forwarded to the SRDF/S engine — compression and encryption applied in transit        │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        2  SRDF/S Engine                                       │   │
+│   │          R2 Volume (Target)  — DR PowerMax; must confirm write before host I/O completes      │   │
+│   │                    Data compressed, deduplicated, and encrypted before storage                │   │
+│   │                  Metadata catalog updated; job status reported to control plane               │   │
+│   │                                     symrdf establish -type s                                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     3  Target / Repository                                    │   │
+│   │         SRDF/S Engine       — synchronous write mirroring; adds WAN RTT to write latency      │   │
+│   │                  Recovery point written; retention policy applied automatically               │   │
+│   │                                     Restore: symrdf failover                                  │   │
+│   │                     RTO driven by target storage performance and data volume                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (&lt; 200 km) · RF director ports │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
+│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
+│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
+│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
+│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
+│  RTO           = Recovery Time Objective; SRDF/S failover typically &lt; 5 minutes manual, &lt; 1 min       │
+│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
+│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
+│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
+│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
+│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
+│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
+│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
+│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Components
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Component | Role |
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|---|---|
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| R1 device | Source (production) SRDF device; hosts write to R1 |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| R2 device | Target (DR) SRDF device; read-only during normal operation |
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| SRDF Director Ports | Dedicated RDF ports on each PowerMax carrying replication traffic |
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| SRDF Groups (RDFG) | Logical groupings of device pairs replicating together as a consistency group |
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Device Pairs | One R1 device mapped to one R2 device of identical size |
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| Solutions Enabler (SE) | Dell management CLI host with gatekeeper LUN access for SYMCLI operations |
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>## Pair States
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>| Pair State | Description | Host Write Impact |
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>|---|---|---|
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>| Synchronized | R1 and R2 are identical; every R1 write goes synchronously to R2 | Full protection, RPO = 0 |
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| SyncInProg | Initial or resync copy in progress | R1 writable; R2 not consistent |
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| Suspended | Replication paused; R1 continues without mirroring | R1 writable; R2 stale |
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| Failed Over | R1 unavailable; R2 is now writable | R2 takes production I/O |
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| Split | Pair manually split; both volumes are independent | Both writable; no replication |
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>| Partitioned | RDF link interrupted; pair state indeterminate | Depends on link recovery |
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>## Key Commands
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Restore (copy R2 data back to R1 after Failed Over)</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span>restore<span class="w"> </span>-noprompt
-</code></pre></div>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>```bash
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a># Summary query for all devices in an RDFG group
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>symrdf -g 10 query
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a># Detailed output including track counts and link state
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>symrdf -g 10 query -detail
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a># Find any device not in Synchronized state
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>symrdf -g 10 query | grep -v Synchronized
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a># Check RDF director and port status
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>symcfg list -dir all -rdf
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a># Suspend replication (planned maintenance)
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>symrdf -g 10 -type S suspend -noprompt
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a># Resume from Suspended back to Synchronized
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>symrdf -g 10 -type S resume -noprompt
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a># Establish (initial sync or re-establish after split)
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>symrdf -g 10 -type S establish -noprompt
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a># Failover (manual, when R1 is unavailable)
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>symrdf -g 10 -type S failover -noprompt
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a># Restore (copy R2 data back to R1 after Failed Over)
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>symrdf -g 10 -type S restore -noprompt
+</code></pre></div></p>
 <h2 id="rtt-requirements">RTT Requirements<a class="headerlink" href="#rtt-requirements" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

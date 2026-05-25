@@ -4201,30 +4201,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#powerstore-role-assignments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PowerStore — Role Assignments
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#idrac-access-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        iDRAC Access Control
-      
-    </span>
-  </a>
   
 </li>
       
@@ -4589,7 +4567,7 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># uemcli — list users and roles</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># uemcli — list users and roles</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>/user<span class="w"> </span>show<span class="w"> </span>-detail
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Create a user with Recovery Manager role</span>
@@ -4601,134 +4579,141 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># View LDAP group role assignments</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>uemcli<span class="w"> </span>/sys/auth/ldapgroup<span class="w"> </span>show
 </code></pre></div>
-<h3 id="powerstore-role-assignments">PowerStore — Role Assignments<a class="headerlink" href="#powerstore-role-assignments" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># pstcli — list users</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pstcli<span class="w"> </span>--action<span class="w"> </span>list<span class="w"> </span>--object<span class="w"> </span>user
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Assign role to an AD group</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pstcli<span class="w"> </span>--action<span class="w"> </span>modify<span class="w"> </span>--object<span class="w"> </span>ldap_account<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;CORP\\DR-Operators&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--role<span class="w"> </span><span class="s2">&quot;Storage Operator&quot;</span>
-</code></pre></div>
-<h2 id="idrac-access-control">iDRAC Access Control<a class="headerlink" href="#idrac-access-control" title="Permanent link">&para;</a></h2>
-<p>iDRAC roles control who can manage hardware and trigger out-of-band operations, including RASR boot sequences.</p>
-<table>
-<thead>
-<tr>
-<th>iDRAC Role</th>
-<th>Permissions</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Administrator</td>
-<td>Full iDRAC control, power, virtual media</td>
-<td>DR team for recovery operations</td>
-</tr>
-<tr>
-<td>Operator</td>
-<td>Power management, virtual media access</td>
-<td>DR operators initiating recovery boot</td>
-</tr>
-<tr>
-<td>Read Only</td>
-<td>View-only</td>
-<td>Monitoring, NOC</td>
-</tr>
-<tr>
-<td>None</td>
-<td>No access</td>
-<td>Revoke access</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Assign an AD group to iDRAC Operator role</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Users.4.Enable<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Users.4.UserName<span class="w"> </span><span class="s2">&quot;DR-Operators&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Users.4.Privilege<span class="w"> </span>0x1F3<span class="w">   </span><span class="c1"># Operator privilege bitmask</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Or via LDAP group mapping (preferred for AD integration)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAPRoleGroup.1.DN<span class="w"> </span><span class="s2">&quot;CN=DR-Operators,OU=Groups,DC=corp,DC=local&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAPRoleGroup.1.Privilege<span class="w"> </span>0x1F3
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># View current privilege assignments</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.Users
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.LDAPRoleGroup
-</code></pre></div>
+┌──────────────────────────────────────── RASR — Access Control ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 RASR — RBAC and Access Control                                │   │
+│   │      Auth: Vault operator role; 2-person integrity for unlock; AD integration for PPDM UI     │   │
+│   │             Principle of least privilege: each role gets only required permissions            │   │
+│   │              Service accounts: dedicated, non-interactive; rotation every 90 days             │   │
+│   │               Emergency break-glass: documented, monitored, time-limited access               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │       Role       │   Access Level   │    Typical User   │   Review Freq    │    Granted By    │   │
+│   │      Admin       │ Full config/ops  │   Sr Backup Eng   │    Quarterly     │  Security team   │   │
+│   │     Operator     │ Start/stop jobs  │     Backup Eng    │    Quarterly     │    Team lead     │   │
+│   │     Monitor      │  Read-only view  │      NOC / L1     │    Quarterly     │    Team lead     │   │
+│   │   Service Acct   │  API / headless  │     Automation    │   Per rotation   │  Security team   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## iDRAC Access Control
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>iDRAC roles control who can manage hardware and trigger out-of-band operations, including RASR boot sequences.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| iDRAC Role | Permissions | Use Case |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|---|---|---|
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Administrator | Full iDRAC control, power, virtual media | DR team for recovery operations |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Operator | Power management, virtual media access | DR operators initiating recovery boot |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Read Only | View-only | Monitoring, NOC |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| None | No access | Revoke access |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>```bash
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Assign an AD group to iDRAC Operator role
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>racadm set iDRAC.Users.4.Enable 1
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>racadm set iDRAC.Users.4.UserName &quot;DR-Operators&quot;
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>racadm set iDRAC.Users.4.Privilege 0x1F3   # Operator privilege bitmask
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Or via LDAP group mapping (preferred for AD integration)
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>racadm set iDRAC.LDAPRoleGroup.1.DN &quot;CN=DR-Operators,OU=Groups,DC=corp,DC=local&quot;
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>racadm set iDRAC.LDAPRoleGroup.1.Privilege 0x1F3
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># View current privilege assignments
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>racadm get iDRAC.Users
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>racadm get iDRAC.LDAPRoleGroup
+</code></pre></div></p>
 <h2 id="recovery-media-access-control">Recovery Media Access Control<a class="headerlink" href="#recovery-media-access-control" title="Permanent link">&para;</a></h2>
 <h3 id="physical-access-procedure">Physical Access Procedure<a class="headerlink" href="#physical-access-procedure" title="Permanent link">&para;</a></h3>
 <p>Recovery USBs and ISOs must follow a strict custody chain to prevent unauthorised use.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Standard Operating Procedure — RASR Recovery Media:
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>1. Media is stored in a locked DR cabinet; key held by DR manager
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>2. Access logged in the DR cabinet access register (name, date/time, reason)
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>3. Media is checked out under a change record number
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>4. Single-use principle: media is verified clean (virus scan) after return
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>5. Media vault inventory reviewed monthly against CMDB records
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>6. Retired or corrupted media securely destroyed (physical shred or cryptographic wipe)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Standard Operating Procedure — RASR Recovery Media:
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>1. Media is stored in a locked DR cabinet; key held by DR manager
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>2. Access logged in the DR cabinet access register (name, date/time, reason)
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>3. Media is checked out under a change record number
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>4. Single-use principle: media is verified clean (virus scan) after return
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>5. Media vault inventory reviewed monthly against CMDB records
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>6. Retired or corrupted media securely destroyed (physical shred or cryptographic wipe)
 </code></pre></div>
 <h3 id="uefi-boot-order-lock">UEFI Boot Order Lock<a class="headerlink" href="#uefi-boot-order-lock" title="Permanent link">&para;</a></h3>
 <p>Prevent unauthorised boot from recovery media by locking the boot order:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">UEFI Configuration</span><span class="p">:</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">BIOS Setup Password</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">Required to change boot order</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Default boot order</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Internal HDD only</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">USB Boot</span><span class="p">:</span><span class="w">              </span><span class="l l-Scalar l-Scalar-Plain">Disabled by default; enabled one-time via iDRAC console</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Secure Boot</span><span class="p">:</span><span class="w">           </span><span class="l l-Scalar l-Scalar-Plain">Enabled; RASR media must be Secure Boot signed</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">PXE Boot</span><span class="p">:</span><span class="w">              </span><span class="l l-Scalar l-Scalar-Plain">Allowed only from management VLAN (firewall controlled)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">UEFI Configuration</span><span class="p">:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">BIOS Setup Password</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">Required to change boot order</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Default boot order</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Internal HDD only</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">USB Boot</span><span class="p">:</span><span class="w">              </span><span class="l l-Scalar l-Scalar-Plain">Disabled by default; enabled one-time via iDRAC console</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Secure Boot</span><span class="p">:</span><span class="w">           </span><span class="l l-Scalar l-Scalar-Plain">Enabled; RASR media must be Secure Boot signed</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">PXE Boot</span><span class="p">:</span><span class="w">              </span><span class="l l-Scalar l-Scalar-Plain">Allowed only from management VLAN (firewall controlled)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Racadm — disable USB boot at BIOS level</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>racadm<span class="w"> </span>bios<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">BootSeq</span><span class="o">=</span><span class="s2">&quot;HardDisk.List.1-1&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Enable one-time USB boot (authorised recovery session only)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.ServerBoot.BootOnce<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.ServerBoot.FirstBootDevice<span class="w"> </span>USB
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># This change requires iDRAC Operator credentials — enforcing authorisation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Racadm — disable USB boot at BIOS level</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>racadm<span class="w"> </span>bios<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">BootSeq</span><span class="o">=</span><span class="s2">&quot;HardDisk.List.1-1&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Enable one-time USB boot (authorised recovery session only)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.ServerBoot.BootOnce<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.ServerBoot.FirstBootDevice<span class="w"> </span>USB
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># This change requires iDRAC Operator credentials — enforcing authorisation</span>
 </code></pre></div>
 <h2 id="snapshot-access-control">Snapshot Access Control<a class="headerlink" href="#snapshot-access-control" title="Permanent link">&para;</a></h2>
 <p>RASR operates on storage snapshots. Access to snapshot data must be restricted.</p>
 <h3 id="snapshot-visibility">Snapshot Visibility<a class="headerlink" href="#snapshot-visibility" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Unity — list snapshots and their access settings</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>uemcli<span class="w"> </span>/prot/snap<span class="w"> </span>show<span class="w"> </span>-detail
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Restrict snapshot access (set snap to not be accessible as a production clone)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Snapshots should not be writable or accessible except during recovery operations</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>uemcli<span class="w"> </span>/prot/snap<span class="w"> </span>modify<span class="w"> </span>-id<span class="w"> </span>snap_001<span class="w"> </span>-descr<span class="w"> </span><span class="s2">&quot;RASR snap - restricted&quot;</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Assign snapshot management only to the recovery service account</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Via Unity LDAP group role: recovery_manager role can access snapshots</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Unity — list snapshots and their access settings</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>uemcli<span class="w"> </span>/prot/snap<span class="w"> </span>show<span class="w"> </span>-detail
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Restrict snapshot access (set snap to not be accessible as a production clone)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Snapshots should not be writable or accessible except during recovery operations</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>uemcli<span class="w"> </span>/prot/snap<span class="w"> </span>modify<span class="w"> </span>-id<span class="w"> </span>snap_001<span class="w"> </span>-descr<span class="w"> </span><span class="s2">&quot;RASR snap - restricted&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Assign snapshot management only to the recovery service account</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Via Unity LDAP group role: recovery_manager role can access snapshots</span>
 </code></pre></div>
 <h3 id="network-access-to-snapshot-data">Network Access to Snapshot Data<a class="headerlink" href="#network-access-to-snapshot-data" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">Snapshot data paths must be isolated</span><span class="p">:</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recovery LUNs presented only to the DR recovery host (not production hosts)</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iSCSI or FC zoning restricts which initiators can see recovery targets</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">VLAN segmentation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">recovery traffic on isolated DR VLAN</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">No direct access from application VLANs to recovery storage paths</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">Snapshot data paths must be isolated</span><span class="p">:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recovery LUNs presented only to the DR recovery host (not production hosts)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iSCSI or FC zoning restricts which initiators can see recovery targets</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">VLAN segmentation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">recovery traffic on isolated DR VLAN</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">No direct access from application VLANs to recovery storage paths</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify FC zone — recovery host should only see DR storage ports</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># (Brocade switch example)</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>zoneshow<span class="w"> </span><span class="s2">&quot;DR-Recovery-Zone&quot;</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Verify iSCSI access list (Unity)</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>uemcli<span class="w"> </span>/net/iscsi/node<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Verify FC zone — recovery host should only see DR storage ports</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># (Brocade switch example)</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>zoneshow<span class="w"> </span><span class="s2">&quot;DR-Recovery-Zone&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Verify iSCSI access list (Unity)</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>uemcli<span class="w"> </span>/net/iscsi/node<span class="w"> </span>show
 </code></pre></div>
 <h2 id="least-privilege-for-automated-rasr-operations">Least Privilege for Automated RASR Operations<a class="headerlink" href="#least-privilege-for-automated-rasr-operations" title="Permanent link">&para;</a></h2>
 <p>Automated recovery scripts and scheduled validation tasks should use the minimum required access.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">Automated RASR service account policy</span><span class="p">:</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Account</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">svc-rasr-prod, svc-rasr-uat (one per environment)</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Array role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Operator (read snapshots, initiate restore) — not Administrator</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">iDRAC role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Read Only (monitoring only; human operator handles boot)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Credential storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PAM vault (CyberArk / HashiCorp Vault) — never in config files</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Network access</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">management VLAN only, specific source IP restrictions where possible</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Log forwarding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all API actions forwarded to SIEM</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">Automated RASR service account policy</span><span class="p">:</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Account</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">svc-rasr-prod, svc-rasr-uat (one per environment)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Array role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Operator (read snapshots, initiate restore) — not Administrator</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">iDRAC role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Read Only (monitoring only; human operator handles boot)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Credential storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PAM vault (CyberArk / HashiCorp Vault) — never in config files</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Network access</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">management VLAN only, specific source IP restrictions where possible</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Log forwarding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all API actions forwarded to SIEM</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Restrict svc-rasr-prod to management VLAN source IPs on the array firewall</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># (Array CLI concept — implementation varies by platform)</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>uemcli<span class="w"> </span>/net/acl<span class="w"> </span>create<span class="w"> </span>-host<span class="w"> </span><span class="m">10</span>.10.20.0/24<span class="w"> </span>-access<span class="w"> </span>allow
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Service account used for API calls only — verify no interactive sessions</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>last<span class="w"> </span>svc-rasr-prod<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5<span class="w">   </span><span class="c1"># Should show no interactive SSH sessions</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Restrict svc-rasr-prod to management VLAN source IPs on the array firewall</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># (Array CLI concept — implementation varies by platform)</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>uemcli<span class="w"> </span>/net/acl<span class="w"> </span>create<span class="w"> </span>-host<span class="w"> </span><span class="m">10</span>.10.20.0/24<span class="w"> </span>-access<span class="w"> </span>allow
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Service account used for API calls only — verify no interactive sessions</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>last<span class="w"> </span>svc-rasr-prod<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5<span class="w">   </span><span class="c1"># Should show no interactive SSH sessions</span>
 </code></pre></div>
 <h2 id="change-management-gate">Change Management Gate<a class="headerlink" href="#change-management-gate" title="Permanent link">&para;</a></h2>
 <p>All RASR recovery initiations must be gated by an approved change record. This is an administrative access control.</p>
@@ -4766,12 +4751,12 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nt">ServiceNow change record fields for RASR</span><span class="p">:</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Assignment Group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DR Operations</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Category</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recovery</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Risk</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">High</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Implementation Notes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snapshot ID, target system, expected RTO</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Approval chain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">system_owner + dr_manager</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">ServiceNow change record fields for RASR</span><span class="p">:</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Assignment Group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DR Operations</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Category</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recovery</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Risk</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">High</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Implementation Notes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snapshot ID, target system, expected RTO</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Approval chain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">system_owner + dr_manager</span>
 </code></pre></div>
 <h2 id="separation-of-duties">Separation of Duties<a class="headerlink" href="#separation-of-duties" title="Permanent link">&para;</a></h2>
 <table>
@@ -4805,24 +4790,24 @@
 </tbody>
 </table>
 <h2 id="access-control-audit">Access Control Audit<a class="headerlink" href="#access-control-audit" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Array — review who has access to recovery-related roles</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>uemcli<span class="w"> </span>/user<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name:|Role:&quot;</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>uemcli<span class="w"> </span>/sys/auth/ldapgroup<span class="w"> </span>show
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># iDRAC — review role assignments</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.Users
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Check who accessed the recovery USB (physical log audit)</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Review DR cabinet access register for the last 90 days</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># Review change records for unapproved recoveries</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># ServiceNow: query Changes where category=Recovery AND approval_state != approved</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Array — review who has access to recovery-related roles</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>uemcli<span class="w"> </span>/user<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name:|Role:&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>uemcli<span class="w"> </span>/sys/auth/ldapgroup<span class="w"> </span>show
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># iDRAC — review role assignments</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.Users
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># Check who accessed the recovery USB (physical log audit)</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Review DR cabinet access register for the last 90 days</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># Review change records for unapproved recoveries</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># ServiceNow: query Changes where category=Recovery AND approval_state != approved</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Review recent privileged access to array management (from SIEM / event log)</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c"># On management workstation:</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4648</span><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">50</span> <span class="p">|</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Message</span> <span class="o">-like</span> <span class="s2">&quot;*unisphere*&quot;</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Message</span> <span class="o">-like</span> <span class="s2">&quot;*iDRAC*&quot;</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Review recent privileged access to array management (from SIEM / event log)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c"># On management workstation:</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4648</span><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">50</span> <span class="p">|</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Message</span> <span class="o">-like</span> <span class="s2">&quot;*unisphere*&quot;</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Message</span> <span class="o">-like</span> <span class="s2">&quot;*iDRAC*&quot;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
 </code></pre></div>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>

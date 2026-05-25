@@ -4218,7 +4218,65 @@
 Commvault architecture reference — CommServe topology, MediaAgent deduplication, storage library types, multi-site design, and port requirements.
 </div>
 
-<p><img alt="Commvault Architecture" src="../../../assets/commvault-architecture-overview.svg" /></p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────── Commvault Architecture — Component Topology ─────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                     CommCell Architecture                                     │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │          Three-tier: CommServe (control) → MediaAgent (data plane) → Client (source)          │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │              All communications encrypted TLS 1.2+; certificate-based mutual auth             │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │        CommCell ID uniquely identifies the deployment; required for cross-CommCell ops        │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │             Firewall tunnels: clients connect outbound to CommServe 8400 / MA 8403            │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    Control plane (CS) and data plane (MA) are separated for independent scaling                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                   ▼                                                   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │          Control Plane (CommServe)           │  │           Data Plane (MediaAgents)          │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │        SQL Server CommCell DB (CSDB)         │  │         Deduplication Database (DDB)        │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │      Job Manager: schedule/queue/retry       │  │          Chunk-based data pipeline          │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │        Event Manager: alerts and SNMP        │  │        Compression + encryption at MA       │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │         CommServe Cache: DR metadata         │  │     Mount paths: disk/tape/cloud targets    │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │        HA: active/passive CS failover        │  │      MA groups: load-balance across MAs     │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│    Data flows from Client iDA → MediaAgent → Storage Library (bypassing CommServe)                    │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                   ▼                                                   │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │                                     Data Flow: Backup Job                                     │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │         1. CS Job Manager fires job → sends instructions to Client iDA and MediaAgent         │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │            2. Client iDA reads source data (VSS snapshot, DB quiesce, or live read)           │   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   │               3. Data stream transferred Client → MA over TCP (port 8403 tunnel)              │   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   │            4. MA deduplicates (DDB lookup), compresses, encrypts, writes to library           │   │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│   │                5. MA reports chunk metadata to CS; CSDB records job completion                │   │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  CommServe: 2U rack server · 32-64 GB RAM · SQL Server on NVMe RAID-10 · 10 GbE NIC                   │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  MediaAgent: 2U server · 16-32 GB RAM · FC HBA 8/16 Gb for tape · 10/25 GbE NIC                       │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Disk Library: NAS/SAN target · FC or iSCSI LUNs · WORM-capable for compliance                        │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Tape Library: FC-attached autoloader or enterprise tape library (LTO-8/9)                            │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│  CommCell DB    = SQL Server database holding all job history, policies, and metadata                 │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│  Job Manager    = CommServe service that schedules, launches, and monitors backup jobs                │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│  iDA            = Intelligent Data Agent; client-side component that reads/writes data                │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│  VSS            = Volume Shadow Copy Service; Windows quiesce mechanism used by iDA                   │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│  Chunk          = Fixed-size data block written to library; unit of dedup and tracking                │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│  Silo           = Isolated MA group for multi-tenant or compliance storage separation                 │
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│  MA Group       = Named set of MediaAgents used for load balancing backup streams                     │
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│  Firewall Proxy = CV Tunnel Service enabling outbound-only client connectivity                        │
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│  CommCell DR    = Warm standby CommServe; CSDB replicated via SQL log shipping                        │
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│  CSDB Backup    = Automated backup of CommServe DB; critical for disaster recovery                    │
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>│  Library        = Logical storage target: disk path, tape drive, or cloud container                   │
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>│  Retention      = Policy defining how many days/cycles backup data is kept on each copy               │
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<img alt="Commvault Architecture" src="../../../assets/commvault-architecture-overview.svg" /></p>
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>CommServe topology, MediaAgent dedup, storage library types, multi-site design, and port requirements.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>VMware, cloud storage, NDMP, and third-party integrations.</span></a>
@@ -4251,21 +4309,6 @@ Commvault architecture reference — CommServe topology, MediaAgent deduplicatio
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>graph TB
-  CS["CommServe\n(command &amp; control)"] --&gt; WEBCON["Web Console\n&amp; Command Center"]
-  MA1["Media Agent 1\n(data mover)"] &amp; MA2["Media Agent 2"] --&gt; CS
-  SRC(["Source — VMs / DBs / Files"]) --&gt; MA1 &amp; MA2
-  MA1 &amp; MA2 --&gt; DISK[("Disk Library\nDDB dedup")]
-  DISK --&gt;|"aux copy"| TAPE[("Tape / Object\nlong-term retention")]
-  ADMIN(["Backup Admin"]) --&gt; WEBCON
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class CS,MA1,MA2 ctrl
-  class DISK,TAPE store
-  class SRC,ADMIN host
-  class WEBCON mgmt</code></pre>
 
 
 

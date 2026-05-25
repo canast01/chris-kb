@@ -3849,28 +3849,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#powershell-remoting-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PowerShell Remoting Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#core" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Core
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#variables-output-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4097,7 +4075,7 @@
 <p>Works on Windows, macOS, and Linux (PowerShell 7+). VMware PowerCLI requires <code>Install-Module VMware.PowerCLI</code>.</p>
 </blockquote>
 <h2 id="script-execution-pipeline">Script Execution Pipeline<a class="headerlink" href="#script-execution-pipeline" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
+<p><pre class="mermaid"><code>graph LR
     readHost["Read-Host / param()\n(user input / args)"]
     processLogic["Process Logic\n(filter / transform / query)"]
     exportCsv["Export-Csv\n(or ConvertTo-Json)"]
@@ -4108,50 +4086,63 @@
     processLogic --&gt; exportCsv
     exportCsv --&gt; sendEmail
     processLogic --&gt; logResult</code></pre>
-<h2 id="powershell-remoting-topology">PowerShell Remoting Topology<a class="headerlink" href="#powershell-remoting-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    controlHost["Control Host\n(Invoke-Command)"]
-    winrm["WinRM\n(port 5985 HTTP\n/ 5986 HTTPS)"]
-    remoteHost1["Remote Host 1\n(srv1)"]
-    remoteHost2["Remote Host 2\n(srv2)"]
-    remoteHost3["Remote Host 3\n(srv3)"]
-    psSession["PSSession\n(persistent)"]
-    scriptBlock["ScriptBlock\n(runs remotely)"]
-
-    controlHost --&gt;|Invoke-Command -ComputerName| winrm
-    controlHost --&gt;|New-PSSession| psSession
-    psSession --&gt; winrm
-    winrm --&gt; remoteHost1
-    winrm --&gt; remoteHost2
-    winrm --&gt; remoteHost3
-    scriptBlock --&gt;|executes on| remoteHost1
-    scriptBlock --&gt;|executes on| remoteHost2
-    scriptBlock --&gt;|executes on| remoteHost3</code></pre>
-<hr />
-<h2 id="core">Core<a class="headerlink" href="#core" title="Permanent link">&para;</a></h2>
-<p>The basics of working in a PowerShell session — checking the version, getting help for any cmdlet, discovering what commands are available, and loading modules. Start here when you're on an unfamiliar system.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Version and environment</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$PSVersionTable</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Get-Host</span>
+┌───────────────────────────────────── PowerShell — CLI Reference ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               Essential PowerShell commands for daily infrastructure operations               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Core Commands                 │  │               Utility Commands              │   │
+│   │          Get-Command -Module <name>          │  │             Measure-Object -Sum             │   │
+│   │             Get-Help <cmd> -Full             │  │         Where-Object { $<em>.X -eq Y }         │   │
+│   │            Get-Member (alias: gm)            │  │           Select-Object -First 10           │   │
+│   │          Get-Module -ListAvailable           │  │          Sort-Object -Property Name         │   │
+│   │             Import-Module <name>             │  │         Group-Object -Property Type         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                File and Data                 │  │               Remote Execution              │   │
+│   │           Get-Content, Set-Content           │  │         Invoke-Command -ScriptBlock         │   │
+│   │            Import-Csv, Export-Csv            │  │            Enter-PSSession <host>           │   │
+│   │       ConvertTo-Json, ConvertFrom-Json       │  │          Copy-Item -ToSession $sess         │   │
+│   │        Invoke-RestMethod (API calls)         │  │             Disconnect-PSSession            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Get-Member     = inspect object properties and methods; essential for pipeline debugging   │   │
+│   │  ForEach-Object = pipeline loop; alias: %; $</em>  is current object; use for per-item processing │   │
+│   │              Where-Object   = filter pipeline; alias: ?; $_.Property -eq "value"              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Core
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Help — the most important command to know</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Get-Help</span> <span class="p">&lt;</span><span class="n">cmdlet</span><span class="p">&gt;</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">Get-Help</span> <span class="p">&lt;</span><span class="n">cmdlet</span><span class="p">&gt;</span> <span class="n">-Full</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-Help</span> <span class="p">&lt;</span><span class="n">cmdlet</span><span class="p">&gt;</span> <span class="n">-Examples</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Update-Help</span>              <span class="c"># download latest help files</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c"># Discover commands</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">Get-Command</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">Get-Command</span> <span class="n">-Noun</span> <span class="n">VM</span>     <span class="c"># find all cmdlets with &quot;VM&quot; in the noun</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Get-Command</span> <span class="p">*</span><span class="n">Service</span><span class="p">*</span>    <span class="c"># wildcard search</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c"># Modules</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nb">Get-Module</span>               <span class="c"># loaded modules in current session</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nb">Import-Module</span> <span class="p">&lt;</span><span class="n">module</span><span class="p">&gt;</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nb">Remove-Module</span> <span class="p">&lt;</span><span class="n">module</span><span class="p">&gt;</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nb">Install-Module</span> <span class="p">&lt;</span><span class="n">module</span><span class="p">&gt;</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
-</code></pre></div>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>The basics of working in a PowerShell session — checking the version, getting help for any cmdlet, discovering what commands are available, and loading modules. Start here when you&#39;re on an unfamiliar system.
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```powershell
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Version and environment
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>$PSVersionTable
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Get-Host
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># Help — the most important command to know
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>Get-Help &lt;cmdlet&gt;
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Get-Help &lt;cmdlet&gt; -Full
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>Get-Help &lt;cmdlet&gt; -Examples
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>Update-Help              # download latest help files
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Discover commands
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>Get-Command
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>Get-Command -Noun VM     # find all cmdlets with &quot;VM&quot; in the noun
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>Get-Command *Service*    # wildcard search
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a># Modules
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>Get-Module               # loaded modules in current session
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>Get-Module -ListAvailable
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>Import-Module &lt;module&gt;
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>Remove-Module &lt;module&gt;
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>Install-Module &lt;module&gt; -Scope CurrentUser
+</code></pre></div></p>
 <hr />
 <h2 id="variables-output-pipeline">Variables, Output &amp; Pipeline<a class="headerlink" href="#variables-output-pipeline" title="Permanent link">&para;</a></h2>
 <p>PowerShell passes objects between commands using the pipe (<code>|</code>). This is more powerful than text-based pipes — you get real properties you can filter and select, not just strings. Variables start with <code>$</code>.</p>

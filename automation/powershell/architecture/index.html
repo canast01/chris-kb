@@ -3802,7 +3802,28 @@
 Cross-platform automation shell on .NET; execution engine processes input through parser → AST → runspace → pipeline; remoting via WinRM (5985/5986) or SSH; module system with PSGallery distribution; runspace pools for parallelism.
 </div>
 
-<p><img alt="PowerShell Architecture" src="../../../assets/powershell-architecture-overview.svg" /></p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── PowerShell — Architecture ──────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │   PowerShell architecture: runtime on .NET; cmdlets call .NET APIs; pipeline passes objects   │   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │    Remoting: Invoke-Command, Enter-PSSession → WinRM (Windows) or SSH transport (PS7/Linux)   │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │          Modules: binary (compiled .dll) or script (.psm1); loaded from PSModulePath          │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │                 How It Works                 │  │               Design Standards              │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │        Script → PSParser → AST → exec        │  │      Verb-Noun naming (approved verbs)      │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │         Pipeline: object not string          │  │         CmdletBinding + param block         │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │          Module autoload from path           │  │          Error handling: try/catch          │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │        Runspaces: parallel execution         │  │        Pester tests for all functions       │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │            Remoting: WinRM / SSH             │  │            PSScriptAnalyzer lint            │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │     Physical: PS runs on Windows, Linux, macOS; remoting requires WinRM (Win) or SSH (PS7)    │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<img alt="PowerShell Architecture" src="../../../assets/powershell-architecture-overview.svg" /></p>
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="how-it-works/">
@@ -3860,20 +3881,6 @@ Cross-platform automation shell on .NET; execution engine processes input throug
 </tbody>
 </table>
 <h2 id="execution-engine">Execution Engine<a class="headerlink" href="#execution-engine" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    A([Input&lt;br/&gt;stdin / script / command]) --&gt; B[Lexer &amp; Parser]
-    B --&gt; C[AST\nAbstract Syntax Tree]
-    C --&gt; D[Binder\nType resolution]
-    D --&gt; E[Compiled Script Block]
-    E --&gt; F{Runspace}
-    F --&gt; G[Command Discovery\nAlias → Function → Cmdlet → Native]
-    G --&gt; H[Parameter Binding]
-    H --&gt; I[Pipeline Processor]
-    I --&gt; J[Output / Objects]
-    J --&gt; K([stdout / next cmdlet / $null])
-    I --&gt; L([Error Stream\n$Error / Write-Error])
-    style F fill:#1565c0,color:#fff
-    style I fill:#2e7d32,color:#fff</code></pre>
 
 
 

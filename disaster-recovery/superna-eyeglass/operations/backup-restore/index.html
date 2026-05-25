@@ -4306,56 +4306,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#performing-a-manual-backup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Performing a Manual Backup
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Performing a Manual Backup">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#via-eyeglass-gui" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Via Eyeglass GUI
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#via-cli" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Via CLI
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuring-scheduled-backups" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuring Scheduled Backups
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#restoring-eyeglass-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4639,7 +4589,7 @@
 </table>
 <hr />
 <h2 id="backup-architecture">Backup Architecture<a class="headerlink" href="#backup-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
+<p><pre class="mermaid"><code>flowchart LR
     subgraph "Eyeglass Appliance"
         EG[Eyeglass Engine]
         CFG[Config Store]
@@ -4655,122 +4605,125 @@
     EG --&gt; LOCAL
     EG --&gt; NFS
     EG --&gt; SFTP</code></pre>
-<hr />
-<h2 id="performing-a-manual-backup">Performing a Manual Backup<a class="headerlink" href="#performing-a-manual-backup" title="Permanent link">&para;</a></h2>
-<h3 id="via-eyeglass-gui">Via Eyeglass GUI<a class="headerlink" href="#via-eyeglass-gui" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Log in to Eyeglass web UI: <code>https://&lt;eyeglass-ip&gt;</code></li>
-<li>Navigate to: <strong>Admin → Backup &amp; Restore</strong></li>
-<li>Click <strong>Backup Now</strong></li>
-<li>Select backup destination (local or remote)</li>
-<li>Click <strong>Start Backup</strong></li>
-<li>Monitor progress — backup completes in &lt; 5 minutes for typical configurations</li>
-</ol>
-<h3 id="via-cli">Via CLI<a class="headerlink" href="#via-cli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to Eyeglass appliance</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@&lt;eyeglass-ip&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Trigger backup via igls CLI</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>igls<span class="w"> </span>backup<span class="w"> </span>create
+┌───────────────────────────────── Superna Eyeglass — Backup &amp; Restore ─────────────────────────────────┐
+│                                                                                                       │
+│    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Backup (Protection)              │  │              Restore (Recovery)             │   │
+│   │               igls quota list                │  │               igls dr runbook               │   │
+│   │              Quiesce source I/O              │  │            Select recovery point            │   │
+│   │             Take snapshot / CBT              │  │           Mount or copy to target           │   │
+│   │           Transfer changed blocks            │  │              Validate integrity             │   │
+│   │             Commit to repository             │  │             Restart application             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 Key Superna Eyeglass Commands                                 │   │
+│   │                                Backup trigger  : igls quota list                              │   │
+│   │                                List points     : igls dr runbook                              │   │
+│   │                                Health status   : igls sync status                             │   │
+│   │                              Retention mgmt  : igls failover start                            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
+│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
+│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
+│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
+│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
+│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
+│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
+│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
+│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
+│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
+│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
+│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
+│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
+│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Configuring Scheduled Backups
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Navigate to: **Admin → Backup &amp; Restore → Schedule**
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List available backups</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>igls<span class="w"> </span>backup<span class="w"> </span>list
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Export backup to external location</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>igls<span class="w"> </span>backup<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--id<span class="w"> </span>&lt;backup-id&gt;<span class="w"> </span>--destination<span class="w"> </span>/mnt/nfs-share/eyeglass-backups/
-</code></pre></div>
-<hr />
-<h2 id="configuring-scheduled-backups">Configuring Scheduled Backups<a class="headerlink" href="#configuring-scheduled-backups" title="Permanent link">&para;</a></h2>
-<p>Navigate to: <strong>Admin → Backup &amp; Restore → Schedule</strong></p>
-<p><strong>Recommended schedule:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Frequency</td>
-<td>Daily</td>
-</tr>
-<tr>
-<td>Time</td>
-<td>02:00 (outside replication windows)</td>
-</tr>
-<tr>
-<td>Retention</td>
-<td>7 backups</td>
-</tr>
-<tr>
-<td>Remote target</td>
-<td>NFS share or SFTP (off-appliance)</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Configure remote backup target via CLI</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>igls<span class="w"> </span>backup<span class="w"> </span>configure-remote<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--type<span class="w"> </span>nfs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--host<span class="w"> </span>&lt;nfs-server-ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--path<span class="w"> </span>/exports/eyeglass-backups
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify remote target connectivity</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>igls<span class="w"> </span>backup<span class="w"> </span>test-remote
-</code></pre></div>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>**Recommended schedule:**
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Setting | Value |
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>|---|---|
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| Frequency | Daily |
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>| Time | 02:00 (outside replication windows) |
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>| Retention | 7 backups |
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>| Remote target | NFS share or SFTP (off-appliance) |
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>```bash
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Configure remote backup target via CLI
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>igls backup configure-remote \
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  --type nfs \
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  --host &lt;nfs-server-ip&gt; \
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  --path /exports/eyeglass-backups
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a># Verify remote target connectivity
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>igls backup test-remote
+</code></pre></div></p>
 <hr />
 <h2 id="restoring-eyeglass-configuration">Restoring Eyeglass Configuration<a class="headerlink" href="#restoring-eyeglass-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="restore-to-same-appliance">Restore to Same Appliance<a class="headerlink" href="#restore-to-same-appliance" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Log in to Eyeglass CLI</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@&lt;eyeglass-ip&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># 2. List available backups</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>igls<span class="w"> </span>backup<span class="w"> </span>list
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># 3. Restore from a specific backup</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>igls<span class="w"> </span>backup<span class="w"> </span>restore<span class="w"> </span>--id<span class="w"> </span>&lt;backup-id&gt;
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># 4. Confirm restore completed</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>igls<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Log in to Eyeglass CLI</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@&lt;eyeglass-ip&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># 2. List available backups</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>igls<span class="w"> </span>backup<span class="w"> </span>list
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 3. Restore from a specific backup</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>igls<span class="w"> </span>backup<span class="w"> </span>restore<span class="w"> </span>--id<span class="w"> </span>&lt;backup-id&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># 4. Confirm restore completed</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>igls<span class="w"> </span>status
 </code></pre></div>
 <h3 id="restore-to-newreplacement-appliance">Restore to New/Replacement Appliance<a class="headerlink" href="#restore-to-newreplacement-appliance" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Deploy new Eyeglass OVA (same version as backup)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># 2. Complete initial setup wizard (network, hostname)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># 3. Copy backup file to new appliance</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>scp<span class="w"> </span>eyeglass-backup-&lt;date&gt;.tar.gz<span class="w"> </span>admin@&lt;new-eyeglass-ip&gt;:/home/admin/
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># 4. SSH to new appliance</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ssh<span class="w"> </span>admin@&lt;new-eyeglass-ip&gt;
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># 5. Import and restore the backup</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>igls<span class="w"> </span>backup<span class="w"> </span>import<span class="w"> </span>--file<span class="w"> </span>/home/admin/eyeglass-backup-&lt;date&gt;.tar.gz
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>igls<span class="w"> </span>backup<span class="w"> </span>restore<span class="w"> </span>--id<span class="w"> </span>&lt;imported-backup-id&gt;
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># 6. Verify cluster connections</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>igls<span class="w"> </span>clusters<span class="w"> </span>list
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># 7. Re-enter cluster credentials (passwords are not stored in backup)</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>igls<span class="w"> </span>clusters<span class="w"> </span>update-credentials<span class="w"> </span>--cluster<span class="w"> </span>&lt;cluster-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Deploy new Eyeglass OVA (same version as backup)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># 2. Complete initial setup wizard (network, hostname)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># 3. Copy backup file to new appliance</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>scp<span class="w"> </span>eyeglass-backup-&lt;date&gt;.tar.gz<span class="w"> </span>admin@&lt;new-eyeglass-ip&gt;:/home/admin/
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># 4. SSH to new appliance</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ssh<span class="w"> </span>admin@&lt;new-eyeglass-ip&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># 5. Import and restore the backup</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>igls<span class="w"> </span>backup<span class="w"> </span>import<span class="w"> </span>--file<span class="w"> </span>/home/admin/eyeglass-backup-&lt;date&gt;.tar.gz
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>igls<span class="w"> </span>backup<span class="w"> </span>restore<span class="w"> </span>--id<span class="w"> </span>&lt;imported-backup-id&gt;
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># 6. Verify cluster connections</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>igls<span class="w"> </span>clusters<span class="w"> </span>list
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># 7. Re-enter cluster credentials (passwords are not stored in backup)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>igls<span class="w"> </span>clusters<span class="w"> </span>update-credentials<span class="w"> </span>--cluster<span class="w"> </span>&lt;cluster-name&gt;
 </code></pre></div>
 <p><strong>Note:</strong> Cluster passwords and API tokens are not included in backups for security. After restore, re-enter credentials for each managed PowerScale cluster.</p>
 <hr />
 <h2 id="post-restore-validation">Post-Restore Validation<a class="headerlink" href="#post-restore-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check Eyeglass service health</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>igls<span class="w"> </span>status
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify all clusters are connected</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>igls<span class="w"> </span>clusters<span class="w"> </span>list
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify replication jobs are visible</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>igls<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Check share/export configuration loaded correctly</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>igls<span class="w"> </span>shares<span class="w"> </span>list
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>igls<span class="w"> </span>exports<span class="w"> </span>list
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Run a configuration sync to verify policies are intact</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>igls<span class="w"> </span>sync<span class="w"> </span>run<span class="w"> </span>--cluster<span class="w"> </span>&lt;cluster-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check Eyeglass service health</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>igls<span class="w"> </span>status
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify all clusters are connected</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>igls<span class="w"> </span>clusters<span class="w"> </span>list
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify replication jobs are visible</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>igls<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Check share/export configuration loaded correctly</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>igls<span class="w"> </span>shares<span class="w"> </span>list
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>igls<span class="w"> </span>exports<span class="w"> </span>list
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Run a configuration sync to verify policies are intact</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>igls<span class="w"> </span>sync<span class="w"> </span>run<span class="w"> </span>--cluster<span class="w"> </span>&lt;cluster-name&gt;
 </code></pre></div>
 <p><strong>GUI validation:</strong></p>
 <ul>
@@ -4783,14 +4736,14 @@
 <hr />
 <h2 id="policy-backup-export-manual">Policy Backup Export (Manual)<a class="headerlink" href="#policy-backup-export-manual" title="Permanent link">&para;</a></h2>
 <p>For additional protection, export individual policy configurations:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Export all SyncIQ policy mappings</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>igls<span class="w"> </span>dr<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>eyeglass-policy-export-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Export DFS configuration</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>igls<span class="w"> </span>dfs<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&gt;<span class="w"> </span>eyeglass-dfs-export-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Store exports off-appliance</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>scp<span class="w"> </span>eyeglass-policy-export-*.json<span class="w"> </span>admin@nas:/backups/eyeglass/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Export all SyncIQ policy mappings</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>igls<span class="w"> </span>dr<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>eyeglass-policy-export-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Export DFS configuration</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>igls<span class="w"> </span>dfs<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&gt;<span class="w"> </span>eyeglass-dfs-export-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Store exports off-appliance</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>scp<span class="w"> </span>eyeglass-policy-export-*.json<span class="w"> </span>admin@nas:/backups/eyeglass/
 </code></pre></div>
 <hr />
 <h2 id="backup-verification-testing">Backup Verification Testing<a class="headerlink" href="#backup-verification-testing" title="Permanent link">&para;</a></h2>

@@ -3676,7 +3676,63 @@
 Confluence Data Center runs as an active-active Java cluster sharing a single PostgreSQL database, a distributed NFS/EFS home, and Hazelcast for cache invalidation. Sticky sessions are mandatory at the load balancer.
 </div>
 
-<p><img alt="Confluence Architecture" src="../../../assets/confluence-architecture-overview.svg" /></p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────── Confluence — Architecture Overview ──────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                              Confluence Data Center Architecture                              │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │          Load balancer → multiple Tomcat app nodes → shared PostgreSQL DB + NFS home          │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │       Each node is stateless for HTTP; shared NFS provides attachments and Lucene index       │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │            Hazelcast cluster: in-memory cache synchronisation across all app nodes            │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │         Synchrony: collaborative editing service co-located or standalone on port 8091        │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    App nodes scale horizontally; DB and NFS are the single-source-of-truth tiers                      │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │               Application Tier               │  │                  Data Tier                  │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │           Tomcat JVM: heap 4-8 GB            │  │            PostgreSQL 14+ primary           │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │          Hazelcast: node discovery           │  │          DB replica for read scale          │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │           Synchrony: collab edits            │  │            NFS shared home mount            │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │           Lucene: local index copy           │  │              Attachments on NFS             │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │           REST API endpoint: 8090            │  │            JDBC: confluence user            │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │          Session: Hazelcast-backed           │  │          DB backup: pg_dump nightly         │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│    Application tier is horizontally scalable; data tier requires HA at DB and NFS level               │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │   How It Works   │ Design Standards │    Integrations   │      Ports       │    Protocols     │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │Request lifecycle │Node sizing guide │   LDAP/SAML IdP   │  8090 HTTP app   │   AJP / HTTP/S   │   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   │ Search indexing  │ DB schema design │   Jira app link   │ 5432 PostgreSQL  │     JDBC TCP     │   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   │  Collab editing  │    NFS sizing    │   CI/CD webhooks  │  8091 Synchrony  │    WebSocket     │   │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│   │ Cache sync flow  │   HA topology    │  REST API clients │   443 HTTPS LB   │     TLS 1.2+     │   │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  2+ vSphere VMs per app node · DB VM with SSD storage · NFS datastore · L4 load balancer              │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│                                                                                                       │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│                                                                                                       │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  Hazelcast    = distributed in-memory data grid; Confluence uses it for session + cache sync          │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  Synchrony    = real-time collaborative editing service bundled with Confluence DC                    │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│  AJP          = Apache JServ Protocol; Tomcat connector for Apache httpd reverse proxy                │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│  JDBC         = Java Database Connectivity; connection pool managed by Confluence                     │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│  Lucene       = Apache search library; Confluence maintains local index per node                      │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│  NFS          = Network File System; shared home for attachments across DC nodes                      │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│  pg_dump      = PostgreSQL native backup utility; produces SQL or custom-format dump                  │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│  JVM heap     = memory allocated to Confluence JVM; set in setenv.sh (recommended 4-8 GB)             │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│  DC node      = single Confluence app server instance in a clustered DC deployment                    │
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│  Load balancer= L4/L7 device distributing HTTP requests across Confluence app nodes                   │
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│  Shared home  = confluence.home path mounted from NFS; same path on all nodes                         │
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│  App link     = Atlassian application link connecting Confluence to Jira for auth/data                │
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│                                                                                                       │
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<img alt="Confluence Architecture" src="../../../assets/confluence-architecture-overview.svg" /></p>
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Deployment models, cluster topology, component roles, and port reference.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
@@ -3721,23 +3777,6 @@ Confluence Data Center runs as an active-active Java cluster sharing a single Po
 </table>
 <hr />
 <h2 id="data-center-topology">Data Center Topology<a class="headerlink" href="#data-center-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    Users["End Users / Browsers"] --&gt; LB["Load Balancer\n(sticky sessions)"]
-
-    LB --&gt; N1["Node 1\nTomcat JVM"]
-    LB --&gt; N2["Node 2\nTomcat JVM"]
-    LB --&gt; N3["Node 3\nTomcat JVM"]
-
-    N1 &lt;--&gt;|Hazelcast| N2
-    N2 &lt;--&gt;|Hazelcast| N3
-    N1 &lt;--&gt;|Hazelcast| N3
-
-    N1 --&gt; SH["Shared Home\n(NFS / EFS)"]
-    N2 --&gt; SH
-    N3 --&gt; SH
-    N1 --&gt; DB[("PostgreSQL")]
-    N2 --&gt; DB
-    N3 --&gt; DB</code></pre>
 
 
 

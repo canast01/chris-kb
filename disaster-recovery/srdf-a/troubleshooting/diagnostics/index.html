@@ -4131,17 +4131,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#collecting-diagnostics-before-engaging-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Collecting Diagnostics Before Engaging Support
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -4304,7 +4293,7 @@
 </ol>
 <hr />
 <h2 id="diagnostic-command-reference">Diagnostic Command Reference<a class="headerlink" href="#diagnostic-command-reference" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check SRDF group and pair states</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check SRDF group and pair states</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Detailed view including cycle time, lag, and DSE state</span>
@@ -4325,46 +4314,46 @@
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Check target array thin pool utilisation</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>list<span class="w"> </span>-pool<span class="w"> </span>-thin<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Pool|Used|Free&quot;</span>
 </code></pre></div>
-<hr />
-<h2 id="collecting-diagnostics-before-engaging-support">Collecting Diagnostics Before Engaging Support<a class="headerlink" href="#collecting-diagnostics-before-engaging-support" title="Permanent link">&para;</a></h2>
-<p>Always collect the following before opening a Dell support case or escalating:</p>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Command</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Current pair states</td>
-<td><code>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query</code></td>
-</tr>
-<tr>
-<td>Detailed cycle/lag output</td>
-<td><code>symrdf query -g &lt;group&gt; -v</code></td>
-</tr>
-<tr>
-<td>Array event log</td>
-<td><code>symevent -sid &lt;SID&gt; list -last 100</code></td>
-</tr>
-<tr>
-<td>RDF group configuration</td>
-<td><code>symcfg -sid &lt;SID&gt; list -rdfg &lt;group_num&gt; -v</code></td>
-</tr>
-<tr>
-<td>Solutions Enabler version</td>
-<td><code>symcli -version</code></td>
-</tr>
-<tr>
-<td>Array serial numbers</td>
-<td><code>symcfg list</code></td>
-</tr>
-</tbody>
-</table>
-<p>Save all output to a timestamped file:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query<span class="w"> </span>-detail<span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf_diag_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>.txt
-</code></pre></div>
+┌──────────────────────────────────────── SRDF/A — Diagnostics ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                  SRDF/A — Diagnostic Commands                                 │   │
+│   │                       Collect these before opening a vendor support case                      │   │
+│   │                                           symrdf query                                        │   │
+│   │                                     symrdf suspend / resume                                   │   │
+│   │                       Check system logs: /var/log/ or Windows Event Viewer                    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Log Collection                │  │               Live Diagnostics              │   │
+│   │            Application log bundle            │  │             Network connectivity            │   │
+│   │            OS syslog (journalctl)            │  │              Storage path check             │   │
+│   │             Core dump if crashed             │  │              Process list check             │   │
+│   │             Config export/backup             │  │              Port reachability              │   │
+│   │                 symrdf query                 │  │           symrdf suspend / resume           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
+│  R1            = source SRDF volume on production array; host writes flow here                        │
+│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
+│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
+│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
+│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
+│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
+│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
+│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
+│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
+│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
+│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
+│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
+│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 
 
 

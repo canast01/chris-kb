@@ -4132,39 +4132,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recovery-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recovery Workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dell-hardware-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dell Hardware Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#agent-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Agent Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#network-recovery-share-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4364,7 +4331,7 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Protected Windows Server
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Protected Windows Server
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── RASR Agent (RASRAgent Windows service)
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── RASR Console (GUI in Windows)
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└── Captured Image → Network Recovery Share (SMB)
@@ -4373,77 +4340,90 @@
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└── WinPE boot environment
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>      └── RASR Recovery Engine + Dell hardware drivers
 </code></pre></div>
-<h2 id="recovery-workflow">Recovery Workflow<a class="headerlink" href="#recovery-workflow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    A([Server Failure Detected]) --&gt; B{Server boots?}
-    B --&gt; |Yes| C[Boot Windows normally\nor Safe Mode]
-    B --&gt; |No - hardware failure| D[Boot from RASR Media\nUSB / Virtual ISO via iDRAC]
-
-    C --&gt; E[Launch RASR Console\nStart Recovery from OS]
-    D --&gt; F[WinPE Environment Loads]
-
-    F --&gt; G[Map Network Share\nnet use Z: \\\\nas\\rasr-images]
-    G --&gt; H[Select Recovery Image\nfrom share]
-
-    H --&gt; I{Restore target?}
-    I --&gt; |Same hardware| J[In-Place Restore\nto original disks]
-    I --&gt; |New/replacement hardware| K[Bare-Metal Restore\nwith driver injection]
-
-    E --&gt; L[Select Image &amp; Restore Point]
-    J --&gt; M[Image written to disk\nPartition table restored]
-    K --&gt; M
-    L --&gt; M
-    M --&gt; N[Reboot server]
-    N --&gt; O[Windows starts from restored image]
-    O --&gt; P[Post-restore validation]
-    P --&gt; Q([Recovery Complete])</code></pre>
-<h2 id="dell-hardware-integration">Dell Hardware Integration<a class="headerlink" href="#dell-hardware-integration" title="Permanent link">&para;</a></h2>
-<p>RASR is designed specifically for Dell PowerEdge servers:</p>
-<ul>
-<li><strong>iDRAC Virtual Media</strong> — boot the RASR ISO from iDRAC without physical USB, enabling remote bare-metal recovery</li>
-<li><strong>PERC Storage Controller</strong> support — WinPE includes current PERC drivers, ensuring the recovery environment can see all local disks</li>
-<li><strong>Lifecycle Controller</strong> — RASR can be invoked from within the iDRAC Lifecycle Controller on compatible servers (R750, R650, R740 and later)</li>
-<li><strong>OpenManage Integration</strong> — RASR Agent status appears in the OpenManage Server Administrator dashboard</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Server Generation</th>
-<th>WinPE Driver Pack</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PowerEdge 14G (R740, R640)</td>
-<td>WinPE 10</td>
-<td>Full PERC H730/H740 support</td>
-</tr>
-<tr>
-<td>PowerEdge 15G (R750, R650)</td>
-<td>WinPE 10/11</td>
-<td>PERC H755, HBA355</td>
-</tr>
-<tr>
-<td>PowerEdge 16G (R760, R660)</td>
-<td>WinPE 11</td>
-<td>PERC H965i, BOSS-N1</td>
-</tr>
-</tbody>
-</table>
-<h2 id="agent-management">Agent Management<a class="headerlink" href="#agent-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check RASR Agent status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="n">RASRAgent</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Restart agent</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="n">RASRAgent</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Check last backup result</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Dell\RASR&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Version</span><span class="p">,</span> <span class="n">LastBackupTime</span><span class="p">,</span> <span class="n">LastBackupResult</span>
+┌───────────────────────────────────────── RASR — How It Works ─────────────────────────────────────────┐
+│                                                                                                       │
+│    RASR data flow — from source to target through the protection pipeline:                            │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 1  Source / Production System                                 │   │
+│   │            Vault Appliance      — air-gapped PowerStore/DD in isolated network segment        │   │
+│   │                Host writes are intercepted or snapshotted by the RASR agent/proxy             │   │
+│   │                  Changed blocks tracked via CBT / journal / delta-set mechanism               │   │
+│   │                 Consistency ensured at quiesce point before data transfer begins              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Changed data forwarded to the RASR engine — compression and encryption applied in transit          │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                         2  RASR Engine                                        │   │
+│   │          CyberSense Engine    — ML-based malware and corruption detection on vault data       │   │
+│   │                    Data compressed, deduplicated, and encrypted before storage                │   │
+│   │                  Metadata catalog updated; job status reported to control plane               │   │
+│   │                                         cr_vault_cli sync                                     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     3  Target / Repository                                    │   │
+│   │           PowerProtect Manager — orchestrates replication jobs, retention, and recovery       │   │
+│   │                  Recovery point written; retention policy applied automatically               │   │
+│   │                                   Restore: cr_vault_cli status                                │   │
+│   │                     RTO driven by target storage performance and data volume                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Dell Hardware Integration
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>RASR is designed specifically for Dell PowerEdge servers:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- **iDRAC Virtual Media** — boot the RASR ISO from iDRAC without physical USB, enabling remote bare-metal recovery
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- **PERC Storage Controller** support — WinPE includes current PERC drivers, ensuring the recovery environment can see all local disks
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- **Lifecycle Controller** — RASR can be invoked from within the iDRAC Lifecycle Controller on compatible servers (R750, R650, R740 and later)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- **OpenManage Integration** — RASR Agent status appears in the OpenManage Server Administrator dashboard
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># View recent agent log</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\Program Files\Dell\RASR\Logs\RASRAgent.log&quot;</span> <span class="n">-Tail</span> <span class="n">50</span>
-</code></pre></div>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Server Generation | WinPE Driver Pack | Notes |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|---|---|---|
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| PowerEdge 14G (R740, R640) | WinPE 10 | Full PERC H730/H740 support |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| PowerEdge 15G (R750, R650) | WinPE 10/11 | PERC H755, HBA355 |
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| PowerEdge 16G (R760, R660) | WinPE 11 | PERC H965i, BOSS-N1 |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>## Agent Management
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>```powershell
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># Check RASR Agent status
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Get-Service -Name RASRAgent
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># Restart agent
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Restart-Service -Name RASRAgent
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a># Check last backup result
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>Get-ItemProperty &quot;HKLM:\SOFTWARE\Dell\RASR&quot; | Select-Object Version, LastBackupTime, LastBackupResult
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a># View recent agent log
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>Get-Content &quot;C:\Program Files\Dell\RASR\Logs\RASRAgent.log&quot; -Tail 50
+</code></pre></div></p>
 <h2 id="network-recovery-share-requirements">Network Recovery Share Requirements<a class="headerlink" href="#network-recovery-share-requirements" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

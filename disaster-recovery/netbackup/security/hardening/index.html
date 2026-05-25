@@ -4179,28 +4179,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#hardening-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardening Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#firewall-ports" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4357,7 +4335,7 @@
 
 <h1 id="netbackup-hardening">NetBackup — Hardening<a class="headerlink" href="#netbackup-hardening" title="Permanent link">&para;</a></h1>
 <h2 id="netbackup-security-architecture">NetBackup Security Architecture<a class="headerlink" href="#netbackup-security-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     subgraph accessControl [Access Control]
         nbac["NBAC\nRole-based access\nAD group mappings"]
         opscenterRBAC["OpsCenter RBAC\nBackup admin group only"]
@@ -4394,28 +4372,47 @@
     class master ctrl
     class nbac,opscenterRBAC,nbuCA,cyberArk,fw,ssh,pbx sec
     class audit,siem mon</code></pre>
-<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] NBAC enabled; all access via AD group mappings</li>
-<li>[ ] NetBackup CA deployed; all client certificates valid</li>
-<li>[ ] Encryption enabled for policies covering regulated data</li>
-<li>[ ] Master server firewall: only ports 1556, 13724, 13782 open from authorised subnets</li>
-<li>[ ] PBX service disabled on client hosts where not required</li>
-<li>[ ] nbauditreport reviewed weekly; forwarded to SIEM</li>
-<li>[ ] CyberArk AAM integration for all service account credentials</li>
-<li>[ ] OpsCenter access restricted to backup admin AD group</li>
-<li>[ ] SSH to master server limited to management jump hosts only</li>
-</ul>
-<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Enable audit logging</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nbauditreport<span class="w"> </span>-enable
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># View audit report</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nbauditreport<span class="w"> </span>-reporttype<span class="w"> </span>all<span class="w"> </span>-startdate<span class="w"> </span>&lt;date&gt;<span class="w"> </span>-enddate<span class="w"> </span>&lt;date&gt;
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Output to file</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>nbauditreport<span class="w"> </span>-reporttype<span class="w"> </span>all<span class="w"> </span>-startdate<span class="w"> </span><span class="m">2026</span>-01-01<span class="w"> </span>&gt;<span class="w"> </span>/tmp/nbu_audit.txt
-</code></pre></div>
+┌──────────────────────────────────────── NetBackup — Hardening ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                NetBackup — Hardening Checklist                                │   │
+│   │               [ ] Disable default/admin accounts; create named admin accounts only            │   │
+│   │                   [ ] Enable MFA for all interactive logins via IdP / SAML SSO                │   │
+│   │            [ ] Restrict management port (443 (Web UI)) to jump host / management VLAN         │   │
+│   │               [ ] Enable audit logging and forward to SIEM (syslog, TLS port 6514)            │   │
+│   │                 [ ] Apply all security patches within 30 days of vendor release               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Network Hardening                                       │   │
+│   │               [ ] Separate backup VLAN — no direct production host access to repo             │   │
+│   │               [ ] Firewall: allow only 443 (Web UI) · 1556 (vnetd) · 13724 (bprd)             │   │
+│   │                  [ ] Disable unused ports and protocols on management interface               │   │
+│   │              [ ] Immutable repository: enable WORM or object lock on backup target            │   │
+│   │                 [ ] Encryption in transit: disable TLS 1.0/1.1; enforce TLS 1.2+              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+│  Media Server  = data mover between client and storage; can be co-located with master                 │
+│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <p>Forward to SIEM: configure <code>nblog</code> syslog output or use a log shipper agent pointing to <code>/usr/openv/netbackup/logs/audit/</code>.</p>
 <h2 id="firewall-ports">Firewall Ports<a class="headerlink" href="#firewall-ports" title="Permanent link">&para;</a></h2>
 <table>

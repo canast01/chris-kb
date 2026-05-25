@@ -4143,39 +4143,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#policy-design-rules" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Policy Design Rules
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#storage-unit-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage Unit Standards
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#catalog-backup-standard" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Catalog Backup Standard
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#encryption-standard" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4413,7 +4380,7 @@
 </table>
 <p>Compliance requirements may extend yearly retention to 10 years for regulated data.</p>
 <h2 id="backup-policy-to-job-flow">Backup Policy to Job Flow<a class="headerlink" href="#backup-policy-to-job-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     policy["Backup Policy\n(application type,\nclient list, schedules)"]
     policy --&gt; schedule["Schedule\n(full-14d, incr-7d, weekly-8w)"]
     schedule --&gt; trigger{Schedule\ntrigger}
@@ -4437,52 +4404,49 @@
     class trigger,dedup decision
     class policy,schedule terminal
     class done terminal</code></pre>
-<h2 id="policy-design-rules">Policy Design Rules<a class="headerlink" href="#policy-design-rules" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Client list</strong>: Always use an explicitly named client list — wildcard client patterns are not permitted in production</li>
-<li><strong>Granularity</strong>: Separate policies per application type (Oracle, MSSQL, file system) — do not mix policy types</li>
-<li><strong>Application-aware</strong>: Enable application-consistent backup for Oracle (ORA policy type), MSSQL, and Exchange</li>
-<li><strong>VMware</strong>: Use tag-based or folder-based selection — never include entire vCenter as a single selection</li>
-<li><strong>Multiplexing</strong>: Limit to 8 jobs per drive to avoid excessive fragmentation during restores</li>
-</ul>
-<h2 id="storage-unit-standards">Storage Unit Standards<a class="headerlink" href="#storage-unit-standards" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Standard</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Primary storage (OST/DD)</td>
-<td>AdvancedDisk or OST on Data Domain; deduplicated</td>
-</tr>
-<tr>
-<td>Cloud storage (long-term)</td>
-<td>Cloud storage unit with S3-compatible target; Glacier-class after 90 days</td>
-</tr>
-<tr>
-<td>Tape (archival)</td>
-<td>LTO8/9 WORM for compliance workloads; separate tape pool per retention tier</td>
-</tr>
-<tr>
-<td>Storage unit load balancing</td>
-<td>Maximum concurrent jobs per storage unit = media server CPU core count / 2</td>
-</tr>
-</tbody>
-</table>
-<h2 id="catalog-backup-standard">Catalog Backup Standard<a class="headerlink" href="#catalog-backup-standard" title="Permanent link">&para;</a></h2>
-<p>The catalog is the most critical data in a NetBackup domain — protect it rigorously:</p>
-<ul>
-<li>Catalog backup must run every 4–6 hours (not just daily)</li>
-<li>Store catalog backup on a separate storage unit from standard backups</li>
-<li>Keep a cold copy of the most recent catalog backup off-site or on a separate server</li>
-<li>Verify catalog backup is successful before proceeding with any infrastructure change</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check catalog backup status</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>bplist<span class="w"> </span>-S<span class="w"> </span>&lt;master_server&gt;<span class="w"> </span>-t<span class="w"> </span><span class="m">0</span><span class="w"> </span>-policy<span class="w"> </span>NBU_Catalog<span class="w"> </span>-s<span class="w"> </span>-1d
-</code></pre></div>
+┌──────────────────────────────────── NetBackup — Design Standards ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Sizing Guidelines               │  │               HA Requirements               │   │
+│   │         Deduplicate where supported          │  │           N+1 component redundancy          │   │
+│   │          Bandwidth: 10 GbE minimum           │  │          Heartbeat / health monitor         │   │
+│   │          Storage: 130% of raw data           │  │          Separate mgmt / data VLANs         │   │
+│   │         Latency: &lt; 10 ms to storage          │  │          Out-of-band access (IPMI)          │   │
+│   │           CPU: 8+ vCPU for engine            │  │          Anti-affinity VM placement         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Ports: 443 (Web UI) · 1556 (vnetd) · 13724 (bprd)                                                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                Standard NetBackup Design Rules                                │   │
+│   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
+│   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
+│   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
+│   │Encryption enabled on all channels: AES-256 backup encryption; KMS key management; TLS 1.2+ on │   │
+│   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+│  Media Server  = data mover between client and storage; can be co-located with master                 │
+│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h2 id="encryption-standard">Encryption Standard<a class="headerlink" href="#encryption-standard" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

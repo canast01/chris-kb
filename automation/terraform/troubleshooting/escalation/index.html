@@ -3816,19 +3816,30 @@
 
 
 <h1 id="terraform-escalation">Terraform — Escalation<a class="headerlink" href="#terraform-escalation" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────── Terraform — Escalation ────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │    Escalate Terraform issues: provider bugs → GitHub, state corruption → HashiCorp support    │   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │  Provider bugs: github.com/hashicorp/terraform-provider-&lt;name&gt;; include TF + provider version │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │        Terraform Cloud: support.hashicorp.com; TF Enterprise: emergency contact per SLA       │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │             Escalation Triggers              │  │                Info to Gather               │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │             State file corrupted             │  │           terraform version output          │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │            Provider panic / crash            │  │               Provider version              │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │           Lock cannot be released            │  │            TF_LOG=TRACE full log            │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │               TF Cloud outage                │  │            State file (sanitised)           │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │        Sentinel policy blocking apply        │  │               Plan JSON output              │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │  State corruption   = restore from S3 versioned backup; terraform state push prev-state.json  │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │  Provider GitHub    = github.com/hashicorp/terraform-provider-aws (replace aws with provider) │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │         HashiCorp support  = support.hashicorp.com; severity 1 for production outages         │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="escalation-decision-tree">Escalation Decision Tree<a class="headerlink" href="#escalation-decision-tree" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    issue["Terraform Issue\nDetected"]
-    canRecover{"Can recover with\nstandard commands?"}
-    issue --&gt; canRecover
-    canRecover --&gt;|Yes| selfResolve["Self-resolve:\nforce-unlock / import\n/ apply / refresh-only"]
-    canRecover --&gt;|No| escalate["Escalate to senior\nengineer / HashiCorp support"]
-
-    escalate --&gt; captureInfo["Capture:\n• terraform version\n• terraform providers\n• workspace\n• lock status\n• last apply log"]
-
-    captureInfo --&gt; raiseTicket["Raise ticket / page:\n• Summary\n• Full error output\n• Reproduction steps\n• State status\n• Recent changes"]
-
-    raiseTicket --&gt; backupFirst["Take state backup\nbefore recovery attempts:\nterraform state pull &gt; backup.tfstate"]</code></pre>
 <h2 id="when-to-escalate">When to Escalate<a class="headerlink" href="#when-to-escalate" title="Permanent link">&para;</a></h2>
 <p>Escalate when:</p>
 <ul>

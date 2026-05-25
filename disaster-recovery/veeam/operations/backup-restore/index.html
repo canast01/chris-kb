@@ -4295,28 +4295,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#restore-types-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Restore Types Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#instant-vm-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Instant VM Recovery
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#full-vm-restore" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4580,7 +4558,7 @@
 <p>Veeam Backup &amp; Replication provides comprehensive recovery options ranging from full VM restore to granular application-item recovery. Choosing the right restore type minimises RTO and avoids unnecessary data movement.</p>
 <hr />
 <h2 id="restore-type-decision-tree">Restore Type Decision Tree<a class="headerlink" href="#restore-type-decision-tree" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     A([Recovery Required]) --&gt; B{What is lost?}
     B --&gt; |Entire VM| C{Production available?}
     B --&gt; |Files/Folders| G[File-Level Recovery]
@@ -4596,143 +4574,128 @@
     G --&gt; J
     H --&gt; J
     I --&gt; J</code></pre>
-<hr />
-<h2 id="restore-types-reference">Restore Types Reference<a class="headerlink" href="#restore-types-reference" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Restore Type</th>
-<th>Use Case</th>
-<th>RTO</th>
-<th>Data Movement</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Instant VM Recovery</td>
-<td>Critical VM down, production unavailable</td>
-<td>Minutes</td>
-<td>None (runs from backup)</td>
-</tr>
-<tr>
-<td>Full VM Restore</td>
-<td>Planned recovery, hardware failure</td>
-<td>30 min – hours</td>
-<td>Full VM copied</td>
-</tr>
-<tr>
-<td>File-Level Recovery</td>
-<td>Individual files/folders lost</td>
-<td>Minutes</td>
-<td>File(s) only</td>
-</tr>
-<tr>
-<td>Application-Item Recovery</td>
-<td>Exchange mailbox, SQL database, AD object</td>
-<td>Minutes</td>
-<td>Object(s) only</td>
-</tr>
-<tr>
-<td>Volume-Level Restore</td>
-<td>OS volume corrupt, faster than full VM</td>
-<td>15–45 min</td>
-<td>Volume only</td>
-</tr>
-<tr>
-<td>Entire VM Replica Failover</td>
-<td>Replication-based DR</td>
-<td>Minutes</td>
-<td>None</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="instant-vm-recovery">Instant VM Recovery<a class="headerlink" href="#instant-vm-recovery" title="Permanent link">&para;</a></h2>
-<p>Instant VM Recovery mounts the backup directly from the Veeam repository and starts the VM immediately. Use this when RTO is critical.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Veeam Console → Home → Restore → VMware vSphere VMs →
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  Instant Recovery → select backup → select restore point →
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  select target host/datastore → Power on target VM automatically → Finish
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Via PowerShell (Veeam PowerShell Toolkit)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Add-PSSnapin</span> <span class="n">VeeamPSSnapIn</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">$vm</span>      <span class="p">=</span> <span class="nb">Find-VBRViEntity</span> <span class="n">-Name</span> <span class="s2">&quot;PRODVM01&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">$backup</span>  <span class="p">=</span> <span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">&quot;PRODVM01 - Backup&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">$rp</span>      <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="nv">$backup</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Start-VBRInstantVMRecovery</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span> <span class="n">-TargetServer</span> <span class="s2">&quot;esx01.corp.example.com&quot;</span> <span class="n">-PowerVM</span> <span class="nv">$true</span>
-</code></pre></div>
+┌────────────────────────────────────── Veeam — Backup &amp; Restore ───────────────────────────────────────┐
+│                                                                                                       │
+│    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Backup (Protection)              │  │              Restore (Recovery)             │   │
+│   │          Add-VBRJob / Start-VBRJob           │  │             Get-VBRRestorePoint             │   │
+│   │              Quiesce source I/O              │  │            Select recovery point            │   │
+│   │             Take snapshot / CBT              │  │           Mount or copy to target           │   │
+│   │           Transfer changed blocks            │  │              Validate integrity             │   │
+│   │             Commit to repository             │  │             Restart application             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Key Veeam Commands                                      │   │
+│   │                           Backup trigger  : Add-VBRJob / Start-VBRJob                         │   │
+│   │                              List points     : Get-VBRRestorePoint                            │   │
+│   │                           Health status   : Start-VBRInstantVMRecovery                        │   │
+│   │                             Retention mgmt  : Invoke-VBRHealthCheck                           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
+│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
+│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
+│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
+│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
+│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
+│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
+│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
+│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
+│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
+│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
+│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
+│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
+│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```powershell
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a># Via PowerShell (Veeam PowerShell Toolkit)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Add-PSSnapin VeeamPSSnapIn
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>$vm      = Find-VBRViEntity -Name &quot;PRODVM01&quot;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>$backup  = Get-VBRBackup -Name &quot;PRODVM01 - Backup&quot;
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>$rp      = Get-VBRRestorePoint -Backup $backup | Sort-Object CreationTime -Descending | Select-Object -First 1
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Start-VBRInstantVMRecovery -RestorePoint $rp -TargetServer &quot;esx01.corp.example.com&quot; -PowerVM $true
+</code></pre></div></p>
 <p><strong>After stabilisation — migrate from backup to production:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Veeam Console → Home → Instant Recovery → select running recovery →
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Migrate to Production → select datastore → Run migration
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Veeam Console → Home → Instant Recovery → select running recovery →
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Migrate to Production → select datastore → Run migration
 </code></pre></div>
 <p>This performs a Storage vMotion in the background. The VM remains live throughout.</p>
 <hr />
 <h2 id="full-vm-restore">Full VM Restore<a class="headerlink" href="#full-vm-restore" title="Permanent link">&para;</a></h2>
 <p>Full VM Restore copies the backup to a production datastore. Use for planned recoveries or when instant recovery is not required.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Veeam Console → Home → Restore → VMware vSphere VMs →
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Entire VM Restore → select backup → select restore point →
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Original location or New location → select ESXi host and datastore →
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Power on VM after restoring → Finish
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Veeam Console → Home → Restore → VMware vSphere VMs →
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Entire VM Restore → select backup → select restore point →
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Original location or New location → select ESXi host and datastore →
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Power on VM after restoring → Finish
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">$vm</span>     <span class="p">=</span> <span class="nb">Find-VBRViEntity</span> <span class="n">-Name</span> <span class="s2">&quot;PRODVM01&quot;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$backup</span> <span class="p">=</span> <span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">&quot;PRODVM01 - Backup&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$rp</span>     <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="nv">$backup</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">1</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">$options</span> <span class="p">=</span> <span class="nb">New-VBRViRecoveryOptions</span> <span class="n">-PowerVM</span> <span class="nv">$true</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Start-VBRRestoreVM</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span> <span class="n">-ToOriginalLocation</span> <span class="n">-RecoveryOptions</span> <span class="nv">$options</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">$vm</span>     <span class="p">=</span> <span class="nb">Find-VBRViEntity</span> <span class="n">-Name</span> <span class="s2">&quot;PRODVM01&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$backup</span> <span class="p">=</span> <span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">&quot;PRODVM01 - Backup&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$rp</span>     <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="nv">$backup</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">1</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">$options</span> <span class="p">=</span> <span class="nb">New-VBRViRecoveryOptions</span> <span class="n">-PowerVM</span> <span class="nv">$true</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Start-VBRRestoreVM</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span> <span class="n">-ToOriginalLocation</span> <span class="n">-RecoveryOptions</span> <span class="nv">$options</span>
 </code></pre></div>
 <hr />
 <h2 id="file-level-recovery">File-Level Recovery<a class="headerlink" href="#file-level-recovery" title="Permanent link">&para;</a></h2>
 <p>Restore individual files from any Windows or Linux guest backup without mounting the full VM.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Veeam Console → Home → Restore → Guest Files → Windows / Linux →
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  select backup → select restore point → browse guest file system →
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  right-click file → Restore to original location / Keep / Overwrite
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Veeam Console → Home → Restore → Guest Files → Windows / Linux →
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  select backup → select restore point → browse guest file system →
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  right-click file → Restore to original location / Keep / Overwrite
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Mount backup for browse/copy</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$rp</span>     <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="p">(</span><span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">&quot;FILESERVER01&quot;</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>          <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">Start-VBRWindowsFileRestore</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># Session opens Windows Explorer-like browser in console</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Mount backup for browse/copy</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$rp</span>     <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="p">(</span><span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">&quot;FILESERVER01&quot;</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>          <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">Start-VBRWindowsFileRestore</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># Session opens Windows Explorer-like browser in console</span>
 </code></pre></div>
 <hr />
 <h2 id="application-item-recovery">Application-Item Recovery<a class="headerlink" href="#application-item-recovery" title="Permanent link">&para;</a></h2>
 <h3 id="exchange-mailbox-recovery">Exchange Mailbox Recovery<a class="headerlink" href="#exchange-mailbox-recovery" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Veeam Console → Home → Restore → Microsoft Exchange Items →
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  select Exchange server backup → browse mailbox → select items →
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Restore to: Original mailbox / PST export / Another mailbox
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Veeam Console → Home → Restore → Microsoft Exchange Items →
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  select Exchange server backup → browse mailbox → select items →
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Restore to: Original mailbox / PST export / Another mailbox
 </code></pre></div>
 <h3 id="sql-database-recovery">SQL Database Recovery<a class="headerlink" href="#sql-database-recovery" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Veeam Console → Home → Restore → Microsoft SQL Server Items →
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  select SQL server backup → select database → select restore point →
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Restore to original location / Restore to another server
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Veeam Console → Home → Restore → Microsoft SQL Server Items →
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  select SQL server backup → select database → select restore point →
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Restore to original location / Restore to another server
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># SQL restore via PowerShell</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">$rp</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="p">(</span><span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">&quot;SQLSERVER01&quot;</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>      <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">Start-VBRSQLDatabaseRestore</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span> <span class="p">`</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  <span class="n">-TargetSQLServer</span> <span class="s2">&quot;SQLSERVER01&quot;</span> <span class="p">`</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  <span class="n">-DatabaseName</span> <span class="s2">&quot;ProductionDB&quot;</span> <span class="p">`</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  <span class="n">-ToOriginalLocation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># SQL restore via PowerShell</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">$rp</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="p">(</span><span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">&quot;SQLSERVER01&quot;</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>      <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Start-VBRSQLDatabaseRestore</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span> <span class="p">`</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  <span class="n">-TargetSQLServer</span> <span class="s2">&quot;SQLSERVER01&quot;</span> <span class="p">`</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  <span class="n">-DatabaseName</span> <span class="s2">&quot;ProductionDB&quot;</span> <span class="p">`</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  <span class="n">-ToOriginalLocation</span>
 </code></pre></div>
 <h3 id="active-directory-object-recovery">Active Directory Object Recovery<a class="headerlink" href="#active-directory-object-recovery" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Veeam Console → Home → Restore → Microsoft Active Directory Items →
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  select Domain Controller backup → browse AD → select object →
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  Restore to original location (will re-hydrate in AD)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Veeam Console → Home → Restore → Microsoft Active Directory Items →
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  select Domain Controller backup → browse AD → select object →
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Restore to original location (will re-hydrate in AD)
 </code></pre></div>
 <hr />
 <h2 id="veeam-datalabs-restore-testing">Veeam DataLabs — Restore Testing<a class="headerlink" href="#veeam-datalabs-restore-testing" title="Permanent link">&para;</a></h2>
 <p>DataLabs allows testing restores in an isolated sandbox without touching production.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Veeam Console → Inventory → Virtual Labs → Run Recovery Verification →
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  select backup → select VMs to test → select lab → Run verification
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Veeam Console → Inventory → Virtual Labs → Run Recovery Verification →
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  select backup → select VMs to test → select lab → Run verification
 </code></pre></div>
 <p><strong>Scheduled SureBackup jobs automate this for all production backups:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Veeam Console → Home → Jobs → SureBackup Job →
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  configure virtual lab, application group, and backup job →
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  set schedule (weekly recommended)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Veeam Console → Home → Jobs → SureBackup Job →
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  configure virtual lab, application group, and backup job →
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  set schedule (weekly recommended)
 </code></pre></div>
 <p>SureBackup boots each VM in the isolated lab and runs application-specific tests (ping, heartbeat, port check, custom script).</p>
 <hr />

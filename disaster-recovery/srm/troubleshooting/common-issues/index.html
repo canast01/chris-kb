@@ -4121,17 +4121,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#vm-not-in-protection-group-not-ready-state" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VM Not in Protection Group / Not Ready State
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#recovery-plan-fails-at-network-mapping-step" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4322,7 +4311,7 @@
 <h1 id="srm-troubleshooting-common-issues">SRM Troubleshooting — Common Issues<a class="headerlink" href="#srm-troubleshooting-common-issues" title="Permanent link">&para;</a></h1>
 <h2 id="triage-decision-tree">Triage Decision Tree<a class="headerlink" href="#triage-decision-tree" title="Permanent link">&para;</a></h2>
 <p>Use this flowchart to quickly route to the correct troubleshooting section.</p>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     start(["SRM alert or failure"])
     start --&gt; q1{Where is\nthe failure?}
 
@@ -4346,23 +4335,56 @@
     class vr,sraLog,cert,netCheck,script action
     class q1,planFailed decision
     class start terminal</code></pre>
-<hr />
-<h2 id="vm-not-in-protection-group-not-ready-state">VM Not in Protection Group / <code>Not Ready</code> State<a class="headerlink" href="#vm-not-in-protection-group-not-ready-state" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Cause: vSphere Replication synchronisation error or initial sync not complete
-</code></pre></div>
-<ol>
-<li>vSphere Client → Site Recovery → Replications → find the VM → check status</li>
-<li>If status is <code>Error</code>: click the VM → History tab → view error detail</li>
-<li>Common sub-causes:</li>
-<li>Insufficient disk space on recovery datastore</li>
-<li>RPO set too aggressively for available bandwidth</li>
-<li>vSphere Replication appliance connectivity issue</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check VR appliance is reachable from recovery site ESXi</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ping<span class="w"> </span>&lt;vr-appliance-ip&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Check VR port 31031 is open (replication traffic)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vr-appliance-recovery-ip&gt;<span class="w"> </span><span class="m">31031</span>
-</code></pre></div>
+┌───────────────────────────────────────── SRM — Common Issues ─────────────────────────────────────────┐
+│                                                                                                       │
+│   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
+│   │    Plan fails    │   SRA timeout    │ check array repli │re-run or fix SRA │  srm-cli histor  │   │
+│   │     VM no IP     │customization err │ check IP customiz │ fix NIC mapping  │    vmware.log    │   │
+│   │    Test stuck    │snapshot not rele │    srm cleanup    │  force cleanup   │  srm-cli cleanu  │   │
+│   │   Pair broken    │  cert mismatch   │ check SRM pairing │  re-pair sites   │  srm-cli site i  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     General Triage Pattern                                    │   │
+│   │          Is the issue new or recurring? New = recent change; Recurring = config problem       │   │
+│   │             Is it isolated to one source or all? Isolated = agent; All = server/repo          │   │
+│   │                               Check logs first: srm-cli plan test                             │   │
+│   │                    If unresolved in 2h: open vendor case with full log bundle                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>1. vSphere Client → Site Recovery → Replications → find the VM → check status
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>2. If status is `Error`: click the VM → History tab → view error detail
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>3. Common sub-causes:
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>   - Insufficient disk space on recovery datastore
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>   - RPO set too aggressively for available bandwidth
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>   - vSphere Replication appliance connectivity issue
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>```bash
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># Check VR appliance is reachable from recovery site ESXi
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>ping &lt;vr-appliance-ip&gt;
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Check VR port 31031 is open (replication traffic)
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>nc -zv &lt;vr-appliance-recovery-ip&gt; 31031
+</code></pre></div></p>
 <h2 id="recovery-plan-fails-at-network-mapping-step">Recovery Plan Fails at Network Mapping Step<a class="headerlink" href="#recovery-plan-fails-at-network-mapping-step" title="Permanent link">&para;</a></h2>
 <ol>
 <li>SRM UI → Recovery Plans → select plan → Recent Tasks → view failed step</li>
@@ -4371,21 +4393,21 @@
 <li>For NSX: confirm overlay segment exists at recovery site</li>
 </ol>
 <h2 id="sra-communication-failure">SRA Communication Failure<a class="headerlink" href="#sra-communication-failure" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Symptom: Array Manager shows &quot;Error&quot; or &quot;Unknown&quot; state in SRM UI
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Symptom: Array Manager shows &quot;Error&quot; or &quot;Unknown&quot; state in SRM UI
 </code></pre></div>
 <ol>
 <li>SRM → Configure → Array Managers → check status</li>
 <li>Verify SRA service is running:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-Service</span> <span class="n">vmware-sra</span><span class="p">-*</span>   <span class="c"># Windows SRM</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Get-Service</span> <span class="n">vmware-sra</span><span class="p">-*</span>   <span class="c"># Windows SRM</span>
 </code></pre></div></li>
 <li>Re-test array credentials: Array Manager → Edit → Test Connection</li>
 <li>Check SRA log for specific error (Dell SRA logs: see above path)</li>
 <li>Verify Unisphere/FlashArray/ONTAP API is accessible from SRM server:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="s2">&quot;https://&lt;array-ip&gt;/univmax/restapi/system/version&quot;</span> <span class="n">-SkipCertificateCheck</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="s2">&quot;https://&lt;array-ip&gt;/univmax/restapi/system/version&quot;</span> <span class="n">-SkipCertificateCheck</span>
 </code></pre></div></li>
 </ol>
 <h2 id="recovery-plan-stuck-running">Recovery Plan Stuck <code>Running</code><a class="headerlink" href="#recovery-plan-stuck-running" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Cause: Custom script step timed out, or a VM failed to power on
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Cause: Custom script step timed out, or a VM failed to power on
 </code></pre></div>
 <ol>
 <li>SRM → Recovery Plans → running plan → Steps tab — identify which step is stuck</li>
@@ -4394,15 +4416,15 @@
 <li>As a last resort (during actual DR): manually advance the plan past the stuck step using "Force Next Step"</li>
 </ol>
 <h2 id="site-pair-shows-error">Site Pair Shows <code>Error</code><a class="headerlink" href="#site-pair-shows-error" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Cause: Certificate mismatch, vCenter connectivity, or credential expiry
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Cause: Certificate mismatch, vCenter connectivity, or credential expiry
 </code></pre></div>
 <ol>
 <li>From SRM server, verify vCenter is reachable:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">vcenter-fqdn</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">443</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">vcenter-fqdn</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">443</span>
 </code></pre></div></li>
 <li>Check certificate validity:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="no">[Net.ServicePointManager]</span><span class="p">::</span><span class="n">ServerCertificateValidationCallback</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Invoke-WebRequest</span> <span class="s2">&quot;https://&lt;vcenter-fqdn&gt;&quot;</span> <span class="n">-UseBasicParsing</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="no">[Net.ServicePointManager]</span><span class="p">::</span><span class="n">ServerCertificateValidationCallback</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Invoke-WebRequest</span> <span class="s2">&quot;https://&lt;vcenter-fqdn&gt;&quot;</span> <span class="n">-UseBasicParsing</span>
 </code></pre></div></li>
 <li>Re-enter site pair credentials: SRM → Sites → Edit Credentials</li>
 </ol>

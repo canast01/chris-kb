@@ -3617,67 +3617,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#events" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Events
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Events">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#webhook-events" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Webhook Events
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#non-webhook-events" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Non-Webhook Events
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#jobs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Jobs
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#runners" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3897,7 +3836,7 @@
 <p>GitHub Actions is an event-driven CI/CD and automation platform embedded directly into GitHub repositories. It executes workflows in response to repository events, schedules, or external triggers.</p>
 <hr />
 <h2 id="core-execution-model">Core Execution Model<a class="headerlink" href="#core-execution-model" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     E[Repository Event] --&gt; W[Workflow Triggered]
     W --&gt; Q[Job Queue]
     Q --&gt; R1[Runner 1\nJob A]
@@ -3910,145 +3849,62 @@
     S3 --&gt; A[Upload Artifact]
     S5 --&gt; A
     A --&gt; NOTIFY[Notification / Downstream Jobs]</code></pre>
-<p>Events fire workflows. Workflows contain jobs. Jobs run on runners. Steps execute sequentially within a job. Artifacts bridge data between jobs.</p>
-<hr />
-<h2 id="events">Events<a class="headerlink" href="#events" title="Permanent link">&para;</a></h2>
-<h3 id="webhook-events">Webhook Events<a class="headerlink" href="#webhook-events" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Event</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>push</code></td>
-<td>Commits pushed to a branch or tag</td>
-</tr>
-<tr>
-<td><code>pull_request</code></td>
-<td>PR opened, synchronized, or closed</td>
-</tr>
-<tr>
-<td><code>pull_request_target</code></td>
-<td>PR event running in the context of the base branch (elevated trust)</td>
-</tr>
-<tr>
-<td><code>release</code></td>
-<td>Release published, created, or deleted</td>
-</tr>
-<tr>
-<td><code>workflow_run</code></td>
-<td>Another workflow completes</td>
-</tr>
-<tr>
-<td><code>deployment</code></td>
-<td>A deployment is created</td>
-</tr>
-<tr>
-<td><code>issue_comment</code></td>
-<td>Comment posted on an issue or PR</td>
-</tr>
-</tbody>
-</table>
-<h3 id="non-webhook-events">Non-Webhook Events<a class="headerlink" href="#non-webhook-events" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Event</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>schedule</code></td>
-<td>Cron-based timer (UTC, minimum 5-minute interval)</td>
-</tr>
-<tr>
-<td><code>workflow_dispatch</code></td>
-<td>Manual trigger via UI, API, or <code>gh</code> CLI</td>
-</tr>
-<tr>
-<td><code>repository_dispatch</code></td>
-<td>External HTTP POST to GitHub API</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition warning">
-<p class="admonition-title">pull_request_target Risk</p>
-<p><code>pull_request_target</code> runs in the context of the base branch and has access to repository secrets. Never checkout and execute code from the PR head without explicit validation — this is a known attack vector for privilege escalation.</p>
-</div>
-<hr />
-<h2 id="jobs">Jobs<a class="headerlink" href="#jobs" title="Permanent link">&para;</a></h2>
-<p>A job is a set of steps that executes on a single runner. Jobs within a workflow are independent by default and run in parallel. Sequential execution requires explicit <code>needs:</code> dependencies.</p>
-<pre class="mermaid"><code>flowchart LR
-    lint[lint] --&gt; build[build]
-    test[test] --&gt; build
-    build --&gt; deploy[deploy]
-    deploy --&gt; notify[notify]</code></pre>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>runs-on</code></td>
-<td>Specifies the runner label or group</td>
-</tr>
-<tr>
-<td><code>needs</code></td>
-<td>Declares upstream job dependencies</td>
-</tr>
-<tr>
-<td><code>if</code></td>
-<td>Conditional execution expression</td>
-</tr>
-<tr>
-<td><code>environment</code></td>
-<td>Links to a protected deployment environment</td>
-</tr>
-<tr>
-<td><code>concurrency</code></td>
-<td>Prevents duplicate runs for the same group</td>
-</tr>
-<tr>
-<td><code>timeout-minutes</code></td>
-<td>Hard deadline for the job (default 360)</td>
-</tr>
-<tr>
-<td><code>strategy.matrix</code></td>
-<td>Fan-out across multiple configurations</td>
-</tr>
-<tr>
-<td><code>outputs</code></td>
-<td>Key-value data passed to dependent jobs</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">steps</span><span class="p">:</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Checkout repository</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run tests</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">env</span><span class="p">:</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="nt">NODE_ENV</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upload coverage</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="nt">with</span><span class="p">:</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coverage</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coverage/</span>
-</code></pre></div>
+┌──────────────────────────────────── GitHub Actions — How It Works ────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Event fires → GitHub evaluates on: triggers → matching workflows queued → runner picks up job │   │
+│   │     Runner clones repo, restores cache, executes steps, uploads artifacts, reports status     │   │
+│   │          Secrets injected as env vars at runtime; masked in log output automatically          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Trigger Phase        │  │       Execution Phase       │  │         Result Phase        │   │
+│   │   Event: push/PR/schedule   │  │      Runner accepts job     │  │     Status check posted     │   │
+│   │    on: filter evaluation    │  │        Repo checkout        │  │     Artifacts available     │   │
+│   │     Workflow file parsed    │  │        Cache restore        │  │      Logs retained 90d      │   │
+│   │     Jobs queued parallel    │  │      Steps run in order     │  │      Notify: PR, Slack      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     GITHUB_TOKEN    = auto-generated per-job token; scoped to repo; expires when job ends     │   │
+│   │      permissions:    = restrict GITHUB_TOKEN scopes per job; principle of least privilege     │   │
+│   │    needs:          = declare job dependency; forces sequential execution and output passing   │   │
+│   │        if: condition   = conditional step/job execution; uses expression syntax ${{ }}        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>| Property | Purpose |
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|---|---|
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| `runs-on` | Specifies the runner label or group |
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>| `needs` | Declares upstream job dependencies |
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| `if` | Conditional execution expression |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| `environment` | Links to a protected deployment environment |
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| `concurrency` | Prevents duplicate runs for the same group |
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| `timeout-minutes` | Hard deadline for the job (default 360) |
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| `strategy.matrix` | Fan-out across multiple configurations |
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| `outputs` | Key-value data passed to dependent jobs |
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>---
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>## Steps
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>```yaml
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>steps:
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  - name: Checkout repository
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    uses: actions/checkout@v4
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  - name: Install dependencies
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    run: npm ci
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  - name: Run tests
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    run: npm test
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    env:
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>      NODE_ENV: test
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>  - name: Upload coverage
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    uses: actions/upload-artifact@v4
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    with:
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>      name: coverage
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>      path: coverage/
+</code></pre></div></p>
 <hr />
 <h2 id="runners">Runners<a class="headerlink" href="#runners" title="Permanent link">&para;</a></h2>
 <h3 id="github-hosted-runners">GitHub-Hosted Runners<a class="headerlink" href="#github-hosted-runners" title="Permanent link">&para;</a></h3>

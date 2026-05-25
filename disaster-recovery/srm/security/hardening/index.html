@@ -4334,6 +4334,47 @@
 
 
 <h1 id="srm-security-hardening">SRM Security — Hardening<a class="headerlink" href="#srm-security-hardening" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────── SRM — Hardening ───────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                   SRM — Hardening Checklist                                   │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │               [ ] Disable default/admin accounts; create named admin accounts only            │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │                   [ ] Enable MFA for all interactive logins via IdP / SAML SSO                │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │          [ ] Restrict management port (443 (SRM HTTPS)) to jump host / management VLAN        │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │               [ ] Enable audit logging and forward to SIEM (syslog, TLS port 6514)            │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │                 [ ] Apply all security patches within 30 days of vendor release               │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │                                       Network Hardening                                       │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │               [ ] Separate backup VLAN — no direct production host access to repo             │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │        [ ] Firewall: allow only 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) · 443 (vCenter)      │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │                  [ ] Disable unused ports and protocols on management interface               │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │              [ ] Immutable repository: enable WORM or object lock on backup target            │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │                 [ ] Encryption in transit: disable TLS 1.0/1.1; enforce TLS 1.2+              │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                                                                                       │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│                                                                                                       │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="test-failover-network-isolation">Test Failover Network Isolation<a class="headerlink" href="#test-failover-network-isolation" title="Permanent link">&para;</a></h2>
 <p>Recovery plan tests must never reach production networks. Enforce this:</p>
 <ol>
@@ -4342,8 +4383,8 @@
 <li>Verify no routing exists from the test bubble to production VLANs</li>
 <li>If using NSX: create a dedicated overlay segment with no uplink for test failover</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify test network mapping</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-SrmRecoveryPlan</span> <span class="p">|</span> <span class="nb">Get-SrmNetworkMapping</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">RecoveryNetwork</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Verify test network mapping</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-SrmRecoveryPlan</span> <span class="p">|</span> <span class="nb">Get-SrmNetworkMapping</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">RecoveryNetwork</span>
 </code></pre></div>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>SRM logs all recovery plan events. Ensure logs are forwarded to SIEM:</p>

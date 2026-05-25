@@ -4132,61 +4132,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#replication-modes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Replication Modes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#splitter-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Splitter Types
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#component-hierarchy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Component Hierarchy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consistency-group-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consistency Group Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#journal-sizing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4367,7 +4312,7 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell EMC RecoverPoint provides continuous data protection (CDP) and continuous remote replication (CRR) through journal-based replication. RPA (RecoverPoint Appliance) clusters at each site intercept writes via splitters and maintain a rolling journal enabling point-in-time recovery to any point within the journal window. All volumes that must be recovered together are grouped into a Consistency Group (CG).</p>
 <h2 id="topology">Topology<a class="headerlink" href="#topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
+<p><pre class="mermaid"><code>graph LR
   RPA1["RPA Cluster\nSite A"] --&gt; STG_A[("Storage A\nProduction LUNs")]
   RPA2["RPA Cluster\nSite B"] --&gt; STG_B[("Storage B\nReplica + Journal")]
   RPA1 &lt;--&gt;|"WAN — compressed replication"| RPA2
@@ -4381,139 +4326,71 @@
   class RPA2 dr
   class STG_A,STG_B store
   class H_A host</code></pre>
-<h2 id="replication-modes">Replication Modes<a class="headerlink" href="#replication-modes" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Mode</th>
-<th>Description</th>
-<th>RPO</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CDP (Continuous Data Protection)</td>
-<td>Local journal; recover to any point in time</td>
-<td>~0 seconds</td>
-</tr>
-<tr>
-<td>CRR (Continuous Remote Replication)</td>
-<td>Async replication to DR site</td>
-<td>Seconds to minutes</td>
-</tr>
-<tr>
-<td>CLR (Concurrent Local and Remote)</td>
-<td>Simultaneous local CDP + remote CRR</td>
-<td>Per-copy</td>
-</tr>
-</tbody>
-</table>
-<h2 id="splitter-types">Splitter Types<a class="headerlink" href="#splitter-types" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Environment</th>
-<th>Splitter</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PowerMax / VMAX All Flash</td>
-<td>Hardware splitter (array-embedded)</td>
-<td>No host agent required; preferred for PowerMax</td>
-</tr>
-<tr>
-<td>VMware (non-PowerMax)</td>
-<td>Software splitter (RP4VM ESXi kernel module)</td>
-<td>Works at VMDK level</td>
-</tr>
-<tr>
-<td>iSCSI-attached storage</td>
-<td>iSCSI splitter</td>
-<td>Where FC hardware splitter unavailable</td>
-</tr>
-</tbody>
-</table>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RPA Cluster</td>
-<td>Per-site appliance cluster; intercepts and forwards writes</td>
-</tr>
-<tr>
-<td>Consistency Group (CG)</td>
-<td>Replication unit grouping one or more volumes</td>
-</tr>
-<tr>
-<td>Copy</td>
-<td>A point-in-time image; each CG has at least a Production and DR copy</td>
-</tr>
-<tr>
-<td>Journal Volume</td>
-<td>Stores delta changes; governs how far back recovery can go</td>
-</tr>
-<tr>
-<td>Splitter</td>
-<td>Intercepts host I/O before it reaches the array</td>
-</tr>
-<tr>
-<td>Bookmark</td>
-<td>Named or automatic point-in-time marker within the journal</td>
-</tr>
-</tbody>
-</table>
-<h2 id="component-hierarchy">Component Hierarchy<a class="headerlink" href="#component-hierarchy" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    subgraph prodSite ["Production Site"]
-        prodHosts["Production Hosts"]
-        splitter["Splitter\n(PowerMax HW or ESXi SW)"]
-        rpaClusterA["RPA Cluster Site A\n(2+ appliances)"]
-        prodStorage["Production Storage\n(Protected LUNs)"]
-        prodHosts --&gt;|"I/O"| splitter
-        splitter --&gt;|"split write"| prodStorage
-        splitter --&gt;|"capture write"| rpaClusterA
-    end
-
-    subgraph drSite ["DR Site"]
-        rpaClusterB["RPA Cluster Site B\n(2+ appliances)"]
-        journal["Journal Volumes\n(rolling delta store)"]
-        drStorage["DR Storage\n(Replica LUNs)"]
-        rpaClusterB --&gt; journal
-        journal --&gt;|"drain"| drStorage
-    end
-
-    rpaClusterA &lt;--&gt;|"WAN — compressed\nreplication traffic"| rpaClusterB</code></pre>
-<h2 id="consistency-group-commands">Consistency Group Commands<a class="headerlink" href="#consistency-group-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to RPA cluster management IP</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@&lt;rpa-cluster-ip&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># All CGs and their current replication state</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>groups<span class="w"> </span>status
+┌───────────────────────────────────── RecoverPoint — How It Works ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Write Flow: VM write → ESXi splitter forks I/O → production path + RPA buffer         │   │
+│   │         RPA bundles writes into delta sets → compresses → sends to remote RPA over IP         │   │
+│   │        Remote RPA applies delta set to journal; journal tracks sequence and timestamps        │   │
+│   │       Recovery: select bookmark or time → RPA rolls journal forward/back → present image      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Step 1: Write  ──► Step 2: Split  ──► Step 3: Journal  ──► Step 4: Replicate  ──► Step 5: Apply    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Source Side                  │  │                 Target Side                 │   │
+│   │             VM disk write issued             │  │          Remote RPA receives delta          │   │
+│   │            Splitter forks to RPA             │  │           Writes to remote journal          │   │
+│   │            RPA buffers in memory             │  │             Updates replica VMDK            │   │
+│   │            Bundles into delta set            │  │           Advances journal pointer          │   │
+│   │            Compresses, sends WAN             │  │           Logs bookmark timestamps          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: journal = dedicated VMDK on datastore; splitter = ESXi kernel module; RPA = VM appliance │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Write splitting     = Non-blocking fork of every VM disk write at hypervisor layer                 │
+│    Delta set           = Batch of compressed write deltas transferred from source to target RPA       │
+│    Journal apply       = Process of writing delta sets to journal VMDK in sequence on target side     │
+│    Journal pointer     = Current position in the journal; marks which deltas have been applied        │
+│    Bookmark            = Named timestamp in journal; enables recovery to a known-good application stat│
+│    Crash-consistent    = All VMs in CG captured at the same write sequence; safe for OS-level recovery│
+│    App-consistent      = Quiesced snapshot of CG (VMware Tools quiesce); safe for DB-level recovery   │
+│    Image access        = Temporary mount of journal image; test without committing; auto rolls back   │
+│    CDP window          = Journal depth in time; configurable; determines how far back recovery reaches│
+│    Replication lag     = Difference between source write time and target journal apply time (=RPO)    │
+│    WAN throttle        = Bandwidth cap on replication link per CG; prevents production WAN saturation │
+│    Compression ratio   = Typical 2:1–4:1 reduction on replication traffic via RPA dedup/compress      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Consistency Group Commands
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># SSH to RPA cluster management IP
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssh admin@&lt;rpa-cluster-ip&gt;
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Detailed CG state including RPO, lag, and journal utilization</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>groups<span class="w"> </span>status<span class="w"> </span>detail
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># All CGs and their current replication state
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>groups status
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Create a manual bookmark before a patching window</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>group<span class="w"> </span>create_bookmark<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;pre-patch-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Detailed CG state including RPO, lag, and journal utilization
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>groups status detail
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Enable image access at a specific bookmark (DR test)</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>group<span class="w"> </span>enable-image-access<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;<span class="w"> </span>--copy<span class="w"> </span>DR<span class="w"> </span>--image<span class="w"> </span>&lt;bookmark_name&gt;
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Create a manual bookmark before a patching window
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>group create_bookmark --gname &lt;cg_name&gt; --name &quot;pre-patch-$(date +%Y%m%d)&quot;
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Disable image access (return to replication)</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>group<span class="w"> </span>disable-image-access<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Enable image access at a specific bookmark (DR test)
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>group enable-image-access --gname &lt;cg_name&gt; --copy DR --image &lt;bookmark_name&gt;
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Suspend / resume replication</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>group<span class="w"> </span>disable-replication<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>group<span class="w"> </span>enable-replication<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;
-</code></pre></div>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a># Disable image access (return to replication)
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>group disable-image-access --gname &lt;cg_name&gt;
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a># Suspend / resume replication
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>group disable-replication --gname &lt;cg_name&gt;
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>group enable-replication --gname &lt;cg_name&gt;
+</code></pre></div></p>
 <h2 id="journal-sizing">Journal Sizing<a class="headerlink" href="#journal-sizing" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Journal size (GB) = Write rate (MB/s) × 3600 × Retention hours / 1024
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
