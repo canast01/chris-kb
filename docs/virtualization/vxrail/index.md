@@ -1,3 +1,7 @@
+---
+title: VxRail
+---
+
 # VxRail
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+title: LDAP
+---
+
 # LDAP
 
 Lightweight Directory Access Protocol — directory service query and authentication for infrastructure and applications.

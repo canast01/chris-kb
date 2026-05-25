@@ -1,3 +1,7 @@
+---
+title: NSX
+---
+
 # NSX
 
 <div class="kb-summary">

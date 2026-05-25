@@ -1,3 +1,7 @@
+---
+title: DNS
+---
+
 # DNS
 
 <div class="kb-summary">

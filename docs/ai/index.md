@@ -1,3 +1,7 @@
+---
+title: AI
+---
+
 # AI
 
 <div class="kb-summary">

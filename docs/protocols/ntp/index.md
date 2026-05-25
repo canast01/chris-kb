@@ -1,3 +1,7 @@
+---
+title: NTP
+---
+
 # NTP
 
 <div class="kb-summary">

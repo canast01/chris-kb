@@ -1,3 +1,7 @@
+---
+title: SRM
+---
+
 # Site Recovery Manager
 
 <div class="kb-summary">

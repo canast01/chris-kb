@@ -1,3 +1,7 @@
+---
+title: SNMP
+---
+
 # SNMP
 
 <div class="kb-summary">

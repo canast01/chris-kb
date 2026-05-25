@@ -1,3 +1,7 @@
+---
+title: TLS
+---
+
 # LDAP TLS (LDAPS)
 
 ```

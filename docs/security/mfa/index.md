@@ -1,3 +1,7 @@
+---
+title: MFA
+---
+
 # Multi-Factor Authentication (MFA)
 
 ## Overview

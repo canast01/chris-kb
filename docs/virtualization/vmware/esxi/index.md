@@ -1,3 +1,7 @@
+---
+title: ESXi
+---
+
 # ESXi
 
 <div class="kb-summary">

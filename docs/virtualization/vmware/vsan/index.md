@@ -1,3 +1,7 @@
+---
+title: vSAN
+---
+
 # vSAN
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+title: TLS
+---
+
 # TLS and HTTPS
 
 TLS (Transport Layer Security) provides encryption, integrity, and authentication for network communications.
