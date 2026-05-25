@@ -1,6 +1,6 @@
 # Scripts
 
-> Part of the [VxRail](../) reference.
+> Part of the [VxRail](../index.md) reference.
 
 ```
   ┌──────────────────────────────────────────────────────────┐

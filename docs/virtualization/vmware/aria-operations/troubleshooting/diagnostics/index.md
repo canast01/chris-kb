@@ -168,5 +168,5 @@ Use Aria Operations to identify VMs that are oversized or undersized.
 
 ## Related Sections
 
-- [Operations](../../operations/) — health checks and procedures
-- [Escalation](../escalation/) — opening vendor support cases
+- [Operations](../../operations/index.md) — health checks and procedures
+- [Escalation](../escalation/index.md) — opening vendor support cases

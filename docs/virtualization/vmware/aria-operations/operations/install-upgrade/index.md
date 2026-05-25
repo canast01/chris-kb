@@ -125,6 +125,6 @@ Reference: [Broadcom Lifecycle Policy](https://support.broadcom.com/lifecycle-ma
 
 ## Related Sections
 
-- [Architecture](../../architecture/) — node roles
-- [Operations](../) — health checks
-- [Escalation](../../troubleshooting/escalation/) — opening upgrade-related cases
+- [Architecture](../../architecture/index.md) — node roles
+- [Operations](../index.md) — health checks
+- [Escalation](../../troubleshooting/escalation/index.md) — opening upgrade-related cases

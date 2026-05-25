@@ -90,7 +90,7 @@ The configuration bundle includes network settings, storage policies, service st
 
 ## VM-Level Backup
 
-VM backup is handled by the backup solution (e.g., Veeam Backup & Replication) using VMware VADP. See the [integration page](../../architecture/integrations/) for transport mode details.
+VM backup is handled by the backup solution (e.g., Veeam Backup & Replication) using VMware VADP. See the [integration page](../../architecture/integrations/index.md) for transport mode details.
 
 Key requirements:
 - Changed Block Tracking (CBT) enabled on VMs

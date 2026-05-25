@@ -31,7 +31,7 @@ Credential Rotation (all via SDDC Manager — never manually):
 └─────────────────────────────────────────────────────┘
 ```
 
-> Part of the [VMware Cloud Foundation](../../) reference.
+> Part of the [VMware Cloud Foundation](../../index.md) reference.
 
 ---
 

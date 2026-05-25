@@ -83,7 +83,7 @@ Configure at **vCenter → Cluster → Configure → vSAN → Services → Data 
 
 All vCenter-issued certificates (VMCA) use RSA 2048-bit minimum. Certificate chain of trust is maintained through the VMCA root certificate and STS signing certificate.
 
-See [Authentication](../authentication/) for certificate management procedures.
+See [Authentication](../authentication/index.md) for certificate management procedures.
 
 ## VM Encryption Key Flow
 

@@ -110,6 +110,6 @@ scp admin@<aria-ops-primary-fqdn>:/storage/log/support-bundle/<bundle-file>.zip 
 
 ## Related Sections
 
-- [Operations](../../operations/) — support bundle generation
-- [Diagnostics](../diagnostics/) — pre-case diagnostics
-- [Install & Upgrade](../../operations/install-upgrade/) — version and EOL information
+- [Operations](../../operations/index.md) — support bundle generation
+- [Diagnostics](../diagnostics/index.md) — pre-case diagnostics
+- [Install & Upgrade](../../operations/install-upgrade/index.md) — version and EOL information

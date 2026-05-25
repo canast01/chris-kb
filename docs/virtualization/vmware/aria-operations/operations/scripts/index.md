@@ -177,6 +177,6 @@ echo "Alerts saved to /tmp/aria-ops-alerts-$(date +%Y%m%d).json"
 
 ## Related Sections
 
-- [CLI Reference](../cli-reference/) — vracli and REST API basics
-- [Operations](../) — operational runbooks
-- [Troubleshooting](../../troubleshooting/) — diagnostic use cases
+- [CLI Reference](../cli-reference/index.md) — vracli and REST API basics
+- [Operations](../index.md) — operational runbooks
+- [Troubleshooting](../../troubleshooting/index.md) — diagnostic use cases
