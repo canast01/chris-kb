@@ -1,5 +1,59 @@
 # Commvault — Common Issues
 
+```
+┌──────────────────────────── Commvault Common Issues — Symptoms and Fixes ─────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                            Issue: Backup Jobs Consistently Failing                            │   │
+│   │                    Symptom: jobs show "Failed" status; error in job details                   │   │
+│   │             Cause A: disk library full → fix: prune expired data or expand library            │   │
+│   │                Cause B: client iDA offline → fix: restart GxCVD on client host                │   │
+│   │              Cause C: MA unreachable → fix: check network, restart GxCLMgrS on MA             │   │
+│   │                Cause D: DDB corruption → fix: run DDB Verification + repair job               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 Issue: Slow Backup Performance                                │   │
+│   │           Symptom: backup throughput < expected; jobs taking 3x longer than baseline          │   │
+│   │             Cause A: DDB fragmentation → fix: run DDB defrag job; schedule monthly            │   │
+│   │             Cause B: network saturation → fix: enable bandwidth throttling or QoS             │   │
+│   │          Cause C: MA CPU/disk bottleneck → fix: check iostat; add MA or upgrade disk          │   │
+│   │             Cause D: too many concurrent jobs → fix: reduce max concurrent streams            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                  Issue: CommServe Unreachable                                 │   │
+│   │               Symptom: CommCell Console cannot connect; clients cannot register               │   │
+│   │                 Check A: Windows services GxCVD, GxJobMgr, SQL Server running                 │   │
+│   │                    Check B: port 8400/8401 open; test: telnet <CS_IP> 8400                    │   │
+│   │               Check C: CSDB accessible; test: sqlcmd -S localhost -Q "SELECT 1"               │   │
+│   │                Fix: restart CV services; if SQL down, restore from CSDB backup                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Disk full: check mount path with df -h (Linux) or Get-PSDrive (Windows PowerShell)                   │
+│  Network: use iperf3 between client and MA to measure actual throughput                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  DDB Defrag     = MediaAgent job that rewrites DDB to reduce fragmentation overhead                   │
+│  Library Full   = Disk library mount path at 100% usage; new backup writes fail                       │
+│  Pruning        = Commvault job removing expired chunks from library to free space                    │
+│  Throughput     = Backup data rate in MB/s; baseline by running benchmark backup                      │
+│  Concurrent Streams = Number of parallel data streams to a single MA                                  │
+│  GxJobMgr       = CommServe Job Manager; if stopped, no jobs will run                                 │
+│  sqlcmd         = SQL Server CLI tool; use to verify CSDB is responding                               │
+│  iperf3         = Network throughput test tool; use between client and MA servers                     │
+│  GxCLMgrS       = MediaAgent component service; if stopped, MA shows offline in CS                    │
+│  Max Streams    = CommCell setting limiting parallel backup jobs per MA                               │
+│  DDB Repair     = Automated repair mode of DDB Verification job; fixes detectable errors              │
+│  CSDB Restore   = Last-resort recovery: restore SQL backup + replay transaction logs                  │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 CommVault job failures are classified by error code and phase. The first diagnostic step is to open the job detail in the Job Controller and expand the phase-level log — this shows the specific module and error code.
 
 | Symptom | Likely Cause | Remediation |

@@ -22,37 +22,60 @@ graph LR
   class EG mgmt
   class ADMIN,DNS host
 ```
-
-## Components
-
-| Component | Role | Location |
-|---|---|---|
-| Eyeglass Primary Appliance | Monitor SyncIQ policies; sync share/quota config; DR orchestration control plane | Primary site |
-| Eyeglass DR Appliance | Standby orchestration node; activates when primary site unavailable | DR site |
-| PowerScale SyncIQ | Underlying data replication engine | Both sites |
-| DNS Integration | Automated DNS zone cutover during failover | Primary / DR DNS servers |
-| Eyeglass Admin UI | Web-based management (port 443) | Accessed from management network |
-
-## Failover Execution Flow
-
-```mermaid
-sequenceDiagram
-    actor Admin
-    participant EG as Eyeglass DR Assistant
-    participant ProdPS as Production PowerScale
-    participant DRPS as DR PowerScale
-    participant DNS as DNS Server
-
-    Admin->>EG: egcli drfailover --policy POL-NAS-PROD --confirm
-    EG->>ProdPS: Pause / break SyncIQ replication
-    ProdPS-->>EG: SyncIQ stopped
-    EG->>DRPS: Activate access zones
-    EG->>DRPS: Apply NFS exports + SMB shares
-    EG->>DRPS: Apply quota policies
-    EG->>DNS: Update SmartConnect zone delegation → DR VIPs
-    DNS-->>EG: DNS updated
-    EG-->>Admin: Failover complete — notify via SNMP/email
-    Note over DRPS: Clients now resolve to DR cluster
+┌─────────────────────────────────── Superna Eyeglass — How It Works ───────────────────────────────────┐
+│                                                                                                       │
+│    Superna Eyeglass data flow — from source to target through the protection pipeline:                │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 1  Source / Production System                                 │   │
+│   │             Eyeglass Appliance   — VM monitoring PowerScale clusters; REST API-driven         │   │
+│   │          Host writes are intercepted or snapshotted by the Superna Eyeglass agent/proxy       │   │
+│   │                  Changed blocks tracked via CBT / journal / delta-set mechanism               │   │
+│   │                 Consistency ensured at quiesce point before data transfer begins              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Changed data forwarded to the Superna Eyeglass engine — compression and encryption applied in trans│
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                   2  Superna Eyeglass Engine                                  │   │
+│   │     RAPA Engine          — Ransomware Protection with Automated Response; quarantine on dete  │   │
+│   │                    Data compressed, deduplicated, and encrypted before storage                │   │
+│   │                  Metadata catalog updated; job status reported to control plane               │   │
+│   │                                          igls quota list                                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     3  Target / Repository                                    │   │
+│   │       DFS Namespace Mgr    — Windows DFS-N failover automation; transparent client redirect   │   │
+│   │                  Recovery point written; retention policy applied automatically               │   │
+│   │                                     Restore: igls dr runbook                                  │   │
+│   │                     RTO driven by target storage performance and data volume                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
+│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
+│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
+│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
+│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
+│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
+│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
+│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
+│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
+│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
+│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
+│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
+│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
+│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 RTO: typically 5–15 minutes for file services, depending on share count.

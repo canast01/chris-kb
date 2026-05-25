@@ -1,27 +1,56 @@
 # Aria Operations — How It Works (Monitoring)
 
+```
+┌─────────────────────────────────── Aria Operations — How It Works ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │            Aria Operations Data Pipeline — Collection · Storage · Analysis · Output           │   │
+│   │               Step 1: Adapter polls vCenter/NSX/storage every 5 minutes via API               │   │
+│   │        Step 2: Collector buffers metrics locally then ships to master analytics engine        │   │
+│   │          Step 3: Analytics computes baselines, forecasts, anomaly scores, compliance          │   │
+│   │            Step 4: Alerts triggered → dashboard updated → recommendations published           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    The 5-minute poll cycle is the default; adapters support custom collection intervals               │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Collection         │  │          Analytics          │  │           Outputs           │   │
+│   │       Adapter API poll      │  │      Dynamic threshold      │  │         Alerts in UI        │   │
+│   │        5-min interval       │  │      Capacity forecast      │  │       REST API alerts       │   │
+│   │       Object discovery      │  │        Anomaly detect       │  │          Dashboards         │   │
+│   │        Metric tagging       │  │       Compliance check      │  │       Reports PDF/CSV       │   │
+│   │       Collector buffer      │  │       Workload reclaim      │  │      ServiceNow ticket      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Data sources on same network segment as collector nodes — all on-prem vSphere environment            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Poll interval     = Frequency at which an adapter queries a data source (default 5 min)              │
+│  Dynamic threshold = Adaptive warn/crit level computed from rolling baseline statistics               │
+│  Object discovery  = Automatic inventory scan finding new VMs, hosts, and datastores                  │
+│  Metric tagging    = Associating metadata labels to metrics for filtering and grouping                │
+│  Capacity forecast = Time-series projection predicting when a resource will be exhausted              │
+│  Anomaly score     = 0-100 deviation score; high values indicate abnormal behaviour                   │
+│  Workload reclaim  = Recommendation to right-size over-provisioned VMs                                │
+│  Compliance check  = Test of object config against a compliance pack policy rule                      │
+│  REST API alert    = JSON alert object served at /api/alerts for external consumption                 │
+│  Report            = Scheduled PDF or CSV output of dashboard or capacity data                        │
+│  OOTB adapter      = Out-of-the-box adapter shipping with Aria Ops (vCenter, NSX, vSAN)               │
+│  MP (Management Pack)= Community or vendor adapter extending Aria Ops to new data sources             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 VMware Aria Operations (formerly vROps) is deployed as an analytics cluster comprising primary, replica, and optional data nodes. Remote Collectors distribute collection workload across sites without adding to the analytics tier. All components are managed through the Aria Suite Lifecycle Manager.
 
 ---
 
 ## Analytics Cluster Topology
 
-```mermaid
-graph TB
-  ADP1["vCenter Adapter"] & ADP2["NSX Adapter"] & ADP3["Third-party Adapters"] --> COL["Remote Collector\n(cloud proxy)"]
-  COL --> ANAL["Aria Operations\nAnalytics Cluster"]
-  ANAL --> DATA[("Metrics Store")]
-  ANAL --> ALERTS["Alert Engine\nCapacity · Compliance"]
-  ADMIN(["Admin"]) -->|"browser"| ANAL
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class ANAL,COL ctrl
-  class DATA store
-  class ADP1,ADP2,ADP3,ALERTS mgmt
-  class ADMIN host
-```
+
 
 ---
 

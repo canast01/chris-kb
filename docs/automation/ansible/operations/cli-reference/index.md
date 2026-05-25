@@ -29,19 +29,36 @@ graph TD
     groupDB -->|SSH| db02["db02"]
     groupNet -->|SSH| router01["router01"]
 ```
-
-## Playbook Execution Flow
-
-```mermaid
-graph LR
-    parseInv["Parse Inventory"] --> gatherFacts["Gather Facts"]
-    gatherFacts --> preTasks["pre_tasks"]
-    preTasks --> taskLoop["Task Loop\n(loop / when / register)"]
-    taskLoop --> runModule["Run Module\non managed host"]
-    runModule --> notifyHandler["notify:\nHandler"]
-    notifyHandler --> postTasks["post_tasks"]
-    postTasks --> flushHandlers["Flush Handlers\n(run once)"]
-    flushHandlers --> report["Play Recap\n(ok / changed / failed)"]
+┌─────────────────────────────────────── Ansible — CLI Reference ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Ansible CLI tools: ansible, ansible-playbook, ansible-inventory, ansible-vault, ansible-galaxy│   │
+│   │            ansible-playbook: primary command; runs a playbook against an inventory            │   │
+│   │     Common flags: -i (inventory), -l (limit), --tags, --check, --diff, -v/-vvv (verbosity)    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               ansible-playbook               │  │               ansible (ad-hoc)              │   │
+│   │          ansible-playbook site.yml           │  │             ansible all -m ping             │   │
+│   │              -i inventories/prod/            │  │        ansible web -m shell -a uptime       │   │
+│   │          -l webservers --tags deploy         │  │             ansible db -m setup             │   │
+│   │                 --check --diff               │  │           ansible all -m reboot -b          │   │
+│   │               -e "version=1.2.3"             │  │               -b = become (sudo)            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                ansible-vault                 │  │                ansible-galaxy               │   │
+│   │        ansible-vault encrypt vars.yml        │  │        ansible-galaxy install <role>        │   │
+│   │        ansible-vault decrypt vars.yml        │  │      ansible-galaxy collection install      │   │
+│   │         ansible-vault rekey vars.yml         │  │             ansible-galaxy list             │   │
+│   │         ansible-vault view vars.yml          │  │       requirements.yml for pinned deps      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     -v / -vvv   = verbosity levels; -vvv shows module args and return values for debugging    │   │
+│   │      --limit / -l= restrict to matching hosts or groups; supports patterns: web[1:3], !db     │   │
+│   │    --extra-vars = -e "key=value"; highest precedence; override any inventory/role variable    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Role Directory Structure

@@ -4,6 +4,28 @@
 Cross-platform automation shell on .NET; execution engine processes input through parser → AST → runspace → pipeline; remoting via WinRM (5985/5986) or SSH; module system with PSGallery distribution; runspace pools for parallelism.
 </div>
 
+```
+┌────────────────────────────────────── PowerShell — Architecture ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   PowerShell architecture: runtime on .NET; cmdlets call .NET APIs; pipeline passes objects   │   │
+│   │    Remoting: Invoke-Command, Enter-PSSession → WinRM (Windows) or SSH transport (PS7/Linux)   │   │
+│   │          Modules: binary (compiled .dll) or script (.psm1); loaded from PSModulePath          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 How It Works                 │  │               Design Standards              │   │
+│   │        Script → PSParser → AST → exec        │  │      Verb-Noun naming (approved verbs)      │   │
+│   │         Pipeline: object not string          │  │         CmdletBinding + param block         │   │
+│   │          Module autoload from path           │  │          Error handling: try/catch          │   │
+│   │        Runspaces: parallel execution         │  │        Pester tests for all functions       │   │
+│   │            Remoting: WinRM / SSH             │  │            PSScriptAnalyzer lint            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Physical: PS runs on Windows, Linux, macOS; remoting requires WinRM (Win) or SSH (PS7)    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ![PowerShell Architecture](../../../assets/powershell-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
@@ -37,19 +59,4 @@ Cross-platform automation shell on .NET; execution engine processes input throug
 
 ## Execution Engine
 
-```mermaid
-flowchart LR
-    A([Input<br/>stdin / script / command]) --> B[Lexer & Parser]
-    B --> C[AST\nAbstract Syntax Tree]
-    C --> D[Binder\nType resolution]
-    D --> E[Compiled Script Block]
-    E --> F{Runspace}
-    F --> G[Command Discovery\nAlias → Function → Cmdlet → Native]
-    G --> H[Parameter Binding]
-    H --> I[Pipeline Processor]
-    I --> J[Output / Objects]
-    J --> K([stdout / next cmdlet / $null])
-    I --> L([Error Stream\n$Error / Write-Error])
-    style F fill:#1565c0,color:#fff
-    style I fill:#2e7d32,color:#fff
-```
+

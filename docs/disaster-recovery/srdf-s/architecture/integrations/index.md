@@ -35,26 +35,47 @@ graph TD
     sra1 --> r1
     sra2 --> r2
 ```
-
-## VMware SRM + Dell SRA
-
-The Dell Storage Replication Adapter (SRA) enables Site Recovery Manager to discover and manage SRDF/S replicated datastores for automated failover.
-
-### Installation
-
-1. Download the Dell SRA for PowerMax from dell.com/support — install on each SRM server (protected and recovery site)
-2. In vCenter → SRM → Array Managers → Add:
-   - Array Manager Name: `PowerMax-<SID>`
-   - Manager type: Dell EMC PowerMax/VMAX
-   - Unisphere URL: `https://<unisphere-ip>:8443`
-   - Username/password: dedicated svc_srm account with `StorageAdmin` role
-
-### Protection Group Configuration
-
-```bash
-# Verify SRM can discover SRDF groups
-# In SRM: Array Managers → Rescan Devices
-# All SRDF/S groups should appear as replication candidates
+┌───────────────────────────────── SRDF/S — Architecture Integrations ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                              SRDF/S — External Integration Points                             │   │
+│   │       Auth: Symmetrix admin credentials; Solutions Enabler; Unisphere role-based access       │   │
+│   │             Storage: connected via Dark fiber FC (< 5 ms RTT) · DWDM long-haul FC             │   │
+│   │            Monitoring: SNMP traps / syslog / REST API to ITSM and alerting systems            │   │
+│   │    Encryption: Data identical to R1 at R2; FA port encryption optional; Unisphere TLS/HTTPS   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                        ▼                        ▼                          │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Identity          │  │           Storage           │  │          Monitoring         │   │
+│   │          AD / LDAP          │  │  Dark fiber FC (< 5 ms RTT) │  │        SNMP / syslog        │   │
+│   │           SAML SSO          │  │      DWDM long-haul FC      │  │         REST webhook        │   │
+│   │          RBAC roles         │  │       NFS / iSCSI / FC      │  │         Email alerts        │   │
+│   │         MFA optional        │  │       Dedup appliance       │  │          ServiceNow         │   │
+│   │          Cert auth          │  │        Object storage       │  │          Prometheus         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (< 200 km) · RF director ports │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
+│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
+│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
+│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
+│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
+│  RTO           = Recovery Time Objective; SRDF/S failover typically < 5 minutes manual, < 1 min       │
+│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
+│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
+│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
+│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
+│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
+│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
+│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
+│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Map each protection group to an SRDF group:

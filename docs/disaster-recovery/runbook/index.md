@@ -1,5 +1,36 @@
 # Disaster Recovery Runbook
 
+```
+┌───────────────────────────────────────────── DR Runbook ──────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       DR Runbook — pre-defined response steps for declared disaster across all DR tools       │   │
+│   │                   See product-specific sub-sections for detailed procedures                   │   │
+│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
+│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
+│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Production site · DR site · Replication link · Management network · Vault network                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
+│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
+│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
+│  Failback      = returning operations to production site after DR resolved                            │
+│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
+│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
+│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
+│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
+│  DR Test       = planned failover test; validates RTO without real disaster                           │
+│  Replication   = continuous or periodic data copy to secondary site or vault                          │
+│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
+│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Overview
 
 This runbook defines the activation criteria, phased recovery procedures, communication obligations, and validation requirements for declaring and executing a disaster recovery event. It applies to all infrastructure tiers managed under this platform.

@@ -43,37 +43,43 @@ flowchart TD
     style investigateDir fill:#be123c,color:#fff
     style investigateLink fill:#b45309,color:#fff
 ```
-
----
-
-## Daily Pair State Check
-
-Run these checks at the start of each shift and before any planned changes. All commands are executed from a Solutions Enabler (SE) host with gatekeeper access to the R1 array unless noted.
-
-```bash
-# 1. Confirm pair states for all devices in the primary SRDF group
-symrdf query -g <dgname>
-
-# 2. List all SRDF groups and inspect for any non-Synchronized entries
-symrdf list -v
-
-# 3. Confirm SRDF group port and link state — look for Online on all ports
-symcfg -sid <r1_sid> list -rdfg <rdf_group_number>
-
-# 4. Show group-level detail including mode, link ports, and pair count
-symcfg -sid <r1_sid> show -rdfgrp <rdf_group_number>
-
-# 5. Verify all pairs report Synchronized (exits non-zero if any pair differs)
-symrdf -sid <r1_sid> -rdfg <rdf_group_number> verify -synchronized
-
-# 6. Check R2 side — run from an SE host connected to the R2 array
-symrdf query -g <dgname> -sid <r2_sid>
-
-# 7. Check WAN RTT between sites (run from a host at the primary site)
-ping -c 20 <dr_site_gateway_or_storage_ip>
-
-# 8. Pull write latency metrics from Unisphere Performance
-# Aria Operations / Unisphere: confirm write I/O response time is within baseline ±10%
+┌─────────────────────────────────────── SRDF/S — Health Checks ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                SRDF/S — Health Check Procedures                               │   │
+│   │                 Run these checks daily/weekly to confirm protection is working                │   │
+│   │                                           symrdf query                                        │   │
+│   │                  Review job completion rate — target 100%; investigate failures               │   │
+│   │                         Check replication/backup lag against RPO target                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Check       │  What to verify  │      Expected     │    Frequency     │  Action if bad   │   │
+│   │    Job status    │All jobs complete │    100% success   │      Daily       │ Triage failures  │   │
+│   │    Lag / RPO     │ Replication lag  │    < RPO target   │      Daily       │  Tune bandwidth  │   │
+│   │     Capacity     │ Repo space used  │     < 80% full    │      Weekly      │ Expand or expire │   │
+│   │   Restore test   │  Random restore  │    Data intact    │     Monthly      │ Fix backup chain │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (< 200 km) · RF director ports │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
+│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
+│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
+│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
+│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
+│  RTO           = Recovery Time Objective; SRDF/S failover typically < 5 minutes manual, < 1 min       │
+│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
+│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
+│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
+│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
+│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
+│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
+│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
+│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Checklist items to confirm:**

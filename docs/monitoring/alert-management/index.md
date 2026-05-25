@@ -32,35 +32,48 @@ Alert Lifecycle
 │  Incident   │
 └─────────────┘
 ```
-
-## Alert Severity Levels
-
-| Severity | Meaning | Response Time |
-|---|---|---|
-| Critical | Service impact or imminent outage | Immediate (15 min) |
-| High | Degraded performance or threshold approaching | 1 hour |
-| Medium | Warning — trend needs attention | Business day |
-| Low | Informational / advisory | Next scheduled review |
-
-## Alert Response Workflow
-
-1. **Acknowledge** — claim the alert so others know it's owned
-2. **Assess impact** — is a service affected? How many users?
-3. **Triage root cause** — use the relevant runbook or dashboard
-4. **Resolve or escalate** — fix, or hand to the right team with context
-5. **Close and document** — note root cause and action taken in the ticket
-
-## Silencing and Suppression Rules
-
-- Never silence without a linked ticket and expiry time
-- Maintenance window suppressions: set duration = window + 30 min buffer
-- Recurring false positives: fix the threshold, don't silence permanently
-
-```bash
-# Zabbix — suppress a host for 2 hours (API example via curl)
-curl -s -X POST -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"maintenance.create","params":{...},"auth":"<token>","id":1}' \
-  http://<zabbix>/api_jsonrpc.php
+┌──────────────────────────────────── Monitoring — Alert Management ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Alert Management — Routing, Suppression, Escalation, and Notification Policies        │   │
+│   │      Alert sources: Aria Operations · CloudIQ · Dell AIOps · Nexus Dashboard NDI · Pure1      │   │
+│   │       Routing targets: email · SMTP relay · PagerDuty · ServiceNow ITSM · Slack webhooks      │   │
+│   │         Suppression rules: maintenance windows · severity thresholds · dedup intervals        │   │
+│   │          Escalation tiers: L1 auto-ticket → L2 paging → L3 vendor engage → P1 bridge          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Alert policies govern who is notified, how quickly, and what actions auto-trigger                  │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Alert Sources        │  │        Routing Rules        │  │          Escalation         │   │
+│   │       Aria Ops alerts       │  │       Severity filter       │  │       L1: auto-ticket       │   │
+│   │    CloudIQ health alerts    │  │      Object-type filter     │  │       L2: on-call page      │   │
+│   │      NDI anomaly alerts     │  │      Maintenance window     │  │        L3: vendor TAM       │   │
+│   │    Pure1 capacity alerts    │  │     Dedup interval 5 min    │  │     P1: war room bridge     │   │
+│   │     AIOps predicted fail    │  │     Correlated grouping     │  │     SLA: 15-min response    │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  SMTP relay: on-prem MTA (Postfix/Exchange) · PagerDuty: SaaS · ServiceNow: on-prem or SaaS           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Severity          = Critical/Warning/Info classification applied to each alert                       │
+│  Suppression rule  = Policy silencing alerts during maintenance or known-issue windows                │
+│  Deduplication     = Preventing repeat notifications for the same active alert condition              │
+│  Escalation policy = Tiered response path: L1 auto-ticket → L2 page → L3 vendor → P1 bridge           │
+│  Maintenance window= Scheduled suppression period applied to specific objects or groups               │
+│  PagerDuty         = SaaS on-call paging platform; ingests alerts via API or email integration        │
+│  ServiceNow ITSM   = Incident and change management platform; receives alert-driven tickets           │
+│  SMTP relay        = Internal mail transfer agent routing notification emails                         │
+│  Correlated group  = Multiple alerts from different sources mapped to a single incident               │
+│  SLA               = Service Level Agreement; defines maximum acceptable response time                │
+│  P1 bridge         = Priority-1 war-room call convened when critical systems are impacted             │
+│  Alert fatigue     = Operator desensitisation caused by excessive or low-quality alerts               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Common Alert Sources

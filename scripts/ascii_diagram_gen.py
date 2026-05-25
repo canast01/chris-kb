@@ -132,7 +132,8 @@ def _write(name):
         print(f'  ERROR: file not found: {entry["file"]}', file=sys.stderr)
         return False
     replacement = '```\n' + '\n'.join(lines) + '\n```'
-    new_content, n = _BLOCK_RE.subn(replacement, content, count=1)
+    _repl = replacement  # capture for lambda (avoids re escape processing of backslashes)
+    new_content, n = _BLOCK_RE.subn(lambda m: _repl, content, count=1)
     # If block exists but is after the kb-grid, strip it and let the fallback re-insert correctly.
     if n == 1:
         grid_m = re.search(r'^<div class="kb-grid', content, re.MULTILINE)

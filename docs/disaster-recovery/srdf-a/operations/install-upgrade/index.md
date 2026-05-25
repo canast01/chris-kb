@@ -36,27 +36,56 @@ symrdf -g <dgname> -sid <r1_sid> resume -noprompt
 symrdf -g <dgname> -sid <r1_sid> query
 # Wait for SyncInProg → Consistent transition before closing the change window
 ```
-
-**Important:** After resume, monitor the delta set queue — a large backlog accumulated during suspension will flush over the WAN link and may saturate bandwidth temporarily.
-
----
-
-## Adding New Devices to an SRDF Group
-
-When new volumes need SRDF/A protection:
-
-```bash
-# Create a new device pair and add to an existing device group
-# Step 1 — Ensure the R2 device is created and unformatted on the target array
-# Step 2 — Create the SRDF pair (establishes initial sync)
-symrdf -g <dgname> -sid <r1_sid> establish -noprompt -type RDF/A
-
-# Step 3 — Monitor sync progress
-symrdf -g <dgname> -sid <r1_sid> query
-# State will show SyncInProg until initial full sync completes, then Consistent
-
-# Step 4 — Verify the new device pair before handing to the application team
-symrdf -g <dgname> -sid <r1_sid> verify -consistent
+┌───────────────────────────────────── SRDF/A — Install & Upgrade ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                              SRDF/A — Installation Prerequisites                              │   │
+│   │             OS: supported Linux or Windows Server (see vendor compatibility matrix)           │   │
+│   │          Network: FC dark fiber / DWDM · FCIP (TCP 3225) — ensure firewall allows these       │   │
+│   │   Auth: Symmetrix/PowerMax admin credentials; Solutions Enabler (SYMAPI); role-based Unisphere│   │
+│   │  Storage: Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth)│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        Install Sequence                                       │   │
+│   │                  1  Deploy control plane component and configure network access               │   │
+│   │                          2  Configure storage and network connectivity                        │   │
+│   │                        3  Install agent/proxy/splitter on protected hosts                     │   │
+│   │                      4  Register sources and configure protection policies                    │   │
+│   │                        5  Run first job; verify completion; test restore                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        Upgrade Sequence                                       │   │
+│   │                 1  Review release notes and compatibility matrix before upgrade               │   │
+│   │                   2  Snapshot or backup the control plane VM before upgrading                 │   │
+│   │                  3  Upgrade control plane first, then proxies/agents/appliances               │   │
+│   │                       4  Validate jobs resume automatically after upgrade                     │   │
+│   │                        5  Document version change and update CMDB record                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
+│  R1            = source SRDF volume on production array; host writes flow here                        │
+│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
+│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
+│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
+│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
+│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
+│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
+│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
+│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
+│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
+│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
+│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
+│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Initial synchronisation copies the full volume from R1 to R2. Schedule this during low-write periods to avoid saturating the WAN link and delaying existing SRDF/A cycles.

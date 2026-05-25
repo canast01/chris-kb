@@ -4,6 +4,51 @@
 Veritas NetBackup three-tier architecture — Primary Server catalog and scheduling, Media Servers for data movement, and Clients with backup agents.
 </div>
 
+```
+┌────────────────────────────────────── NetBackup — Architecture ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               NetBackup — Component Architecture                              │   │
+│   │             Master Server     — scheduler, catalog, policy engine, job controller             │   │
+│   │             Media Server      — data mover, dedup engine, storage unit management             │   │
+│   │          Client Agent      — installed on protected host; sends data to media server          │   │
+│   │                       Ports: 443 (Web UI) · 1556 (vnetd) · 13724 (bprd)                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Three-tier component model — control plane, data plane, and management                             │
+│                                                                                                       │
+│                          ▼                        ▼                        ▼                          │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Control Plane        │  │          Data Plane         │  │          Management         │   │
+│   │ Master Server     — schedule│  │ Media Server      — data mov│  │ NetBackup Web UI  — browser │   │
+│   │          Scheduling         │  │      Replication/Backup     │  │         443 (Web UI)        │   │
+│   │         Policy mgmt         │  │        Data movement        │  │           REST API          │   │
+│   │          Catalog/DB         │  │        Dedup/compress       │  │             RBAC            │   │
+│   │          Job engine         │  │         1556 (vnetd)        │  │           Alerting          │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+│  Media Server  = data mover between client and storage; can be co-located with master                 │
+│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ![NetBackup Architecture](../../../assets/netbackup-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
@@ -20,22 +65,4 @@ Veritas NetBackup three-tier architecture — Primary Server catalog and schedul
 | MSDP | Media Server Deduplication Pool; inline dedup; supports AIR image replication |
 | Catalog | Most critical component — tracks all backup images; must be protected separately |
 
-```mermaid
-graph TB
-  MASTER["Primary Server\nCatalog · Scheduler · EMM DB"] -->|"TCP 1556 policy/job control"| MS1["Media Server 1\nSite A"]
-  MASTER --> MS2["Media Server 2\nSite B / DR"]
-  MS1 --> MSDP1[("MSDP Pool\nSite A")]
-  MS2 --> MSDP2[("MSDP Pool\nSite B")]
-  MSDP1 -->|"AIR replication"| MSDP2
-  MSDP2 -->|"SLP copy"| CLOUD[("Cloud Storage\nlong-term archive")]
-  CLIENT1(["VMware VADP host"]) -->|"TCP 13724 bpcd"| MS1
-  CLIENT2(["Oracle / MSSQL agent"]) -->|"TCP 13724 bpcd"| MS1
-  classDef master fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef media fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef store fill:#b45309,stroke:#92400e,color:#fff
-  classDef client fill:#15803d,stroke:#166534,color:#fff
-  class MASTER master
-  class MS1,MS2 media
-  class MSDP1,MSDP2,CLOUD store
-  class CLIENT1,CLIENT2 client
-```
+

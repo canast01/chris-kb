@@ -4,6 +4,46 @@
 Dell EMC RecoverPoint journal-based replication — RPA clusters intercept writes via splitters and maintain a rolling journal enabling point-in-time recovery across CDP, CRR, and CLR modes.
 </div>
 
+```
+┌───────────────────────────────────── RecoverPoint — Architecture ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      RP4VM Architecture: ESXi splitter ──► RPA cluster ──► journal volumes ──► remote RPA     │   │
+│   │         RPA cluster: active/active pair; each RPA handles subset of consistency groups        │   │
+│   │   Splitter intercepts every VM write at ESXi kernel; sends copy to RPA without blocking I/O   │   │
+│   │     Journal stores delta writes; replication link carries deltas from source to target RPA    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Write Path         │  │         RPA Cluster         │  │        Journal / Copy       │   │
+│   │       VM issues write       │  │        2–8 RPA nodes        │  │        Local journal        │   │
+│   │     ESXi splitter forks     │  │       Active/active HA      │  │        Remote journal       │   │
+│   │      Prod write → array     │  │         Owns CG set         │  │       CDP depth = RPO       │   │
+│   │      Copy → RPA buffer      │  │        vSphere plugin       │  │       Replica volumes       │   │
+│   │     RPA applies to jrnl     │  │       WAN compression       │  │      Bookmark timeline      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: RPAs run as VMs (4 vCPU/8 GB) on dedicated ESXi host; journal vols on separate datastore │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    RPA cluster      = 2–8 RecoverPoint Appliance VMs per site; active/active; no single point of failu│
+│    ESXi splitter    = Kernel module installed on each ESXi host; intercepts VM disk writes non-disrupt│
+│    Local copy       = Protection within same site (same cluster); journal on same or separate datastor│
+│    Remote copy      = Cross-site replication; delta compressed over IP WAN; bandwidth-adaptive        │
+│    Journal volume   = Dedicated VMDK per copy; stores write deltas; sized for desired CDP window      │
+│    Replica volume   = Copy of production VMDK at target site; updated by journal apply process        │
+│    Delta set        = Unit of replication transfer between source and target RPA                      │
+│    WAN compression  = RPA compresses and deduplicates replication traffic before sending across WAN   │
+│    Active/active    = Both RPAs in cluster handle I/O simultaneously; failover is automatic on RPA los│
+│    CG ownership     = Each CG assigned to one RPA; redistributed automatically on RPA failure         │
+│    vSphere plugin   = RP4VM vCenter plugin; exposes CG management, failover, and image access in UI   │
+│    Bubble network   = Isolated portgroup for test failover VMs; no production traffic reaches test cop│
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ![RecoverPoint Architecture](../../../assets/recoverpoint-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
@@ -18,18 +58,4 @@ Dell EMC RecoverPoint journal-based replication — RPA clusters intercept write
 | CRR (Continuous Remote Replication) | Async replication to DR site | Seconds to minutes |
 | CLR (Concurrent Local and Remote) | Simultaneous local CDP + remote CRR | Per-copy |
 
-```mermaid
-graph LR
-  H_A(["Production Hosts"]) --> STG_A[("Storage A\nProduction LUNs")]
-  STG_A -->|"splitter intercepts writes"| RPA1["RPA Cluster\nSite A"]
-  RPA1 <-->|"WAN — compressed replication"| RPA2["RPA Cluster\nSite B"]
-  RPA2 --> STG_B[("Storage B\nReplica + Journal")]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class RPA1 ctrl
-  class RPA2 dr
-  class STG_A,STG_B store
-  class H_A host
-```
+

@@ -31,25 +31,28 @@ Get-Module | Select-Object Name, Version, Path | ConvertTo-Json
 [System.Environment]::Is64BitOperatingSystem
 [System.Environment]::Is64BitProcess
 ```
-
-### 2. Error Details
-
-```powershell
-# Capture the full error record
-$Error[0] | Select-Object * | ConvertTo-Json -Depth 5
-
-# Stack trace
-$Error[0].ScriptStackTrace
-
-# Exception chain
-$ex = $Error[0].Exception
-while ($ex) {
-    [PSCustomObject]@{
-        Type    = $ex.GetType().FullName
-        Message = $ex.Message
-    }
-    $ex = $ex.InnerException
-}
+┌─────────────────────────────────────── PowerShell — Escalation ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Escalate PowerShell issues to: infra team (remoting), vendor support (module bugs), Microsoft │   │
+│   │     PowerShell Core issues: GitHub.com/PowerShell/PowerShell — file issue with repro steps    │   │
+│   │Module issues: vendor support portal (VMware, Dell, Microsoft) — include module version + error│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │                Info to Gather               │   │
+│   │          PS crashes / hangs on host          │  │            $PSVersionTable output           │   │
+│   │        Module API returns wrong data         │  │           Get-InstalledModule list          │   │
+│   │         WinRM broken after OS update         │  │           winrm get config output           │   │
+│   │        JEA endpoint stops responding         │  │          Get-PSSessionConfiguration         │   │
+│   │            DSC compilation errors            │  │          Get-DscConfigurationStatus         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   PS GitHub issues = file bugs at github.com/PowerShell/PowerShell with minimal repro script  │   │
+│   │      DSC status       = Get-DscConfigurationStatus; shows last enactment result and error     │   │
+│   │   WinRM event log  = Event Viewer → Microsoft → Windows → WinRM for connection error details  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 3. Transcript

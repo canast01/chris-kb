@@ -1,52 +1,55 @@
 # SRM Architecture — Integrations
 
+```
+┌─────────────────────────────────── SRM — Architecture Integrations ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               SRM — External Integration Points                               │   │
+│   │     Auth: vCenter SSO / AD integration; SRM admin role; site-pairing certificate exchange     │   │
+│   │                Storage: connected via 443 (SRM HTTPS) · 9086 (SRM-SRM pairing)                │   │
+│   │            Monitoring: SNMP traps / syslog / REST API to ITSM and alerting systems            │   │
+│   │      Encryption: SRM management TLS; replication encryption controlled by array/SRA layer     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                        ▼                        ▼                          │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Identity          │  │           Storage           │  │          Monitoring         │   │
+│   │          AD / LDAP          │  │       443 (SRM HTTPS)       │  │        SNMP / syslog        │   │
+│   │           SAML SSO          │  │    9086 (SRM-SRM pairing)   │  │         REST webhook        │   │
+│   │          RBAC roles         │  │       NFS / iSCSI / FC      │  │         Email alerts        │   │
+│   │         MFA optional        │  │       Dedup appliance       │  │          ServiceNow         │   │
+│   │          Cert auth          │  │        Object storage       │  │          Prometheus         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 > Part of the [SRM](../../index.md) reference.
 
 ## Integration Points Overview
 
 SRM sits at the centre of multiple integration layers — storage, networking, monitoring, and orchestration all connect through a defined interface.
 
-```mermaid
-flowchart TD
-    srm["SRM Server\n(protected + recovery site)"]
 
-    subgraph storageAdapters [Storage Replication Adapters]
-        sraEMC["Dell SRA\n(PowerMax / SRDF)"]
-        sraPure["Pure SRA\n(ActiveCluster / async)"]
-        sraNetApp["NetApp SRA\n(SnapMirror)"]
-        vrBuiltin["vSphere Replication\n(built-in, no SRA)"]
-    end
-
-    subgraph networking [Network Layer]
-        nsx["NSX-T\nNetwork Mappings\n+ DFW tag follow"]
-        portGroups["vDS Port Groups\n(test bubble + prod)"]
-    end
-
-    subgraph monitoring [Monitoring & Orchestration]
-        aria["Aria Operations\nSRM Management Pack"]
-        runbook["Recovery Plan\nCustom Scripts\n(pre/post steps)"]
-        dns["DNS Update\n(post-failover script)"]
-    end
-
-    srm --> sraEMC
-    srm --> sraPure
-    srm --> sraNetApp
-    srm --> vrBuiltin
-    srm --> nsx
-    srm --> portGroups
-    srm --> aria
-    srm --> runbook
-    runbook --> dns
-
-    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef net fill:#0f766e,stroke:#0d5f58,color:#fff
-    classDef mon fill:#b45309,stroke:#92400e,color:#fff
-    class srm ctrl
-    class sraEMC,sraPure,sraNetApp,vrBuiltin store
-    class nsx,portGroups net
-    class aria,runbook,dns mon
-```
 
 ---
 ## Dell EMC SRA for PowerMax

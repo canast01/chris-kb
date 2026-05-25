@@ -28,24 +28,25 @@ graph LR
     symptom --> debugLog
     debugLog --> resolved
 ```
-
-## Debug Logging
-
-```bash
-# Enable debug logging
-export TF_LOG=DEBUG
-terraform plan
-
-# Log levels (most to least verbose): TRACE, DEBUG, INFO, WARN, ERROR
-export TF_LOG=TRACE
-terraform apply
-
-# Write logs to a file
-export TF_LOG_PATH=./terraform-debug.log
-terraform plan
-
-# Disable logging
-unset TF_LOG
+┌─────────────────────────────────────── Terraform — Diagnostics ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Terraform diagnostic sequence: capture logs → inspect plan JSON → check state → verify auth  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Log Capture                  │  │                Plan Analysis                │   │
+│   │       TF_LOG=DEBUG tf plan &>debug.log       │  │       tf plan -out=p; tf show -json p       │   │
+│   │        TF_LOG_PROVIDER=DEBUG for API         │  │     cat plan.json | jq .resource_changes    │   │
+│   │         TF_LOG_PATH=./terraform.log          │  │       terraform state show <resource>       │   │
+│   │         terraform version (in logs)          │  │       terraform refresh (resync state)      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    TF_LOG_PATH    = write log to file instead of stderr; useful for CI artifact collection    │   │
+│   │          Plan JSON      = machine-readable plan; jq to find specific resource changes         │   │
+│   │       .resource_changes= JSON field listing all planned changes with before/after values      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Validation and Syntax Checks

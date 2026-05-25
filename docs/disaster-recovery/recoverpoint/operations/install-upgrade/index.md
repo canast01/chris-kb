@@ -58,65 +58,46 @@ flowchart TD
     class hA,hB host
     class spA,spB splitter
 ```
-
-Each site requires a minimum of 2 RPAs per cluster for high availability. A cluster supports up to 8 RPAs. A maximum of 5 clusters can be connected in a RecoverPoint system.
-
----
-
-## Prerequisites
-
-### Hardware Requirements
-
-| Component | Minimum | Recommended |
-|---|---|---|
-| RPAs per cluster | 2 | 4 (production) |
-| RPA model | Gen 6 (PowerEdge R640-based) | Gen 6 |
-| Management network | 1 GbE dedicated | 1 GbE dedicated |
-| WAN/replication link | 100 Mbps | 1 Gbps+ |
-| Fibre Channel HBAs | 2 × 8 GbE per RPA | 4 × 16 GbE per RPA |
-| RAM per RPA | 128 GB | 256 GB |
-
-### Network Prerequisites
-
-- Cluster management IP: static IPv4, one per cluster (not per RPA)
-- Per-RPA management IPs: one static IP per RPA node
-- WAN IPs: dedicated interface per RPA for inter-site replication traffic
-- Required open ports:
-
-| Port | Protocol | Purpose |
-|---|---|---|
-| 443 | HTTPS | Unisphere for RecoverPoint UI |
-| 7225 | TCP | RPA inter-cluster communication |
-| 2049 | TCP/UDP | NFS journal mounts (legacy) |
-| 22 | SSH | CLI management (boxmgmt) |
-| 7170 | TCP | RecoverPoint API (REST) |
-
-### Storage Prerequisites
-
-- Gatekeeper (management) devices: minimum 6 per RPA cluster (3 per site), presented from each storage array
-- Journal volumes: sized at 10× the change rate per journal; minimum 10 GB per consistency group
-- Repository volume: 1 GB thin volume, presented to all RPAs in the cluster
-- All RPA WWNs must be zoned to the storage arrays **before** running the Deployment Manager wizard
-
-### Software Prerequisites
-
-- Dell Deployment Manager package downloaded from dell.com/support
-- NTP configured and synchronised across all RPA nodes and management station
-- DNS resolution for RPA hostnames from the management station
-- vCenter credentials (for RP4VM) or array credentials (for RP/CL) ready
-
----
-
-## RPA Deployment — Initial Install
-
-### Step 1 — Physical Connectivity
-
-```text
-1. Rack and cable RPAs according to the site-specific cabling matrix.
-2. Connect RPA management ports to the management network switch.
-3. Connect RPA FC HBAs to SAN fabric (zone per the zoning design doc).
-4. Connect WAN ports to the MPLS/dark fibre hand-off.
-5. Power on RPAs — they will PXE boot from the Deployment Manager.
+┌────────────────────────────────── RecoverPoint — Install & Upgrade ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Install order: deploy RPA OVF → configure network → pair sites → install splitter on ESXi hosts│   │
+│   │       Pre-req: vCenter credentials, management VLAN, replication VLAN, journal datastore      │   │
+│   │      Upgrade: rolling RPA upgrade (one node at a time); CGs remain active during upgrade      │   │
+│   │         Splitter upgrade: done via VIB update on ESXi; requires host maintenance mode         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Deploy RPA OVF ──► network config ──► site pairing ──► install splitter ──► create CGs             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Fresh Install Steps              │  │                Upgrade Steps                │   │
+│   │          1. Deploy RPA OVF per site          │  │          1. Download new RPA image          │   │
+│   │          2. Configure mgmt/repl IPs          │  │            2. Upload to Unisphere           │   │
+│   │          3. Pair protected/recovery          │  │           3. Rolling node upgrade           │   │
+│   │         4. Install ESXi splitter VIB         │  │           4. Upgrade splitter VIBs          │   │
+│   │         5. Create consistency groups         │  │          5. Validate all CGs active         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: RPA VMs need 4 vCPU, 8 GB RAM, 3 vNICs (mgmt, replication, data); use anti-affinity rules│
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    OVF deploy       = Deploy RPA as virtual appliance from OVF template in vCenter                    │
+│    Site pairing     = Connect protected site RPA cluster to recovery site RPA cluster over IP         │
+│    Splitter VIB     = VMware Installation Bundle; installed on ESXi via esxcli software vib install   │
+│    Management IP    = RPA vNIC for Unisphere access and admin CLI; on management VLAN                 │
+│    Replication IP   = RPA vNIC for site-to-site journal replication traffic; on replication VLAN      │
+│    Data IP          = RPA vNIC for write split data from ESXi splitter to RPA; on storage VLAN        │
+│    Rolling upgrade  = Upgrade one RPA node at a time; surviving node handles all CGs during upgrade   │
+│    VIB update       = ESXi host in maintenance mode; esxcli updates splitter kernel module            │
+│    Post-upgrade     = Verify all CGs Active; check lag; confirm splitter version per host             │
+│    License          = Apply RP4VM licence in Unisphere before creating first CG                       │
+│    Compatibility    = Check RP4VM compatibility matrix; ESXi version must match supported list        │
+│    Journal datastore= Dedicated datastore for journal VMDKs; separate from production datastores      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Step 2 — Launch Deployment Manager

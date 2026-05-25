@@ -21,20 +21,27 @@ graph TD
     apiKey --> bearerHeader
     bearerHeader --> apiEndpoint
 ```
-
-## API Keys
-
-Store API keys in environment variables or a secrets manager — never hardcode them in scripts.
-
-```python
-import os
-
-# Read from environment variable
-api_key = os.environ["API_KEY"]                     # raises KeyError if missing
-api_key = os.environ.get("API_KEY", "")             # returns empty string if missing
-
-# Pass as Bearer token header
-headers = {"Authorization": f"Bearer {api_key}"}
+┌─────────────────────────────────────── Python — Authentication ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Python authentication: boto3 credential chain, paramiko SSH key, requests auth classes    │   │
+│   │    boto3 credential chain: env var → ~/.aws/credentials → IAM role → container credentials    │   │
+│   │         Never use access keys in code; prefer IAM roles (EC2) or OIDC (GitHub Actions)        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              AWS Authentication              │  │              SSH and REST Auth              │   │
+│   │          IAM role: boto3.Session()           │  │       paramiko.RSAKey.from_private_key      │   │
+│   │           Assume role: STS client            │  │         requests.auth.HTTPBasicAuth         │   │
+│   │        boto3.Session(profile_name=X)         │  │       Bearer: headers={"Auth": "..."}       │   │
+│   │           No hardcoded access keys           │  │          OAuth2: requests-oauthlib          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      STS AssumeRole = boto3 STS client; returns temp credentials for cross-account access     │   │
+│   │     Credential chain= boto3 tries in order: env vars, shared file, container, EC2 metadata    │   │
+│   │  keyring library = OS keychain integration; python-keyring; store/retrieve API tokens safely  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash

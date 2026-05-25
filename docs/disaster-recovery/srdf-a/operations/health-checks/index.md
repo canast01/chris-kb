@@ -34,26 +34,43 @@ symrdf -g 20 -type A query -detail | grep -E "Lag|Cycle Age"
 LAG=$(symrdf -g 20 -type A query -detail | grep "Lag" | awk '{print $NF}')
 echo "Current lag: ${LAG} seconds"
 ```
-
----
-
-## RDF Link and Director Health
-
-```bash
-# Check RDF director and port status
-symcfg list -dir all -rdf
-
-# Show bandwidth utilization on RDF ports
-symstat -rdf -dir RF-2F -i 5 -c 3
-
-# Check link state for SRDF/A group
-symcfg list -rdfg 20 -detail
-
-# Confirm remote array is accessible
-symcfg list -rdfg 20 -detail | grep "Link"
-
-# Show all RDFG groups (confirm group 20 is type A)
-symcfg list -rdfg all
+┌─────────────────────────────────────── SRDF/A — Health Checks ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                SRDF/A — Health Check Procedures                               │   │
+│   │                 Run these checks daily/weekly to confirm protection is working                │   │
+│   │                                           symrdf query                                        │   │
+│   │                  Review job completion rate — target 100%; investigate failures               │   │
+│   │                         Check replication/backup lag against RPO target                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Check       │  What to verify  │      Expected     │    Frequency     │  Action if bad   │   │
+│   │    Job status    │All jobs complete │    100% success   │      Daily       │ Triage failures  │   │
+│   │    Lag / RPO     │ Replication lag  │    < RPO target   │      Daily       │  Tune bandwidth  │   │
+│   │     Capacity     │ Repo space used  │     < 80% full    │      Weekly      │ Expand or expire │   │
+│   │   Restore test   │  Random restore  │    Data intact    │     Monthly      │ Fix backup chain │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
+│  R1            = source SRDF volume on production array; host writes flow here                        │
+│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
+│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
+│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
+│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
+│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
+│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
+│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
+│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
+│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
+│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
+│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
+│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

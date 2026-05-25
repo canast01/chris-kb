@@ -154,189 +154,46 @@ Set these as environment variables before running:
 ```text
 RP_HOST=192.168.1.100 RP_USER=admin RP_PASS=MyPassword python3 rp-cg-health.py
 ```
-
-**What you should see**
-
-A table listing every consistency group with its replication state (Active/Paused/etc.), current lag, configured RPO, and whether it is compliant. Any CG not in Active state is flagged with `<-- ALERT`. The final line shows `RESULT: ALL CGs ACTIVE` or a list of degraded CGs.
-
----
-
-## DR Test Failover Script (Bash)
-
-Authenticate against the RecoverPoint REST API, locate a consistency group by name, start image access at the latest bookmark for DR testing, and optionally roll back to restore production replication.
-
-~~~bash
-#!/usr/bin/env bash
-# rp-dr-test-failover.sh
-# Usage:
-#   ./rp-dr-test-failover.sh                 -- start image access (DR test)
-#   ./rp-dr-test-failover.sh --rollback      -- disable image access, resume replication
-
-set -euo pipefail
-
-RP_HOST="${RP_HOST:?RP_HOST is required}"
-RP_USER="${RP_USER:?RP_USER is required}"
-RP_PASS="${RP_PASS:?RP_PASS is required}"
-CG_NAME="${CG_NAME:?CG_NAME (consistency group name) is required}"
-BOOKMARK_POLICY="${BOOKMARK_POLICY:-latest}"
-ROLLBACK=false
-LOGFILE="/var/log/rp-dr-test-$(date +%Y%m%d-%H%M%S).log"
-
-for arg in "$@"; do
-    [[ "$arg" == "--rollback" ]] && ROLLBACK=true
-done
-
-BASE_URL="https://${RP_HOST}/fapi/rest/4_5"
-CURL_OPTS=(-sk -u "${RP_USER}:${RP_PASS}" -H "Content-Type: application/json" -H "Accept: application/json")
-
-log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "${LOGFILE}"; }
-
-rp_get()  { curl "${CURL_OPTS[@]}" "${BASE_URL}${1}"; }
-rp_post() { curl "${CURL_OPTS[@]}" -X POST -d "${2:-}" "${BASE_URL}${1}"; }
-
-log "=== RecoverPoint DR Test Failover ==="
-log "CG: ${CG_NAME}  | Mode: $( ${ROLLBACK} && echo ROLLBACK || echo FAILOVER-TEST )"
-
-# --- Step 1: Find CG ID by name ---
-log "Step 1: Locating CG '${CG_NAME}'..."
-CG_LIST=$(rp_get "/groups")
-CG_ID=$(python3 - <<EOF
-import json, sys
-data = json.loads('''${CG_LIST}''')
-for cg in data.get('innerSet', []):
-    if cg.get('name') == '${CG_NAME}':
-        print(cg['groupUID']['id'])
-        sys.exit(0)
-sys.exit(1)
-EOF
-)
-
-if [[ -z "${CG_ID}" ]]; then
-    log "ERROR: CG '${CG_NAME}' not found."
-    exit 1
-fi
-log "Found CG ID: ${CG_ID}"
-
-if ${ROLLBACK}; then
-    # --- Rollback: disable image access and resume replication ---
-    log "Step 2 (Rollback): Disabling image access for CG ${CG_ID}..."
-    rp_post "/groups/${CG_ID}/disable_image_access" '{}'
-    log "Step 3 (Rollback): Resuming replication..."
-    rp_post "/groups/${CG_ID}/start_transfer" '{}'
-    log "Rollback complete. Production replication resumed."
-    exit 0
-fi
-
-# --- Step 2: Get latest bookmark ---
-log "Step 2: Retrieving latest bookmark..."
-COPIES=$(rp_get "/groups/${CG_ID}/copies")
-COPY_ID=$(python3 - <<EOF
-import json, sys
-data = json.loads('''${COPIES}''')
-copies = data.get('innerSet', [])
-# Use the remote copy (non-production)
-for c in copies:
-    if not c.get('copySettings', {}).get('isProductionCopy', True):
-        print(c['copyUID']['globalCopyUID']['copyUID'])
-        sys.exit(0)
-sys.exit(1)
-EOF
-)
-
-if [[ -z "${COPY_ID}" ]]; then
-    log "ERROR: Could not determine remote copy ID."
-    exit 1
-fi
-log "Remote copy ID: ${COPY_ID}"
-
-# --- Step 3: Enable image access at latest bookmark ---
-log "Step 3: Enabling image access at latest bookmark on copy ${COPY_ID}..."
-REQUEST_BODY=$(python3 -c "
-import json
-print(json.dumps({
-    'copyUID': {'globalCopyUID': {'copyUID': int('${COPY_ID}')}},
-    'scenario': 'LOGGED_ACCESS',
-    'imageAccessMode': 'VIRTUAL_ACCESS_WITH_ROLL',
-    'bookmark': {'bookmarkType': 'LATEST'}
-}))
-")
-
-rp_post "/groups/${CG_ID}/enable_image_access" "${REQUEST_BODY}"
-log "Image access request submitted."
-
-# --- Step 4: Wait for access to be enabled ---
-log "Step 4: Waiting for image access to become active..."
-MAX_WAIT=120
-ELAPSED=0
-while [[ $ELAPSED -lt $MAX_WAIT ]]; do
-    STATE=$(rp_get "/groups/${CG_ID}/links" | python3 -c "
-import json, sys
-data = json.load(sys.stdin)
-links = data.get('innerSet', [])
-if links:
-    print(links[0].get('linkState', 'unknown'))
-else:
-    print('unknown')
-")
-    log "Current link state: ${STATE}"
-    if [[ "${STATE}" == "ImageAccess" ]] || [[ "${STATE}" == "ImageAccessEnabled" ]]; then
-        break
-    fi
-    sleep 10
-    ELAPSED=$((ELAPSED + 10))
-done
-
-if [[ $ELAPSED -ge $MAX_WAIT ]]; then
-    log "WARNING: Timed out waiting for image access. Check RecoverPoint UI."
-    exit 1
-fi
-
-# --- Step 5: Print accessible volumes ---
-log "Step 5: Image access enabled. Copy volumes are now accessible."
-VOLUMES=$(rp_get "/groups/${CG_ID}/copies/${COPY_ID}/volumes" 2>/dev/null || echo '{"innerSet":[]}')
-python3 - <<EOF
-import json
-data = json.loads('''${VOLUMES}''')
-for v in data.get('innerSet', []):
-    print(f"  Volume: {v.get('name', 'unknown')}  WWN: {v.get('wwn', 'N/A')}")
-EOF
-
-log "DR test failover complete. Remember to run --rollback when done."
-log "Log: ${LOGFILE}"
-~~~
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux or macOS machine (or WSL on Windows)
-- `curl` and `python3` installed
-- Network access to the RecoverPoint Appliance management IP
-- RecoverPoint admin credentials
-- The exact name of the Consistency Group you want to test (case-sensitive)
-
-**Step 1 — Save the file**
-
-1. Open a text editor
-2. Copy the entire code block above
-3. Save it as `rp-dr-test-failover.sh`
-
-**Step 2 — Fill in your details**
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `RP_HOST` | RecoverPoint Appliance IP | RPA management IP |
-| `RP_USER` | Admin username | Usually `admin` |
-| `RP_PASS` | Admin password | Your RecoverPoint password |
-| `CG_NAME` | Consistency group name | Exact name as shown in RecoverPoint UI |
-
-**Step 3 — Open a terminal**
-
-- **For .sh:** Open Terminal on Linux/Mac, or use Git Bash / WSL on Windows
-
-**Step 4 — Make the script executable**
-
-```bash
-chmod +x rp-dr-test-failover.sh
+┌─────────────────────────────────────── RecoverPoint — Scripts ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     RP automation: REST API (HTTPS/443) or CLI scripting via SSH; Python/PowerShell common    │   │
+│   │   Common scripts: CG health report, journal fill monitor, lag alert, bulk bookmark creation   │   │
+│   │             API base: https://<RPA-IP>/fapi/rest/5_1; auth: Basic or session token            │   │
+│   │            SDK: Dell RecoverPoint PowerShell module (unofficial); wraps REST calls            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Script triggers: cron/Task Scheduler ──► REST/SSH ──► RPA API ──► parse response ──► alert         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Monitoring Scripts              │  │              Automation Scripts             │   │
+│   │                get_cg_lag.py                 │  │              create_bookmark.py             │   │
+│   │            journal_fill_alert.py             │  │              bulk_enable_cgs.sh             │   │
+│   │             rpa_health_check.py              │  │                failover_cg.py               │   │
+│   │           rpo_compliance_report.py           │  │           test_copy_automation.ps1          │   │
+│   │             link_status_check.sh             │  │               config_backup.py              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: scripts run from jump host on management VLAN with HTTPS/SSH access to RPA management IPs│
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    REST API base    = https://<RPA-IP>/fapi/rest/5_1; GET /clusters, /groups, /links endpoints        │
+│    Session token    = POST to /sessions; returns token; use X-RP-Auth header in subsequent calls      │
+│    CG lag script    = Poll GET /groups; parse transferTimeLag; alert if > threshold seconds           │
+│    Journal fill     = GET /groups/<id>/copies; check journalUsagePercent; alert if > 70%              │
+│    Bulk bookmark    = POST /groups/<id>/bookmarks; run for all CGs before maintenance window          │
+│    RPO report       = Pull lag history; calculate % time within RPO; export to CSV/email              │
+│    Config backup    = GET /system/config; export XML; store in version-controlled repo                │
+│    SSH scripting    = Paramiko or subprocess SSH to RPA; run get all cgs; parse text output           │
+│    PowerShell module= Import-Module RecoverPoint; wraps REST; Windows automation environments         │
+│    Cron schedule    = Health checks every 5 min; journal fill every 15 min; RPO report daily          │
+│    Alert routing    = Scripts send email or post to Slack/Teams webhook on threshold breach           │
+│    Error handling   = Catch HTTP 4xx/5xx; retry with backoff; log to syslog on persistent failure     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Step 5 — Run the DR test (enables image access)**

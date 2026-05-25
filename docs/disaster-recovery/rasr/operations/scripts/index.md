@@ -95,73 +95,45 @@ function New-RASRImage {
 #               -ShareUser "CORP\svc-rasr" `
 #               -SharePassword "S3cr3t!"
 ```
-
----
-
-## Test-RASRImageAge
-
-Checks whether a RASR backup image exists and is within the required age threshold. Returns a boolean and writes a warning if stale.
-
-```powershell
-<#
-.SYNOPSIS
-    Verifies that a RASR image exists on the share and is not older than MaxAgeDays.
-.PARAMETER SharePath
-    UNC path to the server's image directory.
-.PARAMETER MaxAgeDays
-    Maximum acceptable age for the most recent image in days.
-.PARAMETER ShareUser
-    Credential username for share access.
-.PARAMETER SharePassword
-    Credential password for share access.
-#>
-function Test-RASRImageAge {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$SharePath,
-
-        [int]$MaxAgeDays = 8,
-
-        [string]$ShareUser,
-        [string]$SharePassword
-    )
-
-    # Map share if credentials provided
-    if ($ShareUser -and $SharePassword) {
-        net use $SharePath /user:$ShareUser $SharePassword 2>$null | Out-Null
-    }
-
-    if (-not (Test-Path $SharePath)) {
-        Write-Warning "Share path inaccessible: $SharePath"
-        return $false
-    }
-
-    $images = Get-ChildItem -Path $SharePath -Filter "*.rasr" |
-              Sort-Object LastWriteTime -Descending
-
-    if ($images.Count -eq 0) {
-        Write-Warning "No RASR images found in $SharePath"
-        return $false
-    }
-
-    $latest   = $images[0]
-    $ageDays  = (New-TimeSpan -Start $latest.LastWriteTime -End (Get-Date)).Days
-
-    if ($ageDays -gt $MaxAgeDays) {
-        Write-Warning "Latest RASR image '$($latest.Name)' is $ageDays days old (max $MaxAgeDays)"
-        return $false
-    }
-
-    Write-Host "OK: Latest image '$($latest.Name)' is $ageDays days old."
-    return $true
-}
-
-# Example usage:
-# Test-RASRImageAge -SharePath "\\nas01\rasr-images\$env:COMPUTERNAME" `
-#                   -MaxAgeDays 8 `
-#                   -ShareUser "CORP\svc-rasr" `
-#                   -SharePassword "S3cr3t!"
+┌─────────────────────────────────────────── RASR — Scripts ────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                   RASR — Automation Scripts                                   │   │
+│   │                Scripts automate routine RASR operations — run via cron or CI/CD               │   │
+│   │               Always store credentials in vault (not in script); log all output               │   │
+│   │                 Test scripts in non-production before scheduling in production                │   │
+│   │                        Scope scripts to least-privilege service account                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Status / Reporting Scripts          │  │              Automation Scripts             │   │
+│   │           Job success rate report            │  │            Auto-expire old points           │   │
+│   │              Capacity trending               │  │          Auto-add new VMs to policy         │   │
+│   │            SLA compliance report             │  │          Nightly DR test validation         │   │
+│   │             RPO / RTO dashboard              │  │             Alert on job failure            │   │
+│   │               cybersense scan                │  │             vault lock / unlock             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

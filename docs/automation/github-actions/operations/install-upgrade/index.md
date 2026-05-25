@@ -16,15 +16,29 @@ On each runner host, check the installed version:
 cd /opt/actions-runner   # or wherever the runner is installed
 ./config.sh --version
 ```
-
-Compare against the latest release on the [actions/runner releases page](https://github.com/actions/runner/releases).
-
-### 2. Drain in-progress jobs
-
-Before stopping the runner service, drain any active jobs:
-
-```bash
-sudo systemctl stop actions.runner.<org>-<name>.service
+┌───────────────────────────────── GitHub Actions — Install & Upgrade ──────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  GitHub Actions is a hosted service — no server-side installation; manage self-hosted runners │   │
+│   │    Self-hosted runner install: download from GitHub, configure, register, run as OS service   │   │
+│   │   Runner updates: GitHub-hosted auto-update weekly; self-hosted manual or auto-update policy  │   │
+│   │        ARC (Actions Runner Controller): Kubernetes-based auto-scaling runner deployment       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Self-Hosted Runner Setup           │  │            ARC Setup (Kubernetes)           │   │
+│   │       1. Settings → Actions → Runners        │  │          helm install arc oci://...         │   │
+│   │          2. Download runner package          │  │      kubectl apply -f runnerdeployment      │   │
+│   │         3. ./config.sh --url --token         │  │          Set minRunners/maxRunners          │   │
+│   │           4. sudo ./svc.sh install           │  │           Configure runner labels           │   │
+│   │            5. sudo ./svc.sh start            │  │           Verify runners register           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ARC             = Actions Runner Controller; Kubernetes operator managing ephemeral runner pods│   │
+│   │  Runner version  = must be within 30 days of latest; GitHub stops routing jobs to old runners │   │
+│   │Ephemeral       = --ephemeral flag: runner deregisters after each job; clean environment per ru│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Wait for any in-flight workflow jobs to complete before proceeding. If runners are registered in a runner group, temporarily remove the runner from active job queues via the GitHub UI (Settings > Actions > Runners) rather than hard-stopping the service.

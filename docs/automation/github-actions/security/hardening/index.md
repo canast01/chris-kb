@@ -21,20 +21,28 @@ flowchart TD
     repo --> secretScan
     repo --> selfHostedIsolate
 ```
-
-Grant only the permissions each job requires. The default `GITHUB_TOKEN` permissions can be locked down at the workflow or job level.
-
-```yaml
-# Workflow-level: restrict all jobs
-permissions:
-  contents: read
-
-# Override per job when more is needed
-jobs:
-  release:
-    permissions:
-      contents: write
-      id-token: write
+┌───────────────────────────────────── GitHub Actions — Hardening ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Harden GitHub Actions against supply chain attacks, secret exposure, and privilege abuse   │   │
+│   │Organisation settings: restrict allowed actions, require approval for first-time fork contribut│   │
+│   │    Self-hosted runner: ephemeral mode, isolated network, minimal tools, no persistent state   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Org-Level Hardening              │  │               Runner Hardening              │   │
+│   │        Allowed actions: only verified        │  │         Ephemeral: --ephemeral flag         │   │
+│   │          Fork PR approval required           │  │          Network: egress allowlist          │   │
+│   │       Secrets: no org secrets in forks       │  │           No admin tools on runner          │   │
+│   │         Branch protection on default         │  │       Read-only filesystem where poss       │   │
+│   │         Audit log enabled + exported         │  │       Separate runner per environment       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Ephemeral runner = deregisters after each job; prevents state leakage between runs      │   │
+│   │     Egress allowlist = firewall rules on runner host limiting outbound to known endpoints     │   │
+│   │ Audit log        = org-level log of all Actions events; export to SIEM for long-term retention│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Pinning Action Versions

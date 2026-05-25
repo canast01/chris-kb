@@ -31,48 +31,25 @@ flowchart TD
     checkLogs -->|None| healthy
     checkLogs -->|Errors| alertLogs
 ```
-
-## Daily Checks
-
-| Check | Command | Notes |
-|---|---|---|
-| [ ] Verify scheduled PowerShell tasks are not disabled | `Get-ScheduledTask | Where-Object {$_.State -eq 'Disabled'}` |  |
-| [ ] Check execution policy on managed hosts | `Get-ExecutionPolicy -List` |  |
-| [ ] Review script error logs and transcript files for failed scheduled |  |  |
-| [ ] Confirm PSGallery or internal module feed is accessible |  |  |
-| [ ] Validate service account credentials used by scheduled scripts are |  |  |
-| [ ] Review PowerShell event log for script block logging errors | `Get-WinEvent -LogName 'Microsoft-Windows-PowerShell/Operational' -MaxEvents 50` |  |
-| [ ] Confirm WinRM is running on remote targets if remoting is in use |  |  |
-
-## Health Check
-
-- [ ] PowerShell version is at expected level on all managed hosts
-- [ ] Execution policy permits script execution
-- [ ] Required modules are installed and at expected versions
-- [ ] Service accounts used by scheduled tasks have valid, non-expired credentials
-- [ ] WinRM service is running and reachable on remote targets
-- [ ] Transcript logging path is writable and recent transcripts exist
-- [ ] PSGallery or internal feed is reachable from the control host
-- [ ] No errors in the PowerShell operational event log from the last 24 hours
-
-```powershell
-# PowerShell version
-$PSVersionTable
-
-# Execution policy (all scopes)
-Get-ExecutionPolicy -List
-
-# Installed modules
-Get-Module -ListAvailable | Sort-Object Name | Select-Object Name, Version
-
-# Scheduled tasks — flag disabled tasks
-Get-ScheduledTask | Where-Object { $_.State -eq 'Disabled' } |
-  Select-Object TaskName, TaskPath, State
-
-# Test WinRM connectivity to a remote host
-Test-WSMan -ComputerName <hostname>
-
-# Last 50 PowerShell operational log entries
-Get-WinEvent -LogName 'Microsoft-Windows-PowerShell/Operational' -MaxEvents 50 |
-  Where-Object { $_.LevelDisplayName -in 'Error','Warning' }
+┌───────────────────────────────────── PowerShell — Health Checks ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  PowerShell health checks: verify PS version, remoting, module currency, and script execution │   │
+│   │      Check: $PSVersionTable.PSVersion, Test-WSMan, Get-PSRepository, PSScriptAnalyzer run     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Version and Environment            │  │               Remoting Health               │   │
+│   │          $PSVersionTable.PSVersion           │  │            Test-WSMan <hostname>            │   │
+│   │          Get-Module -ListAvailable           │  │        Test-NetConnection -port 5985        │   │
+│   │       Get-InstalledModule (PSGallery)        │  │          Get-PSSessionConfiguration         │   │
+│   │          Get-ExecutionPolicy -List           │  │            winrm get winrm/config           │   │
+│   │        Invoke-ScriptAnalyzer -Path .         │  │          Check JEA endpoints active         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           $PSVersionTable = hash table with PS version, OS, runtime, and build info           │   │
+│   │     Test-WSMan      = validates WinRM connectivity and config on remote host; returns XML     │   │
+│   │ExecutionPolicy = check per scope: Process, CurrentUser, LocalMachine; Restricted blocks all .p│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

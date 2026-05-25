@@ -51,32 +51,49 @@ flowchart TD
     class vmHost,dbHost,nasHost client
     class dd,msdp,s3 storage
 ```
-
-NetBackup CLI commands run on the Primary Server as root (Linux) or Administrator (Windows). The `bp*` family covers backup and restore operations; `nb*` and `tp*` commands cover EMM, media, and device management. Commands are in `/usr/openv/netbackup/bin/admincmd/` on Linux or `C:\Program Files\Veritas\NetBackup\bin\admincmd\` on Windows.
----
-
-## Job Monitoring
-
-Monitor backup and restore jobs in real time or review recent history.
-
-```bash
-# High-level job summary
-bpjobs -summary
-
-# List all active jobs
-bpjobs
-
-# Query job database — failed jobs in last 24 hours
-bpdbjobs -report -failed -hoursago 24
-
-# Query job database — all jobs with verbose output
-bpdbjobs -report -all_columns -hoursago 48
-
-# Kill a running job
-bpdbjobs -cancel -jobid <id>
-
-# Check NetBackup processes
-bpps -a
+┌────────────────────────────────────── NetBackup — CLI Reference ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 NetBackup — Command Reference                                 │   │
+│   │           Use these commands for routine operations, scripting, and troubleshooting           │   │
+│   │                                       bpbackup / bprestore                                    │   │
+│   │                                        bplist / bpdbjobs                                      │   │
+│   │                                         nbpemreq / bpps                                       │   │
+│   │                                       tpconfig / nbstlutil                                    │   │
+│   │                                     bpexpdate / bpimmediate                                   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Ports: 443 (Web UI) · 1556 (vnetd) · 13724 (bprd)                                                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Command Categories                                      │   │
+│   │                  Status / Query  — check current state, list jobs, show config                │   │
+│   │                  Operations      — start, stop, failover, restore, sync, expire               │   │
+│   │                Configuration   — add/modify policies, schedules, storage targets              │   │
+│   │               Diagnostics     — collect logs, run health checks, test connectivity            │   │
+│   │                  Scripting       — REST API or CLI for automation and reporting               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+│  Media Server  = data mover between client and storage; can be co-located with master                 │
+│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

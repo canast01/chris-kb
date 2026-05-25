@@ -25,13 +25,48 @@ Syslog Flow
 │  correlation rules  │   │   storage archive)  │
 └─────────────────────┘   └─────────────────────┘
 ```
-
-## Architecture Overview
-
-```text
-Hosts (rsyslog / syslog-ng / journald)
-    → Syslog server / SIEM (Splunk / Graylog / ELK / Syslog-NG)
-        → Long-term archive (object storage / NFS)
+┌───────────────────────────────────────── Monitoring — Syslog ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │            Syslog — Centralised Log Collection: RFC 5424 over UDP/514 and TLS/6514            │   │
+│   │        Sources: ESXi hosts · vCenter · NSX managers · storage arrays · network switches       │   │
+│   │          Collectors: rsyslog/syslog-ng on-prem · Aria Log Insight · Splunk forwarder          │   │
+│   │          Parsing: structured data fields: facility · severity · hostname · msgid · SD         │   │
+│   │         ESXi config: esxcli system syslog config set --loghost=<IP>:514 --protocol=udp        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    TLS transport (port 6514) is required for syslog crossing security zone boundaries                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Sources           │  │          Collectors         │  │          Consumers          │   │
+│   │        ESXi: UDP 514        │  │       rsyslog HA pair       │  │       Aria Log Insight      │   │
+│   │       vCenter: UDP 514      │  │       syslog-ng relay       │  │        Splunk indexer       │   │
+│   │        NSX: TLS 6514        │  │      Log Insight agent      │  │       SIEM correlation      │   │
+│   │     Storage: SNMP+syslog    │  │       Queue: 10k msg/s      │  │      Alert rules engine     │   │
+│   │      Switches: UDP 514      │  │      TLS cert rotation      │  │       Retention policy      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  rsyslog VMs: 2x on dedicated VLAN · Log Insight cluster on vSphere · NFS for log storage             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RFC 5424          = IETF standard defining syslog message format with structured data                │
+│  Facility          = Log category code (e.g. kern=0, user=1, mail=2, daemon=3)                        │
+│  Severity          = Log level: 0=Emergency · 1=Alert · 2=Crit · 3=Err · 4=Warn · 5=Notice            │
+│  rsyslog           = High-performance Linux syslog daemon; supports TCP/UDP/TLS/RELP                  │
+│  syslog-ng         = Enterprise syslog daemon with advanced filtering and routing                     │
+│  Log Insight       = VMware Aria Log Insight; structured log search and alerting                      │
+│  TLS 6514          = Encrypted syslog transport; required for cross-zone log forwarding               │
+│  RELP              = Reliable Event Logging Protocol; guaranteed delivery over TCP                    │
+│  SD (structured)   = RFC 5424 key=value pairs in the structured-data section of syslog                │
+│  esxcli syslog     = ESXi command to configure remote syslog destination and protocol                 │
+│  SIEM              = Security Information and Event Management; consumes syslog for threat detection  │
+│  Queue depth       = In-memory message buffer in collector; overflow causes message loss              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Syslog Service Health

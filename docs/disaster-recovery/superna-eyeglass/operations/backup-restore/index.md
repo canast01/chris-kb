@@ -39,34 +39,47 @@ flowchart LR
     EG --> NFS
     EG --> SFTP
 ```
-
----
-
-## Performing a Manual Backup
-
-### Via Eyeglass GUI
-
-1. Log in to Eyeglass web UI: `https://<eyeglass-ip>`
-2. Navigate to: **Admin → Backup & Restore**
-3. Click **Backup Now**
-4. Select backup destination (local or remote)
-5. Click **Start Backup**
-6. Monitor progress — backup completes in < 5 minutes for typical configurations
-
-### Via CLI
-
-```bash
-# SSH to Eyeglass appliance
-ssh admin@<eyeglass-ip>
-
-# Trigger backup via igls CLI
-igls backup create
-
-# List available backups
-igls backup list
-
-# Export backup to external location
-igls backup export --id <backup-id> --destination /mnt/nfs-share/eyeglass-backups/
+┌───────────────────────────────── Superna Eyeglass — Backup & Restore ─────────────────────────────────┐
+│                                                                                                       │
+│    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Backup (Protection)              │  │              Restore (Recovery)             │   │
+│   │               igls quota list                │  │               igls dr runbook               │   │
+│   │              Quiesce source I/O              │  │            Select recovery point            │   │
+│   │             Take snapshot / CBT              │  │           Mount or copy to target           │   │
+│   │           Transfer changed blocks            │  │              Validate integrity             │   │
+│   │             Commit to repository             │  │             Restart application             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 Key Superna Eyeglass Commands                                 │   │
+│   │                                Backup trigger  : igls quota list                              │   │
+│   │                                List points     : igls dr runbook                              │   │
+│   │                                Health status   : igls sync status                             │   │
+│   │                              Retention mgmt  : igls failover start                            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
+│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
+│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
+│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
+│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
+│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
+│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
+│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
+│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
+│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
+│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
+│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
+│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
+│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

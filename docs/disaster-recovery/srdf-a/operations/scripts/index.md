@@ -116,154 +116,45 @@ Pass as environment variables when running, or set defaults in the script:
 chmod +x srdf-cycle-time-monitor.sh
 SID=000123456789 RDF_GROUP=1 ./srdf-cycle-time-monitor.sh
 ```
-
-**What you should see**
-
-Current cycle time and delta set processing time in seconds, a status of OK / WARNING / CRITICAL, and the last 10 historical samples from the trend file. Each run appends one line to the trend file, so you build up a history over time. Run it via cron every 5 minutes for continuous monitoring.
-
----
-
-## SRDF State Checker (Perl)
-
-Use SYMCLI to enumerate all device pairs in an SRDF group, flag any pair not in a Synchronized or Consistent state, and exit with a monitoring-compatible return code.
-
-~~~perl
-#!/usr/bin/env perl
-# srdf-state-checker.pl
-# Usage: perl srdf-state-checker.pl --sid <SID> --rdfg <RDF_GROUP>
-# Exit codes: 0=OK, 1=WARN (non-sync devices), 2=CRIT (failed/split/suspended)
-
-use strict;
-use warnings;
-use Getopt::Long;
-
-my ($sid, $rdfg);
-GetOptions(
-    "sid=s"  => \$sid,
-    "rdfg=s" => \$rdfg,
-) or die "Usage: $0 --sid <SID> --rdfg <RDF_GROUP>\n";
-
-die "ERROR: --sid is required\n"  unless defined $sid;
-die "ERROR: --rdfg is required\n" unless defined $rdfg;
-
-my %CRIT_STATES = map { $_ => 1 } (
-    'Suspended', 'Split', 'Failed Over', 'Not Ready'
-);
-my %WARN_STATES = map { $_ => 1 } (
-    'Transmit Idle', 'Syncing', 'Partitioned'
-);
-
-print "\n=== SRDF State Checker ===\n";
-print "SID      : $sid\n";
-print "RDF Group: $rdfg\n";
-print "Time     : " . localtime() . "\n\n";
-
-# Run symrdf list
-my $cmd    = "symrdf list -sid $sid -rdfg $rdfg";
-my $output = `$cmd 2>&1`;
-if ($? != 0) {
-    print "ERROR: symrdf command failed:\n$output\n";
-    exit 2;
-}
-
-my %state_counts;
-my @problem_devices;
-my @all_rows;
-
-# Parse output: look for lines with device pairs (non-header, non-blank)
-for my $line (split /\n/, $output) {
-    next if $line =~ /^\s*$/;
-    next if $line =~ /^-+/;
-    next if $line =~ /^\s*(Sym|RDF|Dev|Local|Remote|Source|Target)/i;
-
-    # Typical symrdf list columns: local_dev remote_dev rdf_state pair_state ...
-    # Actual column positions vary by SYMCLI version; parse conservatively.
-    my @cols = split(/\s+/, $line);
-    next unless @cols >= 4;
-
-    my $local_dev  = $cols[0] // '';
-    my $remote_dev = $cols[1] // '';
-    # State usually appears around column 4 or 5
-    my $state = $cols[4] // $cols[3] // '';
-
-    next unless $local_dev =~ /^[0-9A-Fa-f]{4}$/;  # looks like a device ID
-
-    $state_counts{$state}++;
-    push @all_rows, { local => $local_dev, remote => $remote_dev, state => $state };
-
-    if (exists $CRIT_STATES{$state} || exists $WARN_STATES{$state}) {
-        push @problem_devices, { local => $local_dev, remote => $remote_dev, state => $state };
-    }
-}
-
-# Print summary table
-print "State Summary:\n";
-print sprintf("  %-25s %s\n", "State", "Count");
-print "  " . "-" x 35 . "\n";
-for my $s (sort keys %state_counts) {
-    my $flag = (exists $CRIT_STATES{$s}) ? "  <-- CRITICAL" :
-               (exists $WARN_STATES{$s}) ? "  <-- WARN"     : "";
-    printf "  %-25s %d%s\n", $s, $state_counts{$s}, $flag;
-}
-
-# Print problem devices
-if (@problem_devices) {
-    print "\nNon-Synchronized Devices:\n";
-    print sprintf("  %-12s %-12s %s\n", "Local Dev", "Remote Dev", "State");
-    print "  " . "-" x 40 . "\n";
-    for my $d (@problem_devices) {
-        printf "  %-12s %-12s %s\n", $d->{local}, $d->{remote}, $d->{state};
-    }
-}
-
-# Determine exit code
-my $crit_count = grep { exists $CRIT_STATES{$_->{state}} } @problem_devices;
-my $warn_count = grep { exists $WARN_STATES{$_->{state}} } @problem_devices;
-
-print "\n";
-if ($crit_count > 0) {
-    printf "RESULT: CRITICAL — %d device(s) in critical state.\n", $crit_count;
-    exit 2;
-} elsif ($warn_count > 0) {
-    printf "RESULT: WARNING — %d device(s) in non-optimal state.\n", $warn_count;
-    exit 1;
-} else {
-    printf "RESULT: OK — All %d device(s) synchronized.\n", scalar @all_rows;
-    exit 0;
-}
-~~~
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux server with SYMCLI (Solutions Enabler) installed
-- SYMCLI connectivity to the PowerMax / VMAX array
-- The SID (array serial number) and RDF group number
-
-**Step 1 — Save the file**
-
-1. Open a text editor on the SYMCLI Linux server
-2. Copy the entire code block above
-3. Save it as `srdf-state-checker.pl`
-
-**Step 2 — Fill in your details**
-
-You pass values as command-line arguments:
-
-| Argument | What to put here | How to find it |
-|---|---|---|
-| `--sid` | Symmetrix serial number | Run `symcfg list` to see your array SIDs |
-| `--rdfg` | RDF group number | Run `symrdf list -sid <SID>` to see groups |
-
-**Step 3 — Open a terminal**
-
-- **For .pl:** Log into the SYMCLI Linux management server. Perl is usually pre-installed (`perl --version` to confirm).
-
-**Step 4 — Make the script executable and run it**
-
-```bash
-chmod +x srdf-state-checker.pl
-perl srdf-state-checker.pl --sid 000123456789 --rdfg 1
+┌────────────────────────────────────────── SRDF/A — Scripts ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                  SRDF/A — Automation Scripts                                  │   │
+│   │               Scripts automate routine SRDF/A operations — run via cron or CI/CD              │   │
+│   │               Always store credentials in vault (not in script); log all output               │   │
+│   │                 Test scripts in non-production before scheduling in production                │   │
+│   │                        Scope scripts to least-privilege service account                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Status / Reporting Scripts          │  │              Automation Scripts             │   │
+│   │           Job success rate report            │  │            Auto-expire old points           │   │
+│   │              Capacity trending               │  │          Auto-add new VMs to policy         │   │
+│   │            SLA compliance report             │  │          Nightly DR test validation         │   │
+│   │             RPO / RTO dashboard              │  │             Alert on job failure            │   │
+│   │                 symrdf query                 │  │           symrdf suspend / resume           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
+│  R1            = source SRDF volume on production array; host writes flow here                        │
+│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
+│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
+│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
+│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
+│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
+│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
+│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
+│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
+│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
+│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
+│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
+│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **What you should see**

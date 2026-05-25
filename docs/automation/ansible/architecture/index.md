@@ -4,6 +4,38 @@
 Agentless IT automation over SSH/WinRM; the control node pushes modules to managed nodes, executes tasks, and removes them; organised via inventory, playbooks, roles, and collections; enterprise scale via AWX/AAP and Execution Environments.
 </div>
 
+```
+┌─────────────────────────────────────── Ansible — Architecture ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Ansible architecture: control node runs ansible-playbook; connects outbound via SSH/WinRM   │   │
+│   │   No persistent agent on managed nodes; Python must be present on Linux targets (>=2.7/3.5)   │   │
+│   │       AWX provides a stateful control plane: job queue, credential store, event logging       │   │
+│   │         Execution environments (EE): container images bundling Ansible + dependencies         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 How It Works                 │  │               Design Standards              │   │
+│   │       Inventory → play → task → module       │  │             One role per concern            │   │
+│   │          SSH multiplexing for speed          │  │      Tag every task for selective runs      │   │
+│   │           Facts gathered per host            │  │       Roles in collections, not loose       │   │
+│   │        Forks: parallel host execution        │  │           No hardcoded credentials          │   │
+│   │        Handlers deferred to play end         │  │         Use check mode in pipelines         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Integrations                 │  │               Execution Model               │   │
+│   │        AWX REST API → CI/CD triggers         │  │         Control node → SSH → managed        │   │
+│   │         GitHub Actions calls AWX API         │  │          Execution environment (EE)         │   │
+│   │         HashiCorp Vault for secrets          │  │         Forks = parallel host limit         │   │
+│   │          LDAP/AD → AWX RBAC groups           │  │        Callback plugins: log results        │   │
+│   │       Dynamic inventory: AWS, vSphere        │  │          Fact cache: Redis or file          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Physical: control node host (VM or container) + network access to managed nodes on port 22  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ![Ansible Architecture](../../../assets/ansible-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
@@ -40,11 +72,4 @@ Agentless IT automation over SSH/WinRM; the control node pushes modules to manag
 
 ## Agentless Execution Model
 
-```mermaid
-flowchart LR
-    CN[Control Node\nAnsible installed] -->|SSH| MN1[Linux Host]
-    CN -->|SSH| MN2[Network Device\nCisco / Juniper]
-    CN -->|WinRM or SSH| MN3[Windows Host]
-    CN -->|HTTPS API| MN4[Cloud API\nAWS / Azure / vSphere]
-    CN -->|SSH| MN5[Linux Host]
-```
+

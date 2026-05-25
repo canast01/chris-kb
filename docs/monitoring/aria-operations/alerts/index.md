@@ -30,41 +30,48 @@ Alert Lifecycle — Aria Operations
 │        │   │ webhook) │  │            │
 └────────┘   └──────────┘  └────────────┘
 ```
-
-VMware Aria Operations (formerly vRealize Operations) generates alerts based on symptom definitions, recommendations, and policies. This page covers creating alert definitions, configuring thresholds, managing suppression, and applying alert policies.
-
-## Alert Anatomy: Symptoms and Definitions
-
-Alerts are composed of one or more **symptoms**. A symptom fires when a metric crosses a threshold or a property matches a condition. Alert definitions group symptoms using AND/OR logic.
-
-Navigation: **Alerts > Alert Definitions > Add**
-
-Key fields when creating an alert definition:
-
-| Field | Description |
-|-------|-------------|
-| Base Object Type | The resource kind the alert applies to (e.g., Virtual Machine) |
-| Impact | Availability, Performance, Capacity, Compliance, or Efficiency |
-| Criticality | Critical, Immediate, Warning, Information |
-| Wait Cycle | How many collection cycles a symptom must be true before firing |
-| Cancel Cycle | How many cycles must be false before the alert cancels |
-
-## Symptom Definitions and Thresholds
-
-Symptom definitions live under **Alerts > Symptom Definitions**. Metric symptoms compare a collected metric against a static or dynamic threshold.
-
-```bash
-# Export all alert definitions via REST API
-curl -sk -X GET \
-  "https://aria-ops.example.com/suite-api/api/alertdefinitions" \
-  -H "Authorization: vRealizeOpsToken <token>" \
-  -H "Accept: application/json" | jq '.alertDefinitions[].name'
-
-# Get symptom definitions for Virtual Machine object type
-curl -sk -X GET \
-  "https://aria-ops.example.com/suite-api/api/symptomdefinitions?adapterKind=VMWARE&resourceKind=VirtualMachine" \
-  -H "Authorization: vRealizeOpsToken <token>" \
-  -H "Accept: application/json" | jq '.symptomDefinitions[] | {id, name}'
+┌────────────────────────────────────── Aria Operations — Alerts ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Aria Operations Alert Framework — Symptoms, Recommendations, and Outbound Actions       │   │
+│   │             Alert anatomy: Alert Definition → Symptom(s) → Recommendation → Action            │   │
+│   │       Symptoms: metric threshold · property change · event (fault/task) · message event       │   │
+│   │          Impact: Health · Risk · Efficiency — each drives different response priority         │   │
+│   │           Outbound: email · REST · ServiceNow · SNMP trap · Log Insight notification          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Impact type drives dashboard placement: Health=Ops board · Risk=Capacity board                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Symptom Types        │  │         Impact Types        │  │       Outbound Actions      │   │
+│   │       Metric threshold      │  │        Health impact        │  │          Email SMTP         │   │
+│   │       Property change       │  │         Risk impact         │  │         REST webhook        │   │
+│   │        Event (fault)        │  │      Efficiency impact      │  │      ServiceNow ticket      │   │
+│   │        Message event        │  │       Criticality 1-5       │  │          SNMP trap          │   │
+│   │         KPI symptom         │  │       Wait cycle conf       │  │      Log Insight notify     │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Alert engine runs on Aria Ops master node · outbound connectors configured in Administration         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Alert definition  = Named policy grouping one or more symptoms with a recommendation                 │
+│  Symptom           = Specific condition triggering an alert (metric, property, event, message)        │
+│  Recommendation    = Suggested remediation step linked to an alert definition                         │
+│  Health impact     = Alert affecting current operational state (e.g. CPU critical)                    │
+│  Risk impact       = Alert indicating future degradation (e.g. disk will fill in 7 days)              │
+│  Efficiency impact = Alert flagging resource waste (e.g. oversized idle VMs)                          │
+│  Criticality       = 1-5 scale; 1=Critical, 5=Info; drives UI badge colour                            │
+│  Wait cycle        = Number of collection cycles a symptom must persist before alert fires            │
+│  KPI symptom       = Symptom based on a KPI metric defined in a dashboard super metric                │
+│  Super metric      = Custom metric formula combining multiple raw metrics                             │
+│  Cancel alert      = Manual or automated resolution of an active alert                                │
+│  Outbound action   = Configured connector sending alert payload to external system                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Common threshold types:

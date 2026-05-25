@@ -20,23 +20,27 @@ steps:
   - name: Deploy to ECS
     run: aws ecs update-service --cluster prod --service app --force-new-deployment
 ```
-
-### Azure — OIDC
-
-```yaml
-permissions:
-  id-token: write
-  contents: read
-
-steps:
-  - uses: azure/login@v2
-    with:
-      client-id: ${{ secrets.AZURE_CLIENT_ID }}
-      tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-      subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-  - name: Deploy to AKS
-    run: az aks get-credentials --resource-group prod-rg --name prod-aks
+┌──────────────────────────────────── GitHub Actions — Integrations ────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  GitHub Actions integrates with cloud providers, registries, ITSM, Slack, and security tools  │   │
+│   │        Cloud auth via OIDC: AWS, Azure, GCP — no stored access keys; federated identity       │   │
+│   │        Container registries: GHCR, ECR, ACR, Docker Hub — login action then docker push       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Cloud            │  │         DevOps Tools        │  │        Notifications        │   │
+│   │   AWS (OIDC → AssumeRole)   │  │     Terraform plan/apply    │  │        Slack webhook        │   │
+│   │   Azure (OIDC → federated)  │  │     Ansible AWX trigger     │  │      GitHub PR comment      │   │
+│   │   GCP (Workload Identity)   │  │     Docker build + push     │  │       Email on failure      │   │
+│   │     kubectl + kubeconfig    │  │    Security scan (Trivy)    │  │       PagerDuty alert       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ OIDC / Workload Identity = cloud-side trust policy allows GitHub Actions JWT to assume a role │   │
+│   │     repository_dispatch      = external system triggers workflow via GitHub API POST event    │   │
+│   │ Deployment API           = GitHub Deployments track which SHA is deployed to which environment│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### GCP — Workload Identity Federation

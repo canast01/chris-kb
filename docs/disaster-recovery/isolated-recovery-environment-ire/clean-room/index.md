@@ -23,44 +23,35 @@ graph LR
     VALIDATE -->|"Approved"| REINTRODUCE["Reintroduce to Production"]
     VALIDATE -->|"Issues found"| RESTORE
 ```
-
-## Clean Room Build Standards
-
-### Compute
-
-- Fresh OS deployment from known-good media (not a clone of production).
-- No production software agents installed (backup agents, monitoring, SIEM).
-- All patches applied before use.
-- Snapshot the clean OS state before loading any recovered data — revert between test cycles.
-
-### Networking
-
-- Clean room hosts on a dedicated subnet within the IRE.
-- No outbound internet access (prevents C2 beacon from any surviving malware).
-- DNS resolution pointing to IRE-internal DNS only.
-- Inbound access limited to the jump host and authorised analyst workstations.
-
-### Storage
-
-- Recovered data mounted read-only initially.
-- Scanning tools installed locally — do not send files to cloud-based scanning.
-- Write access only granted after clean verification.
-
-## Malware Scanning Procedure
-
-```bash
-# Example: ClamAV offline scan of mounted recovery volume (Linux)
-# Install ClamAV and update definitions (from offline mirror or pre-downloaded)
-clamscan --recursive --infected --log=/var/log/ire-scan-$(date +%F).log /mnt/recovery-volume
-
-# Scan for known ransomware IOCs
-clamscan --database=/opt/ir-signatures/ --recursive /mnt/recovery-volume
-
-# Windows: offline AV scan using Windows Defender (from WinPE)
-MpCmdRun.exe -Scan -ScanType 3 -File D:\recovery-volume
-
-# Generate file hash manifest for integrity verification
-find /mnt/recovery-volume -type f -exec sha256sum {} \; > /var/log/ire-hash-manifest-$(date +%F).txt
+┌─────────────────────────────────────────── IRE Clean Room ────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         IRE Clean Room — isolated ESXi + vCenter + workstations for validated recovery        │   │
+│   │                   See product-specific sub-sections for detailed procedures                   │   │
+│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
+│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
+│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Production site · DR site · Replication link · Management network · Vault network                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
+│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
+│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
+│  Failback      = returning operations to production site after DR resolved                            │
+│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
+│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
+│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
+│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
+│  DR Test       = planned failover test; validates RTO without real disaster                           │
+│  Replication   = continuous or periodic data copy to secondary site or vault                          │
+│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
+│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Data Validation Checklist

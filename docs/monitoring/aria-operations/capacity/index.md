@@ -19,44 +19,48 @@ Capacity Model — Aria Operations
 │  (vCPU/vRAM)  (days left)  (snapshots)  │
 └──────────────────────────────────────────┘
 ```
-
-Aria Operations provides capacity analytics across vSphere clusters, datastores, and virtual machines. This page covers capacity models, time-remaining projections, rightsizing recommendations, and reclaim workflows.
-
-## Capacity Overview and Models
-
-Capacity analytics are driven by the **capacity model** assigned to each object. The model determines how Aria Operations calculates used, available, and total capacity.
-
-Navigation: **Capacity > Overview**
-
-Key capacity model types:
-
-| Model | Description |
-|---|---|
-| Allocation Model | Based on configured/allocated resources (vCPU, memory reservation) |
-| Demand Model | Based on peak observed usage over rolling window |
-| Custom Model | User-defined weighting between allocation and demand |
-
-The **Time Remaining** metric projects when a cluster or datastore will be full based on the current growth trend. Default look-back is 30 days; adjust in **Administration > Global Settings > Capacity**.
-
-## Cluster and Datastore Capacity
-
-```bash
-# Get capacity for all clusters via API
-curl -sk -X POST \
-  "https://aria-ops.example.com/suite-api/api/resources/query" \
-  -H "Authorization: vRealizeOpsToken <token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "adapterKind": ["VMWARE"],
-    "resourceKind": ["ClusterComputeResource"],
-    "resourceStatus": ["DATA_RECEIVING"]
-  }' | jq '.resourceList[] | {name: .resourceKey.name, id}'
-
-# Query time-remaining metric for a specific cluster
-curl -sk -X GET \
-  "https://aria-ops.example.com/suite-api/api/resources/<resourceId>/stats?statKey=summary|capacityRemainingPercentage&rollUpType=AVG&intervalType=HOURS&intervalQuantifier=1" \
-  -H "Authorization: vRealizeOpsToken <token>" \
-  -H "Accept: application/json"
+┌───────────────────────────────────── Aria Operations — Capacity ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          Aria Operations Capacity Management — Forecasting, Right-Sizing, and What-If         │   │
+│   │      Capacity models: Demand model (usage trend) · Allocation model (provisioned CPU/mem)     │   │
+│   │                Forecast horizon: 30 / 60 / 90 days configurable per object type               │   │
+│   │           Right-sizing: oversized VMs flagged; reclaim CPU/mem/disk recommendations           │   │
+│   │                What-if: add N VMs and see projected impact on cluster headroom                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Run what-if analysis before any major workload migration to validate headroom                      │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Capacity Models       │  │         Forecasting         │  │         Right-Sizing        │   │
+│   │         Demand model        │  │        30-day horizon       │  │        Oversized VMs        │   │
+│   │       Allocation model      │  │        60-day horizon       │  │        Undersized VMs       │   │
+│   │        Custom buffers       │  │        90-day horizon       │  │       Reclaim CPU/mem       │   │
+│   │       Policy overrides      │  │       What-if: add VMs      │  │         Reclaim disk        │   │
+│   │      Per-cluster scope      │  │       Trend visualise       │  │         Batch action        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Capacity analytics on Aria Ops master · data feeds: vCenter/vSAN/storage adapters                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Demand model      = Capacity model tracking actual usage trend over time                             │
+│  Allocation model  = Capacity model tracking provisioned (allocated) CPU and memory                   │
+│  Buffer            = Reserved headroom percentage excluded from usable capacity calc                  │
+│  Forecast horizon  = Number of days projected; longer = less accurate but more strategic              │
+│  What-if analysis  = Simulation adding/removing workloads to predict capacity impact                  │
+│  Right-sizing      = Recommendation to adjust vCPU/vMem to match actual usage patterns                │
+│  Reclaim           = Action recovering idle CPU, memory, or disk from oversized VMs                   │
+│  Oversized VM      = VM provisioned significantly above its measured peak utilisation                 │
+│  Undersized VM     = VM hitting its provisioned limits; causes performance degradation                │
+│  Batch action      = Applying right-size recommendations to multiple VMs simultaneously               │
+│  Policy override   = Cluster-specific capacity policy overriding global default settings              │
+│  Headroom          = Remaining available capacity before the configured utilisation limit             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Key capacity metrics to monitor:

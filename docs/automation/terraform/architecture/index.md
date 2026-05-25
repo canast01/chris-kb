@@ -4,6 +4,28 @@
 Declarative IaC tool with Go provider plugins for 1000+ APIs; single CLI binary drives init/plan/apply/destroy workflow; remote state backend with locking prevents concurrent mutations; modules package reusable infrastructure components.
 </div>
 
+```
+┌────────────────────────────────────── Terraform — Architecture ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Terraform architecture: CLI + core + provider plugins + remote state backend + target API   │   │
+│   │     Execution: CLI parses HCL → builds dependency graph → calls provider APIs in parallel     │   │
+│   │   Remote state: S3 bucket (versioned) + DynamoDB table (state lock) is the standard pattern   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 How It Works                 │  │               Design Standards              │   │
+│   │         HCL parsed → resource graph          │  │         One module per resource type        │   │
+│   │      Provider downloaded (.terraform/)       │  │        Remote state always (no local)       │   │
+│   │          State read + plan computed          │  │            Pin provider versions            │   │
+│   │        Provider API calls in parallel        │  │         Separate state per workspace        │   │
+│   │          State updated after apply           │  │       Approved plan before apply (CI)       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Physical: Terraform runs on CI runner or workstation; provider communicates with target APIs │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ![Terraform Architecture](../../../assets/terraform-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
@@ -36,30 +58,4 @@ Declarative IaC tool with Go provider plugins for 1000+ APIs; single CLI binary 
 
 ## High-Level Architecture
 
-```mermaid
-flowchart TD
-    DEV([Developer / CI Pipeline]) --> CLI[Terraform CLI]
-    CLI --> INIT[terraform init\nDownload providers & modules]
-    CLI --> PLAN[terraform plan\nGenerate execution plan]
-    CLI --> APPLY[terraform apply\nMutate infrastructure]
 
-    INIT --> PR[Provider Registry\nregistry.terraform.io]
-    INIT --> MR[Module Registry\nprivate or public]
-
-    PLAN --> STATE[(State Backend\nS3 / GCS / Azure Blob\n/ Terraform Cloud)]
-    APPLY --> STATE
-
-    PLAN --> P1[AWS Provider]
-    PLAN --> P2[Azure Provider]
-    PLAN --> P3[vSphere Provider]
-
-    P1 --> AWS[AWS APIs]
-    P2 --> AZ[Azure ARM APIs]
-    P3 --> VS[vSphere APIs]
-
-    STATE --> LOCK[State Lock\nDynamoDB / Storage Account]
-
-    style CLI fill:#5c35cc,color:#fff
-    style STATE fill:#1565c0,color:#fff
-    style LOCK fill:#c62828,color:#fff
-```

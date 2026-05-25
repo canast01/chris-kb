@@ -46,76 +46,46 @@ add_bookmark --cg "CG_PROD_SQL" --name "Pre-Patch-2026-05-08" --type CRASH_CONSI
 # List bookmarks for a CG
 get_bookmarks --cg "CG_PROD_SQL"
 ```
-
----
-
-## Accessing a Specific Journal Point (Image Access)
-
-Image access mounts a historical journal point as a read-only (or writeable test copy) volume. The production replication continues unaffected.
-
-### Image Access — Read-Only
-
-Use to inspect data at a specific point in time, validate recovery content, or mount for testing.
-
-1. **Consistency Groups** → select CG → **Image Access**.
-2. Select the access type: **Logged Access** (read-only).
-3. Choose the recovery point:
-   - **Latest Image**
-   - **By Bookmark** — select bookmark name
-   - **By Date/Time** — specify the exact timestamp
-4. Click **Enable**.
-5. The image is mounted on the designated access host. The volume appears as a normal disk.
-6. Perform validation.
-7. Click **Disable** to release the image when done. Replication automatically resumes from the point it was at.
-
-### Image Access — Writeable (Virtual Access / Test Copy)
-
-Provides a writeable snapshot — writes go to a separate delta storage, not into the journal.
-
-1. **Consistency Groups** → **Image Access** → select **Virtual Access with Roll**.
-2. Choose the recovery point.
-3. Click **Enable**.
-4. The image is presented as a writeable volume on the access host.
-5. After testing, **Disable** discards all writes made during the test session.
-
----
-
-## Failover Procedure
-
-Failover permanently promotes the DR replica to production. Use only when the primary site is confirmed unavailable.
-
-### Pre-Failover Checklist
-
-- [ ] Confirm primary site is unrecoverable (not a brief network outage).
-- [ ] Identify the latest consistent journal image.
-- [ ] Notify application owners — failover involves a brief I/O pause.
-- [ ] Confirm DR site storage and compute are ready to accept production load.
-
-### Performing Failover
-
-1. **Consistency Groups** → select the CG(s) to fail over.
-2. Click **Failover** → confirm the warning.
-3. Select the recovery image:
-   - **Latest Image** (lowest RPO)
-   - **Named Bookmark** (for a clean pre-incident state)
-4. Click **Confirm Failover**.
-5. RecoverPoint:
-   - Freezes new I/O to the journal.
-   - Applies all journal entries up to the selected point.
-   - Presents the volume(s) to the DR hosts.
-6. Start DR workloads on the recovered volumes.
-
-### CLI Failover
-
-```bash
-# List CG state
-get_cg_state --cg "CG_PROD_SQL"
-
-# Failover to latest image
-failover --cg "CG_PROD_SQL" --image LATEST
-
-# Failover to a specific bookmark
-failover --cg "CG_PROD_SQL" --bookmark "Pre-Incident-2026-05-07"
+┌─────────────────────────────────── RecoverPoint — Backup & Restore ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │RecoverPoint provides CDP-based recovery; no traditional backup agent needed for replicated VMs│   │
+│   │Recovery options: image access (non-disruptive), test copy, failover, and restore to production│   │
+│   │  RPA config backup: export system settings from Unisphere; store off-site after every change  │   │
+│   │              Recovery granularity: any point in journal window, or named bookmark             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Recovery flow: select CG ──► choose point-in-time ──► image access or failover ──► validate        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Recovery Methods               │  │                Config Backup                │   │
+│   │           Image access (read-only)           │  │           Export system config XML          │   │
+│   │          Image access (r/w enabled)          │  │           Store after every change          │   │
+│   │           Test copy (bubble VLAN)            │  │            RPA appliance snapshot           │   │
+│   │           Failover (prod cutover)            │  │             Re-import on rebuild            │   │
+│   │         Failback (resync + cutback)          │  │              Test import on lab             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: failover powers on replica VMs at DR site; requires pre-configured VM networks and IP poo│
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Image access     = Non-disruptive mount of journal image; source VMs continue running unchanged    │
+│    Read/write image = Enable writes to image copy; journal paused; useful for data mining recovery    │
+│    Test copy        = Full VM boot of replica in isolated bubble network; validates recoverability    │
+│    Failover         = Commit image to replica; power on VMs at DR site; redirect production traffic   │
+│    Failback         = After failover; reverse replicate from DR to prod; restore original direction   │
+│    Bookmark         = Named time marker; set before patching, app changes, or maintenance windows     │
+│    Config export    = Unisphere → System → Export Config; saves all CG definitions and RPA settings   │
+│    Journal rollback = Roll journal pointer back to earlier timestamp; expose older write sequence     │
+│    Bubble VLAN      = Isolated portgroup; test copy VMs powered on here; no prod network access       │
+│    RPO validation   = Confirm lag at time of failover; determines actual data loss window             │
+│    Resync           = After failback; re-establish replication from production to DR direction        │
+│    Recovery point   = Specific second-level timestamp in journal window chosen for recovery           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

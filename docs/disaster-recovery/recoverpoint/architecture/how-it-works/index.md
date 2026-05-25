@@ -22,57 +22,46 @@ graph LR
   class STG_A,STG_B store
   class H_A host
 ```
-
-## Replication Modes
-
-| Mode | Description | RPO |
-|---|---|---|
-| CDP (Continuous Data Protection) | Local journal; recover to any point in time | ~0 seconds |
-| CRR (Continuous Remote Replication) | Async replication to DR site | Seconds to minutes |
-| CLR (Concurrent Local and Remote) | Simultaneous local CDP + remote CRR | Per-copy |
-
-## Splitter Types
-
-| Environment | Splitter | Notes |
-|---|---|---|
-| PowerMax / VMAX All Flash | Hardware splitter (array-embedded) | No host agent required; preferred for PowerMax |
-| VMware (non-PowerMax) | Software splitter (RP4VM ESXi kernel module) | Works at VMDK level |
-| iSCSI-attached storage | iSCSI splitter | Where FC hardware splitter unavailable |
-
-## Components
-
-| Component | Role |
-|---|---|
-| RPA Cluster | Per-site appliance cluster; intercepts and forwards writes |
-| Consistency Group (CG) | Replication unit grouping one or more volumes |
-| Copy | A point-in-time image; each CG has at least a Production and DR copy |
-| Journal Volume | Stores delta changes; governs how far back recovery can go |
-| Splitter | Intercepts host I/O before it reaches the array |
-| Bookmark | Named or automatic point-in-time marker within the journal |
-
-## Component Hierarchy
-
-```mermaid
-graph TD
-    subgraph prodSite ["Production Site"]
-        prodHosts["Production Hosts"]
-        splitter["Splitter\n(PowerMax HW or ESXi SW)"]
-        rpaClusterA["RPA Cluster Site A\n(2+ appliances)"]
-        prodStorage["Production Storage\n(Protected LUNs)"]
-        prodHosts -->|"I/O"| splitter
-        splitter -->|"split write"| prodStorage
-        splitter -->|"capture write"| rpaClusterA
-    end
-
-    subgraph drSite ["DR Site"]
-        rpaClusterB["RPA Cluster Site B\n(2+ appliances)"]
-        journal["Journal Volumes\n(rolling delta store)"]
-        drStorage["DR Storage\n(Replica LUNs)"]
-        rpaClusterB --> journal
-        journal -->|"drain"| drStorage
-    end
-
-    rpaClusterA <-->|"WAN — compressed\nreplication traffic"| rpaClusterB
+┌───────────────────────────────────── RecoverPoint — How It Works ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Write Flow: VM write → ESXi splitter forks I/O → production path + RPA buffer         │   │
+│   │         RPA bundles writes into delta sets → compresses → sends to remote RPA over IP         │   │
+│   │        Remote RPA applies delta set to journal; journal tracks sequence and timestamps        │   │
+│   │       Recovery: select bookmark or time → RPA rolls journal forward/back → present image      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Step 1: Write  ──► Step 2: Split  ──► Step 3: Journal  ──► Step 4: Replicate  ──► Step 5: Apply    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Source Side                  │  │                 Target Side                 │   │
+│   │             VM disk write issued             │  │          Remote RPA receives delta          │   │
+│   │            Splitter forks to RPA             │  │           Writes to remote journal          │   │
+│   │            RPA buffers in memory             │  │             Updates replica VMDK            │   │
+│   │            Bundles into delta set            │  │           Advances journal pointer          │   │
+│   │            Compresses, sends WAN             │  │           Logs bookmark timestamps          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: journal = dedicated VMDK on datastore; splitter = ESXi kernel module; RPA = VM appliance │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Write splitting     = Non-blocking fork of every VM disk write at hypervisor layer                 │
+│    Delta set           = Batch of compressed write deltas transferred from source to target RPA       │
+│    Journal apply       = Process of writing delta sets to journal VMDK in sequence on target side     │
+│    Journal pointer     = Current position in the journal; marks which deltas have been applied        │
+│    Bookmark            = Named timestamp in journal; enables recovery to a known-good application stat│
+│    Crash-consistent    = All VMs in CG captured at the same write sequence; safe for OS-level recovery│
+│    App-consistent      = Quiesced snapshot of CG (VMware Tools quiesce); safe for DB-level recovery   │
+│    Image access        = Temporary mount of journal image; test without committing; auto rolls back   │
+│    CDP window          = Journal depth in time; configurable; determines how far back recovery reaches│
+│    Replication lag     = Difference between source write time and target journal apply time (=RPO)    │
+│    WAN throttle        = Bandwidth cap on replication link per CG; prevents production WAN saturation │
+│    Compression ratio   = Typical 2:1–4:1 reduction on replication traffic via RPA dedup/compress      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Consistency Group Commands

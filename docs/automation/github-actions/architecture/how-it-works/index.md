@@ -21,48 +21,28 @@ flowchart TD
     S5 --> A
     A --> NOTIFY[Notification / Downstream Jobs]
 ```
-
-Events fire workflows. Workflows contain jobs. Jobs run on runners. Steps execute sequentially within a job. Artifacts bridge data between jobs.
-
----
-
-## Events
-
-### Webhook Events
-
-| Event | Description |
-|---|---|
-| `push` | Commits pushed to a branch or tag |
-| `pull_request` | PR opened, synchronized, or closed |
-| `pull_request_target` | PR event running in the context of the base branch (elevated trust) |
-| `release` | Release published, created, or deleted |
-| `workflow_run` | Another workflow completes |
-| `deployment` | A deployment is created |
-| `issue_comment` | Comment posted on an issue or PR |
-
-### Non-Webhook Events
-
-| Event | Description |
-|---|---|
-| `schedule` | Cron-based timer (UTC, minimum 5-minute interval) |
-| `workflow_dispatch` | Manual trigger via UI, API, or `gh` CLI |
-| `repository_dispatch` | External HTTP POST to GitHub API |
-
-!!! warning "pull_request_target Risk"
-    `pull_request_target` runs in the context of the base branch and has access to repository secrets. Never checkout and execute code from the PR head without explicit validation — this is a known attack vector for privilege escalation.
-
----
-
-## Jobs
-
-A job is a set of steps that executes on a single runner. Jobs within a workflow are independent by default and run in parallel. Sequential execution requires explicit `needs:` dependencies.
-
-```mermaid
-flowchart LR
-    lint[lint] --> build[build]
-    test[test] --> build
-    build --> deploy[deploy]
-    deploy --> notify[notify]
+┌──────────────────────────────────── GitHub Actions — How It Works ────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Event fires → GitHub evaluates on: triggers → matching workflows queued → runner picks up job │   │
+│   │     Runner clones repo, restores cache, executes steps, uploads artifacts, reports status     │   │
+│   │          Secrets injected as env vars at runtime; masked in log output automatically          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Trigger Phase        │  │       Execution Phase       │  │         Result Phase        │   │
+│   │   Event: push/PR/schedule   │  │      Runner accepts job     │  │     Status check posted     │   │
+│   │    on: filter evaluation    │  │        Repo checkout        │  │     Artifacts available     │   │
+│   │     Workflow file parsed    │  │        Cache restore        │  │      Logs retained 90d      │   │
+│   │     Jobs queued parallel    │  │      Steps run in order     │  │      Notify: PR, Slack      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     GITHUB_TOKEN    = auto-generated per-job token; scoped to repo; expires when job ends     │   │
+│   │      permissions:    = restrict GITHUB_TOKEN scopes per job; principle of least privilege     │   │
+│   │    needs:          = declare job dependency; forces sequential execution and output passing   │   │
+│   │        if: condition   = conditional step/job execution; uses expression syntax ${{ }}        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 | Property | Purpose |

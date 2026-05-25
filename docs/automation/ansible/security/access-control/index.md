@@ -16,41 +16,28 @@ graph TD
     ORG --> JT[Job Templates]
     USER --> ROLE[Role Assignment\nAdmin / Execute / Use / Read]
 ```
-
-### Built-in Roles
-
-| Role | Scope | Permissions |
-|---|---|---|
-| System Administrator | Platform | Full access to everything |
-| System Auditor | Platform | Read-only to all objects |
-| Organization Admin | Organization | Full control within org |
-| Organization Auditor | Organization | Read-only within org |
-| Project Admin | Project | CRUD on the project |
-| Inventory Admin | Inventory | CRUD on inventory + hosts |
-| Job Template Execute | Job Template | Can launch, not edit |
-| Credential Use | Credential | Can attach to templates, not view secrets |
-
-### Assign Roles via AWX CLI
-
-```bash
-# Grant user execute on a job template
-awx role grant \
-  --user jsmith \
-  --type execute \
-  --job_template "Deploy Web App" \
-  --conf.host https://awx.example.com \
-  --conf.token "$AWX_TOKEN"
-
-# Add user to team
-awx team associate \
-  --team "Ops Team" \
-  --user jsmith
-
-# Grant team use of a credential
-awx role grant \
-  --team "Ops Team" \
-  --type use \
-  --credential "Production SSH Key"
+┌────────────────────────────────────── Ansible — Access Control ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Ansible access control: who can run which playbooks against which hosts — enforced via AWX  │   │
+│   │AWX RBAC model: organizations → teams → users; permissions per job template, inventory, credent│   │
+│   │     CLI access: limit SSH key distribution; service accounts only; no shared personal keys    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              AWX RBAC Hierarchy              │  │              Permission Levels              │   │
+│   │          Organization → Team → User          │  │               Admin: full CRUD              │   │
+│   │           Credentials: team-scoped           │  │            Execute: run jobs only           │   │
+│   │           Inventories: team-scoped           │  │            Read: view job output            │   │
+│   │          Job templates: team-scoped          │  │           Use: attach to template           │   │
+│   │            LDAP/SAML sync for SSO            │  │           Approval: require review          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        AWX organization = top-level RBAC container; isolate business units or customers       │   │
+│   │   Team             = group of users within an organization; assign permissions at team level  │   │
+│   │ Approval workflow= AWX Workflow Job Template can require human approval step before execution │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Assign Roles via Playbook

@@ -24,16 +24,25 @@ flowchart TD
     uiCheck -->|"Context issue"| dumpCtx --> identify
     uiCheck -->|"Logs clear"| runLogs --> identify
 ```
-
-Enable additional diagnostic output without modifying workflow files.
-
-```bash
-# Set these repository secrets to enable debug logs for the next run
-ACTIONS_RUNNER_DEBUG = true
-ACTIONS_STEP_DEBUG   = true
-
-# Or pass via workflow_dispatch input / re-run with debug enabled
-# In the GitHub UI: Actions → select run → Re-run jobs → Enable debug logging
+┌──────────────────────────────────── GitHub Actions — Diagnostics ─────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │GitHub Actions diagnostic sequence: enable debug → inspect logs → check runner → verify secrets│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Debug Logging                 │  │                  Log Access                 │   │
+│   │         Set ACTIONS_STEP_DEBUG=true          │  │            gh run view --log <id>           │   │
+│   │        Set ACTIONS_RUNNER_DEBUG=true         │  │        gh run view --log-failed <id>        │   │
+│   │        Re-run with debug enabled (UI)        │  │           Download log ZIP from UI          │   │
+│   │        Add: run: env (print env vars)        │  │        API: /repos/.../runs/{id}/logs       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Debug secrets   = ACTIONS_STEP_DEBUG and ACTIONS_RUNNER_DEBUG are set as repo/env secrets   │   │
+│   │     Log retention   = 90 days default; configurable per repo; ZIP downloadable for archive    │   │
+│   │run: env        = add as a step to print all environment variables; helps trace secret injectio│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```yaml

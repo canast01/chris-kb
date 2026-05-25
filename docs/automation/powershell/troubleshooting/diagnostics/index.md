@@ -29,34 +29,26 @@ flowchart TD
     style O fill:#c62828,color:#fff
     style N fill:#2e7d32,color:#fff
 ```
-
----
-
-## `$Error` and `Get-Error`
-
-`$Error` is an automatic variable — a fixed-size circular array (default capacity 256) of `ErrorRecord` objects. The most recent error is at index `0`.
-
-```powershell
-# Count of errors in current session
-$Error.Count
-
-# Most recent error — summary
-$Error[0]
-
-# Full structured error detail (PowerShell 7+)
-Get-Error
-
-# Inspect specific error record fields
-$err = $Error[0]
-$err.Exception.Message        # Human-readable message
-$err.Exception.GetType().Name  # Exception class
-$err.InvocationInfo.ScriptName # Source script
-$err.InvocationInfo.ScriptLineNumber
-$err.InvocationInfo.Line       # The actual line of code
-$err.ScriptStackTrace          # Full stack trace
-
-# Clear the error variable (useful before a test block)
-$Error.Clear()
+┌────────────────────────────────────── PowerShell — Diagnostics ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  PowerShell diagnostic sequence: check error object → enable verbose → trace script execution │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Error Inspection               │  │               Trace and Debug               │   │
+│   │          $Error[0] | Format-List *           │  │             Set-PSDebug -Trace 2            │   │
+│   │           $Error[0].InnerException           │  │        $VerbosePreference = Continue        │   │
+│   │          $Error[0].ScriptStackTrace          │  │        Set-StrictMode -Version Latest       │   │
+│   │         Resolve-Error function (ISE)         │  │        Start-Transcript for full log        │   │
+│   │        Get-PSCallStack (in debugger)         │  │        Test-Path, Test-NetConnection        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Set-PSDebug -Trace 2 = traces every line executed with variable assignments; very verbose   │   │
+│   │    Set-StrictMode       = raises errors on undefined vars and bad index; catches bugs early   │   │
+│   │   ScriptStackTrace     = call stack at the point of error; shows which function called what   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

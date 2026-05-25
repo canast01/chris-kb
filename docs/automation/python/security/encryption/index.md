@@ -25,29 +25,27 @@ graph TD
     script --> tlsVerify
     tlsVerify --> apiCall
 ```
-
-## Secrets Management
-
-Never store secrets in source code, logs, or plain-text config files.
-
-```python
-import os
-
-# Read secrets from environment variables
-db_password = os.environ["DB_PASSWORD"]
-api_token   = os.environ["API_TOKEN"]
-
-# Fetch secrets from AWS Secrets Manager at runtime
-import boto3, json
-
-def get_secret(secret_name: str, region: str = "eu-west-1") -> dict:
-    client = boto3.client("secretsmanager", region_name=region)
-    response = client.get_secret_value(SecretId=secret_name)
-    return json.loads(response["SecretString"])
-
-secret = get_secret("prod/myapp/db")
-db_host = secret["host"]
-db_pass = secret["password"]
+┌───────────────────────────────────────── Python — Encryption ─────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Python encryption: cryptography library for AES/RSA; TLS via ssl/requests; key management   │   │
+│   │     Use: cryptography library (PyCA); avoid: pycrypto (unmaintained), roll-your-own crypto    │   │
+│   │     Transport: requests library uses SSL by default; verify=True (default) validates certs    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Encryption Patterns              │  │                Key Management               │   │
+│   │        Fernet: symmetric AES-128-CBC         │  │        AWS KMS: boto3 encrypt/decrypt       │   │
+│   │        RSA: asymmetric (sign/verify)         │  │             Azure Key Vault: SDK            │   │
+│   │           PBKDF2: password hashing           │  │        HashiCorp Vault: hvac library        │   │
+│   │        hashlib: sha256/sha512 digests        │  │        Never store key in code or git       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Fernet       = symmetric auth encryption; from cryptography.fernet import Fernet       │   │
+│   │        hvac         = HashiCorp Vault Python client; read secrets, write, authenticate        │   │
+│   │           verify=False = requests flag to skip TLS verification; NEVER in production          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## TLS and Certificate Verification

@@ -9,5 +9,10 @@ from . import vmware_apps
 from . import vmware_aria
 from . import vmware_core
 from . import vxrail
+from . import disaster_recovery_backup
+from . import disaster_recovery_replication
+from . import monitoring
+from . import tools
+from . import automation
 
 from ._core import DIAGRAMS

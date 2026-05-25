@@ -25,38 +25,28 @@ flowchart TD
     parsePlan --> alertOps
     alertOps --> remediate
 ```
-
-## Health Check
-
-- [ ] Remote backend is reachable and state file is present and valid
-- [ ] State is not locked: no `terraform.tfstate.lock.info` file or backend lock active
-- [ ] `terraform validate` passes with no errors
-- [ ] `terraform plan` produces expected output — no unintended resource changes
-- [ ] All provider plugins are initialized: `.terraform/` directory present
-- [ ] Workspace is set to the correct environment: `terraform workspace show`
-- [ ] Sensitive variables are resolvable (Vault token valid, SSM accessible)
-- [ ] CI pipeline last run passed for the target workspace
-
-```bash
-# Validate configuration syntax
-terraform validate
-
-# Show current workspace
-terraform workspace show
-
-# List all workspaces
-terraform workspace list
-
-# Check plan for drift (no changes expected in steady state)
-terraform plan -out=tfplan
-
-# Show current state summary
-terraform show
-
-# Check if state is locked (S3 backend example)
-aws s3api head-object \
-  --bucket <state-bucket> \
-  --key <path/to/terraform.tfstate>
+┌────────────────────────────────────── Terraform — Health Checks ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Terraform health checks: state drift, stale lock, provider version currency, CI pipeline pass │   │
+│   │   Drift detection: terraform plan on schedule; alert if non-empty plan in stable environment  │   │
+│   │       Stale lock: terraform force-unlock <lock-id> after confirming no apply is running       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 State Health                 │  │               Pipeline Health               │   │
+│   │        terraform plan (expect empty)         │  │         fmt -check: no format drift         │   │
+│   │       Check for stale lock in DynamoDB       │  │          validate: no config errors         │   │
+│   │            S3 versioning enabled             │  │            tflint: zero warnings            │   │
+│   │        terraform version (up to date)        │  │            checkov: zero failures           │   │
+│   │       Provider plugin version currency       │  │          Plan approved before apply         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Drift          = when actual infra state diverges from Terraform state; plan shows changes  │   │
+│   │   force-unlock   = removes DynamoDB lock entry; only run if certain no apply is in progress   │   │
+│   │    Scheduled plan = run terraform plan -detailed-exitcode in CI; exit 2 = changes detected    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

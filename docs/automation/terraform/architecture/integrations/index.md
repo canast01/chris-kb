@@ -25,29 +25,27 @@ provider "aws" {
   # Never: hardcoded credentials in .tf files
 }
 ```
-
-```hcl
-# OIDC authentication for GitHub Actions
-data "aws_iam_openid_connect_provider" "github" {
-  url = "https://token.actions.githubusercontent.com"
-}
-
-resource "aws_iam_role" "terraform_ci" {
-  name = "TerraformCIRole"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Effect    = "Allow"
-      Principal = { Federated = data.aws_iam_openid_connect_provider.github.arn }
-      Action    = "sts:AssumeRoleWithWebIdentity"
-      Condition = {
-        StringLike = {
-          "token.actions.githubusercontent.com:sub" = "repo:my-org/infra:*"
-        }
-      }
-    }]
-  })
-}
+┌────────────────────────────────────── Terraform — Integrations ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Terraform integrates with CI/CD, secret managers, monitoring, and ITSM via providers and APIs │   │
+│   │          GitHub Actions: terraform plan in PR check; terraform apply on merge to main         │   │
+│   │Secrets: provider auth via env vars or OIDC; Vault provider for secret injection into resources│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            CI/CD            │  │           Secrets           │  │          Platforms          │   │
+│   │    GitHub Actions (OIDC)    │  │        Vault provider       │  │       AWS, Azure, GCP       │   │
+│   │    GitLab CI: plan/apply    │  │      env var: TF_VAR_x      │  │        VMware vSphere       │   │
+│   │   Atlantis (PR automation)  │  │   AWS SSM Parameter Store   │  │      NetApp, Pure, Dell     │   │
+│   │  Terraform Cloud/Enterprise │  │ No secrets in .tfvars in git│  │       Kubernetes, Helm      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Atlantis    = Terraform PR automation; runs plan on PR, apply on merge; self-hosted      │   │
+│   │    TF Cloud    = HashiCorp SaaS; remote execution, Sentinel policies, team RBAC, audit log    │   │
+│   │  Vault provider= reads secrets from Vault at apply time; writes dynamic credentials to state  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

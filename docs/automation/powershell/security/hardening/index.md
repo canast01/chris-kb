@@ -25,18 +25,28 @@ graph TD
     scriptBlock --> siem
     moduleAllow --> siem
 ```
-
-## Constrained Language Mode
-
-Constrained Language Mode limits PowerShell to a safe subset of the language, blocking arbitrary .NET access.
-
-```powershell
-# Check the current language mode
-$ExecutionContext.SessionState.LanguageMode
-
-# Set constrained language mode (requires system configuration — not settable in-session)
-# Configure via AppLocker or Windows Defender Application Control (WDAC)
-# When enforced: $ExecutionContext.SessionState.LanguageMode returns 'ConstrainedLanguage'
+┌─────────────────────────────────────── PowerShell — Hardening ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   PowerShell hardening: logging, execution control, JEA, AMSI, code signing — deploy via GPO  │   │
+│   │         Enable via Group Policy: ScriptBlockLogging, ModuleLogging, TranscriptLogging         │   │
+│   │   Set ExecutionPolicy AllSigned at machine scope; sign all production scripts with code cert  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         GPO Settings (Apply via GPO)         │  │                Host Hardening               │   │
+│   │         ScriptBlockLogging: Enabled          │  │          ExecutionPolicy: AllSigned         │   │
+│   │            ModuleLogging: Enabled            │  │          Constrained Language Mode          │   │
+│   │        Transcription: Enabled + path         │  │         Disable PS 2.0 (no logging)         │   │
+│   │        ProtectedEventLogging: Enabled        │  │         Remove PS v2 Windows feature        │   │
+│   │             HTTPS WinRM: enforce             │  │             AMSI: do not disable            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   PS v2 removal  = Disable-WindowsOptionalFeature -FeatureName MicrosoftWindowsPowerShellV2   │   │
+│   │  Code signing   = Get-AuthenticodeSignature; sign with: Set-AuthenticodeSignature -Cert $cert │   │
+│   │AMSI bypass    = attackers attempt to disable; monitor for AMSI-related events in security logs│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Script Signing

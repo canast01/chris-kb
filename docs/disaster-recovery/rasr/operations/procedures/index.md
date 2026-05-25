@@ -31,64 +31,45 @@ Get-Content "C:\Program Files\Dell\RASR\Logs\RASRAgent.log" -Tail 20 -Wait
 # Step 5: Verify image created
 Get-ChildItem $share | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 ```
-
-**Post-capture:**
-- Verify image is readable: `dism /Get-ImageInfo /ImageFile:<image-path>`
-- Update the server's recovery card with the new image date.
-- Remove images beyond retention policy.
-
----
-
-## Procedure 2: Bare-Metal Recovery (WinPE)
-
-**When:** Server OS is unbootable or hardware replaced. Uses iDRAC virtual media.
-
-**Time required:** 30–90 minutes.
-
-### Pre-recovery checklist
-
-- [ ] iDRAC access confirmed (IP, credentials)
-- [ ] Recovery share IP and credentials available (written/offline — do not rely on production systems)
-- [ ] RASR ISO mapped in iDRAC
-- [ ] Target disks confirmed (correct server, correct RAID config exists or will be rebuilt)
-
-### Step-by-step
-
-```text
-Step 1: Boot from RASR Media
-
-  iDRAC → Configuration → Virtual Media → Map Drive → select rasr-media.iso
-  iDRAC → Power → Boot Next → Virtual Optical Drive → Reboot
-  → WinPE loads, RASR wizard starts automatically
-
-Step 2: Connect to Recovery Share
-
-  In WinPE RASR wizard → "Connect to network share"
-  OR from WinPE command prompt (Shift+F10):
-    netsh interface ip set address "Ethernet" static <ire-ip> 255.255.255.0 <gateway>
-    net use Z: \\nas01\rasr-images\prod\<hostname> /user:nashost\localuser
-
-Step 3: Select Recovery Image
-
-  RASR wizard → Browse → select the image file on Z:\
-  Choose recovery point (date/time shown from image metadata)
-
-Step 4: Select Target Disk
-
-  Wizard shows available disks detected by WinPE
-  Select the OS disk (verify by size and disk number — use diskpart to confirm if needed)
-  WARNING: this will overwrite all data on the selected disk
-
-Step 5: Start Restore
-
-  Wizard → Restore → Confirm → Start
-  Progress shown in wizard; typical rate: 5–10 GB/min over gigabit link
-
-Step 6: Post-Restore
-
-  Wizard → Reboot
-  Remove virtual media before reboot (iDRAC → Virtual Media → Disconnect)
-  Server boots from restored OS
+┌────────────────────────────────────────── RASR — Procedures ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Routine Procedures              │  │                DR Procedures                │   │
+│   │          Add new protection source           │  │              Initiate failover              │   │
+│   │           Modify retention policy            │  │               Validate replica              │   │
+│   │          Expire old recover points           │  │              Redirect host I/O              │   │
+│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
+│   │           Service account rotation           │  │            Failback to production           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                              Change Control Requirements for RASR                             │   │
+│   │           All changes to protection policies require change ticket with rollback plan         │   │
+│   │                      Failover tests must be scheduled in maintenance window                   │   │
+│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
+│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Verify after reboot

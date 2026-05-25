@@ -34,28 +34,49 @@ flowchart TD
     class vm1,vm2,vm3,vm4 vm
     class step1,step2,step3,step4,step5,step6 step
 ```
-
-SRM management is primarily performed via the `VMware.VimAutomation.Srm` PowerCLI module. Connect to the SRM server with `Connect-SrmServer` before running any cmdlets. The SRM REST API (available from SRM 8.3+) provides equivalent functionality for automation pipelines.
-
----
-
-## Connection
-
-Establish a session to both vCenter and SRM before running any operations.
-
-```powershell
-# Connect to vCenter first
-Connect-VIServer -Server <vcenter_fqdn> -User administrator@vsphere.local -Password <pass>
-
-# Connect to SRM server
-Connect-SrmServer -SrmServerAddress <srm_fqdn> -User administrator@vsphere.local -Password <pass>
-
-# Verify connection
-$defaultSrmServer
-
-# Disconnect when done
-Disconnect-SrmServer
-Disconnect-VIServer
+┌───────────────────────────────────────── SRM — CLI Reference ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                    SRM — Command Reference                                    │   │
+│   │           Use these commands for routine operations, scripting, and troubleshooting           │   │
+│   │                                         srm-cli vm list                                       │   │
+│   │                                       srm-cli recovery run                                    │   │
+│   │                                        srm-cli plan test                                      │   │
+│   │                                         srm-cli pg list                                       │   │
+│   │                                         srm-cli history                                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Ports: 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) · 443 (vCenter)                                    │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Command Categories                                      │   │
+│   │                  Status / Query  — check current state, list jobs, show config                │   │
+│   │                  Operations      — start, stop, failover, restore, sync, expire               │   │
+│   │                Configuration   — add/modify policies, schedules, storage targets              │   │
+│   │               Diagnostics     — collect logs, run health checks, test connectivity            │   │
+│   │                  Scripting       — REST API or CLI for automation and reporting               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

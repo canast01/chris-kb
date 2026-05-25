@@ -20,81 +20,45 @@
 # Via boxmgmt
 boxmgmt support collect_bundle
 ```
-
-Upload bundle to Dell Support case via https://www.dell.com/support.
-
----
-
-## `boxmgmt` Command Reference
-
-SSH to the RPA as `admin` (default port 22) and use `boxmgmt` for all diagnostic and management operations.
-
-### System and Hardware Health
-
-| Command | Purpose |
-|---|---|
-| `boxmgmt system show_system_info` | RPA model, firmware version, serial number |
-| `boxmgmt system show_hw_status` | Hardware component health (PSU, fans, NICs) |
-| `boxmgmt system show_load` | CPU and memory utilisation on the RPA |
-| `boxmgmt network show_interfaces` | NIC status, IP addresses, link state |
-| `boxmgmt network ping <ip>` | ICMP connectivity test from RPA to target IP |
-| `boxmgmt network traceroute <ip>` | Trace route from RPA for path diagnostics |
-| `boxmgmt storage show_volumes` | Storage volumes visible to the RPA |
-| `boxmgmt storage show_journal_state` | Journal volume status per consistency group |
-
-### Replication Link Health
-
-| Command | Purpose |
-|---|---|
-| `boxmgmt links show_link_status` | WAN link state and latency between RPAs |
-| `boxmgmt links show_link_stats` | Throughput, packet loss on inter-RPA links |
-| `boxmgmt links show_compression_stats` | WAN compression ratio and savings |
-
-### Consistency Group State
-
-| Command | Purpose |
-|---|---|
-| `boxmgmt cgs show_all_cgs` | List all consistency groups and their states |
-| `boxmgmt cgs show_cg_state <cg_name>` | Detailed state for a specific CG (Active, Paused, Initialising) |
-| `boxmgmt cgs show_lag <cg_name>` | Replication lag (RPO delta) for a specific CG |
-| `boxmgmt cgs show_journal_usage <cg_name>` | Journal capacity consumption and headroom |
-
----
-
-## CLI Diagnostic Commands via SSH (RPACLI)
-
-When logged into the RPA via SSH, the RPACLI shell is available as an alternative to `boxmgmt` for consistency-group-level diagnostics.
-
-```bash
-# Connect to RPA
-ssh admin@<rpa-ip>
-
-# Enter RPACLI (if not default shell)
-rpacli
-
-# List all clusters in the RecoverPoint deployment
-get_all_clusters
-
-# Show system-wide replication status
-get_system_status
-
-# Show all consistency groups with state and lag
-get_all_groups_state
-
-# Show detailed info for a specific consistency group
-get_group_state --group "CG-VM-Prod"
-
-# Show copy set details (source and replica volumes) for a CG
-get_copy_sets --group "CG-VM-Prod"
-
-# Show link health between this cluster and a remote cluster
-get_link_health --local-cluster "Site-A" --remote-cluster "Site-B"
-
-# Test WAN link connectivity to remote RPA
-test_link --remote-rpa <remote-rpa-ip>
-
-# Show journal state for a specific copy
-get_journal_state --group "CG-VM-Prod" --copy "DR-Copy"
+┌───────────────────────────────────── RecoverPoint — Diagnostics ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               RecoverPoint — Diagnostic Commands                              │   │
+│   │                       Collect these before opening a vendor support case                      │   │
+│   │                                   image access enable/disable                                 │   │
+│   │                                        failover / reverse                                     │   │
+│   │                       Check system logs: /var/log/ or Windows Event Viewer                    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Log Collection                │  │               Live Diagnostics              │   │
+│   │            Application log bundle            │  │             Network connectivity            │   │
+│   │            OS syslog (journalctl)            │  │              Storage path check             │   │
+│   │             Core dump if crashed             │  │              Process list check             │   │
+│   │             Config export/backup             │  │              Port reachability              │   │
+│   │         image access enable/disable          │  │              failover / reverse             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  RPA virtual appliances on ESXi · Journal volumes on storage array · WAN link between sites           │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPA           = RecoverPoint Appliance — virtual appliance managing journal and replication          │
+│  Splitter      = intercepts host I/O at hypervisor or array level; sends copy to RPA                  │
+│  Journal       = write-order-consistent storage capturing all writes for point-in-time access         │
+│  Consistency Group= set of volumes protected together; writes are applied in order across all         │
+│  Bookmark      = named marker in journal; enables deterministic recovery to a known state             │
+│  Image Access  = mounting a journal point-in-time image to a host for testing or recovery             │
+│  Failover      = activating the replica at the recovery site; breaks replication relationship         │
+│  Test Copy     = non-disruptive image access for validation without breaking replication              │
+│  RPO           = Recovery Point Objective; how much data loss is acceptable; CDP = near-zero          │
+│  RTO           = Recovery Time Objective; time from failover to service restored                      │
+│  Reverse       = after failover, replicates from recovery site back to re-sync production             │
+│  Splitter Lag  = delay between host write and journal commit; monitor for replication health          │
+│  CDP           = Continuous Data Protection; every write journaled, not just scheduled snaps          │
+│  Distributed CG= consistency group spanning volumes on multiple storage arrays                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

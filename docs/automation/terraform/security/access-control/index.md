@@ -20,24 +20,27 @@ graph TD
     tfRole --> auditLog
     humanReview --> auditLog
 ```
-
-## State Backend Access Control
-
-The Terraform state file contains sensitive resource attributes including passwords, private keys, and connection strings. Restrict access strictly.
-
-### S3 Backend
-
-```hcl
-# backend.tf — encrypted S3 bucket with DynamoDB locking
-terraform {
-  backend "s3" {
-    bucket         = "myorg-terraform-state"
-    key            = "production/network/terraform.tfstate"
-    region         = "eu-west-1"
-    encrypt        = true
-    dynamodb_table = "terraform-state-lock"
-  }
-}
+┌───────────────────────────────────── Terraform — Access Control ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Terraform access control: who can plan/apply, state file access, provider credential scope  │   │
+│   │   Separate IAM roles: read-only (plan) and read-write (apply); apply requires approval in CI  │   │
+│   │ S3 state bucket: restrict GetObject/PutObject to Terraform IAM role only; block public access │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               IAM Role Design                │  │              CI Access Control              │   │
+│   │        tf-plan-role: read-only to AWS        │  │          Plan: any branch, auto-run         │   │
+│   │       tf-apply-role: write permissions       │  │           Apply: main branch only           │   │
+│   │         S3: GetObject/PutObject/List         │  │       Required reviewers before apply       │   │
+│   │         DynamoDB: PutItem/DeleteItem         │  │        OIDC trust: repo+branch filter       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      OIDC trust  = AWS OIDC provider; trust policy sub: repo:org/repo:ref:refs/heads/main     │   │
+│   │       Plan role   = read-only; cannot modify state or infrastructure; safe for PR checks      │   │
+│   │             Apply role  = write; assumed only after PR approval and merge to main             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```json

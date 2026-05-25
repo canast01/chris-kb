@@ -1,18 +1,32 @@
 # Python Automation — Escalation
 
+```
+┌───────────────────────────────────────── Python — Escalation ─────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Escalate Python issues: CPython bugs (bugs.python.org), library bugs (GitHub issues)     │   │
+│   │     boto3/botocore issues: github.com/boto/boto3; include AWS region, service, error code     │   │
+│   │   Internal escalation: infra team for network/SSL issues; security team for secret exposure   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │                Info to Gather               │   │
+│   │         Dependency CVE found in prod         │  │               pip list output               │   │
+│   │          CPython segfault or crash           │  │              python3 --version              │   │
+│   │        API returning unexpected data         │  │         Full traceback + request log        │   │
+│   │      Secret potentially exposed in log       │  │        Affected secret names + scope        │   │
+│   │          SSL broken after OS update          │  │            openssl version output           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ CVE response  = rotate affected secret immediately; audit access logs for the exposure window │   │
+│   │    CPython bugs  = bugs.python.org; include minimal reproducible script and Python version    │   │
+│   │  boto3 issues  = github.com/boto/boto3/issues; label: needs-triage; include service + region  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Escalation Workflow
 
-```mermaid
-flowchart TD
-    issue["Script Failure\nor Production Impact"]
-    selfDiagnose["Work through\nCommon Issues & Diagnostics"]
-    resolved{"Resolved?"}
-    selfDiagnose --> resolved
-    resolved -->|Yes| done["Issue closed"]
-    resolved -->|No| gatherInfo["Gather escalation info:\n• Full traceback\n• python3 --version\n• pip show <package>\n• Exact command used\n• Time of first failure\n• Recent changes"]
-    gatherInfo --> raiseTicket["Raise ticket / page:\n• Summary + impact\n• Error (code block)\n• Environment details\n• Reproduction steps\n• What was already tried"]
-    issue --> selfDiagnose
-```
+
 
 ## When to Escalate
 

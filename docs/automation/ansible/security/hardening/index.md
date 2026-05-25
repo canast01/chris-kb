@@ -35,21 +35,29 @@ AllowAgentForwarding no
 EOF
 systemctl reload sshd
 ```
-
-### Ansible Process Isolation
-
-```bash
-# Run Ansible as dedicated non-root service account
-useradd -r -s /bin/bash -m -d /home/ansible ansible
-
-# Restrict project directory permissions
-chown -R ansible: /opt/ansible-project
-chmod 750 /opt/ansible-project
-chmod 700 /home/ansible/.ssh
-
-# Prevent other users reading vault password file
-chmod 600 /home/ansible/.ansible_vault_pass
-chown ansible: /home/ansible/.ansible_vault_pass
+┌───────────────────────────────────────── Ansible — Hardening ─────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Harden Ansible control node and AWX to reduce attack surface and prevent unauthorised automatio│   │
+│   │    Control node: restrict SSH access, pin package versions, run in isolated network segment   │   │
+│   │      AWX: HTTPS only, MFA, LDAP groups, session timeout, disable API browsable UI in prod     │   │
+│   │          Playbook hygiene: no_log on secrets, FQCN for all modules, lint before merge         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Control Node Hardening            │  │                AWX Hardening                │   │
+│   │          OS hardened baseline (CIS)          │  │            HTTPS only, valid cert           │   │
+│   │         SSH: AllowUsers ansible only         │  │           MFA + LDAP group mapping          │   │
+│   │        Pip packages pinned + audited         │  │           Session timeout: 30 min           │   │
+│   │            Outbound 22/5986 only             │  │        Disable local accounts (prod)        │   │
+│   │     ansible.cfg: host_key_checking=True      │  │          Kubernetes network policy          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     host_key_checking = True prevents connecting to hosts not in known_hosts; blocks MITM     │   │
+│   │        Network policy    = Kubernetes NetworkPolicy restricting AWX pod ingress/egress        │   │
+│   │    CIS baseline      = Centre for Internet Security hardening guide for the control node OS   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Secure ansible.cfg

@@ -35,24 +35,28 @@ git ls-files --others --exclude-standard
 git tag -a v1.4.2 -m "Pre-maintenance snapshot $(date -I)"
 git push origin v1.4.2
 ```
-
-For critical repositories, configure automatic mirror replication:
-
-```bash
-# GitHub Actions: mirror to a secondary remote on every push
-# .github/workflows/mirror.yml
-name: Mirror
-on: [push]
-jobs:
-  mirror:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      - run: |
-          git remote add mirror ${{ secrets.MIRROR_URL }}
-          git push mirror --all
-          git push mirror --tags
+┌────────────────────────────────────── Python — Backup & Restore ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Python script backup: git is the source of truth; include lock file for reproducibility    │   │
+│   │  requirements.txt or poetry.lock pins exact dep versions; re-create venv from lock on restore │   │
+│   │     Restore: git clone → python3 -m venv .venv → pip install -r requirements.txt → verify     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               What to Back Up                │  │                Restore Steps                │   │
+│   │         Git repo (all .py + config)          │  │             1. git clone <repo>             │   │
+│   │       requirements.txt or poetry.lock        │  │           2. python3 -m venv .venv          │   │
+│   │         pyproject.toml configuration         │  │      3. pip install -r requirements.txt     │   │
+│   │          Environment variable names          │  │       4. Re-inject secrets (env vars)       │   │
+│   │      Secrets: external vault (not git)       │  │             5. pytest to verify             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          Never commit   = .venv/, __pycache__/, *.pyc, .env files — add to .gitignore         │   │
+│   │      Lock file      = commit requirements.txt (pip-compile) or poetry.lock to git always      │   │
+│   │     Python version = document in .python-version (pyenv) or pyproject.toml requires-python    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

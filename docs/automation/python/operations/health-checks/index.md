@@ -16,43 +16,28 @@ flowchart TD
     checkLogs -->|None| healthy["Status: HEALTHY"]
     checkLogs -->|Errors found| alertLogs["Alert: Review\nlog file errors"]
 ```
-
-## Daily Checks
-
-| Check | Command | Notes |
-|---|---|---|
-| [ ] Confirm all scheduled Python automation jobs ran successfully in t |  | check cron logs, output files, or email alert summaries |
-| [ ] Review any error output or non-zero exit codes from yesterday's ru | `/var/log/cron` |  |
-| [ ] Confirm API tokens used by production scripts have not expired (ch |  |  |
-| [ ] Review any scripts that interact with external APIs |  | confirm the API endpoints are reachable and returning expected responses |
-
-## Health Check
-
-```bash
-# Check Python version installed on the automation host
-python3 --version
-
-# Confirm the virtual environment is intact (activate and check)
-source /opt/automation/venv/bin/activate
-python3 -m pip check
-
-# Verify critical packages are importable
-python3 -c "import boto3; import requests; import paramiko; print('Core imports OK')"
-
-# Check for packages with known security vulnerabilities
-pip audit
-
-# Check connectivity from the automation host to target APIs (example: Dell API Gateway)
-curl -s -o /dev/null -w "%{http_code}" https://apigw.dell.com/cloudiq/v1/health
-
-# Review last 50 lines of the cron log to check for job failures
-grep CRON /var/log/syslog | tail -50
-
-# Check exit codes of recent job runs (if using a log wrapper)
-grep -E "(ERROR|exit code [^0]|Traceback)" /var/log/automation/*.log | tail -30
-
-# Check for outdated packages (run monthly)
-pip list --outdated
+┌─────────────────────────────────────── Python — Health Checks ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Python health checks: verify interpreter version, venv, dependency currency, test pass rate  │   │
+│   │      CI pipeline is the primary health gate: ruff + mypy + bandit + pytest must all pass      │   │
+│   │             Dependency audit: pip list --outdated; safety check; monthly CVE scan             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Environment Checks              │  │                Quality Checks               │   │
+│   │          python3 --version (>=3.11)          │  │           pytest (all tests pass)           │   │
+│   │             pip list --outdated              │  │          ruff check . (zero errors)         │   │
+│   │           safety check (CVE scan)            │  │           mypy src/ (zero errors)           │   │
+│   │           python -c "import <lib>"           │  │          bandit -r src/ (zero high)         │   │
+│   │         Check .python-version match          │  │            Coverage report >= 80%           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   safety check   = queries PyPI advisory database; reports known CVEs in installed packages   │   │
+│   │    .python-version= pyenv file; records required Python version; auto-activates with pyenv    │   │
+│   │        Dependabot     = GitHub service; auto-creates PRs to update dependencies weekly        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Incident Triage

@@ -99,21 +99,51 @@ flowchart TD
     N2 --> DB
     N3 --> DB
 ```
-
-**Sticky sessions** (session affinity) are mandatory at the load balancer.
-
----
-
-## Cluster Communication — Hazelcast
-
-Confluence Data Center uses **Hazelcast** for distributed cache invalidation, cluster membership, and distributed locks.
-
-Default Hazelcast port: **5801** (TCP). Configure `confluence.cluster.peers` for unicast discovery.
-
-```xml
-<property name="confluence.cluster.home">/mnt/shared-home</property>
-<property name="confluence.cluster.peers">10.0.1.11,10.0.1.12,10.0.1.13</property>
-<property name="confluence.cluster.node.name">node-1</property>
+┌────────────────────────────────────── Confluence — How It Works ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                Confluence Request and Data Flow                               │   │
+│   │          Browser → LB → Tomcat (Confluence app) → DB read/write + NFS attachment I/O          │   │
+│   │         Page render: Velocity templates transform wiki markup to HTML on each request         │   │
+│   │     Search: Lucene index on NFS; rebuilt with full re-index from Admin > Content Indexing     │   │
+│   │            Collab editing: Synchrony service (port 8091) manages OT over WebSocket            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Confluence processes three parallel flows: HTTP, search indexing, and collaborative edits          │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      HTTP Request Flow      │  │         Search Flow         │  │       Collab Edit Flow      │   │
+│   │      Browser → HTTPS LB     │  │     Create/edit triggers    │  │      User opens editor      │   │
+│   │       LB → Tomcat node      │  │     Lucene index update     │  │    WebSocket → Synchrony    │   │
+│   │      Auth: session/SAML     │  │     Async indexing queue    │  │     OT conflict resolve     │   │
+│   │      DB query via JDBC      │  │     Shared index on NFS     │  │        DB draft save        │   │
+│   │       NFS: attachments      │  │     Per-node cache warm     │  │      Publish: DB commit     │   │
+│   │     Velocity → HTML resp    │  │      Re-index: admin UI     │  │     Version stored in DB    │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    All three flows converge on the shared PostgreSQL DB as the authoritative data store               │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Tomcat JVM VMs · PostgreSQL VM with fast SSD · NFS datastore · network load balancer                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Velocity     = Apache Velocity; Java template engine used to render Confluence HTML pages            │
+│  OT           = Operational Transformation; algorithm resolving concurrent edit conflicts             │
+│  Synchrony    = Confluence collab editing service; manages document state via WebSocket               │
+│  Lucene index = inverted index of page content; enables fast full-text search                         │
+│  Re-index     = full rebuild of Lucene index from DB; needed after restore or corruption              │
+│  JDBC pool    = connection pool (HikariCP) managed by Confluence for DB access                        │
+│  SAML         = Confluence delegates authentication to IdP (Okta/AD FS/Ping) via SAML 2.0             │
+│  NFS mount    = shared home directory; same path on every DC node for attachment access               │
+│  Draft        = Synchrony saves drafts to DB before publish to avoid data loss                        │
+│  Page version = every save increments version counter; prior versions retained in DB                  │
+│  Attachment   = binary file stored on NFS under confluence.home/attachments                           │
+│  LB session   = load balancer uses sticky sessions or shared Hazelcast session store                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

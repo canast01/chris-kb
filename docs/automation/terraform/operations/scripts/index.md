@@ -44,198 +44,25 @@ graph LR
     applyProd -->|OK| done
     applyProd -->|Fail| abort
 ```
-
-## Common Checks
-
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
-
-## Incident Notes
-
-Capture:
-
-- Symptom
-- Start time
-- Impact
-- Workspace and environment
-- Error message
-- What changed
-- What was checked
-- Next action
-
-## Change Notes
-
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
-
-## Useful Commands
-
-Add tested commands here.
-
-## Known Issues
-
-Add known issues here as they come up.
-
----
-
-## State Drift Detection (Bash)
-
-Wrapper around `terraform plan` that detects configuration drift in a given workspace, parses the change summary, and alerts if drift is found. Suitable for scheduled execution.
-
-~~~bash
-#!/usr/bin/env bash
-# tf-drift-detect.sh
-# Usage: TF_DIR=<path> TF_WORKSPACE=<workspace> ./tf-drift-detect.sh
-#
-# Exit codes: 0=no drift, 1=drift detected or error
-
-set -euo pipefail
-
-TF_DIR="${TF_DIR:?TF_DIR is required}"
-TF_WORKSPACE="${TF_WORKSPACE:-default}"
-PLANFILE="/tmp/tfplan-$(date +%Y%m%d%H%M%S).out"
-ALERT_WEBHOOK="${ALERT_WEBHOOK:-}"   # Optional: Slack/Teams webhook URL
-LOGFILE="/var/log/tf-drift-$(date +%Y%m%d-%H%M%S).log"
-
-log() {
-    local msg="[$(date '+%Y-%m-%d %H:%M:%S')] $*"
-    echo "${msg}"
-    echo "${msg}" >> "${LOGFILE}"
-}
-
-cleanup() { rm -f "${PLANFILE}" "${PLANFILE}.json"; }
-trap cleanup EXIT
-
-log "=== Terraform Drift Detection ==="
-log "Directory : ${TF_DIR}"
-log "Workspace : ${TF_WORKSPACE}"
-
-cd "${TF_DIR}"
-
-# --- Step 1: Select workspace ---
-log "Step 1: Selecting workspace '${TF_WORKSPACE}'..."
-terraform workspace select "${TF_WORKSPACE}" 2>&1 | tee -a "${LOGFILE}"
-
-# --- Step 2: Init ---
-log "Step 2: Running terraform init -reconfigure..."
-terraform init -reconfigure -input=false 2>&1 | tee -a "${LOGFILE}"
-
-# --- Step 3: Plan with detailed exit code ---
-log "Step 3: Running terraform plan..."
-set +e
-terraform plan -detailed-exitcode -input=false -out="${PLANFILE}" 2>&1 | tee -a "${LOGFILE}"
-PLAN_RC=$?
-set -e
-
-# --- Step 4: Interpret exit code ---
-case "${PLAN_RC}" in
-    0)
-        log "RESULT: No changes. Infrastructure matches configuration."
-        exit 0
-        ;;
-    1)
-        log "RESULT: ERROR — terraform plan encountered an error."
-        exit 1
-        ;;
-    2)
-        log "RESULT: DRIFT DETECTED — configuration changes exist."
-        ;;
-    *)
-        log "RESULT: Unexpected plan exit code: ${PLAN_RC}"
-        exit 1
-        ;;
-esac
-
-# --- Step 5: Parse change summary ---
-log "Step 5: Parsing resource change summary..."
-terraform show -json "${PLANFILE}" > "${PLANFILE}.json"
-
-SUMMARY=$(python3 - <<EOF
-import json, sys
-
-with open('${PLANFILE}.json') as f:
-    plan = json.load(f)
-
-changes = plan.get('resource_changes', [])
-to_add     = [c['address'] for c in changes if 'create' in c.get('change', {}).get('actions', [])]
-to_change  = [c['address'] for c in changes if 'update' in c.get('change', {}).get('actions', [])]
-to_destroy = [c['address'] for c in changes if 'delete' in c.get('change', {}).get('actions', [])]
-
-print(f"Add: {len(to_add)}, Change: {len(to_change)}, Destroy: {len(to_destroy)}")
-print()
-for r in to_add:
-    print(f"  + {r}")
-for r in to_change:
-    print(f"  ~ {r}")
-for r in to_destroy:
-    print(f"  - {r}")
-EOF
-)
-
-log "Change summary:"
-echo "${SUMMARY}" | while IFS= read -r line; do log "  ${line}"; done
-
-# --- Step 6: Send alert if webhook configured ---
-if [[ -n "${ALERT_WEBHOOK}" ]]; then
-    log "Step 6: Sending drift alert..."
-    PAYLOAD=$(python3 -c "
-import json
-msg = 'Terraform drift detected in workspace ${TF_WORKSPACE} (${TF_DIR}):\n${SUMMARY}'
-print(json.dumps({'text': msg}))
-")
-    curl -s -X POST -H "Content-Type: application/json" \
-        -d "${PAYLOAD}" "${ALERT_WEBHOOK}" > /dev/null
-    log "Alert sent to webhook."
-fi
-
-log "Log: ${LOGFILE}"
-exit 1
-~~~
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux or macOS machine (or Windows with Git Bash installed from gitforwindows.org)
-- Terraform installed and in your PATH (download from terraform.io/downloads)
-- Python 3 installed (used inside the script to parse the plan JSON)
-- A Terraform project directory with valid configuration files
-- Optionally: a Slack or Teams webhook URL for drift alerts
-
-**Step 1 — Save the file**
-
-1. On Linux/macOS open a text editor, or on Windows open **Notepad**
-2. Copy the entire code block above
-3. Save it as `tf-drift-detect.sh`
-4. On Linux/macOS make it executable: `chmod +x tf-drift-detect.sh`
-
-**Step 2 — Fill in your details**
-
-Set these environment variables before running (or export them in your shell):
-
-| Variable | What to enter | Where to find it |
-|---|---|---|
-| `TF_DIR` | Full path to your Terraform project folder | The folder containing your `.tf` files |
-| `TF_WORKSPACE` | Terraform workspace name | Run `terraform workspace list` in your project |
-| `ALERT_WEBHOOK` | Slack or Teams incoming webhook URL | Slack/Teams app integration settings — leave blank to skip alerts |
-
-**Step 3 — Open a terminal**
-
-- **On Linux/macOS:** Open Terminal
-- **On Windows:** Install Git for Windows (gitforwindows.org) then open Git Bash
-
-**Step 4 — Run the script**
-
-```bash
-cd ~/Desktop
-TF_DIR=/path/to/your/terraform TF_WORKSPACE=default ./tf-drift-detect.sh
+┌───────────────────────────────────────── Terraform — Scripts ─────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Terraform utility scripts: drift report, stale lock check, state backup, plan summary     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Operations Scripts              │  │                CI/CD Scripts                │   │
+│   │        drift_check.sh (plan + alert)         │  │            tf_plan_pr_comment.py            │   │
+│   │          backup_state.sh (S3 copy)           │  │               tf_apply_gate.sh              │   │
+│   │        unlock_stale.sh (force-unlock)        │  │               tf_fmt_check.sh               │   │
+│   │       list_drift.py (parse plan JSON)        │  │              checkov_report.sh              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Plan JSON     = terraform plan -out=tfplan; terraform show -json tfplan > plan.json      │   │
+│   │    PR comment    = use GitHub API or atlantis to post plan output as PR comment for review    │   │
+│   │         -detailed-exitcode= exit 0: no changes, exit 1: error, exit 2: changes present        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **What you should see**

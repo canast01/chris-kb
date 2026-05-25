@@ -29,157 +29,27 @@ graph TD
     collectResults --> exportCsv
     collectResults --> flagIssues
 ```
-
-## Windows Server Health Check (PowerShell)
-
-Connect to remote servers via `Invoke-Command`, collect disk, memory, CPU, top processes, stopped automatic services, last boot time, and pending reboot status, then export results to CSV.
-
-~~~powershell
-#!/usr/bin/env pwsh
-# windows-health-check.ps1
-# Usage: ./windows-health-check.ps1 -Servers server1,server2,server3 [-ExportCsv health-report.csv]
-
-param(
-    [Parameter(Mandatory)]
-    [string[]]$Servers,
-
-    [System.Management.Automation.PSCredential]
-    $Credential,
-
-    [string]$ExportCsv = "health-report-$(Get-Date -Format 'yyyyMMdd-HHmmss').csv"
-)
-
-Set-StrictMode -Version Latest
-$ErrorActionPreference = "Stop"
-
-$Results = [System.Collections.Generic.List[PSObject]]::new()
-
-$ScriptBlock = {
-    $os      = Get-CimInstance -ClassName Win32_OperatingSystem
-    $cs      = Get-CimInstance -ClassName Win32_ComputerSystem
-    $cpu     = (Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 2 -MaxSamples 2).CounterSamples |
-               Measure-Object CookedValue -Average | Select-Object -ExpandProperty Average
-
-    # Disk usage
-    $disks = Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Used -gt 0 } | ForEach-Object {
-        $total = $_.Used + $_.Free
-        $pct   = if ($total -gt 0) { [math]::Round(($_.Used / $total) * 100, 1) } else { 0 }
-        [PSCustomObject]@{ Drive = $_.Name; UsedGB = [math]::Round($_.Used/1GB,2); TotalGB = [math]::Round($total/1GB,2); UsedPct = $pct }
-    }
-    $highDisks = $disks | Where-Object { $_.UsedPct -ge 85 }
-
-    # Memory
-    $totalMemGB = [math]::Round($cs.TotalPhysicalMemory / 1GB, 2)
-    $freeMemGB  = [math]::Round($os.FreePhysicalMemory / 1MB, 2)
-    $usedMemPct = [math]::Round((($totalMemGB - $freeMemGB) / $totalMemGB) * 100, 1)
-
-    # Top 5 processes by working set
-    $topProcs = Get-Process | Sort-Object WorkingSet64 -Descending |
-                Select-Object -First 5 -Property Name, Id,
-                    @{n='MemMB';e={[math]::Round($_.WorkingSet64/1MB,1)}}
-
-    # Stopped automatic services
-    $stoppedSvcs = Get-Service |
-                   Where-Object { $_.Status -eq 'Stopped' -and $_.StartType -eq 'Automatic' } |
-                   Select-Object Name, DisplayName
-
-    # Last boot
-    $lastBoot = $os.LastBootUpTime
-
-    # Pending reboot (check common registry keys)
-    $pendingReboot = $false
-    $rebootKeys = @(
-        'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired',
-        'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\PendingFileRenameOperations',
-        'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending'
-    )
-    foreach ($key in $rebootKeys) {
-        if (Test-Path $key) { $pendingReboot = $true; break }
-    }
-
-    return [PSCustomObject]@{
-        Hostname        = $env:COMPUTERNAME
-        CPUPct          = [math]::Round($cpu, 1)
-        MemTotalGB      = $totalMemGB
-        MemUsedPct      = $usedMemPct
-        HighDiskDrives  = ($highDisks | ForEach-Object { "$($_.Drive): $($_.UsedPct)%" }) -join '; '
-        StoppedAutoSvcs = ($stoppedSvcs | ForEach-Object { $_.Name }) -join '; '
-        LastBoot        = $lastBoot.ToString('yyyy-MM-dd HH:mm:ss')
-        PendingReboot   = $pendingReboot
-        TopProcs        = ($topProcs | ForEach-Object { "$($_.Name)($($_.MemMB)MB)" }) -join '; '
-    }
-}
-
-Write-Host "`n=== Windows Server Health Check ===" -ForegroundColor Cyan
-Write-Host "Servers: $($Servers -join ', ')"
-Write-Host "Time   : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')`n"
-
-foreach ($Server in $Servers) {
-    Write-Host "Checking $Server..." -NoNewline
-    try {
-        $params = @{ ComputerName = $Server; ScriptBlock = $ScriptBlock }
-        if ($Credential) { $params['Credential'] = $Credential }
-        $result = Invoke-Command @params
-        $Results.Add($result)
-        Write-Host " OK" -ForegroundColor Green
-    } catch {
-        Write-Host " FAILED: $($_.Exception.Message)" -ForegroundColor Red
-        $Results.Add([PSCustomObject]@{ Hostname = $Server; Error = $_.Exception.Message })
-    }
-}
-
-# Print table
-Write-Host ""
-$Results | Format-Table -AutoSize
-
-# Flag issues
-Write-Host "Issues:" -ForegroundColor Yellow
-foreach ($r in $Results) {
-    if ($r.CPUPct -ge 90)          { Write-Host "  [$($r.Hostname)] HIGH CPU: $($r.CPUPct)%" -ForegroundColor Red }
-    if ($r.MemUsedPct -ge 90)      { Write-Host "  [$($r.Hostname)] HIGH MEMORY: $($r.MemUsedPct)%" -ForegroundColor Red }
-    if ($r.HighDiskDrives)         { Write-Host "  [$($r.Hostname)] HIGH DISK: $($r.HighDiskDrives)" -ForegroundColor Red }
-    if ($r.StoppedAutoSvcs)        { Write-Host "  [$($r.Hostname)] STOPPED SERVICES: $($r.StoppedAutoSvcs)" -ForegroundColor Yellow }
-    if ($r.PendingReboot -eq $true){ Write-Host "  [$($r.Hostname)] PENDING REBOOT" -ForegroundColor Yellow }
-}
-
-# Export to CSV
-$Results | Export-Csv -Path $ExportCsv -NoTypeInformation
-Write-Host "`nExported: $ExportCsv"
-~~~
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Windows PowerShell 5.1 or PowerShell 7 (already on most Windows 10/11 machines)
-- WinRM (Windows Remote Management) enabled on the servers you want to check — ask your IT team if unsure
-- Admin credentials for the remote servers (or your account must have remote management access)
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** (Windows key → search for Notepad)
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Set "Save as type" to **All Files** (important — prevents Notepad adding .txt)
-5. Name it `windows-health-check.ps1` and save to your Desktop
-
-**Step 2 — Fill in your details**
-
-The server names are passed when you run the script — no editing needed inside the file.
-
-| Parameter | What to enter | Example |
-|---|---|---|
-| `-Servers` | Comma-separated list of server names or IPs | `server01,server02,192.168.1.10` |
-| `-Credential` | Optional — your admin credentials if needed | Leave out if your current account has access |
-| `-ExportCsv` | Optional — where to save the CSV report | Default is a timestamped file in your current folder |
-
-**Step 3 — Open the right terminal**
-
-- **For .ps1 (PowerShell):** Windows key → `PowerShell` → right-click → **Run as Administrator**
-
-**Step 4 — Allow scripts to run (one-time per session)**
-
-```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+┌──────────────────────────────────── PowerShell — Scripts Library ─────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ PowerShell scripts library: reusable scripts for Active Directory, Azure, VMware, and storage │   │
+│   │     Organised by platform: scripts/ad/, scripts/azure/, scripts/vmware/, scripts/storage/     │   │
+│   │        All scripts: version header, help block, error handling, Pester test counterpart       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Active Directory      │  │        Azure / Cloud        │  │        Infrastructure       │   │
+│   │     New-ADUser-Bulk.ps1     │  │      Get-AzVMReport.ps1     │  │      Get-VMwareVMs.ps1      │   │
+│   │  Disable-StaleAccounts.ps1  │  │      Set-AzTagsBulk.ps1     │  │     Get-DellHWAlert.ps1     │   │
+│   │    Get-ADGroupMembers.ps1   │  │   New-AzResourceGroup.ps1   │  │   Test-SANConnectivity.ps1  │   │
+│   │    Sync-ADAttributes.ps1    │  │   Export-AzCostReport.ps1   │  │    Invoke-VeeamReport.ps1   │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Script versioning = use semantic version in script header; update on every meaningful change │   │
+│   │   Pester test       = scripts/tests/<ScriptName>.Tests.ps1; run: Invoke-Pester -Path tests/   │   │
+│   │       Code review       = all new scripts reviewed via pull request before merge to main      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Step 5 — Run it**

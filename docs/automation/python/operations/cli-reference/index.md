@@ -19,49 +19,34 @@ graph LR
     exportOutput --> sendReport
     runScript --> logResult
 ```
-
-## Python CLI Flags
-
-Quick reference for commonly used interpreter flags.
-
-| Flag | Purpose |
-|---|---|
-| `-c "code"` | Execute a Python statement inline |
-| `-m module` | Run a library module as a script (e.g. `-m venv`, `-m pip`) |
-| `-i` | Inspect: drop into REPL after script execution |
-| `-v` | Verbose: show every import as it happens |
-| `-vv` | Extra-verbose: show more detail on each import |
-| `-O` | Optimise: remove assert statements and `__debug__` code |
-| `-u` | Unbuffered stdout/stderr (useful in pipelines and containers) |
-| `-W error` | Turn warnings into errors |
-| `-X dev` | Development mode: extra warnings, fault handler, memory checks |
-| `-B` | Do not write `.pyc` bytecode files |
-| `--version` | Print Python version and exit |
-
-```bash
-# Check Python version
-python3 --version
-python --version       # may be Python 2 on some systems — check!
-
-# Run a script
-python3 script.py
-
-# Run a script and drop into REPL after (inspect variables)
-python3 -i script.py
-
-# Run a module
-python3 -m http.server 8080
-python3 -m json.tool < data.json
-
-# Execute a one-liner
-python3 -c "import sys; print(sys.version)"
-python3 -c "import platform; print(platform.node())"
-
-# Verbose import tracing (troubleshoot missing modules)
-python3 -v script.py 2>&1 | grep -i "import"
-
-# Development mode (extra warnings + fault handler)
-python3 -X dev script.py
+┌─────────────────────────────────────── Python — CLI Reference ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Essential Python CLI commands for development, testing, and package management        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Python and venv                │  │                     pip                     │   │
+│   │              python3 --version               │  │            pip install <package>            │   │
+│   │            python3 -m venv .venv             │  │       pip install -r requirements.txt       │   │
+│   │              python3 script.py               │  │             pip list --outdated             │   │
+│   │          python3 -c "import boto3"           │  │              pip show <package>             │   │
+│   │           python3 -m pdb script.py           │  │        pip freeze > requirements.txt        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                    pytest                    │  │                 Code Quality                │   │
+│   │                pytest tests/                 │  │              ruff check . --fix             │   │
+│   │            pytest -v -k test_name            │  │                ruff format .                │   │
+│   │           pytest --cov=src tests/            │  │              mypy src/ --strict             │   │
+│   │        pytest -x (stop on first fail)        │  │                bandit -r src/               │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        pdb          = Python Debugger; breakpoint() in code or python3 -m pdb script.py       │   │
+│   │  --cov        = pytest-cov plugin; generates coverage report; set threshold in pyproject.toml │   │
+│   │  ruff         = replaces flake8 + black + isort; configured in [tool.ruff] in pyproject.toml  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

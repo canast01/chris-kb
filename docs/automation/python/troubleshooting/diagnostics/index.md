@@ -25,19 +25,26 @@ graph LR
     checkLogs -->|Warnings| devMode
     devMode --> resolved
 ```
-
-## Debugging with pdb
-
-```python
-# Drop into the interactive debugger at a specific line
-import pdb; pdb.set_trace()
-
-# Python 3.7+ built-in breakpoint()
-breakpoint()
-
-# pdb commands:
-# n (next line), s (step into), c (continue), q (quit)
-# p variable (print), l (list code), w (where / stack trace)
+┌──────────────────────────────────────── Python — Diagnostics ─────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Python diagnostic sequence: reproduce → inspect traceback → pdb debug → add logging      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Error Analysis                │  │                 Debug Tools                 │   │
+│   │    Read full traceback (last line first)     │  │           python3 -m pdb script.py          │   │
+│   │       traceback.print_exc() in except        │  │             breakpoint() in code            │   │
+│   │       logging.exception("msg") logs tb       │  │           ipdb (IPython debugger)           │   │
+│   │          pip check (dep conflicts)           │  │          py-spy top (CPU profiler)          │   │
+│   │       python3 -W error to catch warns        │  │           memory_profiler (memory)          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    breakpoint()   = built-in (3.7+); drops into pdb at that line; n=next, c=continue, p var   │   │
+│   │       py-spy         = sampling profiler; py-spy top --pid <pid>; no code changes needed      │   │
+│   │   -W error       = treat warnings as errors; catches deprecation warnings before they break   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash

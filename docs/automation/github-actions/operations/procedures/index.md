@@ -24,35 +24,28 @@ flowchart TD
     jobB -->|"all matrix legs pass"| jobC
     jobC --> deploy
 ```
-
-Workflows live in `.github/workflows/` and are YAML files with a defined structure.
-
-```yaml
-# .github/workflows/ci.yml
-name: CI Pipeline          # displayed in the Actions UI
-
-on:                        # event triggers
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-env:                       # workflow-level environment variables
-  NODE_ENV: test
-
-jobs:
-  test:                    # job ID (no spaces)
-    name: Run Tests        # display name
-    runs-on: ubuntu-24.04
-    env:
-      LOG_LEVEL: debug     # job-level env vars
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run tests
-        run: npm test
-        env:
-          CI: true         # step-level env vars
+┌───────────────────────────────────── GitHub Actions — Procedures ─────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Common GitHub Actions procedures: secret rotation, runner re-registration, workflow migration │   │
+│   │ Secret rotation: update secret value via gh CLI or UI; workflows pick up new value on next run│   │
+│   │       Runner re-registration: remove stale runner, generate new token, re-run config.sh       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Secret Rotation                │  │            Runner Re-registration           │   │
+│   │          1. Generate new credential          │  │            1. Stop runner service           │   │
+│   │        2. gh secret set NAME -b <val>        │  │               2. ./svc.sh stop              │   │
+│   │             3. Test workflow run             │  │        3. ./config.sh remove --token        │   │
+│   │           4. Revoke old credential           │  │        4. Get new registration token        │   │
+│   │          5. Document rotation date           │  │         5. ./config.sh --url --token        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Registration token = short-lived (1 hour) token from GitHub used to register a new runner   │   │
+│   │      Remove token       = token used to cleanly deregister a runner from GitHub settings      │   │
+│   │    Workflow migration  = copy YAML to new repo; re-inject secrets; test before retiring old   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Reusable Workflows

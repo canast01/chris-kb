@@ -21,28 +21,35 @@ flowchart TD
     K --> L[Reintroduce to production\nIRE isolation maintained until complete]
     L --> M([IRE stand-down])
 ```
-
-## Recovery Point Selection
-
-| RPO target | Backup type to use | Consideration |
-|---|---|---|
-| Minutes | Replication snapshot (synchronous copy) | May be contaminated if attack had long dwell time |
-| Hours | Daily/hourly snapshot | Balance dwell time vs data loss |
-| Days | Weekly full backup | Significant data loss; used when recent backups are compromised |
-
-Always check backup timestamps against the estimated attack start time. Backups taken after the initial compromise may contain malware or encrypted data.
-
-```bash
-# List available recovery points (example: Azure Recovery Services Vault)
-az backup recoverypoint list \
-  --resource-group <rg> \
-  --vault-name <rsv-name> \
-  --container-name <container> \
-  --item-name <backup-item> \
-  --output table
-
-# List snapshot recovery points (example: Pure Storage)
-puresnapshot list --name "vol01*" | sort -k3 -r | head -20
+┌───────────────────────────────────────────── IRE Restore ─────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         IRE Restore — step-by-step clean restore from vault to clean-room environment         │   │
+│   │                   See product-specific sub-sections for detailed procedures                   │   │
+│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
+│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
+│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Production site · DR site · Replication link · Management network · Vault network                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
+│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
+│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
+│  Failback      = returning operations to production site after DR resolved                            │
+│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
+│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
+│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
+│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
+│  DR Test       = planned failover test; validates RTO without real disaster                           │
+│  Replication   = continuous or periodic data copy to secondary site or vault                          │
+│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
+│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## VM Restore Procedure

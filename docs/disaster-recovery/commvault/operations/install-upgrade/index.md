@@ -37,43 +37,50 @@ flowchart TD
     class start,done terminal
     class halt warn
 ```
-
-**Critical: always upgrade CommServe first.**
-
-1. **Pre-upgrade**: Back up CommServe SQL database manually
-   ```powershell
-   # CommVault console: Storage → System Backup → Run Now
-   # Verify backup completes before proceeding
-   ```
-
-2. **Upgrade CommServe** — run installer on CommServe host; SQL DB upgraded automatically
-
-3. **Upgrade MediaAgents** — via CommVault console: Infrastructure → MediaAgents → right-click → Update
-   - MediaAgents can be upgraded rolling if multiple MediaAgents serve each storage pool
-
-4. **Upgrade Clients** — deploy via client group push or individually
-   - Clients one FR behind CommServe: supported
-   - Clients two FRs behind CommServe: not supported — schedule urgent upgrade
-
-## Pre-Upgrade Checklist
-
-- [ ] All jobs complete or suspended (no active jobs on the CommServe)
-- [ ] CommServe SQL database backup completed and verified
-- [ ] Command Center configuration exported: Main Menu → Export Configuration
-- [ ] Compatibility verified for all integrated systems (VMware, storage arrays)
-- [ ] Windows Server and SQL Server patched to CommVault minimum requirements
-
-## Post-Upgrade Validation
-
-```powershell
-# Check CommServe service status
-Get-Service GxCVD, GxEvMgrS, GxShmServer | Select Name, Status
-
-# Verify MediaAgent connectivity
-qoperation execute -af UpdateMediaAgent.xml   # or use console check
-
-# Run a test backup after upgrade
-# Select a non-critical VM → right-click → Back Up Now
+┌───────────────────────────── Commvault Install and Upgrade — Procedures ──────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               New Installation               │  │            Upgrade (Service Pack)           │   │
+│   │1. Download CV software from cloud.commvault.c│  │   1. Download SP from cloud.commvault.com   │   │
+│   │       2. Run prerequisite checker tool       │  │        2. Backup CSDB before upgrade        │   │
+│   │     3. Install CommServe first (SQL req)     │  │          3. Upgrade CommServe first         │   │
+│   │         4. Install MediaAgents next          │  │         4. Upgrade MediaAgents next         │   │
+│   │     5. Push client agents from CommServe     │  │       5. Push agent updates to clients      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Always upgrade CommServe before MAs and Clients; never skip more than 2 SP versions                │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     Pre-Upgrade Checklist                                     │   │
+│   │        [ ] Full CSDB backup completed and verified (SQL backup + CV CommServe DR sync)        │   │
+│   │          [ ] All running jobs quiesced or completed; maintenance window communicated          │   │
+│   │        [ ] Prerequisite checker: .NET version, SQL version, OS patch level, disk space        │   │
+│   │           [ ] Rollback plan documented: restore CSDB SQL backup, reinstall prior SP           │   │
+│   │        [ ] Post-upgrade tests: run backup and restore job on representative subclients        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Upgrade requires CommServe downtime (~30-90 min); plan during off-peak window                        │
+│  MA upgrade can be pushed silently from CommServe; minimal impact to running jobs                     │
+│  Client agent upgrades: push from CommCell Console or deploy via software distribution                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Service Pack   = Commvault cumulative patch bundle (SP30, SP31, SP32, SP33...)                       │
+│  SP Hotfix      = Targeted fix for critical issues between Service Pack releases                      │
+│  Prereq Checker = Commvault tool validating environment readiness before installation                 │
+│  Silent Install = MSI-based client push from CommServe with no user interaction                       │
+│  CSDB Backup    = SQL Server backup of CommCell database; critical upgrade prerequisite               │
+│  Rollback       = Restore prior SP by reinstalling from backup media + CSDB SQL restore               │
+│  Upgrade Order  = CommServe → MediaAgents → Clients (never reverse this sequence)                     │
+│  cloud.commvault.com = Commvault download portal for software and service packs                       │
+│  CommServe Upgrade = Core upgrade updating SQL schema and all CV services simultaneously              │
+│  iDA Upgrade    = Client-side agent update; backward compatible with CS one SP behind                 │
+│  Maintenance Win = Scheduled downtime window communicated to stakeholders for upgrades                │
+│  Post-Upgrade   = Mandatory validation: run backup + restore test before returning to prod            │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Verify in Command Center: Jobs → Active Jobs — confirm no jobs stuck in queued state.

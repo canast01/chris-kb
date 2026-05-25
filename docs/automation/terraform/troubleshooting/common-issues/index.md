@@ -17,28 +17,29 @@ flowchart TD
     errType -->|Unknown| enableDebug["TF_LOG=DEBUG\nTF_LOG_PATH=debug.log"]
     enableDebug --> reviewLog["Review provider\nAPI call trace"]
 ```
-
-## Provider Errors
-
-```bash
-# Enable detailed provider logging
-export TF_LOG=DEBUG
-export TF_LOG_PATH=terraform-debug.log
-terraform plan 2>&1 | tee plan.log
-
-# Log levels: TRACE, DEBUG, INFO, WARN, ERROR
-# TRACE is most verbose — logs every API call
-
-# Provider version mismatch
-terraform init -upgrade    # upgrade providers to latest allowed version
-
-# Locked provider version conflicts
-rm .terraform.lock.hcl
-terraform init
-
-# Provider authentication failure — check credentials
-aws sts get-caller-identity    # verify AWS auth
-az account show                # verify Azure auth
+┌────────────────────────────────────── Terraform — Common Issues ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                        Most frequent Terraform failures and their fixes                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                             Issue: Error acquiring the state lock                             │   │
+│   │   Cause A: previous apply crashed → fix: terraform force-unlock <lock-id> from error message  │   │
+│   │      Cause B: concurrent apply running → fix: wait for it to complete; check CI pipeline      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                        Issue: Error: configuring Terraform AWS Provider                       │   │
+│   │           Cause A: no credentials → fix: export AWS_PROFILE or configure OIDC in CI           │   │
+│   │        Cause B: wrong region → fix: set region in provider block or AWS_DEFAULT_REGION        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                             Issue: Error: resource already exists                             │   │
+│   │        Fix: identify resource ID from error → terraform import resource.type.name <id>        │   │
+│   │  After import: terraform plan should show no changes if config matches the existing resource  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## State Conflicts and Errors

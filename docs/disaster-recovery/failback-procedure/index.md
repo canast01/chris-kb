@@ -28,21 +28,35 @@ purecli drive list | grep -v healthy
 show interface fc brief           # Cisco MDS
 switchshow                        # Brocade
 ```
-
-## Phase 2 — Resync Data to Primary (Reverse Replication)
-
-**NetApp SnapMirror — resync from DR back to primary:**
-```bash
-# On DR system — confirm current mirror state
-snapmirror show -destination-path <dr-svm>:<dr-vol>
-
-# Resync in reverse: DR becomes source, primary becomes destination
-snapmirror resync -source-path <dr-svm>:<dr-vol> -destination-path <primary-svm>:<primary-vol>
-
-# Monitor transfer
-snapmirror show -fields state,transfer-bytes,last-transfer-duration
-
-# Wait for state: SnapMirrored and lag within RPO
+┌──────────────────────────────────────── DR Failback Procedure ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      DR Failback Procedure — reverse replicate, re-sync, validate, cut back to production     │   │
+│   │                   See product-specific sub-sections for detailed procedures                   │   │
+│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
+│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
+│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Production site · DR site · Replication link · Management network · Vault network                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
+│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
+│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
+│  Failback      = returning operations to production site after DR resolved                            │
+│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
+│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
+│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
+│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
+│  DR Test       = planned failover test; validates RTO without real disaster                           │
+│  Replication   = continuous or periodic data copy to secondary site or vault                          │
+│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
+│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **SRDF — restore R1 as source:**

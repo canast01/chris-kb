@@ -25,32 +25,49 @@ flowchart TD
     class q1 decision
     class alert terminal
 ```
-
-## Log Locations
-
-Client logs reside on the client under `C:\Program Files\CommVault\ContentStore\Log Files\` (Windows) or `/var/log/commvault/Log_Files/` (Linux). CommServe logs are at the same path on the CommServe host.
-
-- CommServe: `C:\Program Files\CommVault\ContentStore\Log Files\CommServeDB.log`
-- MediaAgent: `C:\Program Files\CommVault\ContentStore\Log Files\CVMA.log`
-- Client (Windows): `C:\Program Files\CommVault\ContentStore\Log Files\clBackup.log`
-
-## Diagnostic Commands
-
-```bash
-# Check DDB status and space
-qlist ddb
-
-# Check client connectivity readiness
-qoperation execscript -sn QS_CheckReadiness
-
-# Run DDB verification
-qoperation execscript -sn QS_DDBVerify
-
-# Check CommServe services
-qlist services
-
-# View audit log
-qoperation execscript -sn GetAuditLog -si starttime=<timestamp>
+┌──────────────────────────── Commvault Diagnostics — Logs, Tools, Commands ────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Log File Locations              │  │               Diagnostic Tools              │   │
+│   │      CS: C:\CV\Log Files\CommServe.log       │  │      CV_DIAG: collect all logs + config     │   │
+│   │      MA: C:\CV\Log Files\MediaAgent.log      │  │        CommVaultDiagnostics.exe on CS       │   │
+│   │         JobMgr: GxJobMgrService.log          │  │     cvping: test component connectivity     │   │
+│   │     Client: C:\CV\Log Files\clBackup.log     │  │      cvdiskperf: benchmark MA disk I/O      │   │
+│   │     Linux: /var/log/commvault/Log_Files/     │  │     cvnetwork: test MA network bandwidth    │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Always collect CV_DIAG before opening a support case; include job ID and error code                │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                    Key Diagnostic Commands                                    │   │
+│   │                 qlist jobs -jobid <id> -verbose       → detailed job phase log                │   │
+│   │               qlist client -name <host>             → client registration status              │   │
+│   │            qlist storage -type disk -verbose     → disk library mount paths + usage           │   │
+│   │             cvping -clientName <host>             → test CS-to-client connectivity            │   │
+│   │            CommVaultDiagnostics.exe -collect all → generate full diagnostic bundle            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Log rotation: CV logs rotate at 10 MB by default; 30-day retention                                   │
+│  Disk for logs: CommServe log partition should be separate from CSDB partition                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CV_DIAG        = Diagnostic bundle: all component logs, config exports, event logs                   │
+│  cvping         = CommVault connectivity test tool (not ICMP ping; tests CV comms)                    │
+│  cvdiskperf     = Measures sequential read/write performance of MA disk library path                  │
+│  cvnetwork      = Tests throughput and latency between CommVault components                           │
+│  clBackup.log   = Client-side backup agent log; shows pre/post scripts, CBT activity                  │
+│  GxJobMgrSvc    = CommServe Job Manager service log; shows job dispatch and errors                    │
+│  MediaAgent.log = MA-side data pipeline log; shows dedup, compress, write operations                  │
+│  CommServe.log  = Main CommServe service log; CS startup, DB queries, scheduler                       │
+│  Job Phase      = Individual step within a backup job (scan, transfer, dedup, write)                  │
+│  Error Code     = 4-5 digit CV error; search on ma.commvault.com for KB resolution                    │
+│  -verbose flag  = qlist flag enabling detailed per-object output for all list commands                │
+│  Log Rotation   = Commvault auto-rotates logs at size limit; old logs archived to .gz                 │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Support Bundle Collection

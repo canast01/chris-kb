@@ -27,50 +27,35 @@ graph TB
     STORE --> IRE
     IRE -.->|No route back to PROD| PROD
 ```
-
-## Network Controls
-
-### Physical / VLAN Isolation
-
-| Control | Implementation |
-|---|---|
-| Dedicated VLANs | IRE systems on separate VLANs with no trunked ports to production VLANs |
-| Separate uplinks | IRE switches uplinked to a dedicated firewall interface, not the production core |
-| ACL enforcement | Firewall ACLs block all inbound and outbound to/from production IP ranges |
-| No shared routing | IRE routing table has no routes to production subnets |
-
-### Azure IRE Isolation (Virtual)
-
-```bash
-# Create dedicated VNet for IRE
-az network vnet create \
-  --name "ire-vnet" \
-  --resource-group "ire-rg" \
-  --address-prefix "10.200.0.0/16" \
-  --location <region>
-
-az network vnet subnet create \
-  --vnet-name "ire-vnet" \
-  --resource-group "ire-rg" \
-  --name "ire-workloads" \
-  --address-prefix "10.200.1.0/24"
-
-# No VNet peering to production VNet — isolation is default
-# If peering is required for restore operations, create with strict NSG controls
-# and remove peering immediately after restore is complete
-
-# NSG: deny all outbound to production CIDRs
-az network nsg rule create \
-  --resource-group "ire-rg" \
-  --nsg-name "ire-nsg" \
-  --name "DenyProdOutbound" \
-  --priority 100 \
-  --direction Outbound \
-  --source-address-prefixes "10.200.0.0/16" \
-  --destination-address-prefixes "10.0.0.0/8" \
-  --destination-port-ranges "*" \
-  --access Deny \
-  --protocol "*"
+┌──────────────────────────────────────── IRE Network Isolation ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      IRE Network Isolation — air-gap switch config, VLAN separation, no production routes     │   │
+│   │                   See product-specific sub-sections for detailed procedures                   │   │
+│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
+│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
+│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Production site · DR site · Replication link · Management network · Vault network                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
+│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
+│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
+│  Failback      = returning operations to production site after DR resolved                            │
+│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
+│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
+│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
+│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
+│  DR Test       = planned failover test; validates RTO without real disaster                           │
+│  Replication   = continuous or periodic data copy to secondary site or vault                          │
+│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
+│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Credential Isolation

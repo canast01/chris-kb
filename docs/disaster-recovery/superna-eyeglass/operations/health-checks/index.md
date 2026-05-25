@@ -35,54 +35,43 @@ flowchart TD
     result -->|Yes| ok([DR Ready - Score 100%])
     result -->|No| investigate([Investigate and remediate])
 ```
-
-| Area | Tool | Frequency |
-|---|---|---|
-| Eyeglass appliance services | `egcli status` | Daily |
-| DR policy state | `egcli drpolicy status --all` | Daily |
-| SyncIQ replication lag | `isi sync policies list` | Daily |
-| PowerScale cluster health | `isi status` | Daily |
-| Eyeglass DR preflight | `egcli drtest preflight` | Weekly / pre-change |
-
----
-
-## Daily Checklist
-
-- [ ] Eyeglass dashboard — all SyncIQ policies healthy (green)
-- [ ] RPO compliance per policy — no policies exceeding RPO threshold
-- [ ] DR readiness score — confirm at expected level (target: 100%)
-- [ ] DNS sync status — all zones synchronised
-- [ ] Quota policy sync status — no mismatches flagged
-
-## Weekly Checklist
-
-- [ ] Run DR readiness report from Eyeglass UI
-- [ ] Review any share or quota mapping drift
-- [ ] Confirm Eyeglass-to-OneFS API connectivity on both sites
-
----
-
-## Eyeglass Appliance Health
-
-```bash
-# Check Eyeglass service status (SSH to Eyeglass appliance)
-ssh admin@<eyeglass-ip>
-
-# Eyeglass service status
-egcli status
-
-# Eyeglass version
-egcli version
-
-# Check Eyeglass cluster connectivity to both PowerScale clusters
-egcli clusters list
-egcli clusters status
-
-# Check Eyeglass license validity
-egcli license status
-
-# Review Eyeglass event log for errors
-egcli events list --severity error --last 100
+┌────────────────────────────────── Superna Eyeglass — Health Checks ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                           Superna Eyeglass — Health Check Procedures                          │   │
+│   │                 Run these checks daily/weekly to confirm protection is working                │   │
+│   │                                         igls sync status                                      │   │
+│   │                  Review job completion rate — target 100%; investigate failures               │   │
+│   │                         Check replication/backup lag against RPO target                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Check       │  What to verify  │      Expected     │    Frequency     │  Action if bad   │   │
+│   │    Job status    │All jobs complete │    100% success   │      Daily       │ Triage failures  │   │
+│   │    Lag / RPO     │ Replication lag  │    < RPO target   │      Daily       │  Tune bandwidth  │   │
+│   │     Capacity     │ Repo space used  │     < 80% full    │      Weekly      │ Expand or expire │   │
+│   │   Restore test   │  Random restore  │    Data intact    │     Monthly      │ Fix backup chain │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
+│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
+│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
+│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
+│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
+│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
+│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
+│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
+│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
+│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
+│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
+│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
+│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
+│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

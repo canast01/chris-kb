@@ -23,26 +23,27 @@ jobs:
           curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
                https://api.github.com/repos/${{ github.repository }}
 ```
-
-The token expires when the workflow job finishes. Grant only the permissions needed.
-
-## OIDC — Keyless Cloud Authentication
-
-```mermaid
-sequenceDiagram
-    participant WF as Workflow Job\n(GitHub Runner)
-    participant GH as GitHub Actions\nOIDC Provider
-    participant AWS as AWS IAM / GCP WIF\nCloud Provider
-    participant App as AWS CLI / GCP SDK\nActual API call
-
-    WF->>GH: Request OIDC token\n(permissions: id-token: write)
-    GH-->>WF: Short-lived JWT token\n(sub: repo:org/repo:ref:refs/heads/main)
-    WF->>AWS: AssumeRoleWithWebIdentity\n(JWT + role ARN)
-    AWS->>AWS: Validate JWT signature\nCheck sub / aud claims against trust policy
-    AWS-->>WF: Temporary credentials\n(access key + secret + session token)
-    WF->>App: AWS CLI / API call\nusing temporary credentials
-    App-->>WF: Response
-    Note over WF,AWS: No long-lived secrets stored in GitHub
+┌─────────────────────────────────── GitHub Actions — Authentication ───────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ GitHub Actions authentication: GITHUB_TOKEN for GitHub API; OIDC for cloud; secrets for others│   │
+│   │    OIDC preferred for AWS/Azure/GCP — no stored secrets; short-lived token per workflow run   │   │
+│   │      Service accounts: use GitHub Apps (fine-grained token) over PATs for org-wide access     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 GitHub Auth                  │  │              Cloud Auth (OIDC)              │   │
+│   │          GITHUB_TOKEN: auto per job          │  │       aws-actions/configure-aws-creds       │   │
+│   │        GitHub App: installation token        │  │       role-to-assume: arn:aws:iam::...      │   │
+│   │          PAT: scoped personal token          │  │           Azure: azure/login@<sha>          │   │
+│   │        Deploy key: repo-level SSH key        │  │        GCP: auth.yml with workload id       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ GitHub App      = machine identity; fine-grained permissions; short-lived installation tokens │   │
+│   │PAT             = Personal Access Token; scoped to user; avoid for org automation (use App inst│   │
+│   │OIDC token      = JWT issued by GitHub; cloud trusts issuer; exchanged for short-lived cloud cr│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 OIDC lets workflows authenticate to cloud providers without storing long-lived credentials as secrets.

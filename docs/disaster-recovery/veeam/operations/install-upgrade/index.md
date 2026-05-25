@@ -29,28 +29,56 @@ flowchart TD
     class jobCheck decision
     class start,done terminal
 ```
-
-| Component | Upgrade Order | Notes |
-|---|---|---|
-| Veeam Backup Server | 1st | Config DB backed up automatically pre-upgrade |
-| Veeam ONE | 2nd | Must match VBR major version — upgrade immediately after VBR |
-| Backup Proxies | 3rd | Managed via VBR console; can be pushed remotely |
-| Repository Agents | 4th | Veeam Agent for Linux/Windows on managed repos |
-
-Check EOL dates: [veeam.com/product-lifecycle](https://www.veeam.com/product-lifecycle.html)
-
-## Pre-Upgrade Checklist
-
-```powershell
-# 1. Export VBR configuration backup before any upgrade
-# Main Menu → Configuration Backup → Backup Now
-# Verify backup location: C:\VBR\Config\ (default)
-
-# 2. Check no active jobs are running
-# Home → Jobs → Active Jobs — must be empty
-
-# 3. Verify SQL Server version compatibility
-# VBR 12.x requires SQL Server 2016 or later
+┌────────────────────────────────────── Veeam — Install & Upgrade ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               Veeam — Installation Prerequisites                              │   │
+│   │             OS: supported Linux or Windows Server (see vendor compatibility matrix)           │   │
+│   │        Network: 9419 (Veeam REST API) · 6160 (Veeam Agent) — ensure firewall allows these     │   │
+│   │  Auth: Windows/AD auth for Veeam console; service account with vSphere admin; repo credentials│   │
+│   │  Storage: Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Mana│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        Install Sequence                                       │   │
+│   │                  1  Deploy control plane component and configure network access               │   │
+│   │                          2  Configure storage and network connectivity                        │   │
+│   │                        3  Install agent/proxy/splitter on protected hosts                     │   │
+│   │                      4  Register sources and configure protection policies                    │   │
+│   │                        5  Run first job; verify completion; test restore                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        Upgrade Sequence                                       │   │
+│   │                 1  Review release notes and compatibility matrix before upgrade               │   │
+│   │                   2  Snapshot or backup the control plane VM before upgrading                 │   │
+│   │                  3  Upgrade control plane first, then proxies/agents/appliances               │   │
+│   │                       4  Validate jobs resume automatically after upgrade                     │   │
+│   │                        5  Document version change and update CMDB record                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
+│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
+│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
+│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
+│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
+│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
+│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
+│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
+│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
+│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
+│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
+│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
+│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
+│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Additional checks:

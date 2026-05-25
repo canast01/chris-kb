@@ -21,37 +21,29 @@ flowchart LR
     L2 --> L3[Platform Team / SME\nAWX admin access\nExecution environment rebuild]
     L3 --> Vendor[Red Hat Support\nor GitHub issue]
 ```
-
-| Level | Owns | Contact |
-|---|---|---|
-| L1 Ops | Day-to-day playbook failures | Ops team Slack / ticket |
-| L2 Automation | Module bugs, collection issues | automation-team@example.com |
-| L3 Platform | AWX/AAP infrastructure | infra-platform@example.com |
-| Red Hat Support | AAP bugs, licensed product issues | access.redhat.com case |
-| Community | ansible-core / community collections | GitHub Issues / Forum |
-
-## Information to Gather Before Escalating
-
-```bash
-# 1. Ansible version
-ansible --version
-ansible-galaxy collection list | grep -E "vmware|amazon|community.general"
-
-# 2. Full playbook run with maximum verbosity
-ansible-playbook -i inventory/ site.yml -vvvv 2>&1 | tee /tmp/escalation-$(date +%F).log
-
-# 3. Python versions
-python3 --version
-pip show ansible-core | grep Version
-
-# 4. Environment variables that may affect Ansible
-env | grep -i ansible | sort
-
-# 5. SSH trace (for connection issues)
-ssh -vvv -i ~/.ssh/ansible_ed25519 ansible@failing-host.example.com 2>&1 | head -60
-
-# 6. Module debug output (for module-level failures)
-ANSIBLE_DEBUG=1 ansible-playbook -i inventory/ site.yml 2>&1 | grep -A 20 "TASK \[failing task\]"
+┌──────────────────────────────────────── Ansible — Escalation ─────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Escalate Ansible issues when: AWX pod crash-loops, Vault key lost, bulk playbook failures   │   │
+│   │           Tier 1: automation team (AWX job config, playbook bugs, inventory issues)           │   │
+│   │           Tier 2: platform/infra team (AWX Kubernetes deployment, network, storage)           │   │
+│   │         Tier 3: Red Hat support (AAP licensing, Ansible Core bugs, EE build failures)         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │                Info to Gather               │   │
+│   │            AWX pods crash-looping            │  │         AWX version, Ansible version        │   │
+│   │             Vault password lost              │  │          kubectl logs all AWX pods          │   │
+│   │            >20% job failure rate             │  │          Job ID and full event log          │   │
+│   │        Performance: queue backing up         │  │        Inventory count, fork setting        │   │
+│   │          EE build broken repeatedly          │  │          ansible-builder log output         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Red Hat support  = access via access.redhat.com; requires active AAP subscription       │   │
+│   │   Must-gather      = AWX support bundle: Settings → Subscriptions → Download support bundle   │   │
+│   │          SLA              = AAP Premium: 1-hour response for Sev 1; Standard: 4 hours         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## AWX / AAP Escalation Data

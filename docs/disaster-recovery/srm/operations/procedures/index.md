@@ -34,51 +34,45 @@ flowchart TD
     class assess decision
     class start,pm,fo terminal
 ```
-
----
-
-## Creating Protection Groups
-
-Protection groups define which VMs are protected and how they are grouped for recovery.
-
-### Protection Group Types
-
-| Type | Replication Method | Use Case |
-|---|---|---|
-| vSphere Replication | Built-in vSphere replication (no SRA) | Any datastore; configurable RPO 5 min–24 hr (1 min with Enhanced vSphere Replication) |
-| Array-Based (Datastore Group) | SRA + storage array replication (e.g., SRDF, RecoverPoint) | PowerMax, Pure, NetApp; enables near-zero RPO |
-| vVol-Based | Per-VM vVol snapshot replication via SRA | vVol-enabled arrays |
-
-### Creating a vSphere Replication Protection Group
-
-1. Log in to the vCenter at the **protected site**.
-2. Navigate to **Site Recovery** > **Protection Groups** > **New Protection Group**.
-3. Enter group name: use convention `PG-<tier>-<app>-<site-pair>` (e.g., `PG-P1-ORACLE-DC1DC2`).
-4. Select **Type: Individual VMs (vSphere Replication)**.
-5. Select VMs to include — only VMs with active vSphere Replication tasks are eligible.
-6. Select the recovery site from the paired SRM instances.
-7. Review and finish. SRM creates placeholder VMs at the recovery site automatically.
-
-!!! note "VM Eligibility"
-    A VM must have vSphere Replication already configured and in a healthy state before it can be added to a protection group. Configure replication per-VM from **vCenter > VM > Configure > vSphere Replication** first.
-
-### Creating an Array-Based Protection Group
-
-1. Navigate to **Site Recovery** > **Protection Groups** > **New Protection Group**.
-2. Select **Type: Datastore Groups (Array Based Replication)**.
-3. Select the array manager pair (SRA must be installed and arrays added to SRM).
-4. SRM queries the SRA for replicated datastore pairs and presents them as datastore groups.
-5. Select the relevant datastore group(s).
-6. Confirm target datastores at the recovery site.
-7. Finish — SRM creates placeholder VMs at the recovery site.
-
-!!! warning "Datastore Group Auto-Discovery"
-    SRM discovers datastore groups based on the SRA response. If a LUN or datastore is missing, check that the SRA credentials are valid and the storage group/host group mappings are correct at the array level.
-
-```bash
-# Verify SRA communication from the SRM server (Windows example)
-cd "C:\Program Files\VMware\VMware vCenter Site Recovery Manager\bin"
-.\srm-config.exe --cmd=testSRA --sra=<SRA-name>
+┌────────────────────────────────────────── SRM — Procedures ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Routine Procedures              │  │                DR Procedures                │   │
+│   │          Add new protection source           │  │              Initiate failover              │   │
+│   │           Modify retention policy            │  │               Validate replica              │   │
+│   │          Expire old recover points           │  │              Redirect host I/O              │   │
+│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
+│   │           Service account rotation           │  │            Failback to production           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                              Change Control Requirements for SRM                              │   │
+│   │           All changes to protection policies require change ticket with rollback plan         │   │
+│   │                      Failover tests must be scheduled in maintenance window                   │   │
+│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
+│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

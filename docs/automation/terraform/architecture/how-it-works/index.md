@@ -35,50 +35,27 @@ flowchart TD
     style STATE fill:#1565c0,color:#fff
     style LOCK fill:#c62828,color:#fff
 ```
-
----
-
-## Terraform CLI Commands
-
-| Command | Purpose |
-|---|---|
-| `terraform init` | Initialise working directory: download providers, configure backend |
-| `terraform validate` | Check configuration syntax and internal consistency |
-| `terraform fmt` | Format `.tf` files to canonical style |
-| `terraform plan` | Show changes required to reach desired state |
-| `terraform apply` | Apply the plan; mutate real infrastructure |
-| `terraform destroy` | Plan and apply deletion of all managed resources |
-| `terraform state` | Inspect and manipulate state directly |
-| `terraform import` | Import existing resources into state |
-| `terraform output` | Print output values from state |
-| `terraform workspace` | Manage workspaces |
-
----
-
-## State Backend
-
-The state file is Terraform's source of truth for what resources it manages. The backend determines where it is stored and how concurrent access is controlled.
-
-| Backend | State storage | Locking mechanism | Best for |
-|---|---|---|---|
-| S3 + DynamoDB | AWS S3 | DynamoDB item | AWS-primary organisations |
-| GCS | Google Cloud Storage | GCS object lock | GCP-primary organisations |
-| Azure Blob | Azure Storage Account | Blob lease | Azure-primary organisations |
-| Terraform Cloud / Enterprise | Hosted | Native | Multi-cloud, managed service |
-
-```hcl
-terraform {
-  required_version = ">= 1.7.0"
-
-  backend "s3" {
-    bucket         = "my-org-terraform-state"
-    key            = "platform/networking/terraform.tfstate"
-    region         = "eu-west-1"
-    encrypt        = true
-    kms_key_id     = "arn:aws:kms:eu-west-1:123456789012:key/mrk-abc123"
-    dynamodb_table = "terraform-state-lock"
-  }
-}
+┌────────────────────────────────────── Terraform — How It Works ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           terraform init → plan → apply is the core workflow; destroy reverses apply          │   │
+│   │    init: downloads providers; plan: computes diff vs state; apply: calls provider CRUD APIs   │   │
+│   │          State locking: DynamoDB or backend-specific lock prevents concurrent applies         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        terraform init       │  │        terraform plan       │  │       terraform apply       │   │
+│   │      Download providers     │  │      Read current state     │  │   Confirm or -auto-approve  │   │
+│   │      Configure backend      │  │   Call provider read APIs   │  │     Provider CRUD calls     │   │
+│   │      Initialise modules     │  │    Compute resource diff    │  │      Update state file      │   │
+│   │     .terraform.lock.hcl     │  │       Output plan file      │  │      Release state lock     │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │.terraform.lock.hcl = provider version lock file; commit to git for reproducible initialisation│   │
+│   │  plan file           = terraform plan -out=tfplan; apply: terraform apply tfplan (no re-diff) │   │
+│   │State lock          = prevents concurrent terraform apply; acquired on apply, released on finis│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

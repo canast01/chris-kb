@@ -30,27 +30,45 @@ sequenceDiagram
     VBR->>vCenter: Unregister IVR VM
     VBR->>Proxy: Unmount vPower NFS datastore
 ```
-
----
-
-## Verifying a Backup is Restorable
-
-### Instant VM Recovery Test
-
-Use Instant VM Recovery (IVR) to start a VM directly from the backup file. This is the fastest way to confirm the restore chain is intact.
-
-1. In the VBR console, go to **Home > Restores > Virtual Machines**.
-2. Select **Instant Recovery > VMware vSphere VM**.
-3. Choose the backup job and the most recent restore point.
-4. Select a target host and datastore that will not conflict with production.
-5. Start the VM in **Restore Mode** (isolated/sandbox network recommended).
-6. Confirm the VM powers on and the guest OS boots successfully.
-7. Run **Undo Instant Recovery** to clean up — do not leave IVR VMs running.
-
-```powershell
-# Start Instant VM Recovery via PowerShell (requires Veeam PS module)
-$rp = Get-VBRRestorePoint -Name "vm01" | Sort-Object CreationTime -Descending | Select-Object -First 1
-Start-VBRInstantRecovery -RestorePoint $rp -Server "esxi-host01" -Datastore "ds-recovery"
+┌───────────────────────────────────────── Veeam — Procedures ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Routine Procedures              │  │                DR Procedures                │   │
+│   │          Add new protection source           │  │              Initiate failover              │   │
+│   │           Modify retention policy            │  │               Validate replica              │   │
+│   │          Expire old recover points           │  │              Redirect host I/O              │   │
+│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
+│   │           Service account rotation           │  │            Failback to production           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                             Change Control Requirements for Veeam                             │   │
+│   │           All changes to protection policies require change ticket with rollback plan         │   │
+│   │                      Failover tests must be scheduled in maintenance window                   │   │
+│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
+│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
+│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
+│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
+│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
+│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
+│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
+│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
+│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
+│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
+│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
+│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
+│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
+│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
+│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### File-Level Restore Test

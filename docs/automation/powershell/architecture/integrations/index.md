@@ -30,30 +30,27 @@ graph LR
     configure --> disconnect
     migrateDS --> disconnect
 ```
-
-## VMware
-
-VMware PowerCLI is a set of PowerShell modules for managing vSphere, NSX, and vSAN.
-
-```powershell
-# Install PowerCLI (current user, no admin required)
-Install-Module -Name VMware.PowerCLI -Scope CurrentUser -AllowClobber -Force
-
-# Disable certificate checking for lab environments
-Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false
-
-# Disable CEIP telemetry
-Set-PowerCLIConfiguration -Scope User -ParticipateInCEIP $false -Confirm:$false
-
-# Connect to a vCenter Server
-Connect-VIServer -Server vcenter.example.com -User administrator@vsphere.local -Password 'P@ssword1'
-
-# Connect using stored credentials
-$cred = Get-Credential
-Connect-VIServer -Server vcenter.example.com -Credential $cred
-
-# Disconnect when done
-Disconnect-VIServer -Server * -Confirm:$false
+┌────────────────────────────────────── PowerShell — Integrations ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    PowerShell integrates with Microsoft ecosystem and infrastructure platforms via modules    │   │
+│   │   Key modules: Az (Azure), ActiveDirectory, VMware.PowerCLI, DellEMC.OpenManage, ImportExcel  │   │
+│   │      REST API integration via Invoke-RestMethod; parses JSON/XML responses to PS objects      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      Microsoft Platform     │  │        Infra Platform       │  │          Automation         │   │
+│   │     Az: Azure management    │  │       VMware.PowerCLI       │  │    GitHub Actions runner    │   │
+│   │    ActiveDirectory module   │  │       Dell OpenManage       │  │     Ansible WinRM target    │   │
+│   │   ExchangeOnlineManagement  │  │      NetApp PowerShell      │  │  Scheduled Task (schtasks)  │   │
+│   │    Microsoft.Graph module   │  │    Rubrik Security Cloud    │  │   PS Remoting (WinRM/SSH)   │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Invoke-RestMethod = HTTP client; returns PS objects from JSON APIs; handles auth headers   │   │
+│   │       PowerCLI          = VMware.PowerCLI; Connect-VIServer then Get-VM, Start-VM, etc.       │   │
+│   │        Az module         = Connect-AzAccount; then Get-AzVM, New-AzResourceGroup, etc.        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Get-VM and Filtering

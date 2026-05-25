@@ -27,31 +27,31 @@ flowchart TD
     stepFail --> secretErr
     stepFail --> wdErr
 ```
-
-| Error | Cause | Fix |
-|---|---|---|
-| `Context access might be invalid` | Wrong expression syntax | Check `${{ }}` vs `$( )` usage |
-| `Resource not accessible by integration` | `GITHUB_TOKEN` lacks permission | Add `permissions:` block to job |
-| `No such file or directory` | Working directory wrong | Add `working-directory:` or `cd` in run |
-| `Process completed with exit code 1` | Command failed | Check step output; add `set -e` or `|| true` |
-| Workflow not triggering | `on:` path filter too restrictive | Verify paths match changed files |
-| Secret shows as `***` but is empty | Secret not set in correct scope | Check env vs repo vs org secret scopes |
-
-## Permissions Issues
-
-```yaml
-# Minimal permissions — grant only what's needed
-permissions:
-  contents: read
-  packages: write
-  id-token: write
-
-# Per-job override
-jobs:
-  release:
-    permissions:
-      contents: write
-      discussions: write
+┌─────────────────────────────────── GitHub Actions — Common Issues ────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                     Most frequent GitHub Actions failures and their fixes                     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                             Issue: Job queued but never picked up                             │   │
+│   │     Cause A: no runner with matching labels → fix: add label to runner or change runs-on:     │   │
+│   │    Cause B: all runners busy → fix: scale runner pool or add GitHub-hosted runner fallback    │   │
+│   │               Cause C: runner offline → fix: sudo ./svc.sh start on runner host               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                Issue: OIDC token request fails                                │   │
+│   │       Cause A: permissions: id-token: write missing → fix: add to workflow permissions:       │   │
+│   │      Cause B: cloud trust policy wrong → fix: verify sub claim matches workflow ref/repo      │   │
+│   │       Cause C: wrong region/audience → fix: check aws-actions configure-creds parameters      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                             Issue: Workflow not triggering on push                            │   │
+│   │        Cause A: on: branches filter does not match current branch → fix: adjust filter        │   │
+│   │       Cause B: workflow file not on default branch → fix: merge to default branch first       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash

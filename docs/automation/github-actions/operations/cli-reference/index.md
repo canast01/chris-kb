@@ -25,30 +25,34 @@ apt update && apt install gh -y
 gh --version
 gh auth login
 ```
-
-## Workflow Management
-
-```bash
-# List all workflows in the repo
-gh workflow list
-
-# View workflow details
-gh workflow view deploy.yml
-
-# Enable / disable a workflow
-gh workflow enable deploy.yml
-gh workflow disable old-workflow.yml
-
-# Trigger a workflow manually (workflow_dispatch)
-gh workflow run deploy.yml
-
-# With inputs
-gh workflow run deploy.yml \
-  -f environment=staging \
-  -f image_tag=abc123
-
-# Run on a specific branch
-gh workflow run deploy.yml --ref feature/my-branch
+┌─────────────────────────────────── GitHub Actions — CLI Reference ────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   GitHub CLI (gh) is the primary tool for interacting with GitHub Actions from the terminal   │   │
+│   │        Install: brew install gh or https://cli.github.com; authenticate: gh auth login        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Workflow Commands               │  │                 Run Commands                │   │
+│   │               gh workflow list               │  │                 gh run list                 │   │
+│   │            gh workflow run <name>            │  │               gh run view <id>              │   │
+│   │          gh workflow enable/disable          │  │              gh run watch <id>              │   │
+│   │           gh workflow view <name>            │  │              gh run rerun <id>              │   │
+│   │          gh workflow run -f key=val          │  │              gh run cancel <id>             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Secret Commands                │  │               Runner Commands               │   │
+│   │                gh secret list                │  │      gh api /orgs/{org}/actions/runners     │   │
+│   │           gh secret set MY_SECRET            │  │          gh api DELETE runner/{id}          │   │
+│   │          gh secret delete MY_SECRET          │  │           config.sh --url --token           │   │
+│   │               gh variable list               │  │        ./svc.sh install (as service)        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   gh run watch = streams live log output to terminal; Ctrl-C detaches without cancelling run  │   │
+│   │         gh api       = raw API calls; use for endpoints not covered by gh subcommands         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Run Management

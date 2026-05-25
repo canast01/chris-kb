@@ -18,28 +18,27 @@ graph TD
     svcAccount --> auditLog
     iamRole --> auditLog
 ```
-
-## Least Privilege
-
-Automation scripts should run with the minimum permissions required to complete their task.
-
-- Use a dedicated service account or IAM role — not a personal account
-- Scope API tokens to specific resources and actions (e.g. read-only unless writes are needed)
-- Rotate tokens on a schedule; revoke tokens when a script is retired
-- Audit which scripts use which credentials at least quarterly
-
-## Service Accounts
-
-```bash
-# Create a dedicated Linux user for automation scripts
-sudo useradd -r -s /usr/sbin/nologin automation
-
-# Run a cron job as the automation user
-sudo -u automation crontab -e
-
-# Restrict access to the script directory
-chown -R automation:automation /opt/automation/scripts
-chmod 750 /opt/automation/scripts
+┌─────────────────────────────────────── Python — Access Control ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Python access control: who can run scripts, API auth, file permissions, repo branch protection│   │
+│   │Scripts with destructive capability: require explicit --confirm flag; prompt for prod environme│   │
+│   │     API auth: use IAM roles (AWS), service principals (Azure), service accounts (GCP/k8s)     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Script Access Controls            │  │              API Auth Patterns              │   │
+│   │          --dry-run flag for preview          │  │       boto3: IAM role via EC2 instance      │   │
+│   │        --confirm for destructive ops         │  │        requests: Bearer token header        │   │
+│   │         Env var for target env check         │  │         paramiko: SSH key auth only         │   │
+│   │        Restrict executable: chmod 750        │  │         No username+password in code        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     --dry-run    = show what would change without making changes; implement in all scripts    │   │
+│   │      IAM role     = EC2/Lambda instance profile; boto3 picks up credentials automatically     │   │
+│   │    chmod 750    = owner execute, group execute, no world access; protect sensitive scripts    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```python

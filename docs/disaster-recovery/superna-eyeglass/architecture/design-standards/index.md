@@ -7,31 +7,48 @@ SyncIQ policy names must be consistent between primary and DR clusters and follo
 ```text
 <source-cluster>-<target-cluster>-<zone-or-path>
 ```
-
-Examples:
-- `isilon-a-isilon-b-homedir` — home directory replication between Isilon A and B
-- `pscale-dc1-pscale-dc2-finance` — finance data zone
-- `pscale-dc1-pscale-dc2-archive` — archival data path
-
-Eyeglass DR configuration groups mirror SyncIQ policy naming — consistent names simplify DR readiness audits.
-
-## Share and Quota Alignment Requirements
-
-Before declaring DR-ready, ALL of the following must be met:
-
-```mermaid
-flowchart TD
-    primaryPS["Production PowerScale\nSMB shares / NFS exports / Quotas"]
-    eyeglass["Eyeglass DR Assistant\nConfiguration Replication Engine"]
-    drPS["DR PowerScale\nReplicated config (shares / exports / quotas)"]
-    adMapping["Active Directory\nGroup-based ACLs"]
-    dnsZone["DNS Server\nSmartConnect zone delegation"]
-
-    primaryPS -->|"OneFS API\ndiscovers config"| eyeglass
-    eyeglass -->|"replicates SMB shares\nNFS exports\nquotas"| drPS
-    adMapping -->|"AD group ACLs\nmapped to DR shares"| drPS
-    eyeglass -->|"pre-stages DNS\nzone delegation"| dnsZone
-    dnsZone -->|"DNS cutover\non failover"| drPS
+┌───────────────────────────────── Superna Eyeglass — Design Standards ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Sizing Guidelines               │  │               HA Requirements               │   │
+│   │         Deduplicate where supported          │  │           N+1 component redundancy          │   │
+│   │          Bandwidth: 10 GbE minimum           │  │          Heartbeat / health monitor         │   │
+│   │          Storage: 130% of raw data           │  │          Separate mgmt / data VLANs         │   │
+│   │         Latency: < 10 ms to storage          │  │          Out-of-band access (IPMI)          │   │
+│   │           CPU: 8+ vCPU for engine            │  │          Anti-affinity VM placement         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Ports: 443 (Eyeglass web UI) · 8080 (REST API) · 8116 (Isilon/PowerScale mgmt)                     │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                             Standard Superna Eyeglass Design Rules                            │   │
+│   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
+│   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
+│   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
+│   │Encryption enabled on all channels: HTTPS/TLS for all management; SyncIQ data replication encry│   │
+│   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
+│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
+│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
+│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
+│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
+│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
+│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
+│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
+│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
+│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
+│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
+│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
+│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
+│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 | Check | Standard |

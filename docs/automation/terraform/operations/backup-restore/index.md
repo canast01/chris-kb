@@ -15,26 +15,28 @@ aws s3 cp s3://my-tf-state/project/terraform.tfstate \
 # Pull remote state locally for inspection
 terraform state pull > terraform.tfstate.local-$(date +%Y%m%d)
 ```
-
-## S3 State Backend with Versioning
-
-Enable S3 versioning so every state write is automatically retained.
-
-```hcl
-# backend.tf
-terraform {
-  backend "s3" {
-    bucket         = "my-tf-state"
-    key            = "project/terraform.tfstate"
-    region         = "us-east-1"
-    encrypt        = true
-    dynamodb_table = "tf-state-lock"
-
-    # Versioning must be enabled on the S3 bucket — do this once:
-    # aws s3api put-bucket-versioning --bucket my-tf-state \
-    #   --versioning-configuration Status=Enabled
-  }
-}
+┌──────────────────────────────────── Terraform — Backup & Restore ─────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Terraform backup: git repo for .tf code; S3 versioning for state file; .terraform.lock.hcl in g│   │
+│   │    Enable S3 versioning on state bucket; DynamoDB table for lock; enable S3 access logging    │   │
+│   │        State restore: download previous version from S3, push with terraform state push       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               What to Back Up                │  │                Restore Steps                │   │
+│   │          Git repo (.tf + lock file)          │  │       1. Identify state version in S3       │   │
+│   │         S3 bucket (versioned state)          │  │         2. Download previous version        │   │
+│   │        DynamoDB table (lock metadata)        │  │      3. terraform state push state.bak      │   │
+│   │          .terraform.lock.hcl in git          │  │          4. terraform plan (verify)         │   │
+│   │          tfvars (non-secret values)          │  │        5. Correct any drift manually        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   S3 versioning   = preserves all state file versions; restore from Version ID in S3 console  │   │
+│   │   state push       = terraform state push <file>; overwrites remote state; use with caution   │   │
+│   │State corruption = most common cause: concurrent apply or force-unlock; check state integrity f│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Restore State from Backup

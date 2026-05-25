@@ -53,63 +53,60 @@ flowchart TD
     class msdp1,msdp2,cloud storageNode
     class vmHost,dbHost,nasHost clientNode
 ```
-
-## Key Ports
-
-| Port | Protocol | Purpose |
-|---|---|---|
-| 1556 | TCP | vnetd (BPRD) — main communication |
-| 13724 | TCP | bpcd — client daemon |
-| 13782 | TCP | bpbrm — backup/restore manager |
-| 13785 | TCP | bpdbm — database manager (master) |
-
-## Components
-
-| Component | Role | Key Processes |
-|---|---|---|
-| Primary Server | Policy scheduling, catalog management, resource arbitration | `nbpem`, `nbproxy`, `nbwebsvc`, `nbrb` |
-| Media Server | Data mover — reads/writes backup streams | `bpbrm`, `bptm`, `bpdm` |
-| Client | Source of backup data, hosts the backup agent | `bpcd`, `bpbkar` |
-| Catalog | Internal DB of policies, images, and media inventory | `nbdb2`, `nbdbms_start_stop` |
-| Storage Unit | Logical pointer to physical/virtual storage | Configured on Media Server |
-
-## Storage Unit Types
-
-| Type | Description |
-|---|---|
-| BasicDisk | Local or NAS filesystem path |
-| AdvancedDisk | NetBackup-managed disk volume |
-| MSDP | Media Server Deduplication Pool |
-| Cloud | Cloud Catalyst or direct cloud (S3/Azure/GCS) |
-| Tape/Robot | Physical tape library managed by Media Server |
-
-## Key Processes
-
-| Process | Server | Function |
-|---|---|---|
-| `nbpem` | Primary | Policy Execution Manager — evaluates schedules and triggers jobs |
-| `nbrb` | Primary | Resource Broker — allocates drives, media, and server slots |
-| `nbwebsvc` | Primary | Hosts the REST API and Web UI backend |
-| `bpbrm` | Media | Backup/Restore Manager — parent process coordinating a single job |
-| `bptm` | Media | Tape Manager — manages tape drive I/O |
-| `bpdm` | Media | Disk Manager — manages disk-based storage unit I/O |
-| `spoold` | Media | MSDP deduplication storage server daemon |
-| `bpcd` | Client | Client Daemon — accepts incoming connections from Primary/Media |
-| `bpbkar` | Client | Backup Archiver — traverses filesystem and streams data |
-
-## Catalog Backup
-
-The NetBackup Catalog contains all image metadata. Without a valid catalog backup, media cannot be read.
-
-```bash
-# Trigger immediate catalog backup
-/usr/openv/netbackup/bin/admincmd/bpbackupdb
-
-# Verify catalog backup job in activity monitor
-/usr/openv/netbackup/bin/admincmd/bpdbjobs -report -all_columns | grep -i catalog
-
-# Catalog recovery (on rebuilt Primary Server)
-/usr/openv/netbackup/bin/admincmd/bprecover -r -drc <path_to_disaster_recovery_file>
+┌────────────────────────────────────── NetBackup — How It Works ───────────────────────────────────────┐
+│                                                                                                       │
+│    NetBackup data flow — from source to target through the protection pipeline:                       │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 1  Source / Production System                                 │   │
+│   │               Master Server     — scheduler, catalog, policy engine, job controller           │   │
+│   │              Host writes are intercepted or snapshotted by the NetBackup agent/proxy          │   │
+│   │                  Changed blocks tracked via CBT / journal / delta-set mechanism               │   │
+│   │                 Consistency ensured at quiesce point before data transfer begins              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Changed data forwarded to the NetBackup engine — compression and encryption applied in transit     │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                      2  NetBackup Engine                                      │   │
+│   │               Media Server      — data mover, dedup engine, storage unit management           │   │
+│   │                    Data compressed, deduplicated, and encrypted before storage                │   │
+│   │                  Metadata catalog updated; job status reported to control plane               │   │
+│   │                                       bpbackup / bprestore                                    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     3  Target / Repository                                    │   │
+│   │            Client Agent      — installed on protected host; sends data to media server        │   │
+│   │                  Recovery point written; retention policy applied automatically               │   │
+│   │                                    Restore: bplist / bpdbjobs                                 │   │
+│   │                     RTO driven by target storage performance and data volume                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+│  Media Server  = data mover between client and storage; can be co-located with master                 │
+│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Store the DR file off-host (NAS/object storage) and the passphrase in a secure vault — both are required for catalog recovery.

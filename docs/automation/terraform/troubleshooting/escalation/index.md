@@ -1,21 +1,32 @@
 # Terraform — Escalation
 
+```
+┌─────────────────────────────────────── Terraform — Escalation ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Escalate Terraform issues: provider bugs → GitHub, state corruption → HashiCorp support    │   │
+│   │  Provider bugs: github.com/hashicorp/terraform-provider-<name>; include TF + provider version │   │
+│   │        Terraform Cloud: support.hashicorp.com; TF Enterprise: emergency contact per SLA       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │                Info to Gather               │   │
+│   │             State file corrupted             │  │           terraform version output          │   │
+│   │            Provider panic / crash            │  │               Provider version              │   │
+│   │           Lock cannot be released            │  │            TF_LOG=TRACE full log            │   │
+│   │               TF Cloud outage                │  │            State file (sanitised)           │   │
+│   │        Sentinel policy blocking apply        │  │               Plan JSON output              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  State corruption   = restore from S3 versioned backup; terraform state push prev-state.json  │   │
+│   │  Provider GitHub    = github.com/hashicorp/terraform-provider-aws (replace aws with provider) │   │
+│   │         HashiCorp support  = support.hashicorp.com; severity 1 for production outages         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Escalation Decision Tree
 
-```mermaid
-flowchart TD
-    issue["Terraform Issue\nDetected"]
-    canRecover{"Can recover with\nstandard commands?"}
-    issue --> canRecover
-    canRecover -->|Yes| selfResolve["Self-resolve:\nforce-unlock / import\n/ apply / refresh-only"]
-    canRecover -->|No| escalate["Escalate to senior\nengineer / HashiCorp support"]
 
-    escalate --> captureInfo["Capture:\n• terraform version\n• terraform providers\n• workspace\n• lock status\n• last apply log"]
-
-    captureInfo --> raiseTicket["Raise ticket / page:\n• Summary\n• Full error output\n• Reproduction steps\n• State status\n• Recent changes"]
-
-    raiseTicket --> backupFirst["Take state backup\nbefore recovery attempts:\nterraform state pull > backup.tfstate"]
-```
 
 ## When to Escalate
 

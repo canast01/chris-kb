@@ -37,34 +37,25 @@ $report | Format-Table -AutoSize
 Write-Host "`nReport saved: $OutputPath" -ForegroundColor Green
 Disconnect-VIServer -Confirm:$false
 ```
-
-## Host Maintenance Pre-Check
-
-Confirms a host is safe to enter maintenance mode: checks running VMs, HA admission control, and vSAN health.
-
-```powershell
-# host-precheck.ps1
-param([Parameter(Mandatory)] [string] $HostName)
-
-$vmhost = Get-VMHost -Name $HostName
-Write-Host "`n=== Pre-Maintenance Check: $HostName ===" -ForegroundColor Cyan
-
-# Running VMs
-$runningVMs = Get-VM -Location $vmhost | Where-Object { $_.PowerState -eq "PoweredOn" }
-Write-Host "Running VMs : $($runningVMs.Count)"
-$runningVMs | Select-Object Name, MemoryGB | Format-Table -AutoSize
-
-# vSAN health
-$cluster = Get-Cluster -VMHost $vmhost
-if ($cluster.VsanEnabled) {
-    $vsanHealth = Get-VsanView -VsanObject (Get-VsanView -Id "VsanVcClusterHealthSystem-*") `
-        -ErrorAction SilentlyContinue
-    Write-Host "vSAN cluster: $($cluster.Name) (enabled)"
-}
-
-# HA status
-Write-Host "HA enabled  : $($cluster.HAEnabled)"
-Write-Host "DRS enabled : $($cluster.DrsEnabled)"
+┌────────────────────────────────── PowerShell — Scripts (Operations) ──────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           Operational PowerShell scripts for common infrastructure management tasks           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Windows Admin Scripts             │  │              Reporting Scripts              │   │
+│   │              Get-DiskHealth.ps1              │  │           Get-ServerInventory.ps1           │   │
+│   │          Set-LocalAdminPassword.ps1          │  │            Get-EventLogErrors.ps1           │   │
+│   │            Enable-WinRMHTTPS.ps1             │  │           Export-ADUserReport.ps1           │   │
+│   │         Install-RequiredModules.ps1          │  │             Check-CertExpiry.ps1            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Script header = always include #Requires, help block, param block with ValidateSet/Mandatory │   │
+│   │       Logging       = use Write-Verbose for debug; Start-Transcript for full session log      │   │
+│   │     Return values = output objects not strings; allows caller to filter with Where-Object     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Snapshot Cleanup

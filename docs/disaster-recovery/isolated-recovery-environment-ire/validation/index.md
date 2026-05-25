@@ -12,38 +12,35 @@ flowchart LR
     DRTEST --> SIGNOFF["DR Lead Sign-Off\n(written approval)"]
     SIGNOFF --> PROD["Reintroduce to Production"]
 ```
-
-No stage can be skipped. Each must produce documented evidence before proceeding.
-
-## Technical Validation Checklist
-
-### Infrastructure
-
-| Check | Command | Pass condition |
-|---|---|---|
-| VM is running and reachable | `ping <ire-vm-ip>` from jump host | Response within 2ms (IRE-internal) |
-| OS started without errors | `journalctl -b -p err` / Event Viewer | No critical errors at startup |
-| All expected services running | `systemctl list-units --state=failed` | 0 failed units |
-| Disk space adequate | `df -h` / `Get-PSDrive` | > 20% free on all volumes |
-| Network interfaces up | `ip a` / `Get-NetAdapter` | All expected NICs in UP state |
-| DNS resolution working (IRE-internal) | `nslookup <ire-hostname> <ire-dns-server>` | Resolves correctly |
-| No unexpected outbound connections | `ss -tnp` / `netstat -an` | No connections to production or internet IPs |
-
-### Application
-
-```bash
-# HTTP health check
-curl -sf http://<ire-app-host>:<port>/health && echo "PASS" || echo "FAIL"
-
-# Check application log for errors at startup
-tail -100 /var/log/app/app.log | grep -i "error\|exception\|fatal"
-
-# Verify application can reach its database (IRE instance)
-psql -h <ire-db-host> -U <app-user> -d <db-name> -c "SELECT 1;" && echo "DB PASS"
-
-# Check certificate is valid (IRE cert — not production)
-echo | openssl s_client -connect <ire-app-host>:443 2>/dev/null \
-  | openssl x509 -noout -dates
+┌─────────────────────────────────────────── IRE Validation ────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      IRE Validation — application testing, data integrity checks, sign-off before cutback     │   │
+│   │                   See product-specific sub-sections for detailed procedures                   │   │
+│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
+│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
+│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Production site · DR site · Replication link · Management network · Vault network                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
+│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
+│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
+│  Failback      = returning operations to production site after DR resolved                            │
+│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
+│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
+│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
+│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
+│  DR Test       = planned failover test; validates RTO without real disaster                           │
+│  Replication   = continuous or periodic data copy to secondary site or vault                          │
+│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
+│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Database

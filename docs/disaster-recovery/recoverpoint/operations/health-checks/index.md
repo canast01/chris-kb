@@ -58,49 +58,44 @@ links statistics
 # Cluster quorum state
 cluster quorum check
 ```
-
----
-
-## REST API Health Checks
-
-```bash
-RP="https://<rpa-mgmt-ip>/fapi/rest/5_1"
-AUTH="-u admin:password --insecure"
-
-# Cluster health summary
-curl -s $AUTH "$RP/cluster/all_clusters_details" | python3 -c "
-import sys, json
-data = json.load(sys.stdin)
-for c in data.get('clustersDetails', []):
-    print(f\"Cluster: {c.get('name','?')}  Quorum: {c.get('quorum','?')}\")
-"
-
-# All CGs — state and lag
-curl -s $AUTH "$RP/group/all_groups_details" | python3 -c "
-import sys, json
-data = json.load(sys.stdin)
-for g in data.get('innerSet', []):
-    print(f\"CG={g.get('name','?'):30s}  enabled={g.get('enabled','?')}\")
-"
-
-# Show all CGs and their replication state
-RPAPI="https://<rpa_mgmt_ip>/rest/v1"
-RP_TOKEN="<base64_encoded_credentials>"
-
-curl -s -k -H "Authorization: Basic ${RP_TOKEN}" \
-  "${RPAPI}/clusters" | jq '.clusters[] | {name: .name, health: .healthState}'
-
-# REST API: list all CGs and their replication state
-curl -s -k -H "Authorization: Basic ${RP_TOKEN}" \
-  "${RPAPI}/groups" | jq '.innerSets[] | {name: .name, state: .replicationState, rpo: .RPO}'
-
-# RPA node states
-curl -s $AUTH "$RP/rp/all_rps_details" | python3 -c "
-import sys, json
-data = json.load(sys.stdin)
-for r in data.get('innerSet', []):
-    print(f\"RPA {r.get('rpUID',{}).get('id','?')}  state={r.get('rpState','?')}\")
-"
+┌──────────────────────────────────── RecoverPoint — Health Checks ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Health check cadence: daily CG lag/journal, weekly test copy, monthly failover drill     │   │
+│   │       Critical alerts: CG in error state, journal >90% full, RPA node failure, link down      │   │
+│   │         Check sources: Unisphere for RP, vCenter plugin, SNMP traps, REST API polling         │   │
+│   │            Baseline: all CGs Active; lag <30 s; journal <70%; all RPA nodes Online            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          RPA Health         │  │          CG Health          │  │         Link Health         │   │
+│   │      Node state: Online     │  │        State: Active        │  │        Link state: Up       │   │
+│   │          CPU < 80%          │  │         Lag < 30 sec        │  │       Latency < 100 ms      │   │
+│   │         Memory < 85%        │  │        Journal < 70%        │  │        Packet loss 0%       │   │
+│   │          Fan/PSU OK         │  │       Splitter loaded       │  │        BW util < 80%        │   │
+│   │          NTP synced         │  │        No errors 24 h       │  │        Compression OK       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: RPA hardware health viewable in Unisphere; splitter state visible per ESXi host          │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    CG state Active  = Replication is running; writes being journaled; lag within RPO target           │
+│    Lag (RPO lag)    = Seconds between last source write and journal apply on target; primary KPI      │
+│    Journal fill %   = Consumed / allocated journal VMDK; >90% causes CG to pause replication          │
+│    Splitter loaded  = ESXi kernel module active; check per host in Unisphere splitter view            │
+│    SNMP traps       = RPA sends traps to NMS on CG error, journal fill, and RPA node failure          │
+│    Link utilisation = WAN replication bandwidth; sustained >80% may cause lag increase                │
+│    NTP sync         = Critical for journal timestamps and cross-site consistency; must be in sync     │
+│    Packet loss      = Any loss on replication link degrades throughput; investigate immediately       │
+│    RPA node failure = Surviving RPA takes over all CGs; CGs continue with reduced throughput          │
+│    Unisphere alert  = Red badge in Unisphere dashboard; drill down to CG, link, or hardware           │
+│    REST poll        = GET /system/clusters; /groups; /links; use for monitoring integration           │
+│    Monthly drill    = Full failover test with VM power-on at DR site; documents RTO achieved          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

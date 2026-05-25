@@ -19,28 +19,34 @@ graph LR
     exportCsv --> sendEmail
     processLogic --> logResult
 ```
-
-## PowerShell Remoting Topology
-
-```mermaid
-graph TD
-    controlHost["Control Host\n(Invoke-Command)"]
-    winrm["WinRM\n(port 5985 HTTP\n/ 5986 HTTPS)"]
-    remoteHost1["Remote Host 1\n(srv1)"]
-    remoteHost2["Remote Host 2\n(srv2)"]
-    remoteHost3["Remote Host 3\n(srv3)"]
-    psSession["PSSession\n(persistent)"]
-    scriptBlock["ScriptBlock\n(runs remotely)"]
-
-    controlHost -->|Invoke-Command -ComputerName| winrm
-    controlHost -->|New-PSSession| psSession
-    psSession --> winrm
-    winrm --> remoteHost1
-    winrm --> remoteHost2
-    winrm --> remoteHost3
-    scriptBlock -->|executes on| remoteHost1
-    scriptBlock -->|executes on| remoteHost2
-    scriptBlock -->|executes on| remoteHost3
+┌───────────────────────────────────── PowerShell — CLI Reference ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               Essential PowerShell commands for daily infrastructure operations               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Core Commands                 │  │               Utility Commands              │   │
+│   │          Get-Command -Module <name>          │  │             Measure-Object -Sum             │   │
+│   │             Get-Help <cmd> -Full             │  │         Where-Object { $_.X -eq Y }         │   │
+│   │            Get-Member (alias: gm)            │  │           Select-Object -First 10           │   │
+│   │          Get-Module -ListAvailable           │  │          Sort-Object -Property Name         │   │
+│   │             Import-Module <name>             │  │         Group-Object -Property Type         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                File and Data                 │  │               Remote Execution              │   │
+│   │           Get-Content, Set-Content           │  │         Invoke-Command -ScriptBlock         │   │
+│   │            Import-Csv, Export-Csv            │  │            Enter-PSSession <host>           │   │
+│   │       ConvertTo-Json, ConvertFrom-Json       │  │          Copy-Item -ToSession $sess         │   │
+│   │        Invoke-RestMethod (API calls)         │  │             Disconnect-PSSession            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Get-Member     = inspect object properties and methods; essential for pipeline debugging   │   │
+│   │  ForEach-Object = pipeline loop; alias: %; $_  is current object; use for per-item processing │   │
+│   │              Where-Object   = filter pipeline; alias: ?; $_.Property -eq "value"              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

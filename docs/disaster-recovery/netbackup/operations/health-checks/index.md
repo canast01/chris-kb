@@ -1,32 +1,47 @@
 # NetBackup — Health Checks
 
+```
+┌────────────────────────────────────── NetBackup — Health Checks ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                              NetBackup — Health Check Procedures                              │   │
+│   │                 Run these checks daily/weekly to confirm protection is working                │   │
+│   │                                         nbpemreq / bpps                                       │   │
+│   │                  Review job completion rate — target 100%; investigate failures               │   │
+│   │                         Check replication/backup lag against RPO target                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Check       │  What to verify  │      Expected     │    Frequency     │  Action if bad   │   │
+│   │    Job status    │All jobs complete │    100% success   │      Daily       │ Triage failures  │   │
+│   │    Lag / RPO     │ Replication lag  │    < RPO target   │      Daily       │  Tune bandwidth  │   │
+│   │     Capacity     │ Repo space used  │     < 80% full    │      Weekly      │ Expand or expire │   │
+│   │   Restore test   │  Random restore  │    Data intact    │     Monthly      │ Fix backup chain │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+│  Media Server  = data mover between client and storage; can be co-located with master                 │
+│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Daily Check Flow
 
-```mermaid
-flowchart TD
-    start(["Start daily\nhealth check"])
-    start --> jobSummary["bpjobs -summary\nReview totals\n(target: 0 failed)"]
-    jobSummary --> failedJobs{"Any\nfailures?"}
-    failedJobs -->|Yes| investigate["bpdbjobs -report -failed -hoursago 24\nInvestigate each failure\nNote error status code"]
-    failedJobs -->|No| catalog["Verify catalog backup\nbplist -S <master> -policy NBU_Catalog\nMust have completed in last 6 hours"]
-    investigate --> catalog
-    catalog --> catalogOK{"Catalog backup\nOK?"}
-    catalogOK -->|No| catAlert["CRITICAL: trigger manual\ncatalog backup immediately\nbpbackup -p NBU_Catalog_Backup"]
-    catalogOK -->|Yes| storage["bpstulist — check all STUs\nTotal Capacity vs Free Space\nFlag STUs below 15% free"]
-    catAlert --> storage
-    storage --> mediaServers["nbemmcmd -listhosts -machinetype mediaserver\nVerify all media servers registered"]
-    mediaServers --> alerts["Review OpsCenter\n/ Admin Console alerts"]
-    alerts --> done(["Daily check complete\nDocument findings"])
 
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef warn fill:#be123c,stroke:#9f1239,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    class jobSummary,investigate,catalog,storage,mediaServers,alerts action
-    class failedJobs,catalogOK decision
-    class catAlert warn
-    class start,done terminal
-```
 
 ## Daily Checklist
 

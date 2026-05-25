@@ -28,31 +28,48 @@ Baseline Process
 │  Critical: >90% of peak                      │
 └──────────────────────────────────────────────┘
 ```
-
-A documented baseline allows you to distinguish normal variation from genuine anomalies and set meaningful alert thresholds.
-## What to Capture
-
-| Metric | Capture Period | Notes |
-|---|---|---|
-| CPU utilisation | 30-day rolling avg + peak | Separate weekday vs weekend |
-| Memory utilisation | 30-day rolling avg | Include swap |
-| Disk I/O latency | 30-day avg (read/write separately) | Per LUN / volume |
-| Disk throughput (MB/s) | 30-day avg + peak | Per volume |
-| Disk IOPS | 30-day avg + peak | Critical for storage sizing |
-| Network utilisation | 30-day avg per interface | Flag sustained >60% |
-| Application response time | 30-day avg per endpoint | P95 / P99 is more useful than avg |
-
-## Baseline Collection Commands
-
-**Linux — CPU and memory snapshot:**
-```bash
-# 60-second sample, 5 intervals
-vmstat -S M 10 6
-
-# Or sar if sysstat installed
-sar -u 5 12      # CPU every 5 sec, 12 samples
-sar -r 5 12      # Memory
-sar -d 5 12      # Disk I/O
+┌──────────────────────────────────── Monitoring — Metrics Baseline ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Metrics Baseline — Documenting Normal Ranges to Drive Accurate Alert Thresholds        │   │
+│   │        Key metrics: CPU util · memory util · storage IOPS/latency · network throughput        │   │
+│   │           Baseline period: 4-week rolling window captures daily and weekly patterns           │   │
+│   │       Methods: percentile banding (p50/p95/p99) · seasonal adjustment · learned anomaly       │   │
+│   │        Output: documented threshold table per object type used in all monitoring tools        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    A stale baseline creates false positives or misses real anomalies — review quarterly               │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Compute Metrics       │  │       Storage Metrics       │  │       Network Metrics       │   │
+│   │      CPU util: warn 80%     │  │      IOPS: warn 70% max     │  │       Throughput: 70%       │   │
+│   │      Mem util: warn 85%     │  │      Latency: warn 2ms      │  │      Error rate: <0.01%     │   │
+│   │      CPU ready: warn 5%     │  │      Cap: warn 75% full     │  │      Drops: warn >10/s      │   │
+│   │       Co-stop: warn 3%      │  │      Queue depth: warn      │  │        RTT: warn >5ms       │   │
+│   │      Swap: crit >0 MB/s     │  │      Rebuild time: 4hr      │  │        CRC errors: 0        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Baseline data sourced from: Aria Operations · CloudIQ · Pure1 · NDI — reviewed quarterly             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Baseline          = Statistical representation of normal operating behaviour over a time window      │
+│  p50               = 50th percentile (median); typical operating value                                │
+│  p95               = 95th percentile; near-peak value; used for warn threshold                        │
+│  p99               = 99th percentile; extreme peak; used for critical threshold                       │
+│  CPU ready         = Time a VM waits for a physical CPU; >5% indicates contention                     │
+│  Co-stop           = SMP VM waiting for all vCPUs; >3% indicates over-provisioned vCPUs               │
+│  Memory balloon    = VMware reclamation driver; active ballooning indicates memory pressure           │
+│  Seasonal adjust   = Accounting for day-of-week or time-of-day patterns in thresholds                 │
+│  Queue depth       = Number of outstanding I/O requests; elevated = storage saturation                │
+│  Learned anomaly   = ML-derived deviation from historical pattern rather than static threshold        │
+│  Threshold table   = Reference document listing warn/crit values per metric per object type           │
+│  False positive    = Alert firing when conditions are actually normal; caused by stale baseline       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Linux — disk latency:**

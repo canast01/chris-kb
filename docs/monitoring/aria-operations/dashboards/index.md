@@ -23,32 +23,48 @@ Dashboard Hierarchy — Aria Operations
 │  Metric charts │ Relationship │ Alerts  │
 └─────────────────────────────────────────┘
 ```
-
-Aria Operations dashboards provide real-time visibility into the health, risk, and efficiency of your infrastructure. This page covers building dashboards, configuring widgets, using interactions, and sharing with other users.
-
-## Dashboard Basics
-
-Dashboards are per-user by default but can be shared with roles or all users. Each dashboard is composed of one or more **widgets** arranged in a grid layout.
-
-Navigation: **Home > Dashboards > + Add**
-
-Dashboard scope options:
-
-| Scope | Behaviour |
-|---|---|
-| Self-owned | Visible only to the creator |
-| Shared (read) | Others can view but not edit |
-| Shared (edit) | Others can view and modify |
-| Default Dashboard | Shown to all users on login |
-
-## Adding and Configuring Widgets
-
-```bash
-# List available widget definitions via API
-curl -sk -X GET \
-  "https://aria-ops.example.com/suite-api/api/widgetdefinitions" \
-  -H "Authorization: vRealizeOpsToken <token>" \
-  -H "Accept: application/json" | jq '.widgetDefinitions[].name'
+┌──────────────────────────────────── Aria Operations — Dashboards ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Aria Operations Dashboards — Built-in, Custom, and Shared Dashboard Management        │   │
+│   │         Built-in: Executive Overview · Capacity Overview · vSphere Health · NSX Health        │   │
+│   │     Widget types: scoreboard · time-series · heatmap · topology · alert list · object list    │   │
+│   │       Interaction: drill-down from widget to object · filter by tag · time-range picker       │   │
+│   │          Sharing: publish to group · export JSON · import · embed in external portal          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Import community dashboards from VMware {code} exchange to accelerate deployment                   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │     Built-in Dashboards     │  │        Custom Widgets       │  │       Sharing & Export      │   │
+│   │      Executive Overview     │  │          Scoreboard         │  │       Publish to group      │   │
+│   │      Capacity Overview      │  │      Time-series chart      │  │         Export JSON         │   │
+│   │        vSphere Health       │  │        Heatmap widget       │  │         Import JSON         │   │
+│   │          NSX Health         │  │         Topology map        │  │         Embed iframe        │   │
+│   │        Alert Overview       │  │      Alert list widget      │  │       Clone/customise       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Dashboards stored in Aria Ops vPostgres DB · UI served on HTTPS/443 from master node                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Built-in dashboard = Pre-configured dashboard shipped with Aria Operations                           │
+│  Scoreboard widget  = Tile displaying current metric value with colour-coded threshold                │
+│  Time-series widget = Line chart of metric over configurable time window                              │
+│  Heatmap widget     = Grid with colour-coded cells per object; fast outlier detection                 │
+│  Topology widget    = Visual map of object relationships (VM → host → cluster)                        │
+│  Alert list widget  = Live count and list of active alerts for filtered object set                    │
+│  Drill-down         = Clicking widget navigates to the individual object detail page                  │
+│  Tag filter         = Filtering dashboard widgets by vSphere tag or Aria Ops group tag                │
+│  Export JSON        = Serialising dashboard definition for sharing or backup                          │
+│  VMware {code}      = VMware community code exchange hosting dashboard JSON templates                 │
+│  Super metric       = Custom calculated metric combining multiple raw metrics in a formula            │
+│  Clone dashboard    = Copying an existing dashboard as starting point for customisation               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Common widget types and their use cases:

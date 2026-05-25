@@ -42,25 +42,49 @@ flowchart TD
     class vcenter host
     class obj cloud
 ```
-
-Veeam is managed via the `Veeam.Backup.PowerShell` module, loaded automatically in the Veeam PowerShell Console on the Backup Server. For remote execution, load it with `Add-PSSnapin VeeamPSSnapIn` then `Connect-VBRServer -Server <backup_server>`.
-
----
-
-## Connection
-
-```powershell
-# Load the Veeam snap-in (if not already loaded)
-Add-PSSnapin VeeamPSSnapIn
-
-# Connect to local Backup Server
-Connect-VBRServer -Server localhost
-
-# Connect to a remote Backup Server
-Connect-VBRServer -Server <hostname> -User <domain\user> -Password <pass>
-
-# Disconnect
-Disconnect-VBRServer
+┌──────────────────────────────────────── Veeam — CLI Reference ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                   Veeam — Command Reference                                   │   │
+│   │           Use these commands for routine operations, scripting, and troubleshooting           │   │
+│   │                                    Add-VBRJob / Start-VBRJob                                  │   │
+│   │                                       Get-VBRRestorePoint                                     │   │
+│   │                                    Start-VBRInstantVMRecovery                                 │   │
+│   │                                         Get-VBRJob | fl                                       │   │
+│   │                                      Invoke-VBRHealthCheck                                    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Ports: 9419 (Veeam REST API) · 6160 (Veeam Agent) · 443 (vCenter)                                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Command Categories                                      │   │
+│   │                  Status / Query  — check current state, list jobs, show config                │   │
+│   │                  Operations      — start, stop, failover, restore, sync, expire               │   │
+│   │                Configuration   — add/modify policies, schedules, storage targets              │   │
+│   │               Diagnostics     — collect logs, run health checks, test connectivity            │   │
+│   │                  Scripting       — REST API or CLI for automation and reporting               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
+│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
+│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
+│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
+│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
+│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
+│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
+│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
+│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
+│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
+│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
+│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
+│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
+│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

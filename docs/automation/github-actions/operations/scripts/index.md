@@ -37,36 +37,26 @@ rotate_secret "SLACK_BOT_TOKEN"       "secret/data/slack" "bot_token"
 
 echo "All secrets rotated."
 ```
-
-## Runner Health Check Script
-
-```bash
-#!/bin/bash
-# runner-health.sh — Check self-hosted runner status and alert if offline
-set -euo pipefail
-
-ORG="myorg"
-ALERT_WEBHOOK="$SLACK_WEBHOOK_URL"
-OFFLINE_THRESHOLD=3   # alert if more than N runners offline
-
-check_runners() {
-  gh api orgs/$ORG/actions/runners | jq -r '
-    .runners[] | select(.status == "offline") | .name
-  '
-}
-
-OFFLINE_RUNNERS=$(check_runners)
-OFFLINE_COUNT=$(echo "$OFFLINE_RUNNERS" | grep -c . || true)
-
-if [ "$OFFLINE_COUNT" -gt "$OFFLINE_THRESHOLD" ]; then
-  RUNNER_LIST=$(echo "$OFFLINE_RUNNERS" | tr '\n' ', ')
-  curl -s -X POST "$ALERT_WEBHOOK" \
-    -H "Content-Type: application/json" \
-    -d "{\"text\": \":warning: $OFFLINE_COUNT GitHub Actions runners are offline: $RUNNER_LIST\"}"
-  echo "Alert sent: $OFFLINE_COUNT runners offline"
-else
-  echo "Runners OK: $OFFLINE_COUNT offline (threshold: $OFFLINE_THRESHOLD)"
-fi
+┌────────────────────────────────────── GitHub Actions — Scripts ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Utility scripts for GitHub Actions operations: bulk secret update, runner status report, audit│   │
+│   │  Use gh CLI or GitHub REST API (PyGitHub / requests) for scripting GitHub Actions management  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Management Scripts              │  │                Audit Scripts                │   │
+│   │             bulk_set_secrets.py              │  │             audit_action_pins.py            │   │
+│   │            list_runner_status.py             │  │        check_workflow_permissions.py        │   │
+│   │             cancel_stuck_runs.py             │  │          report_billing_minutes.py          │   │
+│   │              migrate_secrets.py              │  │           find_unpinned_actions.py          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    PyGitHub       = Python GitHub API client; pip install PyGithub; wraps REST and GraphQL    │   │
+│   │         gh api --paginate = fetch all pages of a paginated API response automatically         │   │
+│   │    Action audit   = scan all workflow YAML for uses: lines; verify each is pinned to a SHA    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Artifact Cleanup Script

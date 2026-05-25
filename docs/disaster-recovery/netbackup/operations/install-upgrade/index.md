@@ -39,63 +39,56 @@ flowchart TD
     class halt warn
     class start,done terminal
 ```
-
-**Critical: always upgrade Master Server first.**
-
-1. **Pre-upgrade**: Run catalog backup; verify it completes successfully
-   ```bash
-   bpbackup -i -h <master_server> -p NBU_Catalog_Backup   # Force catalog backup
-   bperror -r -backstat -l | head -20                        # Verify recent backup success
-   ```
-
-2. **Upgrade Master Server** — download installer from Veritas portal; run upgrade wizard
-
-3. **Upgrade Media Servers** — one at a time; verify connectivity after each:
-   ```bash
-   bpclntcmd -hn <media_server> -chk   # Verify after each media server upgrade
-   ```
-
-4. **Upgrade Clients** — deploy via push from NetBackup Admin Console or manual installation
-
-## Version Compatibility
-
-| Scenario | Supported? |
-|---|---|
-| Client N-1 behind Master | Supported — upgrade within next cycle |
-| Client N-2 behind Master | Not supported — immediate upgrade required |
-| Media Server N-1 behind Master | Supported |
-| OpsCenter different version from Master | Not supported — must match |
-
-## EEB (Emergency Engineering Binary) Tracking
-
-Maintain an EEB register:
-
-| EEB ID | Version Targeted | Issue Fixed | Applied Date | Superseded By |
-|---|---|---|---|---|
-| EEB-XXXXXX | 10.1 | <description> | <date> | MR10.1.1 |
-
-EEBs are not cumulative — re-apply after each maintenance release if not yet superseded.
-
-## Pre-Upgrade Checklist
-
-- [ ] All backup jobs complete (no active jobs)
-- [ ] Full catalog backup completed and verified
-- [ ] EEB register reviewed — note which EEBs will be superseded by this upgrade
-- [ ] Compatibility confirmed for all integrated systems (vCenter version, Data Domain OS, OST plugin versions)
-- [ ] Rollback plan: catalog backup can restore previous state if upgrade fails
-
-## Post-Upgrade Validation
-
-```bash
-# Check NBU version across master and media servers
-bpclntcmd -self   # On each server
-/usr/openv/netbackup/bin/version   # Version file
-
-# Run test backup after upgrade
-bpbackup -p <policy_name> -s <schedule_name> -h <client>
-
-# Verify catalog integrity post-upgrade
-bpdbm -consistency_check   # Check for catalog corruption
+┌──────────────────────────────────── NetBackup — Install & Upgrade ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                             NetBackup — Installation Prerequisites                            │   │
+│   │             OS: supported Linux or Windows Server (see vendor compatibility matrix)           │   │
+│   │               Network: 443 (Web UI) · 1556 (vnetd) — ensure firewall allows these             │   │
+│   │             Auth: NBU CA host-ID certificates; AD/LDAP for web UI login; RBAC roles           │   │
+│   │  Storage: Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connec│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        Install Sequence                                       │   │
+│   │                  1  Deploy control plane component and configure network access               │   │
+│   │                          2  Configure storage and network connectivity                        │   │
+│   │                        3  Install agent/proxy/splitter on protected hosts                     │   │
+│   │                      4  Register sources and configure protection policies                    │   │
+│   │                        5  Run first job; verify completion; test restore                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        Upgrade Sequence                                       │   │
+│   │                 1  Review release notes and compatibility matrix before upgrade               │   │
+│   │                   2  Snapshot or backup the control plane VM before upgrading                 │   │
+│   │                  3  Upgrade control plane first, then proxies/agents/appliances               │   │
+│   │                       4  Validate jobs resume automatically after upgrade                     │   │
+│   │                        5  Document version change and update CMDB record                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+│  Media Server  = data mover between client and storage; can be co-located with master                 │
+│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Migration: Physical Master to Appliance

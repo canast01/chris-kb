@@ -17,80 +17,43 @@ Privileges to include:
   Virtual Machine:
     - Virtual Machine.Provisioning.* (for recovery)
 ```
-
-Assign the role at the SRM inventory root — do not grant broad vCenter Admin privileges to DR operators.
-
----
-
-## SRM RBAC Roles by Function
-
-SRM operations require different privilege combinations depending on the DR workflow. Apply least-privilege per team function.
-
-| SRM Function | Required vCenter Privileges | Required SRM Privileges | Assign To |
-|---|---|---|---|
-| View protection groups / plans | Read-only on vCenter objects | Site Recovery.View | DR-Read role |
-| Run DR **test** (non-disruptive) | VM power on/off, datastore read | Site Recovery.Test | DR-Operator role |
-| Execute **recovery** (planned / unplanned) | VM provision, datastore alloc, network assign | Site Recovery.Recovery | DR-Recovery role |
-| **Re-protect** (reverse replication post-failover) | Storage policy, replication config | Site Recovery.Manage | DR-Admin role |
-| **Failback** (return to primary site) | All of the above + primary site vCenter perms | Site Recovery.Manage | DR-Admin role |
-| Manage protection groups (create/edit) | Datastore, replication group config | Site Recovery.Manage | DR-Admin role |
-| Modify recovery plans | Recovery plan edit | Site Recovery.Manage | DR-Admin role |
-
-> Create separate AD security groups for each role tier. Avoid assigning the DR-Admin role to operational staff — require approval workflow for recovery plan modifications.
-
----
-
-## Protection Group and Recovery Plan Permissions
-
-Access to create versus execute SRM objects is deliberately separated.
-
-### Protection Groups
-
-| Action | Who Can Perform | Permission Scope |
-|---|---|---|
-| Create / modify protection group | DR-Admin only | Site Recovery.Manage on protected site inventory |
-| View protection group status | DR-Operator, DR-Read | Site Recovery.View |
-| Add/remove VMs from group | DR-Admin only | Site Recovery.Manage + VM inventory rights |
-| Delete protection group | DR-Admin only | Site Recovery.Manage |
-
-### Recovery Plans
-
-| Action | Who Can Perform | Permission Scope |
-|---|---|---|
-| Create / modify recovery plan | DR-Admin only | Site Recovery.Manage on recovery site SRM |
-| Execute Test (cleanup included) | DR-Operator | Site Recovery.Test |
-| Execute Planned Migration | DR-Recovery | Site Recovery.Recovery |
-| Execute Emergency Recovery | DR-Recovery | Site Recovery.Recovery |
-| Re-protect after recovery | DR-Admin | Site Recovery.Manage |
-| Cancel in-progress recovery | DR-Admin | Site Recovery.Manage |
-
-> Recovery plan execution is logged and non-reversible mid-stream. Require a change ticket and secondary approval before granting DR-Recovery role access outside of declared DR events.
-
----
-
-## SRM REST API Authentication
-
-SRM 8.x exposes a REST API for automation (port 443, path `/api`).
-
-### Authentication Methods
-
-| Method | Description | Use Case |
-|---|---|---|
-| vCenter SSO (session token) | Authenticate to vCenter SSO; use session cookie with SRM API | Interactive tooling, ad-hoc scripts |
-| Local SRM account | SRM-local user in the SRM appliance management UI | Break-glass access when SSO is unavailable |
-| Service account (SSO) | Dedicated AD/SSO service account with DR-Operator or DR-Admin role | CI/CD pipelines, orchestration tools |
-
-### Obtain an API Session Token
-
-```bash
-# Authenticate to vCenter SSO and get a session token
-curl -s -k -X POST "https://<vcenter>/rest/com/vmware/cis/session" \
-  -u "administrator@vsphere.local:<password>" \
-  | jq -r '.value'
-
-# Use the session token with the SRM API
-curl -s -k -X GET "https://<srm-server>/api/protection-groups" \
-  -H "vmware-api-session-id: <session_token>"
+┌──────────────────────────────────────── SRM — Access Control ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 SRM — RBAC and Access Control                                 │   │
+│   │     Auth: vCenter SSO / AD integration; SRM admin role; site-pairing certificate exchange     │   │
+│   │             Principle of least privilege: each role gets only required permissions            │   │
+│   │              Service accounts: dedicated, non-interactive; rotation every 90 days             │   │
+│   │               Emergency break-glass: documented, monitored, time-limited access               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │       Role       │   Access Level   │    Typical User   │   Review Freq    │    Granted By    │   │
+│   │      Admin       │ Full config/ops  │   Sr Backup Eng   │    Quarterly     │  Security team   │   │
+│   │     Operator     │ Start/stop jobs  │     Backup Eng    │    Quarterly     │    Team lead     │   │
+│   │     Monitor      │  Read-only view  │      NOC / L1     │    Quarterly     │    Team lead     │   │
+│   │   Service Acct   │  API / headless  │     Automation    │   Per rotation   │  Security team   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Local SRM Account (Break-Glass)

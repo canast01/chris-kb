@@ -1,5 +1,49 @@
 # Veeam — Standards
 
+```
+┌────────────────────────────────────── Veeam — Design Standards ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Sizing Guidelines               │  │               HA Requirements               │   │
+│   │         Deduplicate where supported          │  │           N+1 component redundancy          │   │
+│   │          Bandwidth: 10 GbE minimum           │  │          Heartbeat / health monitor         │   │
+│   │          Storage: 130% of raw data           │  │          Separate mgmt / data VLANs         │   │
+│   │         Latency: < 10 ms to storage          │  │          Out-of-band access (IPMI)          │   │
+│   │           CPU: 8+ vCPU for engine            │  │          Anti-affinity VM placement         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Ports: 9419 (Veeam REST API) · 6160 (Veeam Agent) · 443 (vCenter)                                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                  Standard Veeam Design Rules                                  │   │
+│   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
+│   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
+│   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
+│   │Encryption enabled on all channels: AES-256 backup encryption (key stored in Veeam config DB); │   │
+│   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
+│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
+│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
+│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
+│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
+│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
+│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
+│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
+│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
+│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
+│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
+│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
+│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
+│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Job Naming Convention
 
 | Object | Convention | Example |
@@ -23,37 +67,7 @@ SOBR capacity tier offload: configure automatic offload after 14 days → moves 
 
 ### Backup Job Types Comparison
 
-```mermaid
-flowchart TD
-    subgraph fullBackup [Full Backup]
-        direction TB
-        afull["Active Full\n(reads all blocks\nfrom source)"]
-        sfull["Synthetic Full\n(reads from existing\nbackup chain —\nno source reads)"]
-    end
 
-    subgraph incrementalBackup [Incremental Backup]
-        direction TB
-        fwdIncr["Forward Incremental\n(CBT — changed blocks only\nneeds full chain to restore)"]
-        revIncr["Reverse Incremental\n(CBT — transforms oldest\nincremental into new full\nrolling restore point)"]
-    end
-
-    decide{Choose\nbackup type} --> afull
-    decide --> sfull
-    decide --> fwdIncr
-    decide --> revIncr
-
-    afull --> pros1["Pros: self-contained\nCons: source I/O\nevery run"]
-    sfull --> pros2["Pros: no source I/O\nCons: needs working\nbackup chain"]
-    fwdIncr --> pros3["Pros: minimal daily\nI/O and storage\nCons: longer restore\nchain dependency"]
-    revIncr --> pros4["Pros: always one full\n+ recent changes\nCons: more repo I/O\nduring transform"]
-
-    classDef backupType fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef pros fill:#15803d,stroke:#166534,color:#fff
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    class afull,sfull,fwdIncr,revIncr backupType
-    class pros1,pros2,pros3,pros4 pros
-    class decide decision
-```
 
 ## Backup Job Configuration Standards
 

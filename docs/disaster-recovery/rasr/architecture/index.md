@@ -4,6 +4,51 @@
 Dell RASR (Recovery and System Restore) bare-metal recovery for Windows Server — WinPE boot media, sector-level image capture, and iDRAC virtual media integration.
 </div>
 
+```
+┌───────────────────────────────────────── RASR — Architecture ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 RASR — Component Architecture                                 │   │
+│   │          Vault Appliance      — air-gapped PowerStore/DD in isolated network segment          │   │
+│   │         CyberSense Engine    — ML-based malware and corruption detection on vault data        │   │
+│   │         PowerProtect Manager — orchestrates replication jobs, retention, and recovery         │   │
+│   │               Ports: 443 (PPDM REST API) · 2049 (NFS vault) · 9080 (CyberSense)               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Three-tier component model — control plane, data plane, and management                             │
+│                                                                                                       │
+│                          ▼                        ▼                        ▼                          │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Control Plane        │  │          Data Plane         │  │          Management         │   │
+│   │ Vault Appliance      — air-g│  │ CyberSense Engine    — ML-ba│  │ Vault Lock           — immut│   │
+│   │          Scheduling         │  │      Replication/Backup     │  │     443 (PPDM REST API)     │   │
+│   │         Policy mgmt         │  │        Data movement        │  │           REST API          │   │
+│   │          Catalog/DB         │  │        Dedup/compress       │  │             RBAC            │   │
+│   │          Job engine         │  │       2049 (NFS vault)      │  │           Alerting          │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ![RASR Architecture](../../../assets/rasr-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
@@ -20,17 +65,4 @@ Dell RASR (Recovery and System Restore) bare-metal recovery for Windows Server �
 | Network Recovery Share | SMB share where images are stored and retrieved |
 | iDRAC Virtual Media | Mounts RASR ISO remotely — enables headless bare-metal recovery |
 
-```mermaid
-flowchart TD
-  FAIL(["Server Failure"]) --> IDRAC["iDRAC mounts RASR ISO\n(virtual media)"]
-  IDRAC --> WINPE["WinPE Environment\nloads PERC + NIC drivers"]
-  WINPE --> MAP["Map SMB share\nnet use Z: \\\\nas\\rasr-images"]
-  MAP --> SEL["Select recovery image"]
-  SEL --> REST["Image written to disk\npartition table restored"]
-  REST --> BOOT["Reboot → Windows starts\nfrom restored image"]
-  BOOT --> VALID(["Post-restore validation"])
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef terminal fill:#15803d,stroke:#166534,color:#fff
-  class IDRAC,WINPE,MAP,SEL,REST,BOOT action
-  class FAIL,VALID terminal
-```
+

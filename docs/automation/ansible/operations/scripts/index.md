@@ -25,34 +25,27 @@ graph LR
     runPlaybook -->|exit 0| success
     runPlaybook -->|exit 1| rollback
 ```
-
-## Rolling Update Flow
-
-```mermaid
-graph LR
-    selectHost["Select next host\n(serial: 1)"]
-    drainLB["Drain host\nfrom load balancer"]
-    waitConns["Wait for active\nconnections to drop"]
-    stopSvc["Stop application\nservice (systemd)"]
-    updatePkg["Update package\nto new version"]
-    startSvc["Start application\nservice"]
-    healthCheck["Health check\n(retry until 200 OK)"]
-    reAddLB["Re-add host\nto load balancer"]
-    nextHost["Next host?"]
-    done["Done"]
-    abort["ABORT: Stop pipeline\n(max_fail_percentage: 0)"]
-
-    selectHost --> drainLB
-    drainLB --> waitConns
-    waitConns --> stopSvc
-    stopSvc --> updatePkg
-    updatePkg --> startSvc
-    startSvc --> healthCheck
-    healthCheck -->|OK| reAddLB
-    healthCheck -->|Fail| abort
-    reAddLB --> nextHost
-    nextHost -->|More hosts| selectHost
-    nextHost -->|Done| done
+┌────────────────────────────────────────── Ansible — Scripts ──────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Utility scripts for Ansible operations: inventory validation, bulk vault re-key, job report exp│   │
+│   │   Scripts live in scripts/ at repo root; documented with usage header and example invocation  │   │
+│   │     AWX API scripts: list failed jobs, cancel stuck jobs, export all job templates to JSON    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Inventory Scripts               │  │               AWX API Scripts               │   │
+│   │            validate_inventory.py             │  │             list_failed_jobs.py             │   │
+│   │             compare_inventory.py             │  │             cancel_stuck_jobs.py            │   │
+│   │            generate_host_vars.py             │  │           export_job_templates.py           │   │
+│   │             prune_stale_hosts.py             │  │            rotate_credentials.py            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  AWX API     = REST API at /api/v2/; authenticate with bearer token; paginated JSON responses │   │
+│   │        awx CLI     = official AWX CLI; wraps the REST API; install: pip install awxkit        │   │
+│   │      awxkit     = Python library for AWX API; used by the awx CLI; importable in scripts      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Infrastructure Health Check Playbook

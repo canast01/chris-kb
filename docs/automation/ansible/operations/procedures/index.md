@@ -83,44 +83,28 @@ graph LR
     awxExecutor -->|ansible-playbook| managed
     awxExecutor --> jobHistory
 ```
-
-## Playbooks
-
-A playbook is a YAML file containing one or more plays. Each play targets hosts and defines tasks.
-
-```yaml
-# site.yml
----
-- name: Configure web servers
-  hosts: webservers
-  become: true
-  gather_facts: true
-  vars:
-    app_port: 8080
-
-  pre_tasks:
-    - name: Update apt cache
-      ansible.builtin.apt:
-        update_cache: true
-        cache_valid_time: 3600
-
-  tasks:
-    - name: Install nginx
-      ansible.builtin.apt:
-        name: nginx
-        state: present
-
-    - name: Start and enable nginx
-      ansible.builtin.service:
-        name: nginx
-        state: started
-        enabled: true
-
-  handlers:
-    - name: Reload nginx
-      ansible.builtin.service:
-        name: nginx
-        state: reloaded
+┌──────────────────────────────────────── Ansible — Procedures ─────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Common Ansible operational procedures: rolling OS patching, credential rotation, inventory clea│   │
+│   │    Pre-run: verify inventory is current, check mode first, confirm Vault password available   │   │
+│   │Post-run: review job output for warnings, verify application health, update runbook with outcom│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Rolling OS Patch Procedure          │  │             Credential Rotation             │   │
+│   │          1. Run check mode: --check          │  │         1. Generate new SSH key pair        │   │
+│   │           2. Review changed tasks            │  │         2. Add new pub key to hosts         │   │
+│   │         3. Execute serial:1 (canary)         │  │           3. Update AWX credential          │   │
+│   │        4. Verify app health per host         │  │         4. Remove old key from hosts        │   │
+│   │         5. Increase serial, continue         │  │            5. Verify connectivity           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     serial: 1     = run one host at a time; ensures app stays available during rolling ops    │   │
+│   │    max_fail_pct  = max_fail_percentage: 0 → abort if any host fails; safe for prod changes    │   │
+│   │     pre_tasks     = tasks that run before roles in a play; use for health checks and drain    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Tasks, Handlers, and Notify

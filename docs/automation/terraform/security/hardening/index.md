@@ -25,22 +25,28 @@ graph LR
     reviewGate -->|Approved| tfApply
     reviewGate -->|Changes| prOpen
 ```
-
-## Security Scanning
-
-Scan Terraform configuration before applying to catch misconfigurations early.
-
-```bash
-# tfsec — static analysis for Terraform
-brew install tfsec   # macOS
-tfsec .              # scan the current directory
-tfsec . --format json | jq '.results[] | {severity, description, location}'
-
-# Checkov — policy-as-code scanner
-pip install checkov
-checkov -d .                         # scan directory
-checkov -d . --framework terraform   # Terraform only
-checkov -d . --check CKV_AWS_23     # run a specific check
+┌──────────────────────────────────────── Terraform — Hardening ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Terraform hardening: secure state backend, restrict apply access, scan configs, pin versions │   │
+│   │   S3 bucket hardening: Block Public Access, versioning, SSE-KMS, access logging, MFA delete   │   │
+│   │      CI hardening: plan only on PR, apply only on main, required approval gate, audit log     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           State Backend Hardening            │  │               Config Hardening              │   │
+│   │          S3: Block Public Access on          │  │            Pin: required_version            │   │
+│   │            S3: SSE-KMS encryption            │  │       Pin: required_providers versions      │   │
+│   │            S3: versioning enabled            │  │         checkov: block PR on failure        │   │
+│   │            DynamoDB: IAM restrict            │  │             tfsec / tflint in CI            │   │
+│   │        CloudTrail on S3 state bucket         │  │          No local state file in git         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     MFA delete      = S3 bucket MFA Delete protection; prevents accidental state deletion     │   │
+│   │       tfsec           = open-source IaC security scanner; similar to checkov; check both      │   │
+│   │       CloudTrail on S3= logs every GetObject/PutObject on state bucket; full audit trail      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Policy Enforcement with Sentinel / OPA

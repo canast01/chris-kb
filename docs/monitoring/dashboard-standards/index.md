@@ -23,44 +23,48 @@ Dashboard Design — Layout Standards
 │  └────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────┘
 ```
-
-## Required Dashboards
-
-| Dashboard | Audience | Refresh |
-|---|---|---|
-| Infrastructure Overview | All ops | 5 min |
-| Capacity Planning | Infra / storage leads | 1 hour |
-| Active Alerts | On-call | 1 min |
-| SAN / Storage Health | Storage team | 5 min |
-| Backup Status | Infra / backup team | 30 min |
-| Network Health | Network team | 5 min |
-| Application Availability | App owners | 1 min |
-
-## Infrastructure Overview — Required Panels
-
-1. **Alert count by severity** (Critical / High / Medium)
-2. **Host availability %** (uptime across all monitored hosts)
-3. **Top CPU consumers** (top 10 hosts by 1-hour avg)
-4. **Top memory consumers** (top 10 hosts)
-5. **Disk usage heatmap** (filesystems >75% shown as warning; >90% as critical)
-6. **Storage array health** (one tile per array — green/amber/red)
-
-## Panel Design Rules
-
-- Use consistent colour coding: **red = critical**, **amber = warning**, **green = healthy**
-- Always include a time range selector with default = last 24 hours
-- Do not use pie charts for time-series data — use line or bar charts
-- Label axes with units (%, MB/s, ms, IOPS)
-- Every panel must have a title and a data source label
-- Avoid panels with more than 15 series — break into sub-panels
-
-## Naming Convention
-
-```text
-<environment>-<system>-<metric>
-prod-storage-capacity
-prod-compute-cpu
-uat-network-errors
+┌────────────────────────────────── Monitoring — Dashboard Standards ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           Dashboard Standards — Naming, Layout, Widget, and Data Source Conventions           │   │
+│   │               Naming: <PRODUCT>-<DOMAIN>-<SCOPE> e.g. ARIA-VSPHERE-CLUSTER-PERF               │   │
+│   │            Layout: header summary row · detail grid · trend charts · capacity strip           │   │
+│   │       Widgets: scoreboard (current state) · time-series (trend) · heatmap (distribution)      │   │
+│   │       Colour: green <70% · amber 70-85% · red >85% for capacity and CPU/mem utilisation       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Consistent dashboards reduce MTTR by ensuring operators know exactly where to look                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Naming Standard       │  │         Widget Types        │  │          Governance         │   │
+│   │        Product prefix       │  │       Scoreboard: KPIs      │  │     Owner per dashboard     │   │
+│   │        Domain segment       │  │      Time-series: trend     │  │       Review cycle: Q1      │   │
+│   │        Scope segment        │  │       Heatmap: distrib      │  │       Version in title      │   │
+│   │      No spaces/special      │  │      List: top-N items      │  │     Archived not deleted    │   │
+│   │        Version suffix       │  │     Alert widget: count     │  │     RBAC: read-only pub     │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Dashboards reside in Aria Operations UI · Nexus Dashboard NDI · Pure1 portal · CloudIQ SaaS          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Scoreboard widget = Single-value tile showing current state with colour threshold band               │
+│  Time-series widget= Line/area chart plotting metric values over a configurable time window           │
+│  Heatmap widget    = Grid colouring cells by metric value; useful for per-VM or per-host views        │
+│  KPI               = Key Performance Indicator; top-level metric surfaced in the header row           │
+│  Capacity strip    = Bottom row of a dashboard showing remaining headroom per resource type           │
+│  RBAC              = Role-Based Access Control; governs who can edit vs. view a dashboard             │
+│  Threshold band    = Numeric ranges mapped to green/amber/red colour codings                          │
+│  Dashboard owner   = Team member accountable for accuracy and maintenance of the dashboard            │
+│  Archived          = Dashboard removed from active view but retained for audit/history                │
+│  MTTR              = Mean Time To Resolve; reduced when dashboards are consistent and clear           │
+│  Top-N list        = Widget ranking objects by metric value; identifies worst offenders quickly       │
+│  Version suffix    = e.g. v2; indicates updated dashboard replacing a prior published version         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Grafana — Dashboard as Code

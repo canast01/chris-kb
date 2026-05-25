@@ -1,5 +1,49 @@
 # SRM Architecture — Standards
 
+```
+┌─────────────────────────────────────── SRM — Design Standards ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Sizing Guidelines               │  │               HA Requirements               │   │
+│   │         Deduplicate where supported          │  │           N+1 component redundancy          │   │
+│   │          Bandwidth: 10 GbE minimum           │  │          Heartbeat / health monitor         │   │
+│   │          Storage: 130% of raw data           │  │          Separate mgmt / data VLANs         │   │
+│   │         Latency: < 10 ms to storage          │  │          Out-of-band access (IPMI)          │   │
+│   │           CPU: 8+ vCPU for engine            │  │          Anti-affinity VM placement         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Ports: 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) · 443 (vCenter)                                    │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                   Standard SRM Design Rules                                   │   │
+│   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
+│   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
+│   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
+│   │Encryption enabled on all channels: SRM management TLS; replication encryption controlled by ar│   │
+│   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 > Part of the [SRM](../../index.md) reference.
 
 ---
@@ -23,31 +67,7 @@
 
 ### Protection Group to Recovery Plan Mapping
 
-```mermaid
-flowchart LR
-    subgraph p1Tier [Priority 1 — SRDF/S Sync]
-        pgDB["PG-DB-DC1DC2\n(Oracle, MSSQL)"]
-        pgInfra["PG-INFRA-DC1DC2\n(AD, DNS)"]
-    end
-    subgraph p2Tier [Priority 2 — vSphere Replication]
-        pgApp["PG-APP-DC1DC2\n(Business apps)"]
-        pgFile["PG-FILE-DC1DC2\n(File servers)"]
-    end
-    subgraph p3Tier [Priority 3 — Async array rep]
-        pgDev["PG-DEV-DC1DC2\n(Dev mirrors)"]
-    end
 
-    pgDB --> rpP1["RP-P1-CRITICAL\nRTO < 15 min"]
-    pgInfra --> rpP1
-    pgApp --> rpP2["RP-P2-BUSINESS\nRTO < 1 hr"]
-    pgFile --> rpP2
-    pgDev --> rpP3["RP-P3-NONCRIT\nRTO < 4 hr"]
-
-    classDef pg fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef rp fill:#2563eb,stroke:#1d4ed8,color:#fff
-    class pgDB,pgInfra,pgApp,pgFile,pgDev pg
-    class rpP1,rpP2,rpP3 rp
-```
 
 ## Recovery Plan Design
 

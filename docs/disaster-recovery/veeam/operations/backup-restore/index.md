@@ -24,30 +24,47 @@ flowchart TD
     H --> J
     I --> J
 ```
-
----
-
-## Restore Types Reference
-
-| Restore Type | Use Case | RTO | Data Movement |
-|---|---|---|---|
-| Instant VM Recovery | Critical VM down, production unavailable | Minutes | None (runs from backup) |
-| Full VM Restore | Planned recovery, hardware failure | 30 min – hours | Full VM copied |
-| File-Level Recovery | Individual files/folders lost | Minutes | File(s) only |
-| Application-Item Recovery | Exchange mailbox, SQL database, AD object | Minutes | Object(s) only |
-| Volume-Level Restore | OS volume corrupt, faster than full VM | 15–45 min | Volume only |
-| Entire VM Replica Failover | Replication-based DR | Minutes | None |
-
----
-
-## Instant VM Recovery
-
-Instant VM Recovery mounts the backup directly from the Veeam repository and starts the VM immediately. Use this when RTO is critical.
-
-```text
-Veeam Console → Home → Restore → VMware vSphere VMs →
-  Instant Recovery → select backup → select restore point →
-  select target host/datastore → Power on target VM automatically → Finish
+┌────────────────────────────────────── Veeam — Backup & Restore ───────────────────────────────────────┐
+│                                                                                                       │
+│    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Backup (Protection)              │  │              Restore (Recovery)             │   │
+│   │          Add-VBRJob / Start-VBRJob           │  │             Get-VBRRestorePoint             │   │
+│   │              Quiesce source I/O              │  │            Select recovery point            │   │
+│   │             Take snapshot / CBT              │  │           Mount or copy to target           │   │
+│   │           Transfer changed blocks            │  │              Validate integrity             │   │
+│   │             Commit to repository             │  │             Restart application             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Key Veeam Commands                                      │   │
+│   │                           Backup trigger  : Add-VBRJob / Start-VBRJob                         │   │
+│   │                              List points     : Get-VBRRestorePoint                            │   │
+│   │                           Health status   : Start-VBRInstantVMRecovery                        │   │
+│   │                             Retention mgmt  : Invoke-VBRHealthCheck                           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
+│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
+│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
+│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
+│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
+│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
+│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
+│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
+│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
+│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
+│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
+│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
+│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
+│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```powershell

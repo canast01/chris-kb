@@ -1,5 +1,30 @@
 # PowerShell — Operations
 
+
+```
+┌─────────────────────────────────────── PowerShell — Operations ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │PowerShell operations: script deployment, module updates, remoting configuration, DSC managemen│   │
+│   │Module management: Install-Module, Update-Module, Get-InstalledModule; use -Scope AllUsers for │   │
+│   │            Remoting: Enable-PSRemoting; configure WinRM HTTPS; test with Test-WSMan           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Module Operations               │  │             Remoting Operations             │   │
+│   │              Find-Module <name>              │  │           Enable-PSRemoting -Force          │   │
+│   │       Install-Module -Name <x> -Force        │  │            Test-WSMan <hostname>            │   │
+│   │           Update-Module -Name <x>            │  │            Enter-PSSession <host>           │   │
+│   │          Get-InstalledModule | sort          │  │           Invoke-Command -Computer          │   │
+│   │        Uninstall-Module -AllVersions         │  │          New-PSSession (persistent)         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Enable-PSRemoting = configures WinRM listener and firewall rule; required before remoting works│   │
+│   │  PSRepository      = Register-PSRepository to add internal feed (Nexus, Artifactory, ProGet)  │   │
+│   │-AllowClobber     = Install-Module flag; overrides existing conflicting commands from other mod│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cli-reference/">

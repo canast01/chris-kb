@@ -4,6 +4,51 @@
 VMware Site Recovery Manager DR orchestration — vCenter plugin that automates storage presentation, VM registration, power-on sequencing, and IP customisation across a site pair.
 </div>
 
+```
+┌───────────────────────────────────────── SRM — Architecture ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                  SRM — Component Architecture                                 │   │
+│   │     SRM Server (Protected) — vCenter plugin at production site; manages protection groups     │   │
+│   │            SRM Server (Recovery)  — vCenter plugin at DR site; runs recovery plans            │   │
+│   │     SRA (Storage Replication Adapter) — translates SRM calls to array replication commands    │   │
+│   │                Ports: 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) · 443 (vCenter)                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Three-tier component model — control plane, data plane, and management                             │
+│                                                                                                       │
+│                          ▼                        ▼                        ▼                          │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Control Plane        │  │          Data Plane         │  │          Management         │   │
+│   │ SRM Server (Protected) — vCe│  │ SRM Server (Recovery)  — vCe│  │ Protection Group      — set │   │
+│   │          Scheduling         │  │      Replication/Backup     │  │       443 (SRM HTTPS)       │   │
+│   │         Policy mgmt         │  │        Data movement        │  │           REST API          │   │
+│   │          Catalog/DB         │  │        Dedup/compress       │  │             RBAC            │   │
+│   │          Job engine         │  │    9086 (SRM-SRM pairing)   │  │           Alerting          │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ![SRM Architecture](../../../assets/srm-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
@@ -21,21 +66,4 @@ VMware Site Recovery Manager DR orchestration — vCenter plugin that automates 
 | SRA | Vendor plugin translating SRM commands to array replication APIs |
 | vSphere Replication | Built-in per-VM replication; no SRA required; 5-minute minimum RPO |
 
-```mermaid
-graph LR
-  VC_A["vCenter A\n+ SRM Server A + SRA"] --> STG_A[("Storage A")]
-  VC_B["vCenter B\n+ SRM Server B + SRA"] --> STG_B[("Storage B")]
-  VC_A <-->|"SRM pairing\nTCP 443 / 8095"| VC_B
-  STG_A -->|"array replication\nor vSphere Replication"| STG_B
-  H_A(["Production VMs\nSite A"]) --> VC_A
-  H_B(["DR VMs\nSite B"]) -.-> VC_B
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class VC_A ctrl
-  class VC_B dr
-  class STG_A,STG_B store
-  class H_A host
-  class H_B dr
-```
+

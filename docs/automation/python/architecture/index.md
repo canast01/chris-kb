@@ -4,6 +4,28 @@
 Cross-platform automation language with virtual environment isolation, poetry/venv dependency management, asyncio for concurrent API calls, and Docker container execution; targets cloud APIs, infrastructure APIs, SSH, and databases.
 </div>
 
+```
+┌──────────────────────────────────────── Python — Architecture ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Python architecture: interpreter + stdlib + virtual environment + installed packages     │   │
+│   │  Package management: pip installs from PyPI; poetry/pipenv add lock file for reproducibility  │   │
+│   │      Project layout: src/ layout preferred; separate tests/, docs/, scripts/ directories      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 How It Works                 │  │               Design Standards              │   │
+│   │         Script → CPython interpreter         │  │             One venv per project            │   │
+│   │            Imports from sys.path             │  │         Type hints on all functions         │   │
+│   │             Package: __init__.py             │  │           Docstrings: Google style          │   │
+│   │          Async: asyncio event loop           │  │          pytest test coverage >80%          │   │
+│   │          GIL: true parallel via mp           │  │            ruff lint + mypy in CI           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Physical: CPython runs on any OS; no compiled artefacts needed for distribution via source  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ![Python Architecture](../../../assets/python-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
@@ -35,19 +57,4 @@ Cross-platform automation language with virtual environment isolation, poetry/ve
 
 ## Architecture Model
 
-```mermaid
-flowchart TD
-    A([Script / Service entrypoint]) --> B[Virtual Environment\nvenv / poetry / pipenv]
-    B --> C[Application Code]
-    C --> D[Standard Library\nos, pathlib, subprocess, logging]
-    C --> E[Third-Party Libraries\nrequests, boto3, paramiko, pydantic]
-    C --> F[Internal Packages\nshared utilities, config loaders]
-    D & E & F --> G{Execution Target}
-    G --> H[Cloud APIs\nAWS / Azure / GCP]
-    G --> I[Infrastructure APIs\nvSphere / NetBox / Vault]
-    G --> J[Databases\nPostgreSQL / SQLite / Redis]
-    G --> K[File Systems & OS\nlocal / NFS / S3]
-    G --> L[Remote Hosts\nSSH via paramiko / fabric]
-    style B fill:#1565c0,color:#fff
-    style C fill:#2e7d32,color:#fff
-```
+

@@ -25,23 +25,27 @@ graph TD
     secureString -->|New-PSSession -UseSSL| winrmHTTPS
     winrmHTTPS --> remoteSession
 ```
-
-## SecureString
-
-`SecureString` stores a string in memory as an encrypted value. It prevents the password from appearing in plain text in variables, logs, or memory dumps.
-
-```powershell
-# Convert plain text to SecureString
-$secure = ConvertTo-SecureString 'P@ssword1' -AsPlainText -Force
-
-# Prompt the user for a secure string (no echo)
-$secure = Read-Host -Prompt 'Enter password' -AsSecureString
-
-# Create a PSCredential from a SecureString
-$cred = [PSCredential]::new('domain\admin', $secure)
-
-# Extract the plain-text value (only when necessary)
-$plain = $cred.GetNetworkCredential().Password
+┌─────────────────────────────────────── PowerShell — Encryption ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │PowerShell encryption: SecureString for in-memory, DPAPI for user-scope, SecretManagement for v│   │
+│   │ Transport: WinRM HTTPS (TLS 1.2+); enforce: winrm set winrm/config/listener @{Transport=HTTPS}│   │
+│   │   Avoid: ConvertTo-SecureString with -Key flag stores key alongside data — use vault instead  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Secret Handling                │  │              Transport Security             │   │
+│   │         SecureString: in-memory only         │  │            WinRM HTTPS: port 5986           │   │
+│   │          DPAPI: current user scope           │  │              TLS 1.2+ enforced              │   │
+│   │       SecretManagement: AKV / KeePass        │  │         Certificate required on host        │   │
+│   │       No plain-text passwords in .ps1        │  │        Disable HTTP WinRM (port 5985)       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    DPAPI           = Windows Data Protection API; encrypts to current user or machine scope   │   │
+│   │  SecureString    = in-memory encrypted string; cannot be stored safely to disk without DPAPI  │   │
+│   │    Azure Key Vault = recommended back-end for SecretManagement in cloud/hybrid environments   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Encrypting Strings with DPAPI

@@ -11,45 +11,47 @@ qsystem log export -path C:\cv_support_bundle
 # Alternatively via Command Center:
 # Settings > Support > Generate Support Bundle
 ```
-
-**Required information for a support case**
-
-- CommServe version and Feature Release number (Command Center > Settings > Version)
-- MediaAgent version(s) for affected storage pools
-- Failing job ID(s) and error code from the Job Controller
-- Client name, OS version, and CommVault agent version
-- Storage policy and subclient configuration (screenshots or export)
-- Log bundle from `qsystem log export`
-
-**Support tiers**
-
-| Tier | Sev 1 SLA | Availability | Notes |
-|---|---|---|---|
-| Standard | 4 hours | Business hours | Per-incident or subscription |
-| Priority | 2 hours | 24x7 | Enterprise subscription |
-| Premium | 1 hour | 24x7 | TAM + proactive health checks |
-
-## Escalation Workflow
-
-```mermaid
-flowchart TD
-    issue(["Issue identified\nby ops team"])
-    issue --> internal["Internal triage\nCheck Job Controller\n+ collect log paths"]
-    internal --> selfResolve{Resolved\ninternally?}
-    selfResolve -->|Yes| document["Document root cause\n+ update runbook"]
-    selfResolve -->|No| bundle["Collect support bundle\nqsystem log export\n-path C:\\cv_support_bundle"]
-    bundle --> openCase["Open case on\nsupport.commvault.com\nAttach bundle + job ID"]
-    openCase --> sev{Severity?}
-    sev -->|"Sev 1\nproduction down"| sev1["Sev 1: 24x7 response\nRequest phone bridge\nEscalate to Premium if SLA missed"]
-    sev -->|"Sev 2/3\ndegraded / informational"| sev23["Sev 2/3: portal updates\nMonitor case queue"]
-    sev1 --> track["Track in incident\nmanagement system"]
-    sev23 --> track
-    track --> resolve(["Resolution\n+ post-incident review"])
-
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    class internal,bundle,openCase,sev1,sev23,track,document action
-    class selfResolve,sev decision
-    class issue,resolve terminal
+┌────────────────────────── Commvault Escalation — Support and Case Handling ───────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Internal Tier 1 — L1 Ops           │  │       Internal Tier 2 — L2 Backup Eng       │   │
+│   │       Check Job Activity for failures        │  │         Deep log analysis (CV_DIAG)         │   │
+│   │         Restart CV services (GxCVD)          │  │         DDB repair and library fixes        │   │
+│   │        Check disk library free space         │  │         CommServe DB troubleshooting        │   │
+│   │            Run CV_DIAG collection            │  │       Config change and policy review       │   │
+│   │        Escalate if not resolved in 2h        │  │        Escalate to Commvault Support        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Escalation path: L1 Ops → L2 Backup Engineering → Commvault Vendor Support                         │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               Commvault Vendor Support (Tier 3)                               │   │
+│   │              Portal: ma.commvault.com → Create Case; login with entitled account              │   │
+│   │          Severity 1 (production down): 24x7 response SLA 1h; call hotline immediately         │   │
+│   │             Severity 2 (degraded): business hours response SLA 4h; email + portal             │   │
+│   │           Required info: CS version, SP level, CV_DIAG bundle, error codes, job IDs           │   │
+│   │           Remote assist: Commvault engineer joins via WebEx/remote session if needed          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Commvault Support may request firewall exception for remote session (WebEx/Teams)                    │
+│  Ensure CV_DIAG bundle uploadable to Commvault FTP or case attachment (< 2 GB)                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ma.commvault.com = Commvault support portal for case management and KB articles                      │
+│  Severity 1     = Complete production outage; CommServe down or all backups failing                   │
+│  Severity 2     = Significant impact; some backups failing or restore degraded                        │
+│  CV_DIAG Bundle = Compressed log and config archive required for all support cases                    │
+│  SP Level       = Service Pack version installed; check Help → About in CommCell Console              │
+│  Entitled Acct  = Commvault support portal account tied to licensed CommCell ID                       │
+│  Remote Session = Commvault engineer connects to CommServe for live troubleshooting                   │
+│  CommCell ID    = Unique identifier for the CommCell installation; required for support               │
+│  Case Number    = Reference ID from Commvault portal; track via ma.commvault.com                      │
+│  L2 Backup Eng  = Internal SME for CommVault; owns platform config and deep diagnosis                 │
+│  Hotline        = Commvault 24x7 phone support for Sev1; number on support portal                     │
+│  Entitlement    = Active support contract tied to CommCell serial number                              │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

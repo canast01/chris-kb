@@ -23,46 +23,32 @@ flowchart LR
     CN -->|HTTPS API| MN4[Cloud API\nAWS / Azure / vSphere]
     CN -->|SSH| MN5[Linux Host]
 ```
-
----
-
-## Control Node
-
-The control node is the machine where Ansible is installed and all automation is initiated.
-
-Requirements:
-
-- Python 3.10+ (ansible-core 2.16+ requirement)
-- Linux, macOS, or WSL2 — Windows is not supported natively as a control node
-- SSH client available in PATH
-- Network path to managed nodes on port 22 (or configured alternative)
-
-## Managed Nodes
-
-| OS Family | Connection Method | Python Required on Node |
-|---|---|---|
-| Linux / Unix | SSH | Yes — Python 2.7 or 3.5+ |
-| Windows | WinRM or SSH | No — PowerShell used instead |
-| Network devices (NX-OS, IOS-XE, EOS) | SSH or HTTPAPI | No — modules run on control node |
-| Cloud APIs (AWS, Azure, GCP) | HTTPS | No — API calls, no SSH needed |
-
----
-
-## Inventory
-
-The inventory is the source of truth for which hosts exist and how they are grouped. Ansible supports static files in INI or YAML formats, and dynamic inventory plugins that query external systems at runtime.
-
-```mermaid
-graph TD
-    INV[Inventory Source\nstatic or dynamic] --> G1[Group: webservers]
-    INV --> G2[Group: databases]
-    INV --> G3[Group: all]
-    G1 --> H1[web01.prod.example.com]
-    G1 --> H2[web02.prod.example.com]
-    G2 --> H3[db01.prod.example.com]
-    G3 -.->|implicit| H1
-    G3 -.->|implicit| H2
-    G3 -.->|implicit| H3
+┌─────────────────────────────────────── Ansible — How It Works ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Execution flow: ansible-playbook reads inventory + playbook → connects to hosts → runs tasks │   │
+│   │      Each task calls a module; module code is transferred to the remote host and executed     │   │
+│   │  Results returned as JSON; Ansible evaluates changed/ok/failed; handlers notified on changed  │   │
+│   │       AWX wraps this: stores credentials, queues jobs, streams events to UI in real time      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Step 1: Parse        │  │       Step 2: Connect       │  │       Step 3: Execute       │   │
+│   │        Load inventory       │  │        SSH/WinRM open       │  │     Module runs on host     │   │
+│   │     Parse playbook YAML     │  │     Gather facts (setup)    │  │     JSON result returned    │   │
+│   │      Resolve variables      │  │     Multiplexed SSH conn    │  │    changed / ok / failed    │   │
+│   │     Apply filters/limits    │  │    Fork N hosts parallel    │  │      Handlers triggered     │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Gather facts     = module: setup; collects OS, IP, memory, disk, fqdn for use in templates  │   │
+│   │Check mode       = --check flag; simulates changes without applying; modules report what would │   │
+│   │    Diff mode        = --diff flag; shows before/after for file edits; combine with --check    │   │
+│   │  Fork             = max parallel host connections; default 5; increase for large inventories  │   │
+│   │ Serial           = limit hosts per batch in rolling update; e.g. serial: 1 for canary deploys │   │
+│   │       delegate_to      = run task on a different host (e.g. register DNS on a jump host)      │   │
+│   │        when             = conditional expression; task skipped when condition is False        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```ini
