@@ -4059,17 +4059,17 @@
 </code></pre></div>
 <h2 id="combining-ntfs-and-share-permissions">Combining NTFS and Share Permissions<a class="headerlink" href="#combining-ntfs-and-share-permissions" title="Permanent link">&para;</a></h2>
 <p>Effective access for a network user equals the intersection (most restrictive) of share and NTFS permissions.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Effective = MIN(Share Permission, NTFS Permission)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="l l-Scalar l-Scalar-Plain">Effective = MIN(Share Permission, NTFS Permission)</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Example A:
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Share:  Everyone = Read
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  NTFS:   DOMAIN\jsmith = Modify
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Result: Read  (share is the bottleneck)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="l l-Scalar l-Scalar-Plain">Example A</span><span class="p p-Indicator">:</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">Share</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Everyone = Read</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">NTFS</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">DOMAIN\jsmith = Modify</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">Result</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Read  (share is the bottleneck)</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Example B:
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  Share:  Everyone = Full Control
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  NTFS:   DOMAIN\jsmith = Read
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  Result: Read  (NTFS is the bottleneck)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nt">Example B</span><span class="p">:</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="nt">Share</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Everyone = Full Control</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="nt">NTFS</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">DOMAIN\jsmith = Read</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="nt">Result</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Read  (NTFS is the bottleneck)</span>
 </code></pre></div>
 <p>Best practice: set share to <strong>Everyone: Full Control</strong>, then use NTFS permissions exclusively. This avoids confusing double-restriction calculations and simplifies troubleshooting.</p>
 <h2 id="powershell-share-creation">PowerShell Share Creation<a class="headerlink" href="#powershell-share-creation" title="Permanent link">&para;</a></h2>

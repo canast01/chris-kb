@@ -3878,27 +3878,27 @@
   ESXi-&gt;&gt;FA: PLOGI + PRLI to CT1 via Fabric B
   FA--&gt;&gt;ESXi: Volumes visible via both paths (ALUA)</code></pre>
 <p><strong>Zone a new ESXi host:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># Step 1 — Find the host HBA WWPN after it logs in
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>show flogi database vsan 10 | grep &lt;host-ip-or-note&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a># Or check the host HBA WWPNs from the ESXi console:
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>esxcli storage san fc list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1 — Find the host HBA WWPN after it logs in</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;host-ip-or-note&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Or check the host HBA WWPNs from the ESXi console:</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Step 2 — Create a device alias for each HBA port
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>device-alias database
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  device-alias name esxi-host01_hba0 pwwn 21:00:00:xx:xx:xx:xx:xx
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  device-alias name esxi-host01_hba1 pwwn 21:00:00:xx:xx:xx:xx:xx
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>device-alias commit
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Step 2 — Create a device alias for each HBA port</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>device-alias<span class="w"> </span>database
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>device-alias<span class="w"> </span>name<span class="w"> </span>esxi-host01_hba0<span class="w"> </span>pwwn<span class="w"> </span><span class="m">21</span>:00:00:xx:xx:xx:xx:xx
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>device-alias<span class="w"> </span>name<span class="w"> </span>esxi-host01_hba1<span class="w"> </span>pwwn<span class="w"> </span><span class="m">21</span>:00:00:xx:xx:xx:xx:xx
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>device-alias<span class="w"> </span>commit
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># Step 3 — Create zones (one per host-port to storage-port pair)
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>zone name esxi-host01_hba0-powermax01_fa0 vsan 10
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  member device-alias esxi-host01_hba0
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  member device-alias powermax01_fa0
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Step 3 — Create zones (one per host-port to storage-port pair)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>zone<span class="w"> </span>name<span class="w"> </span>esxi-host01_hba0-powermax01_fa0<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>member<span class="w"> </span>device-alias<span class="w"> </span>esxi-host01_hba0
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>member<span class="w"> </span>device-alias<span class="w"> </span>powermax01_fa0
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Step 4 — Add zones to the active zone set and activate
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>zoneset name prod-zoneset vsan 10
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  member esxi-host01_hba0-powermax01_fa0
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Step 4 — Add zones to the active zone set and activate</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>zoneset<span class="w"> </span>name<span class="w"> </span>prod-zoneset<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>member<span class="w"> </span>esxi-host01_hba0-powermax01_fa0
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>zoneset activate name prod-zoneset vsan 10
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>prod-zoneset<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
 <p><strong>Verify the host can see the storage:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>show zone member device-alias esxi-host01_hba0 vsan 10
@@ -3906,38 +3906,38 @@
 <hr />
 <h2 id="dell-powermax-integration">Dell PowerMax Integration<a class="headerlink" href="#dell-powermax-integration" title="Permanent link">&para;</a></h2>
 <p>PowerMax FA (Front-End Adapter) ports log into the MDS fabric. Each FA port is registered as a device alias.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># Show PowerMax FA port registrations
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show flogi database vsan 10 | grep &lt;powermax-wwpns&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show PowerMax FA port registrations</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;powermax-wwpns&gt;
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a># Create device aliases for PowerMax FA ports
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>device-alias database
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  device-alias name powermax01_fa0e pwwn 5x:xx:xx:xx:xx:xx:xx:xx
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>device-alias commit
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create device aliases for PowerMax FA ports</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>device-alias<span class="w"> </span>database
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>device-alias<span class="w"> </span>name<span class="w"> </span>powermax01_fa0e<span class="w"> </span>pwwn<span class="w"> </span>5x:xx:xx:xx:xx:xx:xx:xx
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>device-alias<span class="w"> </span>commit
 </code></pre></div>
 <p>For SRDF/A replication, the SRDF director ports on both arrays are zoned together in the replication VSAN (e.g., VSAN 20/21) — not in the production VSAN.</p>
 <hr />
 <h2 id="pure-storage-flasharray-integration">Pure Storage FlashArray Integration<a class="headerlink" href="#pure-storage-flasharray-integration" title="Permanent link">&para;</a></h2>
 <p>Pure FlashArray target ports are registered as device aliases and zoned per host.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Pure array target ports (get WWPNs from Pure UI: Settings → SAN)
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>device-alias database
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  device-alias name pure-fa01_ct0.eth4 pwwn 52:4a:xx:xx:xx:xx:xx:xx
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>device-alias commit
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Pure array target ports (get WWPNs from Pure UI: Settings → SAN)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>device-alias<span class="w"> </span>database
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>device-alias<span class="w"> </span>name<span class="w"> </span>pure-fa01_ct0.eth4<span class="w"> </span>pwwn<span class="w"> </span><span class="m">52</span>:4a:xx:xx:xx:xx:xx:xx
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>device-alias<span class="w"> </span>commit
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a># Zone: one zone per host HBA to one Pure target port
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>zone name esxi-host01_hba0-pure-fa01_ct0 vsan 10
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  member device-alias esxi-host01_hba0
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  member device-alias pure-fa01_ct0.eth4
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Zone: one zone per host HBA to one Pure target port</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>zone<span class="w"> </span>name<span class="w"> </span>esxi-host01_hba0-pure-fa01_ct0<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>member<span class="w"> </span>device-alias<span class="w"> </span>esxi-host01_hba0
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>member<span class="w"> </span>device-alias<span class="w"> </span>pure-fa01_ct0.eth4
 </code></pre></div>
 <p>Pure recommends at least 2 target ports per host path for redundancy. Zone each host HBA to 2 Pure target ports (one zone per pair).</p>
 <hr />
 <h2 id="snmp-and-syslog">SNMP and Syslog<a class="headerlink" href="#snmp-and-syslog" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># Configure SNMP v3 (preferred over v2c)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snmp-server user &lt;username&gt; network-operator auth sha &lt;auth-password&gt; priv aes-128 &lt;priv-password&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>snmp-server host &lt;monitoring-server-ip&gt; traps version 3 priv &lt;username&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Configure SNMP v3 (preferred over v2c)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snmp-server<span class="w"> </span>user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>network-operator<span class="w"> </span>auth<span class="w"> </span>sha<span class="w"> </span>&lt;auth-password&gt;<span class="w"> </span>priv<span class="w"> </span>aes-128<span class="w"> </span>&lt;priv-password&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>snmp-server<span class="w"> </span>host<span class="w"> </span>&lt;monitoring-server-ip&gt;<span class="w"> </span>traps<span class="w"> </span>version<span class="w"> </span><span class="m">3</span><span class="w"> </span>priv<span class="w"> </span>&lt;username&gt;
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a># Configure syslog forwarding
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>logging server &lt;siem-ip&gt; 5 facility local7
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a># Level 5 = notifications (includes port state changes and zone changes)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Configure syslog forwarding</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>logging<span class="w"> </span>server<span class="w"> </span>&lt;siem-ip&gt;<span class="w"> </span><span class="m">5</span><span class="w"> </span>facility<span class="w"> </span>local7
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Level 5 = notifications (includes port state changes and zone changes)</span>
 </code></pre></div>
 <p>Verify SNMP is reachable from the monitoring server:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>snmpwalk<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span>&lt;switch-ip&gt;<span class="w"> </span>sysDescr

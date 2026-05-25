@@ -4384,8 +4384,8 @@
 <li><strong>For .yml (Ansible):</strong> Needs Linux or WSL. Open your WSL terminal.</li>
 </ul>
 <p><strong>Step 4 — Run it</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cd ~
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ansible-playbook infra-health-check.yml -i inventory/hosts.yml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>~
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ansible-playbook<span class="w"> </span>infra-health-check.yml<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml
 </code></pre></div>
 <p><strong>What you should see</strong></p>
 <p>Ansible connects to each server in sequence and runs disk, load, and service checks. Each check prints a warning if thresholds are exceeded. At the end, a summary aggregates the results for all servers. If any servers are unreachable, they are flagged as UNREACHABLE.</p>
@@ -4538,9 +4538,9 @@
 <li><strong>For .yml (Ansible):</strong> Needs Linux or WSL. Open your WSL terminal.</li>
 </ul>
 <p><strong>Step 4 — Run it</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cd ~
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ansible-playbook rolling-update.yml -i inventory/hosts.yml \
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  -e &quot;app_package=myapp app_version=2.3.1 lb_api_url=http://lb.example.com/api lb_token=YOUR_TOKEN&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>~
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ansible-playbook<span class="w"> </span>rolling-update.yml<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-e<span class="w"> </span><span class="s2">&quot;app_package=myapp app_version=2.3.1 lb_api_url=http://lb.example.com/api lb_token=YOUR_TOKEN&quot;</span>
 </code></pre></div>
 <p><strong>What you should see</strong></p>
 <p>Ansible processes one server at a time. For each server you see: drain request, wait for connections to drop, service stop, package update, service start, health check (retries until 200 OK), then re-add to LB. If any step fails the playbook stops completely — no other servers are touched.</p>
@@ -4709,8 +4709,8 @@
 <li><strong>For .yml (Ansible):</strong> Needs Linux or WSL. Open your WSL terminal.</li>
 </ul>
 <p><strong>Step 4 — Run it</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cd ~
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ansible-playbook inventory-validate.yml -i inventory/hosts.yml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">cd</span><span class="w"> </span>~
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ansible-playbook<span class="w"> </span>inventory-validate.yml<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml
 </code></pre></div>
 <p><strong>What you should see</strong></p>
 <p>For each host in your inventory, a table is printed showing PASS or FAIL for each check: SSH, Python, sudo, required packages, hostname, NTP, and DNS. At the end, a list of non-compliant hosts is shown. The playbook fails (exits non-zero) if any hosts fail the SSH check.</p>
@@ -4851,10 +4851,10 @@
 <li><strong>For .sh (Bash):</strong> Open your WSL terminal (Git Bash also works).</li>
 </ul>
 <p><strong>Step 4 — Run it</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>export VAULT_PASSWORD_FILE=/path/to/vault-password.txt
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>export DB_VARS_FILE=vars/db_secrets.yml
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>export PLAYBOOK=playbooks/push-db-secret.yml
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>bash rotate-db-secret.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VAULT_PASSWORD_FILE</span><span class="o">=</span>/path/to/vault-password.txt
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">DB_VARS_FILE</span><span class="o">=</span>vars/db_secrets.yml
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PLAYBOOK</span><span class="o">=</span>playbooks/push-db-secret.yml
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>bash<span class="w"> </span>rotate-db-secret.sh
 </code></pre></div>
 <p><strong>What you should see</strong></p>
 <p>Step-by-step log messages showing: backup created, new password generated, password encrypted with Ansible Vault, vars file updated, playbook running. If the playbook succeeds you see a success message. If the playbook fails, the old vars file is automatically restored from backup and the script exits with an error so you can investigate.</p>

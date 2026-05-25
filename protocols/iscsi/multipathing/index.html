@@ -3787,6 +3787,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#linux-dm-multipath" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux — DM-Multipath
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Linux — DM-Multipath">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#etcmultipathconf-key-settings" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3794,6 +3806,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3969,7 +3986,7 @@
 
 <h1 id="iscsi-multipathing">iSCSI Multipathing<a class="headerlink" href="#iscsi-multipathing" title="Permanent link">&para;</a></h1>
 <p>iSCSI multipathing uses multiple network paths between initiator and target for redundancy and load distribution.</p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        iSCSI MULTIPATH TOPOLOGY
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        iSCSI MULTIPATH TOPOLOGY
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   HOST                                                          │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ┌──────────┐   path 1    ┌──────────┐        ┌─────────────┐ │
@@ -3988,39 +4005,38 @@
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>``` On Linux, DM-Multipath handles this; on Windows, MPIO; on ESXi, NMP with PSP.
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>## Recommended Network Layout
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>```text
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>Server NIC0 → Storage VLAN A (10.10.1.x) → Array Port A
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>Server NIC1 → Storage VLAN B (10.10.2.x) → Array Port B
 </code></pre></div>
-Server NIC0 → Storage VLAN A (10.10.1.x) → Array Port A
-Server NIC1 → Storage VLAN B (10.10.2.x) → Array Port B
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Use separate NICs and separate switches (or VLANs at minimum) for each path. Never share iSCSI with management traffic.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Linux — DM-Multipath
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Install
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>dnf install device-mapper-multipath
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Enable and start
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>systemctl enable --now multipathd
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># View all multipath devices and path state
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>multipath -ll
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Sample output interpretation:
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># mpatha (360000000000000) dm-0 PURE,FlashArray
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># size=100G features=&#39;0&#39; hwhandler=&#39;1 alua&#39; wp=rw
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># |-+- policy=&#39;service-time 0&#39; prio=50 status=active
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># | |- 33:0:0:1  sdb 8:16 active ready running
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># | |- 34:0:0:1  sdd 8:48 active ready running
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># +-+- policy=&#39;service-time 0&#39; prio=10 status=enabled
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>#   |- 33:0:1:1  sdc 8:32 active ready running
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>#   |- 34:0:1:1  sde 8:64 active ready running
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a># Reload path config after changes
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>multipath -r
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a># Show multipath topology
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>multipath -t
-</code></pre></div></p>
+<p>Use separate NICs and separate switches (or VLANs at minimum) for each path. Never share iSCSI with management traffic.</p>
+<h2 id="linux-dm-multipath">Linux — DM-Multipath<a class="headerlink" href="#linux-dm-multipath" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Install</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>device-mapper-multipath
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Enable and start</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>multipathd
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># View all multipath devices and path state</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Sample output interpretation:</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># mpatha (360000000000000) dm-0 PURE,FlashArray</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># size=100G features=&#39;0&#39; hwhandler=&#39;1 alua&#39; wp=rw</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># |-+- policy=&#39;service-time 0&#39; prio=50 status=active</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># | |- 33:0:0:1  sdb 8:16 active ready running</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># | |- 34:0:0:1  sdd 8:48 active ready running</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># +-+- policy=&#39;service-time 0&#39; prio=10 status=enabled</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1">#   |- 33:0:1:1  sdc 8:32 active ready running</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1">#   |- 34:0:1:1  sde 8:64 active ready running</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Reload path config after changes</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>multipath<span class="w"> </span>-r
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># Show multipath topology</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>multipath<span class="w"> </span>-t
+</code></pre></div>
 <h3 id="etcmultipathconf-key-settings">/etc/multipath.conf — Key Settings<a class="headerlink" href="#etcmultipathconf-key-settings" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>defaults {
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    find_multipaths  yes

@@ -4003,16 +4003,16 @@
 </code></pre></div>
 <h2 id="correlation-rules-siem-examples">Correlation Rules (SIEM Examples)<a class="headerlink" href="#correlation-rules-siem-examples" title="Permanent link">&para;</a></h2>
 <p><strong>Brute force detection:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># &gt;10 failed logons from same source in 5 minutes
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>index=security EventCode=4625
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>| stats count by src_ip, user
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>| where count &gt; 10
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># &gt;10 failed logons from same source in 5 minutes</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">index</span><span class="o">=</span>security<span class="w"> </span><span class="nv">EventCode</span><span class="o">=</span><span class="m">4625</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">|</span><span class="w"> </span>stats<span class="w"> </span>count<span class="w"> </span>by<span class="w"> </span>src_ip,<span class="w"> </span>user
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">|</span><span class="w"> </span>where<span class="w"> </span>count<span class="w"> </span>&gt;<span class="w"> </span><span class="m">10</span>
 </code></pre></div></p>
 <p><strong>Lateral movement — new admin account:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Account created then added to privileged group within 60 minutes
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>index=security (EventCode=4720 OR EventCode=4728)
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>| transaction user maxspan=60m
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>| where eventcount &gt; 1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Account created then added to privileged group within 60 minutes</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">index</span><span class="o">=</span>security<span class="w"> </span><span class="o">(</span><span class="nv">EventCode</span><span class="o">=</span><span class="m">4720</span><span class="w"> </span>OR<span class="w"> </span><span class="nv">EventCode</span><span class="o">=</span><span class="m">4728</span><span class="o">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">|</span><span class="w"> </span>transaction<span class="w"> </span>user<span class="w"> </span><span class="nv">maxspan</span><span class="o">=</span>60m
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">|</span><span class="w"> </span>where<span class="w"> </span>eventcount<span class="w"> </span>&gt;<span class="w"> </span><span class="m">1</span>
 </code></pre></div></p>
 <p><strong>Off-hours privileged access:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>index=security EventCode=4648

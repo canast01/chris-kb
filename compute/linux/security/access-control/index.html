@@ -4084,35 +4084,35 @@
 <a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;apparmor=\&quot;DENIED\&quot;&quot;</span>
 </code></pre></div>
 <h3 id="apparmor-profile-structure">AppArmor Profile Structure<a class="headerlink" href="#apparmor-profile-structure" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a># /etc/apparmor.d/usr.local.bin.myapp
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/usr/local/bin/myapp {
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  # Allow read on config directory
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  /etc/myapp/** r,
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  # Allow read/write on data directory
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  /var/lib/myapp/** rw,
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  # Allow write on log file
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  /var/log/myapp.log w,
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  # Allow network (TCP)
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  network tcp,
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  # Deny everything else implicitly
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>}
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># /etc/apparmor.d/usr.local.bin.myapp</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/usr/local/bin/myapp<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="c1"># Allow read on config directory</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>/etc/myapp/**<span class="w"> </span>r,
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="c1"># Allow read/write on data directory</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>/var/lib/myapp/**<span class="w"> </span>rw,
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="c1"># Allow write on log file</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>/var/log/myapp.log<span class="w"> </span>w,
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="c1"># Allow network (TCP)</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span>network<span class="w"> </span>tcp,
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="c1"># Deny everything else implicitly</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="o">}</span>
 </code></pre></div>
 <h2 id="sudo-access-control">sudo Access Control<a class="headerlink" href="#sudo-access-control" title="Permanent link">&para;</a></h2>
 <p>See also: <a href="../authentication/#sudo-configuration">Authentication — sudo configuration</a></p>
 <h3 id="principle-of-least-privilege-in-sudoers">Principle of Least Privilege in Sudoers<a class="headerlink" href="#principle-of-least-privilege-in-sudoers" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>visudo<span class="w">   </span><span class="c1"># Always use visudo — validates syntax on save</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a># Separate duty: backup operator — only rsync and tar
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>%backupops  ALL=(root) /usr/bin/rsync, /usr/bin/tar
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Separate duty: backup operator — only rsync and tar</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>%backupops<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>/usr/bin/rsync,<span class="w"> </span>/usr/bin/tar
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a># Developers — restart application services only
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>%developers  ALL=(root) /usr/bin/systemctl restart app-*, /usr/bin/systemctl status app-*
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Developers — restart application services only</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>%developers<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>/usr/bin/systemctl<span class="w"> </span>restart<span class="w"> </span>app-*,<span class="w"> </span>/usr/bin/systemctl<span class="w"> </span>status<span class="w"> </span>app-*
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a># Network team — only network-related commands
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>%netops  ALL=(root) /usr/sbin/ip, /usr/sbin/ss, /usr/sbin/tcpdump
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Network team — only network-related commands</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>%netops<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>/usr/sbin/ip,<span class="w"> </span>/usr/sbin/ss,<span class="w"> </span>/usr/sbin/tcpdump
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a># Deny a specific command even within a permitted group
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>jsmith  ALL=(ALL) ALL, !/bin/su, !/usr/bin/passwd root
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Deny a specific command even within a permitted group</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>jsmith<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>ALL,<span class="w"> </span>!/bin/su,<span class="w"> </span>!/usr/bin/passwd<span class="w"> </span>root
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Audit who has sudo access</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^[^#]&quot;</span><span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.d/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^Defaults&quot;</span>
@@ -4122,26 +4122,26 @@
 </code></pre></div>
 <h2 id="etcsecurityaccessconf">/etc/security/access.conf<a class="headerlink" href="#etcsecurityaccessconf" title="Permanent link">&para;</a></h2>
 <p>Restricts which users or groups can log in from which origins. Processed by <code>pam_access.so</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a># /etc/security/access.conf format:
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a># permission : users/groups : origins
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a># + = allow, - = deny
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># /etc/security/access.conf format:</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># permission : users/groups : origins</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># + = allow, - = deny</span>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a># Allow root only from console and specific management host
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>+ : root : LOCAL 10.10.10.5
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>- : root : ALL
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Allow root only from console and specific management host</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>+<span class="w"> </span>:<span class="w"> </span>root<span class="w"> </span>:<span class="w"> </span>LOCAL<span class="w"> </span><span class="m">10</span>.10.10.5
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>-<span class="w"> </span>:<span class="w"> </span>root<span class="w"> </span>:<span class="w"> </span>ALL
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a># Allow domain admin group from anywhere on the corporate network
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>+ : @linuxadmins : 10.0.0.0/8 .example.local
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>+ : @linuxadmins : LOCAL
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Allow domain admin group from anywhere on the corporate network</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>+<span class="w"> </span>:<span class="w"> </span>@linuxadmins<span class="w"> </span>:<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w"> </span>.example.local
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>+<span class="w"> </span>:<span class="w"> </span>@linuxadmins<span class="w"> </span>:<span class="w"> </span>LOCAL
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a># Allow all users from internal networks
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>+ : ALL : 10.0.0.0/8 192.168.0.0/16
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Allow all users from internal networks</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>+<span class="w"> </span>:<span class="w"> </span>ALL<span class="w"> </span>:<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w"> </span><span class="m">192</span>.168.0.0/16
 <a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a># Deny all others
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>- : ALL : ALL
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># Deny all others</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>-<span class="w"> </span>:<span class="w"> </span>ALL<span class="w"> </span>:<span class="w"> </span>ALL
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a># /etc/pam.d/system-auth — enable pam_access
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>account     required      pam_access.so
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># /etc/pam.d/system-auth — enable pam_access</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>account<span class="w">     </span>required<span class="w">      </span>pam_access.so
 </code></pre></div>
 <h2 id="file-attributes-chattr">File Attributes (chattr)<a class="headerlink" href="#file-attributes-chattr" title="Permanent link">&para;</a></h2>
 <p>Immutable flag prevents modification even by root — useful for protecting log files or configuration.</p>

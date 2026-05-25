@@ -4048,25 +4048,25 @@
 <p>Self-hosted runners do not auto-update by default (unlike GitHub-hosted runners). Follow this procedure for each upgrade cycle.</p>
 <h3 id="1-check-the-current-runner-version">1. Check the current runner version<a class="headerlink" href="#1-check-the-current-runner-version" title="Permanent link">&para;</a></h3>
 <p>On each runner host, check the installed version:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>cd /opt/actions-runner   # or wherever the runner is installed
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>./config.sh --version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>/opt/actions-runner<span class="w">   </span><span class="c1"># or wherever the runner is installed</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>./config.sh<span class="w"> </span>--version
 </code></pre></div>
 <p>Compare against the latest release on the <a href="https://github.com/actions/runner/releases">actions/runner releases page</a>.</p>
 <h3 id="2-drain-in-progress-jobs">2. Drain in-progress jobs<a class="headerlink" href="#2-drain-in-progress-jobs" title="Permanent link">&para;</a></h3>
 <p>Before stopping the runner service, drain any active jobs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo systemctl stop actions.runner.&lt;org&gt;-&lt;name&gt;.service
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>actions.runner.&lt;org&gt;-&lt;name&gt;.service
 </code></pre></div>
 <p>Wait for any in-flight workflow jobs to complete before proceeding. If runners are registered in a runner group, temporarily remove the runner from active job queues via the GitHub UI (Settings &gt; Actions &gt; Runners) rather than hard-stopping the service.</p>
 <h3 id="3-download-and-install-the-new-runner-package">3. Download and install the new runner package<a class="headerlink" href="#3-download-and-install-the-new-runner-package" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cd /opt/actions-runner
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl -O -L https://github.com/actions/runner/releases/download/v&lt;VERSION&gt;/actions-runner-linux-x64-&lt;VERSION&gt;.tar.gz
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>tar xzf ./actions-runner-linux-x64-&lt;VERSION&gt;.tar.gz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>/opt/actions-runner
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-O<span class="w"> </span>-L<span class="w"> </span>https://github.com/actions/runner/releases/download/v&lt;VERSION&gt;/actions-runner-linux-x64-&lt;VERSION&gt;.tar.gz
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>tar<span class="w"> </span>xzf<span class="w"> </span>./actions-runner-linux-x64-&lt;VERSION&gt;.tar.gz
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>./bin/installdependencies.sh
 </code></pre></div>
 <p>Re-registration is not required for in-place upgrades — the existing <code>.credentials</code> and <code>.runner</code> files remain valid.</p>
 <h3 id="4-restart-the-runner-service">4. Restart the runner service<a class="headerlink" href="#4-restart-the-runner-service" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo systemctl start actions.runner.&lt;org&gt;-&lt;name&gt;.service
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sudo systemctl status actions.runner.&lt;org&gt;-&lt;name&gt;.service
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>actions.runner.&lt;org&gt;-&lt;name&gt;.service
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>actions.runner.&lt;org&gt;-&lt;name&gt;.service
 </code></pre></div>
 <p>Confirm the runner appears as <strong>Idle</strong> in the GitHub repository or organisation runner list (Settings &gt; Actions &gt; Runners).</p>
 <h3 id="5-validate-with-a-test-workflow">5. Validate with a test workflow<a class="headerlink" href="#5-validate-with-a-test-workflow" title="Permanent link">&para;</a></h3>

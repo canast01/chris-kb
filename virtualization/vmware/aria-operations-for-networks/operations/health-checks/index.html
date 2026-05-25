@@ -5244,14 +5244,14 @@
 </code></pre></div>
 <p>This returns a count of flows grouped by East-West / North-South. If the count is 0 or the query returns no results, flow data is not arriving.</p>
 <p>Additional flow verification queries:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># Flows in the last 15 minutes
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>flows where time_range = &quot;last 15 minutes&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Flows in the last 15 minutes</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>flows<span class="w"> </span>where<span class="w"> </span><span class="nv">time_range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;last 15 minutes&quot;</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a># Flows from a specific subnet
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>flows where source ip = &quot;10.10.20.0/24&quot;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Flows from a specific subnet</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>flows<span class="w"> </span>where<span class="w"> </span><span class="nb">source</span><span class="w"> </span><span class="nv">ip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.10.20.0/24&quot;</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a># Top talkers by bytes
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>flows where time_range = &quot;last 1 hour&quot; order by bytes desc
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Top talkers by bytes</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>flows<span class="w"> </span>where<span class="w"> </span><span class="nv">time_range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;last 1 hour&quot;</span><span class="w"> </span>order<span class="w"> </span>by<span class="w"> </span>bytes<span class="w"> </span>desc
 </code></pre></div>
 <p><strong>Check flow ingestion via tcpdump on Collector VM:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ssh<span class="w"> </span>ubuntu@aon-collector.example.local
@@ -5309,12 +5309,12 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>flows where collector = &quot;aon-collector-dc1&quot; and time_range = &quot;last 5 minutes&quot;
 </code></pre></div>
 <p>Zero results indicates no flows are arriving at the Collector. Drill down:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a># Check if any flows exist at all (remove time constraint)
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>flows where collector = &quot;aon-collector-dc1&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check if any flows exist at all (remove time constraint)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>flows<span class="w"> </span>where<span class="w"> </span><span class="nv">collector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;aon-collector-dc1&quot;</span>
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a># Check flows by source type
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>flows where source = ESXi and time_range = &quot;last 1 hour&quot;
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>flows where source = physical and time_range = &quot;last 1 hour&quot;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check flows by source type</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>flows<span class="w"> </span>where<span class="w"> </span><span class="nb">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>ESXi<span class="w"> </span>and<span class="w"> </span><span class="nv">time_range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;last 1 hour&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>flows<span class="w"> </span>where<span class="w"> </span><span class="nb">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>physical<span class="w"> </span>and<span class="w"> </span><span class="nv">time_range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;last 1 hour&quot;</span>
 </code></pre></div>
 <p><strong>From the Collector VM, test UDP 2055 reception directly:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Capture any UDP 2055 traffic for 30 seconds</span>
