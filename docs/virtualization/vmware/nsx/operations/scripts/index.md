@@ -135,7 +135,7 @@ print(f"\nOverall: {'PASS' if overall == 0 else 'WARNING' if overall == 1 else '
 sys.exit(overall)
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3.8 or newer installed from python.org — during install, tick "Add Python to PATH"
@@ -298,7 +298,7 @@ else:
     sys.exit(0)
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3.8 or newer installed from python.org — during install, tick "Add Python to PATH"
@@ -432,7 +432,7 @@ done <<< "$policy_ids"
 echo "Audit complete."
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A bash shell — use Git Bash (https://git-scm.com) or WSL (Ubuntu from the Microsoft Store)
@@ -595,7 +595,7 @@ print(f"\nOverall: {'PASS' if overall == 0 else 'WARNING' if overall == 1 else '
 sys.exit(overall)
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3.8 or newer installed from python.org — during install, tick "Add Python to PATH"
@@ -764,7 +764,7 @@ Check NSX-T cluster, transport node, and edge health using the `uri` module, and
           - "Critical alarms: {{ critical_alarms.json.result_count }}"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible — easiest on Windows via WSL. Open Microsoft Store, install Ubuntu, then in the Ubuntu terminal:
@@ -951,7 +951,7 @@ Write-Host $overallText -ForegroundColor $overallColour
 exit $overallExit
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or Windows 11 — PowerShell 5.1 is already installed, no extra modules needed
@@ -1068,7 +1068,7 @@ echo.
 echo === NSX-T check complete ===
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - PuTTY installed on your Windows PC — download from https://www.putty.org (get the 64-bit installer)

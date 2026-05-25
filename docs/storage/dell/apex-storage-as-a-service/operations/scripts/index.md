@@ -118,7 +118,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3.7 or newer installed (python.org)
@@ -253,7 +253,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3.7 or newer installed (python.org)
@@ -369,7 +369,7 @@ Playbook that calls the APEX REST API via the `uri` module to check subscription
          selectattr('severity', 'equalto', 'CRITICAL') | list | length) > 0
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible installed on a Linux/macOS control node (or WSL on Windows)
@@ -980,7 +980,7 @@ if ($Flagged -gt 0) {
 }
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or 11 (PowerShell 5.1 is already built in)

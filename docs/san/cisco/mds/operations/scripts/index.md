@@ -90,7 +90,7 @@ echo "==============================="
 exit $overall
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or macOS machine (or WSL on Windows)
@@ -247,7 +247,7 @@ else:
     sys.exit(0)
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3.7 or later installed
@@ -375,7 +375,7 @@ printf "\nSummary: %d critical, %d warnings\n", $crits, $warns;
 exit $crits ? 2 : $warns ? 1 : 0;
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or macOS machine with Perl installed
@@ -493,7 +493,7 @@ done
 exit $rc
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or macOS machine (or WSL on Windows)
@@ -615,7 +615,7 @@ Capture running configuration, NX-OS version, and active zoning from all MDS swi
         msg: "Backup complete: {{ backup_path }}/{{ inventory_hostname }}_backup_{{ date_stamp }}.tar.gz"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or WSL machine with Ansible installed (`pip install ansible`)
@@ -730,7 +730,7 @@ echo.
 echo Done.
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - PuTTY installed on Windows — download from https://www.putty.org
@@ -879,7 +879,7 @@ if ($downCount -gt 0) {
 }
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or 11 with PowerShell (already installed)

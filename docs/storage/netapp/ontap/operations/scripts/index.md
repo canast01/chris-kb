@@ -125,7 +125,7 @@ print "\nOverall status: $label\n";
 exit $worst;
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Windows PC with Perl installed (download Strawberry Perl from strawberryperl.com — it is free)
@@ -270,7 +270,7 @@ esac
 exit $worst
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Git for Windows installed (download from gitforwindows.org — it is free and includes Git Bash)
@@ -447,7 +447,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3 installed (download from python.org — click "Download Python 3.x.x", run the installer, and tick "Add Python to PATH" during setup)
@@ -610,7 +610,7 @@ Query the ONTAP REST API to check cluster health, aggregate space, and SnapMirro
         msg: "All ONTAP health checks passed."
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible installed — on Windows, you must use WSL (Windows Subsystem for Linux). Open the Microsoft Store, search for "Ubuntu", install it, then open Ubuntu from the Start menu
@@ -729,7 +729,7 @@ exit 1 if $warn;
 exit 0;
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Strawberry Perl installed on Windows (download from strawberryperl.com)
@@ -861,7 +861,7 @@ if ($alerts -and $alerts.records -and $alerts.records.Count -gt 0) {
 Write-Host "`n=== Report complete ===" -ForegroundColor Cyan
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Windows 10 or Windows 11 PC (PowerShell is already installed — nothing extra to download)
@@ -954,7 +954,7 @@ echo === Check complete ===
 :end
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - PuTTY installed on your Windows PC — download from putty.org (it is free and trusted). Make sure `plink.exe` is available

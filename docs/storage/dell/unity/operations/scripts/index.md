@@ -86,7 +86,7 @@ else
 fi
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or macOS system with Bash
@@ -196,7 +196,7 @@ print "=" x 50 . "\n";
 exit($worst == 2 ? 2 : ($worst == 1 ? 1 : 0));
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or macOS system with Perl installed (pre-installed on most Linux distros and macOS)
@@ -321,7 +321,7 @@ else
 fi
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or macOS system with Bash
@@ -445,7 +445,7 @@ Playbook that uses the `shell` module to run `uemcli` health commands against a 
         msg: "Dell Unity health check completed successfully for {{ unity_host }}."
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible installed on your control machine (`pip install ansible` or via your package manager)
@@ -625,7 +625,7 @@ Write-Host "  Health check complete."
 Write-Host "========================================"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Windows 10 or Windows 11 PC (PowerShell 5.1 is built in — nothing to install)
@@ -732,7 +732,7 @@ echo.
 echo Done.
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Windows 10 or Windows 11 PC

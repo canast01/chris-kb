@@ -164,7 +164,7 @@ pause
 endlocal
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Windows PC with Python 3.8 or later installed (download from python.org)
@@ -353,7 +353,7 @@ Write-Host ""
 Read-Host "Press Enter to exit"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Windows PC (Windows 10 or later)

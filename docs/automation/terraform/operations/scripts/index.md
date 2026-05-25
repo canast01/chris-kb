@@ -200,7 +200,7 @@ log "Log: ${LOGFILE}"
 exit 1
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or macOS machine (or Windows with Git Bash installed from gitforwindows.org)
@@ -344,7 +344,7 @@ log "=== All workspaces processed successfully. ==="
 log "Log: ${LOGFILE}"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or macOS machine (or Windows with Git Bash installed from gitforwindows.org)
@@ -481,7 +481,7 @@ pause
 endlocal
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or later
@@ -601,7 +601,7 @@ Write-Report "Report saved to : $ReportFile"
 Write-Host "Audit complete. Report: $ReportFile" -ForegroundColor Green
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or later with Terraform installed and in your PATH

@@ -107,7 +107,7 @@ fi
 echo -e "${GREEN}Health check PASSED.${RESET}"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - AWS CLI installed (download from https://aws.amazon.com/cli/)
@@ -296,7 +296,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python installed (download from https://python.org — tick "Add Python to PATH" during install)
@@ -501,7 +501,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python installed (download from https://python.org)
@@ -615,7 +615,7 @@ for svc, mc in top10:
 PYEOF
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - AWS CLI installed and configured
@@ -755,7 +755,7 @@ Copies AMIs from the source region to the DR region, launches replacement EC2 in
       loop: "{{ launched_instances.results | map(attribute='instances') | flatten }}"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible installed (this runs on Linux or WSL — Ansible does not run natively on Windows)
@@ -926,7 +926,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python installed
@@ -1036,7 +1036,7 @@ sys.exit(1)
 PYEOF
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - AWS CLI installed and configured
@@ -1173,7 +1173,7 @@ Checks EC2 instance states, RDS status, ELB health, S3 bucket replication, and R
           - "Result: PASSED (assertions above would have failed otherwise)"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible installed on Linux or WSL (Ansible does not run natively on Windows)
@@ -1253,7 +1253,7 @@ echo Health check complete.
 pause
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - AWS CLI for Windows installed (download the MSI installer from https://aws.amazon.com/cli/)
@@ -1378,7 +1378,7 @@ if ($flagged.Count -gt 0) {
 }
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows PowerShell 5.1 or PowerShell 7 (already installed on most Windows 10/11 machines)

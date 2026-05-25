@@ -82,7 +82,7 @@ echo ""
 exit ${EXIT_CODE}
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux server with SYMCLI installed (the Dell EMC Solutions Enabler package)
@@ -233,7 +233,7 @@ if ($crit_count > 0) {
 }
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux server with SYMCLI (Solutions Enabler) installed
@@ -391,7 +391,7 @@ log ""
 log "Failover script complete. Log: ${LOGFILE}"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux server with SYMCLI installed and connectivity to the PowerMax array
@@ -540,7 +540,7 @@ log "Production SRDF replication is restored."
 log "Log: ${LOGFILE}"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux server with SYMCLI installed and connectivity to the PowerMax array
@@ -700,7 +700,7 @@ try {
 }
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or 11 with PowerShell (already installed)
@@ -806,7 +806,7 @@ echo.
 echo Done.
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - PuTTY installed on Windows — download from https://www.putty.org

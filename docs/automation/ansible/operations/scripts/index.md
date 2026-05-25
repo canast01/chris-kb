@@ -204,7 +204,7 @@ A general-purpose health-check playbook targeting Linux server and network devic
       loop: "{{ groups['linux_servers'] | default([]) }}"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible installed on Linux or WSL — Ansible does not run natively on Windows
@@ -362,7 +362,7 @@ Update a web application fleet one host at a time without downtime: drain from t
         msg: "{{ inventory_hostname }}: updated to {{ app_version }}, health OK, back in LB."
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible installed on Linux or WSL
@@ -533,7 +533,7 @@ Verify that every inventory host meets baseline configuration requirements: SSH 
       when: non_compliant | length > 0
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible installed on Linux or WSL
@@ -661,7 +661,7 @@ else
 fi
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible and Ansible Vault installed on Linux or WSL

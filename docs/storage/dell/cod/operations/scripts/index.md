@@ -58,7 +58,7 @@ echo "  Alert if activated capacity approaches total installed capacity."
 echo "========================================"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux server with Dell Solutions Enabler (SYMCLI) installed — this is where `symcfg`, `sympd`, and `symlicense` live
@@ -194,7 +194,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3.7 or newer on the Solutions Enabler host (or any Linux server with SYMCLI on PATH)
@@ -287,7 +287,7 @@ Playbook targeting a Solutions Enabler host. Runs `symcfg` and `symlicense` comm
         pool_list.stdout is search('(8[0-9]|9[0-9]|100)\s*%')
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible installed on a Linux/macOS control node (or WSL on Windows)
@@ -397,7 +397,7 @@ Write-Host "  Query complete."
 Write-Host "========================================"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or 11 (PowerShell 5.1 is already installed)

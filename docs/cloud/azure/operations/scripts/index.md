@@ -107,7 +107,7 @@ fi
 echo -e "${GREEN}Health check PASSED — no critical events detected.${RESET}"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Azure CLI installed (download from https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows)
@@ -260,7 +260,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python installed (download from https://python.org)
@@ -428,7 +428,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python installed
@@ -604,7 +604,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python installed
@@ -740,7 +740,7 @@ Checks ASR replication health, triggers failover for specified VMs, waits for co
       when: item.vms is defined and item.vms | length > 0
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible installed on Linux or WSL (Ansible does not run natively on Windows)
@@ -902,7 +902,7 @@ if [[ "${DELETE_OLD:-}" == "--delete" ]]; then
 fi
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Azure CLI installed and you are logged in (`az login`)
@@ -1061,7 +1061,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python installed
@@ -1245,7 +1245,7 @@ Checks VM power states, load balancer health, storage account tiers, Key Vault c
           - "Result          : PASSED (assertions above would have failed otherwise)"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible installed on Linux or WSL (Ansible does not run natively on Windows)
@@ -1325,7 +1325,7 @@ echo Health check complete.
 pause
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Azure CLI for Windows installed (download the MSI from https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows)
@@ -1449,7 +1449,7 @@ Write-Host "VMs running   : $(($vmReport | Where-Object { $_.Status -eq 'OK' }).
 Write-Host "VMs not running: $($notRunning.Count)"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows PowerShell 5.1 or PowerShell 7

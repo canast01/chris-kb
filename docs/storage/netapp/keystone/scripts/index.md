@@ -106,7 +106,7 @@ esac
 exit $worst
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - This script is designed to run directly on the Linux server that hosts the Keystone Collector — it checks a local systemd service and local log files
@@ -280,7 +280,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3 installed (download from python.org — tick "Add Python to PATH" during setup)
@@ -411,7 +411,7 @@ else
 fi
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - WSL (Windows Subsystem for Linux) with Ubuntu, or Git Bash from gitforwindows.org
@@ -577,7 +577,7 @@ Write-Host "`n" + ("-" * 80)
 Write-Host "Report complete." -ForegroundColor Cyan
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Windows 10 or Windows 11 PC (PowerShell is already installed)
@@ -739,7 +739,7 @@ foreach ($sub in $Subscriptions) {
 Write-Host "`n=== Trend report complete ===" -ForegroundColor Cyan
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Windows 10 or Windows 11 PC (PowerShell is already installed)

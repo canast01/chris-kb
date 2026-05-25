@@ -126,7 +126,7 @@ if ($faultCount -gt 0) {
 }
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or 11 with PowerShell 5.1 or PowerShell 7 (already installed)
@@ -274,7 +274,7 @@ else
 fi
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or macOS machine (or WSL on Windows — see Step 3)
@@ -407,7 +407,7 @@ else
 fi
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux, macOS, or WSL terminal
@@ -554,7 +554,7 @@ Use the Ansible `uri` module to authenticate against VxRail Manager, collect clu
       when: system_faults | length > 0
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or WSL machine with Python 3 installed
@@ -694,7 +694,7 @@ Write-Host ""
 Write-Host "Done." -ForegroundColor Cyan
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or Windows 11 (PowerShell is already installed)
@@ -785,7 +785,7 @@ echo.
 echo Done.
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - PuTTY installed on Windows — download from https://www.putty.org (get the installer)

@@ -66,7 +66,7 @@ else
 fi
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux/macOS computer or Windows with Git Bash installed
@@ -197,7 +197,7 @@ if ($worst_state == 2) {
 }
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux/macOS computer or Windows with Git Bash and Strawberry Perl installed
@@ -295,7 +295,7 @@ Playbook targeting the `data_domain` host group. Runs filesystem space, alert, a
         alerts_output.stdout | regex_search('[0-9]+\\s+\\w+\\s+\\w+')
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible installed on a Linux/macOS control node (or WSL on Windows)
@@ -407,7 +407,7 @@ else
 fi
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux/macOS computer or Windows with Git Bash installed
@@ -491,7 +491,7 @@ echo   Health check complete.
 echo ========================================
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Windows PC (Windows 10 or 11)
@@ -632,7 +632,7 @@ Write-Host "  Health check complete."
 Write-Host "========================================"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or 11 (PowerShell 5.1 is already installed — no downloads needed)

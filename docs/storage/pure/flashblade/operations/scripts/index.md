@@ -179,7 +179,7 @@ print(f"{'='*60}\n")
 sys.exit(worst)
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3 installed (download from python.org — tick "Add Python to PATH" during setup)

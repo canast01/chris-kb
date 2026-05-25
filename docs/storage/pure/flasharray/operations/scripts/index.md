@@ -176,7 +176,7 @@ print(f"{'='*60}\n")
 sys.exit(worst)
 ~~~
 
-#### How to run — step by step
+### How to run — step by step
 
 **Requirements:** Python 3, network access to FlashArray management IP, FlashArray API token.
 

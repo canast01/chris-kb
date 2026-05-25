@@ -116,7 +116,7 @@ Disconnect-VIServer -Confirm:$false
 exit $overallExit
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
@@ -252,7 +252,7 @@ Disconnect-VIServer -Confirm:$false
 exit ($warnCount -gt 0 ? 1 : 0)
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
@@ -428,7 +428,7 @@ else:
     sys.exit(0)
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3.8 or newer installed from python.org — during install, tick "Add Python to PATH"
@@ -558,7 +558,7 @@ Disconnect-VIServer -Confirm:$false
 exit $overallExit
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
@@ -701,7 +701,7 @@ Use `community.vmware` to gather vSAN cluster info, run health checks, inspect d
       when: yellow_assert is failed
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible — easiest on Windows via WSL. Open Microsoft Store, install Ubuntu, then in the Ubuntu terminal:
@@ -856,7 +856,7 @@ Disconnect-VIServer -Confirm:$false
 exit $overallExit
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
@@ -980,7 +980,7 @@ echo.
 echo === vSAN check complete ===
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - PuTTY installed on your Windows PC — download from https://www.putty.org (get the 64-bit installer)

@@ -182,7 +182,7 @@ else
 fi
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - WSL (Windows Subsystem for Linux) or Git Bash on Windows
@@ -383,7 +383,7 @@ else:
     sys.exit(0)
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3 installed (python.org — tick "Add Python to PATH")
@@ -590,7 +590,7 @@ Run pre-upgrade readiness checks across an entire FlashArray fleet — retrieve 
       ignore_errors: true
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - WSL (Windows Subsystem for Linux) with Ubuntu installed
@@ -774,7 +774,7 @@ foreach ($arr in $Arrays) {
 Write-Host "`n=== Report complete ===" -ForegroundColor Cyan
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Windows 10 or Windows 11 PC (PowerShell is already installed)

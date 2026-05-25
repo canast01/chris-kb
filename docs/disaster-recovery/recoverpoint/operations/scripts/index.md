@@ -121,7 +121,7 @@ else:
     sys.exit(0)
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3.7 or later installed
@@ -305,7 +305,7 @@ log "DR test failover complete. Remember to run --rollback when done."
 log "Log: ${LOGFILE}"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or macOS machine (or WSL on Windows)
@@ -490,7 +490,7 @@ else:
 sys.exit(exit_code)
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3.7 or later installed
@@ -654,7 +654,7 @@ try {
 }
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or 11 with PowerShell (already installed)
@@ -751,7 +751,7 @@ echo.
 echo Done.
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - PuTTY installed on Windows — download from https://www.putty.org

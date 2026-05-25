@@ -74,7 +74,7 @@ if ($issues > 0) {
 }
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or macOS system with Perl installed (pre-installed on most Linux distros and macOS)
@@ -188,7 +188,7 @@ else
 fi
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or macOS system with Bash
@@ -311,7 +311,7 @@ fi
 exit 0
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or macOS system with Bash and `bc`

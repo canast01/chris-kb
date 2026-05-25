@@ -86,7 +86,7 @@ echo "========================================"
 [[ "$FAIL" -eq 0 ]] && exit 0 || exit 1
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Run this script directly on the SCG appliance or Linux server running the SCG service
@@ -217,7 +217,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3.7 or newer installed (python.org)
@@ -340,7 +340,7 @@ Playbook targeting the SCG host. Checks the SCG service status, verifies outboun
         msg: "SCG health check completed successfully on {{ inventory_hostname }}."
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible installed on a Linux/macOS control node (or WSL on Windows)
@@ -417,7 +417,7 @@ echo   Connection test complete.
 echo ========================================
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Windows PC with plink.exe from PuTTY (https://www.putty.org — free download)
@@ -555,7 +555,7 @@ Write-Host "  Inventory complete."
 Write-Host "========================================"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or 11 (PowerShell 5.1 is already installed)

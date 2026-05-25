@@ -179,7 +179,7 @@ else:
     sys.exit(0)
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3 installed (download from python.org — tick "Add Python to PATH")
@@ -408,7 +408,7 @@ else:
     sys.exit(0)
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3 installed (python.org — tick "Add Python to PATH")
@@ -591,7 +591,7 @@ else
 fi
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - WSL (Windows Subsystem for Linux) with Ubuntu, or a Linux server where you want to schedule this script as a cron job
@@ -803,7 +803,7 @@ if ($warnings.Count -gt 0) {
 }
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Windows 10 or Windows 11 PC (PowerShell is already installed — nothing to download)

@@ -90,7 +90,7 @@ else
 fi
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux server with PowerPath installed and licensed
@@ -201,7 +201,7 @@ printf "Total: %d devices — %d PASS, %d FAIL\n", $pass + $fail, $pass, $fail;
 exit($fail > 0 ? 1 : 0);
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux server with PowerPath installed
@@ -325,7 +325,7 @@ else
 fi
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux server with PowerPath installed and licensed
@@ -410,7 +410,7 @@ echo   Remote check complete.
 echo ========================================
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Windows PC with plink.exe from PuTTY (https://www.putty.org — free)

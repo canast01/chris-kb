@@ -147,7 +147,7 @@ $Results | Export-Csv -Path $ExportCsv -NoTypeInformation
 Write-Host "`nExported: $ExportCsv"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows PowerShell 5.1 or PowerShell 7 (already on most Windows 10/11 machines)
@@ -297,7 +297,7 @@ Write-Host ""
 Write-Host "Reports saved to: $OutputDir" -ForegroundColor Green
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Windows machine that is joined to your Active Directory domain
@@ -486,7 +486,7 @@ if (($CritList.Count -gt 0 -or $WarnList.Count -gt 0) -and $SmtpServer -and $Ale
 }
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows PowerShell 5.1 or PowerShell 7
@@ -665,7 +665,7 @@ Write-Log "Check complete. ExitCode=$ExitCode | Log: $LOGFILE"
 exit $ExitCode
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows PowerShell 5.1 or PowerShell 7
@@ -763,7 +763,7 @@ if %errorlevel% equ 0 (
 pause
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows PowerShell (already on Windows 10/11)
@@ -903,7 +903,7 @@ Remove-SSHSession -SessionId `$session.SessionId
 "@
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows PowerShell 5.1 or PowerShell 7

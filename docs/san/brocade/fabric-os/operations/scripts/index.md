@@ -103,7 +103,7 @@ echo "=============================="
 exit $overall
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or macOS machine (or WSL on Windows)
@@ -258,7 +258,7 @@ save_baseline(%current);
 exit scalar(@alerts) ? 1 : 0;
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux or macOS machine with Perl installed (`perl --version` to check; install with `sudo apt install perl`)

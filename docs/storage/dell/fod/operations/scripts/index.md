@@ -100,7 +100,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3.7 or newer installed (python.org)
@@ -187,7 +187,7 @@ else
 fi
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - A Linux/macOS computer or Windows with Git Bash installed
@@ -290,7 +290,7 @@ Playbook targeting localhost that calls the CloudIQ REST API to list all storage
           exceeds committed_tib — those systems are incurring FOD burst charges.
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible installed on a Linux/macOS control node (or WSL on Windows)
@@ -404,7 +404,7 @@ Write-Host "  Query complete."
 Write-Host "========================================"
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or 11 (PowerShell 5.1 is already built in)

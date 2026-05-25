@@ -110,7 +110,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3.7 or newer installed (python.org)
@@ -257,7 +257,7 @@ if __name__ == "__main__":
     main()
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Python 3.7 or newer installed (python.org)
@@ -369,7 +369,7 @@ Playbook targeting localhost. Authenticates to CloudIQ, retrieves active alerts 
          selectattr('severity', 'equalto', 'CRITICAL') | list | length) > 0
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Ansible installed on a Linux/macOS control node (or WSL on Windows)
@@ -483,7 +483,7 @@ if ($Critical -gt 0) {
 }
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or 11 (PowerShell 5.1 is already installed)
@@ -608,7 +608,7 @@ if ($Degraded -gt 0) {
 }
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or 11 with PowerShell 5.1 (built in — no download needed)

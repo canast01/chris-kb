@@ -31,7 +31,7 @@ Christos Anastasiadis  |  May 2026
 
 *Study: 3 hours  |  Questions: 50*
 
-#### Acronym Reference (DAY 1)
+### Acronym Reference (DAY 1)
 
 | Acronym | Definition |
 |---|---|
@@ -589,7 +589,7 @@ DAY 1 COMPLETE
 
 *Study: 3 hours  |  Questions: 50*
 
-#### Acronym Reference (DAY 2)
+### Acronym Reference (DAY 2)
 
 | Acronym | Definition |
 |---|---|
@@ -951,7 +951,7 @@ DAY 2 COMPLETE
 
 *Study: 3 hours  |  Questions: 50*
 
-#### Acronym Reference (DAY 3)
+### Acronym Reference (DAY 3)
 
 | Acronym | Definition |
 |---|---|
@@ -1286,7 +1286,7 @@ DAY 3 COMPLETE
 
 *Study: 3 hours  |  Questions: 50*
 
-#### Acronym Reference (DAY 4)
+### Acronym Reference (DAY 4)
 
 | Acronym | Definition |
 |---|---|
@@ -1595,7 +1595,7 @@ DAY 4 COMPLETE
 
 *Study: 3 hours  |  Questions: 50*
 
-#### Acronym Reference (DAY 5)
+### Acronym Reference (DAY 5)
 
 | Acronym | Definition |
 |---|---|
@@ -1919,7 +1919,7 @@ DAY 5 COMPLETE
 
 *Study: 3 hours  |  Questions: 50*
 
-#### Acronym Reference (DAY 6)
+### Acronym Reference (DAY 6)
 
 | Acronym | Definition |
 |---|---|
@@ -2266,7 +2266,7 @@ DAY 6 COMPLETE
 
 *Study: 3 hours  |  Questions: 50*
 
-#### Acronym Reference (DAY 7)
+### Acronym Reference (DAY 7)
 
 | Acronym | Definition |
 |---|---|
@@ -2618,7 +2618,7 @@ DAY 7 COMPLETE
 
 *Study: 3 hours  |  Questions: 50*
 
-#### Acronym Reference (DAY 8)
+### Acronym Reference (DAY 8)
 
 | Acronym | Definition |
 |---|---|
@@ -2968,7 +2968,7 @@ DAY 8 COMPLETE
 
 *Study: 3 hours  |  Questions: 50*
 
-#### Acronym Reference (DAY 9)
+### Acronym Reference (DAY 9)
 
 | Acronym | Definition |
 |---|---|
@@ -3332,7 +3332,7 @@ DAY 9 COMPLETE
 
 *Study: 3 hours  |  Questions: 50*
 
-#### Acronym Reference (DAY 10)
+### Acronym Reference (DAY 10)
 
 | Acronym | Definition |
 |---|---|

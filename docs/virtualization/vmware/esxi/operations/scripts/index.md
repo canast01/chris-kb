@@ -133,7 +133,7 @@ Disconnect-VIServer -Confirm:$false
 exit $overallExit
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
@@ -239,7 +239,7 @@ fi
 exit $CRIT
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - SSH must be enabled on the ESXi host: vSphere Client → select the host → Manage → Services → SSH → click Start

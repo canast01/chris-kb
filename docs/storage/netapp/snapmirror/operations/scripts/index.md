@@ -107,7 +107,7 @@ esac
 exit $worst
 ~~~
 
-#### How to run this script — step by step
+### How to run this script — step by step
 
 **Before you start — what you need**
 - Git for Windows installed (download from gitforwindows.org — it is free and includes Git Bash)
