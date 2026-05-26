@@ -25,35 +25,51 @@ passwd root
 # Disable the default 'dcnm' local OS account if not needed
 usermod -L dcnm   # lock (disable password login)
 ```
-
----
-
-## 2. Restrict Management Network Access
-
-```bash
-# Configure firewalld to restrict access to management subnet only
-systemctl enable --now firewalld
-
-# Allow HTTPS from management subnet only
-firewall-cmd --permanent --remove-service=https
-firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.10.0.0/24" port port="443" protocol="tcp" accept'
-
-# Allow SSH from jump host / management subnet only
-firewall-cmd --permanent --remove-service=ssh
-firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.10.0.0/24" service name="ssh" accept'
-
-# Allow SNMP traps from switch subnets only
-firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.20.0.0/16" port port="162" protocol="udp" accept'
-
-# Allow syslog from switch subnets
-firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.20.0.0/16" port port="514" protocol="udp" accept'
-
-# Set default zone to drop all other traffic
-firewall-cmd --permanent --set-default-zone=drop
-firewall-cmd --reload
-
-# Verify
-firewall-cmd --list-all
+┌─────────────────────────────────── Cisco DCNM — Security Hardening ───────────────────────────────────┐
+│                                                                                                       │
+│  DCNM hardening: disable defaults, enforce ISE TACACS+, TLS, RBAC, patch management.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Platform Hardening              │  │               Access Hardening              │   │
+│   │        Change default admin password         │  │          ISE TACACS+: no local use          │   │
+│   │           Disable HTTP; HTTPS only           │  │           RBAC: operator read-only          │   │
+│   │           Firewall: port 443 only            │  │          API IP whitelist: restrict         │   │
+│   │         TLS 1.2+ only; disable older         │  │           Session timeout: 30 min           │   │
+│   │          Disable unused OS services          │  │               MFA via SAML SSO              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Change defaults day 1; restrict API; enforce ISE TACACS+ before production use.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Monitoring & Alert Hardening         │  │               Patch Management              │   │
+│   │        Audit log: all actions logged         │  │            Quarterly DCNM upgrade           │   │
+│   │          Failed logins: SIEM alert           │  │          Cisco PSIRT: check monthly         │   │
+│   │         Config change: diff + alert          │  │          OS patches: monthly cycle          │   │
+│   │             API token expiry: 8h             │  │            Backup before upgrade            │   │
+│   │         Cert expiry: 60-day warning          │  │            Test in staging first            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  DCNM Linux VM · vSphere host · management-only VLAN · Cisco ISE appliance                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  TLS 1.2+        = minimum required; disable TLS 1.0/1.1 and SSL 3.0                                  │
+│  ISE TACACS+     = Cisco ISE centralised CLI auth; all admin actions audited                          │
+│  RBAC            = Role-Based Access Control; operator = read-only; admin = full                      │
+│  IP whitelist    = restrict DCNM REST API to known source IP ranges                                   │
+│  SAML SSO        = DCNM integrates with IdP; MFA enforced at identity provider                        │
+│  Session timeout = idle GUI/API session terminated after 30 minutes                                   │
+│  API token expiry= JWT expires after configurable period; 8h default                                  │
+│  Cisco PSIRT     = Product Security Incident Response; Cisco security advisories                      │
+│  Audit log       = all DCNM GUI and API calls logged with user and timestamp                          │
+│  Config diff     = DCNM detects out-of-band zone changes and sends alert                              │
+│  Cert expiry     = TLS certificate monitored; 60-day warning before expiry                            │
+│  Staging test    = validate DCNM upgrade in non-prod before production rollout                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -23,32 +23,51 @@ snmpget -v3 -u dcnm_poll -l authPriv -a SHA -A <auth-pass> \
 # Step 3: Check DCNM discovery log
 grep "<switch-ip>" /var/log/dcnm/discovery.log | tail -30
 ```
-
-| Cause | Fix |
-|---|---|
-| SSH credentials incorrect or changed | Update switch credentials in **SAN > Fabrics > Edit Credentials** |
-| SNMP v3 credentials mismatch | Update SNMP credentials in DCNM fabric settings |
-| SSH service disabled on switch | `feature ssh` on the switch |
-| Switch IP changed | Update switch IP in DCNM inventory |
-| ACL blocking DCNM on switch | Remove or modify mgmt ACL on the switch to permit DCNM IP |
-
----
-
-## Zone Activation Fails
-
-**Symptom:** Zone set activation from DCNM returns an error or zone configuration does not propagate to all switches.
-
-```bash
-# On the principal switch of the fabric (NX-OS CLI)
-show zone status vsan <vsan-id>
-# Check: Mode, Default-zone, Merge Status
-
-# Check for merge conflicts
-show zone merge-failure vsan <vsan-id>
-
-# If merge failure: identify the switch with conflicting zone DB
-show zoneset active vsan <vsan-id>
-# Compare against expected from DCNM
+┌───────────────────────────── Cisco DCNM — Troubleshooting Common Issues ──────────────────────────────┐
+│                                                                                                       │
+│  DCNM common issues: switch loss, zone push failure, login error, DB full, ISL alerts.                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Fabric & Switch Issues            │  │               Zone Push Issues              │   │
+│   │         Switch lost from DCNM: ping          │  │         Push fail: SSH cred expired         │   │
+│   │           SNMP poll fail: v3 check           │  │          Zone lock: no edit session         │   │
+│   │           VSAN isolated: check ISL           │  │          VSAN mismatch: verify both         │   │
+│   │         ISL bounce: check SFP/cable          │  │         Conflict: out-of-band change        │   │
+│   │         Domain conflict: isolate sw          │  │         show zoneset: verify active         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SNMP and SSH credentials are the most common failure points for DCNM operations.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Auth & Platform Issues            │  │              Performance Issues             │   │
+│   │         ISE TACACS+ fail: check svc          │  │         UI slow: Elasticsearch disk         │   │
+│   │         LDAP bind fail: acct expiry          │  │           appmgr restart: service           │   │
+│   │           Token expired: re-logon            │  │            df -h: disk full check           │   │
+│   │           Local fallback: ISE down           │  │             Prune old perf data             │   │
+│   │        Audit log: failed login check         │  │            journalctl: svc errors           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  DCNM VM · management network · Cisco ISE · Cisco MDS switch management ports                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SNMP v3         = DCNM polls switches every 5 min; credential mismatch = red switch                  │
+│  SSH credentials = per-switch credentials for zone push; update on password change                    │
+│  Zone lock       = NX-OS zone edit session active; DCNM cannot push until cleared                     │
+│  VSAN isolated   = VSAN partition; devices in same VSAN cannot communicate                            │
+│  Domain conflict = two MDS switches same FC domain ID; isolate and renumber                           │
+│  Out-of-band     = zone change on switch bypassing DCNM; causes config conflict                       │
+│  show zoneset    = NX-OS; verify active zone set matches expected config                              │
+│  ISE TACACS+     = check ISE service health if DCNM login fails                                       │
+│  LDAP bind       = DCNM AD integration service account; check for expiry                              │
+│  Elasticsearch   = DCNM perf DB; disk full causes UI slowness and timeouts                            │
+│  appmgr          = DCNM VM CLI; restart/status/prune for service management                           │
+│  journalctl      = Linux systemd log; shows DCNM service crashes and errors                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Resolution for merge conflict:**
