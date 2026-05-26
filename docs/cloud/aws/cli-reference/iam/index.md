@@ -31,36 +31,49 @@ IAM CLI: Users · Roles · Policies · STS
          │          │  SessionToken           │
          └─────────►└─────────────────────────┘
 ```
-
-> Part of the AWS CLI Reference.
-
----
-
-```bash
-# Current identity
-aws sts get-caller-identity
-
-# IAM users
-aws iam list-users
-aws iam get-user --user-name <user>
-aws iam create-user --user-name <user>
-aws iam delete-user --user-name <user>
-
-# IAM groups
-aws iam list-groups
-aws iam add-user-to-group --user-name <user> --group-name <group>
-
-# IAM roles
-aws iam list-roles
-aws iam get-role --role-name <role>
-aws iam create-role --role-name <role> --assume-role-policy-document file://trust.json
-aws iam attach-role-policy --role-name <role> --policy-arn <arn>
-
-# Access keys
-aws iam list-access-keys --user-name <user>
-aws iam create-access-key --user-name <user>
-aws iam delete-access-key --user-name <user> --access-key-id <id>
-
-# Assume role
-aws sts assume-role --role-arn <arn> --role-session-name session1
+┌──────────────────────────────────────────── AWS CLI — IAM ────────────────────────────────────────────┐
+│                                                                                                       │
+│  IAM CLI commands for users, roles, policies, MFA, and access key management.                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               User Management                │  │               Role Management               │   │
+│   │          create-user: new IAM user           │  │        create-role: with trust policy       │   │
+│   │            list-users: all users             │  │            list-roles: all roles            │   │
+│   │            get-user: user details            │  │         assume-role: get credentials        │   │
+│   │             delete-user: remove              │  │          update-assume-role-policy          │   │
+│   │         update-login-profile: passwd         │  │         list-attached-role-policies         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Users for human access; roles for service and cross-account access                                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Policy and Key Management           │  │               MFA and Security              │   │
+│   │          create-policy: new managed          │  │          enable-mfa-device: attach          │   │
+│   │          attach-user-policy: assign          │  │            deactivate-mfa-device            │   │
+│   │          create-access-key: new key          │  │            get-credential-report            │   │
+│   │          update-access-key: disable          │  │          generate-credential-report         │   │
+│   │          delete-access-key: remove           │  │          get-account-summary: stats         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  IAM service (global) · AWS STS (assume-role) · CloudTrail (API logging)                              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  assume-role     = Requests temporary credentials for a role via STS                                  │
+│  Trust policy    = JSON policy on a role defining who can assume it                                   │
+│  Managed policy  = Standalone IAM policy; attached to multiple users/roles                            │
+│  Inline policy   = Policy embedded directly in user/role; not reusable                                │
+│  Access key      = Long-term programmatic credentials; rotate every 90 days                           │
+│  update-access-key= Disables or activates an access key without deleting                              │
+│  Credential report= CSV of all IAM users with last-used dates and MFA status                          │
+│  enable-mfa-device= Registers a virtual or hardware MFA token for a user                              │
+│  STS             = Security Token Service; issues temporary credentials                               │
+│  get-account-summary= Returns counts of users, roles, policies, groups                                │
+│  Permission boundary= IAM policy limiting max permissions a principal can have                        │
+│  update-login-profile= Changes console password for an IAM user                                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
