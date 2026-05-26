@@ -23,92 +23,51 @@ graph TB
   class VPC,PUB,PRIV net
   class IGW,TGW cloud
 ```
-
-SCPs enforce guardrails: deny root access, enforce encryption, restrict regions to an approved list.
-
-## Network Architecture
-
-Hub-and-spoke via Transit Gateway:
-
-Subnet tiers per VPC:
-
-| Tier | Contents | Internet access |
-|---|---|---|
-| Public | ALB, NAT Gateway — no EC2 instances | Yes via IGW |
-| Private | EC2, ECS, Lambda | Outbound via NAT GW |
-| Isolated | RDS, ElastiCache | None |
-
-## Networking Services
-
-| Service | Purpose | Key Config |
-|---|---|---|
-| VPC | Isolated virtual network | CIDR, subnets, route tables, NACLs |
-| Transit Gateway | Hub connecting VPCs and on-prem | TGW attachments, route domains |
-| Direct Connect | Dedicated private circuit from on-prem | VIFs (private/public), BGP, DXGW |
-| Route 53 | DNS — public/private zones, health checks | Alias records, resolver endpoints |
-| ALB / NLB | Layer 7 / Layer 4 load balancing | Target groups, listener rules, WAF |
-| CloudFront | CDN for static content and API acceleration | Distributions, origins, OAC |
-
-## Compute Services
-
-| Service | Use Case | Notes |
-|---|---|---|
-| EC2 (Auto Scaling Groups) | Stateful apps, legacy workloads | Launch templates, target-tracking scaling |
-| EKS | Kubernetes workloads | Node groups vs Fargate profiles, IRSA via OIDC |
-| ECS / Fargate | Container orchestration | Task definitions, services, capacity providers |
-| Lambda | Event-driven functions | 15-min max, 128 MB–10 GB memory, X-Ray tracing |
-
-## Storage Services
-
-| Service | Purpose | Notes |
-|---|---|---|
-| S3 | Object storage | Bucket policies, versioning, lifecycle rules, CRR |
-| EBS | Block storage for EC2 | gp3 default; io2 Block Express for high IOPS; snapshots |
-| EFS | Shared NFS — multi-AZ | General Purpose vs Max I/O; Bursting vs Provisioned |
-| FSx for Windows | Managed SMB file server | AD integration, DFS replication |
-| FSx for ONTAP | Managed NetApp ONTAP | Multi-protocol, SnapMirror, S3 tiering |
-
-## Database Services
-
-| Service | Purpose | Notes |
-|---|---|---|
-| RDS | Managed relational DB | MySQL, PostgreSQL, SQL Server, Oracle; Multi-AZ; read replicas |
-| Aurora | MySQL/PostgreSQL-compatible | Higher throughput; Aurora Serverless v2 for variable workloads |
-| DynamoDB | Managed NoSQL | On-demand vs provisioned capacity, DAX cache, global tables |
-| ElastiCache | In-memory cache | Redis Cluster mode, auth tokens, encryption in transit |
-
-## Security Services
-
-| Service | Purpose | Notes |
-|---|---|---|
-| IAM | Identity and access management | Roles, policies, permission boundaries, OIDC federation |
-| KMS | Key management — encryption at rest | CMK vs AWS-managed keys; key policies; key rotation |
-| Secrets Manager | Secret rotation and storage | Auto-rotation for RDS; cross-account via resource policy |
-| WAF | Web Application Firewall | Managed rule sets (AWS + OWASP core) |
-| GuardDuty | Threat detection | VPC flow logs, DNS, CloudTrail → EventBridge → response |
-| Security Hub | Aggregated findings across accounts | CIS Benchmark, AWS Foundational Security Standard |
-
-## Management and Observability
-
-| Service | Purpose | Notes |
-|---|---|---|
-| CloudWatch | Metrics, logs, alarms | Log groups, metric filters, composite alarms, dashboards |
-| CloudTrail | API audit log | Multi-region trail to S3; CloudWatch Logs integration |
-| AWS Config | Resource configuration history and compliance | Config rules, conformance packs, remediation |
-| Systems Manager | Fleet management without bastions | Session Manager, Patch Manager, Parameter Store |
-| CloudFormation | Infrastructure as code | Stacks, nested stacks, change sets, drift detection |
-
-## EC2 Launch Flow
-
-```mermaid
-flowchart LR
-    request["Launch Request\nConsole / CLI / ASG"] --> iamCheck["IAM Authorization"]
-    iamCheck --> amiSelect["AMI Selection"]
-    amiSelect --> networkPlace["Network Placement\nVPC · Subnet · AZ"]
-    networkPlace --> sgApply["Security Group"]
-    sgApply --> instanceProfile["Instance Profile\nIAM role attached"]
-    instanceProfile --> userData["User Data\ncloud-init"]
-    userData --> running["Instance Running"]
+┌─────────────────────────────────── AWS Architecture — How It Works ───────────────────────────────────┐
+│                                                                                                       │
+│  Multi-account org: management root governs OUs; workload accounts isolated by purpose.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Account Layer                 │  │               Networking Layer              │   │
+│   │        Management: org root + billing        │  │          Transit Gateway: hub-spoke         │   │
+│   │          Log Archive: central logs           │  │          VPC per account: isolation         │   │
+│   │           Audit: security tooling            │  │         DirectConnect: on-prem link         │   │
+│   │         Workload: env/team accounts          │  │        VPC endpoints: private S3/SSM        │   │
+│   │          SCPs: OU-level guardrails           │  │        Route 53: DNS across accounts        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Accounts provide blast-radius isolation; Transit Gateway connects without peering mesh               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Identity and Access              │  │                Observability                │   │
+│   │           IAM Identity Center: SSO           │  │         CloudTrail: org-wide API log        │   │
+│   │        Permission sets → member accts        │  │          CloudWatch: metrics + logs         │   │
+│   │          SAML federation: IdP → AWS          │  │          Config: resource inventory         │   │
+│   │           IAM roles: cross-account           │  │           Security Hub: aggregated          │   │
+│   │          MFA: enforced org-wide SCP          │  │         GuardDuty: threat detection         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS Regions · Availability Zones · data centres · DirectConnect physical ports · backbone            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OU             = Organisational Unit; logical grouping of accounts with shared SCPs                  │
+│  SCP            = Service Control Policy; preventive guardrail at OU or account level                 │
+│  Transit Gateway= Regional hub router connecting multiple VPCs without full mesh                      │
+│  IAM Identity Center= AWS SSO; assigns permission sets to users in member accounts                    │
+│  Permission set = IAM policy bundle assigned to user/group for specific account                       │
+│  DirectConnect  = Dedicated private link from on-premises to AWS; bypasses internet                   │
+│  VPC endpoint   = Private connection to AWS services without internet traversal                       │
+│  CloudTrail org = Management-account trail capturing all API calls across every account               │
+│  AWS Config     = Records resource configuration changes; evaluates compliance rules                  │
+│  Security Hub   = Aggregates findings from GuardDuty, Inspector, Config across accounts               │
+│  GuardDuty      = Threat detection; analyses CloudTrail, VPC Flow Logs, DNS queries                   │
+│  Log archive    = Dedicated account receiving all central logs; immutable S3 bucket                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## IAM Structure

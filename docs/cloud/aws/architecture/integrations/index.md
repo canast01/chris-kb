@@ -16,21 +16,51 @@ flowchart LR
 
     upload -->|"Lifecycle rule"| ia -->|"Lifecycle rule"| glacier -->|"Lifecycle rule"| deepArchive -->|"Lifecycle rule"| expire
 ```
-
-## Direct Connect + VPN
-
-On-premises to AWS connectivity:
-
-```bash
-# Check Direct Connect connection status
-aws directconnect describe-connections --query 'connections[*].[connectionId,connectionName,connectionState]'
-
-# Check Virtual Interface BGP state
-aws directconnect describe-virtual-interfaces --query 'virtualInterfaces[*].[virtualInterfaceId,bgpPeers]'
-
-# Verify Transit Gateway route tables
-aws ec2 describe-transit-gateway-route-tables
-aws ec2 search-transit-gateway-routes --transit-gateway-route-table-id <tgw-rtb-id> --filters "Name=state,Values=active"
+┌─────────────────────────────────── AWS Architecture — Integrations ───────────────────────────────────┐
+│                                                                                                       │
+│  AWS platform integrates with on-prem identity, monitoring, ITSM, and CI/CD tooling.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Identity Integrations             │  │             Network Integrations            │   │
+│   │          Azure AD / Okta: SAML IdP           │  │         DirectConnect: dedicated WAN        │   │
+│   │           SCIM: user provisioning            │  │           Site-to-site VPN: backup          │   │
+│   │           AD Connector: on-prem AD           │  │        Route 53 resolver: hybrid DNS        │   │
+│   │         CyberArk: privileged access          │  │         ELB: external load balancing        │   │
+│   │        Venafi: certificate lifecycle         │  │             WAF: edge protection            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Identity and network integrations established first; tooling integrations built on top               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Monitoring Integrations            │  │           Automation Integrations           │   │
+│   │          Datadog/Splunk: CloudWatch          │  │         Terraform: IaC provisioning         │   │
+│   │         PagerDuty: CloudWatch alarms         │  │         GitHub Actions: OIDC deploy         │   │
+│   │          ServiceNow: CMDB AWS sync           │  │           Ansible: Systems Manager          │   │
+│   │         Security Hub → Jira tickets          │  │          CloudFormation: IaC native         │   │
+│   │           Cost alerts: SNS → Slack           │  │          EventBridge: event routing         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS backbone · DirectConnect port · on-prem IdP server · CI/CD runner · ITSM server                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SCIM           = System for Cross-domain Identity Management; auto-provisions users                  │
+│  AD Connector   = AWS proxy to on-prem Active Directory; no user sync required                        │
+│  Route 53 resolver= Hybrid DNS: resolves on-prem names from VPC and vice versa                        │
+│  WAF            = Web Application Firewall; deployed at CloudFront or ALB edge                        │
+│  OIDC deploy    = GitHub Actions assumes IAM role via OIDC without static keys                        │
+│  EventBridge    = Serverless event bus routing AWS events to targets or 3rd parties                   │
+│  SSM            = AWS Systems Manager; fleet management without SSH/RDP                               │
+│  CyberArk       = PAM tool; brokers privileged AWS console/CLI access                                 │
+│  Venafi         = Certificate lifecycle manager; issues and renews ACM/EC2 certs                      │
+│  SNS → Slack    = Cost alerts published to SNS topic then forwarded to Slack webhook                  │
+│  CMDB AWS sync  = ServiceNow discovery pulling AWS resource inventory via API                         │
+│  CloudFormation = AWS native IaC; stack-based resource provisioning and updates                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 VPN is configured as a backup to Direct Connect with lower BGP preference (AS-Path prepend or local preference).
