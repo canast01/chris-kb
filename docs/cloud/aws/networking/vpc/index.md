@@ -41,37 +41,51 @@ AWS VPC — Virtual Private Cloud
 │      traffic)                           │
 └─────────────────────────────────────────┘
 ```
-
-## Key Terms
-
-| Term | What It Is | On-Premises Equivalent |
-|---|---|---|
-| VPC | Your own isolated network inside AWS | Your data centre LAN |
-| Subnet | A smaller IP range inside the VPC (public or private) | VLAN |
-| EC2 | A VM running in AWS | ESXi virtual machine |
-| EBS | A disk attached to an EC2 instance | Pure Storage LUN |
-| RDS | Managed relational database (AWS runs the OS/DB) | On-prem SQL Server |
-| IGW | Internet Gateway — how public subnets reach the internet | Firewall/router egress |
-| VGW | Virtual Private Gateway — how the VPC connects to on-prem over VPN | VPN endpoint |
-| NAT Gateway | Lets private subnet instances reach the internet (outbound only) | NAT firewall rule |
-| Security Group | Stateful firewall rules per EC2 instance | Host-based firewall |
-| NACL | Network ACL — stateless rules per subnet | VLAN ACL |
-
----
-
-## Subnet Types
-
-```text
-PUBLIC SUBNET                    PRIVATE SUBNET
-─────────────────                ─────────────────
-Has a route to IGW               No direct internet route
-Instances can have public IPs    Instances use NAT Gateway
-Used for: load balancers,        Used for: app servers,
-          bastion hosts,                   databases,
-          NAT Gateways                     internal services
-
-Traffic in:  internet → IGW → subnet    Traffic in:  VPN → VGW → subnet
-Traffic out: subnet → IGW → internet    Traffic out: subnet → NAT GW → IGW → internet
+┌───────────────────────────────────── VPC — Virtual Private Cloud ─────────────────────────────────────┐
+│                                                                                                       │
+│  VPC is an isolated virtual network within AWS; you control CIDR, subnets, and routing.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             VPC Core Components              │  │             Connectivity Options            │   │
+│   │      CIDR block: /16 to /28 IPv4 range       │  │       Internet Gateway: public access       │   │
+│   │       Subnets: per-AZ CIDR sub-blocks        │  │        NAT Gateway: private outbound        │   │
+│   │       Route tables: traffic direction        │  │         VPC Peering: direct VPC link        │   │
+│   │      Security groups: stateful firewall      │  │          Transit Gateway: hub-spoke         │   │
+│   │       NACLs: stateless subnet firewall       │  │          DirectConnect/VPN: on-prem         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Multi-AZ design with public + private + data tiers; TGW for cross-account connectivity.              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             VPC Design Decisions             │  │                 Default VPC                 │   │
+│   │       RFC1918 CIDR: avoid prod overlap       │  │         Auto-created in every region        │   │
+│   │     Secondary CIDR: expand if exhausted      │  │       /16 CIDR; public subnets per AZ       │   │
+│   │      Enable DNS hostnames + resolution       │  │       IGW attached; auto-assign IP on       │   │
+│   │        Flow logs: capture all traffic        │  │        Do not use for prod workloads        │   │
+│   │      Shared VPC: RAM for multi-account       │  │       Recreate if accidentally deleted      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS regional network fabric · Multiple physical AZ data centres · Global backbone                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VPC             = Logically isolated section of AWS cloud with its own network configuration         │
+│  CIDR block      = IP range for the VPC; primary + optional secondary blocks                          │
+│  Tenancy         = Default (shared hardware) or dedicated (single-tenant physical host)               │
+│  DNS resolution  = VPC attribute enabling DNS queries to route through Route 53 resolver              │
+│  DNS hostnames   = VPC attribute giving instances public DNS names for their public IPs               │
+│  Secondary CIDR  = Additional CIDR block added to expand VPC IP address space                         │
+│  Shared VPC      = VPC owned by one account; subnets shared to others via RAM                         │
+│  VPC Peering     = Private routing between two VPCs; no TGW required; no transitive                   │
+│  Transit Gateway = Regional hub connecting many VPCs and on-prem; supports transitive                 │
+│  Default VPC     = AWS-created VPC in every region; do not use for production                         │
+│  Flow Logs       = VPC-level capture of accept/reject traffic for network analysis                    │
+│  RFC1918         = Private address ranges: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
