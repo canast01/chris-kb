@@ -3363,102 +3363,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#ldap-role-mapping" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LDAP Role Mapping
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#test-ldap-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test LDAP Authentication
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-tacacs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. TACACS+
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-saml-20-sso" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. SAML 2.0 (SSO)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="4. SAML 2.0 (SSO)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-session-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Session Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-tls-certificate-management-for-the-nd-ui" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. TLS Certificate Management for the ND UI
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-audit-trail" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Audit Trail
-      
-    </span>
-  </a>
   
 </li>
       
@@ -3784,7 +3690,7 @@
 </tbody>
 </table>
 <h3 id="import-ca-certificate-for-ldaps">Import CA Certificate for LDAPS<a class="headerlink" href="#import-ca-certificate-for-ldaps" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Import corporate CA certificate for LDAPS trust</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>acs<span class="w"> </span>certificates<span class="w"> </span>import-ca<span class="w"> </span>--cert<span class="w"> </span>/tmp/corp-ca.crt<span class="w"> </span>--name<span class="w"> </span>corp-ldap-ca
@@ -3792,153 +3698,66 @@
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Verify</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>acs<span class="w"> </span>certificates<span class="w"> </span>show-ca
 </code></pre></div>
-<p>Alternatively, import via GUI: <strong>Admin Console &gt; Security &gt; Certificates &gt; Trusted Certificates &gt; Add</strong>.</p>
-<h3 id="ldap-role-mapping">LDAP Role Mapping<a class="headerlink" href="#ldap-role-mapping" title="Permanent link">&para;</a></h3>
-<p>Navigate to <strong>Admin Console &gt; Security &gt; Roles &gt; LDAP Role Mapping</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>AD Group</th>
-<th>ND Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>GRP-ND-Admins</code></td>
-<td>Admin</td>
-</tr>
-<tr>
-<td><code>GRP-ND-SAN-Operators</code></td>
-<td>Operator (site-scoped to SAN fabrics)</td>
-</tr>
-<tr>
-<td><code>GRP-ND-ReadOnly</code></td>
-<td>Viewer</td>
-</tr>
-</tbody>
-</table>
-<h3 id="test-ldap-authentication">Test LDAP Authentication<a class="headerlink" href="#test-ldap-authentication" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Navigate to <strong>Admin Console &gt; Security &gt; Authentication &gt; Login Domains &gt; [CORP-AD] &gt; Test</strong>.</li>
-<li>Enter a test AD username and password.</li>
-<li>ND reports: success (including groups resolved and role assigned) or a specific error.</li>
-</ol>
-<hr />
-<h2 id="3-tacacs">3. TACACS+<a class="headerlink" href="#3-tacacs" title="Permanent link">&para;</a></h2>
-<p>Configure under <strong>Admin Console &gt; Security &gt; Authentication &gt; Login Domains &gt; Add &gt; TACACS+</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Server 1</td>
-<td><code>10.10.1.10</code></td>
-</tr>
-<tr>
-<td>Server 2</td>
-<td><code>10.10.1.11</code></td>
-</tr>
-<tr>
-<td>Server port</td>
-<td>49</td>
-</tr>
-<tr>
-<td>Shared key</td>
-<td>Vault-stored; enter at configuration time</td>
-</tr>
-<tr>
-<td>Default role</td>
-<td>Viewer (fallback if no AV-pair returned)</td>
-</tr>
-</tbody>
-</table>
-<p>Role assignment from TACACS+:
-- Configure the TACACS+ server (e.g., Cisco ISE) to return AV-pair: <code>cisco-av-pair=nd-role=Admin</code>
-- ND maps the <code>nd-role</code> attribute value to an ND role</p>
-<hr />
-<h2 id="4-saml-20-sso">4. SAML 2.0 (SSO)<a class="headerlink" href="#4-saml-20-sso" title="Permanent link">&para;</a></h2>
-<p>SAML 2.0 integration allows engineers to use corporate SSO (Okta, ADFS, Ping) to log into ND.</p>
-<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Navigate to <strong>Admin Console &gt; Security &gt; Authentication &gt; Login Domains &gt; Add &gt; SAML</strong>.</li>
-<li>Download the ND Service Provider metadata XML.</li>
-<li>Import this XML into your IdP as a new SAML application.</li>
-<li>Configure the IdP to include a <code>Role</code> attribute in the SAML assertion (e.g., <code>nd-admin</code>, <code>nd-operator</code>).</li>
-<li>In ND: map the IdP role attribute values to ND roles under <strong>Security &gt; Roles &gt; SAML Role Mapping</strong>.</li>
-<li>Set SAML as the primary or default login domain.</li>
-</ol>
-<p>After SAML is configured, the ND login page shows a <strong>Single Sign-On</strong> button that redirects to the corporate IdP. On successful authentication, users are returned to ND with the mapped role.</p>
-<hr />
-<h2 id="5-session-management">5. Session Management<a class="headerlink" href="#5-session-management" title="Permanent link">&para;</a></h2>
-<p>Configure under <strong>Admin Console &gt; Security &gt; Security Settings &gt; Session</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Recommended Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Session idle timeout</td>
-<td>15 minutes</td>
-</tr>
-<tr>
-<td>Maximum session lifetime</td>
-<td>8 hours</td>
-</tr>
-<tr>
-<td>Concurrent sessions per user</td>
-<td>3</td>
-</tr>
-</tbody>
-</table>
-<p>REST API tokens: tokens are created on login and expire after the session lifetime or on explicit logout. Automation scripts must call the logout endpoint when done to release tokens. Accumulated uncleaned sessions do not consume significant resources in ND (Keycloak manages sessions), but cleaning up is good practice.</p>
-<hr />
-<h2 id="6-tls-certificate-management-for-the-nd-ui">6. TLS Certificate Management for the ND UI<a class="headerlink" href="#6-tls-certificate-management-for-the-nd-ui" title="Permanent link">&para;</a></h2>
-<p>By default, ND generates a self-signed certificate. Replace it with a corporate CA certificate:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Step 1: Generate CSR (on any host with OpenSSL)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-keyout<span class="w"> </span>nd-dc1.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-out<span class="w"> </span>nd-dc1.csr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=nd-dc1.corp.example.com/O=Corp/C=AU&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-addext<span class="w"> </span><span class="s2">&quot;subjectAltName=DNS:nd-dc1.corp.example.com,DNS:nd-dc1-1.corp.example.com,DNS:nd-dc1-2.corp.example.com,DNS:nd-dc1-3.corp.example.com&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Step 2: Submit CSR to corporate CA; receive signed certificate</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Step 3: Create bundle with intermediate CA cert</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>cat<span class="w"> </span>nd-dc1.crt<span class="w"> </span>intermediate-ca.crt<span class="w"> </span>&gt;<span class="w"> </span>nd-dc1-bundle.crt
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Step 4: Import into ND</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>acs<span class="w"> </span>certificates<span class="w"> </span>import<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--key<span class="w"> </span>/tmp/nd-dc1.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>--cert<span class="w"> </span>/tmp/nd-dc1-bundle.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span>--name<span class="w"> </span>nd-dc1-cert
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># Step 5: Activate</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>acs<span class="w"> </span>certificates<span class="w"> </span>activate<span class="w"> </span>--name<span class="w"> </span>nd-dc1-cert
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># Verify</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>nd-dc1.corp.example.com:443<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span>-servername<span class="w"> </span>nd-dc1.corp.example.com<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
-</code></pre></div>
-<p>Include all node hostnames in the SAN extension so direct node access (not via VIP) also presents a valid certificate.</p>
-<hr />
-<h2 id="7-audit-trail">7. Audit Trail<a class="headerlink" href="#7-audit-trail" title="Permanent link">&para;</a></h2>
-<p>All authentication events are recorded in the ND audit log:
-- View under <strong>Admin Console &gt; Operations &gt; Audit Logs</strong>
-- Filter by: category <strong>Security</strong>, event type <strong>Login</strong>, <strong>Logout</strong>, <strong>Login_Failed</strong>
-- Export to CSV for SIEM ingestion or quarterly review</p>
-<p>Authentication events also appear in ND platform logs:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>acs<span class="w"> </span>system<span class="w"> </span>logs<span class="w"> </span>--component<span class="w"> </span>security<span class="w"> </span>--tail<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;login\|auth&quot;</span>
+┌─────────────────────────── Cisco Nexus Dashboard — Security Authentication ───────────────────────────┐
+│                                                                                                       │
+│  ND supports local, LDAP, RADIUS, TACACS+, and SAML 2.0 authentication providers.                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Local Authentication             │  │            Remote Authentication            │   │
+│   │         Built-in user DB on cluster          │  │            RADIUS: PAP/CHAP auth            │   │
+│   │           Bcrypt password hashing            │  │         TACACS+: per-cmd accounting         │   │
+│   │           Min 8 chars + complexity           │  │         LDAP: bind DN + search base         │   │
+│   │         Account lockout: 5 attempts          │  │         SAML 2.0: IdP-initiated SSO         │   │
+│   │        Local fallback if remote down         │  │         Priority: order of providers        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Remote providers tried in priority order; local fallback activates if all unreachable                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                SAML SSO Flow                 │  │              Session Management             │   │
+│   │          SP-initiated: ND redirects          │  │           JWT: signed bearer token          │   │
+│   │         Assertion: groups → ND roles         │  │          Token TTL: 60 min default          │   │
+│   │         Signing cert: IdP public key         │  │          Refresh: re-auth required          │   │
+│   │          MFA enforced at IdP layer           │  │         Concurrent sessions: allowed        │   │
+│   │          Metadata URL: auto-import           │  │           Idle timeout: UI logout           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ND cluster · RADIUS/TACACS+ server · LDAP/AD server · SAML IdP · management network                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SAML 2.0       = XML-based SSO standard; ND acts as Service Provider                                 │
+│  IdP            = Identity Provider; issues SAML assertions (e.g. Okta, Azure AD)                     │
+│  SP-initiated   = User clicks ND login, is redirected to IdP for authentication                       │
+│  SAML assertion = XML document from IdP containing user identity and group claims                     │
+│  Bcrypt         = Adaptive password hashing algorithm; resistant to brute-force                       │
+│  Bind DN        = LDAP distinguished name used by ND to query the directory                           │
+│  Search base    = LDAP OU from which ND searches for user and group objects                           │
+│  JWT            = JSON Web Token; signed session credential returned after auth                       │
+│  Account lockout= Disables login after 5 consecutive failed authentication attempts                   │
+│  PAP            = Password Authentication Protocol; sends password in clear over TLS                  │
+│  Local fallback = Admin-account local auth if all remote servers are unreachable                      │
+│  Metadata URL   = SAML IdP endpoint exposing signing cert and SSO URL automatically                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Include all node hostnames in the SAN extension so direct node access (not via VIP) also presents a valid certificate.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## 7. Audit Trail
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>All authentication events are recorded in the ND audit log:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- View under **Admin Console &gt; Operations &gt; Audit Logs**
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- Filter by: category **Security**, event type **Login**, **Logout**, **Login_Failed**
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- Export to CSV for SIEM ingestion or quarterly review
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Authentication events also appear in ND platform logs:
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>```bash
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ssh ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>acs system logs --component security --tail 100 | grep -i &quot;login\|auth&quot;
 </code></pre></div></p>
 <hr />
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>

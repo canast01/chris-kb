@@ -3380,45 +3380,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#least-privilege-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Least Privilege Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quarterly-access-review-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quarterly Access Review Procedure
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quarterly Access Review Procedure">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-based-user-audit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API-Based User Audit
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#disabling-and-removing-accounts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3769,7 +3730,7 @@
 - Rotate every 90 days, coordinated with automation owners
 - Automation scripts must call logout endpoint when finished</p>
 <h3 id="create-a-service-account">Create a Service Account<a class="headerlink" href="#create-a-service-account" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Via REST API</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Via REST API</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://nd-dc1.corp.example.com/login<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;userName&quot;:&quot;admin&quot;,&quot;userPasswd&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:&quot;local&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -3787,107 +3748,52 @@
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s1">    &quot;roles&quot;: [{&quot;name&quot;: &quot;Viewer&quot;, &quot;sites&quot;: [{&quot;name&quot;: &quot;DC1-SAN&quot;}, {&quot;name&quot;: &quot;DC2-SAN&quot;}]}]</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
-<hr />
-<h2 id="least-privilege-reference">Least Privilege Reference<a class="headerlink" href="#least-privilege-reference" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Task</th>
-<th>Minimum Role</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>View dashboards, inventory, topology</td>
-<td>Viewer</td>
-<td></td>
-</tr>
-<tr>
-<td>View NDI anomalies</td>
-<td>Viewer</td>
-<td>NDI site must be in scope</td>
-</tr>
-<tr>
-<td>Acknowledge/clear NDFC alarms</td>
-<td>Operator</td>
-<td></td>
-</tr>
-<tr>
-<td>Create/modify/activate NDFC zones</td>
-<td>Operator</td>
-<td>NDFC Network Admin required</td>
-</tr>
-<tr>
-<td>Manage VSANs and device aliases</td>
-<td>Operator</td>
-<td>NDFC Network Admin required</td>
-</tr>
-<tr>
-<td>MDS firmware upgrade via NDFC</td>
-<td>Operator</td>
-<td>NDFC Network Admin required</td>
-</tr>
-<tr>
-<td>Register new sites</td>
-<td>Admin</td>
-<td></td>
-</tr>
-<tr>
-<td>Install/upgrade ND applications</td>
-<td>Admin</td>
-<td></td>
-</tr>
-<tr>
-<td>Manage ND user accounts</td>
-<td>Admin</td>
-<td></td>
-</tr>
-<tr>
-<td>Configure LDAP/TACACS+/SAML</td>
-<td>Admin</td>
-<td></td>
-</tr>
-<tr>
-<td>ND cluster backup and restore</td>
-<td>Admin</td>
-<td></td>
-</tr>
-<tr>
-<td>TLS certificate management</td>
-<td>Admin</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="quarterly-access-review-procedure">Quarterly Access Review Procedure<a class="headerlink" href="#quarterly-access-review-procedure" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Export the user list: <strong>Admin Console &gt; Security &gt; Local Users &gt; Export</strong>.</li>
-<li>For LDAP accounts: export the current LDAP group membership for all ND-mapped groups.</li>
-<li>For each account:</li>
-<li>Confirm the user is still employed and in the correct role</li>
-<li>Confirm the user has logged in within the past 90 days (inactive accounts should be disabled or deleted)</li>
-<li>Confirm service accounts are still in use by active automation</li>
-<li>Disable accounts no longer required:</li>
-<li>Navigate to <strong>Admin Console &gt; Security &gt; Local Users &gt; [Username] &gt; Disable</strong></li>
-<li>For LDAP accounts: remove the user from the AD group; ND denies access on next login attempt</li>
-<li>Document the review in the change management system.</li>
-</ol>
-<h3 id="api-based-user-audit">API-Based User Audit<a class="headerlink" href="#api-based-user-audit" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all local users with their roles</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://nd-dc1.corp.example.com/nexus/api/v1/users<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">ND_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s2">import sys, json, csv</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s2">users = json.load(sys.stdin)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s2">w = csv.writer(sys.stdout)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s2">w.writerow([&#39;username&#39;,&#39;email&#39;,&#39;roles&#39;,&#39;lastLoginTime&#39;])</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s2">for u in users:</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s2">    roles = &#39;, &#39;.join(r.get(&#39;name&#39;,&#39;&#39;) for r in u.get(&#39;roles&#39;,[]))</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s2">    w.writerow([u.get(&#39;username&#39;,&#39;&#39;), u.get(&#39;email&#39;,&#39;&#39;), roles, u.get(&#39;lastLoginTime&#39;,&#39;&#39;)])</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s2">&quot;</span>
-</code></pre></div>
+┌─────────────────────────── Cisco Nexus Dashboard — Security Access Control ───────────────────────────┐
+│                                                                                                       │
+│  RBAC model with local and AAA-backed users; per-app roles scoped to tenant or site.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               User Management                │  │                  Role Model                 │   │
+│   │          Local users: ND-native DB           │  │          Admin: full cluster access         │   │
+│   │         Remote: LDAP/RADIUS/TACACS+          │  │        Operator: read + limited write       │   │
+│   │          Groups: mapped to ND roles          │  │             Read-only: view only            │   │
+│   │        Password policy: enforce cmplx        │  │         App roles: per NDFC/NDI/NDO         │   │
+│   │        Session timeout: configurable         │  │         Site scope: per-site access         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Roles assigned at cluster level; app-specific roles further restrict within each app                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              API Access Control              │  │                    Audit                    │   │
+│   │         REST API: Bearer token auth          │  │          Login events: success/fail         │   │
+│   │          Token TTL: 60 min default           │  │           Config changes: who+what          │   │
+│   │         Service accounts: dedicated          │  │          API calls: logged per user         │   │
+│   │         IP allowlist: restrict mgmt          │  │            Export: syslog to SIEM           │   │
+│   │            MFA: via SAML IdP only            │  │          Retention: 90-day default          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ND cluster · LDAP/RADIUS/TACACS+ server · SAML IdP · SIEM · management network                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RBAC           = Role-Based Access Control; maps users/groups to permitted actions                   │
+│  LDAP group map = Mapping LDAP group DN to an ND role for automatic assignment                        │
+│  App role       = Role scoped to a specific ND app (NDFC/NDI/NDO) not cluster-wide                    │
+│  Site scope     = Restricting a user to only manage specific onboarded sites                          │
+│  Service account= Dedicated ND user for automation; not used for human login                          │
+│  IP allowlist   = Network ACL restricting management access to known source IPs                       │
+│  MFA            = Multi-Factor Auth; enforced by SAML IdP (not natively by ND)                        │
+│  Token TTL      = JWT lifetime; default 60 min; reduce for higher security posture                    │
+│  Password complexity= Minimum length, upper/lower/digit/special char requirements                     │
+│  Session timeout= Idle period after which UI session is automatically terminated                      │
+│  SIEM export    = Forwarding ND audit logs via syslog TLS to Splunk or similar                        │
+│  Audit retention= How long ND retains access logs before purging (default 90 days)                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <hr />
 <h2 id="disabling-and-removing-accounts">Disabling and Removing Accounts<a class="headerlink" href="#disabling-and-removing-accounts" title="Permanent link">&para;</a></h2>
 <h3 id="disable-temporary">Disable (Temporary)<a class="headerlink" href="#disable-temporary" title="Permanent link">&para;</a></h3>
