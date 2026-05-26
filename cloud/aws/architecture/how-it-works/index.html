@@ -3723,105 +3723,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#network-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#networking-services" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Networking Services
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#compute-services" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compute Services
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#storage-services" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage Services
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#database-services" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Database Services
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security-services" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Security Services
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#management-and-observability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Management and Observability
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ec2-launch-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        EC2 Launch Flow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#iam-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        IAM Structure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#high-availability" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4017,7 +3918,7 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>AWS is deployed as a multi-account organisation via AWS Organizations. All production workloads run in dedicated member accounts. A management account holds only SCPs and consolidated billing — no workloads. An audit account aggregates CloudTrail and Config findings; a log archive account stores centralised log retention.</p>
 <h2 id="account-structure">Account Structure<a class="headerlink" href="#account-structure" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
+<p><pre class="mermaid"><code>graph TB
   ORG["AWS Organization\n(management account)"] --&gt; LOG["Log Archive Account"]
   ORG --&gt; AUDIT["Audit / Security Account"]
   ORG --&gt; PROD["Production Account\n(workload VPC)"]
@@ -4032,276 +3933,62 @@
   class ORG,LOG,AUDIT,PROD ctrl
   class VPC,PUB,PRIV net
   class IGW,TGW cloud</code></pre>
-<p>SCPs enforce guardrails: deny root access, enforce encryption, restrict regions to an approved list.</p>
-<h2 id="network-architecture">Network Architecture<a class="headerlink" href="#network-architecture" title="Permanent link">&para;</a></h2>
-<p>Hub-and-spoke via Transit Gateway:</p>
-<p>Subnet tiers per VPC:</p>
-<table>
-<thead>
-<tr>
-<th>Tier</th>
-<th>Contents</th>
-<th>Internet access</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Public</td>
-<td>ALB, NAT Gateway — no EC2 instances</td>
-<td>Yes via IGW</td>
-</tr>
-<tr>
-<td>Private</td>
-<td>EC2, ECS, Lambda</td>
-<td>Outbound via NAT GW</td>
-</tr>
-<tr>
-<td>Isolated</td>
-<td>RDS, ElastiCache</td>
-<td>None</td>
-</tr>
-</tbody>
-</table>
-<h2 id="networking-services">Networking Services<a class="headerlink" href="#networking-services" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Purpose</th>
-<th>Key Config</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VPC</td>
-<td>Isolated virtual network</td>
-<td>CIDR, subnets, route tables, NACLs</td>
-</tr>
-<tr>
-<td>Transit Gateway</td>
-<td>Hub connecting VPCs and on-prem</td>
-<td>TGW attachments, route domains</td>
-</tr>
-<tr>
-<td>Direct Connect</td>
-<td>Dedicated private circuit from on-prem</td>
-<td>VIFs (private/public), BGP, DXGW</td>
-</tr>
-<tr>
-<td>Route 53</td>
-<td>DNS — public/private zones, health checks</td>
-<td>Alias records, resolver endpoints</td>
-</tr>
-<tr>
-<td>ALB / NLB</td>
-<td>Layer 7 / Layer 4 load balancing</td>
-<td>Target groups, listener rules, WAF</td>
-</tr>
-<tr>
-<td>CloudFront</td>
-<td>CDN for static content and API acceleration</td>
-<td>Distributions, origins, OAC</td>
-</tr>
-</tbody>
-</table>
-<h2 id="compute-services">Compute Services<a class="headerlink" href="#compute-services" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Use Case</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>EC2 (Auto Scaling Groups)</td>
-<td>Stateful apps, legacy workloads</td>
-<td>Launch templates, target-tracking scaling</td>
-</tr>
-<tr>
-<td>EKS</td>
-<td>Kubernetes workloads</td>
-<td>Node groups vs Fargate profiles, IRSA via OIDC</td>
-</tr>
-<tr>
-<td>ECS / Fargate</td>
-<td>Container orchestration</td>
-<td>Task definitions, services, capacity providers</td>
-</tr>
-<tr>
-<td>Lambda</td>
-<td>Event-driven functions</td>
-<td>15-min max, 128 MB–10 GB memory, X-Ray tracing</td>
-</tr>
-</tbody>
-</table>
-<h2 id="storage-services">Storage Services<a class="headerlink" href="#storage-services" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Purpose</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>S3</td>
-<td>Object storage</td>
-<td>Bucket policies, versioning, lifecycle rules, CRR</td>
-</tr>
-<tr>
-<td>EBS</td>
-<td>Block storage for EC2</td>
-<td>gp3 default; io2 Block Express for high IOPS; snapshots</td>
-</tr>
-<tr>
-<td>EFS</td>
-<td>Shared NFS — multi-AZ</td>
-<td>General Purpose vs Max I/O; Bursting vs Provisioned</td>
-</tr>
-<tr>
-<td>FSx for Windows</td>
-<td>Managed SMB file server</td>
-<td>AD integration, DFS replication</td>
-</tr>
-<tr>
-<td>FSx for ONTAP</td>
-<td>Managed NetApp ONTAP</td>
-<td>Multi-protocol, SnapMirror, S3 tiering</td>
-</tr>
-</tbody>
-</table>
-<h2 id="database-services">Database Services<a class="headerlink" href="#database-services" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Purpose</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RDS</td>
-<td>Managed relational DB</td>
-<td>MySQL, PostgreSQL, SQL Server, Oracle; Multi-AZ; read replicas</td>
-</tr>
-<tr>
-<td>Aurora</td>
-<td>MySQL/PostgreSQL-compatible</td>
-<td>Higher throughput; Aurora Serverless v2 for variable workloads</td>
-</tr>
-<tr>
-<td>DynamoDB</td>
-<td>Managed NoSQL</td>
-<td>On-demand vs provisioned capacity, DAX cache, global tables</td>
-</tr>
-<tr>
-<td>ElastiCache</td>
-<td>In-memory cache</td>
-<td>Redis Cluster mode, auth tokens, encryption in transit</td>
-</tr>
-</tbody>
-</table>
-<h2 id="security-services">Security Services<a class="headerlink" href="#security-services" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Purpose</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IAM</td>
-<td>Identity and access management</td>
-<td>Roles, policies, permission boundaries, OIDC federation</td>
-</tr>
-<tr>
-<td>KMS</td>
-<td>Key management — encryption at rest</td>
-<td>CMK vs AWS-managed keys; key policies; key rotation</td>
-</tr>
-<tr>
-<td>Secrets Manager</td>
-<td>Secret rotation and storage</td>
-<td>Auto-rotation for RDS; cross-account via resource policy</td>
-</tr>
-<tr>
-<td>WAF</td>
-<td>Web Application Firewall</td>
-<td>Managed rule sets (AWS + OWASP core)</td>
-</tr>
-<tr>
-<td>GuardDuty</td>
-<td>Threat detection</td>
-<td>VPC flow logs, DNS, CloudTrail → EventBridge → response</td>
-</tr>
-<tr>
-<td>Security Hub</td>
-<td>Aggregated findings across accounts</td>
-<td>CIS Benchmark, AWS Foundational Security Standard</td>
-</tr>
-</tbody>
-</table>
-<h2 id="management-and-observability">Management and Observability<a class="headerlink" href="#management-and-observability" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Purpose</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CloudWatch</td>
-<td>Metrics, logs, alarms</td>
-<td>Log groups, metric filters, composite alarms, dashboards</td>
-</tr>
-<tr>
-<td>CloudTrail</td>
-<td>API audit log</td>
-<td>Multi-region trail to S3; CloudWatch Logs integration</td>
-</tr>
-<tr>
-<td>AWS Config</td>
-<td>Resource configuration history and compliance</td>
-<td>Config rules, conformance packs, remediation</td>
-</tr>
-<tr>
-<td>Systems Manager</td>
-<td>Fleet management without bastions</td>
-<td>Session Manager, Patch Manager, Parameter Store</td>
-</tr>
-<tr>
-<td>CloudFormation</td>
-<td>Infrastructure as code</td>
-<td>Stacks, nested stacks, change sets, drift detection</td>
-</tr>
-</tbody>
-</table>
-<h2 id="ec2-launch-flow">EC2 Launch Flow<a class="headerlink" href="#ec2-launch-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    request["Launch Request\nConsole / CLI / ASG"] --&gt; iamCheck["IAM Authorization"]
-    iamCheck --&gt; amiSelect["AMI Selection"]
-    amiSelect --&gt; networkPlace["Network Placement\nVPC · Subnet · AZ"]
-    networkPlace --&gt; sgApply["Security Group"]
-    sgApply --&gt; instanceProfile["Instance Profile\nIAM role attached"]
-    instanceProfile --&gt; userData["User Data\ncloud-init"]
-    userData --&gt; running["Instance Running"]</code></pre>
-<h2 id="iam-structure">IAM Structure<a class="headerlink" href="#iam-structure" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>AWS Organizations SCPs (deny dangerous actions globally)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>IAM Identity Center (SSO — maps AD groups to permission sets)
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>IAM Roles (assumed by EC2, Lambda, ECS, CI/CD via OIDC)
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>No long-lived IAM user access keys in production
-</code></pre></div>
+┌─────────────────────────────────── AWS Architecture — How It Works ───────────────────────────────────┐
+│                                                                                                       │
+│  Multi-account org: management root governs OUs; workload accounts isolated by purpose.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Account Layer                 │  │               Networking Layer              │   │
+│   │        Management: org root + billing        │  │          Transit Gateway: hub-spoke         │   │
+│   │          Log Archive: central logs           │  │          VPC per account: isolation         │   │
+│   │           Audit: security tooling            │  │         DirectConnect: on-prem link         │   │
+│   │         Workload: env/team accounts          │  │        VPC endpoints: private S3/SSM        │   │
+│   │          SCPs: OU-level guardrails           │  │        Route 53: DNS across accounts        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Accounts provide blast-radius isolation; Transit Gateway connects without peering mesh               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Identity and Access              │  │                Observability                │   │
+│   │           IAM Identity Center: SSO           │  │         CloudTrail: org-wide API log        │   │
+│   │        Permission sets → member accts        │  │          CloudWatch: metrics + logs         │   │
+│   │          SAML federation: IdP → AWS          │  │          Config: resource inventory         │   │
+│   │           IAM roles: cross-account           │  │           Security Hub: aggregated          │   │
+│   │          MFA: enforced org-wide SCP          │  │         GuardDuty: threat detection         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS Regions · Availability Zones · data centres · DirectConnect physical ports · backbone            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OU             = Organisational Unit; logical grouping of accounts with shared SCPs                  │
+│  SCP            = Service Control Policy; preventive guardrail at OU or account level                 │
+│  Transit Gateway= Regional hub router connecting multiple VPCs without full mesh                      │
+│  IAM Identity Center= AWS SSO; assigns permission sets to users in member accounts                    │
+│  Permission set = IAM policy bundle assigned to user/group for specific account                       │
+│  DirectConnect  = Dedicated private link from on-premises to AWS; bypasses internet                   │
+│  VPC endpoint   = Private connection to AWS services without internet traversal                       │
+│  CloudTrail org = Management-account trail capturing all API calls across every account               │
+│  AWS Config     = Records resource configuration changes; evaluates compliance rules                  │
+│  Security Hub   = Aggregates findings from GuardDuty, Inspector, Config across accounts               │
+│  GuardDuty      = Threat detection; analyses CloudTrail, VPC Flow Logs, DNS queries                   │
+│  Log archive    = Dedicated account receiving all central logs; immutable S3 bucket                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## IAM Structure
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```text
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>AWS Organizations SCPs (deny dangerous actions globally)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>IAM Identity Center (SSO — maps AD groups to permission sets)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>IAM Roles (assumed by EC2, Lambda, ECS, CI/CD via OIDC)
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>No long-lived IAM user access keys in production
+</code></pre></div></p>
 <ul>
 <li><strong>Humans</strong>: IAM Identity Center — no direct IAM users in member accounts</li>
 <li><strong>Machines</strong>: IAM Roles with instance profiles or OIDC federation</li>

@@ -3745,39 +3745,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#s3-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        S3 Standards
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#iam-policy-evaluation-logic" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        IAM Policy Evaluation Logic
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cloudformation-stack-lifecycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CloudFormation Stack Lifecycle
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#security-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4099,7 +4066,7 @@
 </tbody>
 </table>
 <h2 id="s3-object-lifecycle">S3 Object Lifecycle<a class="headerlink" href="#s3-object-lifecycle" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
+<p><pre class="mermaid"><code>flowchart LR
     standard["S3 Standard\nFrequent access\n(day 0)"]
     ia["S3 Standard-IA\nInfrequent access\n(day 30+)"]
     glacier["S3 Glacier\nInstant Retrieval\n(day 90+)"]
@@ -4110,83 +4077,77 @@
     ia --&gt;|"Transition rule\n≥ 90 days"| glacier
     glacier --&gt;|"Transition rule\n≥ 180 days"| deepArchive
     deepArchive --&gt;|"Expiration rule"| expire</code></pre>
-<h2 id="s3-standards">S3 Standards<a class="headerlink" href="#s3-standards" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Requirement</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Block Public Access</td>
-<td>Enabled on all buckets (account-level + bucket-level)</td>
-</tr>
-<tr>
-<td>Server-side encryption</td>
-<td>SSE-S3 minimum; SSE-KMS for sensitive data</td>
-</tr>
-<tr>
-<td>Versioning</td>
-<td>Enabled on all buckets containing production data</td>
-</tr>
-<tr>
-<td>MFA delete</td>
-<td>Enabled on backup/compliance buckets</td>
-</tr>
-<tr>
-<td>Lifecycle rules</td>
-<td>Transition to S3-IA after 30 days, Glacier after 90 days (for archival buckets)</td>
-</tr>
-<tr>
-<td>Bucket policy</td>
-<td>Deny HTTP (require HTTPS); deny cross-account unless explicitly required</td>
-</tr>
-</tbody>
-</table>
-<h2 id="iam-policy-evaluation-logic">IAM Policy Evaluation Logic<a class="headerlink" href="#iam-policy-evaluation-logic" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    request["API Request"]
-    explicitDeny{"Explicit Deny\nin any policy?"}
-    scpAllow{"SCP allows\nthe action?"}
-    iamAllow{"IAM policy\nexplicitly allows?"}
-    resourcePolicy{"Resource-based policy\nallows?"}
-    defaultDeny["Default DENY\nAccess denied"]
-    allow["ALLOW\nRequest proceeds"]
-
-    request --&gt; explicitDeny
-    explicitDeny -- Yes --&gt; defaultDeny
-    explicitDeny -- No --&gt; scpAllow
-    scpAllow -- No --&gt; defaultDeny
-    scpAllow -- Yes --&gt; iamAllow
-    iamAllow -- Yes --&gt; allow
-    iamAllow -- No --&gt; resourcePolicy
-    resourcePolicy -- Yes --&gt; allow
-    resourcePolicy -- No --&gt; defaultDeny</code></pre>
-<h2 id="cloudformation-stack-lifecycle">CloudFormation Stack Lifecycle<a class="headerlink" href="#cloudformation-stack-lifecycle" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    template["Template\nYAML / JSON"]
-    validate["aws cloudformation validate-template"]
-    createStack["CREATE_IN_PROGRESS\naws cloudformation create-stack"]
-    createComplete["CREATE_COMPLETE\nStack resources provisioned"]
-    createFailed["CREATE_FAILED\nRollback triggered"]
-    rollbackComplete["ROLLBACK_COMPLETE\nResources removed"]
-    updateStack["UPDATE_IN_PROGRESS\naws cloudformation update-stack"]
-    updateComplete["UPDATE_COMPLETE\nChanges applied"]
-    updateFailed["UPDATE_ROLLBACK_COMPLETE\nPrevious state restored"]
-    deleteStack["DELETE_IN_PROGRESS\naws cloudformation delete-stack"]
-    deleteComplete["DELETE_COMPLETE\nStack removed"]
-
-    template --&gt; validate --&gt; createStack
-    createStack --&gt; createComplete
-    createStack --&gt; createFailed --&gt; rollbackComplete
-    createComplete --&gt; updateStack
-    updateStack --&gt; updateComplete
-    updateStack --&gt; updateFailed
-    createComplete --&gt; deleteStack
-    updateComplete --&gt; deleteStack
-    deleteStack --&gt; deleteComplete</code></pre>
+┌───────────────────────────────── AWS Architecture — Design Standards ─────────────────────────────────┐
+│                                                                                                       │
+│  Standards covering account structure, tagging, naming, networking, and security baseline.            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Account Standards               │  │              Tagging Standards              │   │
+│   │           One workload per account           │  │          Required: env, owner, team         │   │
+│   │          No production in mgmt acct          │  │          Required: cost-centre, app         │   │
+│   │           OU hierarchy: env-based            │  │          Enforce: SCP deny untagged         │   │
+│   │          Separate audit + log accts          │  │         Naming: kebab-case standard         │   │
+│   │           Email alias per account            │  │          Automation: tag on create          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Account and tagging standards enforced via SCPs and AWS Config rules                                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Networking Standards             │  │              Security Baseline              │   │
+│   │          Non-overlapping VPC CIDRs           │  │             MFA: enforced by SCP            │   │
+│   │        Private subnets for workloads         │  │          Root: no programmatic keys         │   │
+│   │           Public: only LB + NAT GW           │  │            CloudTrail: always on            │   │
+│   │            VPC flow logs: enabled            │  │            GuardDuty: org-wide on           │   │
+│   │           TGW: centralised egress            │  │          CIS AWS Benchmark: target          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS Regions · Availability Zones · data centres · DirectConnect · internet edge                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CIS AWS Benchmark= Center for Internet Security prescriptive AWS security controls                   │
+│  Non-overlapping CIDR= VPC address ranges that do not conflict; required for TGW                      │
+│  Private subnet = No internet gateway route; workloads access internet via NAT GW                     │
+│  Public subnet  = Has internet gateway route; only load balancers and NAT GW placed here              │
+│  Centralised egress= All internet-bound traffic routed through shared inspection VPC                  │
+│  Email alias    = Shared mailbox per account; avoids personal email ownership                         │
+│  Kebab-case     = Naming convention using lowercase words separated by hyphens                        │
+│  SCP deny untagged= Preventive control blocking resource creation without required tags               │
+│  Cost-centre tag= Tag linking resources to financial cost allocation unit                             │
+│  VPC flow logs  = Network traffic metadata logs; required for security investigations                 │
+│  Audit account  = Dedicated account for security tooling (Security Hub, Config agg.)                  │
+│  OU hierarchy   = Organizational Unit tree: Root → Security → Workloads → env OUs                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## CloudFormation Stack Lifecycle
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```mermaid
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>flowchart TD
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    template[&quot;Template\nYAML / JSON&quot;]
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    validate[&quot;aws cloudformation validate-template&quot;]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    createStack[&quot;CREATE_IN_PROGRESS\naws cloudformation create-stack&quot;]
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    createComplete[&quot;CREATE_COMPLETE\nStack resources provisioned&quot;]
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    createFailed[&quot;CREATE_FAILED\nRollback triggered&quot;]
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    rollbackComplete[&quot;ROLLBACK_COMPLETE\nResources removed&quot;]
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    updateStack[&quot;UPDATE_IN_PROGRESS\naws cloudformation update-stack&quot;]
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    updateComplete[&quot;UPDATE_COMPLETE\nChanges applied&quot;]
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    updateFailed[&quot;UPDATE_ROLLBACK_COMPLETE\nPrevious state restored&quot;]
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    deleteStack[&quot;DELETE_IN_PROGRESS\naws cloudformation delete-stack&quot;]
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    deleteComplete[&quot;DELETE_COMPLETE\nStack removed&quot;]
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    template --&gt; validate --&gt; createStack
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    createStack --&gt; createComplete
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    createStack --&gt; createFailed --&gt; rollbackComplete
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    createComplete --&gt; updateStack
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    updateStack --&gt; updateComplete
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    updateStack --&gt; updateFailed
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    createComplete --&gt; deleteStack
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    updateComplete --&gt; deleteStack
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    deleteStack --&gt; deleteComplete
+</code></pre></div></p>
 <h2 id="security-standards">Security Standards<a class="headerlink" href="#security-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
