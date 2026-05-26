@@ -24,58 +24,35 @@ Scheduled Reports — InsightIQ
 │  list  │      │  / PDF)  │
 └────────┘      └──────────┘
 ```
-
-Dell InsightIQ provides a built-in reporting engine for PowerScale performance and capacity data. Reports can be scheduled for recurring delivery, exported as CSV for further analysis, or used to measure SLA compliance.
-
-## Report Types in InsightIQ
-
-Navigation: **InsightIQ > Reports**
-
-| Report Category | Available Reports |
-|---|---|
-| Performance | Throughput, latency, IOPS, protocol breakdown |
-| Capacity | Used vs available, growth trend, per-directory |
-| Clients | Top talkers, per-client throughput and latency |
-| Quota | Usage vs limits, approaching thresholds |
-| Deduplication | Savings summary, dedupe job history |
-| Cluster Summary | Combined health and performance overview |
-
-## Scheduling a Report
-
-InsightIQ allows reports to be scheduled at daily, weekly, or monthly intervals.
-
-Navigation: **InsightIQ > Reports > [Report Type] > Schedule**
-
-Configuration options:
-
-| Field | Description |
-|---|---|
-| Report Name | Descriptive label for the scheduled job |
-| Cluster | Select which PowerScale cluster to report on |
-| Time Range | Rolling: Last 7 days, Last 30 days, etc. |
-| Granularity | 5-minute, hourly, or daily data points |
-| Format | PDF or CSV |
-| Email Recipients | Comma-separated addresses |
-| Schedule | Daily at HH:MM, Weekly, Monthly |
-
-```bash
-# InsightIQ runs as a virtual appliance — schedule management via the web UI
-# Access the InsightIQ admin interface
-curl -sk -X GET "https://insightiq.example.com/api/json/v2/reports" \
-  -u "admin:password" \
-  -H "Accept: application/json" | jq '.reports[].name'
-
-# Trigger an on-demand report generation via API
-curl -sk -X POST "https://insightiq.example.com/api/json/v2/reports/generate" \
-  -u "admin:password" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "report_type": "performance_summary",
-    "cluster": "powerscale-cluster1",
-    "start_time": "2026-04-01T00:00:00",
-    "end_time": "2026-04-30T23:59:59",
-    "granularity": "1h"
-  }'
+┌───────────────────────────────────────── InsightIQ — Reports ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Built-in Reports               │  │             Scheduling & Export             │   │
+│   │             Performance summary              │  │             Daily/weekly/monthly            │   │
+│   │                Capacity trend                │  │                Email delivery               │   │
+│   │              Top clients/shares              │  │                  PDF format                 │   │
+│   │              Protocol breakdown              │  │                  CSV format                 │   │
+│   │             Latency distribution             │  │              Custom time range              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Reports built in InsightIQ · PDF/CSV download · scheduled email via SMTP                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Performance summary = Cluster IOPS, latency, throughput over selected time window                    │
+│  Capacity trend = Space usage over time with growth rate and projected full date                      │
+│  Top clients = Ranked list of clients by IO volume; useful for chargeback                             │
+│  Top shares = Ranked NFS/SMB shares by IO; identify active workloads                                  │
+│  Protocol breakdown = IO split by NFS v3, NFS v4, SMB, S3, HDFS                                       │
+│  Latency distribution = Histogram of operation latencies; shows p50/p95/p99                           │
+│  Scheduled email = InsightIQ sending report to recipient list on configured cadence                   │
+│  Custom time range = User-defined start and end dates for report data window                          │
+│  Chargeback = Using top-client IO data to attribute storage cost to teams                             │
+│  PDF = Formatted document; suitable for management review or compliance audit                         │
+│  CSV = Raw metric data for import into BI tools or spreadsheets                                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## CSV Export for Analysis

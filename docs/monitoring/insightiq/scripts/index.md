@@ -16,32 +16,36 @@ def iiq_get(path: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
-
-## Export Performance Data
-
-```python
-import csv
-from datetime import datetime, timedelta, timezone
-
-def export_performance(cluster_name: str, hours: int, output_file: str):
-    """Export throughput and latency data for a cluster over the last N hours."""
-    end   = datetime.now(timezone.utc)
-    start = end - timedelta(hours=hours)
-
-    data = iiq_get("/performance", params={
-        "cluster": cluster_name,
-        "start": int(start.timestamp()),
-        "end":   int(end.timestamp()),
-        "metrics": "total_throughput,nfs_latency,smb_latency"
-    })
-
-    with open(output_file, "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=["timestamp", "total_throughput",
-                                                "nfs_latency", "smb_latency"])
-        writer.writeheader()
-        for sample in data.get("samples", []):
-            writer.writerow(sample)
-    print(f"Exported {len(data.get('samples', []))} samples to {output_file}")
+┌──────────────────────────────────── InsightIQ — Scripts Reference ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               InsightIQ admin scripts — run on appliance or via management host               │   │
+│   │             iiq_backup.sh — wrapper triggering iiq_backup with dated archive name             │   │
+│   │                  disk-check.sh — alerts if InsightIQ VM datastore > 80% full                  │   │
+│   │                  collection-check.sh — verifies data age < 5 minutes via API                  │   │
+│   │           export-report.py — uses InsightIQ API to download scheduled report as PDF           │   │
+│   │             top-clients.py — queries InsightIQ for top-IO clients; posts to Slack             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Scripts on InsightIQ VM or management host · Python 3 + requests · SSH for admin                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  iiq_backup = Admin CLI command; wrapper script adds date suffix to archive                           │
+│  Disk check = df -h /data check on appliance; alert at 80% to avoid DB fill                           │
+│  Data age = Time since last collection point; stale > 5 min suggests collection issue                 │
+│  InsightIQ API = Limited REST API at https://<iiq>/api; used for report downloads                     │
+│  Session cookie = InsightIQ API uses session auth; POST login to get cookie                           │
+│  Top clients = List of client IPs ranked by IO; requires clientstats on cluster                       │
+│  Slack webhook = Posting top-client summary to storage team Slack channel                             │
+│  Cron schedule = Running scripts via crontab on management host or InsightIQ VM                       │
+│  SSH key auth = Prefer SSH key over password for script access to InsightIQ                           │
+│  Log check = Tail /var/log/isilon/insightiq/ for collection errors                                    │
+│  PDF download = GET /api/v1/reports/{id}/download with session cookie                                 │
+│  Python requests = pip install requests; standard HTTP library for InsightIQ API                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Cluster Connection Health Check

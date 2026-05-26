@@ -21,46 +21,35 @@ Performance Analytics — InsightIQ
 │  client03  ███            95 MB/s            │
 └──────────────────────────────────────────────┘
 ```
-
-Dell InsightIQ provides detailed performance analytics for PowerScale (Isilon) clusters, covering throughput, latency, IOPS, and per-protocol performance. This page covers how to navigate InsightIQ performance views and correlate metrics.
-
-## Performance Dashboard Overview
-
-Navigation: **InsightIQ > Reports > Performance**
-
-InsightIQ aggregates performance data collected every 30 seconds from the OneFS platform statistics API and stores it locally for trending.
-
-Key performance metrics tracked:
-
-| Metric | Unit | Description |
-|---|---|---|
-| Cluster Throughput | MB/s | Total read + write bytes per second |
-| Node Throughput | MB/s | Per-node read/write breakdown |
-| Protocol Operations | ops/s | NFS/SMB/HDFS operations per second |
-| Average Latency | ms | Round-trip time for client I/O requests |
-| Cache Hit Rate | % | L1/L2 cache effectiveness |
-| CPU Utilisation | % | Node CPU usage under load |
-
-## Querying Performance Data from OneFS CLI
-
-```bash
-# Connect to PowerScale
-ssh admin@powerscale.example.com
-
-# Real-time cluster throughput
-isi statistics client list --sort=bytes_in+bytes_out --limit=10
-
-# Real-time per-node performance
-isi statistics node list --stats cpu.user.avg,disk.xfer.bytes.rate,net.iface.bytes.in.rate
-
-# Protocol-level operations per second
-isi statistics protocol list --protocol=nfs
-
-# Latency histogram for NFS
-isi statistics protocol list --protocol=nfs --stats op_latency_num,op_latency_max,op_latency_ave
-
-# Disk I/O per node
-isi statistics drive list --stats disk.xfer.bytes.rate,disk.busy
+┌────────────────────────────────── InsightIQ — Performance Analysis ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        IOPS Analysis        │  │       Latency Analysis      │  │          Throughput         │   │
+│   │        Per-node IOPS        │  │       Per-protocol lat      │  │        MB/s per node        │   │
+│   │      Per-protocol IOPS      │  │         p50/p95/p99         │  │       Network vs disk       │   │
+│   │        Read vs write        │  │       Backend vs front      │  │         Peak vs avg         │   │
+│   │       Peak vs average       │  │        Trend baseline       │  │       Saturation point      │   │
+│   │       Client breakdown      │  │         Cache impact        │  │         Protocol mix        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Metrics from PowerScale nodes · InsightIQ aggregates to cluster and node level                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  p50 latency = Median latency; 50% of operations complete faster than this value                      │
+│  p95 latency = 95th percentile latency; 5% of operations are slower; good SLA metric                  │
+│  p99 latency = 99th percentile; shows tail latency impacting worst-case user experience               │
+│  Frontend latency = Client-to-cluster latency including network and protocol overhead                 │
+│  Backend latency = Cluster-to-disk latency; excludes network; shows storage device health             │
+│  Cache impact = Reduction in backend IOPS due to read cache (L1 RAM, L2 SSD hits)                     │
+│  Saturation point = Throughput level at which latency begins degrading non-linearly                   │
+│  Protocol mix = Ratio of NFS/SMB/S3/HDFS IO; different protocols have different overheads             │
+│  Trend baseline = Historical average used to identify current deviations                              │
+│  Network vs disk = Comparing frontend and backend throughput to find bottleneck tier                  │
+│  Read vs write = IO breakdown critical for cache effectiveness and drive wear planning                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Protocol Performance Breakdown

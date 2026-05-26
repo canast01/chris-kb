@@ -27,38 +27,35 @@ Recommendations — Dell AIOps
           │  CloudIQ validates  │
           └─────────────────────┘
 ```
-
-Dell AIOps generates AI-driven recommendations that go beyond static best-practice checks. Recommendations are prioritised by business impact, include step-by-step guidance, and track implementation status. This page covers how to find, evaluate, implement, and close AIOps recommendations.
-
-## Recommendation Sources
-
-AIOps recommendations originate from multiple analysis engines:
-
-| Source | Description |
-|---|---|
-| Bottleneck Analysis | Configuration changes to relieve active constraints |
-| Capacity ML Model | Proactive expansion or tiering changes |
-| Predictive Failure | Replace component before predicted failure window |
-| Configuration Best Practice | Mismatches against Dell-recommended settings |
-| Energy Efficiency | Workload and power optimisation opportunities |
-| Firmware / Software | Versions known to fix production-impacting bugs |
-
-Navigation: **CloudIQ > AIOps > Recommendations**
-
-## Viewing and Prioritising Recommendations
-
-```bash
-# List all active AIOps recommendations sorted by priority
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/recommendations?filter=state%20eq%20%27ACTIVE%27&order_by=priority%20desc" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json" | jq '.results[] | {id, title, priority, effort, system_name}'
-
-# Get full recommendation detail including implementation steps
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/recommendations/<recId>" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json"
+┌──────────────────────────────────── Dell AIOps — Recommendations ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         AIOps AI generates recommendations from anomalies, insights, and health scores        │   │
+│   │            Categories: Performance, Capacity, Availability, Security, Configuration           │   │
+│   │               Priority: Critical → High → Medium → Low based on estimated impact              │   │
+│   │          Each recommendation: problem, affected systems, steps, and expected outcome          │   │
+│   │                     Status flow: Open → In Progress → Resolved / Dismissed                    │   │
+│   │              Linked to ITSM: recommendation can trigger ServiceNow problem record             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Recommendations computed by AIOps ML engine · tracked in AIOps DB · exported via API                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Recommendation = AI-generated action linking a detected issue to a corrective step                   │
+│  Priority = Urgency classification: Critical (act now)/High (act soon)/Medium/Low                     │
+│  Affected systems = Infrastructure components contributing to the recommendation                      │
+│  Expected outcome = Estimated improvement if recommendation is implemented                            │
+│  In Progress = Status indicating team has started working on the recommendation                       │
+│  Resolved = Recommendation closed; AIOps validates via subsequent telemetry                           │
+│  Dismissed = Closed without action; requires reason comment for audit trail                           │
+│  ServiceNow problem = ITSM record created from recommendation for tracking in change process          │
+│  SLA = Internal target for acting on Critical recs (e.g., within 2 business days)                     │
+│  Configuration rec = Flagging settings that deviate from Dell best practice baseline                  │
+│  Weekly review = Dedicated recurring meeting to action or defer open recommendations                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Priority and effort matrix:

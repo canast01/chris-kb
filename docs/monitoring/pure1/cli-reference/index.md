@@ -23,20 +23,36 @@ print(token)
 # Exchange JWT for access token
 curl -X POST https://api.pure1.purestorage.com/oauth2/1.0/token   -d "grant_type=urn:ietf:params:oauth:grant-type:token-exchange&subject_token=<jwt>&subject_token_type=urn:ietf:params:oauth:token-type:jwt"
 ```
-
----
-
-## Arrays & Fleet
-
-```bash
-# List all arrays registered in Pure1
-curl -X GET "https://api.pure1.purestorage.com/api/1.latest/arrays"   -H "Authorization: Bearer <token>"
-
-# Filter by model
-curl -X GET "https://api.pure1.purestorage.com/api/1.latest/arrays?filter=model%3D%27FlashArray%2F%2FX%27"   -H "Authorization: Bearer <token>"
-
-# Get a specific array by name
-curl -X GET "https://api.pure1.purestorage.com/api/1.latest/arrays?filter=name%3D%27<array_name>%27"   -H "Authorization: Bearer <token>"
+┌──────────────────────────────────── Pure1 — CLI and API Reference ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           Pure1 REST API — Base URL: https://api.pure1.purestorage.com/api/1.latest           │   │
+│   │           Auth: POST /oauth2/1.0/token (client_id + private_key JWT) → Bearer token           │   │
+│   │          Arrays: GET /arrays — list all registered arrays with model, version, health         │   │
+│   │            Metrics: GET /metrics?names=array_total_capacity&resource_names=<array>            │   │
+│   │              Alerts: GET /alerts?filter=state='open' — active alerts across fleet             │   │
+│   │                 Fleet health: GET /arrays?fields=name,model,os,version,health                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Pure1 API at api.pure1.purestorage.com · client runs from any internet-connected host                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Pure1 REST API = Programmatic access to fleet-wide metrics and alert data                            │
+│  JWT auth = JSON Web Token signed with RSA private key for API authentication                         │
+│  client_id = Application ID registered in Pure1 > API Registration                                    │
+│  Bearer token = Short-lived (10 min) OAuth2 token; refresh before expiry                              │
+│  arrays endpoint = Returns all arrays with model, Purity version, and health score                    │
+│  metrics endpoint = Time-series metric retrieval; supports multiple arrays and metrics                │
+│  alerts endpoint = Returns active alerts; filter by state, severity, or array                         │
+│  resource_names = Array name filter for metric queries                                                │
+│  fields param = Projection; return only needed fields to reduce payload size                          │
+│  Pagination = Pure1 API uses continuation_token for large result sets                                 │
+│  Rate limit = API enforces per-client limits; exponential backoff on 429                              │
+│  py-pure-client = Pure-provided Python library wrapping Pure1 API                                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

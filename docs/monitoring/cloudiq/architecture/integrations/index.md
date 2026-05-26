@@ -47,20 +47,30 @@ curl -H "Authorization: Bearer <token>" \
 curl -H "Authorization: Bearer <token>" \
   "https://cloudiq.dell.com/v1/storage-systems/{id}/capacity"
 ```
-
-## Integration Architecture
-
-```mermaid
-graph LR
-  PM["PowerMax"] & UN["Unity XT"] & PS["PowerScale"] --> SCG["Secure Connect Gateway\n(on-premises OVA)"]
-  SCG -->|"HTTPS outbound only"| CIQ["Dell CloudIQ\n(SaaS)"]
-  CIQ --> SN["ServiceNow"]
-  CIQ --> EMAIL["Email / Webhook"]
-  CIQ --> API["REST API\n(reporting tools)"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class SCG ctrl
-  class PM,UN,PS host
-  class CIQ,SN,EMAIL,API cloud
+┌───────────────────────────────── CloudIQ — Architecture Integrations ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               Supported Arrays               │              Notification Targets              │   │
+│   │        PowerStore: native integration        │           Email: SMTP to ops mailbox           │   │
+│   │        PowerScale: native integration        │        Webhook: Slack/Teams/ServiceNow         │   │
+│   │        PowerFlex: native integration         │          API: REST for custom tooling          │   │
+│   │         Unity XT: native integration         │       MyService360: support portal link        │   │
+│   │         PowerMax: via Data Mobility          │         Aria Ops: CloudIQ adapter PAK          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Arrays push telemetry to cloudiq.dell.com · CloudIQ pushes alerts to webhook targets                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Native integration = Array firmware includes CloudIQ telemetry client; no agent needed               │
+│  Data Mobility = PowerMax component handling CloudIQ registration and telemetry forwarding            │
+│  Webhook = Outbound HTTP POST from CloudIQ when alert fires; JSON payload                             │
+│  REST API = CloudIQ programmatic interface for retrieving health scores and alert data                │
+│  MyService360 = Dell customer support portal; linked from CloudIQ for case creation                   │
+│  Aria Ops PAK = Adapter package enabling Aria Operations to pull CloudIQ data on-prem                 │
+│  SMTP notification = Email sent by CloudIQ when alert fires or score drops                            │
+│  API token = Bearer token for CloudIQ REST API; generated in account settings                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

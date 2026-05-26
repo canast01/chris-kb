@@ -20,27 +20,34 @@ Key compatibility rules:
 5. Download the InsightIQ upgrade package from the NetApp Support Portal
 6. Verify available disk space: InsightIQ requires at least 10 GB free on the OS disk for upgrade staging
 ```
-
-## Upgrade Procedure (OVA Deployment)
-
-InsightIQ OVA upgrades replace the appliance and reconnect to the existing database.
-
-```text
-1. Export/back up the PostgreSQL data directory:
-   # On the InsightIQ appliance CLI
-   pg_dump -U iiq iiq > /backup/iiq_$(date +%Y%m%d).sql
-
-2. Note cluster connection details (hostnames, credentials) for re-entry post-upgrade
-
-3. Deploy the new OVA in vCenter alongside the existing appliance
-4. Configure network settings on new OVA to match the existing appliance
-5. Restore the database backup to the new appliance:
-   psql -U iiq iiq < /backup/iiq_<date>.sql
-
-6. Power off the old appliance
-7. Assign the existing IP to the new appliance
-8. Verify all cluster connections re-establish in InsightIQ web UI
-9. Confirm dashboard data is present and metrics are collecting
+┌────────────────────────────────── InsightIQ — Lifecycle Management ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                    Deploy                    │  │                   Upgrade                   │   │
+│   │            Deploy OVA to vCenter             │  │                 Backup first                │   │
+│   │              Assign IP and DNS               │  │                 Snapshot VM                 │   │
+│   │             Add clusters via UI              │  │              Apply upgrade pkg              │   │
+│   │                Configure SMTP                │  │              Verify collection              │   │
+│   │             Set retention policy             │  │               Rollback if fail              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  OVA on vSphere management cluster · VM snapshot before upgrade · backup to NFS                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OVA deployment = Importing InsightIQ as VM; set 4 vCPU, 8 GB RAM, 200+ GB disk                       │
+│  Cluster registration = Adding PowerScale cluster in InsightIQ UI with PAPI credentials               │
+│  Retention policy = Configured in InsightIQ settings; default 2 years raw data                        │
+│  SMTP configuration = InsightIQ settings for email alerts and scheduled reports                       │
+│  Upgrade package = Dell-provided upgrade file; applied via iiq_upgrade command                        │
+│  Snapshot = VM snapshot taken before upgrade; enables rollback if data is lost                        │
+│  Backup = iiq_backup run before upgrade; stored off-VM on NFS                                         │
+│  Verify collection = Check InsightIQ is collecting new data after upgrade                             │
+│  Rollback = Revert to VM snapshot if upgrade corrupts DB or stops collection                          │
+│  Decommission = iiq_backup → save archive → power off VM → remove from vCenter                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Upgrade Procedure (Linux Installer)

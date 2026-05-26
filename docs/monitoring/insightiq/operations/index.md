@@ -30,24 +30,35 @@ Symptom: Cluster shows Disconnected or Missing in InsightIQ
 5. Restart the InsightIQ collection service if credential fix doesn't resolve:
    sudo systemctl restart iiq
 ```
-
-## Performance Review Process
-
-### Daily Review
-
-1. Log into InsightIQ web dashboard
-2. Navigate to **Dashboard > [Cluster] > Overview**
-3. Review the last 24-hour throughput chart — compare to previous 7-day baseline
-4. Flag any latency spikes exceeding the Warning threshold (5 ms for NFS/SMB)
-5. Check per-node throughput for uneven distribution (indicates possible node issues)
-
-### Protocol Throughput Analysis
-
-```text
-Dashboard > [Cluster] > Protocol Summary
-- Compare NFS vs. SMB vs. HTTP throughput
-- Flag unexpected protocol spikes (may indicate misbehaving clients)
-- Check top client IPs for unexpected load
+┌─────────────────────────────────────── InsightIQ — Operations ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Daily Checks        │  │         Weekly Tasks        │  │        Monthly Tasks        │   │
+│   │      Verify collection      │  │        Review reports       │  │      Capacity planning      │   │
+│   │       Check disk usage      │  │         Check alerts        │  │       Retention review      │   │
+│   │      Verify backup ran      │  │      Top talker review      │  │        Trend analysis       │   │
+│   │     Confirm clusters up     │  │        Latency review       │  │        Report to mgmt       │   │
+│   │     Check service status    │  │       Capacity outlook      │  │        Access review        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Daily ops via InsightIQ web UI · admin CLI for service checks · NFS backup verification              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Collection verify = Confirm InsightIQ shows Connected and recent data for each cluster               │
+│  Disk usage = Monitor InsightIQ VM datastore; alert at 80% to expand before full                      │
+│  Backup verification = Confirm nightly iiq_backup completed and archive exists on NFS                 │
+│  Service status = iiq_status on appliance confirms data collection daemon running                     │
+│  Top talker review = Weekly check of clients generating most IO; spot unexpected growth               │
+│  Latency review = Review average and p95 latency trends; flag increases to storage team               │
+│  Capacity outlook = Review InsightIQ capacity report for projected full dates                         │
+│  Retention review = Monthly check that old data purging correctly per retention policy                │
+│  Trend analysis = Monthly review of 30/90-day performance trends for capacity planning                │
+│  Access review = Monthly check of InsightIQ user list; remove stale accounts                          │
+│  Management report = Monthly PDF summary of performance trends for leadership review                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Top Clients Review (Weekly)

@@ -23,33 +23,35 @@ sudo tail -f /var/log/insightiq/collector.log
 # Restart the collector if it has stopped
 sudo systemctl restart iiq-collector
 ```
-
-Connectivity requirements:
-
-| Source | Destination | Port | Protocol |
-|---|---|---|---|
-| InsightIQ VM | PowerScale SmartConnect zone | 8080 | HTTPS |
-| InsightIQ VM | PowerScale management IP | 8080 | HTTPS |
-| InsightIQ VM | NTP server | 123 | UDP |
-
-## Diagnosing Data Gaps
-
-A data gap appears in InsightIQ charts as a flat line or missing time range. Causes include collector downtime, PowerScale API unavailability, or time sync issues.
-
-```bash
-# Check data completeness for a cluster in InsightIQ UI
-# Navigate to: InsightIQ > Clusters > [Cluster Name] > Collection Status
-
-# On InsightIQ CLI: check recent collection events
-sudo grep "ERROR\|WARN\|collection" /var/log/insightiq/collector.log | tail -50
-
-# Verify time sync between InsightIQ and PowerScale
-# On InsightIQ:
-timedatectl status
-
-# On PowerScale:
-ssh admin@powerscale.example.com
-isi ntp status
+┌───────────────────────────────────── InsightIQ — Troubleshooting ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Collection Stops               │  │              Performance Issues             │   │
+│   │               Check iiq_status               │  │               Check VM CPU/mem              │   │
+│   │             Check PAPI TCP 8080              │  │               Check disk usage              │   │
+│   │               Verify PAPI user               │  │               Check PostgreSQL              │   │
+│   │              Restart collection              │  │            Reduce collection int            │   │
+│   │              Check cluster PAPI              │  │              Open Dell support              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Logs: /var/log/isilon/insightiq/ · iiq_status on VM · PAPI test from VM                              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  iiq_status = Show InsightIQ collection daemon status (running/stopped)                               │
+│  PAPI TCP 8080 = Test connectivity: curl -k https://<cluster>:8080/platform/1/auth                    │
+│  PAPI user test = Verify credential: curl -u <user>:<pass> https://<cluster>:8080/platform/1          │
+│  Restart collection = iiq_stop then iiq_start to recover stalled collection process                   │
+│  Disk full = df -h /data; if > 95%, purge old data or expand VMDK                                     │
+│  PostgreSQL check = Check DB service: systemctl status postgresql                                     │
+│  VM CPU/mem = If InsightIQ VM is starved, add vCPU or RAM via vSphere                                 │
+│  Reduce interval = Increase collection interval from 30s to 5m to reduce DB write load                │
+│  PAPI on cluster = Verify cluster PAPI is enabled and accessible (isi_backend_cache_rpc_test)         │
+│  Log review = /var/log/isilon/insightiq/collection.log for error details                              │
+│  Dell support = support.dell.com; attach collection log and iiq_status output                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Data gap causes and remediation:

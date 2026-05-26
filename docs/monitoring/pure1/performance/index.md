@@ -24,50 +24,36 @@ Performance Data Flow — Pure1
 │  read/write │  µs avg     │  MB/s      │
 └─────────────┴──────────────┴────────────┘
 ```
-
-Pure1 retains performance data for all registered arrays — IOPS, bandwidth, latency, and queue depth — with up to 1 year of history and anomaly detection via AI-powered analytics.
-
-## Key Metrics
-
-| Metric | Definition | Healthy range |
-|---|---|---|
-| **Read/Write IOPS** | I/O operations per second | Array-dependent; see model spec |
-| **Read/Write Bandwidth** | MB/s throughput | Array-dependent |
-| **Read/Write Latency** | Average response time in µs | < 1ms read, < 1ms write (FlashArray//XL) |
-| **Queue Depth** | Outstanding I/O in flight | < 32 sustained; spikes are normal |
-| **Load** | % of array processing capacity used | < 80% sustained |
-| **Data Reduction** | Combined dedup + compression ratio | Workload-dependent |
-
-## Viewing Performance in Pure1
-
-**Pure1 → Arrays → select array → Performance tab**
-
-- Toggle between Read / Write / Combined
-- Zoom to specific time windows (1h, 6h, 24h, 7d, 30d, 1y)
-- Compare multiple arrays side-by-side
-- AI-powered anomaly highlights shown as orange bands
-
-**Pure1 → Analytics → Workload Planner** — capacity and performance forecasting.
-
-## Performance via CLI
-
-```bash
-ssh pureuser@<flasharray-ip>
-
-# Current array-level IOPS, bandwidth, latency
-purearray list --performance
-
-# Per-volume performance
-purevol list --performance | sort -k3 -rn | head -20   # sort by read IOPS
-
-# Host-level performance
-purehost list --performance
-
-# Historical stats for a volume (last 24h)
-purevol list VOL_NAME --historical 1d
-
-# Protocol-level stats (FC vs iSCSI)
-pureport list --performance
+┌──────────────────────────────────── Pure1 — Performance Analysis ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Performance Metrics              │  │            Workload Intelligence            │   │
+│   │               IOPS read/write                │  │               Workload ID (AI)              │   │
+│   │               Latency p50/p99                │  │               IO size profile               │   │
+│   │                Bandwidth MB/s                │  │               Read/write ratio              │   │
+│   │                 Queue depth                  │  │               Fleet benchmark               │   │
+│   │               Per-volume stats               │  │              Custom time range              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Metrics from Purity OS via phonehome · Pure1 aggregates and visualises                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  IOPS = Input/Output Operations per Second; primary performance metric                                │
+│  p50 latency = Median latency; 50% of operations faster than this value                               │
+│  p99 latency = 99th percentile; 1% of operations slower; shows tail latency                           │
+│  Bandwidth = Throughput in MB/s; saturates at network limit before IOPS typically                     │
+│  Queue depth = Outstanding IO requests; high queue depth may indicate saturation                      │
+│  Per-volume = Pure1 showing IOPS/latency per volume for workload isolation                            │
+│  Workload ID = Pure1 AI classifying application type from IO signature                                │
+│  IO size = Average IO request size in KB; small random vs large sequential                            │
+│  Read/write ratio = Proportion of reads vs writes; impacts cache effectiveness                        │
+│  Fleet benchmark = Pure1 comparing array performance to anonymised peer group                         │
+│  Custom range = Pure1 UI allows selecting arbitrary time window for analysis                          │
+│  Anomaly = Pure1 ML detecting performance deviation from established baseline                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash

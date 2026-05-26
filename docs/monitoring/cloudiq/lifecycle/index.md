@@ -21,18 +21,31 @@ The SCG has its own version lifecycle and must be kept current for compatibility
 3. Note the current SCG version
 4. Compare against the latest available version in the Dell Support Portal
 ```
-
-### SCG Upgrade Procedure
-
-```text
-1. Download the latest SCG upgrade package from:
-   support.dell.com > CloudIQ > Secure Connect Gateway > Downloads
-2. Log into SCG admin UI: https://<SCG-IP>:9443
-3. Navigate to: System Settings > Software Updates
-4. Upload the upgrade package and follow the upgrade wizard
-5. SCG will restart — collection will pause for approximately 10–15 minutes
-6. Verify SCG version post-upgrade in About page
-7. Confirm all systems return to Collecting status in CloudIQ dashboard (allow 30 minutes)
+┌─────────────────────────────────── CloudIQ — Lifecycle Management ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  Onboarding                  │  │             Ongoing Maintenance             │   │
+│   │             Create Dell account              │  │            Monitor telemetry age            │   │
+│   │               Register arrays                │  │             Re-register if stale            │   │
+│   │               Configure alerts               │  │            Update array firmware            │   │
+│   │              Add users + roles               │  │            Rotate service account           │   │
+│   │            Test webhook delivery             │  │             Annual access review            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  CloudIQ is SaaS — no on-prem component to patch · array firmware controls telemetry client           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Telemetry age = Time since last successful push from array; stale > 15 min triggers alert            │
+│  Re-registration = Removing and re-adding array to CloudIQ; resets telemetry stream                   │
+│  Service account rotation = Changing Dell account password used for CloudIQ API access                │
+│  Access review = Auditing CloudIQ user list; removing departed staff and role changes                 │
+│  Array firmware = On-array software; update process depends on array model (PSTCLI, ESRS)             │
+│  ESRS = EMC Secure Remote Services; gateway used by some older Dell arrays for telemetry              │
+│  CloudIQ SaaS = Hosted by Dell; no customer upgrade responsibility for the platform itself            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### SCG Compatibility

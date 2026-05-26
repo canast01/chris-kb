@@ -46,37 +46,35 @@ curl -sk -X GET "<download_url>" \
   -H "Authorization: Bearer <access_token>" \
   -o aiops-exec-summary.pdf
 ```
-
-## Trend Analysis Reports
-
-Trend reports visualise how key infrastructure metrics have evolved over time, and how they are projected to change.
-
-Key metrics included:
-
-| Metric | Chart Type | Prediction Horizon |
-|---|---|---|
-| Fleet-wide average latency | Time series + trend line | 30 days |
-| Capacity utilisation per system | Stacked area | 90 days |
-| Alert frequency over time | Bar chart | Historical only |
-| Recommendation closure rate | Line chart | Historical only |
-| Anomaly count per week | Bar chart | Historical only |
-
-## Capacity Planning Export
-
-For integration with capacity planning spreadsheets or ITSM tools:
-
-```bash
-# Export capacity forecast data as CSV for all systems
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/capacity_forecast?format=csv&horizon_days=90" \
-  -H "Authorization: Bearer <access_token>" \
-  -o capacity-forecast-90d.csv
-
-# Export anomaly history as CSV for a specific system
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/anomaly_history?system_id=<systemId>&format=csv" \
-  -H "Authorization: Bearer <access_token>" \
-  -o anomaly-history.csv
+┌─────────────────────────────────────── Dell AIOps — Reporting ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Built-in Reports               │  │               Export / Custom               │   │
+│   │             Fleet health summary             │  │              CSV metric export              │   │
+│   │                Alert history                 │  │                  PDF report                 │   │
+│   │              Capacity forecast               │  │                API data pull                │   │
+│   │            Recommendation status             │  │               Scheduled email               │   │
+│   │              Performance trends              │  │                Grafana panels               │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Reports generated on AIOps master · CSV/PDF via browser · API for automation                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Fleet health report = Summary of all monitored systems with health score and issue count             │
+│  Alert history = Time-series of alert activity; useful for trend and MTTR analysis                    │
+│  Capacity forecast report = Per-system projected fill dates for procurement planning                  │
+│  Performance trend = Historical IOPS/latency/throughput per system over custom window                 │
+│  Recommendation status = Open/resolved/dismissed counts by category and priority                      │
+│  CSV export = Raw metric data download for spreadsheet or BI tool consumption                         │
+│  PDF report = Formatted document suitable for management or audit review                              │
+│  Scheduled email = AIOps sending report on configured cadence to recipient list                       │
+│  API data pull = REST GET to retrieve report data for custom downstream tooling                       │
+│  Grafana panels = AIOps metrics exposed via REST and visualised in Grafana dashboards                 │
+│  MTTR = Mean Time To Resolve; calculated from alert history open/close timestamps                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Capacity planning export fields:

@@ -21,34 +21,50 @@ curl -sk -X GET \
   -H "Authorization: vRealizeOpsToken <token>" \
   -H "Accept: application/json"
 ```
-
-Adapter status meanings:
-
-| Status | Meaning | Action |
-|---|---|---|
-| COLLECTING | Normal operation | None |
-| STOPPED | Adapter manually stopped | Start adapter instance |
-| FAILED | Authentication or network error | Check credentials, test connection |
-| NO_DATA | Connected but no metrics | Verify permissions on monitored system |
-| WAITING | Queued for collection | Wait one cycle; restart if persistent |
-
-## Log Files and Diagnostic Collection
-
-```bash
-# SSH to Aria Ops node (default admin user)
-ssh admin@aria-ops.example.com
-
-# View collector service log
-tail -f /storage/log/vcops/collector.log
-
-# View web service log
-tail -f /storage/log/vcops/web.log
-
-# Collect a support bundle from CLI
-/usr/lib/vmware-vcops/tools/support/vcopsSupport.sh
-
-# Check service health
-/etc/init.d/vmware-vcops-watchdog status
+┌────────────────────────────────── Aria Operations — Troubleshooting ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Adapter Not Collecting            │  │               UI / API Issues               │   │
+│   │               Check credential               │  │             Restart web service             │   │
+│   │             Verify network reach             │  │             Check master status             │   │
+│   │              Review adapter log              │  │             vracli cluster list             │   │
+│   │             Re-test in Solutions             │  │             Clear browser cache             │   │
+│   │             Check firewall rules             │  │             Check cert validity             │   │
+│   │                Reinstall PAK                 │  │            Collect support bundle           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Support bundle via vrops-support-get command; logs in /var/log/vmware/vcops on each node           │
+│                                                                                                       │
+│                                                  ▼                                                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Performance Issues              │  │            Alert / Policy Issues            │   │
+│   │              Check node CPU/mem              │  │             Check symptom state             │   │
+│   │             Review object count              │  │              Policy inheritance             │   │
+│   │            Reduce collection int             │  │              Alert dedup check              │   │
+│   │                Add data nodes                │  │             Outbound plugin test            │   │
+│   │               Archive old data               │  │             Notification history            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Logs: /var/log/vmware/vcops · support bundle: vrops-support-get from master node SSH                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Support bundle = Compressed archive of logs and config; used by VMware GSS for diagnosis             │
+│  vrops-support-get = CLI command on Aria Ops appliance to collect support bundle                      │
+│  Solutions UI = Administration > Solutions; shows adapter status and allows credential test           │
+│  Cluster list = vracli cluster list shows node health: ONLINE/OFFLINE/INITIALIZING                    │
+│  PAK reinstall = Remove and re-add adapter package; resets adapter state without data loss            │
+│  Collection interval = How often adapter polls source; reduce if master is overloaded                 │
+│  Symptom state = True/False evaluation of a threshold condition for an object                         │
+│  Policy inheritance = Child policy inheriting settings from parent; override at child level           │
+│  Alert dedup = Aria Ops suppressing repeat alerts for same symptom within cool-down window            │
+│  Notification history = Log of outbound alert notifications sent; in Administration > Outbound        │
+│  Object count = Number of monitored objects; growth reduces collection capacity per node              │
+│  Data node = Worker node; adding nodes scales collection capacity linearly                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Login and Authentication Issues

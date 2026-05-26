@@ -24,33 +24,36 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
-
-## Export Active Recommendations
-
-```python
-import csv
-
-def export_recommendations(token: str, output_file: str):
-    data = api_get("/recommendations", token,
-                   params={"filter": "state eq 'ACTIVE'"})
-    recs = data.get("results", [])
-    with open(output_file, "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=[
-            "id", "title", "severity", "system_id",
-            "system_name", "recommended_action", "created_at"
-        ])
-        writer.writeheader()
-        for r in recs:
-            writer.writerow({
-                "id": r["id"],
-                "title": r.get("title"),
-                "severity": r.get("severity"),
-                "system_id": r.get("system_id"),
-                "system_name": r.get("system_name"),
-                "recommended_action": r.get("recommended_action"),
-                "created_at": r.get("created_at")
-            })
-    print(f"Exported {len(recs)} recommendations to {output_file}")
+┌─────────────────────────────────── Dell AIOps — Scripts Reference ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                            AIOps REST API scripts — Python examples                           │   │
+│   │                get-token.py: POST /api/v1/auth/login → Bearer token for session               │   │
+│   │            get-alerts.py: GET /api/v1/alerts?status=open → CSV with severity/system           │   │
+│   │            capacity-check.py: GET /api/v1/capacity → flag systems < 90 days to full           │   │
+│   │            recommendations.py: GET /api/v1/recommendations → post Critical to Slack           │   │
+│   │             adapter-health.py: GET /api/v1/adapters → verify all collecting status            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Scripts run from management host · Python 3.8+ with requests · AIOps TCP 443                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Bearer token = Short-lived credential from /auth/login; pass in Authorization header                 │
+│  status=open = Filter for unresolved alerts only                                                      │
+│  capacity endpoint = Returns per-system current and forecast capacity data                            │
+│  recommendations endpoint = Returns prioritised AI action items                                       │
+│  adapters endpoint = Returns health status for each configured data source adapter                    │
+│  Slack webhook = Incoming webhook URL for posting summaries to a Slack channel                        │
+│  Cron schedule = Automated execution (e.g., daily at 06:00 for capacity check)                        │
+│  Environment vars = Store AIOps URL, username, password in env; never hardcode                        │
+│  Exponential backoff = Retry logic for 429/503 responses from AIOps API                               │
+│  CSV output = Writing alert/capacity data to CSV for spreadsheet import                               │
+│  Collecting status = Adapter state confirming data being received; opposite of No Data                │
+│  Requests library = pip install requests; standard Python HTTP client                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Anomaly Trend Analysis (30-Day Rolling Window)

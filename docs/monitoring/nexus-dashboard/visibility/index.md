@@ -19,29 +19,36 @@ Fabric Visibility — Nexus Dashboard
 │  Expected: 9216  Actual: 1500   ← alert      │
 └──────────────────────────────────────────────┘
 ```
-
-Cisco Nexus Dashboard Insights provides comprehensive visibility into fabric endpoints, traffic flows, and the physical and logical topology of ACI and NX-OS fabrics. This page covers how to use these visibility features for day-to-day operations and troubleshooting.
-
-## Endpoint Tracking
-
-NDI continuously tracks all endpoints (IP/MAC pairs) learned in the fabric. This is useful for confirming VM connectivity, tracing moves, and verifying policy enforcement.
-
-Navigation: **NDI > Browse > Endpoints**
-
-```bash
-# Search for an endpoint by IP
-curl -sk -X POST \
-  "https://nexus-dashboard.example.com/nexus/infra/api/v3/insights/endpoints/query" \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{"filter": {"ip": "10.10.20.50"}, "limit": 10}'
-
-# Search for an endpoint by MAC address
-curl -sk -X POST \
-  "https://nexus-dashboard.example.com/nexus/infra/api/v3/insights/endpoints/query" \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{"filter": {"mac": "00:50:56:ab:cd:ef"}}'
+┌──────────────────────────────────── Nexus Dashboard — Visibility ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        NDI Visibility: comprehensive view of fabric state — topology, endpoints, flows        │   │
+│   │             Topology view: interactive map of spine/leaf/border-leaf interconnects            │   │
+│   │           Endpoint tracking: VM/container moves, dual-home detection, stale entries           │   │
+│   │              Flow analytics: per-flow visibility with source/dest/protocol/bytes              │   │
+│   │              Audit trail: who changed what and when across ACI and NX-OS fabrics              │   │
+│   │               Multi-site: unified view across multiple ACI domains in single UI               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Visibility data from APIC REST + MDT streaming · stored in NDI DB · rendered in ND UI                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Topology view = Interactive fabric map showing switch interconnects and health                       │
+│  Endpoint = VM, container, or bare-metal IP/MAC connected to fabric leaf                              │
+│  Dual-home = Endpoint connected to two leaf switches for redundancy                                   │
+│  Stale endpoint = Endpoint record remaining after VM is deleted; detected by NDI                      │
+│  Flow analytics = NDI tracking actual traffic flows through fabric for visibility                     │
+│  Audit trail = NDI logging all APIC configuration changes with user and timestamp                     │
+│  Multi-site view = Single ND UI showing health and state for all registered ACI sites                 │
+│  EPG = Endpoint Group; ACI policy construct; endpoints grouped by EPG                                 │
+│  Contract = ACI inter-EPG connectivity policy; NDI verifies enforcement                               │
+│  BD = Bridge Domain; ACI Layer-2 forwarding domain containing EPGs                                    │
+│  Border leaf = Leaf switch connecting ACI fabric to external L3 networks                              │
+│  Delta analysis = NDI showing configuration changes between two epochs                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Endpoint detail fields:

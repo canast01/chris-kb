@@ -1,25 +1,44 @@
 # CloudIQ — How It Works (Monitoring)
 
+```
+┌─────────────────────────────────────── CloudIQ — How It Works ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Step 1: Array Registration — connect array to cloudiq.dell.com using Dell account       │   │
+│   │         Step 2: Telemetry Push — array sends metrics/events every 5 minutes over HTTPS        │   │
+│   │      Step 3: AI Processing — ML models score health, detect anomalies, forecast capacity      │   │
+│   │     Step 4: Alert Generation — violations trigger alerts; notifications via email/webhook     │   │
+│   │         Step 5: Recommendation — AI suggests corrective actions with estimated impact         │   │
+│   │      Step 6: User Action — engineer reviews, acknowledges, and implements recommendation      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Arrays on-prem · Dell cloud processing · engineer accesses via browser at cloudiq.dell.com           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Array registration = Linking a Dell storage system to a CloudIQ organisation/account                 │
+│  Telemetry interval = Frequency of metric push; typically 5 minutes for most array types              │
+│  Health score = 0-100 composite score derived from multiple metric and event inputs                   │
+│  Anomaly detection = ML model identifying behaviour deviating from learned baseline                   │
+│  Capacity forecast = Regression model predicting when array will reach capacity threshold             │
+│  Alert = Notification generated when health score drops below threshold or anomaly detected           │
+│  Recommendation = AI-generated corrective action with priority and expected benefit                   │
+│  Acknowledge = Marking alert as seen and accepted; stops re-notification                              │
+│  Snooze = Temporarily silencing an alert for a defined period                                         │
+│  Baseline = Normal operating pattern learned by ML over initial collection window                     │
+│  Organisation = CloudIQ tenant grouping arrays and users for a customer account                       │
+│  Dell account = MyService360 or Dell account credential used for CloudIQ login and registration       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 Dell CloudIQ is a cloud-native SaaS AIOps platform that collects telemetry from Dell storage, server, and networking systems. All communication is outbound HTTPS from an on-premises Secure Connect Gateway (SCG) virtual appliance — no inbound firewall rules are required.
 
 ---
 
 ## Architecture
 
-```mermaid
-graph TB
-  ARRAYS["Dell Arrays\nPowerMax · Unity · PowerScale"] -->|"secure telemetry HTTPS"| CLOUDIQ["Dell CloudIQ\n(SaaS analytics)"]
-  CLOUDIQ --> HEALTH["Health Score & Alerts"]
-  CLOUDIQ --> CAP["Capacity Forecasting"]
-  CLOUDIQ --> REC["AI Recommendations"]
-  ADMIN(["IT Admin"]) -->|"web portal"| CLOUDIQ
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class ARRAYS ctrl
-  class CLOUDIQ,HEALTH,CAP,REC cloud
-  class ADMIN host
-```
+
 
 ---
 

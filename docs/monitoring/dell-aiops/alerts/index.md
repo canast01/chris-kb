@@ -31,37 +31,36 @@ AI Alert Flow — Dell AIOps
 │              │   │  event group   │
 └──────────────┘   └────────────────┘
 ```
-
-Dell AIOps (part of the CloudIQ AI platform) uses machine learning to detect anomalies, correlate related events across infrastructure domains, and surface alerts that static threshold tools would miss. This page covers how AI-generated alerts work, how to interpret them, and how to manage alert correlation.
-
-## AI Alert Types
-
-Dell AIOps generates alerts in three main categories:
-
-| Alert Type | Description |
-|---|---|
-| Anomaly Detection | Metric deviates significantly from learned baseline |
-| Predicted Failure | ML model predicts component failure within a time window |
-| Correlated Event | Multiple individual events grouped as a single root-cause alert |
-
-Navigation: **CloudIQ > AIOps > Alerts**
-
-## Understanding Anomaly Detection
-
-Anomaly alerts fire when a metric exceeds a dynamically calculated confidence band. Unlike static thresholds, the band adjusts for daily, weekly, and seasonal patterns.
-
-```bash
-# Retrieve AI-generated anomaly alerts via CloudIQ API
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/alerts?filter=type%20eq%20%27ANOMALY%27&filter=state%20eq%20%27ACTIVE%27" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json" | jq '.results[] | {id, metric, system_name, deviation_percent, started_at}'
-
-# Get anomaly detail including contributing metrics
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/alerts/<alertId>" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json"
+┌───────────────────────────────────────── Dell AIOps — Alerts ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                 Alert Types                  │                Alert Lifecycle                 │   │
+│   │        Threshold: static metric limit        │              Open: condition met               │   │
+│   │        Anomaly: ML baseline deviation        │          Acknowledged: engineer seen           │   │
+│   │         Predictive: failure forecast         │           In Progress: being worked            │   │
+│   │           Capacity: fill date near           │          Resolved: condition cleared           │   │
+│   │          Hardware: component fault           │           Dismissed: false positive            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Alerts generated in AIOps engine · delivered via console, email, webhook, and ITSM                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Threshold alert = Fires when metric exceeds static limit (e.g., utilisation > 85%)                   │
+│  Anomaly alert = Fires when ML model detects unusual pattern outside learned baseline                 │
+│  Predictive alert = Fires when model forecasts failure or capacity exhaustion within horizon          │
+│  Capacity alert = Fires when forecast horizon drops below threshold (e.g., 90 days)                   │
+│  Hardware alert = Propagated from array firmware; component failure detected                          │
+│  Acknowledge = Engineer marks alert as seen; stops re-notification                                    │
+│  In Progress = Status indicating active remediation in progress                                       │
+│  Resolved = Alert auto-closes when triggering condition no longer detected                            │
+│  Dismissed = Alert closed as false-positive; reason required                                          │
+│  Severity = Critical / Warning / Informational; routes to different notification targets              │
+│  Alert context = Related metrics, affected objects, and recommendation attached to alert              │
+│  Noise reduction = Correlation grouping related alerts into single actionable incident                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Anomaly alert fields:

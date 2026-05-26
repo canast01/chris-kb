@@ -24,20 +24,36 @@ CloudIQ portal > Settings > Identity Providers > Add
   - role attribute → Admin or Viewer (via IdP group claim)
 - Enable Just-in-Time (JIT) provisioning if supported
 ```
-
-Once SSO is configured, local account login should be disabled for standard users. Retain one break-glass local admin account.
-
-## API Client Management
-
-CloudIQ REST API uses OAuth2 client credentials. Each consuming system (automation scripts, Splunk, Grafana) should have its own API client — do not share a single credential across multiple systems.
-
-```text
-Create an API client:
-CloudIQ portal > Settings > API Clients > Add Client
-- Name: descriptive (e.g., splunk-poller, grafana-cloudiq)
-- Scope: assign minimum required scopes (read-only for dashboards/monitoring)
-- Store client_id and client_secret in the team secrets manager immediately
-  — the secret is only shown once
+┌───────────────────────────────────────── CloudIQ — Security ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Access Control                │  │                Data Security                │   │
+│   │              Dell account + MFA              │  │             TLS 1.2+ in transit             │   │
+│   │              RBAC: Admin/Viewer              │  │              Encrypted at rest              │   │
+│   │             Service account only             │  │           No config pushed to arr           │   │
+│   │             Annual access review             │  │           Telemetry only — no data          │   │
+│   │             Audit log in CloudIQ             │  │             Dell SOC2 compliant             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Data stored in Dell cloud datacentres · customer data isolated per tenant · SOC2 Type II             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Dell account MFA = Multi-factor authentication required for cloudiq.dell.com login                   │
+│  RBAC = Role-Based Access Control; Admin (full) vs Viewer (read-only) roles                           │
+│  Service account = Non-personal account for API access; password rotated per policy                   │
+│  Telemetry only = CloudIQ receives metrics and events; does not access user data or files             │
+│  No config push = CloudIQ is monitoring-only; it cannot change array configuration                    │
+│  TLS 1.2 = Minimum transport encryption for all CloudIQ connections                                   │
+│  Encrypted at rest = Telemetry data encrypted in Dell cloud storage                                   │
+│  SOC2 Type II = Dell security audit certification; covers data handling and access controls           │
+│  Audit log = Record of logins and configuration changes viewable in CloudIQ admin section             │
+│  Tenant isolation = Each customer organisation data separated in multi-tenant cloud                   │
+│  Annual review = Yearly audit of CloudIQ users; remove stale accounts and inappropriate roles         │
+│  API token security = client_id/secret treated as password; never logged or committed to code         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### API Token Rotation

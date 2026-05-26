@@ -30,19 +30,35 @@ A version mismatch between ND and its managed fabrics can result in loss of mana
 7. Notify network operations team — brief service interruptions may occur per node during rolling upgrade
 8. Schedule the upgrade in the change management system
 ```
-
-## ND Base Platform Upgrade
-
-```text
-1. Log into Nexus Dashboard web UI
-2. Navigate to Admin > System Settings > Software Management
-3. Upload the upgrade image (or specify URL for direct download)
-4. ND validates the image and runs pre-upgrade checks
-5. Initiate the upgrade — ND performs a rolling node-by-node upgrade
-6. Monitor progress in Admin > Cluster Configuration
-   - Each node cycles: Downloading → Upgrading → Rebooting → Online
-7. Verify all nodes return to Online status post-upgrade
-8. Verify all services (NDFC, NDI) are running: Admin > App Store > Installed Apps
+┌─────────────────────────────── Nexus Dashboard — Lifecycle Management ────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                    Deploy                    │  │                   Upgrade                   │   │
+│   │              Bootstrap 3 nodes               │  │             Check release notes             │   │
+│   │            Assign mgmt + data IPs            │  │             Backup config first             │   │
+│   │             Form cluster via UI              │  │              acs upgrade apply              │   │
+│   │            Install apps (NDI etc)            │  │             Rolling node upgrade            │   │
+│   │               Onboard fabrics                │  │               Verify apps post              │   │
+│   │              Configure ITSM out              │  │               Rollback if fail              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  3 physical or VM nodes · Cisco ISO install · upgrade via acs CLI or ND UI                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Bootstrap = Initial ND node setup: assign hostname, IPs, NTP, DNS via console                        │
+│  Cluster form = Joining 3 nodes into quorum cluster via ND web UI                                     │
+│  App install = Installing NDI, NDFC, NDO as apps from ND admin > Apps                                 │
+│  Fabric onboard = Adding APIC or NX-OS fabric to ND with credentials                                  │
+│  acs upgrade = CLI command to apply upgrade image to cluster                                          │
+│  Rolling upgrade = Upgrading nodes sequentially to maintain quorum                                    │
+│  Backup = acs backup create before upgrade; stored externally                                         │
+│  Rollback = Restoring from backup if upgrade causes data loss                                         │
+│  Release notes = Cisco release notes; check for breaking changes before upgrade                       │
+│  Verify apps = Post-upgrade check: NDI collecting, NDFC managing, NDO syncing                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Rolling upgrade typically takes 30–60 minutes per node for a 3-node cluster.

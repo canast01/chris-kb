@@ -32,18 +32,33 @@ SCG admin UI > System Settings > About
 Note the installed version and compare to the latest on Dell Support Portal:
 support.dell.com > Products > CloudIQ > Secure Connect Gateway > Downloads
 ```
-
-### SCG Upgrade Procedure
-
-```text
-1. Download upgrade package from Dell Support Portal
-2. Log into SCG admin UI: https://<SCG-IP>:9443
-3. Navigate to: System Settings > Software Updates
-4. Upload the package and follow the upgrade wizard
-5. SCG restarts (collection pause ~10–15 minutes)
-6. Post-upgrade: verify all systems show Collecting status in CloudIQ
-   (allow up to 30 minutes for telemetry to resume)
-7. Check AIOps recommendations dashboard for new recommendations post-upgrade
+┌────────────────────────────────── Dell AIOps — Lifecycle Management ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Deploy / Install               │  │                   Upgrade                   │   │
+│   │               OVA or container               │  │             Check release notes             │   │
+│   │              Configure adapters              │  │               Snapshot before               │   │
+│   │             Connect data sources             │  │               Rolling upgrade               │   │
+│   │              Set alert policies              │  │                 Verify after                │   │
+│   │              Configure ITSM out              │  │               Rollback if fail              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  AIOps on management cluster VMs · upgrade via admin CLI or UI · snapshot enables rollback            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OVA deployment = VM image for vSphere; alternative container deployment for Kubernetes               │
+│  Adapter = Per-product data source connector configured after initial platform deployment             │
+│  Rolling upgrade = Upgrading nodes one at a time to maintain availability during upgrade              │
+│  Snapshot = VM snapshot taken before upgrade; enables fast rollback if upgrade fails                  │
+│  Release notes = Per-version document; check for breaking changes before upgrade                      │
+│  Verify after = Post-upgrade checks: adapters collecting, alerts firing, UI accessible                │
+│  Rollback = Revert to snapshot if upgrade causes data loss or service disruption                      │
+│  Alert policy = Named ruleset defining thresholds and notification targets; survives upgrade          │
+│  Admin CLI = aiops-admin command-line tool for backup, upgrade, and service management                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## New System Onboarding

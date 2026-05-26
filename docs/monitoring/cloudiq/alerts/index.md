@@ -27,47 +27,36 @@ Proactive Alert Flow — CloudIQ
 │  (distro)  │   │   UI)       │
 └────────────┘   └─────────────┘
 ```
-
-Dell CloudIQ surfaces alerts from connected storage, data protection, networking, and hyperconverged infrastructure systems. This page covers alert types, severity levels, notification setup, and dismissal workflows.
-
-## Alert Types and Sources
-
-CloudIQ aggregates alerts from all registered systems. Alerts are sourced from the hardware itself (telemetry pushed via phone-home) and enriched by CloudIQ's analytics engine.
-
-Navigation: **CloudIQ > Alerts**
-
-| Alert Source | Examples |
-|---|---|
-| PowerStore | Drive failure, replication lag, pool near-full |
-| PowerMax / VMAX | Director offline, SRDF link degraded |
-| PowerScale (Isilon) | Node down, quota exceeded, SRS connectivity |
-| PowerProtect / Avamar | Job failure, catalogue corruption, capacity |
-| PowerEdge Servers | Drive predictive failure, RAID degradation |
-| PowerSwitch | Port down, STP topology change |
-
-## Severity Levels
-
-| Severity | Colour | Meaning | Response Time |
-|---|---|---|---|
-| Critical | Red | System or service impact is occurring | Immediate |
-| Major | Orange | Risk of imminent impact | Within 1 hour |
-| Minor | Yellow | Degraded state, no immediate impact | Business hours |
-| Informational | Blue | Configuration or state change logged | Review when convenient |
-
-## Viewing and Filtering Alerts
-
-```bash
-# Query active alerts via CloudIQ REST API v1
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/alerts?filter=state%20eq%20%27ACTIVE%27" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json" | jq '.results[] | {id, severity, summary, system_name}'
-
-# Filter by severity
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/alerts?filter=severity%20eq%20%27CRITICAL%27" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json"
+┌────────────────────────────────────────── CloudIQ — Alerts ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               Alert Categories               │                 Alert Actions                  │   │
+│   │          Health: score < threshold           │           Acknowledge: mark as seen            │   │
+│   │          Capacity: fill date < 90d           │            Snooze: mute for N hours            │   │
+│   │          Performance: latency spike          │          Dismiss: remove if false-pos          │   │
+│   │          Hardware: component fault           │             Create service request             │   │
+│   │            Anomaly: ML deviation             │             Link to recommendation             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Alerts generated in Dell cloud · delivered via email/webhook · viewed at cloudiq.dell.com            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Alert = CloudIQ notification for a condition requiring attention on an array                         │
+│  Health alert = Fired when array health score drops below configured threshold                        │
+│  Capacity alert = Fired when projected full date is within defined horizon (default 90 days)          │
+│  Performance alert = Fired when latency or IOPS deviates significantly from baseline                  │
+│  Hardware alert = Firmware-detected component fault forwarded via telemetry                           │
+│  Anomaly alert = ML-detected statistical deviation not matching known fault pattern                   │
+│  Acknowledge = Confirms alert reviewed; suppresses repeat notification                                │
+│  Snooze = Temporary suppression for a defined window; re-fires after window expires                   │
+│  Dismiss = Permanent closure of alert; used for confirmed false-positives                             │
+│  Service request = Dell support case created from CloudIQ alert with pre-populated diagnostics        │
+│  Recommendation = AI-generated fix linked to alert; addresses root cause                              │
+│  Severity = Alert priority: Critical, Warning, Informational                                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Notification Configuration

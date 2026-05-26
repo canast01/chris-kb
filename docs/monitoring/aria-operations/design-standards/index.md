@@ -1,4 +1,50 @@
 # Aria Operations Standards
+
+```
+┌───────────────────────────────── Aria Operations — Design Standards ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      Sizing & Topology      │  │        Data Retention       │  │      High Availability      │   │
+│   │      XS: 1 node ≤1k obj     │  │      Metrics: 6 months      │  │        2-node minimum       │   │
+│   │      S: 1 node ≤5k obj      │  │       Events: 6 months      │  │       Witness optional      │   │
+│   │       M: 2 nodes ≤20k       │  │      Snapshots: 30 days     │  │      vSphere HA enabled     │   │
+│   │       L: 4 nodes ≤50k       │  │      Purge via vROps UI     │  │      DRS anti-affinity      │   │
+│   │      XL: 8 nodes ≤150k      │  │       Backup: nightly       │  │       Shared datastore      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Naming, tagging, and alert policy standards drive consistent operation across all environments     │
+│                                                                                                       │
+│                ▼                                 ▼                                 ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Naming Standards      │  │     Alert Policy Design     │  │      Adapter Standards      │   │
+│   │       Groups: env-team      │  │        Symptom first        │  │      1 adapter/instance     │   │
+│   │     Dashboards: func-obj    │  │     Threshold reviewed Q    │  │       Credential vault      │   │
+│   │     Reports: sched-scope    │  │     No duplicate alerts     │  │       PAK from VMware       │   │
+│   │    Alerts: sev-component    │  │     Notify via outbound     │  │       Test before prod      │   │
+│   │       Tags: env+owner       │  │      Escalation defined     │  │        Version locked       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Master node: 4 vCPU 16 GB min · Data node: 8 vCPU 32 GB · NFS/vSAN for VMDK storage                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Object = Monitored entity in Aria Ops (VM, host, datastore, application component)                   │
+│  Super metric = Formula combining raw metrics into a single derived KPI                               │
+│  Policy = Named ruleset controlling collection intervals, thresholds, and alert actions               │
+│  Group = Dynamic or static collection of objects; policies and alerts applied at group level          │
+│  PAK = Plugin/adapter package installed via Administration > Solutions                                │
+│  Symptom = Condition evaluated against metric; true/false trigger for alert                           │
+│  Recommendation = Action suggested when alert fires (KB link, runbook, automated action)              │
+│  Outbound plugin = Webhook or SMTP/SNMP connector for alert notification                              │
+│  Anti-affinity = DRS rule keeping Aria Ops nodes on separate ESXi hosts                               │
+│  Retention = Days Aria Ops stores raw metrics before rollup and eventual purge                        │
+│  Witness node = Tie-breaking node used in 2-node HA cluster to avoid split-brain                      │
+│  NFS datastore = Shared storage enabling vSphere HA restart of Aria Ops VMs                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Alert Naming Convention
 
 Alerts follow the pattern `ENV-OBJECT_TYPE-CONDITION` to ensure consistent filtering and automated routing.

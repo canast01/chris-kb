@@ -45,36 +45,35 @@ curl -sk -X GET \
   -H "Authorization: Bearer <access_token>" \
   -o cloudiq-health-report.pdf
 ```
-
-## Scheduling Recurring Reports
-
-Navigation: **CloudIQ > Reports > Scheduled Reports > + New Schedule**
-
-Schedule configuration options:
-
-| Field | Options |
-|---|---|
-| Report Type | Health, Capacity, Alerts, etc. |
-| Frequency | Daily, Weekly, Monthly |
-| Day / Time | Specific day and UTC time |
-| Systems | All systems or selected subset |
-| Format | PDF or CSV |
-| Recipients | Comma-separated email addresses |
-
-```bash
-# Create a weekly capacity forecast schedule via API
-curl -sk -X POST \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/report_schedules" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "type": "CAPACITY_FORECAST",
-    "frequency": "WEEKLY",
-    "day_of_week": "MONDAY",
-    "time_utc": "07:00",
-    "format": "PDF",
-    "recipients": ["storage-team@example.com", "manager@example.com"]
-  }'
+┌───────────────────────────────────────── CloudIQ — Reporting ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Built-in Reports               │  │               Custom / Export               │   │
+│   │             Fleet health summary             │  │             CSV capacity export             │   │
+│   │              Capacity forecast               │  │              PDF health report              │   │
+│   │                Alert history                 │  │                API data pull                │   │
+│   │              Performance trends              │  │                Schedule email               │   │
+│   │            Recommendation status             │  │              Custom time range              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Reports generated in Dell cloud · PDF/CSV download via browser · API for automation                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Fleet health summary = Report showing all arrays with current health score and issue count           │
+│  Capacity forecast report = Per-array projected full dates for planning horizon                       │
+│  Alert history = Time-series of alerts over selected period; useful for trend analysis                │
+│  Performance trend = Historical IOPS/latency/bandwidth per array over custom window                   │
+│  Recommendation status = Open/resolved/dismissed counts per category and priority                     │
+│  CSV export = Comma-separated raw data download; import into Excel or BI tool                         │
+│  PDF report = Formatted document suitable for management review or audit                              │
+│  Scheduled email = CloudIQ sending report on defined cadence to recipient list                        │
+│  API data pull = REST GET calls to retrieve report data programmatically                              │
+│  Custom time range = Selecting arbitrary start/end dates for historical report generation             │
+│  BI tool = Business intelligence platform (Tableau, Power BI) consuming CloudIQ CSV exports           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Exporting Data for External Analysis

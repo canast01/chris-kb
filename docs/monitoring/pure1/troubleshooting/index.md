@@ -33,24 +33,36 @@ purearray set --proxy https://<proxy-host>:<port>
 # Array management IP must have outbound TCP 443 to pure1.purestorage.com
 # Verify with network team if connectivity test fails
 ```
-
-If array was recently onboarded, allow 30–60 minutes for first telemetry to appear.
-
-### Stale Data / Old Last-Seen Timestamp
-
-**Symptoms**: Metrics in Pure1 are hours or days out of date.
-
-```bash
-# Check Purity management service health
-pureadmin list --api-token   # verify management services are running
-puremessage list             # review recent system messages for errors
-
-# If Purity management is running but connectivity is intermittent:
-# - Check for network flaps on management interface
-# - Review switch logs for the port connected to array management IP
-
-# Restart Pure1 telemetry (if Purity running but connectivity was briefly lost):
-# Connection recovers automatically — allow 15–30 minutes after connectivity restores
+┌─────────────────────────────────────── Pure1 — Troubleshooting ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Phonehome Issues               │  │             Alert / Data Issues             │   │
+│   │            Check TCP 443 outbound            │  │             Verify array status             │   │
+│   │            Verify DNS resolution             │  │                Check data age               │   │
+│   │            purearray setattr show            │  │              Check alert config             │   │
+│   │             Re-enable phonehome              │  │            Test webhook delivery            │   │
+│   │             Check proxy settings             │  │                Open TAC case                │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Troubleshoot from array CLI (purearray) and pure1.purestorage.com UI                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Disconnected = Array shows Disconnected in Pure1; phonehome not received > 5 min                     │
+│  TCP 443 test = From array: curl -s https://pure1.purestorage.com >/dev/null; check rc                │
+│  DNS resolution = Array must resolve pure1.purestorage.com; check array DNS settings                  │
+│  purearray setattr show = View phonehome enabled/disabled state on FlashArray                         │
+│  Re-enable phonehome = purearray setattr --phonehome true on FlashArray CLI                           │
+│  Proxy settings = purearray setattr --proxy http://proxy:port if array uses proxy                     │
+│  Data age = Time since last phonehome; check in Pure1 > array detail                                  │
+│  Alert config = Verify email and webhook targets in Pure1 > Admin > Notifications                     │
+│  Webhook test = Pure1 UI has a test button; verify delivery to endpoint                               │
+│  TAC case = support.purestorage.com; include array serial and phonehome status                        │
+│  FlashBlade phonehome = pureauthapp setattr --phonehome true on FlashBlade CLI                        │
+│  Firewall rule = Allow outbound TCP 443 from array mgmt IP to pure1.purestorage.com                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### API Rate Limiting (HTTP 429)

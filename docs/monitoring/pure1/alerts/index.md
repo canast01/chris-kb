@@ -22,19 +22,36 @@ Alert Pipeline — Pure1
 │   list)    │  │   view)  │  │  (ticketing) │
 └────────────┘  └──────────┘  └──────────────┘
 ```
-
-Pure1 aggregates alerts from all registered arrays in a single pane. Arrays generate alerts automatically for hardware faults, capacity thresholds, replication lag, and performance anomalies.
-
-## Alert Lifecycle
-
-```mermaid
-flowchart LR
-    A[Event on array] --> B[Alert raised — Open]
-    B --> C{Resolved?}
-    C -->|Auto-resolved| D[Alert Closed]
-    C -->|Manual action| E[Acknowledge → Investigate → Resolve]
-    E --> D
-    D --> F[Audit history retained]
+┌─────────────────────────────────────────── Pure1 — Alerts ────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               Alert Categories               │                 Alert Actions                  │   │
+│   │       Pre-failure: component degraded        │             Acknowledge: mark seen             │   │
+│   │           Capacity: fill < 90 days           │                 Open TAC case                  │   │
+│   │         Performance: latency anomaly         │                Webhook to ITSM                 │   │
+│   │            Software: Purity event            │             Dismiss false positive             │   │
+│   │         Connectivity: phonehome gap          │               Email to ops team                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Alerts generated in Pure cloud · delivered via Pure1 UI, email, webhook · TAC auto-case              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Pre-failure alert = Pure1 ML detecting component degradation before failure                          │
+│  Capacity alert = Projected full date within 90 days at current growth rate                           │
+│  Performance alert = Latency or IOPS anomaly detected by Pure1 ML                                     │
+│  Software alert = Purity OS event (firmware error, NVMe error, data reduction issue)                  │
+│  Connectivity alert = Array phonehome not received for > 5 minutes                                    │
+│  TAC auto-case = Pure1 opening case with diagnostic bundle; assigned to engineer                      │
+│  Acknowledge = Marks alert as seen; suppresses re-notification                                        │
+│  Dismiss = Close confirmed false-positive with comment                                                │
+│  Severity = Critical / Warning / Info; Critical triggers auto-case                                    │
+│  Proactive = Alert fires before customer notices impact; target of Pure1 model                        │
+│  Webhook = HTTP POST from Pure1 to configured URL when alert fires                                    │
+│  Phonehome gap = Connectivity loss; array cannot reach pure1.purestorage.com                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Viewing Alerts in Pure1

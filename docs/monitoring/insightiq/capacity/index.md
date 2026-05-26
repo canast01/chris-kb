@@ -19,40 +19,34 @@ Used ▲
 │  Cluster total      ████████████░  83%  ⚠   │
 └──────────────────────────────────────────────┘
 ```
-
-Dell InsightIQ (now part of the OneFS Analytics suite) provides capacity analytics for PowerScale (Isilon) clusters. This page covers how to monitor capacity trends, break down usage by protocol, and manage quota monitoring.
-
-## Capacity Overview
-
-InsightIQ collects capacity metrics from all nodes in a PowerScale cluster via the OneFS platform APIs. Data is stored locally on the InsightIQ virtual appliance.
-
-Navigation: **InsightIQ > Reports > Capacity**
-
-Key capacity metrics:
-
-| Metric | Description |
-|---|---|
-| Cluster Used Capacity | Total bytes written across all nodes |
-| Cluster Total Capacity | Raw usable capacity after protection overhead |
-| Hard Quota Used | Data written under hard quota limits |
-| Soft Quota Used | Data approaching soft quota warning thresholds |
-| Data Reduction Savings | Dedupe and compression savings (if enabled) |
-
-## Capacity Trending Reports
-
-```bash
-# On the InsightIQ appliance (SSH access)
-ssh admin@insightiq.example.com
-
-# List available cluster targets
-isi_gather_info --list-clusters   # Not available directly; use InsightIQ UI
-
-# On PowerScale OneFS directly - check used vs available capacity
-ssh admin@powerscale.example.com
-isi statistics query list --stats ifs.bytes.avail,ifs.bytes.total,ifs.bytes.used
-
-# Check capacity in human-readable format
-isi storagepool list
+┌─────────────────────────────────── InsightIQ — Capacity Management ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Capacity Metrics               │  │                 Forecasting                 │   │
+│   │              Total usable space              │  │              Growth rate trend              │   │
+│   │              Used vs available               │  │             Projected full date             │   │
+│   │              Per-tier breakdown              │  │              Linear regression              │   │
+│   │             Dedup/compress ratio             │  │                Custom horizon               │   │
+│   │              Quota utilisation               │  │             Export for planning             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Capacity data from PAPI · trend analysis in InsightIQ · export for spreadsheet planning              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Usable space = Total cluster capacity after RAID overhead                                            │
+│  Tier = Storage class within PowerScale (SSD, SAS, HDD) each with separate capacity                   │
+│  Dedup ratio = Data deduplication factor; 2.0 means half the physical space used                      │
+│  Compression ratio = Data compression factor; reduces physical footprint of data                      │
+│  Quota = Per-directory or per-user space limit; tracked in InsightIQ for trend                        │
+│  Growth rate = MB/day or GB/week consumption rate; derived from time-series                           │
+│  Linear regression = Statistical method for projecting capacity exhaustion date                       │
+│  Projected full date = Estimated date cluster reaches capacity at current growth rate                 │
+│  Custom horizon = User-defined forecast window (30/60/90/180 days)                                    │
+│  CSV export = Downloading capacity data for external planning tools                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 InsightIQ capacity report settings:

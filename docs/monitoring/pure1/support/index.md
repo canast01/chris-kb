@@ -28,47 +28,36 @@ Support Flow — Pure1
 │  └──────────────────────┘   │
 └─────────────────────────────┘
 ```
-
-Pure Storage's support model is built around proactive monitoring via Pure1 and the Evergreen subscription. Most hardware replacements and upgrades are non-disruptive and covered under the subscription.
-
-## Support Portal
-
-**pure1.purestorage.com** — single portal for:
-- Opening and tracking support cases
-- Downloading Purity software bundles
-- Accessing documentation and knowledge base
-- Viewing support entitlement and contract details
-
-## Opening a Support Case
-
-### Via Pure1 UI
-
-1. Log into pure1.purestorage.com
-2. **Support → Cases → Create Case**
-3. Select array, provide description and severity
-4. Attach diagnostic bundle (see below)
-
-### Via Phone
-
-| Region | Number |
-|---|---|
-| US / Canada | +1 650-729-4088 |
-| EMEA | +44 20 3318 9181 |
-| APAC | +65 6521 2890 |
-
-Use phone for Severity 1 (complete loss of access or data loss risk).
-
-### Via CLI (auto-case creation)
-
-Pure arrays with Phone Home enabled will auto-open cases for hardware failures:
-
-```bash
-# Verify Phone Home is enabled and connected
-purearray list | grep phone_home
-puresupport list
-
-# Force a Phone Home transmission (sends diagnostics to Pure)
-puresupport phonehome --transmit
+┌───────────────────────────────────── Pure1 — Support Integration ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               Pure1 Support: proactive TAC case creation and remote diagnostics               │   │
+│   │               Auto-case: Pure1 ML opens TAC case before customer notices failure              │   │
+│   │          Case includes: diagnostic bundle, array serial, failure signature, priority          │   │
+│   │           Remote assist: Pure engineer connects to array via encrypted Pure1 tunnel           │   │
+│   │               Proactive swap: replacement hardware staged before failure occurs               │   │
+│   │                      View cases: pure1.purestorage.com > Support > Cases                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Cases opened in Pure cloud · engineer accesses array via Pure1 secure tunnel                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Auto-case = Pure1 opening TAC case automatically on pre-failure detection                            │
+│  Diagnostic bundle = Phonehome data + Purity log snapshot attached to case                            │
+│  Remote assist = Pure engineer SSH-ing to array through Pure1 encrypted tunnel                        │
+│  Proactive swap = Pure dispatching replacement drive/module before failure                            │
+│  Case priority = Sev-1 for pre-failure; Sev-2 for degraded; Sev-3 for advisory                        │
+│  Encrypted tunnel = Pure1 remote access over customer-approved secure channel                         │
+│  Customer approval = Remote access requires explicit opt-in per session                               │
+│  TAC = Pure Storage Technical Assistance Centre; 24x7 for Sev-1                                       │
+│  Case view = All open and historical cases visible in Pure1 Support portal                            │
+│  Manual case = Open at support.purestorage.com if auto-case not triggered                             │
+│  Evergreen = All-inclusive support model; no per-incident charges                                     │
+│  Phonehome = Required for auto-case and remote assist; must be enabled and connected                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Diagnostic Bundle Collection

@@ -41,29 +41,31 @@ curl -H "Authorization: Bearer <token>" \
 curl -H "Authorization: Bearer <token>" \
   "https://api.pure1.purestorage.com/api/1.latest/metrics/history?names=array_total_capacity&ids=<array_id>"
 ```
-
-Authentication uses RSA key pairs — generate a key pair in Pure1 → Profile → API Registration.
-
-## SupportAssist Integration
-
-- **Remote Support**: Allows Pure engineers to open a secure tunnel (requires per-session approval)
-- **Support Tickets**: Auto-opened from Pure1 when an array alert triggers a support case
-- **Evergreen Subscription**: Pure1 tracks subscription entitlements and flags non-compliance
-
-## Integration Architecture
-
-```mermaid
-graph LR
-  FA["FlashArray\n(Purity OS)"] & FB["FlashBlade\n(Purity OS)"] -->|"HTTPS outbound"| PURE1["Pure1 Cloud"]
-  PURE1 --> PD["PagerDuty"]
-  PURE1 --> SN["ServiceNow"]
-  PURE1 --> API["REST API\n(automation)"]
-  PURE1 --> SUP["Pure Support\n(SupportAssist)"]
-  ADMIN(["Storage Admin"]) -->|"browser / mobile"| PURE1
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class FA,FB host
-  class PURE1,PD,SN,API,SUP cloud
-  class ADMIN host
+┌────────────────────────────────── Pure1 — Architecture Integrations ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                Array Sources                 │              Notification Targets              │   │
+│   │       FlashArray//X (native phonehome)       │              Email: ops-storage@               │   │
+│   │       FlashArray//C (native phonehome)       │           Webhook: ServiceNow/Slack            │   │
+│   │       FlashBlade//S (native phonehome)       │                 Pure1 REST API                 │   │
+│   │       FlashBlade//E (native phonehome)       │             Aria Ops Pure adapter              │   │
+│   │            Pure Cloud Block Store            │             SIEM via syslog proxy              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Purity phonehome built-in · TCP 443 outbound from array · Pure cloud forwards alerts                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Native phonehome = Purity OS built-in; no additional agent or gateway needed                         │
+│  Pure Cloud Block Store = FlashArray in AWS/Azure; also connected to Pure1                            │
+│  REST API = Pure1 API for fleet-wide metric retrieval and management                                  │
+│  Webhook = Pure1 outbound POST to webhook URL on proactive alert                                      │
+│  ServiceNow = Pure1 alert forwarded as incident via webhook                                           │
+│  Slack = Pure1 alert posted to storage team channel via webhook                                       │
+│  Aria Ops adapter = PAK file pulling Pure1/FlashArray metrics into VMware Aria Operations             │
+│  SIEM proxy = Script forwarding Pure1 API alerts to syslog for SIEM ingestion                         │
+│  Pure1 API token = OAuth token for REST API; generated in Pure1 account settings                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

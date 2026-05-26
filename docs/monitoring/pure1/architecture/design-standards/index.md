@@ -4,6 +4,36 @@
 Array naming standards, team access model, alert threshold configuration, and operational baselines for Pure1.
 </div>
 
+```
+┌────────────────────────────────────── Pure1 — Design Standards ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Registration Standards            │  │            Operational Standards            │   │
+│   │            All arrays registered             │  │             Email alerts active             │   │
+│   │              Phonehome verified              │  │                Review weekly                │   │
+│   │              TCP 443 unblocked               │  │              Auto-case enabled              │   │
+│   │               Service account                │  │            Capacity plan monthly            │   │
+│   │             Tag by env+location              │  │                Alert to ITSM                │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  All arrays require TCP 443 outbound to pure1.purestorage.com · Pure handles the rest                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Phonehome verified = Array shows Connected in Pure1; data age < 2 minutes                            │
+│  TCP 443 unblocked = Firewall allows outbound from array management IP to Pure cloud                  │
+│  Service account = Dedicated Pure1 org user for API access; not personal login                        │
+│  Tag = Pure1 metadata for grouping arrays by environment, location, and team                          │
+│  Email alerts = Pure1 sending proactive alerts to ops-storage email list                              │
+│  Auto-case = Pure1 automatically opening TAC case; must be enabled per org                            │
+│  Weekly review = Review Pure1 fleet health and capacity outlooks every Monday                         │
+│  Alert to ITSM = Pure1 webhook configured to forward proactive alerts to ServiceNow                   │
+│  Capacity monthly = Monthly review of Pure1 forecasts; inform procurement planning                    │
+│  Purity current = All arrays on current Purity release; Pure1 flags older versions                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Array Naming Standards
 
 Array names in Pure1 are inherited from the array's configured hostname. Enforce the hostname standard at array deployment — it cannot be changed without array rename.

@@ -1,4 +1,33 @@
 # InsightIQ Standards
+
+```
+┌──────────────────────────────────── InsightIQ — Design Standards ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Platform Design                │  │                Data Standards               │   │
+│   │               One VM per site                │  │             2-year min retention            │   │
+│   │               200+ GB SSD disk               │  │               Client stats ON               │   │
+│   │              All clusters added              │  │              30-sec collection              │   │
+│   │             PAPI read-only acct              │  │                Backup nightly               │   │
+│   │               Management VLAN                │  │           Report scheduled weekly           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  InsightIQ VM on management cluster · SSD VMDK · PAPI TCP 8080 to cluster                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  One VM per site = Each data centre site has a dedicated InsightIQ appliance                          │
+│  200+ GB SSD = Disk allocation; SSD required for PostgreSQL write performance                         │
+│  Client stats = isi_clientstats must be enabled on cluster for per-client breakdown                   │
+│  Read-only PAPI account = InsightIQ cannot modify cluster; dedicated account per cluster              │
+│  2-year retention = Minimum to support trend analysis and capacity planning                           │
+│  Nightly backup = iiq_backup scheduled; archive to NFS before 07:00                                   │
+│  Weekly report = Scheduled performance report emailed to storage team every Monday                    │
+│  Management VLAN = InsightIQ isolated to management network; no access from users                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Appliance Sizing Standards
 
 InsightIQ appliance sizing is based on the number of monitored clusters and the desired data retention period.

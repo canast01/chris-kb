@@ -67,30 +67,31 @@ Admin > Authentication > Remote Login Domains > Add
 - Bind DN: CN=svc-nd-ldap,OU=ServiceAccounts,DC=company,DC=com
 - Role mapping: LDAP group → ND role
 ```
-
-SSO (SAML 2.0) is supported on newer ND versions. Enable SSO for simplified enterprise identity integration.
-
-## Fabric Monitoring Standards
-
-- All fabrics must have NDI health scoring enabled within 24 hours of onboarding
-- NDI compliance checking must be run against a defined baseline configuration snapshot
-- Flow telemetry (if licensed) is enabled on tier-1 production fabrics only
-- Minimum NTP sync validation: all fabric nodes must sync to the same NTP source as ND nodes
-
-## Change Management
-
-All configuration changes to production fabrics via NDFC must be tracked as ServiceNow change records. Emergency changes may use the emergency change process, with documentation filed within 24 hours.
-
-## Backup Standards
-
-- ND cluster backup: weekly, automated via Admin > Backup and Restore
-- Backup files stored on external NFS or SFTP target
-- NDFC configuration backup: weekly
-- Backup retention: 4 weeks minimum
-
-```text
-Admin > Backup and Restore > Backup
-- Destination: SFTP or NFS
-- Schedule: weekly (Sunday 02:00)
-- Retention: 4 backups
+┌───────────────────────────────── Nexus Dashboard — Design Standards ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Platform Standards              │  │             Monitoring Standards            │   │
+│   │               3 physical nodes               │  │            All fabrics onboarded            │   │
+│   │               SSD 500+ GB/node               │  │             MDT on all switches             │   │
+│   │             Dedicated mgmt/data              │  │               ITSM integration              │   │
+│   │               ND backup daily                │  │            Weekly anomaly review            │   │
+│   │             RBAC: role per team              │  │             Compliance schedule             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  3 physical nodes minimum · SSD storage · dual-network (mgmt + data)                                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Physical nodes = Bare-metal ND for production; 3 nodes for quorum                                    │
+│  SSD 500 GB = Flash per node for streaming telemetry time-series write                                │
+│  Dedicated networks = ND requires separate management and data network interfaces                     │
+│  MDT on all switches = Model-Driven Telemetry enabled on all fabric switches                          │
+│  ITSM integration = ServiceNow webhook configured in ND for all NDI events                            │
+│  Compliance schedule = NDI running assurance checks on defined cadence                                │
+│  RBAC = Role-Based Access Control; Admin/Operator/Viewer per team                                     │
+│  Weekly review = Calendar event for NDI anomaly and health score review                               │
+│  Backup daily = acs backup create scheduled and archived off-node                                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

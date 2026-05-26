@@ -23,31 +23,36 @@ Proactive Insights — Dell AIOps
 │  └────────────────────────────────────────┘  │
 └──────────────────────────────────────────────┘
 ```
-
-Dell AIOps Insights analyses workload behaviour patterns to surface performance predictions and identify bottlenecks before they cause service degradation. This page covers workload insight types, how to interpret prediction data, and how to act on bottleneck detections.
-
-## Insight Types Overview
-
-Navigation: **CloudIQ > AIOps > Insights**
-
-| Insight Type | Description |
-|---|---|
-| Workload Characterisation | Classification of I/O pattern (sequential, random, mixed) |
-| Performance Prediction | Projected latency/IOPS trend over next 7–30 days |
-| Bottleneck Detection | Active constraint on a system (CPU, cache, bandwidth) |
-| Noisy Neighbour | Volume or workload consuming disproportionate resources |
-| Growth Trend | Projected resource exhaustion based on workload growth |
-
-## Workload Characterisation
-
-AIOps classifies each volume or file system's I/O workload based on observed read/write ratios, block sizes, and sequentiality.
-
-```bash
-# Get workload characterisation for all volumes
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/workload_insights?select=volume_name,system_name,io_pattern,read_percent,avg_block_size_kb" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json" | jq '.results[] | {volume_name, io_pattern, read_percent}'
+┌──────────────────────────────────────── Dell AIOps — Insights ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │             AIOps Insights: AI-generated summaries of infrastructure health trends            │   │
+│   │                 Categories: Efficiency, Risk, Capacity, Performance, Security                 │   │
+│   │         Insight = aggregated pattern observed across multiple objects and time windows        │   │
+│   │                    Includes estimated business impact and priority ranking                    │   │
+│   │                    Updated daily from ML analysis of all ingested telemetry                   │   │
+│   │             Actionable: each insight links to recommendations and affected systems            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Insights computed in AIOps ML engine · stored in AIOps DB · displayed in UI and API                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Insight = Aggregated finding from ML analysis covering multiple systems or time windows              │
+│  Efficiency insight = Identifying over-provisioned or under-utilised resources                        │
+│  Risk insight = Patterns suggesting increased failure probability across a group of systems           │
+│  Capacity insight = Fleet-wide capacity outlook; systems at risk within 90 days                       │
+│  Performance insight = Workload patterns causing latency degradation across multiple arrays           │
+│  Security insight = Configuration gaps or unusual access patterns detected by ML                      │
+│  Business impact = Estimated operational risk or cost of not acting on insight                        │
+│  Priority ranking = Insights ordered by estimated impact and urgency                                  │
+│  Affected systems = List of infrastructure objects contributing to the insight                        │
+│  Linked recommendations = Specific actions to address the identified pattern                          │
+│  Daily refresh = Insight model runs nightly on new telemetry; UI updated each morning                 │
+│  Pattern = Recurring behaviour observed across objects over time; basis for insight generation        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 I/O pattern classifications:

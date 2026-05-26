@@ -26,37 +26,36 @@ AI Recommendations — CloudIQ
        │ Mark Implemented│ → CloudIQ validates next cycle
        └─────────────────┘
 ```
-
-Dell CloudIQ generates proactive recommendations based on telemetry analysis, configuration assessment, and best practices. Categories include performance optimisation, energy savings, and configuration improvements. This page covers reviewing, implementing, and tracking recommendations.
-
-## Recommendation Categories
-
-Navigation: **CloudIQ > Recommendations**
-
-| Category | Examples |
-|---|---|
-| Performance | Increase I/O queue depth, rebalance volumes across controllers |
-| Capacity | Expand pool before projected full date |
-| Data Reduction | Enable compression or deduplication on eligible volumes |
-| Resiliency | Upgrade RAID level, replace at-risk drives pre-emptively |
-| Configuration | Apply firmware updates, enable recommended settings |
-| Energy Savings | Power down idle drives, enable MAID (Massive Array of Idle Disks) |
-| Security | Enable at-rest encryption, rotate credentials |
-
-## Viewing Active Recommendations
-
-```bash
-# List all active recommendations
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations?filter=state%20eq%20%27ACTIVE%27" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json" | jq '.results[] | {id, category, title, impact, system_name}'
-
-# Filter recommendations by category
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations?filter=category%20eq%20%27PERFORMANCE%27" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json"
+┌──────────────────────────────────── CloudIQ — AI Recommendations ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           CloudIQ AI generates recommendations based on health issues and anomalies           │   │
+│   │            Categories: Performance, Capacity, Availability, Security, Best Practice           │   │
+│   │          Priority: Critical (act now), High (act soon), Medium (plan), Low (optional)         │   │
+│   │          Each recommendation: problem description, impact, suggested action, KB link          │   │
+│   │                    Track status: Open → In Progress → Resolved → Dismissed                    │   │
+│   │         Resolution improves health score once Dell cloud receives confirming telemetry        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Recommendations computed in Dell cloud from fleet-wide ML · no on-prem component                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Recommendation = AI action item linking a detected issue to a corrective step                        │
+│  Priority = Urgency classification: Critical/High/Medium/Low                                          │
+│  KB link = Dell Knowledge Base article linked from recommendation for detailed steps                  │
+│  Impact = Estimated health score improvement if recommendation is implemented                         │
+│  In Progress = Status indicating team has started working on the recommendation                       │
+│  Resolved = Recommendation marked done; CloudIQ validates via subsequent telemetry                    │
+│  Dismissed = Recommendation closed without action; should include a reason comment                    │
+│  Fleet-wide ML = Models trained on all registered Dell arrays globally for pattern matching           │
+│  Best practice = Recommendation to align configuration with Dell recommended settings                 │
+│  Security recommendation = Flagging insecure configuration (weak auth, unencrypted replication)       │
+│  Confirming telemetry = Subsequent metric push showing issue condition no longer present              │
+│  SLA = Internal target for acting on Critical/High recommendations (e.g., within 3 business days)     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Recommendation priority fields:

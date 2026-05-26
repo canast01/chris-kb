@@ -50,28 +50,36 @@ isi statistics client list \
   --limit=10 \
   --format table
 ```
-
-Top client output fields:
-
-| Field | Meaning |
-|---|---|
-| `local_addr` | PowerScale node IP serving the client |
-| `remote_addr` | Client IP address |
-| `protocol` | Protocol in use |
-| `ops` | Operations per second |
-| `bytes_in` | Write bytes/s to cluster |
-| `bytes_out` | Read bytes/s from cluster |
-| `latency` | Average operation latency in microseconds |
-
-## Workload Classification
-
-InsightIQ (and the underlying OneFS statistics) can help classify workloads by their I/O pattern, which informs tiering and caching policy decisions.
-
-```bash
-# Check per-client I/O breakdown for classification
-isi statistics client list --protocol=nfs \
-  --stats=bytes_in,bytes_out,ops,latency \
-  --format csv > /tmp/client-stats.csv
+┌──────────────────────────────────── InsightIQ — Workload Analysis ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Workload Identification            │  │               Workload Sizing               │   │
+│   │                Top-IO clients                │  │              IOPS per workload              │   │
+│   │                Top-IO shares                 │  │              Latency SLA check              │   │
+│   │              Protocol by client              │  │             Throughput required             │   │
+│   │             Time-of-day pattern              │  │              Capacity per team              │   │
+│   │                Growth per dir                │  │              Chargeback report              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Workload data from InsightIQ client stats · per-share and per-directory tracking                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Workload = IO pattern from a specific client, application, or directory                              │
+│  Top-IO client = Client IP or hostname generating highest IOPS or throughput                          │
+│  Top-IO share = NFS export or SMB share with highest IO activity                                      │
+│  Protocol by client = Which protocol (NFS/SMB/S3) each client uses                                    │
+│  Time-of-day pattern = IO activity profile over 24h; identifies batch window vs real-time             │
+│  Growth per directory = Capacity growth rate for specific directories; useful for chargeback          │
+│  Latency SLA = Target latency for a workload; InsightIQ used to verify compliance                     │
+│  Chargeback = Attributing storage cost to departments using per-client/share IO data                  │
+│  Capacity per team = Space consumption breakdown by team based on directory hierarchy                 │
+│  Client stats = isi_clientstats on PowerScale; must be enabled for per-client data                    │
+│  IOPS per workload = Average and peak IOPS for a specific application or team                         │
+│  Throughput required = Peak bandwidth needed; used for network and controller sizing                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Workload classification criteria:

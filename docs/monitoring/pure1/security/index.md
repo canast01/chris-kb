@@ -24,24 +24,36 @@ Pure1 > Administration > Single Sign-On > Configure
   - role claim → Admin or Read-only (via IdP group claim)
 - Enable SCIM for automatic user provisioning/deprovisioning
 ```
-
-After SSO is configured:
-- Disable local account login for all non-break-glass users
-- Retain one break-glass local admin account with the password in the team vault
-- Offboarding: SCIM automatically deactivates accounts when removed from IdP group
-
-## API Key Management
-
-Pure1 REST API uses RSA key-pair authentication. Each consuming system gets its own service account and key pair.
-
-### Creating an API Service Account
-
-```text
-Pure1 > Administration > API Registration > Create Registration
-- Name: descriptive (e.g., splunk-poller, grafana-pure1, automation-scripts)
-- Scope: Read-only for monitoring/reporting systems
-- Download the private key (PEM format) — only shown once
-- Store in secrets manager immediately
+┌────────────────────────────────────────── Pure1 — Security ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Access Control                │  │                Data Security                │   │
+│   │             SSO / local account              │  │              TLS 1.2 phonehome              │   │
+│   │              MFA on Pure1 login              │  │              Encrypted at rest              │   │
+│   │              RBAC: Admin/Viewer              │  │                Telemetry only               │   │
+│   │               API RSA key auth               │  │                No data access               │   │
+│   │             Annual access review             │  │                 SOC2 Type II                │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Data in Pure cloud datacentres · tenant isolation · SOC2 Type II · no customer data                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SSO = Single Sign-On; Pure1 supports SAML 2.0 for corporate IdP integration                          │
+│  MFA = Multi-factor authentication for Pure1 UI login                                                 │
+│  RBAC = Admin (full) vs Viewer (read-only) per Pure1 org                                              │
+│  RSA key auth = Pure1 API uses RSA-signed JWT; no shared secret                                       │
+│  TLS 1.2 = Phonehome and API connections encrypted in transit                                         │
+│  Telemetry only = Pure1 receives metrics and events; no customer data or files                        │
+│  No data access = Pure Storage cannot access stored customer data via Pure1                           │
+│  Encrypted at rest = Telemetry data encrypted in Pure cloud storage                                   │
+│  SOC2 Type II = Pure Storage annual security audit; covers data handling                              │
+│  Tenant isolation = Each customer org data separated in multi-tenant cloud                            │
+│  Annual review = Yearly audit of Pure1 users; remove stale accounts and roles                         │
+│  API key rotation = RSA key pair rotated annually per security policy                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### API Key Rotation

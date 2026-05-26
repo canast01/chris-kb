@@ -28,21 +28,34 @@
 6. Action during approved change window
 7. Post-action: monitor health score for improvement over next 2–4 hours
 ```
-
-### Anomaly Investigation
-
-```text
-1. CloudIQ > AIOps > Anomalies > [New Anomaly]
-2. Review:
-   - Affected metric (latency, IOPS, capacity growth rate)
-   - Time of anomaly detection vs. start of deviation
-   - Correlated events (firmware change, workload spike, replication event)
-3. Cross-reference with Aria Operations for correlated VM workload changes
-4. Determine root cause:
-   - Workload-driven: notify application team; no storage action required
-   - Storage-driven: investigate further; may require SCG-level diagnostics
-5. Annotate the anomaly in CloudIQ with findings
-6. If a storage-level issue is confirmed: raise ServiceNow incident
+┌─────────────────────────────────────── Dell AIOps — Operations ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Daily            │  │            Weekly           │  │           Monthly           │   │
+│   │     Review alert console    │  │    Action recommendations   │  │       Capacity review       │   │
+│   │       Check anomalies       │  │       Review insights       │  │       Threshold audit       │   │
+│   │      Verify adapters OK     │  │     Update ITSM tickets     │  │        Access review        │   │
+│   │      Triage new alerts      │  │       Check forecasts       │  │        Report to mgmt       │   │
+│   │    Check platform health    │  │      Dismiss false pos      │  │       Procurement plan      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Operations via AIOps web UI and REST API · admin CLI for platform-level checks                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Alert console = AIOps UI showing all active alerts sorted by severity and age                        │
+│  Adapter status = Health check confirming each data source adapter is collecting normally             │
+│  Platform health = AIOps self-monitoring; check /api/v1/health endpoint                               │
+│  Triage = Classifying new alert: actionable, false positive, or informational                         │
+│  Recommendation = AI action item; review weekly and track in ITSM                                     │
+│  Insight review = Weekly check of AI-generated fleet-wide patterns                                    │
+│  Forecast check = Reviewing capacity projections per system for procurement planning                  │
+│  Threshold audit = Monthly validation that alert thresholds match current operational norms           │
+│  Access review = Monthly check of AIOps user list for stale or inappropriate access                   │
+│  Procurement plan = Capacity expansion request based on AIOps forecast data                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Weekly Tasks

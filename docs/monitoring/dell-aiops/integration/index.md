@@ -12,26 +12,34 @@ Verify collection status:
 CloudIQ portal > Assets > [System] — check "Last Seen" timestamp
 SCG admin UI > Systems > [System] > Connection Status
 ```
-
-## ServiceNow ITSM Integration
-
-AIOps generates recommendations that may require infrastructure changes. ServiceNow integration automates incident and change request creation.
-
-### Webhook-Based Auto-Ticketing
-
-```text
-CloudIQ portal > Settings > Notifications > Add Notification Rule
-- Trigger: Recommendation Severity = Critical OR High
-- Action: Webhook to ServiceNow
-- URL: https://<instance>.service-now.com/api/now/table/change_request
-- Auth: Basic Auth or OAuth token (service account: svc-cloudiq-snow)
-- Payload:
-  {
-    "short_description": "Dell AIOps {{recommendation.severity}}: {{recommendation.title}}",
-    "description": "System: {{system.name}}\nRecommendation: {{recommendation.description}}\nCloudIQ ID: {{recommendation.id}}",
-    "category": "Storage",
-    "assignment_group": "storage-ops"
-  }
+┌─────────────────────────────────── Dell AIOps — Integration Guide ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               ITSM Integration               │  │             Observability Stack             │   │
+│   │              ServiceNow webhook              │  │             Grafana data source             │   │
+│   │             Auto incident create             │  │              Splunk HEC forward             │   │
+│   │                CMDB CI update                │  │             Elastic integration             │   │
+│   │              PagerDuty routing               │  │              Custom REST client             │   │
+│   │              Jira issue create               │  │             Prometheus exporter             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  AIOps on-prem · outbound TCP 443 to ITSM/SaaS targets · no inbound connections required              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ServiceNow webhook = AIOps POST to ServiceNow event endpoint on alert fire                           │
+│  CMDB CI = Configuration Item in ServiceNow matched to AIOps monitored system                         │
+│  Auto incident = ServiceNow incident created automatically from AIOps alert payload                   │
+│  PagerDuty = On-call routing; AIOps sends Events API v2 payload for escalation                        │
+│  Jira issue = AIOps creates Jira bug/task for recommendation tracking in dev teams                    │
+│  Grafana data source = AIOps REST API configured as Grafana JSON data source                          │
+│  Splunk HEC = HTTP Event Collector; AIOps forwards alerts as events for SIEM correlation              │
+│  Prometheus exporter = AIOps /metrics endpoint scraped by Prometheus                                  │
+│  Elastic integration = AIOps alert forwarded to Elasticsearch for log analytics                       │
+│  REST client = Custom script polling AIOps API and pushing to proprietary system                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 For Critical recommendations, target the **incident** table rather than change_request for immediate response.

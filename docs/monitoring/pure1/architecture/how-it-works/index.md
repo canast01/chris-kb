@@ -21,72 +21,36 @@ graph TB
   class PURE1,HEALTH,CAP,PERF,SUP cloud
   class ADMIN host
 ```
-
----
-
-## Component Roles
-
-| Component | Role |
-|---|---|
-| Pure1 Cloud | SaaS platform — health, capacity, performance data, alerts, REST API |
-| Array Purity OS | Generates telemetry; uploads to Pure1 via outbound HTTPS automatically |
-| Pure1 Meta | AI/ML engine — workload analytics, anomaly detection, capacity forecasting |
-| Pure1 REST API | Programmatic access to fleet data: v1 (arrays) and v2 (tags, subscriptions) |
-
----
-
-## Telemetry Collection
-
-- Arrays initiate outbound HTTPS connections to Pure1 cloud endpoints
-- No inbound firewall rules required
-- No on-premises proxy or collector appliance needed
-- Collection interval: every 30 seconds for performance metrics; health and capacity data refreshes more frequently
-- Data is associated with the array's serial number and tied to the customer's Pure1 tenant
-
-### Telemetry Data Types
-
-| Data Type | Examples |
-|---|---|
-| Performance metrics | IOPS, throughput (read/write), latency (read/write/mirror) |
-| Capacity | Used, provisioned, physical used, data reduction ratio, snapshot capacity |
-| Health | Component health (controllers, shelves, drives), Purity version |
-| Configuration | Volume names, host connections, protection groups (metadata only) |
-
----
-
-## Pure1 Meta
-
-Pure1 Meta is the AI/ML analytics layer. Capabilities include:
-
-- **Workload fingerprinting**: identifies workload types and patterns per array and per volume
-- **Anomaly detection**: surfaces performance anomalies against learned baselines
-- **Capacity forecasting**: predicts days to capacity exhaustion per array
-- **Recommended actions**: capacity expansion suggestions, configuration optimisations
-
----
-
-## Data Retention
-
-| Metric Type | Retention |
-|---|---|
-| Performance metrics | 90 days rolling (default) |
-| Capacity trends | 90 days rolling |
-| Health event history | Available for the array's lifetime in Pure1 |
-
----
-
-## Network Requirements
-
-| Source | Destination | Port | Purpose |
-|---|---|---|---|
-| FlashArray / FlashBlade (management IP) | pure1.purestorage.com | TCP 443 | Telemetry upload |
-| Browser | pure1.purestorage.com | TCP 443 | Pure1 web UI |
-| Automation scripts | api.pure1.purestorage.com | TCP 443 | REST API access |
-
-If arrays are behind a proxy:
-
-```text
-Purity CLI: purearray set --proxy https://<proxy-host>:<port>
+┌──────────────────────────────────────── Pure1 — How It Works ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Step 1: Phonehome — Purity OS sends telemetry to pure1.purestorage.com every 30 seconds    │   │
+│   │       Step 2: Ingest — Pure cloud stores metrics in time-series DB with full resolution       │   │
+│   │      Step 3: AI Analysis — ML models score health, identify workloads, forecast capacity      │   │
+│   │        Step 4: Alert — pre-failure condition or threshold breach triggers notification        │   │
+│   │       Step 5: Auto case — Pure1 opens TAC case with diagnostics before customer is aware      │   │
+│   │        Step 6: Resolution — Pure stages hardware, engineer resolves; customer notified        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Arrays push to Pure cloud every 30 sec · Pure TAC resolves proactively · no customer action          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Phonehome interval = 30 seconds; full metric telemetry at high resolution                            │
+│  Pre-failure detection = Pure1 ML identifying component degradation before failure                    │
+│  Auto case = Pure1 opening TAC support case automatically with diagnostic bundle                      │
+│  Proactive swap = Pure staging replacement drive/module before customer impact                        │
+│  Workload ID = Pure1 classifying IO pattern (random/sequential, read/write ratio)                     │
+│  Capacity forecast = ML predicting array full date from consumption trend                             │
+│  Health score = Composite array health from hardware, performance, and software inputs                │
+│  Threshold breach = Alert when metric crosses defined limit (utilisation, latency)                    │
+│  TAC = Pure Storage Technical Assistance Centre; resolves proactive cases                             │
+│  Diagnostic bundle = Phonehome data attached to auto-opened TAC case                                  │
+│  No customer action = Proactive support model aims for zero-touch resolution                          │
+│  Evergreen = Subscription includes proactive support and hardware refresh rights                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

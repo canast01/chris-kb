@@ -21,36 +21,35 @@ Used ▲  ╭─────────────────────╮ 
 │  Days Until Full <  7  → Critical alert │
 └──────────────────────────────────────────┘
 ```
-
-Dell CloudIQ provides capacity forecasting across all registered storage systems. It uses telemetry data to project when pools, volumes, and file systems will reach defined thresholds. This page covers capacity views, forecasting methodology, and threshold alert configuration.
-
-## Capacity Dashboard Overview
-
-Navigation: **CloudIQ > Capacity**
-
-The Capacity dashboard shows aggregate utilisation across all registered systems and allows drill-down to individual arrays or pools.
-
-| View | What it Shows |
-|---|---|
-| Fleet Overview | Percentage full across all systems |
-| By System Type | PowerStore, PowerMax, PowerScale breakout |
-| Top 10 Fullest | Systems or pools closest to capacity |
-| Forecast Timeline | Projected full dates plotted on a timeline |
-
-## System-Level Capacity Metrics
-
-```bash
-# Get capacity summary for all storage systems
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage_systems?select=id,name,capacity_used_tb,capacity_total_tb,capacity_used_percent" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json" | jq '.results[] | {name, used: .capacity_used_percent}'
-
-# Get capacity for a specific PowerStore system
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage_systems/<systemId>/capacity" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json"
+┌──────────────────────────────────── CloudIQ — Capacity Management ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Capacity Overview               │  │                 Forecasting                 │   │
+│   │              Total raw capacity              │  │            30/60/90 day forecast            │   │
+│   │                 Used vs free                 │  │               ML growth model               │   │
+│   │                Tier breakdown                │  │             Projected full date             │   │
+│   │               Thin provision %               │  │               Confidence band               │   │
+│   │              Snapshot overhead               │  │              Add-capacity alert             │   │
+│   │              Reclaim candidates              │  │               Seasonal adjust               │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Capacity data from array firmware · Dell cloud processes and stores trend for forecast model         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Raw capacity = Total physical storage before RAID/parity overhead                                    │
+│  Usable capacity = Raw minus RAID overhead; available for data                                        │
+│  Thin provisioning = Allocating more logical capacity than physical; deduplication + compression expan│
+│  Forecast = ML regression on historical consumption predicting when capacity will be exhausted        │
+│  Confidence band = Upper/lower bound on forecast based on variance in historical data                 │
+│  Add-capacity alert = CloudIQ alert when forecast horizon drops below threshold (e.g., 90 days)       │
+│  Reclaim candidate = Volume with zero or near-zero utilisation; flagged for decommission review       │
+│  Snapshot overhead = Capacity consumed by snapshots; tracked separately from primary data             │
+│  Tier = Storage class within an array (e.g., NVMe, SAS, SSD) each with separate capacity              │
+│  Seasonal adjustment = ML model accounting for cyclical usage spikes in forecast                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Key capacity metrics available via API:
