@@ -30,34 +30,49 @@ S3 CLI: Buckets → Objects → Sync
   │  put-bucket-lifecycle-configuration                  │
   └──────────────────────────────────────────────────────┘
 ```
-
-> Part of the AWS CLI Reference.
-
----
-
-```bash
-# Buckets
-aws s3 ls
-aws s3 ls s3://<bucket>/
-aws s3 mb s3://<bucket>
-aws s3 rb s3://<bucket> --force
-
-# Objects
-aws s3 cp <local_file> s3://<bucket>/<key>
-aws s3 cp s3://<bucket>/<key> <local_file>
-aws s3 mv s3://<bucket>/<key> s3://<bucket>/<new_key>
-aws s3 rm s3://<bucket>/<key>
-aws s3 rm s3://<bucket>/<prefix>/ --recursive
-
-# Sync
-aws s3 sync <local_dir> s3://<bucket>/<prefix>
-aws s3 sync s3://<bucket>/<prefix> <local_dir>
-aws s3 sync --delete s3://<source> s3://<dest>
-
-# S3 API (for policy/lifecycle/versioning)
-aws s3api get-bucket-versioning --bucket <bucket>
-aws s3api put-bucket-versioning --bucket <bucket> --versioning-configuration Status=Enabled
-aws s3api get-bucket-policy --bucket <bucket>
-aws s3api list-object-versions --bucket <bucket>
-aws s3api put-bucket-lifecycle-configuration --bucket <bucket> --lifecycle-configuration file://lifecycle.json
+┌──────────────────────────────────────────── AWS CLI — S3 ─────────────────────────────────────────────┐
+│                                                                                                       │
+│  S3 CLI commands for bucket management, object operations, sync, and policy config.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            High-Level S3 Commands            │  │              Object Operations              │   │
+│   │           s3 cp: copy file/folder            │  │          s3api get-object: download         │   │
+│   │              s3 mv: move/rename              │  │           s3api put-object: upload          │   │
+│   │           s3 rm: delete object(s)            │  │             s3api delete-object             │   │
+│   │          s3 ls: list bucket/prefix           │  │            s3api list-objects-v2            │   │
+│   │          s3 sync: delta sync folder          │  │         s3api head-object: metadata         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  s3 commands wrap multipart upload; s3api gives direct REST API access                                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Bucket Management               │  │             Security and Policy             │   │
+│   │             s3api create-bucket              │  │           s3api put-bucket-policy           │   │
+│   │             s3api delete-bucket              │  │        s3api put-public-access-block        │   │
+│   │         s3api put-bucket-versioning          │  │         s3api put-bucket-encryption         │   │
+│   │   s3api put-bucket-lifecycle-configuration   │  │           s3api put-bucket-logging          │   │
+│   │         s3api put-bucket-replication         │  │     s3api put-object-lock-configuration     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  S3 storage nodes (11 nines durability) · KMS · CloudTrail · CloudFront (CDN)                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  s3 sync         = Transfers only new or changed objects; --delete removes extras                     │
+│  Multipart upload= S3 splits large files into parts; automatic via aws s3 cp                          │
+│  s3api           = Low-level REST API wrapper; all S3 operations directly                             │
+│  Versioning      = Keeps all object versions; protects against accidental delete                      │
+│  Object lock     = WORM: prevents object deletion during retention period                             │
+│  Lifecycle rule  = Transitions objects to cheaper tiers or expires them                               │
+│  Replication     = Cross-region or cross-account object copy for DR/compliance                        │
+│  put-public-access-block= Blocks all public ACLs and bucket policies; account level                   │
+│  head-object     = Returns metadata without downloading the object body                               │
+│  Bucket policy   = Resource-based IAM policy controlling access to bucket                             │
+│  Server-side encryption= SSE-S3 (managed) or SSE-KMS (CMK) encrypts stored objects                    │
+│  list-objects-v2 = Paginated listing of objects in bucket with prefix filter                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
