@@ -50,38 +50,51 @@ flowchart TD
   class REJECT badNode
   class AAA,FCSP decisionNode
 ```
-
-## Management Plane: TACACS+
-
-TACACS+ is the preferred AAA protocol for MDS switches. It separates authentication, authorization, and accounting — providing granular command-level auditing.
-
-### Basic TACACS+ Setup
-
-```bash
-# Define TACACS+ servers with encrypted shared key
-tacacs-server host 10.10.1.10 key 7 <encrypted-key>
-tacacs-server host 10.10.1.11 key 7 <encrypted-key>
-
-# (Optional) Set per-server timeout and retries
-tacacs-server host 10.10.1.10 timeout 5
-tacacs-server host 10.10.1.10 port 49
-
-# Group the servers
-aaa group server tacacs+ TACACS-SERVERS
-  server 10.10.1.10
-  server 10.10.1.11
-
-# Authentication: TACACS+ primary, local fallback for break-glass
-aaa authentication login default group TACACS-SERVERS local
-
-# Authorization: enforce per-command authorization
-aaa authorization commands default group TACACS-SERVERS local
-
-# Accounting: record all exec and configuration commands
-aaa accounting default group TACACS-SERVERS
-
-# Save
-copy running-config startup-config
+┌───────────────────────────────── Cisco MDS — Security Authentication ─────────────────────────────────┐
+│                                                                                                       │
+│  Multi-layer authentication covering management plane, fabric login, and data-plane security.         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Management Auth                │  │             Fabric Auth (FC-SP)             │   │
+│   │          SSH: key exchange + cipher          │  │        DHCHAP: switch-to-switch auth        │   │
+│   │         HTTPS: TLS 1.2+ for DCNM/GUI         │  │        DHCHAP group: DH key strength        │   │
+│   │        Console: local auth + timeout         │  │         Hash algorithm: MD5 / SHA-1         │   │
+│   │           AAA login: TACACS+ first           │  │         Password db: local or RADIUS        │   │
+│   │         MFA via TACACS+ server side          │  │         Per-VSAN DHCHAP enable flag         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Management auth and FC-SP fabric auth operate independently on the same switch                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Session Security               │  │            Certificate Management           │   │
+│   │        Idle timeout: auto-disconnect         │  │         PKI: local CA or external CA        │   │
+│   │         Max sessions: limit per user         │  │         Trustpoint: CA anchor config        │   │
+│   │          Login banner: legal notice          │  │       Cert enrollment: SCEP or manual       │   │
+│   │        Exec timeout: per line config         │  │          CRL: revocation list check         │   │
+│   │        Logging: auth success/failure         │  │          OCSP: online status check          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS supervisor · TACACS+/RADIUS server · CA server · management Ethernet port                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  DHCHAP         = Diffie-Hellman Challenge Handshake Authentication Protocol; FC-SP method            │
+│  FC-SP          = Fibre Channel Security Protocol; authenticates switches at FLOGI                    │
+│  TACACS+        = AAA protocol; separates auth, authz, accounting for per-command logging             │
+│  SCEP           = Simple Certificate Enrollment Protocol; automates cert requests to CA               │
+│  Trustpoint     = Named CA anchor in NX-OS/MDS; used to validate server certificates                  │
+│  CRL            = Certificate Revocation List; list of invalidated certs to reject                    │
+│  OCSP           = Online Certificate Status Protocol; real-time cert validity check                   │
+│  PKI            = Public Key Infrastructure; framework managing digital certificates                  │
+│  MFA            = Multi-Factor Authentication; adds OTP/push beyond password                          │
+│  SSH key        = Public-key authentication; eliminates password for admin sessions                   │
+│  Login banner   = Legal warning displayed before credential prompt                                    │
+│  FLOGI          = Fabric Login; N_Port to switch handshake where FC-SP auth occurs                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Testing and Verification
