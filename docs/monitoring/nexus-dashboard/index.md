@@ -47,27 +47,6 @@ Cisco Nexus Dashboard unified operations platform — architecture, NDFC/NDI ser
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-Nexus Dashboard — Fabric Monitoring
-┌───────────────────────────────────────────┐
-│      ACI Fabric / NX-OS Fabric            │
-│  ┌──────────┐      ┌──────────┐           │
-│  │  Spine 1 │──────│  Spine 2 │           │
-│  └────┬─────┘      └─────┬────┘           │
-│  ┌────┴──┐  ┌──────┐  ┌──┴────┐           │
-│  │Leaf 1 │  │Leaf 2│  │Leaf 3 │           │
-│  └───────┘  └──────┘  └───────┘           │
-│      │ telemetry (APIC / NX-OS API)        │
-└──────┼────────────────────────────────────┘
-       ▼
-┌──────────────────────────────────────────┐
-│   Nexus Dashboard (NDI service)          │
-│   ┌──────────────────────────────────┐   │
-│   │  Health Score  │  Alerts  │ Flow │   │
-│   │  Visibility    │  BGP/OSPF│ Trace│   │
-│   └──────────────────────────────────┘   │
-└──────────────────────────────────────────┘
-```
 
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>Cluster topology, form factors (physical/virtual/cloud), service hosting, and upgrade co-residency.</span></a>

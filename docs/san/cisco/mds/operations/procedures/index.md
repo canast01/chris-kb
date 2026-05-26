@@ -74,27 +74,6 @@ flowchart TD
 
 ### VSAN and Zone Model
 
-```text
-  MDS Switch (VSAN 10 — Fabric A)
-  ┌─────────────────────────────────────────────────────────────────────────┐
-  │  Active Zone Set: dc1-fabA-prod                                         │
-  │                                                                         │
-  │  ┌──────────────────────────────────────────────────────────────────┐   │
-  │  │  Zone: esxi01_hba0__fa01_ct0_p0                                  │   │
-  │  │  Device Alias: esxi01_hba0  pWWN 10:00:00:...  (initiator)       │   │
-  │  │  Device Alias: fa01_ct0_p0  pWWN 52:4a:93:...  (target)          │   │
-  │  └──────────────────────────────────────────────────────────────────┘   │
-  │                                                                         │
-  │  ┌──────────────────────────────────────────────────────────────────┐   │
-  │  │  Zone: esxi01_hba1__fa01_ct1_p0  ← separate zone for Fabric B    │   │
-  │  │  Device Alias: esxi01_hba1  pWWN 10:00:00:...                    │   │
-  │  │  Device Alias: fa01_ct1_p0  pWWN 52:4a:93:...                    │   │
-  │  └──────────────────────────────────────────────────────────────────┘   │
-  │                                                                         │
-  │  Enhanced zoning: default-deny — non-zoned devices cannot communicate   │
-  └─────────────────────────────────────────────────────────────────────────┘
-```
-
 ### Zoning Rules
 
 | Rule | Reason |

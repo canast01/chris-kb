@@ -48,34 +48,6 @@ Dell CloudIQ cloud-based monitoring platform — architecture, health scoring, c
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-CloudIQ Data Flow
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│ PowerStore   │  │  PowerMax    │  │  PowerScale  │
-│  (on-prem)   │  │  (on-prem)   │  │  (on-prem)   │
-└──────┬───────┘  └──────┬───────┘  └──────┬───────┘
-       │ telemetry (SRS/ESRS)               │
-       └──────────────┬────────────────────┘
-                      ▼ HTTPS outbound
-         ┌────────────────────────┐
-         │  Secure Connect Gateway│  (on-prem relay)
-         └────────────┬───────────┘
-                      ▼
-         ┌────────────────────────┐
-         │     CloudIQ Cloud      │
-         │  ┌──────────────────┐  │
-         │  │  Health Score    │  │
-         │  │  ML Analytics    │  │
-         │  │  Capacity Fcst   │  │
-         │  └──────────────────┘  │
-         └────────────┬───────────┘
-                      │
-           ┌──────────┼──────────┐
-           ▼          ▼          ▼
-        Alerts   Recommend-   Health
-       (email/   ations       Score
-        portal)  (portal)     Dashboard
-```
 
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>SaaS data pipeline, SCG gateway integration, phone-home telemetry collection, and supported array types.</span></a>

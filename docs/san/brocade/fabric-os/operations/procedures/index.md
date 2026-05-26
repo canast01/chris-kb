@@ -59,28 +59,6 @@ flowchart TD
 
 ### Zone Membership Model
 
-```text
-  Fabric (single switch domain or director)
-  ┌─────────────────────────────────────────────────────────────────────────┐
-  │  Active Zone Set: dc1-fabA-prod                                         │
-  │                                                                         │
-  │  ┌──────────────────────────────────────┐                               │
-  │  │  Zone: esxi01_hba0__fa01_ct0_p0      │                               │
-  │  │  Alias: esxi01_hba0  (10:00:00:...)  │  ← initiator (one per zone)   │
-  │  │  Alias: fa01_ct0_p0  (52:4a:93:...)  │  ← target                    │
-  │  │  Alias: fa01_ct0_p1  (52:4a:93:...)  │  ← additional target port OK  │
-  │  └──────────────────────────────────────┘                               │
-  │                                                                         │
-  │  ┌──────────────────────────────────────┐                               │
-  │  │  Zone: esxi01_hba1__fa01_ct1_p0      │  ← separate zone for HBA1     │
-  │  │  Alias: esxi01_hba1  (10:00:00:...)  │                               │
-  │  │  Alias: fa01_ct1_p0  (52:4a:93:...)  │                               │
-  │  └──────────────────────────────────────┘                               │
-  │                                                                         │
-  │  Rule: one initiator + one or more targets per zone (single-initiator)  │
-  └─────────────────────────────────────────────────────────────────────────┘
-```
-
 ### Zoning Rules
 
 | Rule | Reason |

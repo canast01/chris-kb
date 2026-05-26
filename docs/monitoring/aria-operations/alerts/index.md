@@ -1,35 +1,5 @@
 # Aria Operations: Alert Definitions and Policies
 
-```text
-Alert Lifecycle — Aria Operations
-┌──────────────────┐
-│ Metric threshold │  (symptom fires for N cycles)
-│   violation      │
-└────────┬─────────┘
-         ▼
-┌──────────────────┐
-│ Alert Definition │  (symptom AND/OR logic evaluated)
-│  matched         │
-└────────┬─────────┘
-         ▼
-┌──────────────────┐
-│  Alert created   │  criticality: Critical / Immediate / Warning
-│  (Active state)  │
-└────────┬─────────┘
-         ▼
-┌──────────────────┐
-│ Notification     │  policy routes alert
-│  Policy match    │
-└────────┬─────────┘
-         │
-    ┌────┴──────────┬──────────────┐
-    ▼               ▼              ▼
-┌────────┐   ┌──────────┐  ┌────────────┐
-│ Email  │   │  Ticket  │  │   SNMP     │
-│ (SMTP) │   │  (REST   │  │   Trap     │
-│        │   │ webhook) │  │            │
-└────────┘   └──────────┘  └────────────┘
-```
 ┌────────────────────────────────────── Aria Operations — Alerts ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

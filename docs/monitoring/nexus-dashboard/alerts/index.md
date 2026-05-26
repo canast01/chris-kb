@@ -1,30 +1,5 @@
 # Nexus Dashboard: Fabric Alerts, Severity, Acknowledgement, and Notification Policies
 
-```text
-Alert Flow — Nexus Dashboard
-┌──────────────────────────────┐
-│  Fabric event or threshold   │  (BGP flap, TCAM high, port error)
-└────────────────┬─────────────┘
-                 ▼
-┌──────────────────────────────┐
-│  Nexus Dashboard Insights    │
-│  (NDI anomaly detection)     │
-└────────────────┬─────────────┘
-                 ▼
-┌──────────────────────────────┐
-│  Alert created               │
-│  severity: Critical/Major/   │
-│            Minor/Warning/Info│
-└────────────────┬─────────────┘
-                 │
-      ┌──────────┼──────────┐
-      ▼          ▼          ▼
-┌──────────┐ ┌───────┐ ┌──────────┐
-│  Email   │ │Syslog │ │  SNMP    │
-│  (on-    │ │(SIEM  │ │  Trap    │
-│  call)   │ │ingest)│ │  (NMS)   │
-└──────────┘ └───────┘ └──────────┘
-```
 ┌────────────────────────────────────── Nexus Dashboard — Alerts ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

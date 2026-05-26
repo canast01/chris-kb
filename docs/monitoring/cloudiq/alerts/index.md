@@ -1,32 +1,5 @@
 # CloudIQ: Alert Types, Severity, and Notification Configuration
 
-```text
-Proactive Alert Flow — CloudIQ
-┌─────────────────────────────┐
-│  System telemetry (SRS)     │  (PowerStore / PowerMax / PowerScale)
-└──────────────┬──────────────┘
-               ▼
-┌─────────────────────────────┐
-│  CloudIQ AI/ML engine       │  detects anomaly or threshold breach
-└──────────────┬──────────────┘
-               ▼
-┌─────────────────────────────┐
-│  Alert created              │
-│  ┌────────────────────────┐ │
-│  │ Severity: Critical     │ │
-│  │ Root cause identified  │ │
-│  │ Recommended action     │ │
-│  └────────────────────────┘ │
-└──────────────┬──────────────┘
-               │
-       ┌───────┴────────┐
-       ▼                ▼
-┌────────────┐   ┌─────────────┐
-│  Email     │   │   Portal    │
-│ notification│  │  (CloudIQ   │
-│  (distro)  │   │   UI)       │
-└────────────┘   └─────────────┘
-```
 ┌────────────────────────────────────────── CloudIQ — Alerts ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

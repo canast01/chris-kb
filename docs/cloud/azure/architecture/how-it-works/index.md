@@ -27,18 +27,6 @@ graph TB
 
 Hub-and-spoke topology with Azure Firewall in the hub controlling east-west and internet-bound traffic:
 
-```text
-On-Premises ←→ ExpressRoute ←→ Hub VNet (Connectivity subscription)
-                                    │
-                   ┌────────────────┼────────────────┐
-                   ▼                ▼                 ▼
-            Prod Spoke VNet   Staging Spoke VNet   Dev Spoke VNet
-            (10.1.0.0/16)    (10.2.0.0/16)        (10.3.0.0/16)
-            ├── snet-web
-            ├── snet-app
-            └── snet-db (isolated — no internet)
-```
-
 ## Compute
 
 | Service | Use Case |

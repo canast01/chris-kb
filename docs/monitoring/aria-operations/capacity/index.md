@@ -1,24 +1,5 @@
 # Aria Operations: Capacity Analytics and Rightsizing
 
-```text
-Capacity Model — Aria Operations
-┌──────────────────────────────────────────┐
-│         Capacity Analytics Engine        │
-│                                          │
-│  Observed usage (demand model)           │
-│  ┌──────────────────────────────────┐    │
-│  │ Cluster A  ████████░░░░░  68%   │    │
-│  │ Cluster B  ██████████████ 92% ! │    │
-│  │ Datastore  ████████████░░ 83%   │    │
-│  └──────────────────────────────────┘    │
-│                   │                      │
-│       ┌───────────┼──────────────┐       │
-│       ▼           ▼              ▼       │
-│  Rightsize    Demand         Reclaim     │
-│  recommend.   forecast       idle VMs   │
-│  (vCPU/vRAM)  (days left)  (snapshots)  │
-└──────────────────────────────────────────┘
-```
 ┌───────────────────────────────────── Aria Operations — Capacity ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

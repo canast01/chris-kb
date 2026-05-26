@@ -1,29 +1,5 @@
 # InsightIQ: Scheduled Reports, CSV Export, and SLA Reporting
 
-```text
-Scheduled Reports — InsightIQ
-┌─────────────────────────────────────────┐
-│  Report template configured             │
-│  (capacity / performance / quota)       │
-└─────────────────┬───────────────────────┘
-                  ▼
-┌─────────────────────────────────────────┐
-│  Schedule: weekly  │  format: PDF/CSV   │
-│  cluster: ps-cluster1  │  granularity: 1h│
-└─────────────────┬───────────────────────┘
-                  ▼
-┌─────────────────────────────────────────┐
-│  Report generated (InsightIQ appliance) │
-└──────────┬──────────────────────────────┘
-           │
-    ┌──────┴──────────┐
-    ▼                 ▼
-┌────────┐      ┌──────────┐
-│ Email  │      │ Download │
-│ distro │      │  (CSV    │
-│  list  │      │  / PDF)  │
-└────────┘      └──────────┘
-```
 ┌───────────────────────────────────────── InsightIQ — Reports ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

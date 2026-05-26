@@ -1,26 +1,5 @@
 # CloudIQ: Capacity Forecasting and Pool Utilisation
 
-```text
-Capacity Analytics — CloudIQ
-                                         ← 90-day warning
-                   consumed              │
-Used ▲  ╭─────────────────────╮         │ ← 30-day critical
-     │  │ current: 68%        │──────────────────────►
-     │  │                     │ forecast (linear trend)
-     │  │  reclaimable: 12%   │
-     │  │                     ▼
-     │  │  net projected full:  ~75 days
-     │  │
-     └──┼─────────────────────────────────────► time
-       now        +30d      +60d         +90d
-
-┌──────────────────────────────────────────┐
-│  Threshold Alerts                        │
-│  Days Until Full < 90  → Minor   alert  │
-│  Days Until Full < 30  → Major   alert  │
-│  Days Until Full <  7  → Critical alert │
-└──────────────────────────────────────────┘
-```
 ┌──────────────────────────────────── CloudIQ — Capacity Management ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

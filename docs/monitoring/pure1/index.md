@@ -47,31 +47,6 @@ Pure Storage Pure1 cloud-based management and analytics — SaaS architecture, A
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-Pure1 — Cloud Monitoring
-┌────────────────┐    ┌────────────────┐
-│ FlashArray     │    │ FlashBlade     │
-│ (on-prem)      │    │ (on-prem)      │
-└───────┬────────┘    └───────┬────────┘
-        │ phone home           │ phone home
-        │ HTTPS outbound       │ HTTPS outbound
-        └──────────┬───────────┘
-                   ▼
-         ┌─────────────────┐
-         │   Pure1 Cloud   │
-         │  ┌───────────┐  │
-         │  │ Analytics │  │
-         │  │ AI / ML   │  │
-         │  │ Alerts    │  │
-         │  └───────────┘  │
-         └────────┬────────┘
-                  │
-       ┌──────────┼──────────┐
-       ▼          ▼          ▼
-   Browser     Email      REST API
-   (GUI)      alerts    (ticketing
-              team)      integration)
-```
 
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>SaaS data pipeline, phone-home architecture, Pure1 Meta analytics engine, and fleet topology.</span></a>

@@ -1,23 +1,5 @@
 # Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry
 
-```text
-Fabric Health — Nexus Dashboard
-┌──────────────────────────────────────────────┐
-│  Spine/Leaf Status   BGP Sessions   VTEPs    │
-│  ┌────────┐          ┌───────────┐           │
-│  │Spine 1 │ healthy  │ BGP: 8/8  │ VTEP: 12 │
-│  │Spine 2 │ healthy  │ OSPF: 4/4 │ active   │
-│  │Leaf 1  │ healthy  └───────────┘           │
-│  │Leaf 2  │ warning ◄── port errors          │
-│  │Leaf 3  │ healthy                          │
-│  └────────┘                                  │
-├──────────────────────────────────────────────┤
-│  Inter-Fabric Links      Endpoint Reach.     │
-│  ISL-1  ████  45% util   10.0.0.1  reachable │
-│  ISL-2  █     8% util    10.0.0.2  reachable │
-│                          10.0.0.50 stale  !  │
-└──────────────────────────────────────────────┘
-```
 ┌─────────────────────────────────── Nexus Dashboard — Fabric Health ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

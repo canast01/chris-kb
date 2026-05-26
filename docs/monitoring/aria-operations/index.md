@@ -48,27 +48,6 @@ VMware Aria Operations monitoring platform — architecture, health checks, capa
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-Aria Operations Topology
-┌────────────────────────────────────────────┐
-│              Aria Ops Cluster              │
-│  ┌──────────────┐   ┌─────────────────┐   │
-│  │ Primary Node │   │  Replica Node   │   │
-│  │  (analytics) │◄──►  (HA failover)  │   │
-│  └──────────────┘   └─────────────────┘   │
-│         ▲ REST API / UI                    │
-└─────────┼──────────────────────────────────┘
-          │
-  ┌───────┼──────────┬──────────────┐
-  ▼       ▼          ▼              ▼
-Remote  vCenter    NSX-T         Adapters
-Collect  Adapter   Adapter    ┌──────────────┐
-  │     (VMs/hosts (overlays) │ Pure Storage │
-  │      clusters)            │ AWS / Azure  │
-  ▼                           └──────────────┘
-Remote site
-metrics
-```
 
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>Deployment topology, cluster sizing, adapter configuration, and vCenter integration.</span></a>

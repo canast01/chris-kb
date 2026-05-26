@@ -1,28 +1,5 @@
 # Aria Operations: Dashboards — Creating, Editing, and Sharing
 
-```text
-Dashboard Hierarchy — Aria Operations
-┌─────────────────────────────────────────┐
-│         Executive KPIs (top-level)      │
-│  ┌──────────┐  ┌──────────┐  ┌───────┐ │
-│  │ Workload │  │ Capacity │  │ Risk  │ │
-│  │ summary  │  │ overview │  │ score │ │
-│  └──────────┘  └──────────┘  └───────┘ │
-└─────────────────────┬───────────────────┘
-                      ▼ drill-down
-┌─────────────────────────────────────────┐
-│      Operational View (per team)        │
-│  ┌─────────────┐  ┌────────────────┐   │
-│  │ Cluster CPU │  │  Active alerts │   │
-│  │ heat map    │  │  by severity   │   │
-│  └──────┬──────┘  └────────────────┘   │
-└─────────┼───────────────────────────────┘
-          ▼ click object to drill-down
-┌─────────────────────────────────────────┐
-│    Troubleshooting (object detail)      │
-│  Metric charts │ Relationship │ Alerts  │
-└─────────────────────────────────────────┘
-```
 ┌──────────────────────────────────── Aria Operations — Dashboards ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

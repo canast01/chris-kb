@@ -1,26 +1,5 @@
 # InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards
 
-```text
-Performance Analytics — InsightIQ
-┌──────────────────────────────────────────────┐
-│  PowerScale array metrics (30s collection)   │
-│  throughput (MB/s) │ IOPS │ latency (ms)     │
-└──────────────────────────────────────────────┘
-         ▼ stored in InsightIQ time-series DB
-┌──────────────────────────────────────────────┐
-│  Dashboard by node / protocol / client       │
-├─────────────┬──────────────┬─────────────────┤
-│  NFS        │   SMB        │   HDFS / S3     │
-│  ops/s ▲   │  read MB/s ▲ │  throughput ▲  │
-│  latency    │  write MB/s  │  latency        │
-│  < 5ms OK   │  < 10ms OK   │  < 100ms OK     │
-├─────────────┴──────────────┴─────────────────┤
-│  Top Clients by Throughput                   │
-│  client01  ████████████  450 MB/s            │
-│  client02  █████         180 MB/s            │
-│  client03  ███            95 MB/s            │
-└──────────────────────────────────────────────┘
-```
 ┌────────────────────────────────── InsightIQ — Performance Analysis ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │

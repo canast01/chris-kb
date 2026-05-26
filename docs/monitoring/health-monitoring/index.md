@@ -1,31 +1,5 @@
 # Infrastructure Health Monitoring
 
-```text
-Health Monitoring Framework
-┌──────────────────────────────────────────────────┐
-│  What to Monitor                                 │
-│  Servers (CPU/mem/disk) │ Storage │ Network       │
-│  Backup jobs  │  Certificates  │  Services        │
-└────────────────────────┬─────────────────────────┘
-                         │
-           ┌─────────────┼──────────────┐
-           ▼             ▼              ▼
-    Polling (agent)  Push (syslog)   API pull
-    (Zabbix/SNMP)    (events)        (CloudIQ/Pure1)
-           │             │              │
-           └─────────────┼──────────────┘
-                         ▼
-           ┌─────────────────────────────┐
-           │   Monitoring Platform       │
-           │   (compare vs thresholds)   │
-           └──────────────┬──────────────┘
-                          ▼
-           ┌─────────────────────────────┐
-           │  Alert if threshold breached│
-           │  Warning >70% / Critical    │
-           │  >90% (CPU / disk / mem)    │
-           └─────────────────────────────┘
-```
 ┌─────────────────────────────────── Monitoring — Health Monitoring ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

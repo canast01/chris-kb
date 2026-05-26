@@ -30,15 +30,6 @@ SCPs enforce guardrails: deny root access, enforce encryption, restrict regions 
 
 Hub-and-spoke via Transit Gateway:
 
-```text
-On-Premises ←→ Direct Connect ←→ Transit Gateway
-                                        │
-              ┌─────────────────────────┼─────────────────────────┐
-              ▼                         ▼                         ▼
-      Shared Services VPC         Production VPC            Dev/Staging VPC
-      (10.0.0.0/16)               (10.1.0.0/16)             (10.2.0.0/16)
-```
-
 Subnet tiers per VPC:
 
 | Tier | Contents | Internet access |

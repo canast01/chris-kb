@@ -1,31 +1,5 @@
 # CloudIQ: Proactive Recommendations and Implementation Tracking
 
-```text
-AI Recommendations — CloudIQ
-┌──────────────────────────────────────┐
-│  Telemetry analysis identifies waste │
-│  or risk pattern                     │
-└────────────────┬─────────────────────┘
-                 ▼
-┌──────────────────────────────────────┐
-│  Recommendation generated            │
-│  ┌──────────────────────────────┐    │
-│  │ Category: Capacity           │    │
-│  │ Priority: HIGH               │    │
-│  │ Effort:   LOW                │    │
-│  │ Action: thin reclaim on      │    │
-│  │         vol03 (saves 2.1TB)  │    │
-│  └──────────────────────────────┘    │
-└────────────────┬─────────────────────┘
-                 ▼
-       ┌─────────────────┐
-       │  Apply button   │  (guided steps in portal)
-       └────────┬────────┘
-                ▼
-       ┌─────────────────┐
-       │ Mark Implemented│ → CloudIQ validates next cycle
-       └─────────────────┘
-```
 ┌──────────────────────────────────── CloudIQ — AI Recommendations ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

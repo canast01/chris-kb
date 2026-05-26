@@ -1,24 +1,5 @@
 # InsightIQ: Capacity Trending, Protocol Breakdown, and Quota Monitoring
 
-```text
-Capacity — InsightIQ
-Used ▲
-     │                              ╭──── projected full
-     │                    ╭─────────╯
-     │           ╭────────╯
-     │  ╭────────╯
-     │  │  volume usage vs quota
-     └──┼──────────────────────────────────────► time
-       now       +30d       +60d          +90d
-
-┌──────────────────────────────────────────────┐
-│  Quota Monitoring                            │
-│  /ifs/dept/finance  ████████████░  82%  ⚠   │
-│  /ifs/dept/ops      ████████░░░░░  55%       │
-│  /ifs/dept/archive  █████░░░░░░░░  38%       │
-│  Cluster total      ████████████░  83%  ⚠   │
-└──────────────────────────────────────────────┘
-```
 ┌─────────────────────────────────── InsightIQ — Capacity Management ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

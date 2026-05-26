@@ -1,33 +1,5 @@
 # Performance Metrics Baseline
 
-```text
-Baseline Process
-┌──────────────────────────────────────────────┐
-│  Capture normal behaviour (30-day rolling)   │
-│  CPU / storage / network / latency           │
-└────────────────────┬─────────────────────────┘
-                     ▼
-┌──────────────────────────────────────────────┐
-│  Store baseline                              │
-│  System: app-db01  Period: Mon–Fri 4 weeks   │
-│  CPU avg: 22%      peak: 68%                 │
-│  Disk read lat: 0.8ms  peak: 3ms             │
-│  IOPS avg: 3,200   peak: 12,000              │
-└────────────────────┬─────────────────────────┘
-                     ▼
-┌──────────────────────────────────────────────┐
-│  Compare current vs baseline                 │
-│  Current CPU: 85%  vs baseline 22%   ← drift │
-│                    ▲                         │
-│                    threshold = avg + 3×stddev│
-└────────────────────┬─────────────────────────┘
-                     ▼
-┌──────────────────────────────────────────────┐
-│  Alert on drift                              │
-│  Warning: >75% of peak                       │
-│  Critical: >90% of peak                      │
-└──────────────────────────────────────────────┘
-```
 ┌──────────────────────────────────── Monitoring — Metrics Baseline ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
