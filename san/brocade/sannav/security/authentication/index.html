@@ -3308,63 +3308,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#ldap-group-to-role-mapping" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LDAP Group to Role Mapping
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#testing-ldap-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Testing LDAP Authentication
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-session-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Session Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-audit-trail" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Audit Trail
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-tls-for-the-sannav-web-ui" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. TLS for the SANnav Web UI
-      
-    </span>
-  </a>
   
 </li>
       
@@ -3706,7 +3651,7 @@
 </table>
 <h3 id="ldaps-certificate-trust">LDAPS Certificate Trust<a class="headerlink" href="#ldaps-certificate-trust" title="Permanent link">&para;</a></h3>
 <p>If the LDAP server uses a self-signed or internal CA certificate, import the CA certificate into SANnav:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Copy CA cert to SANnav appliance</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Copy CA cert to SANnav appliance</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>scp<span class="w"> </span>corp-ca.crt<span class="w"> </span>admin@sannav-dc1.corp.example.com:/tmp/
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># SSH to appliance and import</span>
@@ -3721,107 +3666,85 @@
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Restart SANnav to pick up new truststore</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>sudo<span class="w"> </span>sannav<span class="w"> </span>restart
 </code></pre></div>
-<h3 id="ldap-group-to-role-mapping">LDAP Group to Role Mapping<a class="headerlink" href="#ldap-group-to-role-mapping" title="Permanent link">&para;</a></h3>
-<p>Navigate to <strong>Administration &gt; Server Settings &gt; LDAP &gt; Role Mapping</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>AD Group</th>
-<th>SANnav Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>GRP-SANnav-SAN-Admins</code></td>
-<td>SAN Admin</td>
-</tr>
-<tr>
-<td><code>GRP-SANnav-SAN-Operators</code></td>
-<td>SAN Operator</td>
-</tr>
-<tr>
-<td><code>GRP-SANnav-SAN-Viewers</code></td>
-<td>SAN Viewer</td>
-</tr>
-</tbody>
-</table>
-<h3 id="testing-ldap-authentication">Testing LDAP Authentication<a class="headerlink" href="#testing-ldap-authentication" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Navigate to <strong>Administration &gt; Server Settings &gt; LDAP &gt; Test Connection</strong> — validates the bind DN and password.</li>
-<li>Navigate to <strong>Administration &gt; Server Settings &gt; LDAP &gt; Test User Authentication</strong> — enter a test AD username and password to verify full authentication and group resolution.</li>
-</ol>
-<p>If authentication fails:
-- Verify DNS resolution: <code>nslookup ldap.corp.example.com</code> from SANnav appliance
-- Verify LDAPS port 636 is reachable: <code>openssl s_client -connect ldap.corp.example.com:636</code>
-- Verify the bind DN has read access to the user and group OUs
-- Verify the CA certificate is trusted (if LDAPS)</p>
-<hr />
-<h2 id="3-session-management">3. Session Management<a class="headerlink" href="#3-session-management" title="Permanent link">&para;</a></h2>
-<p>Configure session timeout and concurrent session limits under <strong>Administration &gt; Security Settings &gt; Session</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Recommended Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Session idle timeout</td>
-<td>15 minutes</td>
-</tr>
-<tr>
-<td>Maximum session duration</td>
-<td>8 hours</td>
-</tr>
-<tr>
-<td>Concurrent sessions per user</td>
-<td>2</td>
-</tr>
-</tbody>
-</table>
-<p>Inactive sessions are automatically invalidated after the idle timeout. For API tokens (REST API): tokens have the same idle timeout; always call <code>/rest/logout</code> at the end of automation scripts to release the session.</p>
-<hr />
-<h2 id="4-audit-trail">4. Audit Trail<a class="headerlink" href="#4-audit-trail" title="Permanent link">&para;</a></h2>
-<p>All authentication events (login, logout, failed login, password change) are recorded in the SANnav audit log. View under <strong>Administration &gt; Audit Log</strong>:</p>
-<ul>
-<li>Filter by event type: <code>LOGIN</code>, <code>LOGOUT</code>, <code>LOGIN_FAILED</code></li>
-<li>Filter by user</li>
-<li>Export to CSV for SIEM ingestion</li>
-</ul>
-<p>The audit log is also written to the SANnav application log file:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>grep<span class="w"> </span><span class="s2">&quot;AUTH\|LOGIN\|LOGOUT&quot;</span><span class="w"> </span>/opt/sannav/logs/server.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+┌─────────────────────────────────── Brocade SANnav — Authentication ───────────────────────────────────┐
+│                                                                                                       │
+│  SANnav auth: TACACS+/LDAP for GUI, REST API tokens, MFA via SSO, local fallback.                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              GUI Authentication              │  │              API Authentication             │   │
+│   │         TACACS+: primary auth method         │  │           POST /api/v1/login → JWT          │   │
+│   │          LDAP: AD group-to-role map          │  │          Token expiry: configurable         │   │
+│   │         SAML 2.0 SSO: IdP-initiated          │  │         HTTPS: TLS 1.2/1.3 required         │   │
+│   │         Local: last-resort fallback          │  │         API key: long-lived service         │   │
+│   │         Session timeout: 30 min idle         │  │          Rate limiting: brute-force         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  TACACS+/LDAP for human login; JWT tokens for automation; local only as break-glass.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Audit &amp; Session Control            │  │           Switch Auth (via SANnav)          │   │
+│   │         All logins logged: user+time         │  │          FOS auth: per-switch creds         │   │
+│   │        Failed logins: alert threshold        │  │         SNMPv3: auth + privacy mode         │   │
+│   │         Concurrent sessions: limited         │  │         SANnav proxies zone changes         │   │
+│   │        Action audit: all GUI changes         │  │         Switch TACACS+ separate cfg         │   │
+│   │         Export audit to SIEM/syslog          │  │         Credential vault: HashiCorp         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SANnav VM · TACACS+ server · LDAP/AD · IdP for SAML · Brocade FC switch management                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  TACACS+         = Terminal Access Controller; centralized CLI + GUI auth for SANnav                  │
+│  LDAP            = Lightweight Directory Access Protocol; AD group to SANnav role map                 │
+│  SAML 2.0        = Security Assertion Markup Language; IdP-initiated SSO for SANnav                   │
+│  JWT             = JSON Web Token; bearer token returned on REST API login                            │
+│  API key         = long-lived service account token for non-interactive automation                    │
+│  Session timeout = idle session expired after 30 minutes by default; configurable                     │
+│  Rate limiting   = SANnav blocks repeated failed login attempts to prevent brute-force                │
+│  Action audit    = every GUI/API change logged with user, timestamp, and action                       │
+│  SIEM export     = SANnav audit log sent to Splunk/QRadar via syslog/webhook                          │
+│  SNMPv3          = SNMP v3 auth+privacy used for switch polling from SANnav                           │
+│  HashiCorp Vault = credential vault; stores SANnav switch passwords for automation                    │
+│  Break-glass     = local admin account used only when TACACS+ is unreachable                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## 5. TLS for the SANnav Web UI
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>The SANnav web UI is served over HTTPS. By default, it uses a self-signed certificate. Replace this with a certificate from the corporate CA or a public CA:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Generate CSR on SANnav appliance
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>ssh admin@sannav-dc1.corp.example.com
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>openssl req -new -newkey rsa:4096 -nodes \
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  -keyout /tmp/sannav.key \
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  -out /tmp/sannav.csr \
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  -subj &quot;/CN=sannav-dc1.corp.example.com/O=Corp/C=AU&quot; \
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  -addext &quot;subjectAltName=DNS:sannav-dc1.corp.example.com&quot;
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># Send CSR to your CA for signing
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># After receiving the signed cert (sannav.crt):
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># Install certificate
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>sudo cp /tmp/sannav.key /opt/sannav/conf/ssl/sannav.key
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>sudo cp /tmp/sannav.crt /opt/sannav/conf/ssl/sannav.crt
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a># If intermediate CA cert is needed, create bundle:
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>cat sannav.crt intermediate-ca.crt &gt; sannav-chain.crt
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>sudo cp /tmp/sannav-chain.crt /opt/sannav/conf/ssl/sannav.crt
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a># Reload nginx (SANnav&#39;s front-end web server)
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>sudo systemctl reload nginx
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a># Verify certificate is served correctly
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>openssl s_client -connect sannav-dc1.corp.example.com:443 &lt;/dev/null 2&gt;/dev/null \
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  | openssl x509 -noout -subject -dates
 </code></pre></div></p>
-<hr />
-<h2 id="5-tls-for-the-sannav-web-ui">5. TLS for the SANnav Web UI<a class="headerlink" href="#5-tls-for-the-sannav-web-ui" title="Permanent link">&para;</a></h2>
-<p>The SANnav web UI is served over HTTPS. By default, it uses a self-signed certificate. Replace this with a certificate from the corporate CA or a public CA:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Generate CSR on SANnav appliance</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@sannav-dc1.corp.example.com
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-keyout<span class="w"> </span>/tmp/sannav.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-out<span class="w"> </span>/tmp/sannav.csr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=sannav-dc1.corp.example.com/O=Corp/C=AU&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-addext<span class="w"> </span><span class="s2">&quot;subjectAltName=DNS:sannav-dc1.corp.example.com&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Send CSR to your CA for signing</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># After receiving the signed cert (sannav.crt):</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Install certificate</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/tmp/sannav.key<span class="w"> </span>/opt/sannav/conf/ssl/sannav.key
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/tmp/sannav.crt<span class="w"> </span>/opt/sannav/conf/ssl/sannav.crt
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># If intermediate CA cert is needed, create bundle:</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>cat<span class="w"> </span>sannav.crt<span class="w"> </span>intermediate-ca.crt<span class="w"> </span>&gt;<span class="w"> </span>sannav-chain.crt
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/tmp/sannav-chain.crt<span class="w"> </span>/opt/sannav/conf/ssl/sannav.crt
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Reload nginx (SANnav&#39;s front-end web server)</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># Verify certificate is served correctly</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>sannav-dc1.corp.example.com:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
-</code></pre></div>
 <h2 id="track-certificate-expiry-renew-at-least-30-days-before-expiry-sannav-will-issue-a-warning-alert-when-the-certificate-is-within-the-warning-threshold-if-certificate-monitoring-is-enabled">Track certificate expiry; renew at least 30 days before expiry. SANnav will issue a warning alert when the certificate is within the warning threshold if certificate monitoring is enabled.<a class="headerlink" href="#track-certificate-expiry-renew-at-least-30-days-before-expiry-sannav-will-issue-a-warning-alert-when-the-certificate-is-within-the-warning-threshold-if-certificate-monitoring-is-enabled" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
 <ul>
