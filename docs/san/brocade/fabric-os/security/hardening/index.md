@@ -26,66 +26,51 @@ flowchart TD
     style done fill:#15803d,color:#fff
     style start fill:#2563eb,color:#fff
 ```
-
-## Overview
-
-Hardening a Brocade FabricOS switch closes the attack surface on both the management plane (who can connect and how) and the fabric plane (which devices can join and communicate). Apply hardening immediately after initial switch configuration, before connecting to the production network.
-
-The hardening steps are grouped into three categories:
-
-1. **Management plane** — authentication, protocol restrictions, access control
-2. **Fabric plane** — device and switch admission control
-3. **Operational** — logging, monitoring, change control
-
----
-
-## Hardening Checklist
-
-Apply every item on this list to each new switch before it enters production service. Document completion in the CMDB change record.
-
-### Management Plane
-
-- [ ] **Telnet disabled** — SSH only for CLI access (`sshutil --show`)
-- [ ] **HTTP disabled, HTTPS enabled** — web management over TLS only (`httpcfg --show`)
-- [ ] **RADIUS configured** pointing to Active Directory/LDAP; local accounts as fallback only
-- [ ] **Local `admin` password changed** from factory default; stored in enterprise vault
-- [ ] **All unused default accounts reviewed** — disable any not required (`userconfig --show`)
-- [ ] **RBAC roles assigned** — `switchadmin` for ops, `zoneadmin` for zone-only changes; no shared `admin` accounts for daily use
-- [ ] **IPfilter policy applied** — management plane restricted to approved management subnet
-- [ ] **SNMP v3 configured** — SHA authentication, AES-128 privacy; default community strings removed
-- [ ] **SSH host key generated** — RSA 2048+ or ECDSA (`sshutil --genkey`)
-- [ ] **NTP configured and synced** — minimum two NTP servers from internal stratum 2 hierarchy
-- [ ] **Syslog forwarded to SIEM** — all facility levels forwarded (`syslogadmin --show`)
-- [ ] **Audit logging enabled** — zone changes, logins, firmware events logged
-
-### Fabric Plane
-
-- [ ] **Static domain ID set** — `insistDomainId = 1` in `configure`; domain ID recorded in SAN design register
-- [ ] **Fabric binding enabled** — only known switches permitted to form ISLs
-- [ ] **Zoning configured** — single-initiator, WWN-based zones only; no default zone (open fabric)
-- [ ] **Default zone disabled** — verify `defzone --show` returns `off` (all devices not in a zone are isolated)
-
-### Operational
-
-- [ ] **Configuration backup taken** — post-hardening config uploaded to backup server
-- [ ] **CMDB updated** — switch hostname, serial number, domain ID, port map, support contract
-- [ ] **SANnav discovery completed** — switch visible in SANnav with no unresolved alerts
-- [ ] **MAPS policy applied** — `dflt_conservative_policy` or equivalent as baseline
-
----
-
-## Management Protocol Hardening
-
-### Disable Telnet
-
-```bash
-configure
-# Navigate: Fabric parameters → System Services → Telnet
-# Enter: 0 (disable)
-# Complete the configure wizard
-
-# Verify
-sshutil --show    # Confirm telnetd = disabled
+┌─────────────────────────────── Brocade Fabric OS — Security Hardening ────────────────────────────────┐
+│                                                                                                       │
+│  Hardening: disable legacy protocols, enforce RBAC, enable security policies, patch FOS.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Protocol & Service Hardening         │  │           Account & Auth Hardening          │   │
+│   │       Disable Telnet: sshutil disable        │  │          TACACS+ for all admin auth         │   │
+│   │        Disable FTP: no sftp fallback         │  │        Remove default admin password        │   │
+│   │           Disable HTTP: HTTPS only           │  │       Lockout after 3 failed attempts       │   │
+│   │         SNMPv3 only: disable v1/v2c          │  │         Complexity: 10 char + mixed         │   │
+│   │         Restrict management IP range         │  │        Expiry: 90-day password policy       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Disable all legacy protocols; enforce TACACS+; limit management access to known IPs.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Fabric Security Policies           │  │         Firmware & Patch Management         │   │
+│   │        SCC: restrict switch ISL joins        │  │          FOS patch cycle: quarterly         │   │
+│   │          DCC: bind devices to ports          │  │         Check PSIRTs before upgrade         │   │
+│   │           DH-CHAP on all ISL ports           │  │        Test upgrade in non-prod first       │   │
+│   │           Zoning: deny-by-default            │  │         HA firmware: no-disrupt path        │   │
+│   │           MAPS: alert on anomalies           │  │        Rollback plan if upgrade fails       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Brocade FC switch · dedicated mgmt Ethernet · serial console for recovery                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  sshutil         = Fabric OS CLI to enable/disable SSH and Telnet services                            │
+│  SCC             = Switch Connection Control; restricts which FC switches can form ISLs               │
+│  DCC             = Device Connection Control; binds HBA WWNs to specific switch ports                 │
+│  DH-CHAP         = Diffie-Hellman CHAP; authenticates switches before ISL formation                   │
+│  MAPS            = Monitoring and Alerting Policy Suite; threshold-based anomaly detection            │
+│  PSIRT           = Product Security Incident Response Team advisory; vendor security bulletin         │
+│  HA firmware     = non-disruptive FOS upgrade; active CP reboots while standby takes over             │
+│  SNMPv3          = SNMP v3; authentication (MD5/SHA) + privacy (AES) mode required                    │
+│  Deny-by-default = zone policy: traffic allowed only if explicitly zoned together                     │
+│  TACACS+         = centralised CLI auth; all switch admin commands audited centrally                  │
+│  Lockout policy  = account locked after N failed logins; unlocked by admin or timeout                 │
+│  IP whitelist    = management source IP restriction; configured via acp filter command                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Disable HTTP

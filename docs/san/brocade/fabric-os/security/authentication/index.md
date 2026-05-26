@@ -24,35 +24,51 @@ flowchart TD
     localAuth -->|No| reject3["Login denied"]
     vsaRole & tacacsRole & localRole --> session["CLI / Web session\nopened with assigned role"]
 ```
-
-## Overview
-
-Brocade FabricOS supports three authentication methods for management access:
-
-1. **Local accounts** — stored on the switch; used for break-glass access only in production
-2. **RADIUS** — recommended for enterprise environments; integrates with Active Directory via NPS
-3. **TACACS+** — alternative to RADIUS; provides per-command authorization
-
-All production switches must be configured with RADIUS or TACACS+ as the primary authentication method, with local accounts as a fallback. Local account credentials for break-glass must be stored in the enterprise vault (CyberArk, HashiCorp Vault, etc.) and rotated quarterly.
-
----
-
-## RADIUS Authentication
-
-### Configure RADIUS
-
-```bash
-# Add primary RADIUS server
-aaaconfig --add <radius-server-ip> -conf radius -p 1812 -s <shared-secret>
-
-# Add secondary RADIUS server (failover)
-aaaconfig --add <radius-server2-ip> -conf radius -p 1812 -s <shared-secret>
-
-# Set authentication order: RADIUS primary, local accounts as fallback
-aaaconfig --authorder RADIUS;LOCAL
-
-# Verify RADIUS configuration
-aaaconfig --show
+┌───────────────────────────────── Brocade Fabric OS — Authentication ──────────────────────────────────┐
+│                                                                                                       │
+│  Authentication: DH-CHAP for switch-to-switch, FCAP, TACACS+, and local login methods.                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │       Switch-to-Switch Auth (DH-CHAP)        │  │          User Login Authentication          │   │
+│   │        DH-CHAP: HMAC-SHA256 exchange         │  │          SSH key-based admin login          │   │
+│   │          FCAP: cert-based ISL auth           │  │         TACACS+: privilege level map        │   │
+│   │           authutil --set -a dhchap           │  │          RADIUS: challenge-response         │   │
+│   │        Group shared secret per fabric        │  │          Local: password + lockout          │   │
+│   │        ISL formed only if auth passes        │  │         passwdcfg: complexity rules         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  DH-CHAP authenticates switches before ISL formation; user auth via TACACS+ or local.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            PKI / Certificate Auth            │  │           Audit & Session Control           │   │
+│   │          FCAP: X.509 cert exchange           │  │         audit log: all CLI commands         │   │
+│   │         certutil: manage local certs         │  │          Security event ID tracking         │   │
+│   │          HTTPS cert bind to web GUI          │  │         Session timeout: 30 min idle        │   │
+│   │        CA-signed vs self-signed cert         │  │         Concurrent sessions limited         │   │
+│   │        Revocation: CRL check on auth         │  │          syslog auth events to SIEM         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Brocade FC switch · management Ethernet · TACACS+ server · PKI CA infrastructure                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  DH-CHAP        = Diffie-Hellman CHAP; cryptographic switch-to-switch auth on ISL                     │
+│  FCAP           = Fibre Channel Authentication Protocol; X.509 cert-based ISL auth                    │
+│  authutil       = CLI to configure and test switch authentication (DH-CHAP/FCAP)                      │
+│  ISL            = Inter-Switch Link; E_Port connection between two FC switches                        │
+│  TACACS+        = centralised CLI auth server; maps privilege levels to Fabric OS roles               │
+│  passwdcfg      = password configuration CLI; sets complexity, expiry, lockout policy                 │
+│  certutil       = Fabric OS CLI to import, export, and manage X.509 certificates                      │
+│  HTTPS cert     = TLS certificate bound to management GUI; must be CA-signed in prod                  │
+│  CRL            = Certificate Revocation List; checked during FCAP auth to block revoked              │
+│  Audit log      = tamper-evident log of all CLI sessions and commands with user/timestamp             │
+│  SSH key        = RSA/ECDSA key pair for passwordless admin SSH; stored in authorized_keys            │
+│  Session timeout= idle session termination; Fabric OS default 30 minutes inactivity                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Role Mapping via RADIUS

@@ -29,42 +29,51 @@ graph TB
     backupServer["Backup Server"] --> scp
     monSystem["Monitoring Platform"] --> snmp3
 ```
-
-## Overview
-
-Encryption in Brocade FabricOS applies to the management plane — protecting switch management traffic (SSH, HTTPS, SNMP v3) and ensuring data confidentiality for audit logs in transit to a SIEM. FC data frames in the SAN fabric itself are not encrypted at the switch level (fabric-layer FC encryption is handled by inline encryption appliances or host-based encryption).
-
-Key areas:
-
-- **SNMP v3** — encrypted and authenticated SNMP (replacing SNMPv1/v2c)
-- **SSH** — management access; Telnet must be disabled
-- **HTTPS** — web management (Web Tools / REST API); HTTP must be disabled
-- **TLS certificates** — certificate management for HTTPS and inter-switch authentication
-- **Secure Fabric OS** — optional policy for encrypting management plane communications between switches
-
----
-
-## SNMP v3 Configuration
-
-SNMP v3 provides authentication (SHA) and privacy (AES-128) for switch monitoring. All monitoring platforms (SANnav, Nagios, Zabbix, etc.) must use SNMP v3 — never SNMPv1 or SNMPv2c.
-
-```bash
-# Configure SNMP v3 interactively (recommended — avoids passwords in shell history)
-snmpconfig --set mibCapability
-
-# The interactive wizard prompts for:
-# - SNMP v3 user name
-# - Authentication protocol: SHA (required — do not select MD5)
-# - Authentication password (minimum 8 characters)
-# - Privacy protocol: AES-128 (required — do not select DES)
-# - Privacy password (minimum 8 characters)
-# - Access level: readOnly (monitoring) or readWrite (management)
-
-# Verify SNMP configuration
-snmpconfig --show
-
-# Verify SNMP v3 traps are enabled
-snmpconfig --show traps
+┌─────────────────────────────────── Brocade Fabric OS — Encryption ────────────────────────────────────┐
+│                                                                                                       │
+│  Fabric OS encryption: FC-SP for fabric security, management TLS, optional data-at-rest.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Management Plane Encryption          │  │           Fabric Security (FC-SP)           │   │
+│   │         SSH: encrypted CLI sessions          │  │         FC-SP: ISL encryption option        │   │
+│   │          HTTPS: TLS 1.2/1.3 for GUI          │  │         DH-CHAP: auth + key exchange        │   │
+│   │           SNMPv3: AES-128 privacy            │  │       Shared secret rotated per fabric      │   │
+│   │       syslog: TLS encrypted forwarding       │  │        FCAP: cert-based key exchange        │   │
+│   │           Disable Telnet/FTP/HTTP            │  │          Per-port auth enforcement          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Management traffic encrypted via SSH/HTTPS; fabric traffic secured via FC-SP DH-CHAP.                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Data-at-Rest (Hardware Enc)          │  │                Key Management               │   │
+│   │        Brocade Encryption Switch (ES)        │  │           KMIP: NetApp/Thales KMAX          │   │
+│   │        FS8-18 blade encryption engine        │  │          Master key in hardware HSM         │   │
+│   │            LUN-level AES-256-XTS             │  │           Key zeroisation on decom          │   │
+│   │        Transparent to host and array         │  │       Dual control: 2 admins required       │   │
+│   │         Re-keying without data loss          │  │        Audit: key usage events logged       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Brocade FC switch / FS8-18 blade · HSM appliance · FC cables · storage array                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  FC-SP           = Fibre Channel Security Protocol; optional ISL authentication/encryption            │
+│  DH-CHAP         = Diffie-Hellman CHAP; generates shared session key for FC-SP                        │
+│  FS8-18          = Brocade encryption blade for DCX directors; LUN-level AES-256                      │
+│  KMIP            = Key Management Interoperability Protocol; connects to external KMS                 │
+│  AES-256-XTS     = AES in XEX-based Tweaked-codebook mode XTS; disk encryption standard               │
+│  SNMPv3 privacy  = AES-128 encryption for SNMP PDU payload; auth + privacy mode                       │
+│  HSM             = Hardware Security Module; tamper-proof storage for encryption keys                 │
+│  Key zeroisation = secure key erasure on decommission; NIST SP800-88 procedure                        │
+│  Re-keying       = rotating encryption keys for stored data without decrypting first                  │
+│  SSH             = Secure Shell; replaces Telnet for encrypted CLI management access                  │
+│  TLS 1.2/1.3     = Transport Layer Security; HTTPS management GUI encryption                          │
+│  Dual control    = key operations require two independent admin approvals                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Remove Default SNMP Community Strings
