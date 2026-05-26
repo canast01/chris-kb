@@ -33,26 +33,52 @@ flowchart TD
     resourceOk -- Yes --> svcOk
     svcOk --> resolve
 ```
-
-## Unexpected Reboots
-
-```powershell
-# Check for unexpected shutdown (Event ID 6008)
-Get-WinEvent -FilterHashtable @{ LogName='System'; Id=6008 } -MaxEvents 5 |
-    Select-Object TimeCreated, Message
-
-# Kernel power loss (Event ID 41 — crash or power failure)
-Get-WinEvent -FilterHashtable @{ LogName='System'; Id=41 } -MaxEvents 5 |
-    Select-Object TimeCreated, Message | Format-List
-
-# Recent reboots
-Get-WinEvent -FilterHashtable @{ LogName='System'; Id=1074,6006 } -MaxEvents 10 |
-    Select-Object TimeCreated, Message | Format-List
-
-# Check for memory dump (indicates BSOD/crash)
-Test-Path C:\Windows\Minidump
-Get-ChildItem C:\Windows\Minidump -ErrorAction SilentlyContinue |
-    Sort-Object LastWriteTime -Descending | Select-Object -First 5 Name, LastWriteTime
+┌───────────────────────────── Windows Server — Common Operational Issues ──────────────────────────────┐
+│                                                                                                       │
+│  Common issues: high CPU/RAM, RDP failures, AD replication errors, disk full, service failures.       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Performance Issues              │  │             Connectivity Issues             │   │
+│   │       High CPU: Task Manager → Details       │  │        RDP port 3389 blocked/disabled       │   │
+│   │        RAM: pooled memory leak check         │  │       Firewall rules blocking traffic       │   │
+│   │         Disk: windirstat + cleanmgr          │  │       DNS resolution failure for host       │   │
+│   │        Paging file exhausted: resize         │  │         NIC driver or teaming errors        │   │
+│   │        Hung service: sc stop + start         │  │        Route table: route print check       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Performance and connectivity are top two issue classes; check Event Viewer first.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              AD / Domain Issues              │  │            Update & Patch Issues            │   │
+│   │        Replication: repadmin /replsum        │  │         Windows Update stuck pending        │   │
+│   │        Secure channel broken: nltest         │  │        WSUS approval not pushed down        │   │
+│   │         Kerberos clock skew > 5 min          │  │          WinRM errors blocking WUA          │   │
+│   │        SRV DNS records missing: check        │  │        CBS log: dism /online /cleanup       │   │
+│   │        GPO not applying: gpresult /h         │  │        Pending reboot blocks updates        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · CPU cores · RAM DIMMs · NIC ports · SAS/SATA/NVMe storage               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Event Viewer   = Windows MMC snap-in; System/Application logs show errors and warnings               │
+│  repadmin       = AD replication diagnostics CLI; /replsummary shows partner health                   │
+│  nltest         = network logon test; /sc_query verifies secure channel to domain DC                  │
+│  Kerberos       = authentication protocol; tickets require clock sync within 5 minutes                │
+│  GPO            = Group Policy Object; applied via gpupdate /force; troubleshoot gpresult             │
+│  WSUS           = Windows Server Update Services; distributes patches to managed clients              │
+│  CBS log        = Component-Based Servicing log; tracks Windows component install state               │
+│  windirstat     = third-party disk usage visualiser; identifies large file consumers                  │
+│  cleanmgr       = Disk Cleanup utility; removes temp files, WinSxS backup components                  │
+│  Paging file    = virtual memory extension on disk; exhaustion causes crashes                         │
+│  NIC teaming    = link aggregation / failover for network adapters via LBFO or SET                    │
+│  WUA            = Windows Update Agent service; communicates with WSUS or Windows Update              │
+│  dism           = Deployment Image Servicing and Management; repairs OS component store               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## High CPU
