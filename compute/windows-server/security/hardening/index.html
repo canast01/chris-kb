@@ -3091,34 +3091,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-policy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Policy
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Audit Policy">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#recommended-audit-categories" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recommended Audit Categories
-      
-    </span>
-  </a>
-  
-</li>
-        
           <li class="md-nav__item">
   <a href="#security-event-log-size" class="md-nav__link">
     <span class="md-ellipsis">
@@ -3448,7 +3420,7 @@
 <li><strong>CIS Benchmarks</strong> — prescriptive guidance at <a href="https://www.cisecurity.org">cisecurity.org</a>.</li>
 <li><strong>Policy Analyzer</strong> — part of SCT; compares a machine's effective policy against a baseline.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Import Microsoft Security Baseline GPO backup</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Import Microsoft Security Baseline GPO backup</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># 1. Download SCT from Microsoft Download Center</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c"># 2. Extract baseline GPO backups</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># 3. Import via GPMC</span>
@@ -3460,157 +3432,139 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Run Policy Analyzer (GUI tool) — compare live settings vs. baseline</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c"># PolicyAnalyzer.exe from SCT</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Apply and verify GPO is linked and enforced</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">New-GPLink</span> <span class="n">-Name</span> <span class="s2">&quot;CORP Baseline - Domain Security&quot;</span> <span class="n">-Target</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span> <span class="n">-Enforced</span> <span class="n">Yes</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Get-GPInheritance</span> <span class="n">-Target</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
-</code></pre></div>
-<h2 id="audit-policy">Audit Policy<a class="headerlink" href="#audit-policy" title="Permanent link">&para;</a></h2>
-<p>Configure via GPO: Computer Configuration &gt; Windows Settings &gt; Security Settings &gt; Advanced Audit Policy Configuration.</p>
-<h3 id="recommended-audit-categories">Recommended Audit Categories<a class="headerlink" href="#recommended-audit-categories" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Category</th>
-<th>Subcategory</th>
-<th>Setting</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Account Logon</td>
-<td>Credential Validation</td>
-<td>Success, Failure</td>
-</tr>
-<tr>
-<td>Account Logon</td>
-<td>Kerberos Authentication</td>
-<td>Success, Failure</td>
-</tr>
-<tr>
-<td>Account Management</td>
-<td>User Account Management</td>
-<td>Success, Failure</td>
-</tr>
-<tr>
-<td>Account Management</td>
-<td>Security Group Management</td>
-<td>Success, Failure</td>
-</tr>
-<tr>
-<td>DS Access</td>
-<td>Directory Service Changes</td>
-<td>Success</td>
-</tr>
-<tr>
-<td>Logon/Logoff</td>
-<td>Logon</td>
-<td>Success, Failure</td>
-</tr>
-<tr>
-<td>Logon/Logoff</td>
-<td>Logoff</td>
-<td>Success</td>
-</tr>
-<tr>
-<td>Logon/Logoff</td>
-<td>Account Lockout</td>
-<td>Failure</td>
-</tr>
-<tr>
-<td>Object Access</td>
-<td>File System</td>
-<td>Failure (Success only for sensitive paths)</td>
-</tr>
-<tr>
-<td>Privilege Use</td>
-<td>Sensitive Privilege Use</td>
-<td>Success, Failure</td>
-</tr>
-<tr>
-<td>Policy Change</td>
-<td>Audit Policy Change</td>
-<td>Success</td>
-</tr>
-<tr>
-<td>Policy Change</td>
-<td>Authentication Policy Change</td>
-<td>Success</td>
-</tr>
-<tr>
-<td>System</td>
-<td>Security System Extension</td>
-<td>Success</td>
-</tr>
-<tr>
-<td>System</td>
-<td>System Integrity</td>
-<td>Success, Failure</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Apply audit subcategory settings via auditpol</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">auditpol</span> <span class="p">/</span><span class="nb">set </span><span class="p">/</span><span class="n">subcategory</span><span class="p">:</span><span class="s2">&quot;Credential Validation&quot;</span> <span class="p">/</span><span class="n">success</span><span class="p">:</span><span class="n">enable</span> <span class="p">/</span><span class="n">failure</span><span class="p">:</span><span class="n">enable</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">auditpol</span> <span class="p">/</span><span class="nb">set </span><span class="p">/</span><span class="n">subcategory</span><span class="p">:</span><span class="s2">&quot;Logon&quot;</span> <span class="p">/</span><span class="n">success</span><span class="p">:</span><span class="n">enable</span> <span class="p">/</span><span class="n">failure</span><span class="p">:</span><span class="n">enable</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">auditpol</span> <span class="p">/</span><span class="nb">set </span><span class="p">/</span><span class="n">subcategory</span><span class="p">:</span><span class="s2">&quot;Account Lockout&quot;</span> <span class="p">/</span><span class="n">failure</span><span class="p">:</span><span class="n">enable</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">auditpol</span> <span class="p">/</span><span class="nb">set </span><span class="p">/</span><span class="n">subcategory</span><span class="p">:</span><span class="s2">&quot;User Account Management&quot;</span> <span class="p">/</span><span class="n">success</span><span class="p">:</span><span class="n">enable</span> <span class="p">/</span><span class="n">failure</span><span class="p">:</span><span class="n">enable</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">auditpol</span> <span class="p">/</span><span class="nb">set </span><span class="p">/</span><span class="n">subcategory</span><span class="p">:</span><span class="s2">&quot;Sensitive Privilege Use&quot;</span> <span class="p">/</span><span class="n">success</span><span class="p">:</span><span class="n">enable</span> <span class="p">/</span><span class="n">failure</span><span class="p">:</span><span class="n">enable</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">auditpol</span> <span class="p">/</span><span class="nb">set </span><span class="p">/</span><span class="n">subcategory</span><span class="p">:</span><span class="s2">&quot;Audit Policy Change&quot;</span> <span class="p">/</span><span class="n">success</span><span class="p">:</span><span class="n">enable</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># View current audit policy</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">auditpol</span> <span class="p">/</span><span class="n">get</span> <span class="p">/</span><span class="n">category</span><span class="p">:*</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c"># Export audit policy to CSV</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">auditpol</span> <span class="p">/</span><span class="n">backup</span> <span class="p">/</span><span class="n">file</span><span class="p">:</span><span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">audit-policy</span><span class="p">.</span><span class="n">csv</span>
-</code></pre></div>
+┌───────────────────────────────────── Windows Server — Hardening ──────────────────────────────────────┐
+│                                                                                                       │
+│  OS hardening: CIS Benchmark baseline, GPO policies, attack surface reduction, Defender.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            OS &amp; Service Hardening            │  │           Attack Surface Reduction          │   │
+│   │           CIS Benchmark L1/L2 GPOs           │  │        Disable unused roles/features        │   │
+│   │         STIG SCAP scan and remediate         │  │          Close unused TCP/UDP ports         │   │
+│   │       Disable SMBv1, TelnetFTP,WDigest       │  │        ASR rules: Office macro block        │   │
+│   │        Enable Secure Boot + UEFI lock        │  │           AppLocker/WDAC whitelist          │   │
+│   │          Patch: patch Tuesday + OOB          │  │         RDP: restrict to jump server        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  GPO baseline locks config; ASR rules reduce malware execution paths.                                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Defender &amp; EDR                │  │              Account Hardening              │   │
+│   │         Defender: real-time + cloud          │  │          Rename built-in Admin acct         │   │
+│   │         Defender ATP: EDR telemetry          │  │            Disable Guest account            │   │
+│   │            Tamper protection: on             │  │         Fine-grained password policy        │   │
+│   │        Credential Guard: LSASS in VBS        │  │         Account lockout: 5 attempts         │   │
+│   │          Device Guard: HVCI kernel           │  │          LAPS for all local admins          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical server · TPM 2.0 · UEFI Secure Boot · dedicated management NIC (iDRAC/iLO)                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CIS Benchmark  = Center for Internet Security; numbered controls for OS hardening                    │
+│  STIG           = Security Technical Implementation Guide; DoD hardening standard                     │
+│  SCAP           = Security Content Automation Protocol; machine-readable STIG scanning                │
+│  WDigest        = legacy auth provider; caches cleartext passwords in LSASS memory                    │
+│  ASR            = Attack Surface Reduction rules; Defender policies blocking exploit paths            │
+│  AppLocker      = Windows policy engine; whitelist which executables/scripts can run                  │
+│  WDAC           = Windows Defender Application Control; kernel code integrity policy                  │
+│  Credential Guard= VBS-isolated LSASS; prevents pass-the-hash/ticket attacks                          │
+│  Device Guard   = HVCI: Hypervisor-Protected Code Integrity; kernel driver validation                 │
+│  HVCI           = Hypervisor Protected Code Integrity; kernel runs in VBS environment                 │
+│  VBS            = Virtualisation-Based Security; Hyper-V isolates security features                   │
+│  LAPS           = Local Admin Password Solution; rotates local admin passwords in AD                  │
+│  Defender ATP   = Microsoft Defender for Endpoint; EDR platform with SIEM integration                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Audit Policy
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Configure via GPO: Computer Configuration &gt; Windows Settings &gt; Security Settings &gt; Advanced Audit Policy Configuration.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### Recommended Audit Categories
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Category | Subcategory | Setting |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|---|
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Account Logon | Credential Validation | Success, Failure |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Account Logon | Kerberos Authentication | Success, Failure |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Account Management | User Account Management | Success, Failure |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Account Management | Security Group Management | Success, Failure |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| DS Access | Directory Service Changes | Success |
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| Logon/Logoff | Logon | Success, Failure |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Logon/Logoff | Logoff | Success |
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| Logon/Logoff | Account Lockout | Failure |
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| Object Access | File System | Failure (Success only for sensitive paths) |
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>| Privilege Use | Sensitive Privilege Use | Success, Failure |
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| Policy Change | Audit Policy Change | Success |
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| Policy Change | Authentication Policy Change | Success |
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>| System | Security System Extension | Success |
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>| System | System Integrity | Success, Failure |
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>```powershell
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a># Apply audit subcategory settings via auditpol
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>auditpol /set /subcategory:&quot;Credential Validation&quot; /success:enable /failure:enable
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>auditpol /set /subcategory:&quot;Logon&quot; /success:enable /failure:enable
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>auditpol /set /subcategory:&quot;Account Lockout&quot; /failure:enable
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>auditpol /set /subcategory:&quot;User Account Management&quot; /success:enable /failure:enable
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>auditpol /set /subcategory:&quot;Sensitive Privilege Use&quot; /success:enable /failure:enable
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>auditpol /set /subcategory:&quot;Audit Policy Change&quot; /success:enable
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a># View current audit policy
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>auditpol /get /category:*
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a># Export audit policy to CSV
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>auditpol /backup /file:C:\temp\audit-policy.csv
+</code></pre></div></p>
 <h3 id="security-event-log-size">Security Event Log Size<a class="headerlink" href="#security-event-log-size" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Set Security log maximum size to 512 MB and retain via circular wrapping</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">wevtutil</span> <span class="nb">sl </span><span class="n">Security</span> <span class="p">/</span><span class="n">ms</span><span class="p">:</span><span class="n">524288000</span> <span class="p">/</span><span class="n">rt</span><span class="p">:</span><span class="n">false</span> <span class="p">/</span><span class="n">ab</span><span class="p">:</span><span class="n">false</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c"># Equivalent in GPO: Computer Configuration &gt; Windows Settings &gt; Security Settings &gt;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c">#                   Event Log &gt; Maximum security log size = 524288 KB</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Set Security log maximum size to 512 MB and retain via circular wrapping</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">wevtutil</span> <span class="nb">sl </span><span class="n">Security</span> <span class="p">/</span><span class="n">ms</span><span class="p">:</span><span class="n">524288000</span> <span class="p">/</span><span class="n">rt</span><span class="p">:</span><span class="n">false</span> <span class="p">/</span><span class="n">ab</span><span class="p">:</span><span class="n">false</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># Equivalent in GPO: Computer Configuration &gt; Windows Settings &gt; Security Settings &gt;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c">#                   Event Log &gt; Maximum security log size = 524288 KB</span>
 </code></pre></div>
 <h2 id="windows-defender-antivirus">Windows Defender Antivirus<a class="headerlink" href="#windows-defender-antivirus" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Verify Windows Defender is running and definitions are current</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-MpComputerStatus</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">AMRunningMode</span><span class="p">,</span> <span class="n">AMProductVersion</span><span class="p">,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="n">AntivirusSignatureLastUpdated</span><span class="p">,</span> <span class="n">RealTimeProtectionEnabled</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Force a signature update</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Update-MpSignature</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Run a quick scan</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Start-MpScan</span> <span class="n">-ScanType</span> <span class="n">QuickScan</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># Run a full scan</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">Start-MpScan</span> <span class="n">-ScanType</span> <span class="n">FullScan</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c"># View recent threat detections</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nb">Get-MpThreatDetection</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">InitialDetectionTime</span><span class="p">,</span> <span class="n">DomainUser</span><span class="p">,</span> <span class="n">ProcessName</span><span class="p">,</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  <span class="n">Resources</span><span class="p">,</span> <span class="n">ActionSuccess</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">InitialDetectionTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c"># Configure exclusions (add only when operationally necessary)</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="nb">Add-MpPreference</span> <span class="n">-ExclusionPath</span> <span class="s2">&quot;C:\App\Databases&quot;</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="nb">Add-MpPreference</span> <span class="n">-ExclusionExtension</span> <span class="s2">&quot;.mdf&quot;</span><span class="p">,</span> <span class="s2">&quot;.ldf&quot;</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c"># Verify exclusions (review periodically)</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="p">(</span><span class="nb">Get-MpPreference</span><span class="p">).</span><span class="n">ExclusionPath</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="p">(</span><span class="nb">Get-MpPreference</span><span class="p">).</span><span class="n">ExclusionProcess</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Verify Windows Defender is running and definitions are current</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-MpComputerStatus</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">AMRunningMode</span><span class="p">,</span> <span class="n">AMProductVersion</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="n">AntivirusSignatureLastUpdated</span><span class="p">,</span> <span class="n">RealTimeProtectionEnabled</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Force a signature update</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">Update-MpSignature</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Run a quick scan</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Start-MpScan</span> <span class="n">-ScanType</span> <span class="n">QuickScan</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c"># Run a full scan</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nb">Start-MpScan</span> <span class="n">-ScanType</span> <span class="n">FullScan</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c"># View recent threat detections</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nb">Get-MpThreatDetection</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">InitialDetectionTime</span><span class="p">,</span> <span class="n">DomainUser</span><span class="p">,</span> <span class="n">ProcessName</span><span class="p">,</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  <span class="n">Resources</span><span class="p">,</span> <span class="n">ActionSuccess</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">InitialDetectionTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c"># Configure exclusions (add only when operationally necessary)</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="nb">Add-MpPreference</span> <span class="n">-ExclusionPath</span> <span class="s2">&quot;C:\App\Databases&quot;</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="nb">Add-MpPreference</span> <span class="n">-ExclusionExtension</span> <span class="s2">&quot;.mdf&quot;</span><span class="p">,</span> <span class="s2">&quot;.ldf&quot;</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c"># Verify exclusions (review periodically)</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="p">(</span><span class="nb">Get-MpPreference</span><span class="p">).</span><span class="n">ExclusionPath</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="p">(</span><span class="nb">Get-MpPreference</span><span class="p">).</span><span class="n">ExclusionProcess</span>
 </code></pre></div>
 <h3 id="attack-surface-reduction-rules">Attack Surface Reduction Rules<a class="headerlink" href="#attack-surface-reduction-rules" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Enable ASR rules in block mode (audit mode = 2, block mode = 1)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c"># Block Office applications from creating child processes</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">Add-MpPreference</span> <span class="n">-AttackSurfaceReductionRules_Ids</span> <span class="n">D4F940AB</span><span class="p">-</span><span class="n">401B</span><span class="p">-</span><span class="n">4EFC-AADC-AD5F3C50688A</span> <span class="p">`</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  <span class="n">-AttackSurfaceReductionRules_Actions</span> <span class="n">Enabled</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># Block credential stealing from LSASS</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">Add-MpPreference</span> <span class="n">-AttackSurfaceReductionRules_Ids</span> <span class="n">9E6C4E1F</span><span class="p">-</span><span class="n">7D60</span><span class="p">-</span><span class="n">472F-BA1A-A39EF669E4B0</span> <span class="p">`</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  <span class="n">-AttackSurfaceReductionRules_Actions</span> <span class="n">Enabled</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c"># Block execution of potentially obfuscated scripts</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">Add-MpPreference</span> <span class="n">-AttackSurfaceReductionRules_Ids</span> <span class="n">5BEB7EFE-FD9A</span><span class="p">-</span><span class="n">4556</span><span class="p">-</span><span class="n">801D</span><span class="p">-</span><span class="n">275E5FFC04CC</span> <span class="p">`</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  <span class="n">-AttackSurfaceReductionRules_Actions</span> <span class="n">Enabled</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c"># View current ASR rule states</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="p">(</span><span class="nb">Get-MpPreference</span><span class="p">).</span><span class="n">AttackSurfaceReductionRules_Ids</span> <span class="p">|</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="s2">&quot;$_ : </span><span class="p">$((</span><span class="nb">Get-MpPreference</span><span class="p">).</span><span class="n">AttackSurfaceReductionRules_Actions</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Enable ASR rules in block mode (audit mode = 2, block mode = 1)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c"># Block Office applications from creating child processes</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">Add-MpPreference</span> <span class="n">-AttackSurfaceReductionRules_Ids</span> <span class="n">D4F940AB</span><span class="p">-</span><span class="n">401B</span><span class="p">-</span><span class="n">4EFC-AADC-AD5F3C50688A</span> <span class="p">`</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  <span class="n">-AttackSurfaceReductionRules_Actions</span> <span class="n">Enabled</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Block credential stealing from LSASS</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Add-MpPreference</span> <span class="n">-AttackSurfaceReductionRules_Ids</span> <span class="n">9E6C4E1F</span><span class="p">-</span><span class="n">7D60</span><span class="p">-</span><span class="n">472F-BA1A-A39EF669E4B0</span> <span class="p">`</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  <span class="n">-AttackSurfaceReductionRules_Actions</span> <span class="n">Enabled</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Block execution of potentially obfuscated scripts</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Add-MpPreference</span> <span class="n">-AttackSurfaceReductionRules_Ids</span> <span class="n">5BEB7EFE-FD9A</span><span class="p">-</span><span class="n">4556</span><span class="p">-</span><span class="n">801D</span><span class="p">-</span><span class="n">275E5FFC04CC</span> <span class="p">`</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  <span class="n">-AttackSurfaceReductionRules_Actions</span> <span class="n">Enabled</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c"># View current ASR rule states</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="p">(</span><span class="nb">Get-MpPreference</span><span class="p">).</span><span class="n">AttackSurfaceReductionRules_Ids</span> <span class="p">|</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="s2">&quot;$_ : </span><span class="p">$((</span><span class="nb">Get-MpPreference</span><span class="p">).</span><span class="n">AttackSurfaceReductionRules_Actions</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">}</span>
 </code></pre></div>
 <h2 id="gpo-hardening-baseline">GPO Hardening Baseline<a class="headerlink" href="#gpo-hardening-baseline" title="Permanent link">&para;</a></h2>
 <h3 id="account-policy-default-domain-policy">Account Policy (Default Domain Policy)<a class="headerlink" href="#account-policy-default-domain-policy" title="Permanent link">&para;</a></h3>
@@ -3726,107 +3680,107 @@
 </tbody>
 </table>
 <h3 id="windows-firewall">Windows Firewall<a class="headerlink" href="#windows-firewall" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Enable firewall on all profiles</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Set-NetFirewallProfile</span> <span class="n">-Profile</span> <span class="n">Domain</span><span class="p">,</span><span class="n">Private</span><span class="p">,</span><span class="n">Public</span> <span class="n">-Enabled</span> <span class="n">True</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Set default inbound to block, outbound to allow</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Set-NetFirewallProfile</span> <span class="n">-Profile</span> <span class="n">Domain</span><span class="p">,</span><span class="n">Private</span><span class="p">,</span><span class="n">Public</span> <span class="p">`</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  <span class="n">-DefaultInboundAction</span> <span class="n">Block</span> <span class="n">-DefaultOutboundAction</span> <span class="n">Allow</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c"># Allow RDP from management network only</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&quot;RDP - Management Network&quot;</span> <span class="p">`</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">3389</span> <span class="p">`</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>  <span class="n">-RemoteAddress</span> <span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">/</span><span class="n">24</span> <span class="n">-Action</span> <span class="n">Allow</span> <span class="n">-Profile</span> <span class="n">Domain</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c"># Allow SMB from specific subnets only</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&quot;SMB - Internal&quot;</span> <span class="p">`</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>  <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">445</span> <span class="p">`</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>  <span class="n">-RemoteAddress</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">/</span><span class="n">8</span> <span class="n">-Action</span> <span class="n">Allow</span> <span class="n">-Profile</span> <span class="n">Domain</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c"># Block SMB from outside (public profile)</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&quot;Block SMB Public&quot;</span> <span class="p">`</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>  <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">445</span> <span class="p">`</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>  <span class="n">-Action</span> <span class="n">Block</span> <span class="n">-Profile</span> <span class="n">Public</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="c"># Export current firewall rules</span>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="nb">Get-NetFirewallRule</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Enabled</span> <span class="o">-eq</span> <span class="s2">&quot;True&quot;</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>  <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">firewall-rules</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Enable firewall on all profiles</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Set-NetFirewallProfile</span> <span class="n">-Profile</span> <span class="n">Domain</span><span class="p">,</span><span class="n">Private</span><span class="p">,</span><span class="n">Public</span> <span class="n">-Enabled</span> <span class="n">True</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Set default inbound to block, outbound to allow</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Set-NetFirewallProfile</span> <span class="n">-Profile</span> <span class="n">Domain</span><span class="p">,</span><span class="n">Private</span><span class="p">,</span><span class="n">Public</span> <span class="p">`</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  <span class="n">-DefaultInboundAction</span> <span class="n">Block</span> <span class="n">-DefaultOutboundAction</span> <span class="n">Allow</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c"># Allow RDP from management network only</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&quot;RDP - Management Network&quot;</span> <span class="p">`</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">3389</span> <span class="p">`</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  <span class="n">-RemoteAddress</span> <span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">/</span><span class="n">24</span> <span class="n">-Action</span> <span class="n">Allow</span> <span class="n">-Profile</span> <span class="n">Domain</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c"># Allow SMB from specific subnets only</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&quot;SMB - Internal&quot;</span> <span class="p">`</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">445</span> <span class="p">`</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  <span class="n">-RemoteAddress</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">/</span><span class="n">8</span> <span class="n">-Action</span> <span class="n">Allow</span> <span class="n">-Profile</span> <span class="n">Domain</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c"># Block SMB from outside (public profile)</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&quot;Block SMB Public&quot;</span> <span class="p">`</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">445</span> <span class="p">`</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>  <span class="n">-Action</span> <span class="n">Block</span> <span class="n">-Profile</span> <span class="n">Public</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="c"># Export current firewall rules</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="nb">Get-NetFirewallRule</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Enabled</span> <span class="o">-eq</span> <span class="s2">&quot;True&quot;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>  <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">firewall-rules</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
 </code></pre></div>
 <h2 id="powershell-security">PowerShell Security<a class="headerlink" href="#powershell-security" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Set PowerShell execution policy — RemoteSigned minimum</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Set-ExecutionPolicy</span> <span class="n">RemoteSigned</span> <span class="n">-Scope</span> <span class="n">LocalMachine</span> <span class="n">-Force</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># Enable PowerShell script block logging (logs all executed script content)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nv">$logPath</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging&quot;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="nv">$logPath</span> <span class="n">-Force</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$logPath</span> <span class="n">-Name</span> <span class="s2">&quot;EnableScriptBlockLogging&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c"># Enable PowerShell transcription (logs sessions to a central share)</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="nv">$transcriptPath</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription&quot;</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="nv">$transcriptPath</span> <span class="n">-Force</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$transcriptPath</span> <span class="n">-Name</span> <span class="s2">&quot;EnableTranscripting&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$transcriptPath</span> <span class="n">-Name</span> <span class="s2">&quot;OutputDirectory&quot;</span> <span class="n">-Value</span> <span class="s2">&quot;\\logserver\pstranscripts\&quot;</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$transcriptPath</span> <span class="n">-Name</span> <span class="s2">&quot;EnableInvocationHeader&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c"># Constrained Language Mode — restrict PowerShell to safer command set</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c"># Set via GPO or WDAC policy (not registry alone)</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="c"># Verify current mode</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="nv">$ExecutionContext</span><span class="p">.</span><span class="n">SessionState</span><span class="p">.</span><span class="n">LanguageMode</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Set PowerShell execution policy — RemoteSigned minimum</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Set-ExecutionPolicy</span> <span class="n">RemoteSigned</span> <span class="n">-Scope</span> <span class="n">LocalMachine</span> <span class="n">-Force</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Enable PowerShell script block logging (logs all executed script content)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">$logPath</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="nv">$logPath</span> <span class="n">-Force</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$logPath</span> <span class="n">-Name</span> <span class="s2">&quot;EnableScriptBlockLogging&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c"># Enable PowerShell transcription (logs sessions to a central share)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nv">$transcriptPath</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription&quot;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="nv">$transcriptPath</span> <span class="n">-Force</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$transcriptPath</span> <span class="n">-Name</span> <span class="s2">&quot;EnableTranscripting&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$transcriptPath</span> <span class="n">-Name</span> <span class="s2">&quot;OutputDirectory&quot;</span> <span class="n">-Value</span> <span class="s2">&quot;\\logserver\pstranscripts\&quot;</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$transcriptPath</span> <span class="n">-Name</span> <span class="s2">&quot;EnableInvocationHeader&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c"># Constrained Language Mode — restrict PowerShell to safer command set</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c"># Set via GPO or WDAC policy (not registry alone)</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c"># Verify current mode</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="nv">$ExecutionContext</span><span class="p">.</span><span class="n">SessionState</span><span class="p">.</span><span class="n">LanguageMode</span>
 </code></pre></div>
 <h2 id="remote-desktop-hardening">Remote Desktop Hardening<a class="headerlink" href="#remote-desktop-hardening" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Require NLA (Network Level Authentication) for RDP</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp&quot;</span> <span class="p">`</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;UserAuthentication&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c"># Set RDP encryption level to High</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp&quot;</span> <span class="p">`</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  <span class="n">-Name</span> <span class="s2">&quot;MinEncryptionLevel&quot;</span> <span class="n">-Value</span> <span class="n">3</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c"># Restrict RDP to specific users</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c"># Add users to &quot;Remote Desktop Users&quot; group only — do not grant Domain Admins direct RDP</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c"># Disable RDP if not needed</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server&quot;</span> <span class="p">`</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>  <span class="n">-Name</span> <span class="s2">&quot;fDenyTSConnections&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Require NLA (Network Level Authentication) for RDP</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp&quot;</span> <span class="p">`</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;UserAuthentication&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c"># Set RDP encryption level to High</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp&quot;</span> <span class="p">`</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  <span class="n">-Name</span> <span class="s2">&quot;MinEncryptionLevel&quot;</span> <span class="n">-Value</span> <span class="n">3</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c"># Restrict RDP to specific users</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c"># Add users to &quot;Remote Desktop Users&quot; group only — do not grant Domain Admins direct RDP</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c"># Disable RDP if not needed</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server&quot;</span> <span class="p">`</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  <span class="n">-Name</span> <span class="s2">&quot;fDenyTSConnections&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
 </code></pre></div>
 <h2 id="credential-protection">Credential Protection<a class="headerlink" href="#credential-protection" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Disable storing of LAN Manager hash (empty string policy ensures no LM hash stored)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa&quot;</span> <span class="p">`</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;NoLMHash&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c"># Enable Protected Users security group for privileged accounts</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c"># Members cannot use NTLM, cannot delegate credentials, tickets expire in 4 hours</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;Protected Users&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;jsmith&quot;</span><span class="p">,</span><span class="s2">&quot;admin.jsmith&quot;</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c"># Enable Credential Guard (see Authentication page for full steps)</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c"># Verify LSA is running as protected process</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;RunAsPPL&quot;</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c"># Value should be 1</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;RunAsPPL&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Disable storing of LAN Manager hash (empty string policy ensures no LM hash stored)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa&quot;</span> <span class="p">`</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;NoLMHash&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c"># Enable Protected Users security group for privileged accounts</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c"># Members cannot use NTLM, cannot delegate credentials, tickets expire in 4 hours</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;Protected Users&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;jsmith&quot;</span><span class="p">,</span><span class="s2">&quot;admin.jsmith&quot;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c"># Enable Credential Guard (see Authentication page for full steps)</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c"># Verify LSA is running as protected process</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;RunAsPPL&quot;</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c"># Value should be 1</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;RunAsPPL&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
 </code></pre></div>
 <h2 id="cis-benchmark-quick-checks">CIS Benchmark Quick Checks<a class="headerlink" href="#cis-benchmark-quick-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Quick hardening verification script</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">$checks</span> <span class="p">=</span> <span class="p">@{</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="s2">&quot;Guest account disabled&quot;</span>              <span class="p">=</span> <span class="p">{</span> <span class="p">(</span><span class="nb">Get-LocalUser</span> <span class="n">Guest</span><span class="p">).</span><span class="n">Enabled</span> <span class="o">-eq</span> <span class="nv">$false</span> <span class="p">}</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="s2">&quot;SMB signing required&quot;</span>                <span class="p">=</span> <span class="p">{</span> <span class="p">(</span><span class="nb">Get-SmbServerConfiguration</span><span class="p">).</span><span class="n">RequireSecuritySignature</span> <span class="p">}</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="s2">&quot;Firewall enabled (Domain)&quot;</span>           <span class="p">=</span> <span class="p">{</span> <span class="p">(</span><span class="nb">Get-NetFirewallProfile</span> <span class="n">-Name</span> <span class="n">Domain</span><span class="p">).</span><span class="n">Enabled</span> <span class="p">}</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="s2">&quot;Defender Real-Time enabled&quot;</span>          <span class="p">=</span> <span class="p">{</span> <span class="p">(</span><span class="nb">Get-MpComputerStatus</span><span class="p">).</span><span class="n">RealTimeProtectionEnabled</span> <span class="p">}</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="s2">&quot;NLA required for RDP&quot;</span>                <span class="p">=</span> <span class="p">{</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>        <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp&quot;</span><span class="p">).</span><span class="n">UserAuthentication</span> <span class="o">-eq</span> <span class="n">1</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    <span class="p">}</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    <span class="s2">&quot;LM hash storage disabled&quot;</span>            <span class="p">=</span> <span class="p">{</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa&quot;</span><span class="p">).</span><span class="n">NoLMHash</span> <span class="o">-eq</span> <span class="n">1</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>    <span class="p">}</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="s2">&quot;Script block logging enabled&quot;</span>        <span class="p">=</span> <span class="p">{</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>        <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging&quot;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span><span class="p">).</span><span class="n">EnableScriptBlockLogging</span> <span class="o">-eq</span> <span class="n">1</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>    <span class="p">}</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="p">}</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$check</span> <span class="k">in</span> <span class="nv">$checks</span><span class="p">.</span><span class="n">GetEnumerator</span><span class="p">())</span> <span class="p">{</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>    <span class="nv">$result</span> <span class="p">=</span> <span class="k">try</span> <span class="p">{</span> <span class="p">&amp;</span> <span class="nv">$check</span><span class="p">.</span><span class="n">Value</span> <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span> <span class="nv">$false</span> <span class="p">}</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>    <span class="nv">$status</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$result</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL&quot;</span> <span class="p">}</span>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;$status : </span><span class="p">$(</span><span class="nv">$check</span><span class="p">.</span><span class="n">Key</span><span class="p">)</span><span class="s2">&quot;</span> <span class="n">-ForegroundColor</span> <span class="p">$(</span><span class="k">if</span> <span class="p">(</span><span class="nv">$result</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;Green&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;Red&quot;</span> <span class="p">})</span>
-<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Quick hardening verification script</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">$checks</span> <span class="p">=</span> <span class="p">@{</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="s2">&quot;Guest account disabled&quot;</span>              <span class="p">=</span> <span class="p">{</span> <span class="p">(</span><span class="nb">Get-LocalUser</span> <span class="n">Guest</span><span class="p">).</span><span class="n">Enabled</span> <span class="o">-eq</span> <span class="nv">$false</span> <span class="p">}</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="s2">&quot;SMB signing required&quot;</span>                <span class="p">=</span> <span class="p">{</span> <span class="p">(</span><span class="nb">Get-SmbServerConfiguration</span><span class="p">).</span><span class="n">RequireSecuritySignature</span> <span class="p">}</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="s2">&quot;Firewall enabled (Domain)&quot;</span>           <span class="p">=</span> <span class="p">{</span> <span class="p">(</span><span class="nb">Get-NetFirewallProfile</span> <span class="n">-Name</span> <span class="n">Domain</span><span class="p">).</span><span class="n">Enabled</span> <span class="p">}</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="s2">&quot;Defender Real-Time enabled&quot;</span>          <span class="p">=</span> <span class="p">{</span> <span class="p">(</span><span class="nb">Get-MpComputerStatus</span><span class="p">).</span><span class="n">RealTimeProtectionEnabled</span> <span class="p">}</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="s2">&quot;NLA required for RDP&quot;</span>                <span class="p">=</span> <span class="p">{</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>        <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp&quot;</span><span class="p">).</span><span class="n">UserAuthentication</span> <span class="o">-eq</span> <span class="n">1</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="p">}</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="s2">&quot;LM hash storage disabled&quot;</span>            <span class="p">=</span> <span class="p">{</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>        <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa&quot;</span><span class="p">).</span><span class="n">NoLMHash</span> <span class="o">-eq</span> <span class="n">1</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    <span class="p">}</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="s2">&quot;Script block logging enabled&quot;</span>        <span class="p">=</span> <span class="p">{</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>        <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging&quot;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span><span class="p">).</span><span class="n">EnableScriptBlockLogging</span> <span class="o">-eq</span> <span class="n">1</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    <span class="p">}</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="p">}</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$check</span> <span class="k">in</span> <span class="nv">$checks</span><span class="p">.</span><span class="n">GetEnumerator</span><span class="p">())</span> <span class="p">{</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>    <span class="nv">$result</span> <span class="p">=</span> <span class="k">try</span> <span class="p">{</span> <span class="p">&amp;</span> <span class="nv">$check</span><span class="p">.</span><span class="n">Value</span> <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span> <span class="nv">$false</span> <span class="p">}</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>    <span class="nv">$status</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$result</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL&quot;</span> <span class="p">}</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;$status : </span><span class="p">$(</span><span class="nv">$check</span><span class="p">.</span><span class="n">Key</span><span class="p">)</span><span class="s2">&quot;</span> <span class="n">-ForegroundColor</span> <span class="p">$(</span><span class="k">if</span> <span class="p">(</span><span class="nv">$result</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;Green&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;Red&quot;</span> <span class="p">})</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>
