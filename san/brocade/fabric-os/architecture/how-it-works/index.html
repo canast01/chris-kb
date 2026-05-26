@@ -3178,39 +3178,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#platform-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Platform Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#fabric-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fabric Design
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#principal-switch-and-domain-id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Principal Switch and Domain ID
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#name-server-and-fabric-services" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3468,7 +3435,7 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Fabric OS (FOS) runs on Brocade/Broadcom SAN switches. Fabrics are deployed in a core-edge topology with ISLs (trunked) connecting edge switches to core directors. One switch per fabric is elected as the <strong>principal switch</strong>, which owns the fabric name server and manages domain ID assignments.</p>
 <h2 id="san-fabric-topology">SAN Fabric Topology<a class="headerlink" href="#san-fabric-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
+<p><pre class="mermaid"><code>graph TB
   H1(["ESXi-01\nHBA0 · HBA1"]) &amp; H2(["ESXi-02\nHBA0 · HBA1"]) --&gt; DIRA["Brocade Director A\n(Fabric A)"]
   H1 &amp; H2 --&gt; DIRB["Brocade Director B\n(Fabric B)"]
   DIRA &lt;--&gt;|"ISL — 10/40 Gbps"| DIRC["Brocade Director C\n(Fabric A — DR)"]
@@ -3481,68 +3448,75 @@
   class DIRA,DIRB,DIRC,DIRD ctrl
   class FA,PM store
   class H1,H2 host</code></pre>
-<h2 id="platform-reference">Platform Reference<a class="headerlink" href="#platform-reference" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Platform</th>
-<th>Type</th>
-<th>Max Ports</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>G620</td>
-<td>Fixed</td>
-<td>64× 32G FC</td>
-<td>Mid-range</td>
-</tr>
-<tr>
-<td>G720</td>
-<td>Fixed</td>
-<td>64× 64G FC</td>
-<td>High-performance fixed</td>
-</tr>
-<tr>
-<td>X7-4</td>
-<td>Director</td>
-<td>Up to 192 FC</td>
-<td>4-slot director</td>
-</tr>
-<tr>
-<td>X7-8</td>
-<td>Director</td>
-<td>Up to 384 FC</td>
-<td>8-slot director</td>
-</tr>
-<tr>
-<td>6510</td>
-<td>Fixed</td>
-<td>48× 16G FC</td>
-<td>End-of-sale — plan migration</td>
-</tr>
-</tbody>
-</table>
-<p>Directors (X7-4 / X7-8) support non-disruptive firmware upgrades (HA chassis with dual CPs).</p>
-<h2 id="fabric-design">Fabric Design<a class="headerlink" href="#fabric-design" title="Permanent link">&para;</a></h2>
-<p>Standard dual-fabric design:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Fabric A:  Host HBA Port 0 → G620-SW01 → Storage Target (Fabric A ports)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Fabric B:  Host HBA Port 1 → G620-SW02 → Storage Target (Fabric B ports)
-</code></pre></div>
-<p>Fabric A and Fabric B are completely independent — no cross-fabric cables. ISLs form trunk groups between switches within a fabric only.</p>
-<h2 id="principal-switch-and-domain-id">Principal Switch and Domain ID<a class="headerlink" href="#principal-switch-and-domain-id" title="Permanent link">&para;</a></h2>
-<p>One switch per fabric is the principal switch, elected by lowest WWN (default) or by priority. Domain IDs are unique per switch within a fabric (1–239). Static domain IDs are strongly recommended for production fabrics.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>fabricshow<span class="w">                         </span><span class="c1"># show all switches and domain IDs in fabric</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>switchshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Domain<span class="w">           </span><span class="c1"># show local domain ID</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>configure<span class="w">                          </span><span class="c1"># set insistDomainId=1 for static domain ID</span>
-</code></pre></div>
+┌─────────────────────────── FabricOS — How It Works: Login, Zoning, Routing ───────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Device login: HBA sends FLOGI to switch, switch assigns FCID, NS registers WWN+FCID      │   │
+│   │       Zone lookup: switch checks active zone config in ASIC; denies frames outside zone       │   │
+│   │       FSPF: each switch builds topology from Link State Records; computes shortest path       │   │
+│   │       MAPS: monitors counters every polling interval; fires alert if threshold breached       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Three parallel operational flows on every FabricOS switch:                                         │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Login Flow         │  │         Zone Enforce        │  │         FSPF Routing        │   │
+│   │       HBA sends FLOGI       │  │        Frame arrives        │  │         LSR exchange        │   │
+│   │        FCID assigned        │  │       ASIC zone check       │  │         SPF computed        │   │
+│   │       NS registration       │  │        Allow or deny        │  │       Route table set       │   │
+│   │       PLOGI to target       │  │       Port quarantine       │  │       Frame forwarded       │   │
+│   │         PRLI (SCSI)         │  │        Counter logged       │  │         ISL selected        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    MAPS polls error counters every 60 s by default; alerts via SNMP trap or email                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Flow       │     Trigger      │      Key step     │      Result      │    CLI verify    │   │
+│   │      Login       │   HBA power-on   │   FLOGI to FCID   │  Device online   │      nsshow      │   │
+│   │       Zone       │    Frame sent    │    ASIC lookup    │    Allow/Deny    │     cfgshow      │   │
+│   │       FSPF       │   Topology chg   │     LSR flood     │  SPF recompute   │   topologyshow   │   │
+│   │       MAPS       │   Counter poll   │   Threshold chk   │   Alert fired    │     mapsshow     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: HBA ports · SFP transceivers · fibre patch panels · FC switch line cards                 │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    FLOGI           = Fabric Login; HBA registers itself with the fabric                               │
+│    FCID            = Fibre Channel ID (24-bit address: domain.area.port)                              │
+│    PLOGI           = Port Login; initiator opens session with target after FLOGI                      │
+│    PRLI            = Process Login; SCSI upper-layer protocol negotiation                             │
+│    LSR             = Link State Record; contains port and neighbour information                       │
+│    SPF             = Shortest Path First; algorithm computing optimal fabric routes                   │
+│    ASIC zone check = Hardware-enforced zone lookup on every FC frame at line rate                     │
+│    Port quarantine = Switch isolates offending port; traffic blocked at hardware level                │
+│    nsshow          = Displays Name Server entries: WWN, FCID, port type                               │
+│    mapsshow        = Shows MAPS policy rules, thresholds, and recent alert history                    │
+│    topologyshow    = Displays fabric topology: domains, ISLs, path costs                              │
+│    cfgshow         = Lists zone database: zone sets, zones, members                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Fabric A and Fabric B are completely independent — no cross-fabric cables. ISLs form trunk groups between switches within a fabric only.
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Principal Switch and Domain ID
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>One switch per fabric is the principal switch, elected by lowest WWN (default) or by priority. Domain IDs are unique per switch within a fabric (1–239). Static domain IDs are strongly recommended for production fabrics.
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```bash
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>fabricshow                         # show all switches and domain IDs in fabric
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>switchshow | grep Domain           # show local domain ID
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>configure                          # set insistDomainId=1 for static domain ID
+</code></pre></div></p>
 <h2 id="name-server-and-fabric-services">Name Server and Fabric Services<a class="headerlink" href="#name-server-and-fabric-services" title="Permanent link">&para;</a></h2>
 <p>When a device logs into the fabric, it registers its WWPN, WWNN, and FC4 type with the name server. Other devices query the name server to discover targets.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>nsshow<span class="w">        </span><span class="c1"># devices registered in local name server</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nsallshow<span class="w">     </span><span class="c1"># name server across entire fabric (all domains)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>nslookup<span class="w"> </span>&lt;wwpn&gt;
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>portloginshow<span class="w"> </span><span class="c1"># FLOGI database — all logged-in devices</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nsshow<span class="w">        </span><span class="c1"># devices registered in local name server</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nsallshow<span class="w">     </span><span class="c1"># name server across entire fabric (all domains)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>nslookup<span class="w"> </span>&lt;wwpn&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>portloginshow<span class="w"> </span><span class="c1"># FLOGI database — all logged-in devices</span>
 </code></pre></div>
 <h2 id="zoning">Zoning<a class="headerlink" href="#zoning" title="Permanent link">&para;</a></h2>
 <table>
@@ -3572,35 +3546,35 @@
 </tbody>
 </table>
 <p><strong>Single-initiator zone model (required):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">Zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esxi01_hba0__pure_ct0_p0</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Member</span><span class="nt">: esxi01_hba0   (WWPN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10:00:00:00:c9:12:34:56)   ← one initiator only</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Member</span><span class="nt">: pure_ct0_p0   (WWPN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">52:4a:93:7c:00:00:00:01)   ← one or more targets</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">Zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esxi01_hba0__pure_ct0_p0</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Member</span><span class="nt">: esxi01_hba0   (WWPN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10:00:00:00:c9:12:34:56)   ← one initiator only</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Member</span><span class="nt">: pure_ct0_p0   (WWPN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">52:4a:93:7c:00:00:00:01)   ← one or more targets</span>
 </code></pre></div></p>
 <p>Never place two initiator WWPNs in the same zone. This creates a blast radius risk.</p>
 <h2 id="isl-trunking">ISL Trunking<a class="headerlink" href="#isl-trunking" title="Permanent link">&para;</a></h2>
 <p>Multiple physical ISL ports between the same pair of switches are grouped into a trunk (single logical high-bandwidth link). All links in a trunk must be same speed and between the same switch pair.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>islshow<span class="w">                    </span><span class="c1"># show ISL status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>trunkshow<span class="w">                  </span><span class="c1"># show trunk group membership and master port</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>portperfshow<span class="w">               </span><span class="c1"># show ISL throughput</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>porttrunkarea<span class="w"> </span>--enable<span class="w"> </span>&lt;slot/port&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>islshow<span class="w">                    </span><span class="c1"># show ISL status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>trunkshow<span class="w">                  </span><span class="c1"># show trunk group membership and master port</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>portperfshow<span class="w">               </span><span class="c1"># show ISL throughput</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>porttrunkarea<span class="w"> </span>--enable<span class="w"> </span>&lt;slot/port&gt;
 </code></pre></div>
 <h2 id="virtual-fabrics">Virtual Fabrics<a class="headerlink" href="#virtual-fabrics" title="Permanent link">&para;</a></h2>
 <p>Virtual Fabrics (VF) partition a single physical chassis into multiple independent logical switches, each with its own Fabric ID (FID). Ports are assigned to exactly one logical switch at a time.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>lscfg<span class="w"> </span>--show<span class="w">               </span><span class="c1"># list logical switches and their FIDs</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>setContext<span class="w"> </span>&lt;fid&gt;<span class="w">           </span><span class="c1"># switch CLI context to a specific FID</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>lscfg<span class="w"> </span>--config<span class="w"> </span>&lt;fid&gt;<span class="w"> </span>-port<span class="w"> </span>&lt;slot/port&gt;<span class="w">   </span><span class="c1"># assign port to logical switch</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>lscfg<span class="w"> </span>--show<span class="w">               </span><span class="c1"># list logical switches and their FIDs</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>setContext<span class="w"> </span>&lt;fid&gt;<span class="w">           </span><span class="c1"># switch CLI context to a specific FID</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>lscfg<span class="w"> </span>--config<span class="w"> </span>&lt;fid&gt;<span class="w"> </span>-port<span class="w"> </span>&lt;slot/port&gt;<span class="w">   </span><span class="c1"># assign port to logical switch</span>
 </code></pre></div>
 <h2 id="maps-monitoring-and-alerting-policy-suite">MAPS — Monitoring and Alerting Policy Suite<a class="headerlink" href="#maps-monitoring-and-alerting-policy-suite" title="Permanent link">&para;</a></h2>
 <p>MAPS provides threshold-based automated health monitoring. It monitors port error counters, ISL utilization, C3 discard rates, BB credit zero (slow drain), switch environment, fabric events, and security events.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>mapsdashboard<span class="w"> </span>--show<span class="w">    </span><span class="c1"># current MAPS health dashboard</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>mapsdb<span class="w"> </span>--show<span class="w">           </span><span class="c1"># all triggered MAPS alerts</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>mapspolicy<span class="w"> </span>--show<span class="w">       </span><span class="c1"># active MAPS policy</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>mapsdashboard<span class="w"> </span>--show<span class="w">    </span><span class="c1"># current MAPS health dashboard</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>mapsdb<span class="w"> </span>--show<span class="w">           </span><span class="c1"># all triggered MAPS alerts</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>mapspolicy<span class="w"> </span>--show<span class="w">       </span><span class="c1"># active MAPS policy</span>
 </code></pre></div>
 <h2 id="fcip-fibre-channel-over-ip">FCIP — Fibre Channel over IP<a class="headerlink" href="#fcip-fibre-channel-over-ip" title="Permanent link">&para;</a></h2>
 <p>FCIP extends a Fibre Channel fabric over an IP WAN connection for long-distance replication (SRDF, RecoverPoint). Brocade 7810/7840 extension platforms provide FCIP gateway functionality. Target IP network latency: &lt;5 ms one-way for synchronous replication.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>fciptunnel<span class="w"> </span>--show<span class="w">       </span><span class="c1"># FCIP tunnel status</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>fcipcircuit<span class="w"> </span>--show<span class="w">      </span><span class="c1"># FCIP circuit status</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>fcipcircuit<span class="w"> </span>--show<span class="w"> </span>-perf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>fciptunnel<span class="w"> </span>--show<span class="w">       </span><span class="c1"># FCIP tunnel status</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>fcipcircuit<span class="w"> </span>--show<span class="w">      </span><span class="c1"># FCIP circuit status</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>fcipcircuit<span class="w"> </span>--show<span class="w"> </span>-perf
 </code></pre></div>
 
 

@@ -3305,7 +3305,51 @@
 ServiceNow is a multi-instance SaaS platform with fully isolated per-customer stacks. On-premises integration is handled via MID Servers — outbound-only Java agents that eliminate inbound firewall requirements.
 </div>
 
-<p><img alt="ServiceNow Architecture" src="../../../assets/servicenow-architecture-overview.svg" /></p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────── ServiceNow — Architecture Overview ──────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                    ServiceNow Architecture                                    │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │              SaaS: customer instance on ServiceNow cloud; no on-prem app servers              │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │            MID Server: on-prem JVM agent; polls ServiceNow ECC Queue for work items           │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │             Data: proprietary Glide DB (MySQL-based); accessed via GlideRecord API            │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │           API: REST Table API + Scripted REST API; HTTPS to instance.service-now.com          │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    ServiceNow is SaaS; the only on-prem component is the optional MID Server                          │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │           Cloud (ServiceNow SaaS)            │  │              On-Prem (Customer)             │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │             Now Platform runtime             │  │                MID Server JVM               │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │               Glide DB (MySQL)               │  │             MID polls ECC Queue             │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │                REST Table API                │  │               Discovery probes              │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │                Flow Designer                 │  │               JDBC/SNMP probes              │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │               Integration Hub                │  │            Firewall: outbound 443           │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │             GlideScript runtime              │  │               No inbound ports              │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  ServiceNow data centres (customer-invisible) · MID Server VM on-prem · outbound firewall             │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Now Platform  = ServiceNow application runtime; hosts all ITSM apps                                  │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Glide DB      = ServiceNow proprietary DB layer; built on MySQL; accessed via GlideRecord            │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  GlideRecord   = server-side JS API for DB CRUD; used in Business Rules and Scripts                   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  ECC Queue     = External Communication Channel; MID Server polls for work items                      │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  MID Server    = on-prem Java agent; runs discovery, orchestration, and event probes                  │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Table API     = /api/now/table/{tableName}; REST CRUD for any ServiceNow table                       │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Flow Designer = drag-drop workflow builder; uses Actions and Triggers                                │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Integration Hub = connector library for Flow Designer; REST, JDBC, LDAP steps                        │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Discovery     = ITOM module; auto-populates CMDB by probing network devices                          │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Outbound only = MID Server initiates connection to ServiceNow; no inbound                            │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Instance URL  = https://customer.service-now.com; unique per customer tenant                         │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Prod/dev/test = separate ServiceNow instances; clone prod to dev for testing                         │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<img alt="ServiceNow Architecture" src="../../../assets/servicenow-architecture-overview.svg" /></p>
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Instance model, node topology, MID Servers, platform components, and upgrade lifecycle.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
@@ -3338,32 +3382,6 @@ ServiceNow is a multi-instance SaaS platform with fully isolated per-customer st
 </table>
 <hr />
 <h2 id="platform-node-topology">Platform Node Topology<a class="headerlink" href="#platform-node-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    LB["Load Balancer\n(ServiceNow-managed)"]
-
-    subgraph App["App Tier"]
-        N1["App Node 1"]
-        N2["App Node 2"]
-        N3["App Node 3"]
-    end
-
-    subgraph DB["DB Tier"]
-        PRI["Primary DB"]
-        REP["Replica DB"]
-    end
-
-    subgraph MID["MID Tier (on-prem)"]
-        MID1["MID Server 1"]
-        MID2["MID Server 2"]
-    end
-
-    LB --&gt; N1
-    LB --&gt; N2
-    LB --&gt; N3
-    N1 --&gt; PRI
-    PRI -- replication --&gt; REP
-    N1 &lt;--&gt;|"HTTPS outbound only"| MID1
-    N1 &lt;--&gt;|"HTTPS outbound only"| MID2</code></pre>
 
 
 

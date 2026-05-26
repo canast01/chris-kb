@@ -3152,45 +3152,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rest-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        REST API
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="REST API">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#inbound-rest-calls-to-servicenow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Inbound REST (calls to ServiceNow)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#outbound-rest-servicenow-calls-external" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Outbound REST (ServiceNow calls external)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#soap-web-services" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3547,7 +3508,7 @@
 <p>ServiceNow is designed as an integration hub as much as an ITSM platform. Integration patterns range from simple REST API calls to complex bidirectional event streams via MID Servers. This page covers the primary patterns in use.</p>
 <hr />
 <h2 id="integration-architecture-overview">Integration Architecture Overview<a class="headerlink" href="#integration-architecture-overview" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
+<p><pre class="mermaid"><code>graph LR
     subgraph ServiceNow Cloud
         SNOW["ServiceNow Instance"]
         REST["REST Message\n/ Scripted REST API"]
@@ -3576,41 +3537,70 @@
     SNOW &lt;--&gt;|"REST / Webhook"| PD
     SNOW &lt;--&gt;|"REST / Webhook"| DT
     SNOW &lt;--&gt;|"REST / Webhook"| SPL</code></pre>
-<p>All MID Server communication originates <strong>outbound from the MID Server</strong> — no inbound firewall rules are required on the corporate network perimeter.</p>
-<hr />
-<h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
-<p>ServiceNow exposes a comprehensive REST API surface. The primary endpoints are documented in <a href="../../operations/cli-reference/">CLI Reference</a>.</p>
-<h3 id="inbound-rest-calls-to-servicenow">Inbound REST (calls to ServiceNow)<a class="headerlink" href="#inbound-rest-calls-to-servicenow" title="Permanent link">&para;</a></h3>
-<p>External systems push data to ServiceNow via the Table API, Import Set API, or custom Scripted REST APIs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>POST https://&lt;instance&gt;.service-now.com/api/now/table/incident
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Authorization: Basic &lt;base64&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Content-Type: application/json
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>{
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  &quot;short_description&quot;: &quot;Database unreachable&quot;,
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  &quot;impact&quot;: &quot;1&quot;,
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  &quot;urgency&quot;: &quot;1&quot;,
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  &quot;assignment_group&quot;: &quot;Database Operations&quot;
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>}
-</code></pre></div>
-<h3 id="outbound-rest-servicenow-calls-external">Outbound REST (ServiceNow calls external)<a class="headerlink" href="#outbound-rest-servicenow-calls-external" title="Permanent link">&para;</a></h3>
-<p>Configured via <strong>System Web Services &gt; Outbound &gt; REST Message</strong>. Each REST Message defines:
-- Base URL and authentication (Basic, OAuth 2.0, API Key header)
-- HTTP methods (GET / POST / PUT / PATCH / DELETE)
-- Variable substitution in URL and body
-- MID Server routing (for on-prem targets)</p>
-<p>Business Rules, Flow Designer steps, or Script Includes invoke the message:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Server-side script</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">sn_ws</span><span class="p">.</span><span class="nx">RESTMessageV2</span><span class="p">(</span><span class="s1">&#39;PagerDuty_Create_Incident&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;post&#39;</span><span class="p">);</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nx">rm</span><span class="p">.</span><span class="nx">setStringParameterNoEscape</span><span class="p">(</span><span class="s1">&#39;routing_key&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">getProperty</span><span class="p">(</span><span class="s1">&#39;pd.routing.key&#39;</span><span class="p">));</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nx">rm</span><span class="p">.</span><span class="nx">setStringParameterNoEscape</span><span class="p">(</span><span class="s1">&#39;payload&#39;</span><span class="p">,</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">pdPayload</span><span class="p">));</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kd">var</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">rm</span><span class="p">.</span><span class="nx">execute</span><span class="p">();</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;PD response: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">getStatusCode</span><span class="p">());</span>
-</code></pre></div>
+┌─────────────────────────────── ServiceNow — Architecture Integrations ────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                ServiceNow Integration Landscape                               │   │
+│   │                 Auth: SAML SSO (Okta/ADFS); MFA at IdP; LDAP user provisioning                │   │
+│   │               ITSM integrations: Jira (sync), PagerDuty (alert), Slack (notify)               │   │
+│   │            Monitoring: Zabbix/Prometheus/Datadog → SNOW event via REST or MID probe           │   │
+│   │            REST Table API: create/update incidents from external systems via HTTPS            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    ServiceNow sits at the integration centre of ops tooling ecosystem                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Identity &amp; Auth       │  │       Dev &amp; ITSM Tools      │  │          Monitoring         │   │
+│   │     SAML SSO (Okta/ADFS)    │  │       Jira: issue sync      │  │        Zabbix alerts        │   │
+│   │      LDAP provisioning      │  │     PagerDuty: escalate     │  │      Prometheus events      │   │
+│   │         MFA via IdP         │  │        Slack: notify        │  │        Datadog events       │   │
+│   │      OAuth 2.0 API auth     │  │     Confluence: KB link     │  │          SNMP traps         │   │
+│   │     Basic auth (legacy)     │  │        Bitbucket PRs        │  │        Syslog ingest        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  IdP (Okta/ADFS) · LDAP/AD · MID Server VM · SMTP relay · network connectivity                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SAML SSO     = ServiceNow supports SAML 2.0; configure under System Properties &gt; SSO                 │
+│  LDAP provisioning = ServiceNow LDAP integration creates/updates users from AD                        │
+│  Table API    = REST endpoint for CRUD on any table; used by external integrations                    │
+│  Jira sync    = Jira issues linked to SNOW changes via webhook or REST                                │
+│  PagerDuty    = incident alert routing; SNOW triggers PagerDuty via REST outbound                     │
+│  Slack        = SNOW sends notifications to Slack channels via Integration Hub                        │
+│  OAuth 2.0    = recommended API auth method; create OAuth app under System OAuth                      │
+│  SNMP trap    = network device alert; received by MID Server or event connector                       │
+│  Syslog       = log stream from servers; parsed by SNOW event connector                               │
+│  MID probe    = MID Server sensor that polls target systems for monitoring data                       │
+│  Event connector = SNOW module that receives external events and creates incidents                    │
+│  Integration Hub = pre-built action library for REST, JDBC, LDAP flow steps                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Outbound REST (ServiceNow calls external)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Configured via **System Web Services &gt; Outbound &gt; REST Message**. Each REST Message defines:
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Base URL and authentication (Basic, OAuth 2.0, API Key header)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- HTTP methods (GET / POST / PUT / PATCH / DELETE)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>- Variable substitution in URL and body
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>- MID Server routing (for on-prem targets)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Business Rules, Flow Designer steps, or Script Includes invoke the message:
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>```javascript
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>// Server-side script
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>var rm = new sn_ws.RESTMessageV2(&#39;PagerDuty_Create_Incident&#39;, &#39;post&#39;);
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>rm.setStringParameterNoEscape(&#39;routing_key&#39;, gs.getProperty(&#39;pd.routing.key&#39;));
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>rm.setStringParameterNoEscape(&#39;payload&#39;, JSON.stringify(pdPayload));
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>var response = rm.execute();
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>gs.log(&#39;PD response: &#39; + response.getStatusCode());
+</code></pre></div></p>
 <hr />
 <h2 id="soap-web-services">SOAP Web Services<a class="headerlink" href="#soap-web-services" title="Permanent link">&para;</a></h2>
 <p>Legacy integrations often use SOAP. ServiceNow auto-generates WSDL for every table:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>https://&lt;instance&gt;.service-now.com/&lt;table_name&gt;.do?WSDL
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>https://&lt;instance&gt;.service-now.com/&lt;table_name&gt;.do?WSDL
 </code></pre></div>
 <p>Inbound SOAP is consumed via <strong>Web Service Import Sets</strong> or direct table SOAP endpoints. Outbound SOAP is configured under <strong>System Web Services &gt; Outbound &gt; SOAP Message</strong>.</p>
 <p>SOAP is considered legacy — prefer REST for new integrations.</p>

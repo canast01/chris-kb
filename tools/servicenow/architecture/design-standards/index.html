@@ -3231,56 +3231,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cab-meeting-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CAB Meeting Standards
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-window-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Window Standards
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cmdb-ci-naming-conventions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CMDB CI Naming Conventions
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="CMDB CI Naming Conventions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#general-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        General Format
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#ci-class-mapping" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3732,7 +3682,7 @@
 <p><strong>Standard Changes</strong> must be registered in the Standard Change Catalog with a documented template before they can bypass the approval workflow.</p>
 <hr />
 <h2 id="change-advisory-board-cab-workflow">Change Advisory Board (CAB) Workflow<a class="headerlink" href="#change-advisory-board-cab-workflow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     A["Change Request Submitted\n(Normal or Emergency)"]
     B["Risk Assessment\nCompleted by Submitter"]
     C{Risk Level}
@@ -3753,63 +3703,50 @@
     G -- Approved --&gt; H
     G -- Rejected --&gt; I
     H --&gt; K --&gt; L</code></pre>
-<h3 id="cab-meeting-standards">CAB Meeting Standards<a class="headerlink" href="#cab-meeting-standards" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Frequency:</strong> Weekly, every Wednesday at 14:00 local time</li>
-<li><strong>Submission deadline:</strong> Changes must be in <strong>Scheduled</strong> state by Monday 17:00 to appear on Wednesday's agenda</li>
-<li><strong>Attendees:</strong> Change Manager, Service Owners, Infrastructure leads, Business representatives</li>
-<li><strong>Quorum:</strong> Minimum 3 service owners + Change Manager</li>
-<li><strong>Minutes:</strong> Auto-generated from CAB workbench; stored in Knowledge Base</li>
-</ul>
-<hr />
-<h2 id="change-window-standards">Change Window Standards<a class="headerlink" href="#change-window-standards" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Window</th>
-<th>Schedule</th>
-<th>Duration</th>
-<th>Permitted Risk Levels</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Standard Business Hours</td>
-<td>Mon–Fri, 08:00–17:00</td>
-<td>Any</td>
-<td>Low only</td>
-</tr>
-<tr>
-<td>Extended Hours</td>
-<td>Mon–Fri, 17:00–22:00</td>
-<td>Up to 4h</td>
-<td>Low, Medium</td>
-</tr>
-<tr>
-<td>Primary Maintenance</td>
-<td>Saturday, 00:00–06:00</td>
-<td>Up to 6h</td>
-<td>All (excluding Critical*)</td>
-</tr>
-<tr>
-<td>Emergency Maintenance</td>
-<td>Any time</td>
-<td>As needed</td>
-<td>Emergency changes only</td>
-</tr>
-</tbody>
-</table>
-<p>* Critical-risk changes require explicit ECAB approval and a dedicated 8-hour window with a 2-hour rollback buffer.</p>
-<p><strong>Blackout periods</strong> (no changes permitted without ECAB exception):
-- Financial quarter-end (last 3 business days of quarter)
-- Year-end close (Dec 26 – Jan 2)
-- Major business events (announced via Change Freeze notices)</p>
-<hr />
-<h2 id="cmdb-ci-naming-conventions">CMDB CI Naming Conventions<a class="headerlink" href="#cmdb-ci-naming-conventions" title="Permanent link">&para;</a></h2>
-<p>Consistent CI names enable reliable service mapping and automation. Apply these standards to all CIs created manually or via Discovery.</p>
-<h3 id="general-format">General Format<a class="headerlink" href="#general-format" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;site&gt;-&lt;type&gt;-&lt;function&gt;-&lt;sequence&gt;
-</code></pre></div>
+┌──────────────────────────────────── ServiceNow — Design Standards ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                         ServiceNow Design and Configuration Standards                         │   │
+│   │                MID Server: min 4 vCPU / 8 GB RAM; Windows or Linux; n+1 for HA                │   │
+│   │           Instance: prod/test/dev; clone prod to test monthly for regression testing          │   │
+│   │             Script standards: always use GlideRecord; avoid cross-scope scripting             │   │
+│   │          Change management: all SNOW config changes via Update Set; tracked in source         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SNOW design standards govern MID sizing, scripting, and config management                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             MID Server Standards             │  │              Platform Standards             │   │
+│   │               Min 4 vCPU/8 GB                │  │           Update Sets for changes           │   │
+│   │              n+1 MID redundancy              │  │            Scripting: GlideRecord           │   │
+│   │              Outbound 443 only               │  │            No cross-scope scripts           │   │
+│   │            Dedicated MID per env             │  │            Test in sub-prod first           │   │
+│   │              JVM: 4 GB heap min              │  │             CMDB: CI naming std             │   │
+│   │             OS patching schedule             │  │            SLA definition review            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MID Server VMs (prod/test/dev) · firewall allowing outbound 443 only                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Update Set    = container for SNOW config changes; migrate via XML export/import                     │
+│  GlideRecord   = SNOW server-side API; always preferred over raw SQL or direct DB                     │
+│  Cross-scope   = accessing data from different application scope; use public APIs                     │
+│  MID HA        = n+1 MID Servers; SNOW auto-fails over to available MID                               │
+│  Clone         = copy prod data to test/dev; Admin &gt; System Clone &gt; Clone Instance                    │
+│  CI naming     = consistent CMDB naming: hostname in lowercase, FQDN preferred                        │
+│  SLA definition = Agreement + SLA Definition + Workflow; reviewed quarterly                           │
+│  Dedicated MID = separate MID Server per environment (prod/test) to avoid confusion                   │
+│  JVM heap      = set in JAVA_OPTS in MID Server wrapper.conf; min 4 GB for prod                       │
+│  Script scope  = ServiceNow app scope isolation; prevents cross-app data access                       │
+│  Sub-prod test = always test Update Sets in test before applying to prod                              │
+│  Outbound 443  = MID Server only needs outbound HTTPS to *.service-now.com                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <table>
 <thead>
 <tr>

@@ -3167,28 +3167,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sannav-management-portal" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SANnav Management Portal
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vmware-fc-connectivity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VMware FC Connectivity
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#dell-powermax-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3426,7 +3404,7 @@
 </blockquote>
 <hr />
 <h2 id="fc-login-sequence-flogi-plogi-prli">FC Login Sequence (FLOGI / PLOGI / PRLI)<a class="headerlink" href="#fc-login-sequence-flogi-plogi-prli" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
+<p><pre class="mermaid"><code>sequenceDiagram
     participant HBA as Host HBA (N_Port)
     participant Switch as Brocade Switch (F_Port)
     participant NS as Name Server
@@ -3448,94 +3426,112 @@
     HBA-&gt;&gt;Storage: PRLI (Process Login)\nnegotiate FCP parameters
     Storage--&gt;&gt;HBA: ACC — FCP ready
     Note over HBA,Storage: LUN discovery and I/O can begin</code></pre>
-<h2 id="sannav-management-portal">SANnav Management Portal<a class="headerlink" href="#sannav-management-portal" title="Permanent link">&para;</a></h2>
-<p>SANnav provides fabric-wide monitoring, zoning management, and firmware orchestration across all Brocade switches, replacing the older DCFM/Network Advisor tools.</p>
-<p><strong>Key capabilities:</strong></p>
-<ul>
-<li>Fabric topology with real-time port state and ISL utilisation</li>
-<li>Zone management across all fabrics from a single UI</li>
-<li>Per-port performance graphs (IOPS, MB/s, error rates)</li>
-<li>Firmware upgrade scheduling and execution</li>
-<li>Event and alert management with SMTP notification</li>
-</ul>
-<p><strong>Setup:</strong></p>
-<ol>
-<li>Deploy SANnav virtual appliance (OVA).</li>
-<li>Discover switches: SANnav → Discover → enter switch management IPs.</li>
-<li>SANnav connects via SSH and SNMP — configure SNMP v3 on each switch first.</li>
-</ol>
-<hr />
-<h2 id="vmware-fc-connectivity">VMware FC Connectivity<a class="headerlink" href="#vmware-fc-connectivity" title="Permanent link">&para;</a></h2>
-<p>ESXi host HBA ports log into the Brocade fabric and are zoned to storage target ports.</p>
-<p><strong>Zone a new ESXi host:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1 — Find the host HBA WWPN after FLOGI</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nsshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;domain-or-recent-entry&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Or collect HBA WWPNs from the ESXi host:</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># esxcli storage san fc list</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Step 2 — Create aliases for each host HBA port</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>alicreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0&quot;</span>,<span class="w"> </span><span class="s2">&quot;21:00:00:xx:xx:xx:xx:xx&quot;</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>alicreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba1&quot;</span>,<span class="w"> </span><span class="s2">&quot;21:00:00:xx:xx:xx:xx:xx&quot;</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Step 3 — Create zones (single-initiator / single-target)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-powermax01_fa0&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0;powermax01_fa0&quot;</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Step 4 — Add to the active zone configuration and activate</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>cfgadd<span class="w"> </span><span class="s2">&quot;prod-cfg&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-powermax01_fa0&quot;</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>cfgenable<span class="w"> </span><span class="s2">&quot;prod-cfg&quot;</span>
-</code></pre></div>
-<p><strong>Verify the host sees the storage after zoning:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>zoneshow<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-powermax01_fa0&quot;</span>
-</code></pre></div>
+┌────────────────────────────────── FabricOS — External Integrations ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       FabricOS integrates with management platforms via SSH, REST API, SNMP, and Syslog       │   │
+│   │         SANnav connects via SSH/REST to discover topology, zones, and port health data        │   │
+│   │        SNMP v3 sends traps to NMS (SolarWinds, Nagios); MIB: FCMGMT-MIB + Brocade MIBs        │   │
+│   │          REST API (FOS 8.2+): HTTPS JSON; auth via session token; used for automation         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Integration categories for FabricOS management:                                                    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Mgmt Platforms       │  │           Alerting          │  │          Automation         │   │
+│   │      SANnav (SSH/REST)      │  │        SNMP v3 traps        │  │           REST API          │   │
+│   │     Brocade Network Adv     │  │        Syslog to SIEM       │  │       Ansible modules       │   │
+│   │        vCenter plugin       │  │         Email (MAPS)        │  │        Python scripts       │   │
+│   │        DCFM (legacy)        │  │        Pager/webhook        │  │          Terraform          │   │
+│   │         LDAP/AD auth        │  │       Threshold alerts      │  │        CI/CD pipeline       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    REST API base URL: https://<switch-ip>/rest/v1; requires FOS 8.2 or later                          │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Integration    │     Protocol     │    Auth method    │     Use case     │      Notes       │   │
+│   │      SANnav      │    SSH + REST    │    Password/key   │    Full mgmt     │    Pull model    │   │
+│   │     SNMP v3      │   UDP 161/162    │      AuthPriv     │    NMS alerts    │   Brocade MIBs   │   │
+│   │      Syslog      │   UDP/TCP 514    │      None/TLS     │    SIEM logs     │ Facility local7  │   │
+│   │     REST API     │    HTTPS 443     │   Session token   │    Automation    │  JSON payloads   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: out-of-band Ethernet mgmt port · in-band FC connectivity · SFPs · cabling                │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    REST API        = FabricOS HTTP interface for programmatic switch management (FOS 8.2+)            │
+│    SNMP v3         = Secure SNMP with auth (SHA) and privacy (AES) encryption                         │
+│    FCMGMT-MIB      = IETF MIB for FC management; defines standard FC OIDs                             │
+│    SANnav          = Brocade GUI platform; connects via SSH+REST to all managed switches              │
+│    Syslog          = Switch event log forwarded to external SIEM (Splunk, QRadar)                     │
+│    LDAP auth       = Switch authenticates admin users against Active Directory via LDAP               │
+│    Ansible module  = brocade_fibrechannel community modules for zone/port automation                  │
+│    vCenter plugin  = Brocade plugin shows FC path from VM HBA to storage LUN                          │
+│    Session token   = REST API login returns a token; included in subsequent API headers               │
+│    DCFM            = Data Center Fabric Manager; legacy predecessor to SANnav                         │
+│    AuthPriv        = SNMP v3 mode with both authentication and payload encryption                     │
+│    Webhook         = MAPS can POST JSON alert payload to an HTTP endpoint                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>**Verify the host sees the storage after zoning:**
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>zoneshow &quot;esxi-host01_hba0-powermax01_fa0&quot;
+</code></pre></div></p>
 <hr />
 <h2 id="dell-powermax-integration">Dell PowerMax Integration<a class="headerlink" href="#dell-powermax-integration" title="Permanent link">&para;</a></h2>
 <p>PowerMax FA (Front-End Adapter) ports are registered as aliases in each Brocade fabric.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create aliases for PowerMax FA ports (get WWPNs from Unisphere)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;powermax01_fa0e&quot;</span>,<span class="w"> </span><span class="s2">&quot;5x:xx:xx:xx:xx:xx:xx:xx&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>alicreate<span class="w"> </span><span class="s2">&quot;powermax01_fa0f&quot;</span>,<span class="w"> </span><span class="s2">&quot;5x:xx:xx:xx:xx:xx:xx:xx&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># For SRDF replication: Director ports are zoned in the replication zone/fabric</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Ensure SRDF director ports use VSAN/zone separation from production host zones</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create aliases for PowerMax FA ports (get WWPNs from Unisphere)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;powermax01_fa0e&quot;</span>,<span class="w"> </span><span class="s2">&quot;5x:xx:xx:xx:xx:xx:xx:xx&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>alicreate<span class="w"> </span><span class="s2">&quot;powermax01_fa0f&quot;</span>,<span class="w"> </span><span class="s2">&quot;5x:xx:xx:xx:xx:xx:xx:xx&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># For SRDF replication: Director ports are zoned in the replication zone/fabric</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Ensure SRDF director ports use VSAN/zone separation from production host zones</span>
 </code></pre></div>
 <hr />
 <h2 id="netapp-ontap-integration">NetApp ONTAP Integration<a class="headerlink" href="#netapp-ontap-integration" title="Permanent link">&para;</a></h2>
 <p>ONTAP SAN LIFs (Logical Interfaces) have associated WWPNs that log into the Brocade fabric.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Get ONTAP target WWPN from ONTAP CLI</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># network interface show -fields wwpn</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Create alias for ONTAP SAN LIF</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>alicreate<span class="w"> </span><span class="s2">&quot;netapp01_lif0a&quot;</span>,<span class="w"> </span><span class="s2">&quot;2x:xx:xx:xx:xx:xx:xx:xx&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Zone host HBA to ONTAP LIF</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-netapp01_lif0a&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0;netapp01_lif0a&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>cfgadd<span class="w"> </span><span class="s2">&quot;prod-cfg&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-netapp01_lif0a&quot;</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>cfgenable<span class="w"> </span><span class="s2">&quot;prod-cfg&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get ONTAP target WWPN from ONTAP CLI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># network interface show -fields wwpn</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create alias for ONTAP SAN LIF</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>alicreate<span class="w"> </span><span class="s2">&quot;netapp01_lif0a&quot;</span>,<span class="w"> </span><span class="s2">&quot;2x:xx:xx:xx:xx:xx:xx:xx&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Zone host HBA to ONTAP LIF</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-netapp01_lif0a&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0;netapp01_lif0a&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>cfgadd<span class="w"> </span><span class="s2">&quot;prod-cfg&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-netapp01_lif0a&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>cfgenable<span class="w"> </span><span class="s2">&quot;prod-cfg&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="pure-storage-flasharray-integration">Pure Storage FlashArray Integration<a class="headerlink" href="#pure-storage-flasharray-integration" title="Permanent link">&para;</a></h2>
 <p>Pure target port WWPNs are registered as aliases and zoned per host initiator.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get Pure target port WWPNs from Pure UI: Settings → SAN</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;pure-fa01_ct0.eth4&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:xx:xx:xx:xx:xx:xx&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>alicreate<span class="w"> </span><span class="s2">&quot;pure-fa01_ct1.eth4&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:xx:xx:xx:xx:xx:xx&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Zone: each host HBA to one Pure target port per controller</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-pure-fa01_ct0&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0;pure-fa01_ct0.eth4&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba1-pure-fa01_ct1&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba1;pure-fa01_ct1.eth4&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Get Pure target port WWPNs from Pure UI: Settings → SAN</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;pure-fa01_ct0.eth4&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:xx:xx:xx:xx:xx:xx&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>alicreate<span class="w"> </span><span class="s2">&quot;pure-fa01_ct1.eth4&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:xx:xx:xx:xx:xx:xx&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Zone: each host HBA to one Pure target port per controller</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-pure-fa01_ct0&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0;pure-fa01_ct0.eth4&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba1-pure-fa01_ct1&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba1;pure-fa01_ct1.eth4&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="snmp-and-syslog">SNMP and Syslog<a class="headerlink" href="#snmp-and-syslog" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Configure SNMP v3</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>snmpconfig<span class="w"> </span>--set<span class="w"> </span>mibCapability
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Use interactive prompts to set v3 user, auth (SHA), and priv (AES) settings</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Configure syslog forwarding</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>syslogadmin<span class="w"> </span>--add<span class="w"> </span>-ip<span class="w"> </span>&lt;siem-ip&gt;
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Verify</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>syslogadmin<span class="w"> </span>--show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Configure SNMP v3</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snmpconfig<span class="w"> </span>--set<span class="w"> </span>mibCapability
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Use interactive prompts to set v3 user, auth (SHA), and priv (AES) settings</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Configure syslog forwarding</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>syslogadmin<span class="w"> </span>--add<span class="w"> </span>-ip<span class="w"> </span>&lt;siem-ip&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>syslogadmin<span class="w"> </span>--show
 </code></pre></div>
 <p><strong>Test SNMP from monitoring server:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>snmpwalk<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>&lt;switch-ip&gt;<span class="w"> </span>sysDescr
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>snmpwalk<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>&lt;switch-ip&gt;<span class="w"> </span>sysDescr
 </code></pre></div>
 
 

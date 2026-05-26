@@ -3260,45 +3260,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ldap-active-directory-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LDAP / Active Directory Integration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="LDAP / Active Directory Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#adding-an-ldap-directory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adding an LDAP Directory
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ldap-security" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LDAP Security
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#local-accounts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3666,99 +3627,74 @@
 </tbody>
 </table>
 <h3 id="saml-security-settings">SAML Security Settings<a class="headerlink" href="#saml-security-settings" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">Recommended SAML configuration</span><span class="p">:</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">Recommended SAML configuration</span><span class="p">:</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Sign Authentication Requests</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enabled</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Require Signed Assertions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enabled</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Require Signed Response</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enabled</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Signature Algorithm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RSA-SHA256 minimum</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Session timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Align with IdP session timeout (e.g., 8 hours for corporate SSO)</span>
 </code></pre></div>
-<h2 id="ldap-active-directory-integration">LDAP / Active Directory Integration<a class="headerlink" href="#ldap-active-directory-integration" title="Permanent link">&para;</a></h2>
-<p>LDAP integration syncs user accounts and group memberships from Active Directory without delegating authentication (users still authenticate through Confluence unless SSO is also enabled).</p>
-<h3 id="adding-an-ldap-directory">Adding an LDAP Directory<a class="headerlink" href="#adding-an-ldap-directory" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Go to <strong>User Management</strong> &gt; <strong>User Directories</strong> &gt; <strong>Add Directory</strong> &gt; <strong>Microsoft Active Directory</strong>.</li>
-<li>Configure:</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Example Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Server</td>
-<td><code>dc01.example.local</code></td>
-</tr>
-<tr>
-<td>Port</td>
-<td>636 (LDAPS — preferred) or 389 (LDAP)</td>
-</tr>
-<tr>
-<td>Use SSL</td>
-<td>Yes (LDAPS)</td>
-</tr>
-<tr>
-<td>Base DN</td>
-<td><code>DC=corp,DC=local</code></td>
-</tr>
-<tr>
-<td>Username DN</td>
-<td><code>CN=svc-confluence,OU=ServiceAccounts,DC=corp,DC=local</code></td>
-</tr>
-<tr>
-<td>Password</td>
-<td>Service account password (from PAM vault)</td>
-</tr>
-<tr>
-<td>User Search Base</td>
-<td><code>OU=Users,DC=corp,DC=local</code></td>
-</tr>
-<tr>
-<td>Group Search Base</td>
-<td><code>OU=Groups,DC=corp,DC=local</code></td>
-</tr>
-</tbody>
-</table>
-<ol>
-<li>Configure <strong>User Schema</strong> settings to match your AD attribute names:</li>
-<li>Username Attribute: <code>sAMAccountName</code></li>
-<li>Full Name Attribute: <code>displayName</code></li>
-<li>Email Attribute: <code>mail</code></li>
-<li>
-<p>Group Member Attribute: <code>member</code></p>
-</li>
-<li>
-<p>Set <strong>Synchronisation</strong> interval (e.g., every 60 minutes).</p>
-</li>
-</ol>
-<h3 id="ldap-security">LDAP Security<a class="headerlink" href="#ldap-security" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">LDAP hardening</span><span class="p">:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Always use LDAPS (port 636) — plain LDAP sends credentials in cleartext</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Use a dedicated read-only service account for the LDAP bind</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Service account</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">password managed in CyberArk/Vault, rotated every 90 days</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Restrict service account</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Read-only access to the User and Group OUs only</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Import the AD CA certificate into Confluence&#39;s Java truststore for LDAPS verification</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Import AD CA cert into Confluence Java truststore (Linux server)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>keytool<span class="w"> </span>-import<span class="w"> </span>-trustcacerts<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-alias<span class="w"> </span>corp-ad-ca<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-file<span class="w"> </span>/tmp/corp-root-ca.cer<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-keystore<span class="w"> </span>/opt/atlassian/confluence/jre/lib/security/cacerts<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-storepass<span class="w"> </span>changeit<span class="w"> </span>-noprompt
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Restart Confluence after importing</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>confluence
-</code></pre></div>
+┌───────────────────────────────────── Confluence — Authentication ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               Confluence Authentication Methods                               │   │
+│   │           LDAP: user/group sync from AD/OpenLDAP; Confluence handles credential bind          │   │
+│   │    SAML SSO: Confluence as SP; IdP (Okta/ADFS) issues signed assertion; no password stored    │   │
+│   │        Crowd: Atlassian SSO server; centralized auth across Confluence, Jira, Bitbucket       │   │
+│   │         PAT: Personal Access Token; HTTP Bearer header; scoped; revocable via profile         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Multiple auth methods serve different user types; SSO preferred for all human login                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Human Auth Methods              │  │               Service/API Auth              │   │
+│   │            SAML 2.0 SSO (primary)            │  │              PAT: Bearer token              │   │
+│   │              LDAP bind fallback              │  │             Basic auth (legacy)             │   │
+│   │            Crowd SSO (DC option)             │  │                OAuth app link               │   │
+│   │               MFA at IdP layer               │  │               Service account               │   │
+│   │             Session: 30 min idle             │  │              API rate limiting              │   │
+│   │          Local account: break-glass          │  │              Scope: read/write              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LDAP/AD DCs · IdP (Okta/ADFS) with HA · Crowd server (if used) · Confluence app VMs                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SAML 2.0     = federated SSO standard; Confluence validates IdP-signed XML assertion                 │
+│  LDAP bind    = Confluence authenticates user by binding to LDAP with their credentials               │
+│  Crowd        = Atlassian identity server; issues Crowd SSO token shared across products              │
+│  PAT          = Personal Access Token; created in Confluence profile; used as Bearer token            │
+│  Basic auth   = Base64-encoded user:pass in Authorization header; deprecated; use PAT                 │
+│  OAuth app link = OAuth 1.0a/2.0 trust between Confluence and Jira for macros/API                     │
+│  Break-glass  = local admin account used when IdP/LDAP is unavailable                                 │
+│  Session timeout = idle session expiry; set in Admin &gt; Security Configuration                         │
+│  MFA          = second factor enforced at IdP; Confluence receives only the SAML assertion            │
+│  Service account = dedicated LDAP account for automation; PAT preferred for API                       │
+│  Rate limiting = Confluence REST API: no native limit; rely on reverse proxy throttling               │
+│  Assertion    = SAML XML document signed by IdP containing user identity and attributes               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a># Import AD CA cert into Confluence Java truststore (Linux server)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>keytool -import -trustcacerts \
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  -alias corp-ad-ca \
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  -file /tmp/corp-root-ca.cer \
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  -keystore /opt/atlassian/confluence/jre/lib/security/cacerts \
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  -storepass changeit -noprompt
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Restart Confluence after importing
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>systemctl restart confluence
+</code></pre></div></p>
 <h2 id="local-accounts">Local Accounts<a class="headerlink" href="#local-accounts" title="Permanent link">&para;</a></h2>
 <p>Local accounts should be limited to break-glass admin accounts and system integration accounts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">Local account policy</span><span class="p">:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Minimum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3 local accounts (primary sysadmin, secondary sysadmin, monitoring service account)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">All local admin accounts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">password managed in PAM vault</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Non-admin local accounts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not permitted; use LDAP/SSO for all regular users</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Review local accounts quarterly; disable unused accounts</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">Local account policy</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Minimum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3 local accounts (primary sysadmin, secondary sysadmin, monitoring service account)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">All local admin accounts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">password managed in PAM vault</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Non-admin local accounts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not permitted; use LDAP/SSO for all regular users</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Review local accounts quarterly; disable unused accounts</span>
 </code></pre></div>
 <h3 id="managing-local-accounts">Managing Local Accounts<a class="headerlink" href="#managing-local-accounts" title="Permanent link">&para;</a></h3>
 <ol>
@@ -3766,10 +3702,10 @@
 <li>Assign to the <code>confluence-administrators</code> or <code>confluence-users</code> group.</li>
 <li>Set a strong random password; store in PAM vault.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Audit local users via Confluence REST API</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>https://confluence.example.local/rest/api/user?type<span class="o">=</span>known<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;username|userKey&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Audit local users via Confluence REST API</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>https://confluence.example.local/rest/api/user?type<span class="o">=</span>known<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;username|userKey&quot;</span>
 </code></pre></div>
 <h2 id="two-factor-authentication-2fa">Two-Factor Authentication (2FA)<a class="headerlink" href="#two-factor-authentication-2fa" title="Permanent link">&para;</a></h2>
 <h3 id="confluence-data-center-plugin-based-2fa">Confluence Data Center — Plugin-Based 2FA<a class="headerlink" href="#confluence-data-center-plugin-based-2fa" title="Permanent link">&para;</a></h3>
@@ -3803,38 +3739,38 @@
 </tbody>
 </table>
 <h3 id="totp-plugin-configuration">TOTP Plugin Configuration<a class="headerlink" href="#totp-plugin-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Plugin configuration (Midori TOTP example):
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>1. Install plugin from Marketplace
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>2. Go to Administration &gt; Two-Factor Authentication
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>3. Enforce 2FA for: All users / Administrators only (minimum: administrators)
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>4. Allow: TOTP apps (Google Authenticator, Authy)
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>5. Backup codes: Generate and store in PAM vault for each admin account
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>6. Grace period: 0 days (enforce immediately)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Plugin configuration (Midori TOTP example):
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>1. Install plugin from Marketplace
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>2. Go to Administration &gt; Two-Factor Authentication
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>3. Enforce 2FA for: All users / Administrators only (minimum: administrators)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>4. Allow: TOTP apps (Google Authenticator, Authy)
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>5. Backup codes: Generate and store in PAM vault for each admin account
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>6. Grace period: 0 days (enforce immediately)
 </code></pre></div>
 <h2 id="session-management">Session Management<a class="headerlink" href="#session-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">Recommended session settings (General Configuration &gt; Security Configuration)</span><span class="p">:</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Maximum Authentication Attempts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5 (then lock account for 30 minutes)</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Session Timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">480 minutes (8 hours) or match IdP session length</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Secure flag on cookies</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enabled (requires HTTPS)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">HttpOnly flag on cookies</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enabled (prevents JavaScript access)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">SameSite cookie attribute</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lax or Strict</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Remember Me</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Disabled on shared/kiosk systems</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">Recommended session settings (General Configuration &gt; Security Configuration)</span><span class="p">:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Maximum Authentication Attempts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5 (then lock account for 30 minutes)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Session Timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">480 minutes (8 hours) or match IdP session length</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Secure flag on cookies</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enabled (requires HTTPS)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">HttpOnly flag on cookies</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enabled (prevents JavaScript access)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">SameSite cookie attribute</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lax or Strict</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Remember Me</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Disabled on shared/kiosk systems</span>
 </code></pre></div>
 <h2 id="authentication-audit">Authentication Audit<a class="headerlink" href="#authentication-audit" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># View Confluence audit log (Data Center)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Administration &gt; Audit Log</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Or query via REST API</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/api/audit?startDate=</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;-7 days&#39;</span><span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&amp;limit=100&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;user&quot;|&quot;type&quot;|&quot;description&quot;&#39;</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Check failed login events in Confluence application log</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;authentication failure\|invalid credentials\|failed login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Check if any users are using local auth when SSO should be enforced</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># In Confluence Admin: User Directories &gt; review which directory each user authenticates against</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># View Confluence audit log (Data Center)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Administration &gt; Audit Log</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Or query via REST API</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/api/audit?startDate=</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;-7 days&#39;</span><span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&amp;limit=100&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;user&quot;|&quot;type&quot;|&quot;description&quot;&#39;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Check failed login events in Confluence application log</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;authentication failure\|invalid credentials\|failed login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Check if any users are using local auth when SSO should be enforced</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># In Confluence Admin: User Directories &gt; review which directory each user authenticates against</span>
 </code></pre></div>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>

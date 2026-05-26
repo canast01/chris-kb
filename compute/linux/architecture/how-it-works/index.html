@@ -3033,39 +3033,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#server-roles" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Server Roles
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#disk-layout" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Disk Layout
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lvm-stack" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LVM Stack
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#storage-stack" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3272,7 +3239,7 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Linux servers run RHEL, Ubuntu, or SLES as the base OS. All services are managed by <strong>systemd</strong>, storage is managed via <strong>LVM2</strong> (with dm-multipath for SAN), and security is enforced by <strong>SELinux</strong> (RHEL) or <strong>AppArmor</strong> (Ubuntu). Network configuration uses NetworkManager (<code>nmcli</code>) on RHEL and Netplan on Ubuntu.</p>
 <h2 id="kernel-subsystem-architecture">Kernel Subsystem Architecture<a class="headerlink" href="#kernel-subsystem-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
+<p><pre class="mermaid"><code>graph TB
   KERNEL["Linux Kernel\nRHEL / Ubuntu / SLES"]
   KERNEL --&gt; STORAGE["Storage Stack\nlvm2 · dm-multipath · xfs/ext4"]
   KERNEL --&gt; NET["Network Stack\nnm · bonding · firewalld"]
@@ -3290,84 +3257,60 @@
   class DISK store
   class NIC,NET net
   class ADMIN host</code></pre>
-<h2 id="server-roles">Server Roles<a class="headerlink" href="#server-roles" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Role</th>
-<th>Typical OS</th>
-<th>vCPU</th>
-<th>RAM</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Application server</td>
-<td>RHEL 8/9, Ubuntu 22.04</td>
-<td>4–16</td>
-<td>8–64 GB</td>
-<td>Primary workload host</td>
-</tr>
-<tr>
-<td>Automation node (Ansible)</td>
-<td>RHEL 9</td>
-<td>4</td>
-<td>8 GB</td>
-<td>Ansible control plane; no inbound access</td>
-</tr>
-<tr>
-<td>Monitoring server</td>
-<td>Ubuntu 22.04</td>
-<td>8</td>
-<td>16 GB</td>
-<td>Prometheus, Grafana, exporters</td>
-</tr>
-<tr>
-<td>NFS/SMB file host</td>
-<td>RHEL 9</td>
-<td>4</td>
-<td>16 GB</td>
-<td>Shared storage; LVM on SAN-backed LUNs</td>
-</tr>
-<tr>
-<td>Container host</td>
-<td>RHEL 9</td>
-<td>8–32</td>
-<td>16–128 GB</td>
-<td>Podman/Docker workloads</td>
-</tr>
-<tr>
-<td>Backup proxy</td>
-<td>RHEL 9</td>
-<td>8</td>
-<td>16 GB</td>
-<td>Veeam proxy or NetBackup media server</td>
-</tr>
-</tbody>
-</table>
-<h2 id="disk-layout">Disk Layout<a class="headerlink" href="#disk-layout" title="Permanent link">&para;</a></h2>
-<p>Standard LVM partition layout — applied at provisioning via Kickstart or cloud-init:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/boot          512 MB      xfs     (separate /boot partition — not in LVM)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>VG: vg_system
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  lv_root     20 GB       xfs     /
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  lv_var      20 GB       xfs     /var
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  lv_tmp       5 GB       xfs     /tmp (noexec,nosuid mount options)
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  lv_home      5 GB       xfs     /home
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  lv_swap      8 GB       swap    (= RAM, up to 16 GB max)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>VG: vg_data (application data — sized per role)
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  lv_app      100+ GB     xfs     /opt/&lt;app&gt;
-</code></pre></div>
-<h2 id="lvm-stack">LVM Stack<a class="headerlink" href="#lvm-stack" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    physDisk["Physical Disk\n/dev/sdb · /dev/sdc"]
-    pv["Physical Volumes\npvcreate"]
-    vg["Volume Group\nvg_system · vg_data"]
-    lv["Logical Volumes\nlv_root · lv_var · lv_app"]
-    fs["Filesystems\nxfs · ext4 · swap"]
-    mnt["Mount Points\n/ · /var · /tmp · /opt/app"]
-    physDisk --&gt; pv --&gt; vg --&gt; lv --&gt; fs --&gt; mnt</code></pre>
+┌──────────────────────────────────────── Linux — How It Works ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                         Boot Sequence                                         │   │
+│   │      UEFI/BIOS → GRUB2 bootloader → kernel decompresses into RAM → initramfs mounts root      │   │
+│   │       kernel init: detects hardware, loads drivers, mounts real rootfs, exec /sbin/init       │   │
+│   │        systemd: reads default.target, activates units in dependency order, starts getty       │   │
+│   │      Login: PAM stack authenticates user; bash/zsh shell launched as child of sshd/getty      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Every process originates from PID 1 through fork(); exec() loads new program images                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Syscall &amp; I/O Path              │  │             Scheduling &amp; Memory             │   │
+│   │          app calls read() via glibc          │  │       CFS picks next task by vruntime       │   │
+│   │         SYSCALL instruction → ring 0         │  │        context switch saves registers       │   │
+│   │        VFS dispatches to block layer         │  │       page fault → alloc physical page      │   │
+│   │         I/O scheduler (mq-deadline)          │  │        mmap: maps file into VA space        │   │
+│   │          NVMe/SCSI driver sends cmd          │  │        OOM: score + kill on pressure        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86-64 CPUs (rings 0/3) · RAM · NVMe/SAS · PCIe bus · iDRAC BMC · Power &amp; Cooling                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  GRUB2       = GRand Unified Bootloader v2; presents boot menu and loads kernel + initramfs           │
+│  initramfs   = Temporary RAM root used during boot to mount the real root filesystem                  │
+│  fork        = Syscall that clones the calling process; child inherits FDs and memory                 │
+│  exec        = Syscall family that replaces process image with a new program binary                   │
+│  vruntime    = Virtual runtime; CFS metric tracking how much CPU time a task has used                 │
+│  context switch= CPU saves registers of running task and loads state of next scheduled task           │
+│  page fault  = MMU exception when a virtual address has no mapped physical page yet                   │
+│  mmap        = Memory-map syscall; maps files or anonymous memory into a process VAS                  │
+│  mq-deadline = Multi-queue deadline I/O scheduler; prioritises read latency over throughput           │
+│  ring 0      = CPU privilege level for kernel code; ring 3 is unprivileged userspace                  │
+│  PAM         = Pluggable Authentication Modules; configures how login and sudo authenticate           │
+│  getty       = Terminal program that presents the login prompt on a virtual console                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## LVM Stack
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```mermaid
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>flowchart TD
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    physDisk[&quot;Physical Disk\n/dev/sdb · /dev/sdc&quot;]
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    pv[&quot;Physical Volumes\npvcreate&quot;]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    vg[&quot;Volume Group\nvg_system · vg_data&quot;]
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    lv[&quot;Logical Volumes\nlv_root · lv_var · lv_app&quot;]
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    fs[&quot;Filesystems\nxfs · ext4 · swap&quot;]
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    mnt[&quot;Mount Points\n/ · /var · /tmp · /opt/app&quot;]
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    physDisk --&gt; pv --&gt; vg --&gt; lv --&gt; fs --&gt; mnt
+</code></pre></div></p>
 <h2 id="storage-stack">Storage Stack<a class="headerlink" href="#storage-stack" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
     appLayer["Application\n(read/write syscall)"]
