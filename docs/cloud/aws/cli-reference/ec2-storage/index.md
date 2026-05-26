@@ -23,27 +23,49 @@ EC2 Storage CLI: AMIs · EBS Volumes · Snapshots
                                         │  (cross-region)  │
                                         └──────────────────┘
 ```
-
-> Part of the AWS CLI Reference.
-
----
-
-```bash
-# AMIs
-aws ec2 describe-images --owners self
-aws ec2 create-image --instance-id <id> --name "snapshot-$(date +%F)" --no-reboot
-
-# EBS volumes
-aws ec2 describe-volumes
-aws ec2 describe-volumes --filters "Name=attachment.instance-id,Values=<id>"
-aws ec2 create-volume --availability-zone us-east-1a --size 100 --volume-type gp3
-aws ec2 attach-volume --device /dev/xvdf --instance-id <id> --volume-id <vol_id>
-aws ec2 detach-volume --volume-id <vol_id>
-aws ec2 delete-volume --volume-id <vol_id>
-
-# EBS snapshots
-aws ec2 describe-snapshots --owner-ids self
-aws ec2 create-snapshot --volume-id <vol_id> --description "backup"
-aws ec2 delete-snapshot --snapshot-id <snap_id>
-aws ec2 copy-snapshot --source-snapshot-id <snap_id> --source-region us-east-1 --destination-region eu-west-1
+┌──────────────────────────────────────── AWS CLI — EC2 Storage ────────────────────────────────────────┐
+│                                                                                                       │
+│  EBS volume and snapshot CLI commands for provisioning, attaching, and DR operations.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Volume Operations               │  │              Volume Inspection              │   │
+│   │           create-volume: provision           │  │            describe-volumes: list           │   │
+│   │         attach-volume: mount to EC2          │  │            describe-volume-status           │   │
+│   │            detach-volume: unmount            │  │          describe-volume-attribute          │   │
+│   │          modify-volume: resize/type          │  │        describe-volumes-modifications       │   │
+│   │            delete-volume: remove             │  │          enable-volume-io: recover          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Volumes created and attached; modify-volume resizes without downtime on Nitro                        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Snapshot Operations              │  │                  Encryption                 │   │
+│   │        create-snapshot: point-in-time        │  │          create-volume --encrypted          │   │
+│   │           describe-snapshots: list           │  │         copy-snapshot: encrypt copy         │   │
+│   │         copy-snapshot: cross-region          │  │        modify-ebs-default-encryption        │   │
+│   │            delete-snapshot: purge            │  │          --kms-key-id: specify CMK          │   │
+│   │         restore-snapshot-tier: thaw          │  │       describe-ebs-encryption-default       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  EBS storage hardware · Nitro hypervisor · KMS HSM · S3 (snapshot storage)                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  EBS             = Elastic Block Store; persistent block storage for EC2                              │
+│  modify-volume   = Online resize or type change; no detach needed on Nitro instances                  │
+│  enable-volume-io= Re-enables I/O on a volume after a potential data inconsistency                    │
+│  Snapshot        = Incremental backup of EBS volume stored in S3                                      │
+│  copy-snapshot   = Copies snapshot to another region for DR                                           │
+│  restore-snapshot-tier= Restores archived snapshot from S3 Glacier to standard tier                   │
+│  CMK             = Customer-Managed Key in KMS; used to encrypt EBS volumes                           │
+│  modify-ebs-default-encryption= Sets account-level default to encrypt all new volumes                 │
+│  Volume type     = gp3 (general), io2 (IOPS), st1 (throughput), sc1 (cold)                            │
+│  gp3             = Default SSD volume; baseline 3000 IOPS, 125 MB/s throughput                        │
+│  io2             = High-performance SSD; up to 64,000 IOPS; provisioned IOPS                          │
+│  Nitro           = AWS hypervisor; allows online volume modifications without reboot                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
