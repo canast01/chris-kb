@@ -1,37 +1,5 @@
 # Authentication Failures Troubleshooting
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                   Auth Failure Triage Flow                           │
-│                                                                      │
-│  Login fails                                                         │
-│        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  Is account locked? (Event 4740 on DC / net user <acct> /DOM) │   │
-│  │  Yes ──► unlock account · identify lockout source             │   │
-│  └─────┬──────────────────────────────────────────────────────────┘  │
-│        │ not locked                                                  │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  Password expired? (Event 4625 code 0xC000006E)                │  │
-│  │  Yes ──► reset password / update service account              │   │
-│  └─────┬──────────────────────────────────────────────────────────┘  │
-│        │ password ok                                                 │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  LDAP/DC reachable? (ldapsearch · nltest /dsgetdc:domain)      │  │
-│  │  Fail ──► firewall (88/389/636) · DNS resolution for DC       │   │
-│  └─────┬──────────────────────────────────────────────────────────┘  │
-│        │ DC reachable                                                │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  Clock drift? (KRB5KRB_AP_ERR_SKEW > 5 min)                   │   │
-│  │  Yes ──► chronyc makestep / w32tm /resync /force              │   │
-│  └─────┬──────────────────────────────────────────────────────────┘  │
-│        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  Check SSO service (ADFS / vIDM / Okta) · SSSD / Winbind status│  │
-│  └────────────────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 ## Overview
 
 Authentication failures span multiple subsystems: Active Directory (Kerberos and NTLM), LDAP bind operations, certificate-based authentication, and MFA. This guide provides structured diagnosis from symptom to root cause with enterprise-grade tooling.

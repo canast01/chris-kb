@@ -54,60 +54,7 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌──────────────────────────────── Dell Apex STaaS — Security Hardening ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Apex hardening: disable unused protocols, isolate storage VLAN, enforce TLS, audit      │   │
-│   │     Network: storage traffic on dedicated VLAN; no routing between storage and user VLANs     │   │
-│   │         Protocols: disable Telnet, NFS AUTH_SYS for sensitive data, unused iSCSI ports        │   │
-│   │      Firmware: Dell manages array firmware; customer must not block SupportAssist access      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Baseline → disable unused protocols → network isolation → audit config → review quarterly          │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │           Protocol          │  │           Network           │  │           Firmware          │   │
-│   │        Disable Telnet       │  │         Storage VLAN        │  │         Dell managed        │   │
-│   │       Enforce TLS 1.2+      │  │         No user VLAN        │  │          SCG allows         │   │
-│   │        CHAP on iSCSI        │  │        iSCSI VLAN ACL       │  │         Auto patches        │   │
-│   │        Limit NFS ver.       │  │        FC zone tight        │  │         CVE tracking        │   │
-│   │         Disable HTTP        │  │         OOB separate        │  │        Audit firmware       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Dell firmware updates are automatic via SupportAssist; never block SCG egress to Dell              │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Hardening     │      Action      │       Verify      │   Risk if skip   │      Notes       │   │
-│   │   VLAN isolate   │  Dedicated VLAN  │   No cross-ping   │   Lateral move   │  ACL on switch   │   │
-│   │       CHAP       │ Enable per host  │    CHAP active    │   Unauth iSCSI   │  Bidirectional   │   │
-│   │   TLS enforce    │ Disable TLS<1.2  │    sslyze test    │   Weak cipher    │    Portal/API    │   │
-│   │    FC zoning     │ Single init/tgt  │     show zone     │   Broad access   │  One zone/pair   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: switch VLAN ACLs · FC fabric binding + port security · iSCSI ACL on switches             │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Storage VLAN   = Dedicated VLAN carrying only iSCSI or NFS; ACL blocks all other hosts             │
-│    OOB separate   = Array management (iDRAC) on separate management VLAN; not in storage VLAN         │
-│    FC zone tight  = One zone per initiator-target pair; not broad zones spanning all targets          │
-│    TLS 1.2+       = Apex Console only accepts TLS 1.2 and 1.3; disable older cipher suites            │
-│    Telnet         = Cleartext protocol; ensure disabled on all Apex Console endpoints                 │
-│    HTTP disable   = Force HTTPS redirect on Apex Console; HTTP should return 301                      │
-│    CVE tracking   = Dell publishes DSA (Dell Security Advisories); subscribe and track                │
-│    SCG egress     = Allow outbound HTTPS from SCG VM to Dell cloud for SupportAssist                  │
-│    Lateral move   = If storage VLAN is flat, compromise of one host risks all volumes                 │
-│    iSCSI VLAN ACL = Switch ACL permitting only registered host IPs to reach array iSCSI ports         │
-│    DSA            = Dell Security Advisory; CVE notifications for Dell product vulnerabilities        │
-│    Audit config   = Monthly review of VLAN, zone, and CHAP settings for drift                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 > Part of the [APEX Storage as a Service](../../index.md) reference.
 
 ---

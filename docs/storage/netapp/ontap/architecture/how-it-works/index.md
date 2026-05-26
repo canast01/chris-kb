@@ -14,22 +14,6 @@ ONTAP runs on three hardware forms:
 
 ONTAP HA pairs are active-active: both nodes serve I/O simultaneously and each holds a full copy of the partner's NVRAM write log. In the event of a node failure, the surviving node performs an automatic storage failover (takeover) within ~45 seconds.
 
-```text
-  ┌──────────────────────────────────────────────────────────┐
-  │                        Cluster                           │
-  │                                                          │
-  │   ┌─────────────┐  Cluster IC  ┌─────────────┐          │
-  │   │   Node 01   │◄────────────►│   Node 02   │  HA Pair │
-  │   │  (AFF A400) │              │  (AFF A400) │          │
-  │   └──────┬──────┘              └──────┬──────┘          │
-  │          │                            │                  │
-  │          └────────────┬───────────────┘                  │
-  │                       │                                  │
-  │              Shared Disk Shelves                         │
-  │              (NS224 NVMe or SAS)                         │
-  └──────────────────────────────────────────────────────────┘
-```
-
 ```mermaid
 sequenceDiagram
     participant Node1 as Node 1 (failed)

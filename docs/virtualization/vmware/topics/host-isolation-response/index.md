@@ -1,32 +1,6 @@
 
 # Host Isolation Response
 
-```text
-┌────────────── Host Isolation: Heartbeat Lost to VM Restart ────────────────────┐
-│                                                                                 │
-│  Normal operation:                                                              │
-│  Host ◄──── management heartbeat ────► vCenter / FDM peers                     │
-│  Host ◄──── datastore heartbeat  ────► shared datastore                        │
-│                                                                                 │
-│  Network failure on isolated host:                                              │
-│  Host ──✕── management network ─────► vCenter (no response)                    │
-│       │                                                                         │
-│       ▼ 10 seconds                                                              │
-│  HA marks host as potentially isolated                                          │
-│       │                                                                         │
-│       ▼ checks datastore heartbeat                                              │
-│  ┌────────────────────────────────────────────────────────────────────────┐    │
-│  │  Datastore HB reachable from isolated host ──► Leave Powered On        │    │
-│  │     (VMs stay running; peer restarts if it cannot see them)             │    │
-│  │  Datastore HB NOT reachable ──► execute IsolationResponse:             │    │
-│  │     none (leave on) │ powerOff │ shutdown (graceful via VMware Tools)  │    │
-│  └────────────────────────────────────────────────────────────────────────┘    │
-│       │                                                                         │
-│       ▼ isolation response executed                                             │
-│  HA restarts VMs on other hosts (FDM on peer host initiates restart)           │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
-
 vSphere HA host isolation response determines what happens to VMs on a host that loses all management network connectivity but may still be running.
 ## Isolation Response Options
 

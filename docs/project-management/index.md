@@ -4,30 +4,6 @@
 Project and operational management references — change management, maintenance windows, health checks, asset inventory, and operational templates.
 </div>
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                 Operational Management Frameworks                    │
-│                                                                      │
-│  ┌────────────────────────┐      ┌────────────────────────────────┐  │
-│  │  Incident Management   │      │    Change Management           │  │
-│  │  Detect ──► Triage     │      │    Request ──► Assess          │  │
-│  │  Escalate ──► Resolve  │      │    Approve ──► Execute         │  │
-│  │  PIR ──► Close         │      │    Validate ──► Close          │  │
-│  └────────────────────────┘      └────────────────────────────────┘  │
-│                                                                      │
-│  ┌────────────────────────┐      ┌────────────────────────────────┐  │
-│  │  Maintenance Windows   │      │      Health Checks             │  │
-│  │  Plan ──► Comms        │      │    Daily ──► Pre-change        │  │
-│  │  Execute ──► Validate  │      │    Post-change ──► Evidence    │  │
-│  │  Closeout ──► Record   │      │    Follow-up ──► Escalate      │  │
-│  └────────────────────────┘      └────────────────────────────────┘  │
-│                                                                      │
-│  ┌─────────────────────────────────────────────────────────────────┐ │
-│  │  Asset Inventory: CMDB ──► auto-discover ──► audit ──► cleanup │  │
-│  └─────────────────────────────────────────────────────────────────┘ │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 ## Articles
 
 <div class="kb-grid kb-grid-3">

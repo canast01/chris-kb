@@ -2,23 +2,6 @@
 
 When a VM is reported as slow, check these in order:
 
-```text
-┌──────────────┬───────────────────────────┬──────────────────────────────┐
-│  Metric      │  esxtop Field / Location  │  Threshold / Action          │
-├──────────────┼───────────────────────────┼──────────────────────────────┤
-│ CPU Ready    │ esxtop → %RDY             │ > 5% → contention, check DRS │
-│ CPU Usage    │ esxtop → %USED            │ > 90% sustained → rightsize  │
-│ Mem Balloon  │ esxtop → MCTLSZ           │ > 0 → host memory pressure   │
-│ Mem Swap     │ esxtop → SWR/SWW          │ > 0 → critical, add memory   │
-│ Disk DAVG    │ esxtop → DAVG/cmd         │ > 5ms → array or path issue  │
-│ Disk GAVG    │ esxtop → GAVG/cmd         │ > 20ms → investigate storage │
-│ Net drops    │ esxtop → DRPTX/DRPRX      │ > 0 → vDS config or uplink   │
-│ Tools state  │ vCenter VM Summary        │ Not current → update Tools   │
-├──────────────┴───────────────────────────┴──────────────────────────────┤
-│  Start esxtop: SSH to host → esxtop  │  Press 'u' = disk  'd' = adapter │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
 ## CPU
 
 - **CPU Ready** — time the VM is waiting for a physical CPU. Above 5% is worth investigating.

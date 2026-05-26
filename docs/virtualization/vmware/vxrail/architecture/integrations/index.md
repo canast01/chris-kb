@@ -4,35 +4,6 @@
 VxRail integrates natively with vCenter, NSX-T, Aria Operations, and Dell SupportAssist. External CMDB and monitoring integrations consume the VxRail Manager REST API.
 </div>
 
-```text
-┌───────────────────────── VxRail Integration Map ───────────────────────────────┐
-│                                                                                 │
-│  ┌──────────────────┐      plugin       ┌──────────────────────────────────┐    │
-│  │  vCenter Server  │◄──────────────────│      VxRail Manager VM           │    │
-│  │  (vSphere RBAC,  │                   │  (REST API │ LCM │ Credentials)  │    │
-│  │   DRS, HA, vSAN) │                   └──────────────┬───────────────────┘    │
-│  └──────────┬───────┘                                   │ iDRAC polling         │
-│             │ adapter                                  ▼                         │
-│  ┌──────────▼────────┐       ┌──────────────────────────────────────────────┐   │
-│  │  Aria Operations  │       │        VxRail Nodes (iDRAC per node)         │   │
-│  │  (vCenter MP +    │       │  iDRAC ◄── HW health, firmware, SEL events  │    │
-│  │   VxRail MP)      │       └──────────────────────────────────────────────┘   │
-│  └───────────────────┘                                                          │
-│                                                                                 │
-│  ┌───────────────────┐       ┌──────────────────────┐                           │
-│  │    NSX-T Manager  │       │   Dell SupportAssist  │                          │
-│  │  Transport Nodes  │◄──────│  (telemetry outbound  │                          │
-│  │  TEP VLAN, VDS    │       │   to Dell cloud/TLS)  │                          │
-│  └───────────────────┘       └──────────────────────┘                           │
-│                                                                                 │
-│  ┌───────────────────┐       ┌──────────────────────┐                           │
-│  │  CMDB / ServiceNow│◄──────│  VxRail REST API      │                          │
-│  │  (CI sync via     │  GET  │  /hosts, /cluster,    │                          │
-│  │   MID Server)     │       │  /system              │                          │
-│  └───────────────────┘       └──────────────────────┘                           │
-└─────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ## vCenter Integration
 
 VxRail Manager embeds a vCenter Server plugin that adds HCI-specific capabilities:

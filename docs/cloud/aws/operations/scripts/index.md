@@ -2,35 +2,6 @@
 
 > Part of the [Operations](../index.md) section.
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│          boto3 / AWS CLI Automation Patterns             │
-└──────────────────────────────────────────────────────────┘
-
-  ┌─────────────┐    ┌──────────────┐    ┌───────────────┐
-  │  boto3      │    │  AWS CLI     │    │  Ansible      │
-  │  Session    │    │  (bash/bat/  │    │  amazon.aws   │
-  │  (Python)   │    │   PowerShell)│    │  collection   │
-  └──────┬──────┘    └──────┬───────┘    └──────┬────────┘
-         │                  │                   │
-         └──────────┬───────┘                   │
-                    ▼                           │
-         ┌──────────────────┐                  │
-         │  AWS API calls   │◄─────────────────┘
-         │  (signed SigV4)  │
-         └──────────┬───────┘
-                    │
-       ┌────────────┼────────────┐
-       ▼            ▼            ▼
- ┌──────────┐ ┌──────────┐ ┌──────────┐
- │  EC2     │ │   S3 /   │ │  IAM /   │
- │  Audit   │ │  Cost    │ │  Key     │
- │  Report  │ │  Report  │ │  Audit   │
- │  (CSV)   │ │  (table) │ │  (flags) │
- └──────────┘ └──────────┘ └──────────┘
-         exit 0 (pass) / exit 1 (failures found)
-```
-
 ---
 
 ## AWS Account Health Check
@@ -169,13 +140,11 @@ STOPPED_DAYS_THRESHOLD = 7       # Flag instances stopped longer than this
 
 # ---------------------
 
-
 def get_regions(session: boto3.Session) -> list[str]:
     if REGIONS:
         return REGIONS
     ec2 = session.client("ec2", region_name="us-east-1")
     return [r["RegionName"] for r in ec2.describe_regions(Filters=[{"Name": "opt-in-status", "Values": ["opt-in-not-required", "opted-in"]}])["Regions"]]
-
 
 def get_tag(tags: list, key: str) -> Optional[str]:
     if not tags:
@@ -185,17 +154,14 @@ def get_tag(tags: list, key: str) -> Optional[str]:
             return t["Value"]
     return None
 
-
 def get_default_vpc(ec2_client) -> Optional[str]:
     vpcs = ec2_client.describe_vpcs(Filters=[{"Name": "isDefault", "Values": ["true"]}])["Vpcs"]
     return vpcs[0]["VpcId"] if vpcs else None
-
 
 def days_since(dt: Optional[datetime.datetime]) -> Optional[int]:
     if dt is None:
         return None
     return (datetime.datetime.now(datetime.timezone.utc) - dt).days
-
 
 def audit_region(session: boto3.Session, region: str, rows: list) -> None:
     ec2 = session.client("ec2", region_name=region)
@@ -255,7 +221,6 @@ def audit_region(session: boto3.Session, region: str, rows: list) -> None:
                     "Flags":         "|".join(flags),
                 })
 
-
 def main() -> None:
     session = boto3.Session()
     regions = get_regions(session)
@@ -290,7 +255,6 @@ def main() -> None:
         print("\nFlagged instances:")
         for r in flagged:
             print(f"  {r['Region']:20s}  {r['InstanceId']:20s}  {r['Name']:30s}  {r['Flags']}")
-
 
 if __name__ == "__main__":
     main()
@@ -359,7 +323,6 @@ SEP    = "-" * len(HEADER)
 
 findings: list[dict] = []
 
-
 def check_public_access_block(bucket: str) -> bool:
     """Returns True when ALL four block settings are enabled."""
     try:
@@ -375,7 +338,6 @@ def check_public_access_block(bucket: str) -> bool:
         if e.response["Error"]["Code"] == "NoSuchPublicAccessBlockConfiguration":
             return False
         raise
-
 
 def check_public_acl(bucket: str) -> bool:
     """Returns True if any ACL grant gives access to AllUsers or AuthenticatedUsers."""
@@ -393,7 +355,6 @@ def check_public_acl(bucket: str) -> bool:
         pass
     return False
 
-
 def check_public_policy(bucket: str) -> bool:
     """Returns True if the bucket policy has any Allow with Principal '*'."""
     try:
@@ -409,14 +370,12 @@ def check_public_policy(bucket: str) -> bool:
         raise
     return False
 
-
 def check_versioning(bucket: str) -> str:
     try:
         status = s3.get_bucket_versioning(Bucket=bucket).get("Status", "Disabled")
         return status or "Disabled"
     except ClientError:
         return "Unknown"
-
 
 def check_encryption(bucket: str) -> bool:
     try:
@@ -427,14 +386,12 @@ def check_encryption(bucket: str) -> bool:
             return False
         raise
 
-
 def check_logging(bucket: str) -> bool:
     try:
         cfg = s3.get_bucket_logging(Bucket=bucket)
         return "LoggingEnabled" in cfg
     except ClientError:
         return False
-
 
 def check_lifecycle(bucket: str) -> bool:
     try:
@@ -444,7 +401,6 @@ def check_lifecycle(bucket: str) -> bool:
         if e.response["Error"]["Code"] == "NoSuchLifecycleConfiguration":
             return False
         raise
-
 
 def main() -> None:
     buckets = [b["Name"] for b in s3.list_buckets().get("Buckets", [])]
@@ -495,7 +451,6 @@ def main() -> None:
 
     if public_count:
         raise SystemExit(1)
-
 
 if __name__ == "__main__":
     main()
@@ -820,16 +775,13 @@ AGE_CRITICAL_THRESHOLD = 365
 
 NOW = datetime.datetime.now(datetime.timezone.utc)
 
-
 def key_age_days(create_date: datetime.datetime) -> int:
     return (NOW - create_date).days
-
 
 def days_since_used(last_used: datetime.datetime | None) -> int | None:
     if last_used is None:
         return None
     return (NOW - last_used).days
-
 
 def audit_keys(iam) -> list[dict]:
     rows: list[dict] = []
@@ -877,11 +829,9 @@ def audit_keys(iam) -> list[dict]:
 
     return sorted(rows, key=lambda r: r["AgeDays"], reverse=True)
 
-
 def deactivate_key(iam, username: str, key_id: str) -> None:
     iam.update_access_key(UserName=username, AccessKeyId=key_id, Status="Inactive")
     print(f"  Deactivated: {key_id} (user: {username})")
-
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="IAM Access Key Age Audit")
@@ -920,7 +870,6 @@ def main() -> None:
                 deactivate_key(iam, r["User"], r["KeyId"])
         else:
             print("Aborted.")
-
 
 if __name__ == "__main__":
     main()

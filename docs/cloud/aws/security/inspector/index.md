@@ -1,41 +1,5 @@
 # AWS Inspector
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│          Inspector — Vulnerability Scanning              │
-└──────────────────────────────────────────────────────────┘
-
-  SCAN TARGETS
-  ┌───────────┐   ┌───────────┐   ┌───────────────┐
-  │  EC2      │   │  Lambda   │   │  ECR Container│
-  │  instances│   │ functions │   │  images       │
-  └─────┬─────┘   └─────┬─────┘   └───────┬───────┘
-        │               │                 │
-        └───────────────┼─────────────────┘
-                        ▼
-            ┌───────────────────────┐
-            │  Inspector scan engine│
-            │  (CVE database match) │
-            └───────────┬───────────┘
-                        │ finding created
-                        ▼
-            ┌───────────────────────┐
-            │  Finding              │
-            │  severity:            │
-            │  CRITICAL / HIGH /    │
-            │  MEDIUM / LOW / INFO  │
-            └───────────┬───────────┘
-                        │
-            ┌───────────┴──────────────┐
-            ▼                          ▼
-  ┌──────────────────┐      ┌──────────────────────┐
-  │  Remediation     │      │  Security Hub        │
-  │  path: patch OS, │      │  (aggregated view    │
-  │  update package, │      │   across accounts)   │
-  │  update image    │      └──────────────────────┘
-  └──────────────────┘
-```
-
 ## Overview
 
 AWS Inspector notes for day-to-day infrastructure operations.
@@ -45,7 +9,6 @@ AWS Inspector notes for day-to-day infrastructure operations.
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -69,7 +32,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -85,7 +47,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

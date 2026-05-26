@@ -2,34 +2,6 @@
 
 Veeam Agent for Windows, Windows Server Backup, restore procedures, and validation steps.
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│          Windows Backup & Restore Flow                   │
-├──────────────────────────┬───────────────────────────────┤
-│  Veeam Agent (Windows)   │  Windows Server Backup (WSB)  │
-│  image / file / volume   │  volumes + system state       │
-└──────────┬───────────────┴────────────┬──────────────────┘
-           ▼                            ▼
-┌─────────────────────────────────────────────────────────┐
-│              VSS (Volume Shadow Copy)                    │
-│   app-consistent snapshot → backup data stream           │
-└──────────────────────────┬──────────────────────────────┘
-                           ▼
-┌─────────────────────────────────────────────────────────┐
-│              Backup Repository                           │
-│   NAS share │ Veeam repo │ local disk                    │
-│   14 daily  │ 4 weekly   │ 3 monthly (retention)         │
-└──────────────────────────┬──────────────────────────────┘
-                           ▼
-         ┌─────────────────┴─────────────────┐
-         ▼                                   ▼
-┌─────────────────┐                ┌──────────────────────┐
-│  File-Level     │                │  Bare Metal Recovery  │
-│  Restore        │                │  Boot Recovery Media  │
-│  browse → copy  │                │  → select RP → write  │
-└─────────────────┘                └──────────────────────┘
-```
-
 ## Veeam Agent for Windows
 
 Veeam Agent for Windows provides image-level and file-level backup for Windows servers. It can run standalone or be managed centrally by a Veeam Backup & Replication server.

@@ -1,39 +1,5 @@
 # NSX — Health Checks
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│               NSX Health Check Stack                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  NSX Manager Cluster (3-node)                        │   │
-│  │  get cluster status → STABLE                         │   │
-│  │  get corfu-cluster status → STABLE                   │   │
-│  └──────────────────────┬───────────────────────────────┘   │
-│                         │ control plane                     │
-│                         ▼                                   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Edge Nodes                                          │   │
-│  │  BGP sessions: vrf <id> → get bgp neighbor summary  │    │
-│  │  HA state: get edge-cluster status → ACTIVE/STANDBY │    │
-│  └──────────────────────┬───────────────────────────────┘   │
-│                         │ data plane                        │
-│                         ▼                                   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  ESXi Transport Nodes + Geneve Tunnels               │   │
-│  │  GET /api/v1/transport-nodes/status → up_count = all │   │
-│  │  get tunnel status → no DOWN tunnels                 │   │
-│  └──────────────────────┬───────────────────────────────┘   │
-│                         │ fabric                            │
-│                         ▼                                   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  DFW + Segments + Alarms                             │   │
-│  │  GET /api/v1/alarms?status=OPEN&severity=CRITICAL    │   │
-│  │  result_count = 0                                    │   │
-│  └──────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ## Daily Checks
 
 | Check | Command / Location | Expected State |

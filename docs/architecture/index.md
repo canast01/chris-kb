@@ -28,34 +28,6 @@ Enterprise infrastructure architecture design guides covering high availability 
 </a>
 </div>
 
-
-```text
-┌─────────────────────────────────────────────────────────────────────┐
-│                    Enterprise Infrastructure Overview               │
-│                                                                     │
-│  ┌──────────────────────┐        ┌──────────────────────────────┐   │
-│  │   On-Premises DC      │        │        Cloud Platforms       │  │
-│  │  ┌────────────────┐  │        │  ┌────────────┐ ┌─────────┐ │    │
-│  │  │ ESXi / vSphere │  │        │  │    AWS     │ │  Azure  │ │    │
-│  │  │  vSAN + NSX-T  │  │        │  │ EC2/EBS/S3 │ │  VMs    │ │    │
-│  │  │   VxRail HCI   │  │        │  └────────────┘ └─────────┘ │    │
-│  │  └───────┬────────┘  │        └──────────────┬───────────────┘   │
-│  │          │            │                       │                   │
-│  │  ┌───────▼────────┐  │   ExpressRoute/        │                   │
-│  │  │  Integration   │◄─┼──────DX Connect────────┘                  │
-│  │  │  Auth · Certs  │  │                                           │
-│  │  │  NTP · DNS     │  │        ┌──────────────────────────────┐   │
-│  │  └───────┬────────┘  │        │          Monitoring          │   │
-│  │          │            │        │  Aria Ops · Pure1 · CloudIQ  │  │
-│  │  ┌───────▼────────┐  │        └──────────────────────────────┘   │
-│  │  │ DR / Backup    │  │                                           │
-│  │  │ SRM · SRDF     │  │                                           │
-│  │  │ Veeam · RP     │  │                                           │
-│  │  └────────────────┘  │                                           │
-│  └──────────────────────┘                                           │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
 ## Enterprise Architecture Overview
 
 ```mermaid

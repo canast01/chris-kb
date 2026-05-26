@@ -2,31 +2,6 @@
 
 > Part of the [VxRail](../index.md) reference.
 
-```text
-  ┌──────────────────────────────────────────────────────────┐
-  │                  VxRail CLI / API Tree                   │
-  │                                                          │
-  │  ┌─────────────────────────────────────────────────┐     │
-  │  │          VxRail Manager REST API                │     │
-  │  │  https://<vxm>/rest/vxm/v1/...                  │     │
-  │  │  ├── /cluster          (health, version)        │     │
-  │  │  ├── /hosts            (nodes, component health)│     │
-  │  │  ├── /system/alerts    (active faults)          │     │
-  │  │  └── /lcm/upgrade      (lifecycle jobs)         │     │
-  │  └─────────────────────────────────────────────────┘     │
-  │                          │                               │
-  │          ┌───────────────┼───────────────┐               │
-  │          ▼               ▼               ▼               │
-  │  ┌──────────────┐ ┌────────────┐ ┌────────────────┐      │
-  │  │ ESXi esxcli  │ │  iDRAC     │ │  VxRail SSH    │      │
-  │  │ (per node)   │ │  racadm    │ │  vxm-cli       │      │
-  │  │ network nic  │ │ getversion │ │  cluster health│      │
-  │  │ storage core │ │ getsysinfo │ │  node list     │      │
-  │  │ vsan storage │ │ storage get│ │  system version│      │
-  │  └──────────────┘ └────────────┘ └────────────────┘      │
-  └──────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## Overview

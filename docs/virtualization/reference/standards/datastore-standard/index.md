@@ -57,24 +57,6 @@
 
 ---
 
-```text
-┌──────────────────────────────────────────────────────────────────────────┐
-│                    Datastore Standard — Key Rules                        │
-├──────────────────────────────────────────────────────────────────────────┤
-│  Naming: ds-<env>-<storage>-<protocol>-<##>                              │
-│  Example: ds-prod-powermax-fc-01  │  ds-mgmt-netapp-nfs-01               │
-├──────────────────────┬───────────────────────────────────────────────────┤
-│  Type                │  Standard                                         │
-├──────────────────────┼───────────────────────────────────────────────────┤
-│ VMFS block           │ VMFS 6 only │ Max 20 TB recommended               │
-│ NFS                  │ NFS v3/v4.1 │ Keep exports < 50 TB                │
-│ vSAN                 │ Managed by cluster │ LCM-controlled               │
-├──────────────────────┴───────────────────────────────────────────────────┤
-│  Paths: min 2 per host │ PSP: Round Robin (Active/Active arrays)         │
-│  Tags: backup-gold │ backup-silver │ backup-bronze │ backup-none         │
-│  Thresholds: 70% monitor │ 80% alert │ 90% critical                      │
-└──────────────────────────────────────────────────────────────────────────┘
-```
 ## Overview
 
 This standard governs how datastores are named, created, presented, and managed across the vSphere environment. All new datastores must follow this standard before VMs are placed on them.

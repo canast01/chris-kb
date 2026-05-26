@@ -4,36 +4,6 @@
 
 Use this page to review host, hardware, vSAN, and cluster health by node.
 
-```text
-  ┌──────────────────────────────────────────────────────┐
-  │            Node Health Review Workflow               │
-  │                                                      │
-  │  Hardware alerts                                     │
-  │  iDRAC ──► VxRail Mgr ──► vCenter host alarms       │
-  │                 │                                    │
-  │                 ▼                                    │
-  │  ┌──────────────────────────────────────────────┐    │
-  │  │  Disk groups (per node)                      │    │
-  │  │  vSAN ──► Disk Management ──► disk group OK? │    │
-  │  │  Cache tier healthy │ Capacity tier healthy  │    │
-  │  └──────────────────────┬───────────────────────┘    │
-  │                         ▼                            │
-  │  ┌──────────────────────────────────────────────┐    │
-  │  │  Network state                               │    │
-  │  │  vmnic link │ vmkernel IP │ vSAN vmk reachable│   │
-  │  └──────────────────────┬───────────────────────┘    │
-  │                         ▼                            │
-  │  ┌──────────────────────────────────────────────┐    │
-  │  │  iDRAC status                                │    │
-  │  │  SEL: no critical events                     │    │
-  │  │  Sensors: temp / PSU / fan all nominal       │    │
-  │  └──────────────────────────────────────────────┘    │
-  │                         │                            │
-  │                         ▼                            │
-  │  All green ──► node healthy ──► document result     │
-  └──────────────────────────────────────────────────────┘
-```
-
 ## Pre-Checks
 
 - Confirm scope.

@@ -1,41 +1,5 @@
 # AWS GuardDuty
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│              GuardDuty — Threat Detection                │
-└──────────────────────────────────────────────────────────┘
-
-  DATA SOURCES
-  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
-  │  VPC Flow   │  │  DNS Query  │  │  CloudTrail │
-  │  Logs       │  │  Logs       │  │  Events     │
-  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘
-         │                │                │
-         └────────────────┼────────────────┘
-                          ▼
-              ┌───────────────────────┐
-              │  GuardDuty ML /       │
-              │  Threat Intel Engine  │
-              │  (anomaly + IOC match)│
-              └───────────┬───────────┘
-                          │ finding generated
-                          ▼
-              ┌───────────────────────┐
-              │  Finding              │
-              │  (severity: LOW /     │
-              │   MEDIUM / HIGH /     │
-              │   CRITICAL)           │
-              └───────────┬───────────┘
-                          │
-            ┌─────────────┴──────────────┐
-            ▼                            ▼
-  ┌──────────────────┐        ┌──────────────────┐
-  │  EventBridge     │        │  Security Hub    │
-  │  rule →          │        │  (normalized     │
-  │  SNS → alert     │        │  finding import) │
-  └──────────────────┘        └──────────────────┘
-```
-
 ## Overview
 
 AWS GuardDuty notes for day-to-day infrastructure operations.
@@ -45,7 +9,6 @@ AWS GuardDuty notes for day-to-day infrastructure operations.
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -69,7 +32,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -85,7 +47,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

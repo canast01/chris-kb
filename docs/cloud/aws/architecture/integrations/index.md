@@ -4,24 +4,6 @@
 
 ---
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│               AWS Integrations Overview                  │
-│                                                          │
-│  On-Premises ────────────────────────────► AWS           │
-│  ├── Direct Connect (private, no internet)               │
-│  │    └── Virtual Private Gateway / Transit GW           │
-│  └── VPN (IPSec over internet, backup path)              │
-│                                                          │
-│  Identity                                                │
-│  ├── AD Connector  → proxy auth to on-prem AD            │
-│  └── IAM Identity Center → SSO → permission sets         │
-│                                                          │
-│  Observability                                           │
-│  └── CloudTrail → S3 (log archive) → Kinesis → SIEM      │
-└──────────────────────────────────────────────────────────┘
-```
-
 ## S3 Object Lifecycle
 
 ```mermaid

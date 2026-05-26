@@ -3,47 +3,11 @@
 
 VxRail Health Checks notes for infrastructure operations, support, health checks, and troubleshooting.
 
-```text
-  ┌──────────────────────────────────────────────────────┐
-  │              VxRail Health Check Gate                │
-  └──────────────────────────────────────────────────────┘
-  ┌────────────────────┐
-  │  VxRail Manager    │── System health ──► GREEN ✓
-  └────────┬───────────┘
-           │
-           ▼
-  ┌────────────────────┐
-  │     vCenter        │── Cluster alarms ──► GREEN ✓
-  └────────┬───────────┘
-           │
-           ▼
-  ┌────────────────────┐
-  │    ESXi Hosts      │── Host state: connected ──► ✓
-  └────────┬───────────┘
-           │
-           ▼
-  ┌────────────────────┐
-  │       vSAN         │── Disk groups / objects ──► ✓
-  └────────┬───────────┘
-           │
-           ▼
-  ┌────────────────────┐
-  │   iDRAC (all nodes)│── Hardware sensors ──► GREEN ✓
-  └────────┬───────────┘
-           │
-           ▼
-  ┌────────────────────────────────────────────┐
-  │    ALL GREEN ► Cluster ready for work      │
-  │    ANY AMBER/RED ► Investigate before ops  │
-  └────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for daily, pre-change, and post-change VxRail cluster validation.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -70,7 +34,6 @@ Use this page for daily, pre-change, and post-change VxRail cluster validation.
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Check service health. |  |
@@ -88,7 +51,6 @@ Use this page for daily, pre-change, and post-change VxRail cluster validation.
 - Run post-upgrade health checks.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

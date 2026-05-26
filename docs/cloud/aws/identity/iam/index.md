@@ -7,30 +7,11 @@ title: AWS Identity — IAM
 
 AWS IAM notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                  IAM Entity Hierarchy                   │
-│                                                         │
-│  User (long-term credentials)                           │
-│  ├── Console password + MFA                             │
-│  └── Access key + secret (rotate / avoid)               │
-│                                                         │
-│  Group ──► attach policy ──► all members inherit        │
-│                                                         │
-│  Role (assumed via STS — short-term tokens 1h–12h)      │
-│  ├── EC2 instance profile                               │
-│  ├── Lambda execution role                              │
-│  ├── Cross-account role                                 │
-│  └── CI/CD OIDC federation (no stored secrets)          │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -54,7 +35,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -70,7 +50,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

@@ -1,37 +1,5 @@
 # Virtualization Troubleshooting
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│          VIRTUALIZATION TROUBLESHOOTING DECISION TREE           │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │
-                    ┌──────▼──────┐
-                    │  Symptom?   │
-                    └──────┬──────┘
-          ┌────────────────┼─────────────────────┐
-          ▼                ▼                     ▼
-   ┌─────────────┐  ┌─────────────┐     ┌─────────────┐
-   │  VM Slow /  │  │ Host Down / │     │ Storage /   │
-   │  No Power   │  │ Disconnected│     │ Datastore   │
-   └──────┬──────┘  └──────┬──────┘     └──────┬──────┘
-          ▼                ▼                   ▼ 
-   ┌─────────────┐  ┌─────────────┐     ┌─────────────┐
-   │ CPU/Mem/Disk│  │ Ping ► SSH  │     │ Path state  │
-   │ Perf triage │  │ vpxa/hostd  │     │ APD/PDL/full│
-   └──────┬──────┘  └──────┬──────┘     └──────┬──────┘
-          │                │                    │
-          └────────────────┴──────────┬─────────┘
-                    ┌─────────────────▼──────────────────┐
-                    │  Network │ Certificate │ Login/Auth │
-                    │  NIC/PG  │  Expiry     │  SSO/AD    │
-                    └─────────────────┬──────────────────┘
-                                      ▼
-                          ┌───────────────────────┐
-                          │  Unresolved ► Escalate │
-                          │  Dell / VMware Support │
-                          └───────────────────────┘
-```
-
 Common virtualization troubleshooting workflows.
 
 ## Troubleshooting Flow
@@ -78,7 +46,6 @@ Start by defining the scope, then work down through the stack.
   <strong>Login or Access Issue</strong>
   <span>SSO, LDAP, AD, permissions, MFA, and local account checks.</span>
 </a>
-
 
 <a class="kb-card" href="known-issues/">
   <strong>Known Issues</strong>

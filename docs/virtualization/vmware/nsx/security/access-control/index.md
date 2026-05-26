@@ -1,34 +1,5 @@
 # NSX — Access Control
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                  NSX RBAC Model                             │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  Identity Sources                                    │    │
-│  │  ┌─────────────┐  ┌──────────────┐  ┌────────────┐  │    │
-│  │  │  Local      │  │  LDAP / AD   │  │  Cert-based│  │    │
-│  │  │  (admin/    │  │  Group sync  │  │  Principal │  │    │
-│  │  │   audit)    │  │  LDAPS :636  │  │  Identity  │  │    │
-│  │  └──────┬──────┘  └──────┬───────┘  └─────┬──────┘  │    │
-│  └─────────┼────────────────┼────────────────┼──────────┘    │
-│            └────────────────┼────────────────┘              │
-│                             ▼                               │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Role Bindings  (GET /api/v1/aaa/role-bindings)      │   │
-│  │  enterprise_admin │ network_engineer │ security_admin │   │
-│  │  operator        │ auditor          │ lb_admin       │   │
-│  └──────────────────────────┬───────────────────────────┘   │
-│                             │                               │
-│                             ▼                               │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Objects (system-wide or per-Project in NSX 4.1+)    │   │
-│  │  Segments │ Gateways │ DFW Policies │ Transport Nodes│   │
-│  └──────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ## RBAC Model
 
 NSX-T uses role-based access control (RBAC) with a flat role hierarchy. Roles are assigned to users or groups at the system level — there is no per-object permission granularity in base NSX (Project-scoped permissions are available with NSX Multitenancy in NSX 4.1+).

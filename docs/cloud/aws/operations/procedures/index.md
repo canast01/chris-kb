@@ -2,31 +2,6 @@
 
 > Part of the [Operations](../index.md) section.
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│           AWS Operational Procedures Workflow            │
-└──────────────────────────────────────────────────────────┘
-
-  INCIDENT                SCALING                PATCHING              COST REVIEW
-  ────────                ───────                ────────              ───────────
-  CloudWatch              CloudWatch             Maintenance           Cost Explorer
-  Alarm ▼                 Alarm ▼                Window fires ▼        alert fires ▼
-  │                       │                      │                     │
-  ▼                       ▼                      ▼                     ▼
-  SNS → PagerDuty         ASG policy             Patch Baseline        Top services
-  │                       triggers               applied via           table (monthly)
-  ▼                       scale-out              SSM RunCommand        │
-  Triage:                 │                      │                     ▼
-  - Check CW logs         ▼                      ▼                     Identify
-  - SSM Session Mgr       New EC2                Compliance            >20% increase
-  - RDS events            instances              report                │
-  │                       register to            generated             ▼
-  ▼                       target group           │                     Right-size /
-  Resolve + RCA           │                      ▼                     reserve /
-  doc in Change           Scale-in               Missing patch         schedule
-  Record                  after cool-off         alert → rerun         cleanup
-```
-
 ---
 
 ## RDS

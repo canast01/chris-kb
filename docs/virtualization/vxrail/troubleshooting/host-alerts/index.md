@@ -3,41 +3,11 @@
 
 ESXi host warnings, disconnected hosts, hardware alerts, and cluster impact.
 
-```text
-  ┌──────────────────────────────────────────────────────┐
-  │           VxRail Host Alert Triage Flow              │
-  │                                                      │
-  │  iDRAC hardware fault / ESXi host alarm triggered   │
-  │                       │                             │
-  │                       ▼                             │
-  │  ┌──────────────────────────────────────────────┐   │
-  │  │  Identify affected node                      │   │
-  │  │  vCenter ──► Hosts ──► Alarms tab            │   │
-  │  │  VxRail Mgr ──► Cluster ──► node status      │   │
-  │  └──────────────────────┬───────────────────────┘   │
-  │                         ▼                           │
-  │  ┌──────────────────────────────────────────────┐   │
-  │  │  Hardware fault?                             │   │
-  │  │  iDRAC SEL ──► racadm getsel                 │   │
-  │  │  Component: PSU │ Fan │ Disk │ NIC │ Memory  │   │
-  │  └──────────────────────┬───────────────────────┘   │
-  │                         ▼                           │
-  │  ┌──────────────────────────────────────────────┐   │
-  │  │  ESXi cluster impact?                        │   │
-  │  │  Host disconnected ──► vSAN degraded?        │   │
-  │  │  vMotion needed ──► enter maintenance mode   │   │
-  │  └──────────────────────┬───────────────────────┘   │
-  │                         ▼                           │
-  │  Remediate: replace hw │ restart service │ Dell SR  │
-  └──────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -66,7 +36,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review cluster health. |  |
@@ -85,7 +54,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 - Run post-upgrade checks.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

@@ -1,33 +1,5 @@
 # NSX — Scripts
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│              NSX Automation: Script → REST API → Result     │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Script (Python / PowerShell / Ansible / Bash)       │   │
-│  │  - Reads env vars: NSX_HOST, NSX_USER, NSX_PASS      │   │
-│  └────────────────────────┬─────────────────────────────┘   │
-│                           │ HTTPS / Basic Auth              │
-│                           ▼                                 │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  NSX Manager REST API  (port 443)                    │   │
-│  │  GET  /api/v1/cluster/status                         │   │
-│  │  GET  /api/v1/transport-nodes/status                 │   │
-│  │  GET  /api/v1/alarms?status=OPEN&severity=CRITICAL   │   │
-│  │  GET  /api/v1/edge-clusters                          │   │
-│  └────────────────────────┬─────────────────────────────┘   │
-│                           │ JSON response                   │
-│                           ▼                                 │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Result: PASS / WARNING / CRITICAL                   │   │
-│  │  exit 0 (clean) | exit 1 (warn) | exit 2 (critical) │    │
-│  │  Output to stdout, monitoring system, or SIEM        │   │
-│  └──────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## NSX-T System Health Check (Python)
@@ -57,13 +29,11 @@ AUTH     = (NSX_USER, NSX_PASS)
 HEADERS  = {"Content-Type": "application/json", "Accept": "application/json"}
 overall  = 0
 
-
 def get(path):
     r = requests.get(f"{BASE_URL}{path}", auth=AUTH, headers=HEADERS,
                      verify=False, timeout=15)
     r.raise_for_status()
     return r.json()
-
 
 def check(label, status, detail=""):
     global overall
@@ -71,7 +41,6 @@ def check(label, status, detail=""):
     print(f"  [{icons.get(status, status)}] {label:<45} {detail}")
     if status == "CRITICAL": overall = max(overall, 2)
     if status == "WARNING":  overall = max(overall, 1)
-
 
 print(f"\n=== NSX-T System Health Check: {NSX_HOST} ===\n")
 
@@ -217,13 +186,11 @@ BASE_URL  = f"https://{NSX_HOST}"
 AUTH      = (NSX_USER, NSX_PASS)
 HEADERS   = {"Accept": "application/json"}
 
-
 def get(path, params=None):
     r = requests.get(f"{BASE_URL}{path}", auth=AUTH, headers=HEADERS,
                      params=params, verify=False, timeout=15)
     r.raise_for_status()
     return r.json()
-
 
 # Fetch all transport nodes
 nodes_resp = get("/api/v1/transport-nodes", params={"page_size": 500})
@@ -516,17 +483,14 @@ AUTH      = (NSX_USER, NSX_PASS)
 HEADERS   = {"Accept": "application/json"}
 overall   = 0
 
-
 def get(path, params=None):
     r = requests.get(f"{BASE_URL}{path}", auth=AUTH, headers=HEADERS,
                      params=params, verify=False, timeout=15)
     r.raise_for_status()
     return r.json()
 
-
 def status_mark(ok):
     return "\033[32mPASS\033[0m" if ok else "\033[31mFAIL\033[0m"
-
 
 # --- Segments ---
 print(f"\n=== NSX-T Segment and Gateway Health: {NSX_HOST} ===\n")

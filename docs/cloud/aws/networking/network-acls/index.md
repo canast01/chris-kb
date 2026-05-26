@@ -3,33 +3,11 @@
 
 AWS Network ACLs notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│              Network ACL (stateless, per subnet)        │
-│                                                         │
-│  Evaluated in rule number order — lowest wins           │
-│  Both inbound AND outbound rules required               │
-│                                                         │
-│  Example inbound rules:                                 │
-│  ┌──────┬──────────┬────────────┬────────────────────┐  │
-│  │ Rule │ Protocol │ Source     │ Allow / Deny        │  │
-│  ├──────┼──────────┼────────────┼────────────────────┤  │
-│  │ 100  │ TCP/443  │ 0.0.0.0/0  │ ALLOW              │  │
-│  │ 110  │ TCP/22   │ 10.0.0.0/8 │ ALLOW              │  │
-│  │ *    │ ALL      │ 0.0.0.0/0  │ DENY (implicit)    │  │
-│  └──────┴──────────┴────────────┴────────────────────┘  │
-│                                                         │
-│  vs Security Groups: NACLs are stateless — ephemeral    │
-│  return ports must also be explicitly allowed           │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -53,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -69,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

@@ -3,29 +3,11 @@
 
 AWS EBS notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                EBS Volume Architecture                  │
-│                                                         │
-│  EC2 Instance ──── EBS Volume (same AZ required)        │
-│                     ├── Type: gp3 (default, cost-eff.)  │
-│                     ├── Type: io2 (high IOPS, 64k+)     │
-│                     ├── Type: st1 (throughput HDD)       │
-│                     └── Type: sc1 (cold HDD, cheap)     │
-│                                                         │
-│  EBS Volume ──► Snapshot ──► S3 (incremental)           │
-│                               │                         │
-│                    copy cross-region for DR              │
-│                    restore as new volume                 │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -49,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -65,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

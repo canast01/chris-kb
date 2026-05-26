@@ -2,23 +2,6 @@
 
 Confirm database backups are completing successfully, files are intact, and restores work before they are needed in an actual incident.
 
-```text
-┌──────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
-│  Backup Job  │   │ Restore to Test  │   │  Validate Data   │   │ Compliance Rpt  │
-│              │   │                  │   │                  │   │                 │
-│ Full/incr/   │   │ pg_restore /     │   │ Row counts match │   │ RPO met?        │
-│ WAL archive  │──►│ xtrabackup --    │──►│ Queries run OK   │──►│ Backup age <    │
-│ completes OK │   │ prepare /        │   │ DB consistent    │   │ policy window   │
-│ size in range│   │ RESTORE DB       │   │                  │   │ Checklist sign  │
-└──────────────┘   └──────────────────┘   └──────────────────┘   └─────────────────┘
-       │                                           │
-       ▼                                           ▼
-┌──────────────────┐                    ┌──────────────────┐
-│ Integrity check  │                    │ Alert on failure                         │
-│ checksum/prepare │                    │ → on-call + ITSM                         │
-└──────────────────┘                    └──────────────────┘
-```
-
 ## Daily Backup Status Checks
 
 ### PostgreSQL (pg_basebackup / pgBackRest)

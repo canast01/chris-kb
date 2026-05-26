@@ -57,23 +57,6 @@
 
 ---
 
-```text
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      Naming Convention Patterns                         │
-├──────────────────┬──────────────────────────────────────────────────────┤
-│  Object          │  Pattern                      │  Example             │
-├──────────────────┼───────────────────────────────┼──────────────────────┤
-│ Virtual Machine  │ <env>-<app>-<##>              │ prod-sqldb-01        │
-│ ESXi Host        │ esx-<site>-<##>               │ esx-syd-01           │
-│ Cluster          │ <site>-<env>-cluster-<##>     │ syd-prod-cluster-01  │
-│ Datastore        │ ds-<env>-<storage>-<proto>-<##>│ ds-prod-powermax-fc-01│
-│ Port Group       │ pg-<vlan>-<description>       │ pg-1001-prod-vm      │
-│ Distributed vSwitch│ vds-<site>-<cluster>-<##>  │ vds-syd-compute-01    │
-│ Template         │ tmpl-<os>-<version>-<date>    │ tmpl-win2022-std-20260101│
-│ iDRAC/iLO        │ idrac-esx-<site>-<##>         │ idrac-esx-syd-01     │
-└──────────────────┴───────────────────────────────┴──────────────────────┘
-  Tokens: env=prod/dev/test/uat/dr/mgmt │ site=syd/mel/etc.
-```
 ## Overview
 
 Consistent naming across the VMware environment reduces confusion during incidents, simplifies inventory queries, and supports automation. All new objects must follow this standard. Exceptions require a documented justification.

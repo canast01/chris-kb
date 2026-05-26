@@ -1,34 +1,5 @@
 # Aria Operations — Encryption
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│            Aria Operations TLS Encryption Paths             │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  UI / API access                                            │
-│  ┌─────────────┐  TLS 1.2+  ┌──────────────────────────┐    │
-│  │ Admin / API │◄──────────►│ Aria Ops Primary  :443   │    │
-│  └─────────────┘            └──────────────────────────┘    │
-│                                                             │
-│  Collector → Primary node                                   │
-│  ┌────────────────────┐  TLS  ┌──────────────────────────┐  │
-│  │ Remote Collector   │◄─────►│ Primary node :4505/4506  │  │
-│  └────────────────────┘       └──────────────────────────┘  │
-│                                                             │
-│  Cluster-internal (Cassandra / node replication)            │
-│  ┌──────────┐  TLS  ┌──────────┐  TLS  ┌──────────┐         │
-│  │ Node-01  │◄─────►│ Node-02  │◄─────►│ Node-03  │         │
-│  └──────────┘       └──────────┘       └──────────┘         │
-│  (auto-managed certs — no manual replacement needed)        │
-│                                                             │
-│  Adapter → vCenter / NSX                                    │
-│  ┌─────────────┐  TLS  ┌──────────────────────────────┐     │
-│  │ Adapter     │──────►│ vCenter :443 / NSX Mgr :443  │     │
-│  │ credentials │       │ (CA-signed or accepted cert)  │    │
-│  └─────────────┘       └──────────────────────────────┘     │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ## TLS Certificate Replacement
 
 Aria Operations ships with a self-signed certificate. Replace with a CA-signed certificate for production to avoid browser warnings, API trust failures, and integration issues with other Aria products.

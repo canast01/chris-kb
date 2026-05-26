@@ -1,28 +1,5 @@
 # Aria Automation — CLI Reference
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│          Aria Automation CLI: vracli Command Tree           │
-├──────────────────────────┬──────────────────────────────────┤
-│  vracli (appliance CLI)  │  kubectl (Kubernetes layer)      │
-├──────────────────────────┼──────────────────────────────────┤
-│ vracli status            │ kubectl get pods -n prelude      │
-│ vracli version           │ kubectl logs <pod> -n prelude    │
-│ vracli cluster health    │ kubectl describe pod <pod>       │
-│ vracli backup list       │ kubectl get events -n prelude    │
-│ vracli backup start      │ kubectl rollout restart          │
-│ vracli backup status     │   deployment/<name> -n prelude   │
-│ vracli restore list      │                                  │
-│ vracli restore start     │ kubectl get svc -n prelude       │
-│ vracli certificate list  │ kubectl get secrets -n prelude   │
-│ vracli certificate import│                                  │
-│ vracli support-bundle    │  REST API base:                  │
-│ vracli software-update   │  /csp/gateway/am/api/login       │
-│   install --file <pak>   │  /iaas/api/  /deployment/api/    │
-│                          │  /blueprint/api/                 │
-└──────────────────────────┴──────────────────────────────────┘
-```
-
 ## vracli (Appliance CLI)
 
 SSH to the Aria Automation appliance and use `vracli` for appliance-level management.

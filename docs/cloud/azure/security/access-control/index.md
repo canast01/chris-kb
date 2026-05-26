@@ -1,34 +1,5 @@
 # Azure — Access Control
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│                       Azure RBAC Scope Hierarchy                 │
-└─────────────────────────────────────────────────────────────────┘
-
-  ┌──────────────────────────┐
-  │    Management Group      │  ← broadest scope; inherits down
-  └────────────┬─────────────┘
-               │
-  ┌────────────▼─────────────┐
-  │      Subscription        │
-  └────────────┬─────────────┘
-               │
-  ┌────────────▼─────────────┐
-  │     Resource Group       │
-  └────────────┬─────────────┘
-               │
-  ┌────────────▼─────────────┐
-  │        Resource          │  ← narrowest scope
-  └──────────────────────────┘
-
-  Role Assignment = Principal + Role Definition + Scope
-  ┌────────────┐   ┌───────────────────┐   ┌─────────────────┐
-  │  User /    │ + │  Owner /          │ + │  Scope above    │
-  │  Group /   │   │  Contributor /    │   │  (any level)    │
-  │  SP / MI   │   │  Reader / Custom  │   │                 │
-  └────────────┘   └───────────────────┘   └─────────────────┘
-```
-
 Azure access control is built on Azure Role-Based Access Control (RBAC). Permissions are assigned by attaching role definitions to security principals (users, groups, service principals, managed identities) at a specific scope (management group, subscription, resource group, or resource).
 
 ---

@@ -3,30 +3,11 @@
 
 AWS Elastic Load Balancer notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                  ELB Traffic Flow                       │
-│                                                         │
-│  Client ──► ALB (Application Load Balancer — Layer 7)   │
-│              ├── Listener: HTTPS :443                   │
-│              ├── Rules: path /api/* → target group A    │
-│              │          path /*    → target group B     │
-│              └── Target Group                           │
-│                   ├── EC2 instance (healthy ✓)          │
-│                   ├── EC2 instance (healthy ✓)          │
-│                   └── EC2 instance (unhealthy ✗ skip)   │
-│                                                         │
-│  NLB (Network Load Balancer — Layer 4 TCP/UDP)          │
-│  └── Static IP per AZ · ultra-low latency · TLS passthrough│
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -50,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -66,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

@@ -1,28 +1,5 @@
 # API Connectivity
 
-```text
-┌─────────────────────────────────────────────────────────────────────┐
-│                    API Integration Flow                             │
-│                                                                     │
-│  ┌──────────┐   HTTPS/TLS    ┌──────────────────────────────────┐   │
-│  │  Client  │───────────────►│       REST API Endpoint          │   │
-│  │(app/curl)│                │  https://api.example.com/v1/...  │   │
-│  └──────────┘                └────────────────┬─────────────────┘   │
-│                                               │                     │
-│                               ┌───────────────▼──────────────────┐  │
-│                               │        Authentication            │  │
-│                               │  Bearer Token │ API Key │ OAuth2  │  │
-│                               └───────────────┬──────────────────┘  │
-│                                               │                     │
-│                               ┌───────────────▼──────────────────┐  │
-│                               │         JSON Response            │  │
-│                               │  200 OK │ 401 Unauth │ 429 Rate  │  │
-│                               └──────────────────────────────────┘  │
-│                                                                     │
-│  Checks: DNS ► TLS cert ► auth token ► rate limits ► response       │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
 Test, diagnose, and maintain connectivity to internal and external APIs across infrastructure and platform services.
 ## Basic Connectivity Tests
 

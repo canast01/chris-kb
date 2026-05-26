@@ -54,60 +54,7 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌─────────────────────────────── Dell Data Domain — Install and Upgrade ────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Data Domain install: rack and power, initial config via CLI or GUI, license activation    │   │
-│   │      Initial setup: set hostname, IPs, NTP, DNS, admin password via serial console or GUI     │   │
-│   │       DDOS upgrade: upload upgrade bundle to DD, pre-check, upgrade, verify via sysstat       │   │
-│   │  Post-install: register with DDMC, configure DD Boost, enable replication, enroll in CloudIQ  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Rack → power → serial console config → license → network → DD Boost → backup app config            │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Initial Install       │  │        Configuration        │  │         DDOS Upgrade        │   │
-│   │        Rack and cable       │  │        Hostname / DNS       │  │        Upload bundle        │   │
-│   │        Serial console       │  │          NTP config         │  │        Run pre-check        │   │
-│   │      License activation     │  │       DD Boost enable       │  │       Execute upgrade       │   │
-│   │         Network IPs         │  │      Replication setup      │  │        Verify sysstat       │   │
-│   │        Register DDMC        │  │        CloudIQ enroll       │  │       Test backup job       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    DDOS upgrade is non-disruptive for most versions; schedule during maintenance window anyway        │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Phase       │       Task       │        Tool       │      Owner       │     Duration     │   │
-│   │     Hardware     │  Rack and cable  │      Physical     │     DC team      │    2-4 hours     │   │
-│   │  Initial config  │  Console setup   │    Serial / GUI   │   Storage eng.   │    1-2 hours     │   │
-│   │   Integration    │Backup app config │    DD GUI + app   │   Storage eng.   │    2-4 hours     │   │
-│   │   DDOS upgrade   │  Upload + apply  │    DD GUI / CLI   │   Storage eng.   │    30-60 min     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: dedicated backup LAN for DD Boost; management LAN for GUI/SSH; replication WAN link      │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Serial console = First access method; configure via DB-9 RS-232 or USB serial at 9600 baud         │
-│    License activation = Apply DD capacity and feature license keys via GUI; tied to chassis SN        │
-│    DD Boost enable = Activate DD Boost protocol in GUI; configure backup app with DD Boost user       │
-│    Replication setup = Configure source→target replication context; IP, path, schedule, throttle      │
-│    DDMC registration = Add new DD to Data Domain Management Center for centralized management         │
-│    CloudIQ enroll = Install SCG and register DD to CloudIQ via SCG for health monitoring              │
-│    DDOS upgrade   = Data Domain OS upgrade; uploaded as .rpm bundle; upgrade wizard in GUI            │
-│    Pre-check      = DDOS upgrade pre-check verifies readiness; abort if any critical warning          │
-│    sysstat        = DD CLI command showing system health post-upgrade; verify all services green      │
-│    NTP config     = Required for replication timestamp accuracy; use same NTP source as backup app    │
-│    Backup LAN     = Dedicated VLAN or network for DD Boost traffic; isolate from production LAN       │
-│    Test backup job = Run full backup cycle after install; verify dedup ratio and job completion       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ## DDOS Version Matrix
 
 | DDOS Version | Status | Notes |

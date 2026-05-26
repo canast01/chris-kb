@@ -3,31 +3,11 @@
 
 AWS CloudWatch Logs notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│               CloudWatch Logs Structure                 │
-│                                                         │
-│  Log Group (e.g. /aws/lambda/my-function)               │
-│  └── Log Stream (one per Lambda invocation context)     │
-│       └── Log Events (timestamp + message)              │
-│                                                         │
-│  Features:                                              │
-│  ├── Metric Filters  → extract value → CloudWatch metric│
-│  ├── Log Insights    → ad-hoc KQL-like query            │
-│  ├── Subscription    → stream to Lambda / Kinesis       │
-│  └── Retention       → set per log group (1d – 10yr)    │
-│                                                         │
-│  Sources: Lambda · EC2 (CW Agent) · ECS · VPC Flow Logs │
-│           CloudTrail · RDS · API Gateway                │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -51,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -67,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

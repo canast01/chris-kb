@@ -1,25 +1,5 @@
 # Linux — Operations
 
-```text
-┌─────────────────────────────────────────────────────┐
-│              Linux Operations Lifecycle             │
-├───────────────┬───────────────┬─────────────────────┤
-│   Patching    │  User Mgmt    │  Service Management │
-│  dnf/apt      │  useradd/mod  │  systemctl          │
-│  WSUS/Ansible │  sudo/visudo  │  start/stop/enable  │
-├───────────────┴───────────────┴─────────────────────┤
-│                   Monitoring & Health               │
-│   journalctl  │  top/vmstat   │  df/iostat/ss       │
-├─────────────────────────────────────────────────────┤
-│                   Backup & Restore                  │
-│   Veeam Agent for Linux  │  rsync  │  tar snapshots │
-├──────────────┬──────────────────────────────────────┤
-│  Scripts &   │  Install & Upgrade                   │
-│  Automation  │  dnf/apt  →  reboot  →  validate     │
-│  (Ansible)   │                                      │
-└──────────────┴─────────────────────────────────────┘
-```
-
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
 <a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>

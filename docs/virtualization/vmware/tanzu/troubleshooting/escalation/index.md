@@ -1,31 +1,5 @@
 # Tanzu — Escalation
 
-```text
-┌─────────────────── Tanzu Escalation Path ──────────────────────────────────────┐
-│                                                                                 │
-│  Issue identified                                                               │
-│      │                                                                          │
-│      ▼                                                                          │
-│  Collect diagnostics before escalating                                          │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  tanzu diagnostics collect │ kubectl cluster-info dump                  │   │
-│  │  vCenter logs │ NSX/AVI support bundle │ Harbor logs                    │   │
-│  │  tanzu version │ kubectl version │ vSphere version                      │   │
-│  └───────────────────────────────────────┬──────────────────────────────────┘  │
-│                                          │                                      │
-│  Severity triage                         ▼                                      │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Sev 1: Supervisor down ──► create case + call support immediately       │  │
-│  │  Sev 2: Cluster degraded / storage failing ──► case within 1 hour       │   │
-│  │  Sev 3: Specific NS or Harbor failing ──► case next business day         │  │
-│  └───────────────────────────────────────┬──────────────────────────────────┘  │
-│                                          │                                      │
-│  Open case                               ▼                                      │
-│  support.broadcom.com ► Tanzu KG / vSphere with Tanzu                          │
-│  Attach diagnostics ► component owner routes to correct team                   │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## Before Opening a Support Case

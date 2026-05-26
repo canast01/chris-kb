@@ -50,27 +50,6 @@ Dell PowerMax SRDF/A asynchronous replication — delta set cycle model buffers 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                      SRDF/A Architecture                             │
-│                                                                      │
-│  Primary Site (R1)                    DR Site (R2)                   │
-│  ┌────────────────────┐               ┌────────────────────────┐     │
-│  │  PowerMax R1       │               │  PowerMax R2           │     │
-│  │  Host writes ──►   │               │                        │     │
-│  │  Delta Set N       │──cycle xmit──►│  Delta Set N applied   │     │
-│  │  (buffered writes) │  (WAN/DWDM)   │  to R2 LUNs            │     │
-│  │  Delta Set N+1     │               │                        │     │
-│  │  (accumulating)    │               │  R2 usable after       │     │
-│  └────────────────────┘               │  activation (failover) │     │
-│                                       └────────────────────────┘     │
-│                                                                      │
-│  RPO = last completed cycle duration (~30s default)                  │
-│  RTO = activate R2 copies ──► register VMs ──► power on (< 1hr)      │
-│                                                                      │
-│  States: Synchronized ► Transmitting ► Consistent ► Suspended        │
-└──────────────────────────────────────────────────────────────────────┘
-```
 
 <div class="kb-grid kb-grid-3">
 

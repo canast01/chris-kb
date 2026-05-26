@@ -2,34 +2,6 @@
 
 > Part of the [Troubleshooting](../index.md) hub.
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│                  VM PERFORMANCE TRIAGE FLOW                     │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │
-   ┌───────────────────────▼───────────────────────────────┐
-   │  CPU Ready (%RDY in esxtop)                           │
-   │  >5% investigate │ >10% action required               │
-   │  Reduce vCPU count, check NUMA, vMotion off host      │
-   └───────────────────────┬───────────────────────────────┘
-                           │
-   ┌───────────────────────▼───────────────────────────────┐
-   │  Memory Balloon / Swap (esxtop 'm')                   │
-   │  MCTLSZ>0 = balloon │ SWCUR>0 = swap (severe)        │
-   │  Migrate VM or add host memory                        │
-   └───────────────────────┬───────────────────────────────┘
-                           │
-   ┌───────────────────────▼───────────────────────────────┐
-   │  Storage Latency (esxtop 'u' ► GAVG ms)               │
-   │  >20ms investigate │ Check snapshots, array perf      │
-   └───────────────────────┬───────────────────────────────┘
-                           │
-   ┌───────────────────────▼───────────────────────────────┐
-   │  Network Drops (esxcli nic stats)                     │
-   │  rx/tx errors ► duplex mismatch, MTU, CRC errors      │
-   └───────────────────────────────────────────────────────┘
-```
-
 ---
 ## VM Will Not Power On
 

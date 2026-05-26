@@ -2,40 +2,6 @@
 
 > Part of the [Troubleshooting](../index.md) hub.
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│               DATASTORE INACCESSIBLE TRIAGE FLOW                │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │
-              ┌────────────▼────────────┐
-              │  Storage Path Check     │
-              │  esxcli storage nmp     │
-              │  path list -d <naa.>    │
-              └─────┬───────────┬───────┘
-                    │           │
-             APD ◄──┘           └──► PDL
-             (recoverable)          (permanent)
-                    │                   │
-     ┌──────────────▼──────┐   ┌────────▼──────────┐
-     │  HBA / Fabric Check │   │  DO NOT rescan     │
-     │  SAN switch zoning  │   │  Escalate to       │
-     │  ISL / port errors  │   │  storage team      │
-     └──────────────┬──────┘   └────────────────────┘
-                    │
-     ┌──────────────▼──────────────┐
-     │  Array LUN Check            │
-     │  Controller state, masking  │
-     │  Port errors, LUN health    │
-     └──────────────┬──────────────┘
-                    │
-     ┌──────────────▼──────────────┐
-     │  Rescan & Verify            │
-     │  esxcli storage core        │
-     │  adapter rescan -A all      │
-     │  Confirm datastores mounted │
-     └─────────────────────────────┘
-```
-
 ---
 ## Datastore Inaccessible — APD vs PDL
 

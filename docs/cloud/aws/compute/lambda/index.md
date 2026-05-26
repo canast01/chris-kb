@@ -3,34 +3,11 @@
 
 AWS Lambda notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                    Lambda Flow                          │
-│                                                         │
-│  Event Source                                           │
-│  ├── API Gateway (HTTP request)                         │
-│  ├── S3 (object created / deleted)                      │
-│  ├── EventBridge (scheduled / rule match)               │
-│  ├── SQS / SNS (message received)                       │
-│  └── DynamoDB Streams (record change)                   │
-│        │                                                │
-│        ▼                                                │
-│  Lambda Function (runtime: Python · Node · Java …)      │
-│  ├── Execution role (IAM)                               │
-│  ├── Environment variables                              │
-│  └── VPC config (optional — for private resource access)│
-│        │                                                │
-│        ▼                                                │
-│  Result / side effects (write to S3 · call API …)       │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -54,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -70,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

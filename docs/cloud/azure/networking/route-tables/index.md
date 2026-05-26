@@ -2,52 +2,6 @@
 
 Azure Route Tables (User Defined Routes / UDRs) override Azure's default system routes
 
-```text
-┌──────────────────────────────────────────────────────────────┐
-│                  UDR / Route Table Flow                      │
-│                                                              │
-│  ┌──────────────────┐    associated to   ┌────────────────┐  │
-│  │   Route Table    │───────────────────►│   Subnet       │  │
-│  │                  │                    └────────┬───────┘  │
-│  │  Route entries:  │                             │          │
-│  │  0.0.0.0/0  ──── next hop ──────────┐          │ traffic  │
-│  │  192.168.0.0/16  ─ VPN Gateway ──┐  │          │          │
-│  │  10.0.2.0/24  ── VnetLocal      │  │           ▼          │
-│  └──────────────────┘               │  │   ┌────────────┐    │
-│                                     │  │   │  NVA/FW    │    │
-│                                     │  └──►│ (10.0.0.4) │    │
-│                                     │      └────────────┘    │
-│                                     │                        │
-│                                     ▼                        │
-│                              ┌────────────────┐              │
-│                              │  VPN Gateway   │              │
-│                              │  ──► on-prem   │              │
-│                              └────────────────┘              │
-└──────────────────────────────────────────────────────────────┘
-```, allowing you to control how traffic is directed within and out of your VNet. Common uses include forced tunnelling through a firewall NVA, BGP propagation control, and hub-spoke routing.
-
-## Creating a Route Table
-
-```bash
-# Create a route table
-az network route-table create \
-  --resource-group myRG \
-  --name myRouteTable \
-  --location eastus \
-  --disable-bgp-route-propagation false
-
-# Show route table details
-az network route-table show \
-  --resource-group myRG \
-  --name myRouteTable \
-  --output json
-
-# List all route tables in a resource group
-az network route-table list \
-  --resource-group myRG \
-  --output table
-```
-
 ## Adding User Defined Routes
 
 ```bash

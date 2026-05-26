@@ -1,30 +1,5 @@
 # Storage Design
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                   Storage Design Decision Tree                       │
-│                                                                      │
-│  What workload type?                                                 │
-│  ┌─────────────────────────────────────────┐                         │
-│  │              Workload                   │                         │
-│  └──────┬──────────────┬───────────────────┘                         │
-│         │              │               │                             │
-│  Block (OLTP/DB)   File (NAS)     Object (Archive)                   │
-│  ┌──────▼──────┐  ┌────▼────┐    ┌─────▼─────┐                       │
-│  │  Latency?   │  │  OS?    │    │ Dell ECS  │                       │
-│  └──┬──────┬───┘  └──┬───┬──┘    │  AWS S3   │                       │
-│     │      │         │   │       └───────────┘                       │
-│  <500µs  <1ms     Win  Linux                                         │
-│  ┌──▼──┐ ┌─▼───┐ ┌───▼┐ ┌▼───┐                                       │
-│  │ FC  │ │iSCSI│ │SMB │ │NFS │  Local vs Shared vs HCI               │
-│  │NVMe │ │  on │ │3.x │ │v4.1│  ┌───────────────────┐                │
-│  │-oF  │ │ 25G │ │    │ │    │  │ Local: vSAN/NVMe  │                │
-│  └─────┘ └─────┘ └────┘ └────┘  │ Shared: SAN/NAS   │                │
-│                                  │ HCI: vSAN/VxRail  │               │
-│                                  └───────────────────┘               │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 ![Storage Design Overview](../../assets/storage-design-overview.svg)
 
 ## Overview
@@ -355,7 +330,6 @@ Configure automatic data tiering to cloud object storage for cold data. This red
 - [ ] Support contracts active for all storage hardware; vendor contact and case numbers documented
 
 ---
-
 
 ## LUN Naming Convention
 

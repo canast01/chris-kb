@@ -57,24 +57,6 @@
 
 ---
 
-```text
-┌──────────────────────────────────────────────────────────────────────────┐
-│                     Cluster Standard — Config Baseline                   │
-├───────────────────────────────┬──────────────────────────────────────────┤
-│   vSphere HA                  │   DRS                                    │
-│                               │                                          │
-│  Enabled: Yes                 │  Enabled: Yes                            │
-│  Host Monitoring: On          │  Automation: Fully Automated (prod)      │
-│  Admission Control: n+1 (25%) │  Migration Threshold: Priority 3+        │
-│  VM Monitoring: On (prod)     │  Predictive DRS: On (if Aria integrated) │
-│  Heartbeat DSs: ≥ 2           │                                          │
-├───────────────────────────────┴──────────────────────────────────────────┤
-│   EVC: Enabled (lowest CPU baseline in cluster)                          │
-│   vSAN: RAID-1 FTT=1 min │ Dedup+Compress On (all-flash) │ Health green  │
-│   Resource Pools: rp-prod-critical │ rp-prod-standard │ rp-dev           │
-│   Min hosts: 3 (prod/mgmt/DR)  │  2 (edge/NSX only)                      │
-└──────────────────────────────────────────────────────────────────────────┘
-```
 ## Overview
 
 This standard defines the minimum required configuration for all vSphere clusters in the production environment. Any new cluster must meet these requirements before workloads are placed on it.

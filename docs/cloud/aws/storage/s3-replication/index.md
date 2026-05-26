@@ -3,30 +3,11 @@
 
 AWS S3 Replication notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                  S3 Replication Flow                    │
-│                                                         │
-│  Source Bucket (eu-west-1)                              │
-│  ├── Versioning: enabled (required)                     │
-│  └── Replication rule: prefix / tag filter              │
-│        │                                                │
-│        ▼  (async · new objects only)                    │
-│  Destination Bucket                                     │
-│  ├── Same-Region Replication (SRR) — same account/cross │
-│  └── Cross-Region Replication (CRR) — DR · compliance   │
-│                                                         │
-│  SRR use cases: log aggregation · test/prod sync        │
-│  CRR use cases: DR · latency reduction · compliance     │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -50,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -66,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

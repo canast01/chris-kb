@@ -8,46 +8,6 @@ title: Standard SAML Configuration
 Canonical SAML 2.0 SSO reference for all KB-covered products. Covers SP/IdP concepts, attribute mapping, Azure AD (Entra ID) and Okta setup, security requirements, and troubleshooting. Product authentication pages link here for the shared baseline and document only their product-specific ACS URLs and entity IDs.
 </div>
 
-```text
-┌─────────────────────────────────────────────────────────────────────┐
-│                     SAML 2.0 SSO Flow                               │
-│                                                                     │
-│  ┌──────────┐      ┌────────────────────────┐   ┌──────────────┐  │
-│  │   User   │      │   Service Provider     │   │    IdP       │  │
-│  │ (Browser)│      │   (Jira, ONTAP,        │   │ (Azure AD /  │  │
-│  │          │      │    vCenter, etc.)       │   │  Okta /      │  │
-│  │          │      │                        │   │  ADFS)       │  │
-│  └────┬─────┘      └───────────┬────────────┘   └──────┬───────┘  │
-│       │                        │                        │           │
-│       │  1. Access resource    │                        │           │
-│       │ ──────────────────────►│                        │           │
-│       │                        │  2. Redirect to IdP    │           │
-│       │ ◄──────────────────────│ ──────────────────────►│           │
-│       │                        │                        │           │
-│       │  3. Authenticate + MFA │                        │           │
-│       │ ──────────────────────────────────────────────► │           │
-│       │                        │                        │           │
-│       │  4. SAML Assertion     │                        │           │
-│       │ ◄─────────────────────────────────────────────  │           │
-│       │                        │                        │           │
-│       │  5. POST assertion     │                        │           │
-│       │ ──────────────────────►│                        │           │
-│       │                        │  6. Validate           │           │
-│       │                        │     signature, map     │           │
-│       │                        │     attributes, grant  │           │
-│       │  7. Access granted     │     session            │           │
-│       │ ◄──────────────────────│                        │           │
-│                                                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │  Key Terms                                                   │  │
-│  │  SP  — Service Provider: the product (Jira, vCenter, etc.)  │  │
-│  │  IdP — Identity Provider: Azure AD, Okta, ADFS              │  │
-│  │  ACS — Assertion Consumer Service URL (SP receives POST)    │  │
-│  │  Entity ID — Unique URI identifying the SP to the IdP       │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## Standard Field Reference

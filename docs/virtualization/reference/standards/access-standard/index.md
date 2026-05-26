@@ -57,23 +57,6 @@
 
 ---
 
-```text
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      vSphere Access Model                               │
-│                                                                         │
-│  AD User ──► AD Group ──► vCenter Global Permission ──► Role            │
-│                                                                         │
-│  grp-vsphere-admins    ──► vcenter-admin       (full admin)             │
-│  grp-vsphere-vm-ops    ──► vcenter-vm-operator (power/snap/console)     │
-│  grp-vsphere-readonly  ──► vcenter-read-only   (view only)              │
-│  grp-nsx-admins        ──► NSX Enterprise Admin                         │
-│                                                                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│  ESXi Direct Access: Lockdown Mode ON  │  SSH: disabled by default      │
-│  Break-glass: P1 incident → CyberArk approval → SSH → disable after     │
-│  Review cadence: Quarterly (vCenter roles)  │  Semi-annual (svc accts)  │
-└─────────────────────────────────────────────────────────────────────────┘
-```
 ## Overview
 
 This standard defines how access to the vSphere environment is granted, managed, and reviewed. The principle of least privilege applies. All access is granted via AD group membership mapped to vCenter roles — no direct user-to-object permission assignments.

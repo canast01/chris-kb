@@ -1,27 +1,5 @@
 # Aria Automation — Diagnostics
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│         Aria Automation Diagnostic Data Sources             │
-├──────────────────────────────┬──────────────────────────────┤
-│  Kubernetes / Pod Layer      │  API / Deployment Layer       │
-│  ────────────────────────    │  ──────────────────────────   │
-│  kubectl get pods -n prelude │  /deployment/api/deployments  │
-│  kubectl logs <pod>          │  /deployments/<id>/events     │
-│  kubectl describe pod <pod>  │  /blueprint/api/blueprints    │
-│  kubectl get events          │  /catalog/api/requests        │
-│  kubectl rollout restart     │                               │
-├──────────────────────────────┼──────────────────────────────┤
-│  Appliance CLI               │  Blueprint Structure          │
-│  ────────────────────────    │  ──────────────────────────   │
-│  vracli version              │  formatVersion: 1             │
-│  vracli status               │  inputs: { }                  │
-│  vracli cluster health       │  resources:                   │
-│  vracli support-bundle       │    Cloud.vSphere.Machine      │
-│                              │    Cloud.vSphere.Network      │
-└──────────────────────────────┴──────────────────────────────┘
-```
-
 ## Blueprints (Cloud Templates)
 
 ### Blueprint Structure

@@ -1,37 +1,5 @@
 # Storage Latency Troubleshooting
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                   Storage Latency Triage Flow                        │
-│                                                                      │
-│  VM I/O slow / application timeout                                   │
-│        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  Check esxtop DAVG (device latency)                            │  │
-│  │  DAVG > 20ms ──► array issue    DAVG OK ──► check KAVG/QAVG   │   │
-│  └─────┬──────────────────────────────────────────────────────────┘  │
-│        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  Check array latency (Unisphere / symstat / Purity CLI)        │  │
-│  │  Array latency high ──► cache miss / drive fault / overload    │  │
-│  └─────┬──────────────────────────────────────────────────────────┘  │
-│        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  Check path count (esxcli storage core path list)              │  │
-│  │  Paths missing ──► HBA / fabric / zoning issue                 │  │
-│  └─────┬──────────────────────────────────────────────────────────┘  │
-│        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  Check fabric (Brocade / MDS port stats for CRC errors)        │  │
-│  │  Errors found ──► cable / SFP replacement                     │   │
-│  └─────┬──────────────────────────────────────────────────────────┘  │
-│        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  Escalate to array vendor with collected diagnostics           │  │
-│  └────────────────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 ## Overview
 
 Storage latency is a primary cause of application performance degradation, database timeouts, and VM instability. Diagnosis requires correlating host-side metrics (iostat, esxtop) with array-side metrics (Unisphere, symstat) and multipath health. This guide covers NVMe, SSD, HDD, NFS, and iSCSI environments including PowerMax/VMAX and VMware ESXi.

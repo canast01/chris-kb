@@ -3,31 +3,11 @@
 
 AWS Security Groups notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│              Security Group (stateful firewall)         │
-│                                                         │
-│  Attached per network interface (EC2 / RDS / Lambda …)  │
-│                                                         │
-│  Inbound rules (default: deny all)                      │
-│  ┌──────────┬───────────┬────────────┬────────────────┐ │
-│  │ Protocol │ Port      │ Source     │ Action         │ │
-│  ├──────────┼───────────┼────────────┼────────────────┤ │
-│  │ TCP      │ 443       │ 0.0.0.0/0  │ Allow (HTTPS)  │ │
-│  │ TCP      │ 22        │ 10.0.0.0/8 │ Allow (SSH)    │ │
-│  └──────────┴───────────┴────────────┴────────────────┘ │
-│                                                         │
-│  Outbound rules (default: allow all)                    │
-│  Return traffic automatically allowed (stateful)        │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -51,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -67,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

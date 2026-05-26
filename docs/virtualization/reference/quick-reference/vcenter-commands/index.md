@@ -2,25 +2,6 @@
 
 > SSH to the vCenter appliance before running these commands.
 
-```text
-┌─────────────────────────────────────────────────────────────────────────┐
-│                  vCenter Command Categories                             │
-├──────────────────────┬──────────────────────────────────────────────────┤
-│  Services            │  Inventory (PowerCLI)                            │
-├──────────────────────┼──────────────────────────────────────────────────┤
-│ service-control      │ Get-VMHost | Select Name,Version,State           │
-│  --status            │ Get-Cluster | Select Name,HAEnabled,DrsEnabled   │
-│  --start --all       │ Get-Datastore | Select Name,FreeSpaceGB          │
-│  --stop --all        │ Get-VM | Where PowerState -ne PoweredOn          │
-│  --restart vpxd      │ Get-VIPermission | Select Entity,Principal,Role  │
-├──────────────────────┼──────────────────────────────────────────────────┤
-│  System              │  Certificates                                    │
-├──────────────────────┼──────────────────────────────────────────────────┤
-│ df -h                │ VAMI :5480 → Certificate Management              │
-│ uptime               │ vecs-cli entry list --store TRUSTED_ROOTS        │
-│ date                 │ openssl s_client -connect vcenter:443            │
-└──────────────────────┴──────────────────────────────────────────────────┘
-```
 ## Check All Services
 
 ```bash

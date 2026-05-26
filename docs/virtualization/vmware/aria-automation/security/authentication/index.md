@@ -1,30 +1,5 @@
 # Aria Automation — Authentication
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│         Aria Automation Authentication Flow                 │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  Browser / API Client                                       │
-│       │                                                     │
-│       ▼  SAML redirect (UI) or POST /login (API)            │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │  Workspace ONE Access (VIDM)                        │    │
-│  │  SAML IdP  ·  AD/LDAP connector  ·  MFA policies   │     │
-│  └────────────────────────┬────────────────────────────┘    │
-│                           │ AD LDAPS (port 636)             │
-│                           ▼                                 │
-│  Active Directory  →  group membership → role mapping       │
-│                           │                                 │
-│                           ▼                                 │
-│  Aria Automation issues JWT Bearer token (8h lifetime)      │
-│  Local admin fallback: System Domain via VIDM               │
-│                                                             │
-│  Service Account Pattern:                                   │
-│  svc-vra-api (System Domain) → Member role → API calls      │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ## Authentication Architecture
 
 Aria Automation delegates all authentication to **Workspace ONE Access (VIDM)**. There is no standalone AD/LDAP connector in Aria Automation itself — VIDM acts as the identity broker between Aria Automation and Active Directory.

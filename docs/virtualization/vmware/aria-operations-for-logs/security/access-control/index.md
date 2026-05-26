@@ -1,29 +1,5 @@
 # Aria Ops for Logs — Access Control
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│         Aria Ops for Logs RBAC Model                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  AD Groups (via LDAPS)     →  Role Assignment               │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  GG-VRLI-Admins          →  Super Admin              │   │
-│  │  GG-VRLI-Operators       →  Admin                    │   │
-│  │  GG-VRLI-ReadOnly        →  User                     │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                             │
-│  Role Capabilities:                                         │
-│  Super Admin — cluster config · users · all settings        │
-│  Admin       — content · alerts · dashboards                │
-│  User        — Interactive Analytics query/view only        │
-│                                                             │
-│  Local Accounts (break-glass only):                         │
-│  admin → Super Admin (change password immediately)          │
-│  svc-vrli-api → Admin (automation scripts)                  │
-│  svc-monitoring → User (read-only queries)                  │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ## RBAC Roles
 
 Aria Operations for Logs uses a simple two-tier RBAC model: users are either administrators or users. More granular access control is applied through Active Directory group assignment and, in Advanced/Enterprise editions, through **user roles** with object-level scoping.

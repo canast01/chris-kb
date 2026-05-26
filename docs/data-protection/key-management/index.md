@@ -2,27 +2,6 @@
 
 Cryptographic key lifecycle management — generation, storage, distribution, rotation, and revocation.
 
-```text
-┌──────────┐   ┌──────────────────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐
-│ Generate │   │  Store               │   │  Rotate  │   │  Expire  │   │  Audit   │
-│          │   │                      │   │          │   │          │   │          │
-│ RSA/EC / │   │ HSM (air-gap root CA)│   │ Auto /   │   │ Schedule │   │ CloudTrl │
-│ AES-256  │──►│ KMS (AWS/Azure)      │──►│ manual   │──►│ deletion │──►│ SIEM fwd │
-│ ed25519  │   │ Vault (AppRole keys) │   │ per sched│   │ 7-30d    │   │ quarterly│
-│          │   │ CyberArk (API keys)  │   │          │   │ wait     │   │ review   │
-└──────────┘   └──────────────────────┘   └──────────┘   └──────────┘   └──────────┘
-                                                │
-                                   ┌────────────┘
-                                   ▼
-                          ┌─────────────────────┐
-                          │  Revocation Path     │
-                          │  Identify scope →    │
-                          │  re-encrypt data →   │
-                          │  revoke old key →    │
-                          │  document incident   │
-                          └─────────────────────┘
-```
-
 ## Key Types and Storage
 
 | Key Type | Storage | Rotation |

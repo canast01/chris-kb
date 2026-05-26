@@ -1,24 +1,5 @@
 # vSAN Quick Reference
 
-```text
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       vSAN Health Flow                                  │
-│                                                                         │
-│  Physical Disks ──► Disk Group ──► vSAN Datastore ──► VM Objects        │
-│  (cache + cap)      (per host)     (cluster-wide)      (FTT policy)     │
-│                                                                         │
-├───────────────────────────────────────────────────────────────────────── │
-│  Check Sequence                │  Key Commands                          │
-├────────────────────────────────┼───────────────────────────────────────┤
-│ 1. Skyline Health (all green?) │ esxcli vsan health cluster list        │
-│ 2. Resync active?              │ esxcli vsan debug resync summary get   │
-│ 3. Object compliance?          │ vCenter → Cluster → vSAN → Objects     │
-│ 4. Disk group up?              │ esxcli vsan storage list               │
-│ 5. Network OK between hosts?   │ vmkping -I vmk2 <peer-vsan-vmk-ip>     │
-├────────────────────────────────┴───────────────────────────────────────┤
-│  Policy: RAID-1 FTT=1 minimum  │  Throttle resync: -p 25 during maint   │
-└─────────────────────────────────────────────────────────────────────────┘
-```
 ## Fast Health Checks
 
 - vSAN Skyline Health → vCenter → Cluster → vSAN → Skyline Health

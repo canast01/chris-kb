@@ -1,33 +1,5 @@
 # Aria Operations — Authentication
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│          Aria Operations Authentication Flow                │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌───────────┐  ┌────────────────┐  ┌────────────────────┐  │
-│  │  Local    │  │  VIDM / SAML   │  │  LDAP / AD         │  │
-│  │  (admin)  │  │  SSO           │  │  LDAPS :636        │  │
-│  └─────┬─────┘  └───────┬────────┘  └──────────┬─────────┘  │
-│        └────────────────┼───────────────────────┘           │
-│                         ▼                                   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Aria Operations Authentication Service              │   │
-│  │  POST /suite-api/api/auth/token/acquire              │   │
-│  │  → returns Bearer token (valid 30 min)               │   │
-│  └──────────────────────────┬───────────────────────────┘   │
-│                             │                               │
-│                             ▼                               │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Role Mapping                                        │   │
-│  │  AD Group → Imported to Aria Ops → Role assigned     │   │
-│  │  Administrator / Content Admin / Operator / ReadOnly │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                             │
-│  Token expiry: 30 min  ·  LDAP sync: every 60 min           │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ## Authentication Sources
 
 Aria Operations supports multiple authentication sources. Users can authenticate against any configured source.

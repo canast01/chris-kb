@@ -2,25 +2,6 @@
 
 Coordinates planning, scheduling, and execution of software and infrastructure releases to minimise risk and ensure controlled delivery.
 
-```text
-┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
-│  Plan    │  │  Build   │  │   Test   │  │  Deploy  │  │  Verify  │  │  Close   │
-│          │  │          │  │          │  │          │  │          │  │          │
-│ Scope /  │  │ Branch / │  │ Unit /   │  │ RFC appr │  │ Smoke    │  │ Release  │
-│ tickets  │─►│ tag      │─►│ integ /  │─►│ change   │─►│ tests    │-►│ notes    │
-│ target   │  │ artefact │  │ UAT sign │  │ window   │  │ 30-60min │  │ CMDB upd │
-│ date     │  │ built    │  │ off      │  │ executed │  │ soak     │  │ lessons  │
-└──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────┘
-                                                │               │
-                                       ┌────────┘               └─────────┐
-                                       ▼                                  ▼
-                              ┌──────────────────┐              ┌──────────────────┐
-                              │  Go / No-Go      │              │  Post-release    │
-                              │  staging green?  │              │  review (major)  │
-                              │  team present?   │              │  within 1 week   │
-                              └──────────────────┘              └──────────────────┘
-```
-
 ## Release Types
 
 | Type | Description | Cadence | Approval |

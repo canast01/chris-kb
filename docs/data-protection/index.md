@@ -1,28 +1,5 @@
 # Data Protection
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                   Data Protection Overview                           │
-│                                                                      │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                │
-│  │    Backup    │  │ Replication  │  │   Snapshot   │                │
-│  │  Veeam       │  │ SRDF/A       │  │  Array-level │                │
-│  │  NetBackup   │  │ SnapMirror   │  │  VM snapshot │                │
-│  │  Commvault   │  │ vSphere Rep  │  │  TimeFinder  │                │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘                │
-│         │                 │                  │                       │
-│  ┌──────▼─────────────────▼─────────────────▼────────────────────┐   │
-│  │              Protected Data                                   │   │
-│  │   VMs · Databases · File shares · Object storage              │   │
-│  └───────────────────────────────────────────────────────────────┘   │
-│                                                                      │
-│  ┌────────────────────────────────────────────────────────────┐      │
-│  │  Retention policy  ·  Immutable (WORM)  ·  3-2-1 rule     │       │
-│  │  Key mgmt  ·  Encryption at rest & in transit             │       │
-│  └────────────────────────────────────────────────────────────┘      │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="backup-validation/"><strong>Backup Validation</strong><span>Verifying backup jobs are complete, restores are testable, and retention policies are met.</span></a>
 <a class="kb-card" href="data-classification/"><strong>Data Classification</strong><span>Data classification tiers, labelling requirements, and handling rules per classification level.</span></a>

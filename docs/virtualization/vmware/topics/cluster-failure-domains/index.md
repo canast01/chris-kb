@@ -1,29 +1,5 @@
 # Cluster Failure Domains
 
-```text
-┌──────────────── Failure Domain Layers: Stretched Cluster & Fault Domains ──────┐
-│                                                                                 │
-│  Availability Zone / Site level                                                 │
-│  ┌─────────────────────────────────┐   ┌─────────────────────────────────┐     │
-│  │          Site A                 │   │          Site B                 │     │
-│  │  ┌──────────────────────────┐   │   │  ┌──────────────────────────┐  │      │
-│  │  │ Rack A    │  Rack B      │   │   │  │ Rack C    │  Rack D      │  │      │
-│  │  │ esxi-01   │  esxi-04     │   │   │  │ esxi-07   │  esxi-10     │  │      │
-│  │  │ esxi-02   │  esxi-05     │   │   │  │ esxi-08   │  esxi-11     │  │      │
-│  │  │ esxi-03   │  esxi-06     │   │   │  │ esxi-09   │  esxi-12     │  │      │
-│  │  └──────────────────────────┘   │   │  └──────────────────────────┘  │      │
-│  └─────────────────────────────────┘   └─────────────────────────────────┘     │
-│                     │                                  │   + Witness VM         │
-│                     └──────────── vSAN stretched ──────┘                       │
-│                                                                                 │
-│  vSAN fault domains prevent both copies landing in same rack/site:              │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  FTT=1 RAID-1: 3 fault domains min │ FTT=2 RAID-6: 6 fault domains min │    │
-│  │  Objects: component-owner-1 in FD-A │ component-owner-2 in FD-B         │   │
-│  └──────────────────────────────────────────────────────────────────────────┘  │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
-
 A failure domain is the blast radius of a single fault: the set of hosts, storage, or network paths that share a common point of failure. Correctly mapping and configuring failure domains is the foundation of vSAN resilience, HA placement, and maintenance safety.
 
 ---

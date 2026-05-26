@@ -3,40 +3,11 @@
 
 Support bundle creation, evidence capture, case attachment, and collection issues.
 
-```text
-  ┌──────────────────────────────────────────────────────┐
-  │              VxRail Support Bundle Flow              │
-  │                                                      │
-  │  VxRail Manager UI                                   │
-  │  ──► System → Support → Generate Support Bundle     │
-  │                  │                                   │
-  │                  ▼                                   │
-  │  ┌──────────────────────────────────────────────┐    │
-  │  │  Collection phase (10–20 min for large       │    │
-  │  │  clusters)                                   │    │
-  │  │  ├── VxRail Manager logs                     │    │
-  │  │  ├── ESXi host logs (all nodes)              │    │
-  │  │  ├── vSAN health + trace data                │    │
-  │  │  ├── vCenter events + alarms                 │    │
-  │  │  └── iDRAC hardware event logs               │    │
-  │  └──────────────────────┬───────────────────────┘    │
-  │                         ▼                            │
-  │  ┌──────────────────────────────────────────────┐    │
-  │  │  bundle.tar.gz ──► Download                  │    │
-  │  │  ──► Attach to Dell SR                       │    │
-  │  └──────────────────────────────────────────────┘    │
-  │                                                      │
-  │  Failure? Check: disk space │ service state          │
-  │  Timeout? Use per-node: vm-support -w /tmp           │
-  └──────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -65,7 +36,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review cluster health. |  |
@@ -84,7 +54,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 - Run post-upgrade checks.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

@@ -57,21 +57,6 @@
 
 ---
 
-```text
-┌─────────────────┬──────────────────────┬───────────────────┬──────────┬───────────┐
-│   Hostname      │  Cluster             │  Hardware Model   │  ESXi    │  State    │
-├─────────────────┼──────────────────────┼───────────────────┼──────────┼───────────┤
-│ esx-prod-01     │ cl-prod-compute-01   │ Dell R750xa       │ 8.0 U3   │ Connected │
-│  IP:10.10.10.11 │  2S×32C / 1024GB RAM │ FC HBA (QLogic)   │          │           │
-├─────────────────┼──────────────────────┼───────────────────┼──────────┼───────────┤
-│ esx-prod-02     │ cl-prod-compute-01   │ Dell R750xa       │ 8.0 U3   │ Connected │
-│  IP:10.10.10.12 │  2S×32C / 1024GB RAM │ 4×25GbE NICs      │          │           │
-├─────────────────┼──────────────────────┼───────────────────┼──────────┼───────────┤
-│ esx-mgmt-01     │ cl-prod-mgmt-01      │ Dell R650         │ 8.0 U3   │ Connected │
-│  IP:10.10.10.21 │  2S×16C /  256GB RAM │ 2×25GbE NICs      │          │ vSAN node │
-└─────────────────┴──────────────────────┴───────────────────┴──────────┴───────────┘
-  Each host: vmk0=mgmt │ vmk1=vMotion │ vmk2=vSAN │ vmk3=NSX-overlay
-```
 ## Overview
 
 Track every ESXi host in the environment using the table format below. One row per physical host. Update after hardware changes, firmware updates, or cluster moves.

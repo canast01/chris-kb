@@ -1,33 +1,5 @@
 # Upgrade Sequence Reference
 
-```text
-┌──────────── VMware Component Upgrade Order ────────────────────────────────────┐
-│                                                                                 │
-│  1. Aria Suite Lifecycle (LCM)  ◄── always first if LCM is used                │
-│         │                                                                       │
-│  2. Workspace ONE Access (vIDM) ◄── must precede Aria product upgrades         │
-│         │                                                                       │
-│  3. vCenter Server              ◄── must precede ESXi                          │
-│         │                                                                       │
-│  4. NSX Manager                 ◄── before ESXi if NSX needs new KMs           │
-│         │                                                                       │
-│  5. ESXi hosts  (rolling, one at a time)                                        │
-│     ┌──────────────────────────────────────────────────────────────────────┐   │
-│     │  maintenance mode ► DRS migrates VMs ► upgrade ► reboot ► exit MM   │    │
-│     └──────────────────────────────────────────────────────────────────────┘   │
-│         │                                                                       │
-│  6. vSAN on-disk format         ◄── after ALL ESXi at target version           │
-│         │                                                                       │
-│  7. VM hardware / VMware Tools  ◄── non-disruptive, schedule separately        │
-│         │                                                                       │
-│  8. Aria Operations ► Aria Automation ► Aria Log Insight                        │
-│         │                                                                       │
-│  9. VxRail LCM (via VxRail Manager — never manually)                           │
-│         │                                                                       │
-│  10. SRM + vSphere Replication  ◄── after vCenter                              │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ## Correct Upgrade Order
 
 Upgrading VMware components in the wrong order causes compatibility failures, plugin breakage, and in worst cases requires rollback. Always follow this sequence:

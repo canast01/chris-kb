@@ -2,32 +2,6 @@
 
 > Part of the [VxRail](../index.md) reference.
 
-```text
-  ┌──────────────────────────────────────────────────────────┐
-  │               VxRail Automation Flow                     │
-  │                                                          │
-  │  ┌─────────────────┐    ┌──────────────────────────┐     │
-  │  │  Python /       │    │    VxRail REST API        │     │
-  │  │  PowerShell     │───►│  https://<vxm>/rest/vxm   │     │
-  │  │  script         │    │  Basic auth (mystic/SSO)  │     │
-  │  └─────────────────┘    └────────────┬─────────────┘     │
-  │                                      │                   │
-  │               ┌──────────────────────┼────────────┐      │
-  │               ▼                      ▼            ▼      │
-  │  ┌─────────────────┐  ┌────────────────┐  ┌────────────┐ │
-  │  │  Health check   │  │  LCM upgrade   │  │ Inventory  │ │
-  │  │  /v1/cluster    │  │  /v1/lcm/...   │  │ /v1/hosts  │ │
-  │  │  /v1/hosts      │  │  status/retry  │  │ /hardware  │ │
-  │  └────────┬────────┘  └───────┬────────┘  └─────┬──────┘ │
-  │           └───────────────────┴────────────────┘ │       │
-  │                                                   ▼       │
-  │                         ┌────────────────────────────┐   │
-  │                         │  Output: health report /   │   │
-  │                         │  upgrade readiness / audit │   │
-  │                         └────────────────────────────┘   │
-  └──────────────────────────────────────────────────────────┘
-```
-
 ---
 ## VxRail Cluster Health Check (PowerShell / PowerCLI)
 

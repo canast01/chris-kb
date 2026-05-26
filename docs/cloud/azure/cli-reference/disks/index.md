@@ -2,30 +2,6 @@
 
 > Part of the Azure CLI Reference.
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│                    Disk CLI Flow                         │
-│                                                          │
-│  az disk create ──────────────► Managed Disk             │
-│                                      │                   │
-│  az vm disk attach ─────────────────►│                   │
-│  az vm disk detach ◄─────────────────┘                   │
-│                                      │                   │
-│                                      ▼                   │
-│                               ┌──────────────┐           │
-│                               │  Azure VM    │           │
-│                               └──────────────┘           │
-│                                                          │
-│  az snapshot create ◄──────── source disk/blob           │
-│         │                                                │
-│         ▼                                                │
-│  ┌────────────────────┐                                  │
-│  │   Snapshot         │── az disk create (from snap)     │
-│  │  (point-in-time)   │                                  │
-│  └────────────────────┘                                  │
-└──────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ```bash

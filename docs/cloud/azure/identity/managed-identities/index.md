@@ -2,53 +2,6 @@
 
 Managed identities give Azure resources an identity in Entra ID without requiring credentials in code or config.
 
-```text
-┌──────────────────────────────────────────────────────────────┐
-│               Managed Identity Flow                          │
-│                                                              │
-│  ┌──────────────────┐   system-assigned  ┌────────────────┐  │
-│  │  Azure VM /      │───────────────────►│  Entra ID      │  │
-│  │  App Service /   │   user-assigned    │  (identity     │  │
-│  │  AKS Pod         │◄───────────────────│   registered)  │  │
-│  └────────┬─────────┘                   └────────────────┘   │
-│           │                                                  │
-│           │ code calls IMDS endpoint                         │
-│           ▼  (169.254.169.254)                               │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │  MSI Token Endpoint  ──►  access token (OAuth2)      │    │
-│  └──────────────────────────┬─────────────────────────┘      │
-│                             │ token attached to request      │
-│                             ▼                                │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │  Target Resource  (Key Vault / Storage / SQL / ...)  │    │
-│  │  RBAC validates: principal has required role ✓       │    │
-│  └──────────────────────────────────────────────────────┘    │
-└──────────────────────────────────────────────────────────────┘
-``` Azure manages credential rotation and renewal automatically.
-
-## Identity Types
-
-| Type | Lifecycle | Shared across resources | Use case |
-|---|---|---|---|
-| **System-assigned** | Tied to the resource; deleted with it | No — 1:1 with the resource | Single-resource workloads; simplest to set up |
-| **User-assigned** | Independent; exists until explicitly deleted | Yes — assign to many resources | Shared identity across multiple resources; pre-provision before resource creation |
-
-## Enable on a Resource
-
-### System-Assigned
-
-```bash
-# Enable on a VM
-az vm identity assign --name <vm-name> --resource-group <rg>
-
-# Enable on App Service
-az webapp identity assign --name <app-name> --resource-group <rg>
-
-# Get the principal ID (object ID) — used for RBAC assignments
-az vm identity show --name <vm-name> --resource-group <rg> \
-  --query principalId --output tsv
-```
-
 ### User-Assigned
 
 ```bash

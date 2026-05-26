@@ -1,27 +1,5 @@
 # Aria Ops for Logs — Procedures
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│         Aria Ops for Logs — Key Operational Tasks           │
-├──────────────────────────────┬──────────────────────────────┤
-│  Search Patterns             │  Alert Management            │
-│  ─────────────────────────   │  ──────────────────────────  │
-│  appname = "hostd"           │  Interactive Analytics       │
-│  text CONTAINS "APD"         │  → build query → Create Alert│
-│  appname = "vpxd" (vCenter)  │  Count / Rate / Presence     │
-│  appname = "vmkernel"        │  Email / Webhook / vROps     │
-│  text CONTAINS "vmotion"     │                              │
-├──────────────────────────────┼──────────────────────────────┤
-│  Alert Config                │  Notifications               │
-│  ─────────────────────────   │  ──────────────────────────  │
-│  Enable/disable via API      │  POST /api/v1/notification/  │
-│  PUT /api/v1/alerts/<id>/    │    channels                  │
-│    state/ENABLED|DISABLED    │  Webhook vars:               │
-│  Threshold: count / rate     │  ${alertName} ${hitCount}    │
-│  Auto-fire on any match      │  ${url} ${timestamp}         │
-└──────────────────────────────┴──────────────────────────────┘
-```
-
 ## Search Examples
 
 ### Host Disconnect Events

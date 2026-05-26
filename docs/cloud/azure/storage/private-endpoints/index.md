@@ -1,35 +1,5 @@
 # Azure Storage Private Endpoints
 
-```text
-┌──────────────────────────────────────────────────────────────────┐
-│               Storage Private Endpoint — Traffic Flow             │
-└──────────────────────────────────────────────────────────────────┘
-
-  ┌──────────────────────────────────────────────────┐
-  │                   VNet (prod)                    │
-  │                                                  │
-  │  ┌──────────┐   DNS: stprodblobs01               │
-  │  │  App VM  │────────────────────┐               │
-  │  └──────────┘                   ▼               │
-  │                        ┌─────────────────────┐  │
-  │                        │ Private DNS Zone     │  │
-  │                        │ privatelink.blob.*  │  │
-  │                        │ → 10.x.x.x          │  │
-  │                        └──────────┬──────────┘  │
-  │                                   │              │
-  │                   ┌───────────────▼───────────┐  │
-  │                   │  Private Endpoint NIC      │  │
-  │                   │  10.x.x.x (private IP)     │  │
-  │                   └───────────────┬────────────┘  │
-  └───────────────────────────────────┼───────────────┘
-                                      │ Azure backbone
-                                      ▼
-                         ┌────────────────────────┐
-                         │  Storage Account        │
-                         │  Public access: Disabled│
-                         └────────────────────────┘
-```
-
 ## Overview
 
 Private endpoints assign a private IP address from your VNet to an Azure Storage service, routing all traffic over the Microsoft backbone rather than the public internet. This eliminates the need for public IP access and enables granular network isolation via NSGs and UDRs.

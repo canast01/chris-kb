@@ -2,25 +2,6 @@
 
 Complete all items after every upgrade (vCenter, ESXi, vSAN, NSX, VxRail). Document evidence for the change record.
 
-```text
-┌────────────────────────────────────────────────────────────────────────┐
-│              Post-Upgrade Validation Checklist                         │
-├─────────────────────┬──────────────────────────────────────────────────┤
-│  Component          │  Pass Criteria                                   │
-├─────────────────────┼──────────────────────────────────────────────────┤
-│ vCenter             │ Login OK │ Target build │ All services running   │
-│ Hosts               │ All Connected │ No HA errors on any host         │
-│ Cluster HA/DRS      │ HA=On │ DRS=On+correct level │ Admission ctrl OK │
-│ vSAN                │ Skyline Health green │ 0 degraded objects        │
-│                     │ No unexpected resync                             │
-│ NSX                 │ get cluster status=STABLE │ Edges Up │ BGP OK    │
-│ VxRail              │ VxRail Manager all nodes Healthy                 │
-│ Aria Suite          │ LCM green │ Ops collection OK │ Auto services up │
-│ Backups             │ Test backup of 1 non-crit VM completes OK        │
-│ Monitoring          │ Agents collecting from all hosts                 │
-└─────────────────────┴──────────────────────────────────────────────────┘
-  Close CR: version inventory updated │ snapshots removed after 48h val.
-```
 ## Immediate Validation (within 15 minutes of upgrade completion)
 
 ```powershell

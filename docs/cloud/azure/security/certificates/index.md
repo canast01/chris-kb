@@ -1,28 +1,5 @@
 # Azure — Certificates
 
-```text
-┌──────────────────────────────────────────────────────────────────┐
-│                  Azure Key Vault Certificate Lifecycle            │
-└──────────────────────────────────────────────────────────────────┘
-
-  ┌──────────────┐   create/import   ┌──────────────────────────┐
-  │  CA (DigiCert│──────────────────►│       Key Vault          │
-  │  /self-signed│                   │  ┌────────────────────┐  │
-  └──────────────┘                   │  │  Certificate v1    │  │
-                                     │  │  Certificate v2    │  │← auto-renew
-                                     │  │  (rotation policy) │  │
-                                     │  └────────────────────┘  │
-                                     └──────────┬───────────────┘
-                                                │
-                   ┌────────────────────────────┼──────────────────┐
-                   ▼                            ▼                  ▼
-        ┌─────────────────┐         ┌──────────────────┐   ┌──────────────┐
-        │  App Gateway    │         │  App Service /   │   │  Expiry alert│
-        │  (KV secret URI │         │  Front Door      │   │  → email     │
-        │   via MI)       │         │  (managed cert)  │   │  contacts    │
-        └─────────────────┘         └──────────────────┘   └──────────────┘
-```
-
 Azure Key Vault manages X.509 certificates, providing lifecycle management including creation, import, auto-renewal, and expiry alerting. Key Vault integrates with App Gateway, API Management, App Service, and other services for SSL/TLS offloading.
 
 ## Creating a Key Vault Certificate

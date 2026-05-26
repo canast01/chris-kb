@@ -1,31 +1,5 @@
 # Aria Operations for Networks — Install and Upgrade
 
-```text
-┌──────────── Aria Networks Upgrade Sequence ────────────────────────────────────┐
-│                                                                                 │
-│  Pre-upgrade                                                                    │
-│  ├── config backup: GET /api/ni/settings/backup ──► .tar.gz                    │
-│  └── snapshot Platform VM (vSphere)                                             │
-│       │                                                                         │
-│       ▼                                                                         │
-│  Step 1: Upgrade Platform VM  (CRITICAL: always first)                          │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  UI: Settings ► Upgrade ► upload .pak bundle ► Install                  │   │
-│  │  CLI: sudo /opt/vmware/bin/upgrade.sh <bundle.pak>                      │   │
-│  │  Duration: 15–30 min (UI unavailable during upgrade)                    │   │
-│  └───────────────────────────────────────┬──────────────────────────────────┘  │
-│                                          │ verify: systemctl + version API      │
-│       ▼                                  ▼                                      │
-│  Step 2: Upgrade Collector VMs (Platform must be healthy first)                 │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  UI: Settings ► Collectors ► Upgrade All  OR  per-collector              │  │
-│  │  Each Collector restarts ► auto-reconnects ► flow ingestion resumes     │   │
-│  └──────────────────────────────────────────────────────────────────────────┘  │
-│                                                                                 │
-│  Rollback: revert Platform VM snapshot ► Collectors auto-reconnect              │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ## Prerequisites
 
 ### Infrastructure Requirements

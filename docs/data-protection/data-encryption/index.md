@@ -2,30 +2,6 @@
 
 Encryption protects data at rest, in transit, and during processing against unauthorised access.
 
-```text
-┌─────────────────────────────────────────────────────────────────────┐
-│                         Data Encryption Overview                    │
-├───────────────────────┬─────────────────────────┬───────────────────┤
-│    At Rest            │      In Transit          │  Key Management  │
-│                       │                          │                  │
-│ LUKS (Linux)          │ TLS 1.2+ mandatory       │ AWS KMS / Azure  │
-│ BitLocker (Windows)   │ Disable TLS 1.0/1.1      │ Key Vault        │
-│ ONTAP vol encryption  │ Cipher: AES-256-GCM      │ HSM for restrict │
-│ Pure: always-on       │                          │ Annual rotation  │
-│ MSSQL TDE             │ openssl s_client verify  │                  │
-└───────────┬───────────┴───────────┬──────────────┴──────────┬───────┘
-            │                       │                         │
-            └───────────────────────┴─────────────────────────┘
-                                    │
-                                    ▼
-                       ┌────────────────────────┐
-                       │  Verification Checklist │
-                       │  cert expiry monitored  │
-                       │  KMS health checked     │
-                       │  key backup tested      │
-                       └────────────────────────┘
-```
-
 ## Encryption Requirements by Classification
 
 | Level | At Rest | In Transit | Key Management |

@@ -1,35 +1,5 @@
 # Aria Operations — Hardening
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│            Aria Operations Hardening Layers                 │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Account Hardening                                   │   │
-│  │  • admin password changed → vault                    │   │
-│  │  • No local admin for day-to-day; named AD accounts  │   │
-│  └──────────────────────────────────────────────────────┘   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Certificate                                         │   │
-│  │  • Replace self-signed with CA-signed cert           │   │
-│  │  • Monitor expiry; alert at 60 days                  │   │
-│  └──────────────────────────────────────────────────────┘   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  LDAP/SSH                                            │   │
-│  │  • LDAPS port 636 only (no plain LDAP)              │    │
-│  │  • SSH: restricted to mgmt CIDR via hosts.allow     │    │
-│  │  • Root: key-based only (PermitRootLogin prohibit)  │    │
-│  └──────────────────────────────────────────────────────┘   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Syslog + Compliance                                 │   │
-│  │  • Syslog → Aria Ops for Logs / SIEM  :514          │    │
-│  │  • VM disk encryption (vSAN or SAN layer)           │    │
-│  │  • NTP delta < 1 second (chronyc tracking)          │    │
-│  └──────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ## Default Account Hardening
 
 Change the `admin` password immediately after deployment:

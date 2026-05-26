@@ -3,41 +3,11 @@
 
 Power supply, thermal, fan, and environmental alert review.
 
-```text
-  ┌──────────────────────────────────────────────────┐
-  │              VxRail Node Power/Cooling           │
-  │                                                  │
-  │  ┌─────────────────┐    ┌─────────────────────┐  │
-  │  │  PSU-A (active) │    │  PSU-B (redundant)  │  │
-  │  │  Input: AC mains│    │  Input: AC mains    │  │
-  │  │  Status: OK     │    │  Status: OK         │  │
-  │  └────────┬────────┘    └──────────┬──────────┘  │
-  │           └──────────┬─────────────┘              │
-  │                      ▼                            │
-  │           ┌──────────────────────┐                │
-  │           │   Power Rail / Node  │                │
-  │           └──────────┬───────────┘                │
-  │                      │                            │
-  │  ┌───────────────────┴────────────────────────┐   │
-  │  │         Fan Zones (iDRAC managed)          │   │
-  │  │  Fan1 ┌─┐  Fan2 ┌─┐  Fan3 ┌─┐  Fan4 ┌─┐  │   │
-  │  │       └─┘       └─┘       └─┘       └─┘  │   │
-  │  │  Thermal thresholds: warn ► crit ► alert  │   │
-  │  └────────────────────┬───────────────────────┘   │
-  └───────────────────────┼──────────────────────────┘
-                          ▼
-               ┌──────────────────────┐
-               │  iDRAC alert engine  │
-               │  VxRail Mgr alarm    │
-               └──────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -66,7 +36,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review cluster health. |  |
@@ -85,7 +54,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 - Run post-upgrade checks.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

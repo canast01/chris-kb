@@ -3,33 +3,11 @@
 
 AWS Instance Recovery notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│               EC2 Instance Recovery Flow                │
-│                                                         │
-│  CloudWatch Alarm                                       │
-│  └── Metric: StatusCheckFailed_System ≥ 1 for 2 min     │
-│        │                                                │
-│        ▼                                                │
-│  Alarm Action: recover                                  │
-│        │                                                │
-│        ▼                                                │
-│  AWS migrates instance to healthy host                  │
-│  ├── Same instance ID preserved                         │
-│  ├── Same private/public IPs preserved                  │
-│  ├── Same EBS volumes reattached                        │
-│  └── In-memory state lost (equivalent to reboot)        │
-│                                                         │
-│  Note: does NOT work for instance-store root volumes     │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -53,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -69,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

@@ -3,30 +3,11 @@
 
 AWS Systems Manager notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│               Systems Manager Architecture              │
-│                                                         │
-│  EC2 Instance                                           │
-│  └── SSM Agent (pre-installed on Amazon Linux / Win)    │
-│        │                                                │
-│        ▼  (HTTPS outbound — no inbound port needed)     │
-│  AWS Systems Manager                                    │
-│  ├── Session Manager  (browser/CLI shell — no bastion)  │
-│  ├── Run Command      (execute script fleet-wide)       │
-│  ├── Patch Manager    (baselines → scan → apply)        │
-│  ├── State Manager    (enforce desired config)          │
-│  ├── Parameter Store  (config key-value store)          │
-│  └── Inventory        (installed apps · OS info)        │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -50,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -66,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

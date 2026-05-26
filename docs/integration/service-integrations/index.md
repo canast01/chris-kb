@@ -1,27 +1,5 @@
 # Service Integrations
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                    Service Integration Map                           │
-│                                                                      │
-│  ┌─────────────────────────────────────────────────────────────┐     │
-│  │              Infrastructure Platform                        │     │
-│  │    vSphere · NSX · FlashArray · PowerMax · ESXi             │     │
-│  └──────┬──────────┬───────────┬────────────┬──────────────────┘     │
-│         │          │           │            │                        │
-│  ┌──────▼──┐ ┌─────▼──┐ ┌──────▼─┐  ┌───────▼────────┐               │
-│  │  ITSM   │ │Monitor │ │ Backup │  │     SIEM       │               │
-│  │ Service │ │  Aria  │ │ Veeam  │  │ Splunk / QRadar│               │
-│  │  Now    │ │ Pure1  │ │Commv.  │  │  Syslog :514   │               │
-│  └─────────┘ └────────┘ └────────┘  └────────────────┘               │
-│                                                                      │
-│  ┌─────────────────────────────────────────────────────────────┐     │
-│  │              Identity / Auth                                │     │
-│  │   Active Directory ◄──► SSSD/Winbind ◄──► All components   │      │
-│  └─────────────────────────────────────────────────────────────┘     │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 Health checks and troubleshooting for common infrastructure integration points: monitoring, backup, authentication, logging, and ticketing.
 ## Integration Health Overview
 

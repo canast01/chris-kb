@@ -2,37 +2,6 @@
 
 > Part of the [Troubleshooting](../index.md) hub.
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│               HOST DISCONNECTED TRIAGE FLOW                     │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │
-              ┌────────────▼────────────┐
-              │  Network Reachable?     │
-              │  ping <esxi-mgmt-ip>    │
-              └────────┬────────┬───────┘
-                  fail │        │ pass
-                       ▼        ▼
-          ┌─────────────────┐  ┌──────────────────────┐
-          │  Mgmt Network   │  │  Management VMkernel  │
-          │  NIC/VLAN/switch│  │  SSH ► hostd/vpxa     │
-          │  iDRAC console  │  │  service status check │
-          └────────┬────────┘  └──────────┬────────────┘
-                   │                      │
-                   │            ┌─────────▼──────────┐
-                   │            │  hostd/vpxa Restart │
-                   │            │  /etc/init.d/vpxa   │
-                   │            │  restart            │
-                   │            └─────────┬───────────┘
-                   │                      │
-                   └──────────────────────┤
-                                          ▼
-                             ┌────────────────────────┐
-                             │  Reconnect in vCenter  │
-                             │  or Re-add host        │
-                             └────────────────────────┘
-```
-
 ---
 ## Quick Triage
 

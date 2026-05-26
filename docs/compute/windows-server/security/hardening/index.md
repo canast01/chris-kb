@@ -2,28 +2,6 @@
 
 CIS benchmark GPO controls, Windows Defender configuration, audit policy, GPO hardening baseline, and Security Compliance Manager (SCM).
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│              Windows Server Hardening Flow               │
-├──────────────────────────────────────────────────────────┤
-│  Baseline Source                                         │
-│  CIS Benchmark / Microsoft SCT  ──►  GPO backup import   │
-├──────────────────────────────────────────────────────────┤
-│  GPO Controls Applied                                    │
-│  ┌────────────┬─────────────┬──────────────────────────┐ │
-│  │ Account    │ Audit       │ Security Options          │ │
-│  │ Policy     │ Policy      │ NTLMv2, NLA, UAC, SMBsign│ │
-│  │ pwd/lockout│ auditpol    │ LM hash off, no anon enum │ │
-│  └────────────┴─────────────┴──────────────────────────┘ │
-├──────────────────────────────────────────────────────────┤
-│  Endpoint Hardening                                      │
-│  SMBv1 disabled │ RDP TLS+NLA │ PS script block logging  │
-│  Defender AV + ASR rules  │  Credential Guard / RunAsPPL │
-├──────────────────────────────────────────────────────────┤
-│  Validate: Policy Analyzer / CIS-CAT / manual checks     │
-└──────────────────────────────────────────────────────────┘
-```
-
 ## CIS Benchmark and Security Baselines
 
 Microsoft and the Center for Internet Security publish security baselines for Windows Server that map to GPO settings.

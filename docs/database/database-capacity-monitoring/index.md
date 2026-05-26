@@ -2,31 +2,6 @@
 
 Track database storage growth, identify capacity risks early, and plan expansion before thresholds are breached.
 
-```text
-┌─────────────────────────────────────────────────────┐
-│             Database Storage Components             │
-│  ┌──────────┐  ┌──────────┐  ┌──────────────────┐   │
-│  │ Data     │  │   Log /  │  │   Temp / Sort    │   │
-│  │ files    │  │ WAL/binlog│  │   tablespace     │  │
-│  └────┬─────┘  └────┬─────┘  └────────┬─────────┘   │
-└───────┼─────────────┼─────────────────┼────────────┘
-        └─────────────┴─────────────────┘
-                          │
-                          ▼
-             ┌────────────────────────┐
-             │    Growth Trending     │
-             │  weekly size snapshot  │
-             │  → growth rate/month   │
-             └────────────┬───────────┘
-                          │
-         ┌────────────────┼────────────────┐
-         ▼                ▼                ▼
-┌──────────────┐  ┌─────────────┐  ┌──────────────────┐
-│  >70% → Alert│  │ >80% → Escal│  │ >90% → Emergency │
-│  plan capac. │  │ expand 2wks │  │ expand or archive│
-└──────────────┘  └─────────────┘  └──────────────────┘
-```
-
 ## Current Capacity — Quick Check
 
 ### PostgreSQL

@@ -1,28 +1,5 @@
 # Aria Automation — Scripts
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│         Aria Automation Script Pattern                      │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  Script (PowerShell / Bash)                                 │
-│       │                                                     │
-│       ▼                                                     │
-│  POST /csp/gateway/am/api/login → Bearer Token              │
-│       │                                                     │
-│       ▼                                                     │
-│  ┌────────────────────────────────────────────────────┐     │
-│  │  Aria Automation REST API                          │     │
-│  │  /deployment/api/deployments  (list, delete)       │     │
-│  │  /blueprint/api/blueprints    (list, versions)     │     │
-│  │  /iaas/api/cloud-accounts     (status check)       │     │
-│  └────────────────────────────────────────────────────┘     │
-│       │                                                     │
-│       ▼                                                     │
-│  JSON response → filter/format → report/action              │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ## Get Failed Deployments in the Last 24 Hours
 
 Uses the Aria Automation REST API. Returns deployment name, ID, and failure reason.

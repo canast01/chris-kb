@@ -1,34 +1,5 @@
 # Azure — Key Vault Keys
 
-```text
-┌────────────────────────────────────────────────────────────┐
-│              Key Vault Key — Envelope Encryption            │
-└────────────────────────────────────────────────────────────┘
-
-  Storage / SQL / Disk (data encrypted with DEK)
-        │
-        │  DEK (Data Encryption Key) encrypted by KEK
-        ▼
-  ┌─────────────────────────────────────────────┐
-  │               Key Vault                     │
-  │  ┌───────────────────────────────────────┐  │
-  │  │  KEK (RSA/EC)  ──  wrapKey/unwrapKey  │  │
-  │  │   version 1   version 2  (rotation)   │  │
-  │  └───────────────────────────────────────┘  │
-  │  All crypto ops happen inside vault / HSM   │
-  │  Key material never leaves in plaintext     │
-  └──────────────────────┬──────────────────────┘
-                         │
-          ┌──────────────┴──────────────┐
-          ▼                             ▼
-  ┌───────────────┐           ┌──────────────────┐
-  │  wrapKey      │           │  Auto rotation   │
-  │  → encrypted  │           │  policy          │
-  │  DEK returned │           │  (P12M / notify) │
-  │  to service   │           └──────────────────┘
-  └───────────────┘
-```
-
 Key Vault keys are cryptographic keys used for encryption, signing, and wrapping operations. Unlike secrets, keys are never exported as plaintext — all cryptographic operations happen within Key Vault (or the HSM).
 
 ## Key Types

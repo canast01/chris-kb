@@ -1,38 +1,5 @@
 # Network Connectivity Troubleshooting
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                  Connectivity Triage Flowchart                       │
-│                                                                      │
-│  Can't reach host                                                    │
-│        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  ping <host>                                                   │  │
-│  │  Fail ──► ping gateway  ──  Fail ──► local interface issue     │  │
-│  │          (ip link / ip addr / ethtool)                         │  │
-│  └─────┬──────────────────────────────────────────────────────────┘  │
-│        │ ping OK                                                     │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  traceroute / tracert                                          │  │
-│  │  Hops stop ──► routing gap · firewall ACL · missing route      │  │
-│  └─────┬──────────────────────────────────────────────────────────┘  │
-│        │ route exists                                                │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  nc -zv <host> <port>                                          │  │
-│  │  Timeout ──► firewall rule blocking port                       │  │
-│  └─────┬──────────────────────────────────────────────────────────┘  │
-│        │ port open                                                   │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  DNS check: dig <hostname>                                     │  │
-│  │  Wrong/missing ──► DNS record or forwarder issue               │  │
-│  └─────┬──────────────────────────────────────────────────────────┘  │
-│        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  Check interface errors · MTU · packet capture (tcpdump)       │  │
-│  └────────────────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 ## Overview
 
 Network failures must be diagnosed by layer — jumping straight to firewall rules wastes time when the issue is a downed physical link or a misconfigured VLAN. This guide follows the OSI model from physical through application, with enterprise tools for Linux, Windows, Cisco, and VMware ESXi environments.

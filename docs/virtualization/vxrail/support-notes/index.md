@@ -3,41 +3,11 @@
 
 VxRail Support Notes notes for infrastructure operations, support, health checks, and troubleshooting.
 
-```text
-  ┌──────────────────────────────────────────────────────┐
-  │            VxRail Support Notes Workflow             │
-  │                                                      │
-  │  Known Issue ──► KB article search (Dell support)   │
-  │       │                                              │
-  │       ▼                                              │
-  │  ┌────────────────────────────────────────────────┐  │
-  │  │  Symptom ──► Match KB / release note           │  │
-  │  │  Fix documented? ──► Apply workaround          │  │
-  │  │  No match? ──► Collect log bundle              │  │
-  │  └────────────────────────────────────────────────┘  │
-  │       │                                              │
-  │       ▼                                              │
-  │  ┌──────────────────────────────────────────────┐    │
-  │  │  Log Bundle                                  │    │
-  │  │  VxRail Mgr → System → Support → Generate   │    │
-  │  │  bundle.tar ──► attach to Dell SR            │    │
-  │  └──────────────────────────────────────────────┘    │
-  │       │                                              │
-  │       ▼                                              │
-  │  ┌──────────────────────────────────────────────┐    │
-  │  │  Dell Support Tips                           │    │
-  │  │  Service tag │ Bundle version │ Timeline     │    │
-  │  │  Clear issue summary ──► faster resolution   │    │
-  │  └──────────────────────────────────────────────┘    │
-  └──────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for support case prep, evidence gathering, and vendor handoff notes.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -64,7 +34,6 @@ Use this page for support case prep, evidence gathering, and vendor handoff note
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Check service health. |  |
@@ -82,7 +51,6 @@ Use this page for support case prep, evidence gathering, and vendor handoff note
 - Run post-upgrade health checks.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

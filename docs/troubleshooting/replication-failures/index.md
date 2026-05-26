@@ -1,35 +1,5 @@
 # Replication Failures Troubleshooting
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                  Replication Triage Flowchart                        │
-│                                                                      │
-│  Replication lag alert / job failed                                  │
-│        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  Check network path to DR site                                 │  │
-│  │  ping · traceroute · check replication VLAN/circuit bandwidth  │  │
-│  │  Network issue ──► escalate to network team                   │   │
-│  └─────┬──────────────────────────────────────────────────────────┘  │
-│        │ network OK                                                  │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  Check credentials / service account                          │   │
-│  │  SRDF: symrdf query · SnapMirror: snapmirror show             │   │
-│  │  Auth fail ──► rotate service account · re-initialize pair    │   │
-│  └─────┬──────────────────────────────────────────────────────────┘  │
-│        │ credentials OK                                              │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  Check destination space                                       │  │
-│  │  df -h on target · check array capacity · thin pool utilisation│  │
-│  │  Space issue ──► free capacity or expand target volume        │   │
-│  └─────┬──────────────────────────────────────────────────────────┘  │
-│        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-│  │  Re-sync / re-baseline if link was down  ·  Assess RPO breach  │  │
-│  └────────────────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 ## Overview
 
 Replication failures degrade DR readiness and can result in RPO breaches. Each replication technology has distinct failure modes and tooling. This guide covers SRDF (Dell EMC PowerMax/VMAX), ONTAP SnapMirror, EMC RecoverPoint, vSphere Replication, and Veeam replication jobs. RPO breach assessment must happen immediately — sustained lag may trigger DR invocation.

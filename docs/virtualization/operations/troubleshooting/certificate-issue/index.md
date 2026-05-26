@@ -2,41 +2,6 @@
 
 > Part of the [Troubleshooting](../index.md) hub.
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│                  CERTIFICATE ISSUE TRIAGE FLOW                  │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │
-              ┌────────────▼────────────┐
-              │  Symptom: Browser warn  │
-              │  Login fail / API error │
-              │  Integration broken     │
-              └────────────┬────────────┘
-                           │
-              ┌────────────▼────────────┐
-              │  Identify Component     │
-              │  VCSA Machine SSL       │
-              │  STS / VMCA / ESXi host │
-              │  NSX / Aria cert        │
-              └────────────┬────────────┘
-                           │
-           ┌───────────────┼───────────────┐
-           ▼               ▼               ▼
-    ┌──────────┐    ┌──────────┐    ┌──────────────┐
-    │ Expired? │    │ Thumbprt │    │  CA Untrusted│
-    │ Renew via│    │ Mismatch?│    │  Push root   │
-    │ VAMI/CLI │    │ Re-register│  │  to clients  │
-    └────┬─────┘    └────┬─────┘    └──────┬───────┘
-         └───────────────┴──────────────────┘
-                          │
-              ┌───────────▼───────────┐
-              │  Validate             │
-              │  Browser clean        │
-              │  Integrations OK      │
-              │  Update cert inventory│
-              └───────────────────────┘
-```
-
 ---
 ## Quick Diagnosis
 

@@ -4,33 +4,6 @@
 Switching and routing knowledge base covering VLANs, inter-VLAN routing, BGP, OSPF, subnetting, and TCP/IP fundamentals.
 </div>
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                   Switching & Routing Topology                       │
-│                                                                      │
-│      WAN / Internet                                                  │
-│           │  BGP                                                     │
-│  ┌────────▼──────────────────────────────────────────┐               │
-│  │          Core Switches (L3 — SVIs / OSPF)         │               │
-│  │          Cisco Nexus 9504 vPC pair                │               │
-│  └────────┬──────────────────────────────────────────┘               │
-│           │  OSPF / ECMP                                             │
-│  ┌────────▼──────────┐       ┌──────────────────────┐                │
-│  │  Distribution     │◄─────►│  Distribution        │  BGP/OSPF      │
-│  │  Sw A (L2/L3)     │  vPC  │  Sw B (L2/L3)        │  boundary      │
-│  └────────┬──────────┘       └──────────┬───────────┘                │
-│           │  LACP                        │                           │
-│  ┌────────▼──────────┐       ┌──────────▼───────────┐                │
-│  │  ToR A (L2)       │◄─────►│  ToR B (L2)          │  STP root      │
-│  │  VM port VLANs    │  vPC  │  VM port VLANs        │  bridge       │
-│  └────────┬──────────┘       └──────────┬───────────┘                │
-│           │  NIC A                       │  NIC B                    │
-│  ┌────────▼─────────────────────────────▼────────────┐               │
-│  │          ESXi Hosts  (LACP 802.3ad bonded)         │               │
-│  └────────────────────────────────────────────────────┘               │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 ## VLANs
 
 VLANs segment network traffic into logical broadcast domains. In an enterprise infrastructure, separate VLANs are standard practice for management, storage (iSCSI, NFS), replication, vMotion, backup, SAN, and production traffic.

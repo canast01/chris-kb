@@ -1,32 +1,5 @@
 # Tanzu — Backup and Restore
 
-```text
-┌────────────────────── Tanzu Backup Flow ───────────────────────────────────────┐
-│                                                                                 │
-│  Supervisor (vCenter VCSA)                                                      │
-│      │  VAMI file-based backup ► SFTP                                           │
-│      ▼                                                                          │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  TKG Management Cluster                                                  │  │
-│  │  Velero ──► etcd snapshot ──► S3/MinIO (object store)                   │   │
-│  └────────────────────────────────┬─────────────────────────────────────────┘  │
-│                                   │ same pattern                                │
-│  ┌────────────────────────────────▼─────────────────────────────────────────┐  │
-│  │  TKG Workload Clusters (per cluster)                                     │  │
-│  │  Velero ──► K8s resources ──► S3/MinIO                                  │   │
-│  │  Velero CSI ──► VolumeSnapshot ──► PV data                              │   │
-│  └──────────────────────────────────────────────────────────────────────────┘  │
-│                                                                                 │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Harbor Registry                                                         │  │
-│  │  PostgreSQL pg_dumpall ──► backup.sql                                   │   │
-│  │  S3 sync ──► harbor-storage-backup (image blobs)                        │   │
-│  └──────────────────────────────────────────────────────────────────────────┘  │
-│                                                                                 │
-│  Restore:  velero restore create --from-backup <name>                           │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## What to Back Up

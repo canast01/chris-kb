@@ -3,30 +3,11 @@
 
 AWS VPC Endpoints notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                  VPC Endpoint Types                     │
-│                                                         │
-│  Gateway Endpoint (free)                                │
-│  ├── Services: S3 · DynamoDB only                       │
-│  └── Route table entry → prefix list → gateway ep       │
-│                                                         │
-│  Interface Endpoint (PrivateLink — hourly cost)         │
-│  ├── Services: most AWS services (SSM · KMS · ECR …)    │
-│  └── Creates ENI in subnet → private IP in VPC          │
-│                                                         │
-│  Without endpoint:  EC2 → NAT GW → IGW → S3             │
-│  With endpoint:     EC2 → VPC Endpoint → S3             │
-│  (stays on AWS backbone — no internet traversal)        │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -50,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -66,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

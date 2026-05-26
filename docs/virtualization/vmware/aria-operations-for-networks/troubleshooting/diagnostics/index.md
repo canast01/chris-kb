@@ -1,32 +1,5 @@
 # Aria Operations for Networks — Diagnostics
 
-```text
-┌────────────── Aria Networks Diagnostics: Support Bundle ───────────────────────┐
-│                                                                                 │
-│  Fastest path: UI ► Settings ► Support ► Download Support Bundle               │
-│  (includes Platform + all Collector logs, system state, config)                 │
-│                                                                                 │
-│  Manual log collection if UI unavailable:                                       │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Platform VM                                                             │  │
-│  │  /var/log/vmware/hms/      ── core platform service                    │    │
-│  │  journalctl -u hms -f      ── follow HMS service log                   │    │
-│  │  journalctl -u nginx -f    ── API gateway log                          │    │
-│  └──────────────────────────────────────────────────────────────────────────┘  │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Collector VM                                                            │  │
-│  │  /var/log/vmware/collector/ ── data collection logs                    │    │
-│  │  journalctl -u hms -f       ── collector agent log                     │    │
-│  └──────────────────────────────────────────────────────────────────────────┘  │
-│                                                                                 │
-│  Connectivity tests (from Collector VM):                                         │
-│  curl -sk https://<vcenter>/rest/.../session  ── vCenter API                   │
-│  curl -sk https://<nsxmgr>/api/v1/cluster     ── NSX API                       │
-│  nc -vz <platform> 443                        ── upload path                   │
-│  tcpdump -i eth0 udp port 2055                ── NetFlow arriving               │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## Support Bundle

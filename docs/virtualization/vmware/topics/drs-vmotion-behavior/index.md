@@ -1,31 +1,5 @@
 # DRS and vMotion Behavior
 
-```text
-┌──────────── DRS / vMotion: Imbalance to Migration ─────────────────────────────┐
-│                                                                                 │
-│  DRS evaluates cluster balance every 5 minutes                                  │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Cluster imbalance detected (CPU/mem skew across hosts)                  │  │
-│  │  DRS score 1–5 (1=conservative, 5=aggressive migration threshold)        │  │
-│  └───────────────────────────────────────┬──────────────────────────────────┘  │
-│                                          │ imbalance > threshold                │
-│  ┌───────────────────────────────────────▼──────────────────────────────────┐  │
-│  │  DRS selects vMotion candidates                                          │  │
-│  │  Checks: shared storage │ VMkernel reachability │ CPU EVC mode           │  │
-│  │  Checks: no USB passthrough │ no physical-mode RDM │ no NPIV             │  │
-│  └───────────────────────────────────────┬──────────────────────────────────┘  │
-│                                          │ Fully Automated mode                 │
-│  ┌───────────────────────────────────────▼──────────────────────────────────┐  │
-│  │  vMotion executes                                                        │  │
-│  │  source host ──── memory pre-copy ──── final switchover ───► target host│   │
-│  │  (brief pause < 1s during final memory sync)                             │  │
-│  └───────────────────────────────────────┬──────────────────────────────────┘  │
-│                                          │                                      │
-│  Anti-affinity rules: DRS will not migrate VMs that violate keep-together/apart │
-│  EVC mode: masks CPU features ── enables vMotion across CPU generations          │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ## DRS Modes
 
 | Mode | Behavior |

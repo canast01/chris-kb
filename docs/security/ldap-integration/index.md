@@ -8,35 +8,6 @@ title: Standard LDAP Integration
 Canonical LDAP/Active Directory integration reference for all KB-covered products. Use this page for field definitions, security standards, and connectivity testing. Product authentication pages link here for the shared baseline and document only their product-specific steps.
 </div>
 
-```text
-┌─────────────────────────────────────────────────────────────────────┐
-│                    LDAP Authentication Flow                         │
-│                                                                     │
-│  ┌─────────────┐    LDAPS:636     ┌─────────────────────────────┐  │
-│  │   Product   │ ──────────────── │    Active Directory / LDAP  │  │
-│  │  (Jira,     │                  │                             │  │
-│  │  ServiceNow,│  1. Bind with    │  ┌───────────────────────┐  │  │
-│  │  NetApp,    │ ─ svc account ─► │  │  Service Account      │  │  │
-│  │  vCenter,   │                  │  │  (read-only, LDAPS)   │  │  │
-│  │  etc.)      │  2. Search user  │  └───────────────────────┘  │  │
-│  │             │ ─ by filter ───► │                             │  │
-│  │             │                  │  ┌───────────────────────┐  │  │
-│  │             │  3. Validate     │  │  Users / Groups OUs   │  │  │
-│  │             │ ◄─ attributes ── │  │  sAMAccountName       │  │  │
-│  │             │                  │  │  memberOf / groups    │  │  │
-│  │             │  4. Group sync   │  └───────────────────────┘  │  │
-│  │             │ ◄─ (scheduled) ─ │                             │  │
-│  └─────────────┘                  └─────────────────────────────┘  │
-│                                                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │  TLS Requirements                                            │  │
-│  │  • Protocol: LDAPS (port 636) or StartTLS — never plain 389  │  │
-│  │  • Certificate: CA-signed, valid hostname, not self-signed   │  │
-│  │  • Minimum: TLS 1.2 — prefer TLS 1.3                        │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## Standard Field Reference

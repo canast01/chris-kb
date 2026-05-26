@@ -2,53 +2,6 @@
 
 Azure Dashboards provide a shared, customisable view of Azure resource telemetry.
 
-```text
-┌──────────────────────────────────────────────────────────────┐
-│                  Azure Dashboard Flow                        │
-│                                                              │
-│  Data Sources                                                │
-│  ┌─────────────┐  ┌─────────────┐  ┌───────────────────┐     │
-│  │  Metrics    │  │  Log query  │  │  Resource Health  │     │
-│  │  (charts)   │  │  (tables)   │  │  / Maps           │     │
-│  └──────┬──────┘  └──────┬──────┘  └────────┬──────────┘     │
-│         └───────────────┬┘                  │                │
-│                         │  pin to dashboard │                │
-│                         ▼                  ▼                 │
-│  ┌────────────────────────────────────────────────────────┐  │
-│  │              Dashboard Tiles                           │  │
-│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │   │
-│  │  │ CPU chart│ │ Log table│ │ Health   │ │ Markdown │  │   │
-│  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘  │   │
-│  └────────────────────────────┬───────────────────────────┘  │
-│                               │ share via RBAC               │
-│                               ▼                              │
-│               Role-scoped view  (Reader on dashboard)        │
-└──────────────────────────────────────────────────────────────┘
-``` Tiles can display metrics charts, log query results, resource health, resource groups, and markdown text. Dashboards live in a subscription and can be shared across users and teams.
-
-## Creating a Dashboard
-
-Dashboards can be created from the Azure portal or deployed as ARM/Bicep templates via CLI.
-
-```bash
-# Create a dashboard from a JSON definition file
-az portal dashboard create \
-  --resource-group myRG \
-  --name "ops-overview-dashboard" \
-  --input-path dashboard-definition.json \
-  --location eastus
-
-# List dashboards in a resource group
-az portal dashboard list \
-  --resource-group myRG \
-  --output table
-
-# Show a specific dashboard definition
-az portal dashboard show \
-  --resource-group myRG \
-  --name "ops-overview-dashboard"
-```
-
 A minimal dashboard JSON skeleton:
 
 ```json

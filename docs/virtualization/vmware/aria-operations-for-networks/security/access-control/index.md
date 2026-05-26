@@ -1,30 +1,5 @@
 # Aria Operations for Networks — Access Control
 
-```text
-┌──────────── Aria Networks RBAC Model ──────────────────────────────────────────┐
-│                                                                                 │
-│  Identity source ──► LDAP/AD or vIDM SAML                                      │
-│      │                                                                          │
-│      ▼                                                                          │
-│  Role assignment (Settings ► Authentication ► Role Mappings)                   │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  AD Group: vRNI-Admins   ──► Super Admin   (full config access)         │   │
-│  │  AD Group: vRNI-NetOps   ──► Network Eng.  (view flows/topology)        │   │
-│  │  AD Group: vRNI-SecOps   ──► Security Eng. (view + push microseg)       │   │
-│  │  AD Group: vRNI-Audit    ──► Auditor        (read-only all data)         │  │
-│  └──────────────────────────────────────────────────────────────────────────┘  │
-│                                                                                 │
-│  Service accounts (minimum privilege)                                           │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  vCenter: svc-vrni-vc   ──► Read Only role (propagate to root)          │   │
-│  │  NSX-T:   svc-vrni-nsx  ──► Auditor role (read-only)                   │    │
-│  │  API tokens: named + scoped + expiry set ── stored in secrets manager   │   │
-│  └──────────────────────────────────────────────────────────────────────────┘  │
-│                                                                                 │
-│  Network: Platform VM port 443 ── management VLAN only (no prod VLAN access)   │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## Built-in Roles

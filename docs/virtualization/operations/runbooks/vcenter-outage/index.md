@@ -1,38 +1,5 @@
 # vCenter Outage Runbook
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│                   VCENTER OUTAGE TRIAGE FLOW                    │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │
-   ┌───────────────────────▼───────────────────────────────┐
-   │  VCSA Services Check (port 5480 / SSH)                │
-   │  service-control --status  ◄── any stopped?           │
-   └───────────────────────┬───────────────────────────────┘
-                           │ services failed
-           ┌───────────────┼────────────────────┐
-           ▼               ▼                    ▼
-   ┌───────────────┐ ┌───────────┐    ┌──────────────────┐
-   │ Disk Full?    │ │  VCHA     │    │  Restore Backup  │
-   │ /storage/log  │ │ Failover  │    │  VAMI ► Backup   │
-   │ /storage/db   │ │ available?│    │  ► Restore       │
-   └───────┬───────┘ └─────┬─────┘    └─────────┬────────┘
-           │               │                    │
-           └───────────────┴──────────┬─────────┘
-                                      ▼
-                    ┌─────────────────────────────┐
-                    │  Hosts in Standalone Mode?  │
-                    │  VMs still running ─ note   │
-                    │  management plane only down │
-                    └──────────────┬──────────────┘
-                                   ▼
-                    ┌──────────────────────────────┐
-                    │  Validate: services up,       │
-                    │  client accessible, hosts     │
-                    │  reconnected, integrations OK │
-                    └──────────────────────────────┘
-```
-
 ## Confirm Outage Scope
 
 - Can you access the vSphere Client?

@@ -19,21 +19,6 @@ For SAN environments, NDFC is the primary application.
 
 Nexus Dashboard is deployed as a 3-node or 5-node cluster for high availability.
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│                  Nexus Dashboard Cluster (3 nodes)               │
-│  ┌────────────┐   ┌────────────┐   ┌────────────┐               │
-│  │  ND Node 1 │   │  ND Node 2 │   │  ND Node 3 │               │
-│  └────────────┘   └────────────┘   └────────────┘               │
-│  ┌──────────────────┐  ┌──────────────────┐                      │
-│  │  NDFC (SAN/LAN)  │  │   NDI (Insights) │  (hosted apps)      │
-│  └──────────────────┘  └──────────────────┘                      │
-└─────────────────────────────────────────────────────────────────┘
-         │                        │
-  MDS SAN Fabric            ACI / Nexus Fabric
-  (NDFC managed)            (NDI / NDO managed)
-```
-
 ## Node Types
 
 | Form Factor | Use Case | Notes |

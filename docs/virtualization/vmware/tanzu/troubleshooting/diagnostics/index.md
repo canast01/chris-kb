@@ -1,35 +1,5 @@
 # Tanzu — Diagnostics
 
-```text
-┌─────────────────── Tanzu Diagnostics: Command Map ─────────────────────────────┐
-│                                                                                 │
-│  Cluster-level                                                                  │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  tanzu diagnostics collect --management-cluster                          │  │
-│  │  kubectl cluster-info dump --all-namespaces --output-directory /tmp/dump │  │
-│  └───────────────────────────────────────┬──────────────────────────────────┘  │
-│                                          │                                      │
-│  Pod-level                               ▼                                      │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  kubectl describe pod ► Events section (scheduling / image / probe)      │  │
-│  │  kubectl logs <pod> --previous  (crash loop previous container)          │  │
-│  │  kubectl get events -A --sort-by='.lastTimestamp'                        │  │
-│  └───────────────────────────────────────┬──────────────────────────────────┘  │
-│                                          │                                      │
-│  Storage                                 ▼                                      │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  kubectl logs -n vmware-system-csi vsphere-csi-controller                │  │
-│  │  kubectl logs -n vmware-system-csi -l app=vsphere-csi-node               │  │
-│  └───────────────────────────────────────┬──────────────────────────────────┘  │
-│                                          │                                      │
-│  Auth                                    ▼                                      │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  kubectl logs -n pinniped-supervisor ► OIDC/LDAP flow errors            │   │
-│  │  kubectl logs -n pinniped-concierge ► token validation errors            │  │
-│  └──────────────────────────────────────────────────────────────────────────┘  │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## Collect Cluster Diagnostics

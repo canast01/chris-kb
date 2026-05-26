@@ -58,60 +58,7 @@ Scale-out software-defined object storage — S3, Swift, and CAS APIs, geo-distr
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌────────────────────────────────── Dell ECS — Elastic Cloud Storage ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   ECS: Dell scale-out object storage; S3-compatible; designed for unstructured data at scale  │   │
-│   │      Protocols: S3, Swift, Atmos, HDFS, NFS (via gateway); RESTful API for all operations     │   │
-│   │ Architecture: commodity nodes in geo-distributed sites; cross-site replication for durability │   │
-│   │     Use cases: backup landing zone, media archive, IoT data lake, cloud-native app storage    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    App writes via S3 → ECS nodes distribute across site → replicate to geo sites → 99.9999% durable   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Storage Engine       │  │        Data Services        │  │          Management         │   │
-│   │         Object store        │  │        S3 compatible        │  │          ECS Portal         │   │
-│   │       Scale-out nodes       │  │          Swift API          │  │         ECS REST API        │   │
-│   │        Erasure coding       │  │         HDFS support        │  │        Namespace mgmt       │   │
-│   │       Geo replication       │  │       Metadata search       │  │           CloudIQ           │   │
-│   │       99.9999% durable      │  │         ILM policies        │  │           Alerting          │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    ECS nodes are commodity x86 servers with NL-SAS or NVMe drives; no external storage required       │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Protocol     │     Location     │      Notes       │   │
-│   │     Clients      │    Apps/tools    │      S3 REST      │   Any network    │ AWS SDK compat.  │   │
-│   │    ECS nodes     │   Object store   │   Internal mesh   │   On-premises    │4+ nodes per site │   │
-│   │    Geo sites     │   DR / archive   │     WAN repl.     │    Remote DC     │  Up to 3 sites   │   │
-│   │    ECS Portal    │  Management UI   │       HTTPS       │   On-premises    │   Central mgmt   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: commodity nodes in rack; 10/25 GbE data network; 1 GbE management network per node       │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    ECS            = Elastic Cloud Storage; Dell object storage platform for unstructured data         │
-│    S3 compatible  = ECS supports Amazon S3 API; AWS SDK and tools work without modification           │
-│    Object         = Immutable data unit with metadata; accessed via bucket/key path                   │
-│    Bucket         = Namespace container for objects; analogous to S3 bucket                           │
-│    Namespace      = Logical tenant container; groups buckets and users; multitenancy unit             │
-│    Erasure coding = EC (12+4 or 10+2 by default) provides durability without full replication         │
-│    Geo replication = Cross-site object replication; active-active or active-passive configuration     │
-│    ILM policy     = Information Lifecycle Management; auto-move or expire objects by age or tag       │
-│    Metadata search = ECS system metadata and custom user metadata are indexed and searchable          │
-│    HDFS support   = ECS exports as HDFS; Hadoop/Spark workloads read directly from ECS                │
-│    99.9999% durability = Six nines; achieved via erasure coding and geo replication combined          │
-│    ECS Portal     = Web-based management UI for ECS; namespace, user, bucket, and policy mgmt         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">
@@ -142,7 +89,6 @@ Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object st
 
 ## Where It Fits
 
-
 | Use Case |
 |---|
 | Primary object storage back-end for applications using S3-compatible APIs (analytics, media, archival) |
@@ -153,7 +99,6 @@ Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object st
 | Integration target for backup software (Veeam, Commvault) using S3 or CAS interfaces for immutable backup copies |
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -207,7 +152,6 @@ ecscli bucket get --namespace <namespace> --name <bucket>
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Create a namespace per team or application via ECS Portal → Namespace → New, and |  |
@@ -221,7 +165,6 @@ ecscli bucket get --namespace <namespace> --name <bucket>
 
 ## Upgrade Notes
 
-
 | Step | Action |
 |---|---|
 | 1 | Confirm the current ECS software version via ECS Portal → Settings → Software Update and record it before proceeding |
@@ -233,7 +176,6 @@ ecscli bucket get --namespace <namespace> --name <bucket>
 | 7 | Validate S3, Swift, and other API endpoints with a quick functional test from each consuming application or namespace |
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

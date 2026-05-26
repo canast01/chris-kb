@@ -3,37 +3,11 @@
 
 Firmware versions, drift review, lifecycle alignment, and upgrade notes.
 
-```text
-  ┌────────────────────────────────────────────────────┐
-  │            VxRail Firmware Inventory               │
-  └────────────────────────────────────────────────────┘
-  ┌─────────────┐
-  │  VxRail     │
-  │   Node      │
-  └──────┬──────┘
-         │
-         ├──► ┌────────────────────────────────────────┐
-         │    │ Component     │ Version    │ Target     │
-         │    ├───────────────┼────────────┼────────────┤
-         │    │ BIOS          │ x.x.x      │ y.y.y      │
-         │    │ iDRAC         │ x.x.x      │ y.y.y      │
-         │    │ NIC firmware  │ x.x.x      │ y.y.y      │
-         │    │ HBA firmware  │ x.x.x      │ y.y.y      │
-         │    │ Disk firmware │ x.x.x      │ y.y.y      │
-         │    │ CPLD          │ x.x.x      │ y.y.y      │
-         │    └────────────────────────────────────────┘
-         │
-         └──► iDRAC: racadm getversion -all
-              VxRail Manager: System → Software Versions
-              Drift ► LCM bundle remediation required
-```
-
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -62,7 +36,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review cluster health. |  |
@@ -81,7 +54,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 - Run post-upgrade checks.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

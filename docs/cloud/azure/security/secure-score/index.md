@@ -1,38 +1,5 @@
 # Azure — Secure Score
 
-```text
-┌────────────────────────────────────────────────────────────────┐
-│                  Secure Score — How It Works                    │
-└────────────────────────────────────────────────────────────────┘
-
-  Subscriptions + Resources
-          │
-          ▼ continuous assessment
-  ┌───────────────────────────────────────────┐
-  │  Security Controls (grouped by category)  │
-  │  ┌──────────────┐  ┌─────────────────┐    │
-  │  │ Enable MFA   │  │ Protect VMs with│    │
-  │  │ max 10 pts   │  │ endpoint prot.  │    │
-  │  └──────────────┘  └─────────────────┘    │
-  │       ...  (N controls)                   │
-  └──────────────────────┬────────────────────┘
-                         │
-                         ▼
-              ┌─────────────────────────────┐
-              │  Score = earned / max × 100 │
-              │  Per-control: partial credit │
-              │  for partial remediation     │
-              └──────────────┬──────────────┘
-                             │
-                  ┌──────────┴──────────┐
-                  ▼                     ▼
-      ┌───────────────────┐  ┌──────────────────────┐
-      │  Recommendations  │  │  Regulatory Compliance│
-      │  (remediate →     │  │  (CIS / NIST / PCI)  │
-      │   score rises)    │  └──────────────────────┘
-      └───────────────────┘
-```
-
 Microsoft Defender for Cloud Secure Score is a quantified measure of an Azure environment's security posture. It aggregates security recommendations across subscriptions into a single percentage that rises as recommendations are remediated.
 
 ## Score Calculation

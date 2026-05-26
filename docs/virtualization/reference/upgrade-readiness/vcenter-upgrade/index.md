@@ -1,29 +1,5 @@
 # vCenter Upgrade Readiness Checklist
 
-```text
-┌──────────────────────────────────────────────────────────────────────────┐
-│                   vCenter Upgrade Flow                                   │
-│                                                                          │
-│  1. File-based backup (VAMI) ──► verify backup exists + accessible       │
-│          │                                                               │
-│          ▼                                                               │
-│  2. Pre-checks: disk space │ certs │ all hosts Connected │ 0 red alarms  │
-│          │                                                               │
-│          ▼                                                               │
-│  3. Launch installer → deploy new appliance → run pre-check wizard       │
-│          │                                                               │
-│          ▼                                                               │
-│  4. Data migration → new VCSA takes over → old VCSA suspended            │
-│          │                                                               │
-│          ▼                                                               │
-│  5. Post-upgrade: login OK │ all services running │ hosts Connected      │
-│     plugins OK │ vSAN green │ NSX connected │ Aria adapters OK           │
-│          │                                                               │
-│          ▼                                                               │
-│  6. Keep old VCSA 48h → validate → delete old appliance                  │
-└──────────────────────────────────────────────────────────────────────────┘
-```
-
 ## Current State
 
 - Confirm current vCenter version and build number

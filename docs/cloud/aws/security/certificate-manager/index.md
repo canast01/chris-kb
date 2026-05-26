@@ -1,46 +1,5 @@
 # AWS Certificate Manager
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│         ACM — Certificate Lifecycle                      │
-└──────────────────────────────────────────────────────────┘
-
-  ┌─────────────────────┐
-  │  Request Certificate │
-  │  (domain + SANs)     │
-  └──────────┬──────────┘
-             │
-     ┌───────┴──────────┐
-     ▼                  ▼
-  DNS Validation     Email Validation
-  (add CNAME to      (click link sent
-   Route 53 / DNS)    to domain owner)
-     │                  │
-     └────────┬─────────┘
-              ▼
-  ┌─────────────────────┐
-  │  Certificate Issued  │
-  │  (ACM manages        │
-  │   private key)       │
-  └──────────┬──────────┘
-             │  attach to
-     ┌───────┴──────────┐
-     ▼                  ▼
-  ┌──────────┐     ┌────────────┐
-  │   ALB    │     │ CloudFront │
-  │ (HTTPS   │     │ (HTTPS     │
-  │ listener)│     │ distrib.)  │
-  └──────────┘     └────────────┘
-             │
-             ▼
-  ┌─────────────────────┐
-  │  Auto-Renewal       │
-  │  (60 days before    │
-  │   expiry, ACM       │
-  │   re-validates DNS) │
-  └─────────────────────┘
-```
-
 ## Overview
 
 AWS Certificate Manager notes for day-to-day infrastructure operations.
@@ -50,7 +9,6 @@ AWS Certificate Manager notes for day-to-day infrastructure operations.
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -74,7 +32,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -90,7 +47,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

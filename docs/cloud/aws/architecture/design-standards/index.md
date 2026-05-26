@@ -4,20 +4,6 @@
 
 ---
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│              AWS Design Standards Checklist              │
-│                                                          │
-│  Account       Multi-account org · no workloads in mgmt  │
-│  Networking    VPC /16 · subnets /24 · no overlap        │
-│  Tagging       Environment · Owner · CostCentre · App    │
-│  IAM           No long-lived keys · roles only · MFA     │
-│  Encryption    SSE-KMS on S3/EBS/RDS · TLS enforced      │
-│  Logging       CloudTrail all-region · Config enabled    │
-│  Guardrails    SCPs deny root · restrict regions         │
-└──────────────────────────────────────────────────────────┘
-```
-
 ## Tagging Policy
 
 All AWS resources must carry these mandatory tags (enforced via AWS Config + SCPs):

@@ -2,37 +2,6 @@
 
 > Part of the [VxRail](../index.md) reference.
 
-```text
-  ┌──────────────────────────────────────────────────────────┐
-  │                   VxRail Security Layers                 │
-  │                                                          │
-  │  ┌──────────────────────────────────────────────────┐    │
-  │  │  iDRAC RBAC                                      │    │
-  │  │  Root password changed │ Mgmt VLAN only          │    │
-  │  │  Audit logging enabled │ IP filter set           │    │
-  │  └──────────────────────────────────────────────────┘    │
-  │                          │                               │
-  │                          ▼                               │
-  │  ┌──────────────────────────────────────────────────┐    │
-  │  │  ESXi Lockdown Mode                              │    │
-  │  │  Normal: SSH/API disabled ─► vCenter only mgmt   │    │
-  │  │  Strict: DCUI also disabled                      │    │
-  │  └──────────────────────────────────────────────────┘    │
-  │                          │                               │
-  │                          ▼                               │
-  │  ┌──────────────────────────────────────────────────┐    │
-  │  │  vSAN Encryption (data-at-rest)                  │    │
-  │  │  KMS ──► vCenter enable ──► disk group reformat  │    │
-  │  └──────────────────────────────────────────────────┘    │
-  │                          │                               │
-  │                          ▼                               │
-  │  ┌──────────────────────────────────────────────────┐    │
-  │  │  Audit Logging ──► Syslog ──► SIEM               │    │
-  │  │  vCenter RBAC: AD groups ──► scoped roles        │    │
-  │  └──────────────────────────────────────────────────┘    │
-  └──────────────────────────────────────────────────────────┘
-```
-
 ---
 ## Hardening Checklist
 

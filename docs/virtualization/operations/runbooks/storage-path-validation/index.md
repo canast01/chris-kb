@@ -1,36 +1,5 @@
 # Virtualization Storage Path Validation
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│                  STORAGE PATH VALIDATION FLOW                   │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │
-   ┌───────────────────────▼───────────────────────────────┐
-   │  esxcli storage nmp device list                       │
-   │  Confirm device visible on all expected hosts         │
-   └───────────────────────┬───────────────────────────────┘
-                           │
-   ┌───────────────────────▼───────────────────────────────┐
-   │  esxcli storage nmp path list -d <naa.xxxx>           │
-   │  Verify active/standby path count, no dead paths      │
-   └───────────────────────┬───────────────────────────────┘
-                           │
-   ┌───────────────────────▼───────────────────────────────┐
-   │  Multipath State Check                                │
-   │  PSP = RR or MRU ► policy matches design              │
-   └───────────────────────┬───────────────────────────────┘
-                           │
-   ┌───────────────────────▼───────────────────────────────┐
-   │  Rescan Adapters (if paths missing)                   │
-   │  esxcli storage core adapter rescan -A all            │
-   └───────────────────────┬───────────────────────────────┘
-                           │
-   ┌───────────────────────▼───────────────────────────────┐
-   │  Verify — Datastores Mounted, Latency Normal           │
-   │  No new storage alarms in vCenter                     │
-   └───────────────────────────────────────────────────────┘
-```
-
 ## Overview
 
 Use this after SAN changes, storage maintenance, host work, or datastore alerts.

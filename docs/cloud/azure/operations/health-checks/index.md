@@ -1,34 +1,5 @@
 # Azure — Health Checks
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                    Azure Health Check Flow                   │
-└─────────────────────────────────────────────────────────────┘
-
- ┌──────────────────┐    ┌──────────────────┐
- │  Azure Service   │    │  Resource Health  │
- │  Health          │    │  (per resource)   │
- │  (platform-wide) │    │                  │
- └────────┬─────────┘    └────────┬─────────┘
-          │                       │
-          └───────────┬───────────┘
-                      ▼
-           ┌──────────────────────┐
-           │   Azure Monitor      │
-           │  ┌────────────────┐  │
-           │  │ Activity Log   │  │
-           │  │ Metric Alerts  │  │
-           │  │ Log Analytics  │  │
-           │  └────────────────┘  │
-           └──────────┬───────────┘
-                      │ alert fires
-                      ▼
-           ┌──────────────────────┐
-           │    Action Group      │
-           │  email / SMS / ITSM  │
-           └──────────────────────┘
-```
-
 > Service health, VM status, load balancer health, and monitor alert review.
 
 See also: [Operations](../index.md) for the full daily checklist and incident triage procedures.

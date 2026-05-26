@@ -1,31 +1,5 @@
 # Aria Operations for Networks — Authentication
 
-```text
-┌──────────── Aria Networks Authentication: vIDM SSO Flow ───────────────────────┐
-│                                                                                 │
-│  Method 1: Local (break-glass)                                                  │
-│  admin@local ──► password set during OVA deploy ──► Settings ► Change Pwd      │
-│                                                                                 │
-│  Method 2: LDAP / Active Directory                                              │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Platform VM ──ldaps:636──► AD server                                   │   │
-│  │  bind DN ► user search ► sAMAccountName match ► group lookup            │   │
-│  │  Settings ► Role Mappings: AD group ──► vRNI role                       │   │
-│  └──────────────────────────────────────────────────────────────────────────┘  │
-│                                                                                 │
-│  Method 3: SAML / vIDM (SSO)                                                   │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  User browser ──► vRNI SP ──► redirect ──► vIDM IdP                    │    │
-│  │  vIDM authenticates ──► SAML assertion ──► vRNI role mapping            │   │
-│  │  SP Metadata export ──► import into vIDM service provider               │   │
-│  └──────────────────────────────────────────────────────────────────────────┘  │
-│                                                                                 │
-│  Method 4: API Token                                                            │
-│  POST /api/ni/auth/token ──► bearer token (24h session or long-lived)          │
-│  Header: Authorization: NetworkInsight <token>                                  │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## Authentication Methods

@@ -2,25 +2,6 @@
 
 Verify database availability, connectivity, replication status, and resource utilization across common platforms.
 
-```text
-┌──────────────────────────────────────────────────────────────────┐
-│                      DB Health Dashboard                         │
-├──────────────┬───────────────┬────────────────┬──────────────────┤
-│ Connections  │ Replication   │  Long Queries  │   Disk Space     │
-│              │ Lag           │  & Blocking    │                  │
-│ active/max   │ <10s normal   │ >5min → warn   │ vol used %       │
-│ >80% → warn  │ >60s → alert  │ >30min → crit  │ >70% → alert     │
-└──────┬───────┴───────┬───────┴────────┬───────┴──────────────────┘
-       │               │                │
-       └───────────────┴────────────────┘
-                       │
-                       ▼
-           ┌───────────────────────┐
-           │  Alert / Escalate     │
-           │  to on-call / DBA     │
-           └───────────────────────┘
-```
-
 ## Quick Status — All Platforms
 
 ```bash

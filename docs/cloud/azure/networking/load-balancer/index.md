@@ -2,60 +2,6 @@
 
 Azure Load Balancer is a Layer 4 (TCP/UDP) load balancer for distributing inbound traffic to backend VMs or scale sets.
 
-```text
-┌──────────────────────────────────────────────────────────────┐
-│                Azure Load Balancer Flow                      │
-│                                                              │
-│  Client ──────────────────────────────────────────────────►  │
-│                                                              │
-│  ┌───────────────────────────────────────────────────────┐   │
-│  │  Frontend IP  (public static IP or internal private)  │   │
-│  └──────────────────────────┬────────────────────────────┘   │
-│                             │ LB rules (port mapping)        │
-│                             ▼                                │
-│  ┌───────────────────────────────────────────────────────┐   │
-│  │  Health Probe  (TCP:80 / HTTP /health)                 │   │
-│  │  ── healthy ──► included in pool                       │   │
-│  │  ── unhealthy ──► excluded from rotation               │   │
-│  └──────────────────────────┬────────────────────────────┘   │
-│                             │                                │
-│                             ▼                                │
-│  ┌───────────────────────────────────────────────────────┐   │
-│  │  Backend Pool                                         │   │
-│  │  ┌─────────┐   ┌─────────┐   ┌─────────┐             │    │
-│  │  │  VM-1   │   │  VM-2   │   │  VM-3   │             │    │
-│  │  └─────────┘   └─────────┘   └─────────┘             │    │
-│  └───────────────────────────────────────────────────────┘   │
-└──────────────────────────────────────────────────────────────┘
-``` The Standard SKU supports availability zones, cross-region load balancing, and detailed metrics. The Basic SKU is being retired.
-
-## Creating a Standard Load Balancer
-
-```bash
-# Create a public IP for the load balancer
-az network public-ip create \
-  --resource-group myRG \
-  --name lb-pip \
-  --sku Standard \
-  --allocation-method Static \
-  --zone 1 2 3
-
-# Create the load balancer
-az network lb create \
-  --resource-group myRG \
-  --name myLB \
-  --sku Standard \
-  --public-ip-address lb-pip \
-  --frontend-ip-name myFrontendIP \
-  --backend-pool-name myBackendPool
-
-# Show load balancer details
-az network lb show \
-  --resource-group myRG \
-  --name myLB \
-  --output json
-```
-
 ## Frontend IPs
 
 ```bash

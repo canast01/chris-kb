@@ -1,33 +1,5 @@
 # Aria Ops for Logs — Health Checks
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│         Aria Ops for Logs Health Check Stack                │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Cluster Nodes                                       │   │
-│  │  GET /api/v2/cluster/nodes  ·  all state=ACTIVE      │   │
-│  └──────────────────────────────────┬───────────────────┘   │
-│                                     │                       │
-│                                     ▼                       │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Disk Usage                                          │   │
-│  │  df -h /var/log/loginsight  ·  < 70%: normal         │   │
-│  │  GET /api/v2/cluster/stats  ·  diskUsagePercent      │   │
-│  └──────────────────────────────────┬───────────────────┘   │
-│                                     │                       │
-│                                     ▼                       │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Ingestion Rate + Agent Connectivity                 │   │
-│  │  eventsIngested > 0  ·  no stale agents (>15 min)   │    │
-│  └──────────────────────────────────┬───────────────────┘   │
-│                                     │                       │
-│                                     ▼                       │
-│  Alert Definitions: none accidentally disabled              │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ## Daily Health Checks
 
 ### Cluster Node Status

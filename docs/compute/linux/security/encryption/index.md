@@ -2,28 +2,6 @@
 
 LUKS/dm-crypt full-disk encryption, NBDE (Network Bound Disk Encryption), TLS for services, and encrypted volume management.
 
-```text
-┌────────────────────────────────────────────────────────┐
-│                Linux Encryption Layers                 │
-├────────────────────────────────────────────────────────┤
-│  Disk: LUKS2 (dm-crypt)                                │
-│  /dev/sdX ──► luksFormat ──► luksOpen ──► /dev/mapper  │
-│  Key slots: passphrase │ keyfile │ Clevis/NBDE token   │
-│                                                        │
-│  NBDE auto-unlock at boot:                             │
-│  Clevis (client) ──► Tang server ──► release key       │
-│  (only unlocks when on trusted network)                │
-├────────────────────────────────────────────────────────┤
-│  TLS (in-transit)                                      │
-│  CA ──► sign CSR ──► server.crt + server.key           │
-│  nginx/httpd: TLSv1.2+ │ strong ciphers │ HSTS         │
-│  RHEL: update-crypto-policies --set DEFAULT/FUTURE     │
-├────────────────────────────────────────────────────────┤
-│  GPG (file/data)                                       │
-│  gpg --encrypt --recipient  │  gpg --symmetric         │
-└────────────────────────────────────────────────────────┘
-```
-
 ## LUKS — Full Disk Encryption
 
 LUKS (Linux Unified Key Setup) is the standard block device encryption layer on Linux, implemented via `dm-crypt`.

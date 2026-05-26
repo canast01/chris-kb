@@ -1,26 +1,5 @@
 # Linux — Security
 
-```text
-┌───────────────────────────────────────────────────────┐
-│               Linux Security Layers                   │
-├───────────────────────────────────────────────────────┤
-│  Authentication: PAM → SSSD → AD/LDAP → sudo          │
-│  SSH: pubkey only, no root, fail2ban / pam_faillock    │
-├───────────────────────────────────────────────────────┤
-│  Access Control                                       │
-│  ┌─────────────┬──────────────┬──────────────────┐    │
-│  │  POSIX ACLs │  SELinux     │  AppArmor        │    │
-│  │  chown/chmod│  contexts    │  profiles        │    │
-│  └─────────────┴──────────────┴──────────────────┘    │
-├───────────────────────────────────────────────────────┤
-│  Network: firewalld (zones) → nftables → kernel       │
-├───────────────────────────────────────────────────────┤
-│  Encryption: LUKS (disk) │ TLS (services) │ GPG       │
-├───────────────────────────────────────────────────────┤
-│  Audit: auditd → /var/log/audit/audit.log             │
-└───────────────────────────────────────────────────────┘
-```
-
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="authentication/">

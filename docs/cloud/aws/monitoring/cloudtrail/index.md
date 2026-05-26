@@ -3,33 +3,11 @@
 
 AWS CloudTrail notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│               CloudTrail Architecture                   │
-│                                                         │
-│  AWS API call (Console · CLI · SDK · Service)           │
-│        │                                                │
-│        ▼                                                │
-│  CloudTrail Event                                       │
-│  ├── Management events (control plane — free 90d)       │
-│  ├── Data events       (S3 obj ops · Lambda invoke)     │
-│  └── Insight events    (unusual API activity)           │
-│        │                                                │
-│        ▼                                                │
-│  Trail (all-region recommended)                         │
-│  ├── S3 bucket (log archive account)                    │
-│  └── CloudWatch Logs (for metric filter alerts)         │
-│                                                         │
-│  Integrity: log file validation (SHA-256 hash chain)    │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -53,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -69,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

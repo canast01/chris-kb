@@ -2,28 +2,6 @@
 
 > Part of the Azure CLI Reference.
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│               Networking CLI Flow                        │
-│                                                          │
-│  az network vnet create ──────────► VNet                 │
-│                                      │                   │
-│  az network vnet subnet create ─────►├── Subnet A        │
-│                                      └── Subnet B        │
-│                                             │            │
-│  az network nsg create                      ▼            │
-│  az network nsg rule create ──────► NSG attached         │
-│                                             │            │
-│  az network route-table create              ▼            │
-│  ──────────────────────────────────► Route Table         │
-│                                             │            │
-│  az network public-ip create                ▼            │
-│  az network lb create ─────────────► Load Balancer       │
-│                                      (frontend IP ►      │
-│                                       backend pool)      │
-└──────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ```bash

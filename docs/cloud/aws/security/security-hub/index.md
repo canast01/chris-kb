@@ -1,41 +1,5 @@
 # AWS Security Hub
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│         Security Hub — Findings Aggregation              │
-└──────────────────────────────────────────────────────────┘
-
-  FINDING SOURCES
-  ┌───────────┐ ┌───────────┐ ┌──────────┐ ┌──────────┐
-  │ GuardDuty │ │ Inspector │ │  Config  │ │  Macie   │
-  │ (threats) │ │  (CVEs)   │ │ (rules)  │ │  (data)  │
-  └─────┬─────┘ └─────┬─────┘ └─────┬────┘ └─────┬────┘
-        │             │             │             │
-        └─────────────┼─────────────┼─────────────┘
-                      ▼
-          ┌───────────────────────┐
-          │  Security Hub         │
-          │  Normalization        │
-          │  (ASFF format)        │
-          └───────────┬───────────┘
-                      │
-          ┌───────────┴──────────────┐
-          ▼                          ▼
-  ┌──────────────────┐    ┌──────────────────────┐
-  │  Security Score  │    │  Standards            │
-  │  (0–100 per      │    │  CIS / PCI DSS /      │
-  │   standard)      │    │  AWS Foundational     │
-  └──────────────────┘    └──────────────────────┘
-          │
-          ▼
-  ┌──────────────────┐
-  │  Dashboard +     │
-  │  Insights view   │
-  │  EventBridge ►   │
-  │  SNS / ticketing │
-  └──────────────────┘
-```
-
 ## Overview
 
 AWS Security Hub notes for day-to-day infrastructure operations.
@@ -45,7 +9,6 @@ AWS Security Hub notes for day-to-day infrastructure operations.
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -69,7 +32,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -85,7 +47,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

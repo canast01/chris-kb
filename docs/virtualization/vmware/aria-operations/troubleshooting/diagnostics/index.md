@@ -1,34 +1,5 @@
 # Aria Operations — Diagnostics
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│         Aria Operations Diagnostics Overview                │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  Support Bundle                                             │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Administration → Support → Generate Support Bundle  │   │
-│  │  vracli support bundle generate                      │   │
-│  │  Contents: logs, DB diagnostics, cluster config      │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                             │
-│  Key Log Files                                              │
-│  ┌─────────────────────────────┬────────────────────────┐   │
-│  │ /data/vcops/log/            │ Purpose                │   │
-│  ├─────────────────────────────┼────────────────────────┤   │
-│  │ collector.log               │ adapter collection     │   │
-│  │ adapters/<name>/adapter.log │ per-adapter errors     │   │
-│  │ casa.log                    │ auth / sessions        │   │
-│  │ analytics.log               │ metric processing      │   │
-│  │ cassandra/system.log        │ storage backend        │   │
-│  └─────────────────────────────┴────────────────────────┘   │
-│                                                             │
-│  Log Level Adjustment (per adapter)                         │
-│  Administration → Solutions → edit adapter → Log Level      │
-│  Reset to INFO after troubleshooting                        │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ## Alert Tuning
 
 Alert tuning is important because too many low-value alerts create noise.

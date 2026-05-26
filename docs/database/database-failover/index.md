@@ -2,25 +2,6 @@
 
 Promote a standby/replica database to primary when the primary becomes unavailable. Follow the appropriate section for each platform.
 
-```text
-┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
-│ Primary Fails    │   │ Replica Promoted │   │  DNS Updated     │   │ App Reconnects  │
-│                  │   │                  │   │                  │   │                 │
-│ Confirm failure  │   │ pg_ctl promote   │   │ CNAME / VIP /    │   │ Connection pool │
-│ from multiple    │──►│ RESET SLAVE ALL  │──►│ ProxySQL backend │──►│ flush / bounce  │
-│ paths; check lag │   │ AG FAILOVER      │   │ updated to new   │   │ App health chk  │
-│                  │   │ Patroni failover │   │ primary host     │   │ returns 200     │
-└──────────────────┘   └──────────────────┘   └──────────────────┘   └─────────────────┘
-                                                                               │
-                                                                      ┌────────┘
-                                                                      ▼
-                                                             ┌────────────────┐
-                                                             │ Rebuild old    │
-                                                             │ primary as new │
-                                                             │ replica        │
-                                                             └────────────────┘
-```
-
 ## Pre-Failover Checklist
 
 - [ ] Primary failure confirmed (not a network partition — verify from multiple paths)

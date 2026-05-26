@@ -3,40 +3,11 @@
 
 Failed or incomplete support bundle collection troubleshooting.
 
-```text
-  ┌──────────────────────────────────────────────────────┐
-  │         Support Bundle Failure Triage                │
-  │                                                      │
-  │  Bundle generation fails / times out                 │
-  │                 │                                    │
-  │     ┌───────────┼──────────────┐                     │
-  │     ▼           ▼              ▼                     │
-  │  Disk space   Service      Collection                │
-  │  check        state        timeout                   │
-  │  df -h        systemctl    large cluster?            │
-  │  /var/log     status       per-node fallback         │
-  │  /tmp full?   marvin       vm-support -w /tmp        │
-  │     │           │              │                     │
-  │     └───────────┴──────────────┘                     │
-  │                 │                                    │
-  │                 ▼                                    │
-  │  ┌──────────────────────────────────────────────┐    │
-  │  │  Per-node fallback:                          │    │
-  │  │  SSH to ESXi ──► vm-support -w /tmp          │    │
-  │  │  SCP .tgz off host ──► attach to SR          │    │
-  │  └──────────────────────────────────────────────┘    │
-  │                 │                                    │
-  │                 ▼                                    │
-  │  Still failing ──► restart marvin ──► retry UI      │
-  └──────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -65,7 +36,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review cluster health. |  |
@@ -84,7 +54,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 - Run post-upgrade checks.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

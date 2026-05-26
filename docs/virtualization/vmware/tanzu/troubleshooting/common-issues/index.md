@@ -1,30 +1,5 @@
 # Tanzu — Common Issues
 
-```text
-┌──────────────── Tanzu Triage: Issue by Layer ──────────────────────────────────┐
-│                                                                                 │
-│  Supervisor issues                                                              │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Stuck "Configuring" ► DNS/NTP/NSX-T load balancer / content library    │   │
-│  │  API unreachable ► check control plane VM IPs and network routing        │  │
-│  └───────────────────────────────────────┬──────────────────────────────────┘  │
-│                                          │                                      │
-│  TKG Cluster issues                      ▼                                      │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Cluster stuck "creating" ► kubectl describe Machine ► image pull/creds  │  │
-│  │  Namespace resource quota hit ► vCenter ► Workload Mgmt ► Namespaces    │   │
-│  └───────────────────────────────────────┬──────────────────────────────────┘  │
-│                                          │                                      │
-│  Node / Pod issues                       ▼                                      │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Pod Pending ► kubectl describe: Insufficient cpu/mem │ PVC not bound    │  │
-│  │  ImagePullBackOff ► Harbor cert trust │ wrong imagePullSecret            │  │
-│  │  LoadBalancer Pending ► NSX/AVI IP pool exhausted                        │  │
-│  │  Ingress not routing ► Contour pods │ HTTPProxy Valid condition          │  │
-│  └──────────────────────────────────────────────────────────────────────────┘  │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## Supervisor Stuck in Configuring State

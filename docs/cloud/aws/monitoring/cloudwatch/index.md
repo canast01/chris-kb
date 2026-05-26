@@ -3,32 +3,11 @@
 
 AWS CloudWatch notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                 CloudWatch Data Model                   │
-│                                                         │
-│  Namespace (e.g. AWS/EC2)                               │
-│  └── Metric (e.g. CPUUtilization)                       │
-│       └── Dimension (InstanceId=i-abc123)               │
-│            └── Data Points (timestamp + value)          │
-│                 └── Statistics (avg · max · p99 …)      │
-│                                                         │
-│  Sources of metrics:                                    │
-│  ├── AWS services (auto-published free)                 │
-│  ├── CloudWatch Agent (OS: memory · disk · process)     │
-│  └── Custom metrics (PutMetricData API)                 │
-│                                                         │
-│  Retention: 1-min → 15 days · 5-min → 63 days           │
-│             1-hr  → 455 days (15 months)                │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -52,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -68,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

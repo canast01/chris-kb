@@ -1,31 +1,5 @@
 # Tanzu — Install and Upgrade
 
-```text
-┌──────────────── Tanzu Upgrade Sequence ────────────────────────────────────────┐
-│                                                                                 │
-│  Step 1: vCenter upgrade (if upgrading vSphere)                                │
-│      │                                                                          │
-│      ▼                                                                          │
-│  Step 2: Supervisor upgrade                                                     │
-│          (auto-managed by vCenter Lifecycle Manager after vCenter upgrade)      │
-│      │                                                                          │
-│      ▼                                                                          │
-│  Step 3: TKG Management Cluster                                                 │
-│          tanzu management-cluster upgrade                                        │
-│      │                                                                          │
-│      ▼                                                                          │
-│  Step 4: TKG Workload Clusters (one at a time, rolling)                         │
-│          tanzu cluster upgrade <name>                                            │
-│          ┌──────────────────────────────────────────────────┐                  │
-│          │ control plane nodes upgrade ► worker nodes roll  │                  │
-│          │ (one node: cordon ► drain ► upgrade ► uncordon)  │                  │
-│          └──────────────────────────────────────────────────┘                  │
-│      │                                                                          │
-│      ▼                                                                          │
-│  Step 5: Harbor — redeploy from new OVA (preserve external DB + storage)        │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## Prerequisites for vSphere with Tanzu (Supervisor)

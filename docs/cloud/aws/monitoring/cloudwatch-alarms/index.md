@@ -3,35 +3,11 @@
 
 AWS CloudWatch Alarms notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                CloudWatch Alarm States                  │
-│                                                         │
-│          ┌─────────────────────────────────┐            │
-│          │           ALARM                 │            │
-│          │  metric > threshold N periods   │            │
-│          └──────────┬──────────────────────┘            │
-│                     │                                   │
-│          ┌──────────▼──────────────────────┐            │
-│          │            OK                   │            │
-│          │  metric within threshold        │            │
-│          └──────────┬──────────────────────┘            │
-│                     │                                   │
-│          ┌──────────▼──────────────────────┐            │
-│          │    INSUFFICIENT_DATA             │            │
-│          │  not enough data points yet     │            │
-│          └─────────────────────────────────┘            │
-│                                                         │
-│  Alarm actions: SNS · Lambda · EC2 action · Auto Scaling│
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -55,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -71,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

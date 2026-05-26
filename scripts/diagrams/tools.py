@@ -615,3 +615,158 @@ def tools_confluence_arch_integrations():
 
     lines.append('└' + '─' * W2 + '┘')
     return lines
+
+
+# ── Confluence remaining pages ────────────────────────────────────────────────
+
+W2 = 103
+
+@kb_diagram('tools-confluence-ops', 'docs/tools/confluence/operations/index.md', 'Confluence operations overview')
+def _():
+    R, txt_row = make_helpers(W2)
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    lines = []
+    lines.append(title_border(W2, 'Confluence — Operations Overview'))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Daily Checks'), bMid(B2_L, B2_R, 'Weekly Tasks'), bMid(B3_L, B3_R, 'Monthly Tasks'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Service status'), bMid(B2_L, B2_R, 'Space health'), bMid(B3_L, B3_R, 'License audit'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Backup verify'), bMid(B2_L, B2_R, 'User audit'), bMid(B3_L, B3_R, 'Plugin updates'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Disk usage'), bMid(B2_L, B2_R, 'Check logs'), bMid(B3_L, B3_R, 'Performance review'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Alert triage'), bMid(B2_L, B2_R, 'Reindex if slow'), bMid(B3_L, B3_R, 'Security review'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure:'))
+    lines.append(txt_row('Confluence server/DC VMs · PostgreSQL or Oracle DB · file system for attachments'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Service status = Confluence app server running; check via systemctl or process monitor'))
+    lines.append(txt_row('Backup verify = Confirm backup job completed; test restore quarterly'))
+    lines.append(txt_row('Disk usage = Monitor home directory and attachments; alert at 80%'))
+    lines.append(txt_row('Reindex = Rebuilding Confluence search index; needed after bulk import or corruption'))
+    lines.append(txt_row('Plugin = Confluence app/add-on; update via UPM (Universal Plugin Manager)'))
+    lines.append(txt_row('UPM = Universal Plugin Manager; Confluence built-in app marketplace management'))
+    lines.append(txt_row('Space = Confluence top-level container for pages; each team typically has a space'))
+    lines.append(txt_row('License audit = Verifying active user count against licensed seats'))
+    lines.append(txt_row('PostgreSQL = Recommended database for Confluence Server/DC deployments'))
+    lines.append(txt_row('Home directory = CONFLUENCE_HOME; stores attachments, backups, and indexes'))
+    lines.append(txt_row('Performance review = Monthly check of heap usage, GC pauses, and page load times'))
+    lines.append(txt_row('Security review = Monthly check of admin accounts, anonymous access, and HTTPS config'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('tools-confluence-ops-backup', 'docs/tools/confluence/operations/backup-restore/index.md', 'Confluence backup and restore')
+def _():
+    R, txt_row = make_helpers(W2)
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    lines = []
+    lines.append(title_border(W2, 'Confluence — Backup and Restore'))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Backup Strategy'), bMid(B2_L, B2_R, 'Restore Procedure'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'DB dump nightly'), bMid(B2_L, B2_R, 'Stop Confluence'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Home dir snapshot'), bMid(B2_L, B2_R, 'Restore DB first'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'XML backup (weekly)'), bMid(B2_L, B2_R, 'Restore home dir'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Verify daily'), bMid(B2_L, B2_R, 'Start Confluence'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Off-site copy'), bMid(B2_L, B2_R, 'Verify via UI'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure:'))
+    lines.append(txt_row('Confluence server · PostgreSQL DB · CONFLUENCE_HOME on NFS or SAN · backup to NFS'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('XML backup = Confluence built-in export; content only; portable but slow for large instances'))
+    lines.append(txt_row('DB dump = pg_dump for PostgreSQL; fastest and most reliable backup method'))
+    lines.append(txt_row('CONFLUENCE_HOME = File system directory containing attachments, config, and indexes'))
+    lines.append(txt_row('Home dir snapshot = Filesystem or VM snapshot of CONFLUENCE_HOME for quick restore'))
+    lines.append(txt_row('Restore order = Always restore DB before restoring home directory'))
+    lines.append(txt_row('Verify restore = Log in, check recent pages and attachments exist after restore'))
+    lines.append(txt_row('Off-site copy = Backup archive copied to secondary location or object store'))
+    lines.append(txt_row('Quarterly test = Full restore to test environment quarterly to verify recoverability'))
+    lines.append(txt_row('RTO = Recovery Time Objective; target time from failure to restored service'))
+    lines.append(txt_row('RPO = Recovery Point Objective; maximum acceptable data loss in time'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('tools-confluence-ops-cli', 'docs/tools/confluence/operations/cli-reference/index.md', 'Confluence CLI reference')
+def _():
+    R, txt_row = make_helpers(W2)
+    L, RR = 3, 99
+    lines = []
+    lines.append(title_border(W2, 'Confluence — CLI Reference'))
+    lines.append(txt_row())
+    lines.append(R(bTop(L, RR)))
+    lines.append(R(bMid(L, RR, 'Confluence admin CLI — run on server as confluence OS user')))
+    lines.append(R(bMid(L, RR, './start-confluence.sh / ./stop-confluence.sh — start/stop application')))
+    lines.append(R(bMid(L, RR, './confluence.sh status — show running/stopped state and PID')))
+    lines.append(R(bMid(L, RR, 'Confluence REST API: GET /rest/api/space — list all spaces')))
+    lines.append(R(bMid(L, RR, 'Confluence REST API: GET /rest/api/content?type=page — search content')))
+    lines.append(R(bMid(L, RR, 'pg_dump -U confluence confluence > backup.sql — PostgreSQL backup')))
+    lines.append(R(bBot(L, RR)))
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure:'))
+    lines.append(txt_row('SSH to Confluence server · commands run as confluence OS user · DB on separate host'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('start-confluence.sh = Script in CONFLUENCE_INSTALL/bin/ to start the app server'))
+    lines.append(txt_row('stop-confluence.sh = Graceful shutdown; waits for active sessions to complete'))
+    lines.append(txt_row('REST API = Confluence programmatic interface at /rest/api; auth: Basic or OAuth'))
+    lines.append(txt_row('Space REST = GET /rest/api/space returns all spaces with key, name, and type'))
+    lines.append(txt_row('Content REST = GET /rest/api/content; supports CQL query for filtering'))
+    lines.append(txt_row('CQL = Confluence Query Language; structured search (type=page AND space=TEAM)'))
+    lines.append(txt_row('pg_dump = PostgreSQL backup utility; creates SQL dump of Confluence DB'))
+    lines.append(txt_row('CONFLUENCE_INSTALL = Installation directory; contains bin/, conf/, and lib/'))
+    lines.append(txt_row('CONFLUENCE_HOME = Data directory; contains attachments, indexes, and backups'))
+    lines.append(txt_row('Log files = CONFLUENCE_HOME/logs/atlassian-confluence.log for app events'))
+    lines.append(txt_row('catalina.out = Tomcat log; CONFLUENCE_INSTALL/logs/catalina.out'))
+    lines.append(txt_row('Heap dump = -XX:+HeapDumpOnOutOfMemoryError in JVM_SUPPORT_RECOMMENDED_ARGS'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('tools-confluence-ops-health', 'docs/tools/confluence/operations/health-checks/index.md', 'Confluence health checks')
+def _():
+    R, txt_row = make_helpers(W2)
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    lines = []
+    lines.append(title_border(W2, 'Confluence — Health Checks'))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Application Health'), bMid(B2_L, B2_R, 'Infrastructure Health'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'GET /status → OK'), bMid(B2_L, B2_R, 'DB connection'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Heap usage < 80%'), bMid(B2_L, B2_R, 'Disk < 80%'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Thread count normal'), bMid(B2_L, B2_R, 'NFS mount check'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No OOM in logs'), bMid(B2_L, B2_R, 'Backup completed'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Search index OK'), bMid(B2_L, B2_R, 'SMTP test'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure:'))
+    lines.append(txt_row('Confluence server · PostgreSQL · NFS for home dir · SMTP relay · load balancer'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('GET /status = Confluence health endpoint; returns RUNNING or error state'))
+    lines.append(txt_row('Heap usage = JVM heap percentage; >80% risks OOM; check via Admin > System Info'))
+    lines.append(txt_row('OOM = OutOfMemoryError; kills Confluence if heap exhausted; check catalina.out'))
+    lines.append(txt_row('Thread count = Active HTTP threads; high count indicates slow requests backing up'))
+    lines.append(txt_row('Search index = Lucene index in CONFLUENCE_HOME/index; trigger reindex if stale'))
+    lines.append(txt_row('DB connection = Confluence checks DB pool; if exhausted, pages fail to load'))
+    lines.append(txt_row('NFS mount = CONFLUENCE_HOME on NFS; if unmounted, attachments return 404'))
+    lines.append(txt_row('SMTP test = Send test email from Admin > Mail Servers; confirms notifications work'))
+    lines.append(txt_row('Backup completed = Check CONFLUENCE_HOME/backups/ for fresh archive'))
+    lines.append(txt_row('System Info = Admin > System Information; shows memory, JVM version, and config'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines

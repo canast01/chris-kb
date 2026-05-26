@@ -1,28 +1,5 @@
 # Aria Ops for Logs — Scripts
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│         Aria Ops for Logs Script Pattern                    │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  Script (Bash / PowerShell)                                 │
-│       │                                                     │
-│       ▼  HTTP Basic auth per request                        │
-│  ┌────────────────────────────────────────────────────┐     │
-│  │  Aria Ops for Logs REST API  (https://<vrli>)      │     │
-│  │  /api/v2/cluster/nodes    → node state             │     │
-│  │  /api/v2/cluster/stats    → eventsIngested, disk%  │     │
-│  │  /api/v2/agents           → stale agent detection  │     │
-│  │  /api/v2/alerts           → export / enable check  │     │
-│  │  /api/v2/events/ingest    → ad-hoc log query       │     │
-│  │  /api/v2/notification     → channel test           │     │
-│  └────────────────────────────────────────────────────┘     │
-│       │                                                     │
-│       ▼                                                     │
-│  JSON response → filter → report / alert / exit code        │
-└─────────────────────────────────────────────────────────────┘
-```
-
 Scripts for Aria Operations for Logs target four use cases: cluster health monitoring, log source coverage auditing, alert definition management, and log queries via the REST API. The API base URL is `https://<vrli-fqdn>/api/v2` with HTTP Basic authentication.
 
 ---

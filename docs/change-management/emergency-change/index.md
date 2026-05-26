@@ -2,24 +2,6 @@
 
 Emergency changes bypass the standard CAB cycle to address active outages or critical security incidents. All approvals and documentation occur during or immediately after implementation.
 
-```text
-┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
-│ Detect Incident  │   │ Emergency CAB    │   │   Implement      │   │  Post-Review    │
-│                  │   │ Approval         │   │                  │   │                 │
-│ P1 outage /      │   │                  │   │ Apply fix →      │   │ Document in     │
-│ security exploit │──►│ On-call mgr or   │──►│ validate health  │──►│ ITSM < 24h      │
-│ data risk /      │   │ CISO (sec)       │   │ smoke tests      │   │ PIR within      │
-│ compliance breach│   │ DBA lead (data)  │   │ confirm restored │   │ 5 biz days      │
-└──────────────────┘   └──────────────────┘   └──────────────────┘   └─────────────────┘
-                                │                       │
-                       ┌────────┘              ┌────────┘
-                       ▼                       ▼
-              ┌──────────────────┐    ┌──────────────────┐
-              │ Brief rollback   │    │ Revert temp rules│
-              │ plan (1 line min)│    │ within 24h       │
-              └──────────────────┘    └──────────────────┘
-```
-
 ## Trigger Conditions
 
 | Condition | Example |

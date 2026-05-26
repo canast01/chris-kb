@@ -3,39 +3,11 @@
 
 VxRail Manager UI or service availability issues.
 
-```text
-  ┌──────────────────────────────────────────────────────┐
-  │         VxRail Manager Unavailable Triage            │
-  │                                                      │
-  │  UI not loading / API returning errors               │
-  │                 │                                    │
-  │     ┌───────────┴───────────────┐                    │
-  │     ▼                           ▼                    │
-  │  Service check               Network check           │
-  │  systemctl status marvin     ping <vxm-ip>           │
-  │  systemctl status mystic     curl -k https://<vxm>   │
-  │     │                           │                    │
-  │     ▼                           ▼                    │
-  │  Service down?               Unreachable?            │
-  │  sudo systemctl              Check mgmt VLAN /       │
-  │  restart marvin              firewall / VM power     │
-  │     │                                                │
-  │     ▼                                                │
-  │  DB / config issue?                                  │
-  │  check /var/log/vmware/marvin/marvin.log             │
-  │  look for DB connection errors or cert failures      │
-  │     │                                                │
-  │     ▼                                                │
-  │  Still failing ──► collect logs ──► Dell SR         │
-  └──────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -64,7 +36,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review cluster health. |  |
@@ -83,7 +54,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 - Run post-upgrade checks.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

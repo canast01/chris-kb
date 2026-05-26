@@ -2,25 +2,6 @@
 
 Post-implementation checks to confirm a change achieved its intent, introduced no regressions, and the system is in a known-good state.
 
-```text
-┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
-│ Test Plan        │   │ Check Services   │   │  Confirm No      │   │    Close or     │
-│                  │   │                  │   │  Rollback Needed │   │    Rollback     │
-│ Smoke tests      │   │ systemctl status │   │                  │   │                 │
-│ defined before   │──►│ curl /health     │──►│ Error rate < 3×  │──►│ All checks pass │
-│ change starts    │   │ DB connectivity  │   │ No P1/P2 alerts  │──►│ → close ticket  │
-│                  │   │ Monitoring: no   │   │ Perf in baseline │   │ Failure → exec  │
-│                  │   │ new alerts firing│   │                  │   │ rollback plan   │
-└──────────────────┘   └──────────────────┘   └──────────────────┘   └─────────────────┘
-                                                        │
-                                               ┌────────┘
-                                               ▼
-                                     ┌──────────────────┐
-                                     │  30-60 min soak  │
-                                     │  monitoring watch│
-                                     └──────────────────┘
-```
-
 ## Validation Phases
 
 | Phase | Timing | Purpose |

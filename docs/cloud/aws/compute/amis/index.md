@@ -3,30 +3,11 @@
 
 AWS AMIs notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                     AMI Architecture                    │
-│                                                         │
-│  Source EC2 Instance                                    │
-│  └── Create Image ──► AMI (registered in EC2)           │
-│                        ├── Root volume snapshot (EBS)   │
-│                        ├── Launch permissions           │
-│                        ├── Kernel / RAM disk IDs        │
-│                        └── Block device mapping         │
-│                                                         │
-│  AMI ──► Launch ──► New EC2 Instance                    │
-│                     (identical root disk + config)      │
-│                                                         │
-│  AMI types: Amazon Linux · Ubuntu · Windows · custom    │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -50,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -66,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

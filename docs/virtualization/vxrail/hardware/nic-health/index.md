@@ -3,36 +3,11 @@
 
 Physical NIC state, link status, uplinks, redundancy, and troubleshooting.
 
-```text
-  ┌──────────────────────────────────────────────────────┐
-  │                    VxRail Node                       │
-  │  ┌───────────┐  ┌───────────┐  ┌───────────┐        │
-  │  │  vmnic0   │  │  vmnic1   │  │  vmnic2   │  ...   │
-  │  │ (25GbE)   │  │ (25GbE)   │  │ (25GbE)   │        │
-  │  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘        │
-  │        │              │              │                │
-  │        └──────┬────────┘        ┌───┘                │
-  │               ▼                 ▼                     │
-  │  ┌──────────────────┐  ┌──────────────────┐          │
-  │  │  vDS (dvSwitch)  │  │  vDS (vSAN/vMot) │          │
-  │  │  Mgmt + VM traf. │  │  vSAN vmkernel   │          │
-  │  └──────────────────┘  └──────────────────┘          │
-  └──────────────────────────────────────────────────────┘
-         Link state │ Speed │ Errors
-  ┌──────────────────────────────────┐
-  │  Check: esxcli network nic list  │
-  │  Uplink: connected / disconnected│
-  │  Speed: 25000 Mb/s expected      │
-  │  Errors: RX/TX drop = 0 ideal    │
-  └──────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -61,7 +36,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review cluster health. |  |
@@ -80,7 +54,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 - Run post-upgrade checks.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

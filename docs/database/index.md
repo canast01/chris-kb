@@ -1,29 +1,5 @@
 # Database
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                    Database Platform Overview                        │
-│                                                                      │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                │
-│  │  SQL Server  │  │   Oracle     │  │  PostgreSQL  │                │
-│  │  Always On   │  │  Data Guard  │  │  Patroni     │                │
-│  │  AG (HA)     │  │  RAC / DG    │  │  Streaming   │                │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘                │
-│         │                 │                  │                       │
-│  ┌──────▼─────────────────▼─────────────────▼────────────────────┐   │
-│  │              Shared Infrastructure                            │   │
-│  │  Storage: FlashArray / PowerMax / PowerScale (NFS/SMB)        │   │
-│  │  Backup: Veeam / NetBackup with VSS / RMAN / pg_dump          │   │
-│  │  Monitoring: Aria Ops / custom exporters / slow query logs    │   │
-│  └───────────────────────────────────────────────────────────────┘   │
-│                                                                      │
-│  ┌────────────────────────────────────────────────────────────┐      │
-│  │  Config repository: version-controlled baseline configs    │      │
-│  │  my.cnf · postgresql.conf · sqlserver.conf · init.ora     │       │
-│  └────────────────────────────────────────────────────────────┘      │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 Operational references for database health, maintenance, and troubleshooting.
 
 <div class="kb-grid kb-grid-3">

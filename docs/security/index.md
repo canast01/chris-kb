@@ -1,29 +1,5 @@
 # Security
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                     Security Overview                                │
-│                                                                      │
-│  ┌─────────────────────┐        ┌──────────────────────────────┐     │
-│  │   Identity (PAM)    │        │    Certificate / PKI          │    │
-│  │   CyberArk Vault    │        │    Venafi · Internal CA       │    │
-│  │   CPM rotation      │        │    Cert lifecycle mgmt        │    │
-│  │   PSM session proxy │        └──────────────────────────────┘     │
-│  └────────┬────────────┘                                             │
-│           │  privileged access                                       │
-│  ┌────────▼────────────────────────────────────────────────────┐     │
-│  │              Infrastructure (all platforms)                 │     │
-│  │       vSphere · NSX · Storage arrays · Network devices       │    │
-│  └────────┬────────────────────────────────────────────────────┘     │
-│           │                                                          │
-│  ┌────────▼────────────┐        ┌──────────────────────────────┐     │
-│  │   Vulnerability     │        │    Incident Response         │     │
-│  │   Management        │        │    Detect ► Contain          │     │
-│  │   Scan ► CVSS ► fix │        │    Eradicate ► Recover       │     │
-│  └─────────────────────┘        └──────────────────────────────┘     │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 ## Shared Reference
 
 <div class="kb-grid kb-grid-3">

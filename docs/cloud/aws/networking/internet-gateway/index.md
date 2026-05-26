@@ -3,31 +3,11 @@
 
 AWS Internet Gateway notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                Internet Gateway (IGW)                   │
-│                                                         │
-│  Internet                                               │
-│     │                                                   │
-│     ▼                                                   │
-│  IGW (attached to VPC — one IGW per VPC)                │
-│     │                                                   │
-│     ▼                                                   │
-│  Public Subnet (route 0.0.0.0/0 → igw-xxxx)             │
-│  └── Resource with public IP / Elastic IP               │
-│                                                         │
-│  IGW performs NAT for public IP ↔ private IP mapping    │
-│  IGW is HA by design — AWS manages redundancy           │
-│  No cost for the gateway itself; data transfer billed   │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -51,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -67,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

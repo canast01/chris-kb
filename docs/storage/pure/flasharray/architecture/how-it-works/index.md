@@ -14,33 +14,6 @@ All models share the same Purity//FA OS, the same CLI and REST API surface, and 
 
 ## HA Topology
 
-```text
-  ┌─────────────────────────────────────────────────────────────────────┐
-  │                     FlashArray Chassis                              │
-  │                                                                     │
-  │  ┌────────────────────┐  NVMe fabric  ┌────────────────────┐       │
-  │  │     CT0            ├───────────────┤     CT1            │       │
-  │  │  (Controller 0)    │  mirror/sync  │  (Controller 1)    │       │
-  │  │  FC / iSCSI / NVMe │               │  FC / iSCSI / NVMe │       │
-  │  └─────────┬──────────┘               └──────────┬─────────┘       │
-  │            │                                     │                 │
-  │  ┌─────────▼─────────────────────────────────────▼─────────┐       │
-  │  │                    NVMe / SSD Drive Shelf                │       │
-  │  └──────────────────────────────────────────────────────────┘       │
-  └──────────────┬────────────────────────────────┬────────────────────┘
-                 │ FC / NVMe-oF / iSCSI            │ FC / NVMe-oF / iSCSI
-        ┌────────▼────────┐                ┌──────▼──────────┐
-        │   FC Switch A   │                │   FC Switch B   │
-        └────────┬────────┘                └───────┬─────────┘
-                 │                                 │
-         ┌───────▼─────────────────────────────────▼───────┐
-         │  ESXi-01   ESXi-02   DB-01   DB-02   APP-01     │
-         │   HBA0      HBA0     HBA0    HBA0    HBA0       │
-         │   HBA1      HBA1     HBA1    HBA1    HBA1       │
-         └─────────────────────────────────────────────────┘
-                         Host Layer (MPIO / ALUA)
-```
-
 FlashArray operates in an active-active dual-controller configuration. Both CT0 and CT1 serve host I/O simultaneously — there is no standby controller. Volume ownership is distributed across both controllers; load balancing occurs via ALUA (Asymmetric Logical Unit Access).
 
 **Failover behaviour:**

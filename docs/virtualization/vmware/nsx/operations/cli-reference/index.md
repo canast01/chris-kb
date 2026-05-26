@@ -1,29 +1,5 @@
 # NSX — CLI Reference
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                   NSX CLI Command Tree                      │
-├──────────────────┬──────────────────┬───────────────────────┤
-│   get (read)     │   set (write)    │  start / stop / debug │
-├──────────────────┼──────────────────┼───────────────────────┤
-│ get cluster      │ set cluster      │ start service <name>  │
-│   status         │   virtual-ip     │ stop  service <name>  │
-│ get managers     │ set appliance    │ debug packet capture  │
-│ get services     │   hostname       │   interface <if>      │
-│ get transport-   │ set service ntp  │                       │
-│   nodes          │   server <ip>    │  ┌──────────────────┐ │
-│ get tunnel       │ set service      │  │  Edge VRF context│ │
-│   status         │   syslog exporter│  │  vrf <id>        │ │
-│ get logical-     │ set user admin   │  │  get bgp neighbor│ │
-│   switches       │   password       │  │  get route       │ │
-│ get bgp neighbor │ set firewall     │  │  get forwarding  │ │
-│   summary        │   rule <n>       │  └──────────────────┘ │
-│ get route        │ set edge-cluster │                       │
-│ get forwarding   │   failover       │  access: SSH → admin  │
-│ get version      │                  │  then: nsxcli         │
-└──────────────────┴──────────────────┴───────────────────────┘
-```
-
 Commonly used NSX-T Manager and Edge CLI commands for managing overlays, routing, and distributed firewall. NSX-T is VMware's software-defined networking platform — it creates virtual networks (segments), virtual routers (gateways), and enforces firewall rules at the hypervisor level.
 
 > NSX Manager and Edge Node CLIs are accessed via SSH. Log in as `admin`. Run `nsxcli` on the Manager to enter the NSX management shell.

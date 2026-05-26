@@ -2,23 +2,6 @@
 
 Verify version compatibility across the full VMware stack before any upgrade. Upgrading out of order or with incompatible versions causes silent failures and unsupported configurations.
 
-```text
-┌──────────────────────────────────────────────────────────────────────────┐
-│                     Compatibility Check Matrix                           │
-├─────────────────────────┬────────────────────────────────────────────────┤
-│  Check                  │  Source                                        │
-├─────────────────────────┼────────────────────────────────────────────────┤
-│ vCenter ↔ ESXi          │ interopmatrix.vmware.com                       │
-│ vCenter ↔ NSX           │ NSX install guide + interop matrix             │
-│ VxRail ↔ vCenter/ESXi   │ VxRail release notes (VxRail owns combination) │
-│ Aria LCM ↔ Aria products│ Aria LCM release notes                         │
-│ HBA/NIC drivers         │ VMware HCL (vmware.com/resources/compatibility)│
-│ Storage array           │ VMware HCL + array vendor support matrix       │
-│ Veeam                   │ veeam.com/kb2443                               │
-│ VM Tools / HW version   │ PowerCLI: Get-VM | ToolsVersionStatus          │
-│ Certificates            │ Check expiry before window: openssl s_client   │
-└─────────────────────────┴────────────────────────────────────────────────┘
-```
 ## VMware Product Interoperability Matrix
 
 Primary source: [VMware Product Interoperability Matrix](https://interopmatrix.vmware.com/)

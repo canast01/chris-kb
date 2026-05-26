@@ -3,39 +3,11 @@
 
 Lifecycle Manager failures, pre-check errors, upgrade stops, and recovery workflow.
 
-```text
-  ┌──────────────────────────────────────────────────────┐
-  │           VxRail LCM Failure Triage                  │
-  │                                                      │
-  │  LCM job stuck / failed                             │
-  │                 │                                    │
-  │     ┌───────────┴───────────┐                        │
-  │     ▼                       ▼                        │
-  │  Pre-check fail         Bundle error                 │
-  │  ├── cluster health     ├── bad checksum             │
-  │  ├── vSAN not healthy   ├── incompatible version     │
-  │  ├── cert expired       └── upload interrupted       │
-  │  └── DNS / NTP skew                                  │
-  │     │                       │                        │
-  │     └───────────┬───────────┘                        │
-  │                 ▼                                    │
-  │  ┌──────────────────────────────────────────────┐    │
-  │  │  Component error (during remediation)        │    │
-  │  │  node update failed ──► marvin log review    │    │
-  │  │  /var/log/vmware/marvin/upgrade.log          │    │
-  │  └──────────────────────┬───────────────────────┘    │
-  │                         ▼                            │
-  │  Remediate ──► fix root cause ──► retry LCM job     │
-  │  Escalate ──► collect bundle ──► open Dell SR        │
-  └──────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -64,7 +36,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review cluster health. |  |
@@ -83,7 +54,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 - Run post-upgrade checks.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

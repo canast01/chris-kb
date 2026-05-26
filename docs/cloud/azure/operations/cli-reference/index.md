@@ -1,23 +1,5 @@
 # Azure Operations CLI Reference
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│                  Azure CLI Daily Ops — Top Commands              │
-├──────────────────┬──────────────────────┬───────────────────────┤
-│   az vm          │   az monitor         │   az network          │
-│──────────────────│──────────────────────│───────────────────────│
-│ list             │ activity-log list    │ lb show               │
-│ show             │ metrics list         │ nsg rule list         │
-│ start / stop     │ alert list           │ nic show              │
-│ restart          │ scheduled-query list │ public-ip list        │
-│ encryption show  │ diagnostic-settings  │ watcher test-conn     │
-├──────────────────┴──────────────────────┴───────────────────────┤
-│   az account set  →  az login  →  az account show               │
-│   --query (JMESPath)  --output table|json|tsv|yaml              │
-│   az configure --defaults group=<rg> location=<region>          │
-└─────────────────────────────────────────────────────────────────┘
-```
-
 A practical reference for day-to-day Azure CLI usage: authentication, subscription management, resource group operations, output formatting, and productivity tools.
 
 ---

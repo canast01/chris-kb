@@ -3,39 +3,11 @@
 
 VxRail Manager service status, UI access, alerts, and management plane checks.
 
-```text
-  ┌──────────────────────────────────────────────────────┐
-  │          VxRail Manager Service Health               │
-  │                                                      │
-  │  ┌──────────────────────────────────────────────┐    │
-  │  │  marvin     ── LCM orchestration service     │    │
-  │  │  mystic     ── external API / credential svc │    │
-  │  │  ptolemy    ── vSAN health bridge            │    │
-  │  │  cetacean   ── node communication agent      │    │
-  │  └────────────────────┬─────────────────────────┘    │
-  │                       │                              │
-  │  systemctl status <service>                          │
-  │  systemctl list-units --type=service --state=running │
-  │                       │                              │
-  │                       ▼                              │
-  │  ┌──────────────────────────────────────────────┐    │
-  │  │  Service down?                               │    │
-  │  │  ├── Check /var/log/vmware/marvin/           │    │
-  │  │  ├── sudo systemctl restart marvin           │    │
-  │  │  └── Verify UI: https://<vxm-ip>            │    │
-  │  └──────────────────────────────────────────────┘    │
-  │                       │                              │
-  │                       ▼                              │
-  │  All services running ──► VxRail Manager healthy    │
-  └──────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -64,7 +36,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review cluster health. |  |
@@ -83,7 +54,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 - Run post-upgrade checks.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

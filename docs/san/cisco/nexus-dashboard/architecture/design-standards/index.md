@@ -54,60 +54,7 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌──────────────────────── Cisco Nexus Dashboard — Architecture Design Standards ────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    ND design standards: node sizing, HA topology, network requirements, app placement rules   │   │
-│   │           Always deploy 3 master nodes minimum; never 1-node or 2-node in production          │   │
-│   │          OOB and Data networks must be separate VLANs; MTU 9000 required on Data VLAN         │   │
-│   │        NDI and NDFC can co-exist on same cluster; NDO should be on a dedicated cluster        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Size cluster → configure networks → deploy nodes → install apps → validate                         │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Node Sizing         │  │        Network Design       │  │        App Placement        │   │
-│   │         Virt: 16vCPU        │  │        OOB mgmt VLAN        │  │        NDFC + NDI OK        │   │
-│   │       Virt: 64 GB RAM       │  │        Data VLAN sep.       │  │         NDO separate        │   │
-│   │      Virt: 550 GB disk      │  │        MTU 9000 data        │  │       Per Cisco guide       │   │
-│   │        Phys: UCS C220       │  │        Ext svc IP /27       │  │       App compat list       │   │
-│   │        3 masters + W        │  │        DNS + NTP req.       │  │       Worker for scale      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Always check Cisco ND hardware and software compatibility guide before deployment                  │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Requirement    │       Spec       │        Why        │      Verify      │      Notes       │   │
-│   │     HA nodes     │  3 masters min   │       Quorum      │  ND cluster UI   │   Add workers    │   │
-│   │     OOB VLAN     │    L3 routed     │    Admin access   │    Ping ND IP    │    Dedicated     │   │
-│   │    Data VLAN     │    Jumbo MTU     │     Telemetry     │   Ping fabric    │     MTU 9000     │   │
-│   │    App compat    │   Cisco matrix   │      Co-exist     │    App health    │   NDO separate   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: vSphere cluster (DRS, HA) · dedicated data NIC for each ND node · OOB switch             │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Master node    = ND node running Kubernetes control plane; always deploy exactly 3                 │
-│    Worker node    = Additional ND compute node for app pods; scale-out option                         │
-│    Standby node   = Spare master; auto-joins if a master fails; recommended in production             │
-│    OOB network    = Out-of-band admin network; used for ND UI, SSH, and switch SSH access             │
-│    Data network   = In-band fabric-facing NIC; ND apps poll switches and receive telemetry            │
-│    MTU 9000       = Jumbo frames required on Data VLAN for ND telemetry and flow export               │
-│    Ext. svc IP    = Pool of IPs for Kubernetes LoadBalancer services (ND apps endpoints)              │
-│    App compat     = Cisco publishes which app versions run together on same ND release                │
-│    NDO separation = NDO multi-site orchestration works best isolated from NDFC/NDI cluster            │
-│    DNS required   = ND nodes must resolve DNS; add ND hostnames to DNS before deploy                  │
-│    NTP required   = All ND nodes and managed switches must be NTP-synchronised                        │
-│    Cisco HCL      = Hardware Compatibility List; verify server model and NIC before deploy            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 > Part of the [Nexus Dashboard](../../index.md) reference.
 
 ---

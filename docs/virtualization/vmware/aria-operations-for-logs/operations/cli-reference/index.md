@@ -1,26 +1,5 @@
 # Aria Ops for Logs — CLI Reference
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│         Aria Ops for Logs CLI Reference                     │
-├──────────────────────────────┬──────────────────────────────┤
-│  li-admin (appliance CLI)    │  REST API                    │
-├──────────────────────────────┼──────────────────────────────┤
-│ li-admin status              │ POST /api/v1/sessions        │
-│ li-admin cluster-info        │ GET  /api/v1/alerts          │
-│ li-admin restart             │ POST /api/v1/events/query    │
-│ li-admin log-collection-     │ GET  /api/v1/agents          │
-│   status                     │ GET  /api/v1/system/info     │
-│ li-admin storage             │ GET  /api/v1/system/storage  │
-│                              │ POST /api/v2/support/bundle  │
-│  vracli (Aria Suite CLI)     │ GET  /api/v2/cluster/nodes   │
-│ vracli status                │ GET  /api/v2/cluster/stats   │
-│ vracli certificate list      │                              │
-│ vracli certificate import    │  Auth: HTTP Basic per-call   │
-│ vracli ntp set <server>      │  Base: https://<vrli-fqdn>   │
-└──────────────────────────────┴──────────────────────────────┘
-```
-
 Aria Operations for Logs (formerly vRealize Log Insight) exposes a REST API and a `vracli` / `li-admin` CLI available on the virtual appliance via SSH. The Ingestion API receives log data from agents and third-party sources.
 
 ---

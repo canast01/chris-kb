@@ -2,31 +2,6 @@
 
 AD group design, GPO user rights, Just Enough Administration (JEA), LAPS, and built-in group review.
 
-```text
-┌────────────────────────────────────────────────────────┐
-│           Windows Access Control Model (AGDLP)         │
-└────────────────────────────────────────────────────────┘
-  User Account (A)
-       │
-       ▼
-  Global Group (G)  ──  "GG-ServerAdmins"
-       │
-       ▼
-  Domain Local Group (DL) ── "DL-FileShare-Finance-RW"
-       │
-       ▼
-  ┌────────────────────────────────────────────────────┐
-  │  Resource Permissions (P)                         │
-  ├──────────────────┬────────────────────────────────┤
-  │  Share Perms     │  NTFS ACL                      │
-  │  (Full/Read/No)  │  (Allow/Deny + Inheritance)    │
-  └──────────────────┴────────────────────────────────┘
-       │
-       ▼
-  GPO User Rights ──► who can log on, debug, backup
-  JEA endpoint ──► constrained PS session per role
-```
-
 ## Active Directory Group Design
 
 Structure groups using the AGDLP (Accounts → Global → Domain Local → Permissions) model to maintain role-based access control.

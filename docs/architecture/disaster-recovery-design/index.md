@@ -1,33 +1,5 @@
 # Disaster Recovery Design
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                     DR Design Framework                              │
-│                                                                      │
-│  Step 1: Define RPO/RTO targets                                      │
-│  ┌─────────────────────────────────────────────────────────┐         │
-│  │  Tier 0: RPO=0  RTO<15m │ Tier 1: RPO<15m  RTO<1h      │          │
-│  │  Tier 2: RPO<1h  RTO<4h │ Tier 3: RPO<24h  RTO<24h     │          │
-│  └───────────────────────────────────┬─────────────────────┘         │
-│                                      │                               │
-│  Step 2: Select replication technology                               │
-│  ┌─────────────┐  ┌─────────────┐  ┌─▼───────────┐                   │
-│  │ SRDF/S      │  │ RecoverPoint│  │ Veeam Repl  │                   │
-│  │ (sync, T0)  │  │ (journal,T1)│  │ (async, T2) │                   │
-│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘                   │
-│         │                │                 │                         │
-│  ┌──────▼────────────────▼────────────────▼───────┐                  │
-│  │            Primary Site ◄──replication──► DR Site │               │
-│  └──────────────────────────────────────────────────┘                │
-│                                                                      │
-│  Step 3: Failover process                                            │
-│  Declare DR ──► Activate copies ──► DNS cutover ──► Validate         │
-│                                                                      │
-│  Step 4: Test cadence                                                │
-│  Tabletop (Q) ──► Component test (M) ──► Full fire drill (A)         │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 ![Disaster Recovery Design Overview](../../assets/disaster-recovery-design-overview.svg)
 
 ## Overview

@@ -1,27 +1,5 @@
 # Change Management
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                    Change Management Process                         │
-│                                                                      │
-│  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────────────┐   │
-│  │ Request  │──►│ Assess   │──►│ Approval │──►│   Schedule       │   │
-│  │ RFC form │   │ Risk/    │   │  CAB     │   │   Maintenance    │   │
-│  │          │   │ Impact   │   │  review  │   │   window         │   │
-│  └──────────┘   └──────────┘   └──────────┘   └────────┬─────────┘   │
-│                                                         │            │
-│  ┌─────────────────────────────────────────────────────▼──────────┐  │
-│  │                    Execute Change                              │  │
-│  │   Pre-checks ──► Implement ──► Monitor ──► Post-checks        │   │
-│  └──────────────────────────────────────────────────────┬─────────┘  │
-│                                                         │            │
-│  ┌──────────────┐   ┌──────────────┐   ┌────────────────▼────────┐   │
-│  │   Rollback   │◄──│  Fail?       │   │   Validate & Close      │   │
-│  │  procedure   │   │  criteria    │   │   Sign-off · PIR        │   │
-│  └──────────────┘   └──────────────┘   └─────────────────────────┘   │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="change-approval/"><strong>Change Approval</strong><span>CAB submission, risk assessment, approval workflow, and sign-off requirements.</span></a>
 <a class="kb-card" href="change-communication/"><strong>Change Communication</strong><span>Stakeholder notification templates, downtime announcements, and post-change updates.</span></a>

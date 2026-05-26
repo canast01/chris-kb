@@ -54,60 +54,7 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌────────────────────────────── Dell Apex STaaS — Operational Procedures ───────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Apex procedures: create and map volumes, NFS exports, snapshots, capacity expansion      │   │
-│   │          Volume create: Apex Console > Storage > Volumes > Create; set size and tier          │   │
-│   │        NFS export: Apex Console > Storage > File > Create Share; set client access list       │   │
-│   │      Capacity expand: raise SR in Apex Console; Dell processes and provisions within SLA      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Create volume → map host → host rescan → format/mount → monitor → snapshot schedule                │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Block Volumes        │  │        File (NFS/SMB)       │  │        Data Services        │   │
-│   │        Create volume        │  │         Create share        │  │         Create snap         │   │
-│   │        Set size/tier        │  │        Set client ACL       │  │         Set schedule        │   │
-│   │         Map to host         │  │        Mount on host        │  │          Clone snap         │   │
-│   │         Host rescan         │  │          Test write         │  │        Restore clone        │   │
-│   │         Format/mount        │  │         Expand share        │  │         Delete snap         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    All capacity expansion requires a Dell SR; planned changes need lead time (days)                   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │   Portal path    │      Key step     │      Verify      │      Notes       │   │
-│   │    Create vol    │   Storage>Vols   │    Size + tier    │   LUN visible    │   Thin default   │   │
-│   │     Map host     │  Storage>Hosts   │      IQN/WWN      │     Host LUN     │    Rescan bus    │   │
-│   │    NFS share     │   Storage>File   │    Client CIDR    │    Mount test    │    NFS v3/v4     │   │
-│   │   Snap policy    │  Data Svc>Snap   │    Freq+retain    │   Snap listed    │     No quota     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: host HBA/NIC and OS multipath · NFS client on Linux/VMware · iSCSI initiator             │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Host rescan      = OS command to detect new LUNs: iscsiadm rescan / hbacmd; or vCenter rescan      │
-│    Client ACL       = NFS share access list; specify host IP or CIDR; rw or ro                        │
-│    Thin default     = Apex volumes are thin-provisioned by default; physical use grows on write       │
-│    LUN visible      = After mapping, host must see LUN via multipath; check multipathd/mpio           │
-│    Snap policy      = Defines frequency (hourly/daily/weekly) and retention count                     │
-│    Clone from snap  = Create writable volume from snapshot; mount as separate device                  │
-│    Capacity expand  = Open SR specifying current committed + desired new committed size               │
-│    NFS v4           = NFSv4 recommended for Kerberos security and improved locking                    │
-│    IQN              = iSCSI Qualified Name; unique identifier for iSCSI initiator (host HBA)          │
-│    WWN              = World Wide Name; unique FC port identifier; used in FC zoning and maps          │
-│    Expand share     = Increase NFS share quota; non-disruptive in most cases                          │
-│    iscsiadm         = Linux iSCSI management tool; discover, login, and rescan iSCSI targets          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 > Part of the [APEX Storage as a Service](../../index.md) reference.
 
 ---

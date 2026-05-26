@@ -2,22 +2,6 @@
 
 Fast operational tools for troubleshooting and validation.
 
-```text
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     Quick Reference Hub                                 │
-├──────────────────────┬────────────────────────┬────────────────────────┤
-│   Decision Trees     │   Cheat Sheets         │  Reference Docs         │
-│                      │                        │                         │
-│ ► VM Slow            │ ► Command Cheat Sheet  │ ► Glossary              │
-│ ► Host Down          │ ► vCenter Commands     │ ► Healthy State Ref     │
-│ ► Storage Latency    │ ► vSAN Quick Ref       │ ► Environment Baseline  │
-│ ► Network Issue      │ ► Snapshot Quick Ref   │ ► Escalation Checklist  │
-│                      │ ► Cert Quick Ref       │ ► Logs Quick Ref        │
-│                      │ ► VM Perf Checks       │ ► Daily Workflow        │
-│                      │                        │ ► Emergency Checks      │
-└──────────────────────┴────────────────────────┴────────────────────────┘
-```
-
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="glossary/">
@@ -59,7 +43,6 @@ Fast operational tools for troubleshooting and validation.
   <strong>Healthy State Reference</strong>
   <span>What normal looks like.</span>
 </a>
-
 
 <a class="kb-card" href="certificate-quick-reference/">
   <strong>Certificate Quick Reference</strong>

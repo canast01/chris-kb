@@ -1,40 +1,5 @@
 # AWS — Authentication
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│              AWS Authentication Flow                     │
-└──────────────────────────────────────────────────────────┘
-
-  IAM User / Role        Identity Center         OIDC / IRSA
-  ─────────────          ───────────────         ───────────
-  ┌───────────┐          ┌─────────────┐         ┌──────────┐
-  │ IAM User  │          │  IdP (SSO)  │         │ GitHub / │
-  │ + MFA     │          │  login      │         │ K8s Pod  │
-  └─────┬─────┘          └──────┬──────┘         └────┬─────┘
-        │                       │                     │ OIDC token
-        ▼                       ▼                     ▼
-  ┌───────────┐          ┌─────────────┐         ┌──────────┐
-  │ STS       │          │ STS         │         │ STS      │
-  │ AssumeRole│          │ AssumeRole  │         │ AssumeRole
-  │           │          │ WithSAML    │         │ WithWeb  │
-  └─────┬─────┘          └──────┬──────┘         │ Identity │
-        │                       │                └────┬─────┘
-        └───────────────┬────────┘                    │
-                        ▼                             │
-              ┌──────────────────┐                    │
-              │  Temp Credentials│◄───────────────────┘
-              │  (AccessKeyId +  │
-              │  SecretKey +     │
-              │  SessionToken)   │
-              └────────┬─────────┘
-                       │  valid 1h–12h
-                       ▼
-              ┌──────────────────┐
-              │  AWS Resource    │
-              │  Access          │
-              └──────────────────┘
-```
-
 ---
 
 ## Authentication Methods Overview

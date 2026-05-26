@@ -1,34 +1,5 @@
 # Aria Operations for Networks — CLI Reference
 
-```text
-┌─────────────── Aria Networks CLI: Platform & Collector ────────────────────────┐
-│                                                                                 │
-│  Platform VM (ssh ubuntu@aon-platform)                                          │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  cat /etc/build.info              ── show version/build                 │   │
-│  │  systemctl status vrni-platform   ── main app service                  │    │
-│  │  systemctl status nginx cassandra kafka elasticsearch postgres          │   │
-│  │  df -hT / df -h /var/lib/cassandra ── disk usage                       │    │
-│  │  nc -zv <collector-ip> 443        ── test collector reachability        │   │
-│  └──────────────────────────────────────────────────────────────────────────┘  │
-│                                                                                 │
-│  Collector VM (ssh ubuntu@aon-collector)                                         │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  systemctl status ni-collector    ── collector service                  │   │
-│  │  journalctl -u ni-collector -f    ── follow collector log               │   │
-│  │  sudo pairing.sh                  ── re-pair to Platform VM             │   │
-│  │  tcpdump -i eth0 udp port 2055    ── verify NetFlow arriving            │   │
-│  │  nc -zv aon-platform 443          ── test upload path                  │    │
-│  └──────────────────────────────────────────────────────────────────────────┘  │
-│                                                                                 │
-│  REST API (from anywhere):                                                      │
-│  POST /api/ni/auth/token ── get bearer token                                    │
-│  GET  /api/ni/collectors  ── collector status                                   │
-│  GET  /api/ni/datasources ── data source sync status                            │
-│  POST /api/ni/search      ── query flows and topology                           │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ## SSH Access
 
 **Platform VM** default OS user is `ubuntu`. There is no direct root login via SSH by default.

@@ -3,30 +3,11 @@
 
 AWS S3 Lifecycle notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                  S3 Lifecycle Transitions               │
-│                                                         │
-│  Day 0:   S3 Standard          (frequent access)        │
-│              │                                          │
-│  Day 30:  S3 Standard-IA ◄─ transition rule             │
-│              │                 (infrequent access)      │
-│  Day 90:  S3 Glacier ◄──── transition rule              │
-│              │                 (archive · mins to hrs)  │
-│  Day 180: S3 Glacier Deep Archive ◄─── (12+ hr retriev.)│
-│              │                                          │
-│  Day 365: Expiration / Delete ◄─── expiration rule      │
-│                                                         │
-│  Rules: filter by prefix, tag, size; apply per bucket   │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -50,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -66,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

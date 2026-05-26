@@ -1,27 +1,5 @@
 # Automation
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                     Automation Overview                              │
-│                                                                      │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐              │
-│  │  Scripting   │  │   REST API   │  │  CI/CD       │              │
-│  │  PowerShell  │  │  Pure REST   │  │  GitHub      │              │
-│  │  Python      │  │  vSphere API │  │  Actions     │              │
-│  │  Ansible     │  │  AWS/Azure   │  │  Workflows   │              │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘              │
-│         │                 │                  │                      │
-│  ┌──────▼─────────────────▼─────────────────▼────────────────────┐  │
-│  │              Automation Targets                               │  │
-│  │   vSphere · NSX · FlashArray · PowerMax · Linux · Windows    │  │
-│  └───────────────────────────────────────────────────────────────┘  │
-│                                                                      │
-│  ┌────────────────────────────────────────────────────────────┐     │
-│  │  IaC (Terraform)                                           │     │
-│  │  Plan ──► Apply ──► State ──► Drift detect ──► Destroy    │     │
-│  └────────────────────────────────────────────────────────────┘     │
-└──────────────────────────────────────────────────────────────────────┘
-```
 ┌──────────────────────────── Automation — Infrastructure Automation Tools ─────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │Automation: codifying repeatable infrastructure operations into executable, version-controlled │   │

@@ -3,34 +3,11 @@
 
 AWS EventBridge notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                EventBridge Flow                         │
-│                                                         │
-│  Event Sources                                          │
-│  ├── AWS services (EC2 state change · S3 · CodePipeline)│
-│  ├── Custom applications (PutEvents API)                │
-│  └── SaaS partners (Datadog · PagerDuty · Zendesk)      │
-│        │                                                │
-│        ▼                                                │
-│  Event Bus (default or custom)                          │
-│        │                                                │
-│        ▼                                                │
-│  Event Rule (pattern match or schedule)                 │
-│        │                                                │
-│        ▼                                                │
-│  Target (up to 5 per rule)                              │
-│  ├── Lambda ├── SQS ├── SNS                             │
-│  ├── Step Functions ├── ECS task ├── API Gateway        │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -54,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -70,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

@@ -1,47 +1,5 @@
 # AWS Secrets Manager
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│         Secrets Manager — Secret Lifecycle               │
-└──────────────────────────────────────────────────────────┘
-
-  ┌──────────────────────┐
-  │  Secret stored       │
-  │  (encrypted by KMS   │
-  │   CMK at rest)       │
-  └──────────┬───────────┘
-             │
-             │  Application retrieves secret
-             ▼
-  ┌──────────────────────┐
-  │  GetSecretValue API  │
-  │  (SDK / CLI call)    │
-  └──────────┬───────────┘
-             │  IAM auth + KMS decrypt
-             ▼
-  ┌──────────────────────┐
-  │  Secret value        │
-  │  returned in memory  │
-  │  (never stored       │
-  │   in code / env var) │
-  └──────────────────────┘
-
-  AUTO-ROTATION
-  ┌──────────────────────┐
-  │  Rotation schedule   │
-  │  (e.g. every 30d)    │
-  └──────────┬───────────┘
-             ▼
-  ┌──────────────────────┐
-  │  Lambda rotation     │
-  │  function            │
-  │  (createSecret ►     │
-  │   setSecret ►        │
-  │   testSecret ►       │
-  │   finishSecret)      │
-  └──────────────────────┘
-```
-
 ## Overview
 
 AWS Secrets Manager notes for day-to-day infrastructure operations.
@@ -51,7 +9,6 @@ AWS Secrets Manager notes for day-to-day infrastructure operations.
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -75,7 +32,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -91,7 +47,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

@@ -2,32 +2,6 @@
 
 Document relationships between systems, applications, and services so that change impact, failure blast radius, and dependency chains are understood.
 
-```text
-┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐
-│  Prod   │  │ Staging │  │   Dev   │  │   DR    │
-│ Full SLA│  │  High   │  │  Low    │  │ RTO/RPO │
-└────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘
-     │             │             │             │
-     └─────────────┴─────────────┴─────────────┘
-                         │
-                ┌────────┴────────┐
-                ▼                 ▼
-     ┌──────────────┐    ┌──────────────────┐
-     │   Owners /   │    │   Dependencies   │
-     │   Teams      │    │                  │
-     │ (tag: Owner) │    │ App → DB → Vault │
-     └──────────────┘    │ App → Auth svc   │
-                         └────────┬─────────┘
-                                  │
-                         ┌────────┴─────────┐
-                         ▼                  ▼
-               ┌──────────────┐   ┌──────────────────┐
-               │ Network Zones│   │  Change Impact   │
-               │ Prod/DB/Mgmt │   │  Blast Radius    │
-               │ /DMZ CIDRs   │   │  Assessment      │
-               └──────────────┘   └──────────────────┘
-```
-
 ## Environment Tiers
 
 | Tier | Purpose | Change Risk | SLA |

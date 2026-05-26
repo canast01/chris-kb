@@ -2,33 +2,6 @@
 
 Veeam Agent for Linux backup jobs, restore procedures, and validation steps.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│               Linux Backup & Restore Flow               │
-├─────────────────┬───────────────────┬───────────────────┤
-│  Veeam Agent    │  rsync (file)     │  tar (archive)    │
-│  (image-level)  │  --link-dest      │  incremental      │
-└────────┬────────┴─────────┬─────────┴────────┬──────────┘
-         ▼                  ▼                  ▼
-┌────────────────────────────────────────────────────────┐
-│                    Schedule (cron / veeamconfig)        │
-│        Daily 02:00  │  Weekly Sunday 03:00              │
-└────────────────────────────┬───────────────────────────┘
-                             ▼
-┌────────────────────────────────────────────────────────┐
-│             Backup Repository (NAS/NFS/SMB)             │
-│         14 daily  │  4 weekly  │  3 monthly             │
-└────────────────────────────┬───────────────────────────┘
-                             ▼
-         ┌───────────────────┴───────────────────┐
-         ▼                                       ▼
-┌─────────────────┐                  ┌───────────────────┐
-│  File-Level     │                  │  Bare Metal        │
-│  Restore        │                  │  Restore (BMR)     │
-│  mount → copy   │                  │  Recovery ISO      │
-└─────────────────┘                  └───────────────────┘
-```
-
 ## Veeam Agent for Linux
 
 Veeam Agent for Linux provides image-level and file-level backup for Linux physical and virtual machines.

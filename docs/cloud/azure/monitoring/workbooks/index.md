@@ -2,59 +2,6 @@
 
 Azure Monitor Workbooks are interactive, parameterised reports that combine text, queries, metrics, and visualisations in a single pane.
 
-```text
-┌──────────────────────────────────────────────────────────────┐
-│                   Workbook Architecture                      │
-│                                                              │
-│  Parameters  ┌─────────────────────────────────────────┐     │
-│  ┌─────────┐  │  Time range │ Subscription │ Resource   │    │
-│  │ User    │─►│  (filter all queries below)            │     │
-│  │ selects │  └─────────────────────────────────────────┘    │
-│  └─────────┘            │ applied to                         │
-│                         ▼                                    │
-│  Data Sources                                                │
-│  ┌───────────┐  ┌───────────┐  ┌───────────────────────┐     │
-│  │  Metrics  │  │   Logs    │  │  Azure Resource       │     │
-│  │  (charts) │  │  (KQL)    │  │  Graph (ARG)          │     │
-│  └─────┬─────┘  └─────┬─────┘  └──────────┬────────────┘     │
-│        └──────────────┴──────────────────┘                   │
-│                               │                              │
-│                               ▼                              │
-│  Visualisations  ┌────────────────────────────────────┐      │
-│                  │  Grid │ Chart │ Map │ Text │ Tiles  │     │
-│                  └────────────────────────────────────┘      │
-│                               │ share via RBAC               │
-│                               ▼                              │
-│             Team workbook  (kind: shared)                    │
-└──────────────────────────────────────────────────────────────┘
-``` They are used for operational dashboards, cost reports, capacity planning, and compliance views that require richer formatting than a standard dashboard.
-
-## Workbook Templates
-
-Azure provides built-in workbook templates for common scenarios. Templates can be accessed from the Workbooks gallery in the Azure Monitor or individual service blades (e.g., App Gateway, AKS, Security Center).
-
-```bash
-# List workbooks in a resource group
-az monitor workbook list \
-  --resource-group myRG \
-  --output table
-
-# Show a specific workbook definition
-az monitor workbook show \
-  --resource-group myRG \
-  --name <workbook-resource-id> \
-  --output json
-
-# Create a workbook from a JSON template file
-az monitor workbook create \
-  --resource-group myRG \
-  --name "vm-performance-workbook" \
-  --display-name "VM Performance Overview" \
-  --serialized-data @workbook-template.json \
-  --source-id /subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace \
-  --kind shared
-```
-
 ## Workbook Parameters
 
 Parameters allow users to filter workbook data dynamically. Common parameter types include time range, subscription, resource group, resource, and free text.

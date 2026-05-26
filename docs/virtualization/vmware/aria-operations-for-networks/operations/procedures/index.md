@@ -1,31 +1,5 @@
 # Aria Operations for Networks — Procedures
 
-```text
-┌──────────── Aria Networks Operational Procedure Flow ──────────────────────────┐
-│                                                                                 │
-│  Add data source (vCenter / NSX-T / physical switch)                            │
-│  Settings ► Accounts and Data Sources ► Add Source ► Validate ► Submit          │
-│  Verify: Last Sync timestamp < 20 min │ search for hosts/segments               │
-│       │                                                                         │
-│       ▼                                                                         │
-│  Configure NetFlow/IPFIX (physical switches)                                    │
-│  Switch: define exporter ► flow record ► monitor ► apply to interfaces          │
-│  Collector: tcpdump -i eth0 udp port 2055 ── confirm packets arriving           │
-│       │                                                                         │
-│       ▼                                                                         │
-│  Microsegmentation analysis                                                     │
-│  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Define application (VM names / NSX tags / subnets)                     │   │
-│  │  Observe 7–30 days ► View Flows tab ► intra/inter-tier/external         │   │
-│  │  Plan & Assess ► Recommendations ► review ► Export CSV or Push to NSX  │    │
-│  └──────────────────────────────────────────────────────────────────────────┘  │
-│       │                                                                         │
-│       ▼                                                                         │
-│  Alerts / compliance reports                                                    │
-│  Saved search ► Alert (threshold + notification) │ Compliance framework PDF    │
-└────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ## Add a New vCenter Data Source
 
 1. Settings → Accounts and Data Sources → Add Source → vCenter Server

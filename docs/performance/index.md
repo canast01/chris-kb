@@ -1,27 +1,5 @@
 # Performance
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                   Performance Management Cycle                       │
-│                                                                      │
-│  ┌──────────┐   ┌──────────────┐   ┌──────────────┐                │
-│  │ Baseline │──►│ Collect      │──►│ Analyse      │                │
-│  │          │   │ metrics      │   │ trend        │                │
-│  │ CPU/Mem  │   │ Aria Ops     │   │ capacity     │                │
-│  │ IOPS     │   │ esxtop       │   │ forecast     │                │
-│  │ latency  │   │ node_exporter│   │              │                │
-│  └──────────┘   └──────────────┘   └──────┬───────┘                │
-│                                           │                         │
-│                               ┌───────────▼──────────────────────┐  │
-│                               │   Threshold exceeded?            │  │
-│                               │   Alert ──► Remediate            │  │
-│                               │   Right-size ──► Scale out/up    │  │
-│                               └──────────────────────────────────┘  │
-│                                                                      │
-│  SLOs: Availability · Latency · Error rate · Throughput targets     │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 References for capacity planning, performance management, and reliability engineering.
 
 <div class="kb-grid kb-grid-3">

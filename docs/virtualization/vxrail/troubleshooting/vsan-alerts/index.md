@@ -3,41 +3,11 @@
 
 vSAN health issues, object health, resync, capacity, and disk group problems.
 
-```text
-  ┌──────────────────────────────────────────────────────┐
-  │            vSAN Alert Triage Flow                    │
-  │                                                      │
-  │  vSAN health alarm raised                            │
-  │                 │                                    │
-  │     ┌───────────┼───────────────────┐                │
-  │     ▼           ▼                   ▼                │
-  │  Disk group   Capacity           Object health       │
-  │  degraded     pressure           non-compliant       │
-  │     │              │                  │              │
-  │     ▼              ▼                  ▼              │
-  │  Check disk    Free capacity     esxcli vsan         │
-  │  iDRAC fault   > 30% slack?      debug object list   │
-  │  racadm        Add capacity /    vCenter ──►         │
-  │  storage get   reclaim storage   vSAN ──► Objects    │
-  │     │              │                  │              │
-  │     └──────────────┴──────────────────┘              │
-  │                 │                                    │
-  │                 ▼                                    │
-  │  Resync in progress?                                 │
-  │  vCenter ──► vSAN ──► Resyncing Components          │
-  │  Wait for resync ──► verify objects healthy          │
-  │                 │                                    │
-  │                 ▼                                    │
-  │  Policy compliance check ──► confirm FTT met        │
-  └──────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -66,7 +36,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review cluster health. |  |
@@ -85,7 +54,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 - Run post-upgrade checks.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

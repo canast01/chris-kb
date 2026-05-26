@@ -2,24 +2,6 @@
 
 Track, baseline, and enforce system configurations across infrastructure to prevent drift and maintain compliance.
 
-```text
-┌─────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
-│  CI Discovery   │   │  Relationships   │   │  Change Impact   │   │     Audit       │
-│                 │   │                  │   │                  │   │                 │
-│ Ansible facts / │   │ CI → depends on  │   │ Before change:   │   │ Drift report    │
-│ AWS Config /    │──►│ CI → hosted on   │──►│ map blast radius │──►│ Compliance scan │
-│ Azure Policy /  │   │ CI → connects to │   │ affected CIs     │   │ CMDB vs actual  │
-│ CMDB discovery  │   │                  │   │                  │   │ state           │
-└─────────────────┘   └──────────────────┘   └──────────────────┘   └─────────────────┘
-         │                                            │                      │
-         ▼                                            └──────────────────────┘
-┌──────────────────────────────┐                               │
-│     CMDB (Config Items)      │◄──────────────────────────────┘
-│  hostname / IP / role / OS                                                          │
-│  relationships / owner                                                              │
-└──────────────────────────────┘
-```
-
 ## Configuration Baseline
 
 A baseline defines the approved, known-good state for a system type. Any deviation is drift.

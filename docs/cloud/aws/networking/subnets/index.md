@@ -3,31 +3,11 @@
 
 AWS Subnets notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                  Subnet Types                           │
-│                                                         │
-│  PUBLIC SUBNET                  PRIVATE SUBNET          │
-│  ─────────────                  ──────────────          │
-│  Route: 0.0.0.0/0 → IGW         No IGW route            │
-│  Resources can have public IPs  Private IPs only        │
-│  Used for:                      Used for:               │
-│  ├── ALB (load balancer)        ├── EC2 app servers      │
-│  ├── NAT Gateway                ├── ECS tasks           │
-│  └── Bastion (if needed)        └── Lambda (VPC mode)   │
-│                                                         │
-│  ISOLATED SUBNET                                        │
-│  ─────────────────                                      │
-│  No route to IGW or NAT GW      Used for: RDS · cache   │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -51,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -67,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

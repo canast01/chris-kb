@@ -1,35 +1,5 @@
 # Aria Automation — Backup & Restore
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│           Aria Automation Backup Flow                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Aria Automation Cluster                             │   │
-│  │  (PostgreSQL DB + config files + ABX + pipelines)   │    │
-│  └────────────────────────┬─────────────────────────────┘   │
-│                           │  trigger (VAMI schedule/manual) │
-│                           ▼                                 │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  vracli backup start                                 │   │
-│  │  Encrypts with passphrase (AES)                      │   │
-│  │  Exports: blueprints, projects, deployments,         │   │
-│  │   policies, ABX, pipelines, role assignments         │   │
-│  └────────────────────────┬─────────────────────────────┘   │
-│                           │  NFS mount or SFTP              │
-│                           ▼                                 │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Backup target (NFS / SFTP)                          │   │
-│  │  /exports/vra-backup/                                │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                             │
-│  Restore: VAMI → select backup → enter passphrase           │
-│  ► stops services ► restores DB ► restarts ► re-enter       │
-│  cloud account credentials (not backed up)                  │
-└─────────────────────────────────────────────────────────────┘
-```
-
 Aria Automation backup uses a built-in tool that exports the platform configuration and deployment state to an external NFS or SFTP target. The backup does not include running VMs or cloud resources — those are managed by vCenter and the respective cloud providers.
 
 ---

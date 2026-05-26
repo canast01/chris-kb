@@ -1,29 +1,5 @@
 # Aria Automation — Access Control
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│         Aria Automation RBAC Model                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  Organisation Level (platform-wide)                         │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  VIDM AD Groups  →  Org Role                         │   │
-│  │  GG-VRA-Admins   →  Administrator (full access)      │   │
-│  │  GG-VRA-Users    →  Member (project access only)     │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                           │                                 │
-│                           ▼                                 │
-│  Project Level (resource isolation boundary)                │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Project: proj-app-lon-prod                          │   │
-│  │  ├── Owner  — GG-APP-TEAM-LON  (manage + deploy)    │    │
-│  │  ├── Member — GG-APP-TEAM-LON-DEV  (catalog + own)  │    │
-│  │  └── Viewer — GG-OPS-READONLY  (read-only)          │    │
-│  │  Cloud Zones · Quotas · Content Sharing              │   │
-│  └──────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ## RBAC Model
 
 Aria Automation uses a **project-based access control** model. All resource provisioning is scoped to a project. Organisation-level roles control platform administration; project-level roles control what users can do within a project.

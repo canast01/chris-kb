@@ -3,30 +3,11 @@
 
 AWS Auto Scaling notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                  Auto Scaling Group Flow                │
-│                                                         │
-│  Launch Template (AMI · instance type · SG · userdata)  │
-│        │                                                │
-│        ▼                                                │
-│  Auto Scaling Group                                     │
-│  ├── Min capacity  (floor — never scale below)          │
-│  ├── Desired capacity (current target)                  │
-│  └── Max capacity  (ceiling — never exceed)             │
-│        │                                                │
-│  CloudWatch Metric (CPU · custom) ──► Scale Policy      │
-│        ├── scale out: desired + N  (add instances)      │
-│        └── scale in:  desired - N  (remove instances)   │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -50,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -66,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

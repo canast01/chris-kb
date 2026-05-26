@@ -1,29 +1,5 @@
 # Inventory
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                   Inventory Management Flow                          │
-│                                                                      │
-│  ┌──────────────────────────────────────────────────────────────┐    │
-│  │                         CMDB                                 │    │
-│  │             (ServiceNow · Netbox · Spreadsheet)              │    │
-│  └────────┬──────────────────────────────┬─────────────────────┘     │
-│           │  auto-discovery              │  manual entry             │
-│  ┌────────▼──────────────┐   ┌───────────▼───────────────────────┐   │
-│  │  Discovery tools      │   │   Manual inventory                │   │
-│  │  vCenter inventory    │   │   New hardware installs           │   │
-│  │  AWS/Azure resource   │   │   Appliance deployments           │   │
-│  │  groups               │   │                                   │   │
-│  └───────────────────────┘   └───────────────────────────────────┘   │
-│                                                                      │
-│  ┌──────────────────────────────────────────────────────────────┐    │
-│  │  Audit (quarterly)                                          │     │
-│  │  Verify CI accuracy ──► identify orphans ──► cleanup        │     │
-│  │  Lifecycle state: Active · EOL · Decommissioned             │     │
-│  └──────────────────────────────────────────────────────────────┘    │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 Asset and configuration management references.
 
 <div class="kb-grid kb-grid-3">

@@ -2,24 +2,6 @@
 
 Track physical infrastructure from procurement through secure disposal to optimise refresh cycles and maintain vendor support coverage.
 
-```text
-┌──────────┐  ┌──────────┐  ┌───────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
-│ Purchase │  │  Deploy  │  │ Warranty  │  │ Refresh  │  │Decommiss │  │ Disposal │
-│          │  │          │  │ & Operate │  │ Planning │  │          │  │          │
-│ PO / spec│─►│ Rack /   │─►│ Monitor   │─►│ EoL eval │─►│ Migrate  │─►│ Data     │
-│ lead time│  │ cable /  │  │ firmware  │  │ budget   │  │ workloads│  │ wipe +   │
-│ vendor   │  │ CMDB tag │  │ SMART chk │  │ timeline │  │ unrack   │  │ cert     │
-└──────────┘  └──────────┘  └───────────┘  └──────────┘  └──────────┘  └──────────┘
-                                  │               ▲
-                         ┌────────┘               │
-                         ▼                        │
-                ┌──────────────────┐              │
-                │  Age > 5 years?  │──────────────┘
-                │  Vendor EoS?     │  trigger refresh
-                │  No drive opts?  │
-                └──────────────────┘
-```
-
 ## Lifecycle Stages
 
 | Stage | Activities | Key Decisions |

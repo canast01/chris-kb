@@ -1,29 +1,5 @@
 # Azure — Backup & Restore
 
-```text
-┌──────────────────────────────────────────────────────────────┐
-│                  Azure Backup / Restore Flow                  │
-└──────────────────────────────────────────────────────────────┘
-
-  ┌──────────────┐     backup policy     ┌──────────────────────┐
-  │   Azure VM   │──────────────────────►│ Recovery Services    │
-  │  (or disk)   │                       │      Vault (RSV)     │
-  └──────────────┘                       │                      │
-                                         │  ┌────────────────┐  │
-  ┌──────────────┐    ad-hoc trigger      │  │ Recovery Points│  │
-  │  az backup   │──────────────────────►│  │ (daily/weekly) │  │
-  │  protection  │                       │  └────────────────┘  │
-  │  backup-now  │                       └──────────┬───────────┘
-  └──────────────┘                                  │
-                                                    │ restore
-                          ┌─────────────────────────┼───────────────┐
-                          ▼                         ▼               ▼
-                 ┌────────────────┐   ┌──────────────────┐  ┌──────────────┐
-                 │  New VM (full  │   │  Restore Disks   │  │  File-Level  │
-                 │  restore)      │   │  → staging SA    │  │  Recovery    │
-                 └────────────────┘   └──────────────────┘  └──────────────┘
-```
-
 > Azure Backup jobs, restore procedures, and Recovery Services vault management.
 
 See also: [Backup & DR](../../backup-dr/index.md) for full Azure Backup and Azure Site Recovery reference.

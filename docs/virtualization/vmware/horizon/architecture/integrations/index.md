@@ -1,23 +1,5 @@
 # Horizon — Integrations
 
-```text
-┌──────────────┐   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
-│   Active     │   │   vCenter    │   │     NSX      │   │ Workspace ONE│
-│  Directory   │   │  (vSphere)   │   │  (segments)  │   │ Access/vIDM  │
-│  ┌────────┐  │   │  ┌────────┐  │   │  ┌────────┐  │   │  ┌────────┐  │
-│  │ Auth / │  │   │  │ Pool   │  │   │  │Desktop │  │   │  │ True   │  │
-│  │ GPO /  │  │   │  │ prov.  │  │   │  │  VLAN  │  │   │  │ SSO /  │  │
-│  │ Groups │  │   │  │ IC fork│  │   │  │segmt.  │  │   │  │ SAML   │  │
-│  └───┬────┘  │   │  └───┬────┘  │   │  └───┬────┘  │   │  └───┬────┘  │
-└──────┼───────┘   └──────┼───────┘   └──────┼───────┘   └──────┼───────┘
-       └──────────────────┴──────────────────┴──────────────────┘
-                                    │
-                          ┌─────────▼──────────┐
-                          │   Connection Server │
-                          │  + App Volumes Mgr  │
-                          └─────────────────────┘
-```
-
 ## Active Directory
 
 Active Directory is a hard dependency — Connection Server must be domain-joined. Horizon uses AD for:

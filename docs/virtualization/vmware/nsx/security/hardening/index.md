@@ -1,37 +1,5 @@
 # NSX — Hardening
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│               NSX Hardening Layers                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  Layer 1 — Network Access Control                           │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  API :443 — admin jump hosts only                    │   │
-│  │  SSH :22  — admin jump hosts only                    │   │
-│  │  Geneve UDP 6081 — TEP VLANs only                    │   │
-│  │  BGP :179 — known physical router IPs only           │   │
-│  └──────────────────────────────────────────────────────┘   │
-│  Layer 2 — Authentication                                   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  LDAP/AD groups → roles (no shared admin passwords)  │   │
-│  │  Password policy: 20+ chars, 90-day, 5-attempt lock  │   │
-│  │  Automation: cert-based principal identities         │   │
-│  └──────────────────────────────────────────────────────┘   │
-│  Layer 3 — API TLS                                          │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  TLS 1.2 minimum  ·  CA-signed API cert              │   │
-│  │  Cert expiry monitored — alert at 60 days            │   │
-│  └──────────────────────────────────────────────────────┘   │
-│  Layer 4 — DFW Baseline + Audit                             │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Default rule 65535 = DROP                           │   │
-│  │  Syslog → TLS :6514 → SIEM                          │    │
-│  │  Backup verified < 25h                               │   │
-│  └──────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ## Hardening Baseline
 
 Follow the **VMware NSX Security Configuration Guide** published by Broadcom. The SCG maps NSX controls to CIS Benchmarks and DISA STIG requirements. Download from the Broadcom Knowledge Base for the specific NSX version in use.

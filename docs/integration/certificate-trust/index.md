@@ -1,29 +1,5 @@
 # Certificate Trust
 
-```text
-┌──────────────────────────────────────────────────────────────────────┐
-│                   Certificate Trust Chain                            │
-│                                                                      │
-│  ┌──────────────────────────────────────────────────────────────┐    │
-│  │               Internal Root CA Certificate                   │    │
-│  │           (self-signed, long-lived, offline)                 │    │
-│  └──────────────────────────┬───────────────────────────────────┘    │
-│                             │  signs                                 │
-│  ┌──────────────────────────▼───────────────────────────────────┐    │
-│  │             Intermediate / Issuing CA                        │    │
-│  └──────────────────────────┬───────────────────────────────────┘    │
-│                             │  issues leaf certs                     │
-│                             ▼                                        │
-│  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌─────────────┐     │
-│  │  vCenter   │  │  vSAN/NSX  │  │ App Server │  │  Appliance  │     │
-│  │ leaf cert  │  │ leaf cert  │  │ leaf cert  │  │  leaf cert  │     │
-│  └────────────┘  └────────────┘  └────────────┘  └─────────────┘     │
-│                                                                      │
-│  Root CA imported to trust store on each system → TLS validates      │
-│  Linux: update-ca-certificates  Windows: Cert:\LocalMachine\Root     │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
 Configure and verify certificate trust chains so that services can validate TLS certificates from internal and external CAs.
 ## Trust Store Locations
 

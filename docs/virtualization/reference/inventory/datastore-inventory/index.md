@@ -57,19 +57,6 @@
 
 ---
 
-```text
-┌──────────────────────────┬────────┬──────────┬──────────┬────────┬──────────────────┐
-│   Datastore Name         │  Type  │ Cap (TB) │ Free(TB) │ Used%  │  Backing Array    │
-├──────────────────────────┼────────┼──────────┼──────────┼────────┼──────────────────┤
-│ ds-prod-powermax-fc-01   │ VMFS 6 │   20     │    8     │  60%   │ Dell PowerMax     │
-│ ds-prod-powermax-fc-02   │ VMFS 6 │   20     │    5     │  75% ⚠ │ Dell PowerMax     │
-│ ds-prod-flasharray-fc-01 │ VMFS 6 │   10     │    6     │  40%   │ Pure FlashArray   │
-│ vsanDatastore            │  vSAN  │   46     │   22     │  52%   │ vSAN (internal)   │
-│ ds-nfs-netapp-01         │  NFS   │   50     │   30     │  40%   │ NetApp AFF A400   │
-├──────────────────────────┴────────┴──────────┴──────────┴────────┴──────────────────┤
-│  Thresholds: >70% monitor ⚠  │  >80% alert  │  >90% critical ✗                       │
-└──────────────────────────────────────────────────────────────────────────────────────┘
-```
 ## Overview
 
 Track all datastores presented to the vSphere environment. Update this inventory after any datastore creation, expansion, removal, or re-presentation event.

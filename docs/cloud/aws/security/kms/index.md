@@ -1,44 +1,5 @@
 # AWS KMS
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│                KMS — Key Operations                      │
-└──────────────────────────────────────────────────────────┘
-
-  ┌──────────────────────┐
-  │  CMK (Customer       │
-  │  Managed Key)        │
-  │  ┌────────────────┐  │
-  │  │  Key Material  │  │  ◄── never leaves KMS HSM
-  │  │  (stays in KMS)│  │
-  │  └────────────────┘  │
-  └──────────┬───────────┘
-             │
-      ┌──────┴───────────────┐
-      ▼                      ▼
-  GenerateDataKey         Encrypt / Decrypt
-  API call                API call
-  │                       │
-  ▼                       ▼
-  Returns:             Encrypt: plaintext ─► ciphertext
-  - Plaintext key      Decrypt: ciphertext ─► plaintext
-  - Encrypted key
-  │
-  ▼
-  App encrypts data locally
-  Stores encrypted key with data
-  (envelope encryption)
-             │
-             ▼
-  ┌──────────────────────┐
-  │  CloudTrail          │
-  │  every API call      │
-  │  logged: who, when,  │
-  │  which key, result   │
-  └──────────────────────┘
-  Auto key rotation: annually (aws kms enable-key-rotation)
-```
-
 ## Overview
 
 AWS KMS notes for day-to-day infrastructure operations.
@@ -48,7 +9,6 @@ AWS KMS notes for day-to-day infrastructure operations.
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -72,7 +32,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -88,7 +47,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

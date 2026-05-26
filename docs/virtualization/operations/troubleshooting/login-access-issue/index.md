@@ -2,39 +2,6 @@
 
 > Part of the [Troubleshooting](../index.md) hub.
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│                  LOGIN / ACCESS TRIAGE FLOW                     │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │
-              ┌────────────▼────────────┐
-              │  Try local SSO admin    │
-              │  administrator@         │
-              │  vsphere.local          │
-              └────────┬────────┬───────┘
-                fail ◄─┘        └─► pass
-                  │                   │
-   ┌──────────────▼──────┐   ┌────────▼──────────────┐
-   │  vCenter Auth / SSO │   │  AD/LDAP Identity Src  │
-   │  service-control    │   │  Test connection        │
-   │  --status vmware-sso│   │  DC reachable? Bind pw?│
-   └──────────────┬──────┘   └──────────┬─────────────┘
-                  │                      │
-                  └──────────┬───────────┘
-                             ▼
-              ┌──────────────────────────┐
-              │  RBAC / Permissions      │
-              │  Check role on object    │
-              │  Group membership valid? │
-              └──────────────┬───────────┘
-                             │
-              ┌──────────────▼──────────────┐
-              │  Account Lock / Cert Expiry  │
-              │  dir-cli find ► unlock       │
-              │  Check STS cert expiry       │
-              └─────────────────────────────┘
-```
-
 ---
 ## Cannot Log Into vCenter
 

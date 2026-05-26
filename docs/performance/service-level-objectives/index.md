@@ -2,25 +2,6 @@
 
 SLOs define quantitative targets for service reliability and performance. They form the basis for alerting thresholds, capacity decisions, and on-call escalation.
 
-```text
-┌──────────────┐   ┌──────────────┐   ┌──────────────────┐   ┌─────────────────────┐
-│ Define SLO   │   │ Measure SLI  │   │ Calculate Error  │   │   Review Cadence    │
-│ Target       │   │              │   │ Budget           │   │                     │
-│              │   │ Prometheus / │   │                  │   │ Monthly: compliance │
-│ 99.9% success│──►│ CloudWatch / │──►│ (1-SLO)×period   │──►│ Quarterly: targets  │
-│ P99 < 500ms  │   │ Azure Monitor│   │ e.g. 43 min/mo   │──►│ Post-incident: amend│
-│ etc.         │   │ query        │   │                  │   │                     │
-└──────────────┘   └──────────────┘   └──────────────────┘   └─────────────────────┘
-                                               │
-                              ┌────────────────┘
-                              ▼
-                   ┌──────────────────────────────┐
-                   │     Burn Rate Alert          │
-                   │ >14× → page  >6× → alert OC │
-                   │ >3× → investigate            │
-                   └──────────────────────────────┘
-```
-
 ## SLO vs SLA vs SLI
 
 | Term | Definition |

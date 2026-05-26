@@ -1,36 +1,5 @@
 # NSX — Authentication
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│           NSX Authentication Flow                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌──────────┐   ┌──────────────┐   ┌──────────────────┐     │
-│  │  Local   │   │  LDAP / AD   │   │  Client Cert     │     │
-│  │  account │   │  LDAPS :636  │   │  (Principal ID)  │     │
-│  │  admin/  │   │  group-based │   │  automation only │     │
-│  │  audit   │   │  binding     │   │                  │     │
-│  └────┬─────┘   └──────┬───────┘   └────────┬─────────┘     │
-│       └────────────────┼────────────────────┘               │
-│                        ▼                                    │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  NSX Manager AAA Service                             │   │
-│  │  POST /api/v1/aaa/session   (session cookie)         │   │
-│  │  Basic Auth                 (per-request)            │   │
-│  │  Certificate                (mTLS)                   │   │
-│  └──────────────────────────┬───────────────────────────┘   │
-│                             │                               │
-│                             ▼                               │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Role Assignment                                     │   │
-│  │  enterprise_admin / network_engineer / security_admin│   │
-│  │  operator / auditor                                  │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                             │
-│  Auth events → audit.log → syslog (TLS) → SIEM              │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ## Local Accounts
 
 NSX Manager ships with three built-in local accounts:

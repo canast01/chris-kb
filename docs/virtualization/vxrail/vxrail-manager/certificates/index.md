@@ -3,39 +3,11 @@
 
 Certificate status, expiration review, renewal planning, and service impact.
 
-```text
-  ┌──────────────────────────────────────────────────────┐
-  │          VxRail Certificate Trust Chain              │
-  │                                                      │
-  │  ┌────────────────────┐                              │
-  │  │   VxRail Internal  │                              │
-  │  │       CA           │─── signs ───────────────┐   │
-  │  └────────────────────┘                         │   │
-  │           │                                     │   │
-  │     signs │                                     ▼   │
-  │           ▼                         ┌────────────────┐│
-  │  ┌─────────────────────┐            │  ESXi host     ││
-  │  │  VxRail Manager     │            │  certificates  ││
-  │  │  certificate        │            └────────────────┘│
-  │  └──────────┬──────────┘                              │
-  │             │                                         │
-  │    Renewal via LCM:                                   │
-  │    VxRail Mgr → System → Certificates                 │
-  │    ├── Generate CSR                                   │
-  │    ├── Submit to internal CA                          │
-  │    ├── Upload signed cert                             │
-  │    └── LCM pushes to all nodes                       │
-  │                                                      │
-  │  Expiry monitoring: check cert notAfter date         │
-  └──────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -64,7 +36,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review cluster health. |  |
@@ -83,7 +54,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 - Run post-upgrade checks.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

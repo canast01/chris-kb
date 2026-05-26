@@ -3,33 +3,11 @@
 
 AWS Cross-Account Access notes for day-to-day infrastructure operations.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│               Cross-Account Role Assumption             │
-│                                                         │
-│  Account A (caller)                                     │
-│  └── Principal (user / role / service)                  │
-│        │  sts:AssumeRole                                │
-│        ▼                                                │
-│  Account B (target)                                     │
-│  └── IAM Role                                           │
-│       ├── Trust policy: allow Account A principal       │
-│       └── Permission policy: what they can do in B      │
-│        │                                                │
-│        ▼                                                │
-│  STS returns temporary credentials for Account B        │
-│  (AccessKeyId · SecretKey · SessionToken · Expiry)      │
-│                                                         │
-│  Use cases: centralised logging · Security Hub · ops    │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -53,7 +31,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -69,7 +46,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 - Test after the change.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

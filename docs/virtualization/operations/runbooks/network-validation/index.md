@@ -1,35 +1,5 @@
 # Virtualization Network Validation
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│                   NETWORK VALIDATION FLOW                       │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │
-   ┌───────────────────────▼───────────────────────────────┐
-   │  VM Layer                                             │
-   │  VM ping gateway ► NIC connected ► IP correct         │
-   └───────────────────────┬───────────────────────────────┘
-                           │ fail ▼  pass ►
-   ┌───────────────────────▼───────────────────────────────┐
-   │  Port Group / NSX Segment                             │
-   │  VLAN ID correct ► segment exists ► policy applied    │
-   └───────────────────────┬───────────────────────────────┘
-                           │ fail ▼  pass ►
-   ┌───────────────────────▼───────────────────────────────┐
-   │  vSwitch / vDS Uplinks                                │
-   │  vmnic link up ► teaming policy ► MTU consistent      │
-   └───────────────────────┬───────────────────────────────┘
-                           │ fail ▼  pass ►
-   ┌───────────────────────▼───────────────────────────────┐
-   │  CDP/LLDP ► Physical Switch                           │
-   │  VLAN on trunk ► STP not blocking ► uplink speed OK   │
-   └───────────────────────┬───────────────────────────────┘
-                           │
-                    ┌──────▼──────┐
-                    │  VALIDATED  │
-                    └─────────────┘
-```
-
 ## Overview
 
 Use this after network changes, VLAN changes, host work, NSX changes, or VM connectivity issues.

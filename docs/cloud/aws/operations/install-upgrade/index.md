@@ -2,46 +2,6 @@
 
 > Part of the [Operations](../index.md) section.
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│            AWS Patch Manager — Patching Flow             │
-└──────────────────────────────────────────────────────────┘
-
-  ┌──────────────────────┐
-  │  Patch Baseline      │  (OS family, severity, auto-approve rules)
-  └──────────┬───────────┘
-             │ assigned to
-             ▼
-  ┌──────────────────────┐
-  │  Patch Group         │  (tag: Patch Group = prod / staging / dev)
-  └──────────┬───────────┘
-             │ triggered by
-             ▼
-  ┌──────────────────────┐
-  │  Maintenance Window  │  (schedule: 2nd week, rolling waves)
-  └──────────┬───────────┘
-             │ runs
-             ▼
-  ┌──────────────────────┐
-  │  AWS-RunPatchBaseline│  (SSM Document — Operation=Install)
-  └──────────┬───────────┘
-             │ executes on
-     ┌───────┴──────────┐
-     ▼                  ▼
-┌─────────┐       ┌──────────────────┐
-│  EC2    │       │  ASG — Instance                        │
-│ Targets │       │  Refresh (blue/                        │
-│ (SSM)   │       │  green replace)                        │
-└────┬────┘       └────────┬─────────┘
-     │                     │
-     └──────────┬──────────┘
-                ▼
-  ┌──────────────────────┐
-  │  Patch Compliance    │  (describe-instance-patch-states)
-  │  Report              │
-  └──────────────────────┘
-```
-
 ---
 
 ## EC2 Patching
