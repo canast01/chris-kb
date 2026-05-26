@@ -45,28 +45,51 @@ sannav restart
 sudo sed -i 's/level="DEBUG"/level="INFO"/' /opt/sannav/conf/log4j2.xml
 sannav restart
 ```
-
----
-
-## Collecting a Diagnostic Bundle for Broadcom Support
-
-SANnav can generate a support bundle containing logs, configuration, and system state:
-
-```bash
-ssh admin@sannav-dc1.corp.example.com
-
-# Generate support bundle
-sannav support-bundle --output /tmp/sannav-diag-$(date +%Y%m%d).tar.gz
-
-# This collects:
-# - All log files
-# - System state (CPU, memory, disk)
-# - SANnav configuration (excluding passwords)
-# - Database schema information (no data)
-# - OS-level diagnostics
-
-# Transfer the bundle to your workstation
-scp admin@sannav-dc1.corp.example.com:/tmp/sannav-diag-*.tar.gz ./
+┌──────────────────────────────────── Brocade SANnav — Diagnostics ─────────────────────────────────────┐
+│                                                                                                       │
+│  SANnav diagnostics: service logs, DB status, API health, performance data, MAPS review.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          SANnav Service Diagnostics          │  │             Database Diagnostics            │   │
+│   │          journalctl -u sannav: logs          │  │            sannav-admin db-status           │   │
+│   │        sannav-admin status: services         │  │           PostgreSQL: pg_activity           │   │
+│   │        curl /api/v1/health: response         │  │        Elasticsearch: cluster health        │   │
+│   │         netstat: port 443 listening          │  │           df -h: disk space check           │   │
+│   │          top: CPU/RAM on SANnav VM           │  │            du -sh: data dir sizes           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  journalctl and sannav-admin are first-line diagnostics; DB status if data issues.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Switch-Level Diagnostics           │  │          Escalation Data Collection         │   │
+│   │        switchshow: verify port state         │  │           Export SANnav logs: GUI           │   │
+│   │          errshow: switch error log           │  │           supportsave: each switch          │   │
+│   │         fabricshow: fabric topology          │  │            Audit log export: CSV            │   │
+│   │          nsshow: device login state          │  │          API debug: verbose logging         │   │
+│   │            MAPS: dashboard alerts            │  │         Screenshot: UI issue record         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SANnav VM · vSphere monitoring · Brocade FC switch management ports · NFS backup                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  journalctl      = systemd log viewer; shows SANnav service start/stop and errors                     │
+│  sannav-admin    = SANnav VM CLI; status/db-status/restart subcommands                                │
+│  pg_activity     = PostgreSQL active query monitor; identifies slow queries                           │
+│  Elasticsearch   = analytics DB; cluster health yellow/red = data issues                              │
+│  /api/v1/health  = SANnav REST health endpoint; returns service status JSON                           │
+│  df -h           = disk free check; Elasticsearch fills disk causing UI failures                      │
+│  top             = Linux process monitor; check SANnav CPU/RAM consumption                            │
+│  switchshow      = FOS CLI first check; verify switch not reporting errors                            │
+│  errshow         = FOS error log; correlate switch events with SANnav issues                          │
+│  MAPS dashboard  = SANnav aggregated view of all MAPS alerts across fabric                            │
+│  supportsave     = FOS diagnostic bundle; required when escalating to Broadcom TAC                    │
+│  Audit log CSV   = exported SANnav user action log; shared during security review                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Attach this bundle to the Broadcom support case.

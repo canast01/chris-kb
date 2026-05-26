@@ -82,15 +82,51 @@ uptime
 # Any changes made before the issue (upgrade, configuration change, network change)
 # Steps already taken to troubleshoot
 ```
-
-### For Discovery / Connectivity Issues
-
-```bash
-# Discovery log for the affected switch
-grep "<switch-ip>" /opt/sannav/logs/discovery.log > /tmp/discovery-issue.log
-
-# HTTPS test result
-curl -v https://<switch-ip>/rest/loginresult 2>&1 > /tmp/https-test.txt
+┌───────────────────────────── Brocade SANnav — Troubleshooting Escalation ─────────────────────────────┐
+│                                                                                                       │
+│  SANnav escalation: internal L2/L3 → Broadcom TAC with log bundle, case, and access.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Internal Escalation Path           │  │           Broadcom TAC Escalation           │   │
+│   │          L1 → L2: basic checks done          │  │         Open case: support.broadcom         │   │
+│   │        L2 → L3: log bundle + timeline        │  │          Provide: SANnav + FOS vers         │   │
+│   │         L3 → TAC: full data package          │  │          Sev-1: SANnav unreachable          │   │
+│   │          Incident bridge for Sev-1           │  │          Remote: TAC SSH to SANnav          │   │
+│   │          No changes during incident          │  │           RCA expected after close          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Collect SANnav logs and switch supportsave before contacting Broadcom TAC.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Escalation Data Package            │  │           Severity Classification           │   │
+│   │         SANnav logs: journalctl dump         │  │          Sev-1: SANnav down; fabric         │   │
+│   │         DB status: sannav-admin out          │  │           Sev-2: zone push failing          │   │
+│   │            FOS version per switch            │  │          Sev-3: monitoring partial          │   │
+│   │        supportsave from all switches         │  │         Sev-4: question/enhancement         │   │
+│   │            Audit log export: CSV             │  │          CSAT survey after closure          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SANnav VM · management Ethernet · serial console access · Broadcom upload endpoint                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  journalctl dump = full SANnav service log export; share compressed to TAC                            │
+│  sannav-admin    = SANnav VM CLI; db-status and status output needed for TAC                          │
+│  supportsave     = FOS diagnostic bundle; one per switch in the affected fabric                       │
+│  Audit log CSV   = SANnav action log export; shows what changed before incident                       │
+│  Sev-1           = SANnav completely down; fabric management unavailable                              │
+│  Sev-2           = SANnav partially working; zone changes or discovery failing                        │
+│  TAC remote      = Broadcom engineer SSHs into SANnav VM with customer permission                     │
+│  RCA             = Root Cause Analysis document; Broadcom provides after Sev-1 close                  │
+│  CSAT            = Customer Satisfaction survey; sent by Broadcom after case closure                  │
+│  FOS version     = Fabric OS version; compatibility matrix needed for SANnav match                    │
+│  Incident bridge = conference call with all responders during active Sev-1 event                      │
+│  No changes      = freeze all fabric and SANnav changes during active incident                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### For Upgrade Issues
