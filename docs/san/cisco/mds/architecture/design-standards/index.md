@@ -9,33 +9,51 @@
 ```text
 <site>-mds-sw<nn>
 ```
-
-| Site | Fabric A | Fabric B |
-|---|---|---|
-| DC1 | `dc1-mds-sw01`, `dc1-mds-sw03` | `dc1-mds-sw02`, `dc1-mds-sw04` |
-| DC2 | `dc2-mds-sw01`, `dc2-mds-sw03` | `dc2-mds-sw02`, `dc2-mds-sw04` |
-
-Fabric A = odd switch numbers, Fabric B = even.
-
-## VSAN Allocation
-
-VSANs isolate traffic types within the same physical fabric:
-
-| VSAN ID | Fabric | Purpose |
-|---|---|---|
-| 10 | Fabric A | Production |
-| 11 | Fabric B | Production |
-| 20 | Fabric A | Replication (SRDF/A, RecoverPoint) |
-| 21 | Fabric B | Replication |
-| 99 | Both | Management / out-of-band testing |
-
-Document VSAN assignments in CMDB. Never reuse a VSAN ID after decommission.
-
-## Zone and Alias Naming
-
-```text
-Zone:   <hostname>_<hba_port>-<arrayname>_<port>
-Alias:  <hostname>_<hba_port>   or   <arrayname>_<port>
+┌────────────────────────────────── Cisco MDS 9000 — Design Standards ──────────────────────────────────┐
+│                                                                                                       │
+│  MDS design principles: dual-fabric A/B, VSAN per workload, PortChannel ISLs, ISSU.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Fabric Design                 │  │                 VSAN Design                 │   │
+│   │          Dual fabric A and B always          │  │          One VSAN per workload type         │   │
+│   │       No single switch failure impact        │  │         VSAN 1 never used: reserved         │   │
+│   │         ISL PortChannel: min 2 ports         │  │         Prod/dev/test separate VSAN         │   │
+│   │          Over-subscription: 7:1 max          │  │         VSAN QoS: priority per VSAN         │   │
+│   │          Directors: 9706/9710/9718           │  │             FCoE: separate VSAN             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Dual fabric is non-negotiable; VSAN per workload prevents blast-radius cross-talk.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Zone Design                  │  │            Operational Standards            │   │
+│   │         WWN zoning: not port zoning          │  │          ISSU upgrade: all upgrades         │   │
+│   │          Single initiator per zone           │  │          TACACS+ via ISE: mandatory         │   │
+│   │          Alias: device name not WWN          │  │           NX-OS: < 2 versions lag           │   │
+│   │         Default deny: no open zones          │  │          SNMPv3 only: disable v1/v2         │   │
+│   │            Zone set: one per VSAN            │  │         Backup: config + zone daily         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS director pair (A+B) · dual supervisor per director · SFP transceivers · FC cables                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Dual fabric     = two independent FC fabrics; every host and array dual-homed                        │
+│  VSAN            = Virtual SAN; one VSAN per workload (prod/dev/test separate)                        │
+│  VSAN 1          = default VSAN; avoid using it; reserved for management                              │
+│  PortChannel ISL = bundled ISLs; PortChannel1 is recommended minimum 2 links                          │
+│  7:1             = recommended over-subscription ratio for FC storage traffic                         │
+│  WWN zoning      = zone by HBA World Wide Name; survives port changes                                 │
+│  Single initiator= one HBA per zone; prevents initiator-to-initiator traffic                          │
+│  Device alias    = human-readable name for WWN; managed via CFS distribution                          │
+│  Default deny    = no zone = no communication; strict zone policy                                     │
+│  ISSU            = In-Service Software Upgrade; required for all NX-OS upgrades                       │
+│  TACACS+ via ISE = Cisco ISE provides TACACS+ for all MDS admin auth                                  │
+│  Zone set        = one active zone set per VSAN at a time; backup sets inactive                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Examples:
