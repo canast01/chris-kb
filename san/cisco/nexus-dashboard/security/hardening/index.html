@@ -3302,28 +3302,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-replace-the-default-tls-certificate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Replace the Default TLS Certificate
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-restrict-management-network-access" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Restrict Management Network Access
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#4-configure-external-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3697,7 +3675,7 @@
 <p>Hardening the Nexus Dashboard cluster reduces the attack surface of the management plane. Apply this baseline during initial deployment and validate quarterly. ND runs on a Kubernetes-based Linux platform — hardening applies to both the ND application configuration and the underlying platform.</p>
 <hr />
 <h2 id="1-change-default-credentials">1. Change Default Credentials<a class="headerlink" href="#1-change-default-credentials" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to the ND cluster</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to the ND cluster</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Change the default admin password (via GUI: Admin Console &gt; Security &gt; Users &gt; admin)</span>
@@ -3706,70 +3684,77 @@
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Use a password meeting corporate complexity policy (20+ characters)</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Store in vault; treat as break-glass</span>
 </code></pre></div>
-<p>Navigate to <strong>Admin Console &gt; Security &gt; Local Users &gt; admin &gt; Change Password</strong> for the ND application admin account. The OS <code>ndadmin</code> and the application <code>admin</code> are separate accounts.</p>
-<hr />
-<h2 id="2-replace-the-default-tls-certificate">2. Replace the Default TLS Certificate<a class="headerlink" href="#2-replace-the-default-tls-certificate" title="Permanent link">&para;</a></h2>
-<p>The default ND deployment uses a self-signed certificate. Replace with a corporate CA certificate immediately after initial deployment — do not operate in production with the self-signed certificate.</p>
-<p>See <a href="../encryption/">Encryption</a> for the full procedure. Key steps:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Generate CSR, get signed by corporate CA</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Import and activate via acs CLI:</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>acs<span class="w"> </span>certificates<span class="w"> </span>import<span class="w"> </span>--key<span class="w"> </span>/tmp/nd.key<span class="w"> </span>--cert<span class="w"> </span>/tmp/nd-bundle.crt<span class="w"> </span>--name<span class="w"> </span>nd-corp-cert
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>acs<span class="w"> </span>certificates<span class="w"> </span>activate<span class="w"> </span>--name<span class="w"> </span>nd-corp-cert
-</code></pre></div>
-<hr />
-<h2 id="3-restrict-management-network-access">3. Restrict Management Network Access<a class="headerlink" href="#3-restrict-management-network-access" title="Permanent link">&para;</a></h2>
-<p>Use firewall or network ACL controls to limit access to the ND management interface:</p>
-<table>
-<thead>
-<tr>
-<th>Source</th>
-<th>Destination</th>
-<th>Port</th>
-<th>Protocol</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Management subnet</td>
-<td>ND mgmt IPs</td>
-<td>443</td>
-<td>HTTPS</td>
-<td>Allow</td>
-</tr>
-<tr>
-<td>Jump host / VPN subnet</td>
-<td>ND mgmt IPs</td>
-<td>22</td>
-<td>SSH</td>
-<td>Allow</td>
-</tr>
-<tr>
-<td>Switch management subnet</td>
-<td>ND data IPs</td>
-<td>22, 161, 162, 514</td>
-<td>TCP/UDP</td>
-<td>Allow</td>
-</tr>
-<tr>
-<td>Any</td>
-<td>ND mgmt IPs</td>
-<td>443, 22</td>
-<td>TCP</td>
-<td>Deny (default)</td>
-</tr>
-</tbody>
-</table>
-<p>ND does not provide a built-in host firewall UI. Apply ACLs on the upstream switch or firewall in front of the ND management network. Do not expose the ND management interface to the open internet.</p>
-<p>On the ND node OS (for emergency access control):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check firewall status (ND appliance uses firewalld)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--list-all
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Restrict SSH to management subnet</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--remove-service<span class="o">=</span>ssh
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="s1">&#39;rule family=&quot;ipv4&quot; source address=&quot;10.10.0.0/24&quot; service name=&quot;ssh&quot; accept&#39;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload
-</code></pre></div>
+┌───────────────────────────── Cisco Nexus Dashboard — Security Hardening ──────────────────────────────┐
+│                                                                                                       │
+│  Hardening checklist: replace default certs, restrict access, enable AAA, audit logging.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Platform Hardening              │  │              Network Hardening              │   │
+│   │           Replace self-signed cert           │  │          IP allowlist: mgmt source          │   │
+│   │          Enable SAML/LDAP: no local          │  │           OOB mgmt: dedicated VLAN          │   │
+│   │        Disable default admin: rename         │  │           Firewall: port 443 only           │   │
+│   │        Password policy: max strength         │  │             NTP auth: keyed NTP             │   │
+│   │         Session timeout: 15 min idle         │  │             Syslog TLS: to SIEM             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Replace certs and enable AAA first; then restrict network access; then audit                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             App-Level Hardening              │  │              Ongoing Compliance             │   │
+│   │        NDFC: disable unused features         │  │           Quarterly access review           │   │
+│   │         NDO: limit deploy approvers          │  │          Cert expiry: monitor &lt; 30d         │   │
+│   │         NDI: restrict telemetry read         │  │         Patch: apply within 30 days         │   │
+│   │          API: service accounts only          │  │         PSIRT: subscribe advisories         │   │
+│   │        Minimal roles: least privilege        │  │            Backup: verify monthly           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ND cluster · CA server · SAML IdP · SIEM · NTP server · OOB management switch                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Self-signed cert= Default ND cert; must be replaced with CA-signed before production                 │
+│  IP allowlist   = Network-level restriction on which source IPs can reach port 443                    │
+│  OOB VLAN       = Dedicated out-of-band management network isolated from data path                    │
+│  PSIRT          = Cisco Product Security Incident Response Team; publishes CVEs                       │
+│  Least privilege= Each user/service account has only the minimum required permissions                 │
+│  Session timeout= Idle UI session automatically terminated after inactivity period                    │
+│  NTP auth       = Keyed NTP ensuring time sync from trusted server only                               │
+│  Service account= Dedicated ND user for automation; separate from human accounts                      │
+│  Deploy approver= NDO role permitted to push templates to production APIC sites                       │
+│  Access review  = Periodic audit of all user accounts and role assignments                            │
+│  Patch window   = Defined maintenance period for applying ND software updates                         │
+│  Syslog TLS     = Encrypted syslog stream forwarding audit events to SIEM                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## 3. Restrict Management Network Access
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Use firewall or network ACL controls to limit access to the ND management interface:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Source | Destination | Port | Protocol | Action |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|---|---|---|
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Management subnet | ND mgmt IPs | 443 | HTTPS | Allow |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Jump host / VPN subnet | ND mgmt IPs | 22 | SSH | Allow |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Switch management subnet | ND data IPs | 22, 161, 162, 514 | TCP/UDP | Allow |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Any | ND mgmt IPs | 443, 22 | TCP | Deny (default) |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ND does not provide a built-in host firewall UI. Apply ACLs on the upstream switch or firewall in front of the ND management network. Do not expose the ND management interface to the open internet.
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>On the ND node OS (for emergency access control):
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>```bash
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># Check firewall status (ND appliance uses firewalld)
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>sudo firewall-cmd --list-all
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># Restrict SSH to management subnet
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>sudo firewall-cmd --permanent --remove-service=ssh
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>sudo firewall-cmd --permanent --add-rich-rule=&#39;rule family=&quot;ipv4&quot; source address=&quot;10.10.0.0/24&quot; service name=&quot;ssh&quot; accept&#39;
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>sudo firewall-cmd --reload
+</code></pre></div></p>
 <hr />
 <h2 id="4-configure-external-authentication">4. Configure External Authentication<a class="headerlink" href="#4-configure-external-authentication" title="Permanent link">&para;</a></h2>
 <p>Do not run production with local accounts only. Configure LDAP, TACACS+, or SAML:</p>
@@ -3819,9 +3804,9 @@
 <ol>
 <li>Navigate to <strong>Admin Console &gt; Security &gt; Security Settings &gt; Login Banner</strong>.</li>
 <li>Enter:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>WARNING: This system is for authorized use only.
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>All connections are monitored and recorded.
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Unauthorized access is prohibited and may result in legal action.
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>WARNING: This system is for authorized use only.
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>All connections are monitored and recorded.
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Unauthorized access is prohibited and may result in legal action.
 </code></pre></div></li>
 <li>Click <strong>Save</strong>. The banner appears below the login form.</li>
 </ol>
@@ -3841,7 +3826,7 @@
 <ol>
 <li><strong>Admin Console &gt; Operations &gt; Audit Logs</strong> — confirm events are being recorded.</li>
 <li>Configure syslog forwarding to forward audit events to the SIEM:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>acs<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.3.50<span class="w"> </span>--port<span class="w"> </span><span class="m">514</span><span class="w"> </span>--protocol<span class="w"> </span>tcp
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>acs<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.3.50<span class="w"> </span>--port<span class="w"> </span><span class="m">514</span><span class="w"> </span>--protocol<span class="w"> </span>tcp
 </code></pre></div></li>
 <li>Set up SIEM alerts for:</li>
 <li>Multiple failed logins (&gt; 5 in 5 minutes)</li>
@@ -3852,43 +3837,43 @@
 <hr />
 <h2 id="9-kubernetes-security-baseline">9. Kubernetes Security Baseline<a class="headerlink" href="#9-kubernetes-security-baseline" title="Permanent link">&para;</a></h2>
 <p>ND's Kubernetes control plane has several security defaults that should be verified:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Confirm no pods are running as root unnecessarily</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{range .items[*]}{.metadata.namespace}{&quot;\t&quot;}{.metadata.name}{&quot;\t&quot;}{.spec.securityContext.runAsUser}{&quot;\n&quot;}{end}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">&quot;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Confirm no privileged pods (outside of system namespaces)</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s2">for item in data[&#39;items&#39;]:</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s2">    ns = item[&#39;metadata&#39;][&#39;namespace&#39;]</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s2">    name = item[&#39;metadata&#39;][&#39;name&#39;]</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s2">    for c in item[&#39;spec&#39;].get(&#39;containers&#39;,[]):</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s2">        if c.get(&#39;securityContext&#39;,{}).get(&#39;privileged&#39;):</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s2">            print(f&#39;Privileged: {ns}/{name}/{c[\&quot;name\&quot;]}&#39;)</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;kube-system\|kube-proxy\|cilium&quot;</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># ND system pods require some elevated privileges; app pods should not</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Confirm NetworkPolicies are in place (Cilium enforces by default in ND)</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>kubectl<span class="w"> </span>get<span class="w"> </span>networkpolicies<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;NetworkPolicy&quot;</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># Should be non-zero</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Confirm no pods are running as root unnecessarily</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{range .items[*]}{.metadata.namespace}{&quot;\t&quot;}{.metadata.name}{&quot;\t&quot;}{.spec.securityContext.runAsUser}{&quot;\n&quot;}{end}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Confirm no privileged pods (outside of system namespaces)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">for item in data[&#39;items&#39;]:</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">    ns = item[&#39;metadata&#39;][&#39;namespace&#39;]</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">    name = item[&#39;metadata&#39;][&#39;name&#39;]</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">    for c in item[&#39;spec&#39;].get(&#39;containers&#39;,[]):</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">        if c.get(&#39;securityContext&#39;,{}).get(&#39;privileged&#39;):</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">            print(f&#39;Privileged: {ns}/{name}/{c[\&quot;name\&quot;]}&#39;)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;kube-system\|kube-proxy\|cilium&quot;</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># ND system pods require some elevated privileges; app pods should not</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Confirm NetworkPolicies are in place (Cilium enforces by default in ND)</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>kubectl<span class="w"> </span>get<span class="w"> </span>networkpolicies<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;NetworkPolicy&quot;</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># Should be non-zero</span>
 </code></pre></div>
 <hr />
 <h2 id="10-ntp-synchronization">10. NTP Synchronization<a class="headerlink" href="#10-ntp-synchronization" title="Permanent link">&para;</a></h2>
 <p>Correct time is essential for certificate validation, log correlation, and Kerberos authentication:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Check NTP status on all nodes</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># If NTP is not configured or not synchronised:</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.10<span class="w"> </span>--prefer
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.11
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Verify synchronisation (may take 2-5 minutes after adding NTP servers)</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Expected: server reachable, stratum ≤ 3, offset &lt; 100ms</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Check NTP status on all nodes</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># If NTP is not configured or not synchronised:</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.10<span class="w"> </span>--prefer
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.11
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Verify synchronisation (may take 2-5 minutes after adding NTP servers)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Expected: server reachable, stratum ≤ 3, offset &lt; 100ms</span>
 </code></pre></div>
 <hr />
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>

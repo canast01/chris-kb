@@ -3233,28 +3233,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ndfc-fabric-shows-all-switches-as-unmanageable-after-nd-upgrade" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NDFC Fabric Shows All Switches as Unmanageable After ND Upgrade
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#zone-activation-partially-propagates-some-switches-updated-others-not" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Zone Activation Partially Propagates (Some Switches Updated, Others Not)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#ndi-anomalies-showing-stale-data" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3516,7 +3494,7 @@
 <h2 id="nd-cluster-node-not-healthy">ND Cluster Node Not Healthy<a class="headerlink" href="#nd-cluster-node-not-healthy" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> One or more nodes shows <strong>Degraded</strong> or <strong>Unavailable</strong> in <strong>Admin Console &gt; Infrastructure &gt; Nodes</strong>.</p>
 <p><strong>Diagnosis:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Overall cluster health</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>acs<span class="w"> </span>health
@@ -3528,80 +3506,67 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># If a node shows NotReady: investigate the node-specific issue below</span>
 </code></pre></div>
-<p><strong>Resolution by cause:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Cause</th>
-<th>Indicator</th>
-<th>Fix</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VM resource exhaustion (RAM/CPU)</td>
-<td>High usage in acs system resources</td>
-<td>Increase VM resources or reduce app workload</td>
-</tr>
-<tr>
-<td>Cluster network (app0) disruption</td>
-<td>Nodes cannot reach each other</td>
-<td>Verify L2 connectivity on cluster VLAN; check vSwitch/port group</td>
-</tr>
-<tr>
-<td>etcd quorum lost</td>
-<td>acs health shows etcd warnings</td>
-<td>Restore lost nodes; if etcd is corrupted, restore from backup</td>
-</tr>
-<tr>
-<td>Kubernetes pod crash loop</td>
-<td><code>kubectl get pods --all-namespaces \| grep -v Running</code></td>
-<td><code>kubectl logs -n &lt;ns&gt; &lt;pod&gt; --previous</code> for crash reason</td>
-</tr>
-<tr>
-<td>Disk full on node</td>
-<td>df shows /data &gt; 90%</td>
-<td>Purge NDI telemetry data; expand PV</td>
-</tr>
-<tr>
-<td>NTP drift &gt; 100ms</td>
-<td>acs system ntp show</td>
-<td>Fix NTP on affected node; etcd requires tight time sync</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="ndfc-fabric-shows-all-switches-as-unmanageable-after-nd-upgrade">NDFC Fabric Shows All Switches as Unmanageable After ND Upgrade<a class="headerlink" href="#ndfc-fabric-shows-all-switches-as-unmanageable-after-nd-upgrade" title="Permanent link">&para;</a></h2>
-<p><strong>Symptom:</strong> After upgrading ND or NDFC, all fabric switches show Unmanageable.</p>
-<p><strong>Cause:</strong> NDFC credential keys or service account passwords may need re-entry after a major upgrade; or NDFC pods may not have fully restarted.</p>
-<p><strong>Resolution:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check NDFC pod health</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>ndfc
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># If pods are not all Running after 10 minutes:</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>ndfc
+┌──────────────────────── Cisco Nexus Dashboard — Troubleshooting Common Issues ────────────────────────┐
+│                                                                                                       │
+│  Most frequent ND issues: cluster quorum, app failures, site disconnects, auth errors.                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Cluster Problems               │  │           Authentication Failures           │   │
+│   │         Node unreachable: NIC/cable          │  │         Login fail: AAA unreachable         │   │
+│   │          Quorum lost: 2+ nodes down          │  │          SAML error: cert mismatch          │   │
+│   │         Disk full: Elasticsearch log         │  │          Token expired: re-auth API         │   │
+│   │         NTP drift: TLS cert failure          │  │             LDAP: bind DN wrong             │   │
+│   │          etcd crash: restore backup          │  │           401 REST: creds rotated           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Check acs health first; auth issues need AAA server reachability confirmed                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Site and App Issues              │  │               Resolution Steps              │   │
+│   │          Site offline: REST timeout          │  │           acs health: check nodes           │   │
+│   │           NDFC: pod crash-looping            │  │          acs logs <app>: pod errors         │   │
+│   │            NDI: no telemetry data            │  │            Renew cert or fix NTP            │   │
+│   │          NDO: deploy stuck/timeout           │  │           Restart app: acs restart          │   │
+│   │         SSL cert expired: 503 error          │  │          TAC: quorum unrecoverable          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ND cluster nodes · management switch · NTP · AAA server · APIC · firewall                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  acs health     = ND CLI command; shows cluster node and service health at a glance                   │
+│  Quorum         = Requires 2 of 3 nodes; loss makes cluster read-only                                 │
+│  etcd crash     = State-store failure; requires cluster restore from backup                           │
+│  Disk full      = Elasticsearch retains telemetry; purge old data or expand volume                    │
+│  NTP drift      = Clock skew breaks TLS validation and JWT expiry calculations                        │
+│  Crash-loop     = Pod restarting repeatedly; acs logs shows root cause                                │
+│  503 error      = HTTP Service Unavailable; typically expired TLS cert on ND                          │
+│  401 error      = HTTP Unauthorized; API credentials rotated but not updated in ND                    │
+│  Bind DN        = LDAP distinguished name ND uses to connect; fails if password changed               │
+│  SAML cert mismatch= IdP signing cert changed but not updated in ND SP config                         │
+│  acs restart    = ND CLI command to restart a specific app service gracefully                         │
+│  TAC            = Cisco TAC; escalate cluster quorum loss or etcd corruption                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Zone Activation Partially Propagates (Some Switches Updated, Others Not)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>**Symptom:** After activating a zone set in NDFC, the zone change is present on some switches but not all.
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Wait for pods to restart</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/ndfc-server<span class="w"> </span>-n<span class="w"> </span>ndfc
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># If pods are Running but switches still show Unmanageable:</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Test SSH from the ND data network to a managed switch</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>acs<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--host<span class="w"> </span>&lt;switch-ip&gt;<span class="w"> </span>--port<span class="w"> </span><span class="m">22</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>**Diagnosis:**
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>```bash
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># On each MDS switch — verify active zone set version
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>show zoneset active vsan &lt;vsan-id&gt; | include name
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Compare timestamps across switches — the lagging switch shows an older timestamp
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># If connectivity is OK: re-enter switch credentials in NDFC</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># NDFC &gt; Fabrics &gt; [Fabric] &gt; Edit Credentials</span>
-</code></pre></div>
-<hr />
-<h2 id="zone-activation-partially-propagates-some-switches-updated-others-not">Zone Activation Partially Propagates (Some Switches Updated, Others Not)<a class="headerlink" href="#zone-activation-partially-propagates-some-switches-updated-others-not" title="Permanent link">&para;</a></h2>
-<p><strong>Symptom:</strong> After activating a zone set in NDFC, the zone change is present on some switches but not all.</p>
-<p><strong>Diagnosis:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On each MDS switch — verify active zone set version</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan-id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>name
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Compare timestamps across switches — the lagging switch shows an older timestamp</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check for zone merge failures</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>show<span class="w"> </span>zone<span class="w"> </span>merge-failure<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan-id&gt;
-</code></pre></div>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Check for zone merge failures
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>show zone merge-failure vsan &lt;vsan-id&gt;
+</code></pre></div></p>
 <p><strong>Resolution:</strong></p>
 <ol>
 <li>In NDFC: navigate to <strong>Fabrics &gt; [Fabric] &gt; Zoning &gt; Deploy</strong> to force a zone push to all switches.</li>
@@ -3612,16 +3577,16 @@
 <h2 id="ndi-anomalies-showing-stale-data">NDI Anomalies Showing Stale Data<a class="headerlink" href="#ndi-anomalies-showing-stale-data" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> NDI dashboard shows anomalies with timestamps &gt; 1 hour old; no new anomalies are appearing despite known issues in the fabric.</p>
 <p><strong>Diagnosis:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check NDI pods</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>ndi
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># All should be Running</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check flow collector logs</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ndi<span class="w"> </span>deployment/ndi-flow-collector<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|drop\|overflow&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Check disk usage for NDI data</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>ndi<span class="w"> </span>deployment/ndi-elasticsearch<span class="w"> </span>--<span class="w"> </span>df<span class="w"> </span>-h<span class="w"> </span>/usr/share/elasticsearch/data
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># If &gt; 85% full: NDI stops writing new data (Elasticsearch circuit breaker)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check NDI pods</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>ndi
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># All should be Running</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check flow collector logs</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ndi<span class="w"> </span>deployment/ndi-flow-collector<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|drop\|overflow&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check disk usage for NDI data</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>ndi<span class="w"> </span>deployment/ndi-elasticsearch<span class="w"> </span>--<span class="w"> </span>df<span class="w"> </span>-h<span class="w"> </span>/usr/share/elasticsearch/data
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># If &gt; 85% full: NDI stops writing new data (Elasticsearch circuit breaker)</span>
 </code></pre></div>
 <p><strong>Resolution for disk full:</strong></p>
 <ol>
@@ -3633,17 +3598,17 @@
 <h2 id="nd-backup-fails-with-authentication-error">ND Backup Fails with Authentication Error<a class="headerlink" href="#nd-backup-fails-with-authentication-error" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Backup job fails; error message indicates authentication failure to the remote SCP/SFTP server.</p>
 <p><strong>Diagnosis and Resolution:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test remote backup connectivity</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span><span class="nb">test</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Review output for the specific error</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># If SSH key authentication: check if key is still authorized on backup server</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Update the backup configuration if credentials changed:</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--server<span class="w"> </span>backup-server.corp.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--user<span class="w"> </span>nd-bkp<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--key-file<span class="w"> </span>/home/ndadmin/.ssh/nd-backup-key
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test remote backup connectivity</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Review output for the specific error</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># If SSH key authentication: check if key is still authorized on backup server</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Update the backup configuration if credentials changed:</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--server<span class="w"> </span>backup-server.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--user<span class="w"> </span>nd-bkp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--key-file<span class="w"> </span>/home/ndadmin/.ssh/nd-backup-key
 </code></pre></div>
 <p>Common causes:
 - SSH key was rotated on the backup server without updating ND configuration
@@ -3684,8 +3649,8 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check ND authentication service logs for SAML errors</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>nd-platform<span class="w"> </span>deployment/nd-keycloak<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;saml\|assertion\|redirect&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check ND authentication service logs for SAML errors</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>nd-platform<span class="w"> </span>deployment/nd-keycloak<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;saml\|assertion\|redirect&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="cisco-intersight-connection-fails">Cisco Intersight Connection Fails<a class="headerlink" href="#cisco-intersight-connection-fails" title="Permanent link">&para;</a></h2>
@@ -3693,7 +3658,7 @@
 <p><strong>Resolution:</strong></p>
 <ol>
 <li>Verify outbound HTTPS from ND management network to <code>api.intersight.com</code>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>acs<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--host<span class="w"> </span>api.intersight.com<span class="w"> </span>--port<span class="w"> </span><span class="m">443</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>acs<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--host<span class="w"> </span>api.intersight.com<span class="w"> </span>--port<span class="w"> </span><span class="m">443</span>
 </code></pre></div></li>
 <li>If proxy is required: configure the HTTP proxy in ND:</li>
 <li>Navigate to <strong>Admin Console &gt; System &gt; Proxy Settings</strong></li>
@@ -3705,44 +3670,44 @@
 <h2 id="application-ndfc-or-ndi-stuck-in-installing-or-error-state">Application (NDFC or NDI) Stuck in "Installing" or "Error" State<a class="headerlink" href="#application-ndfc-or-ndi-stuck-in-installing-or-error-state" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> After uploading a new app image, the app shows <strong>Installing</strong> or <strong>Error</strong> state indefinitely.</p>
 <p><strong>Resolution:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Check app status</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>acs<span class="w"> </span>apps<span class="w"> </span>status
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Check for pods stuck in Init or Error states</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-Ev<span class="w"> </span><span class="s2">&quot;Running|Completed&quot;</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Describe a stuck pod</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>ndfc<span class="w"> </span>&lt;pod-name&gt;
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Check Events section for resource constraints, image pull errors, etc.</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Check node resource availability</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>acs<span class="w"> </span>system<span class="w"> </span>resources
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># If nodes are at memory/CPU limit: scale down other apps or add resources</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c1"># If the install image is corrupt:</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>acs<span class="w"> </span>apps<span class="w"> </span>remove-image<span class="w"> </span>&lt;app&gt;<span class="w"> </span>&lt;version&gt;
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="c1"># Re-upload the image from a fresh download</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Check app status</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>acs<span class="w"> </span>apps<span class="w"> </span>status
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Check for pods stuck in Init or Error states</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-Ev<span class="w"> </span><span class="s2">&quot;Running|Completed&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Describe a stuck pod</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>ndfc<span class="w"> </span>&lt;pod-name&gt;
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Check Events section for resource constraints, image pull errors, etc.</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Check node resource availability</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>acs<span class="w"> </span>system<span class="w"> </span>resources
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># If nodes are at memory/CPU limit: scale down other apps or add resources</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># If the install image is corrupt:</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>acs<span class="w"> </span>apps<span class="w"> </span>remove-image<span class="w"> </span>&lt;app&gt;<span class="w"> </span>&lt;version&gt;
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Re-upload the image from a fresh download</span>
 </code></pre></div>
 <hr />
 <h2 id="time-skew-between-nd-nodes">Time Skew Between ND Nodes<a class="headerlink" href="#time-skew-between-nd-nodes" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> acs health warns about time synchronization issues; Kubernetes etcd logs show time-related warnings; cluster becomes unstable.</p>
 <p><strong>Resolution:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check NTP on all nodes</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># If NTP is not synchronised, re-add NTP servers:</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.10<span class="w"> </span>--prefer
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.11
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Wait 2-3 minutes and check again</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Expected offset: &lt; 100ms</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># If offset is large and nodes cannot sync (isolated network):</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Use chronyc on the node OS to force a step correction:</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>sudo<span class="w"> </span>chronyc<span class="w"> </span>makestep
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check NTP on all nodes</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># If NTP is not synchronised, re-add NTP servers:</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.10<span class="w"> </span>--prefer
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.11
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Wait 2-3 minutes and check again</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Expected offset: &lt; 100ms</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># If offset is large and nodes cannot sync (isolated network):</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Use chronyc on the node OS to force a step correction:</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>sudo<span class="w"> </span>chronyc<span class="w"> </span>makestep
 </code></pre></div>
 <p>etcd requires all cluster nodes to have time within 1 second of each other. Large time skew causes leader election failures and cluster instability.</p>
 
