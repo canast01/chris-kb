@@ -22,22 +22,51 @@ passwd ndadmin
 # Use a password meeting corporate complexity policy (20+ characters)
 # Store in vault; treat as break-glass
 ```
-
-Navigate to **Admin Console > Security > Local Users > admin > Change Password** for the ND application admin account. The OS `ndadmin` and the application `admin` are separate accounts.
-
----
-
-## 2. Replace the Default TLS Certificate
-
-The default ND deployment uses a self-signed certificate. Replace with a corporate CA certificate immediately after initial deployment — do not operate in production with the self-signed certificate.
-
-See [Encryption](../encryption/index.md) for the full procedure. Key steps:
-
-```bash
-# Generate CSR, get signed by corporate CA
-# Import and activate via acs CLI:
-acs certificates import --key /tmp/nd.key --cert /tmp/nd-bundle.crt --name nd-corp-cert
-acs certificates activate --name nd-corp-cert
+┌───────────────────────────── Cisco Nexus Dashboard — Security Hardening ──────────────────────────────┐
+│                                                                                                       │
+│  Hardening checklist: replace default certs, restrict access, enable AAA, audit logging.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Platform Hardening              │  │              Network Hardening              │   │
+│   │           Replace self-signed cert           │  │          IP allowlist: mgmt source          │   │
+│   │          Enable SAML/LDAP: no local          │  │           OOB mgmt: dedicated VLAN          │   │
+│   │        Disable default admin: rename         │  │           Firewall: port 443 only           │   │
+│   │        Password policy: max strength         │  │             NTP auth: keyed NTP             │   │
+│   │         Session timeout: 15 min idle         │  │             Syslog TLS: to SIEM             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Replace certs and enable AAA first; then restrict network access; then audit                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             App-Level Hardening              │  │              Ongoing Compliance             │   │
+│   │        NDFC: disable unused features         │  │           Quarterly access review           │   │
+│   │         NDO: limit deploy approvers          │  │          Cert expiry: monitor < 30d         │   │
+│   │         NDI: restrict telemetry read         │  │         Patch: apply within 30 days         │   │
+│   │          API: service accounts only          │  │         PSIRT: subscribe advisories         │   │
+│   │        Minimal roles: least privilege        │  │            Backup: verify monthly           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ND cluster · CA server · SAML IdP · SIEM · NTP server · OOB management switch                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Self-signed cert= Default ND cert; must be replaced with CA-signed before production                 │
+│  IP allowlist   = Network-level restriction on which source IPs can reach port 443                    │
+│  OOB VLAN       = Dedicated out-of-band management network isolated from data path                    │
+│  PSIRT          = Cisco Product Security Incident Response Team; publishes CVEs                       │
+│  Least privilege= Each user/service account has only the minimum required permissions                 │
+│  Session timeout= Idle UI session automatically terminated after inactivity period                    │
+│  NTP auth       = Keyed NTP ensuring time sync from trusted server only                               │
+│  Service account= Dedicated ND user for automation; separate from human accounts                      │
+│  Deploy approver= NDO role permitted to push templates to production APIC sites                       │
+│  Access review  = Periodic audit of all user accounts and role assignments                            │
+│  Patch window   = Defined maintenance period for applying ND software updates                         │
+│  Syslog TLS     = Encrypted syslog stream forwarding audit events to SIEM                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

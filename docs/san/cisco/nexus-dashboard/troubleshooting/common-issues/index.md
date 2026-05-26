@@ -23,44 +23,51 @@ acs nodes list
 kubectl get nodes
 # If a node shows NotReady: investigate the node-specific issue below
 ```
-
-**Resolution by cause:**
-
-| Cause | Indicator | Fix |
-|---|---|---|
-| VM resource exhaustion (RAM/CPU) | High usage in acs system resources | Increase VM resources or reduce app workload |
-| Cluster network (app0) disruption | Nodes cannot reach each other | Verify L2 connectivity on cluster VLAN; check vSwitch/port group |
-| etcd quorum lost | acs health shows etcd warnings | Restore lost nodes; if etcd is corrupted, restore from backup |
-| Kubernetes pod crash loop | `kubectl get pods --all-namespaces \| grep -v Running` | `kubectl logs -n <ns> <pod> --previous` for crash reason |
-| Disk full on node | df shows /data > 90% | Purge NDI telemetry data; expand PV |
-| NTP drift > 100ms | acs system ntp show | Fix NTP on affected node; etcd requires tight time sync |
-
----
-
-## NDFC Fabric Shows All Switches as Unmanageable After ND Upgrade
-
-**Symptom:** After upgrading ND or NDFC, all fabric switches show Unmanageable.
-
-**Cause:** NDFC credential keys or service account passwords may need re-entry after a major upgrade; or NDFC pods may not have fully restarted.
-
-**Resolution:**
-
-```bash
-# Check NDFC pod health
-kubectl get pods -n ndfc
-
-# If pods are not all Running after 10 minutes:
-kubectl rollout restart deployment -n ndfc
-
-# Wait for pods to restart
-kubectl rollout status deployment/ndfc-server -n ndfc
-
-# If pods are Running but switches still show Unmanageable:
-# Test SSH from the ND data network to a managed switch
-acs network test --host <switch-ip> --port 22
-
-# If connectivity is OK: re-enter switch credentials in NDFC
-# NDFC > Fabrics > [Fabric] > Edit Credentials
+┌──────────────────────── Cisco Nexus Dashboard — Troubleshooting Common Issues ────────────────────────┐
+│                                                                                                       │
+│  Most frequent ND issues: cluster quorum, app failures, site disconnects, auth errors.                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Cluster Problems               │  │           Authentication Failures           │   │
+│   │         Node unreachable: NIC/cable          │  │         Login fail: AAA unreachable         │   │
+│   │          Quorum lost: 2+ nodes down          │  │          SAML error: cert mismatch          │   │
+│   │         Disk full: Elasticsearch log         │  │          Token expired: re-auth API         │   │
+│   │         NTP drift: TLS cert failure          │  │             LDAP: bind DN wrong             │   │
+│   │          etcd crash: restore backup          │  │           401 REST: creds rotated           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Check acs health first; auth issues need AAA server reachability confirmed                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Site and App Issues              │  │               Resolution Steps              │   │
+│   │          Site offline: REST timeout          │  │           acs health: check nodes           │   │
+│   │           NDFC: pod crash-looping            │  │          acs logs <app>: pod errors         │   │
+│   │            NDI: no telemetry data            │  │            Renew cert or fix NTP            │   │
+│   │          NDO: deploy stuck/timeout           │  │           Restart app: acs restart          │   │
+│   │         SSL cert expired: 503 error          │  │          TAC: quorum unrecoverable          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ND cluster nodes · management switch · NTP · AAA server · APIC · firewall                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  acs health     = ND CLI command; shows cluster node and service health at a glance                   │
+│  Quorum         = Requires 2 of 3 nodes; loss makes cluster read-only                                 │
+│  etcd crash     = State-store failure; requires cluster restore from backup                           │
+│  Disk full      = Elasticsearch retains telemetry; purge old data or expand volume                    │
+│  NTP drift      = Clock skew breaks TLS validation and JWT expiry calculations                        │
+│  Crash-loop     = Pod restarting repeatedly; acs logs shows root cause                                │
+│  503 error      = HTTP Service Unavailable; typically expired TLS cert on ND                          │
+│  401 error      = HTTP Unauthorized; API credentials rotated but not updated in ND                    │
+│  Bind DN        = LDAP distinguished name ND uses to connect; fails if password changed               │
+│  SAML cert mismatch= IdP signing cert changed but not updated in ND SP config                         │
+│  acs restart    = ND CLI command to restart a specific app service gracefully                         │
+│  TAC            = Cisco TAC; escalate cluster quorum loss or etcd corruption                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
