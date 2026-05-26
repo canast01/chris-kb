@@ -112,189 +112,51 @@ Open the saved file and update these values near the top:
 cd ~/Desktop
 bash aws-health-check.sh
 ```
-
-**What you should see**
-
-A table of your EC2 instances with their state (running/stopped), a list of RDS databases, and load balancers. If any EC2 instances are stopped you will see a red WARNING line and the script exits with an error code.
-
----
-
-## EC2 Instance Audit
-
-Connects to all regions (or a configurable list), lists every EC2 instance with metadata, flags instances with common compliance issues, and exports a CSV report.
-
-~~~python
-#!/usr/bin/env python3
-"""EC2 Instance Audit — flags stopped, untagged, default-VPC, and public-IP instances."""
-
-import boto3
-import csv
-import sys
-import datetime
-from typing import Optional
-
-# --- Configuration ---
-REGIONS: list[str] = []          # Empty = all enabled regions
-OUTPUT_FILE = "ec2_audit.csv"
-STOPPED_DAYS_THRESHOLD = 7       # Flag instances stopped longer than this
-
-# ---------------------
-
-def get_regions(session: boto3.Session) -> list[str]:
-    if REGIONS:
-        return REGIONS
-    ec2 = session.client("ec2", region_name="us-east-1")
-    return [r["RegionName"] for r in ec2.describe_regions(Filters=[{"Name": "opt-in-status", "Values": ["opt-in-not-required", "opted-in"]}])["Regions"]]
-
-def get_tag(tags: list, key: str) -> Optional[str]:
-    if not tags:
-        return None
-    for t in tags:
-        if t["Key"] == key:
-            return t["Value"]
-    return None
-
-def get_default_vpc(ec2_client) -> Optional[str]:
-    vpcs = ec2_client.describe_vpcs(Filters=[{"Name": "isDefault", "Values": ["true"]}])["Vpcs"]
-    return vpcs[0]["VpcId"] if vpcs else None
-
-def days_since(dt: Optional[datetime.datetime]) -> Optional[int]:
-    if dt is None:
-        return None
-    return (datetime.datetime.now(datetime.timezone.utc) - dt).days
-
-def audit_region(session: boto3.Session, region: str, rows: list) -> None:
-    ec2 = session.client("ec2", region_name=region)
-    default_vpc = get_default_vpc(ec2)
-
-    paginator = ec2.get_paginator("describe_instances")
-    for page in paginator.paginate():
-        for reservation in page["Reservations"]:
-            for inst in reservation["Instances"]:
-                iid        = inst["InstanceId"]
-                itype      = inst["InstanceType"]
-                state      = inst["State"]["Name"]
-                launch     = inst.get("LaunchTime")
-                vpc_id     = inst.get("VpcId", "")
-                subnet_id  = inst.get("SubnetId", "")
-                key_name   = inst.get("KeyName", "")
-                public_ip  = inst.get("PublicIpAddress", "")
-                profile    = (inst.get("IamInstanceProfile") or {}).get("Arn", "")
-                tags       = inst.get("Tags", [])
-                name       = get_tag(tags, "Name") or ""
-                sgs        = ",".join(sg["GroupId"] for sg in inst.get("SecurityGroups", []))
-
-                # --- Flags ---
-                flags = []
-
-                if state == "stopped":
-                    # Approximate stopped time via launch time (not perfect but useful)
-                    if launch and days_since(launch) and days_since(launch) > STOPPED_DAYS_THRESHOLD:
-                        flags.append(f"STOPPED>{STOPPED_DAYS_THRESHOLD}d")
-
-                if not name:
-                    flags.append("NO_NAME_TAG")
-
-                if vpc_id and vpc_id == default_vpc:
-                    flags.append("DEFAULT_VPC")
-
-                if not profile:
-                    flags.append("NO_IAM_ROLE")
-
-                justification = get_tag(tags, "PublicIPJustification")
-                if public_ip and not justification:
-                    flags.append("PUBLIC_IP_NO_JUSTIFICATION")
-
-                rows.append({
-                    "Region":        region,
-                    "InstanceId":    iid,
-                    "Name":          name,
-                    "Type":          itype,
-                    "State":         state,
-                    "LaunchTime":    launch.isoformat() if launch else "",
-                    "VpcId":         vpc_id,
-                    "SubnetId":      subnet_id,
-                    "KeyPair":       key_name,
-                    "PublicIP":      public_ip,
-                    "SecurityGroups": sgs,
-                    "IAMProfile":    profile,
-                    "Flags":         "|".join(flags),
-                })
-
-def main() -> None:
-    session = boto3.Session()
-    regions = get_regions(session)
-    print(f"Auditing {len(regions)} region(s)...")
-
-    rows: list[dict] = []
-    for region in regions:
-        try:
-            audit_region(session, region, rows)
-            print(f"  {region}: {len([r for r in rows if r['Region'] == region])} instances")
-        except Exception as exc:
-            print(f"  {region}: ERROR — {exc}", file=sys.stderr)
-
-    if not rows:
-        print("No instances found.")
-        return
-
-    fields = ["Region", "InstanceId", "Name", "Type", "State", "LaunchTime",
-              "VpcId", "SubnetId", "KeyPair", "PublicIP", "SecurityGroups", "IAMProfile", "Flags"]
-
-    with open(OUTPUT_FILE, "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fields)
-        writer.writeheader()
-        writer.writerows(rows)
-
-    flagged = [r for r in rows if r["Flags"]]
-    print(f"\nTotal instances : {len(rows)}")
-    print(f"Flagged         : {len(flagged)}")
-    print(f"Report written  : {OUTPUT_FILE}")
-
-    if flagged:
-        print("\nFlagged instances:")
-        for r in flagged:
-            print(f"  {r['Region']:20s}  {r['InstanceId']:20s}  {r['Name']:30s}  {r['Flags']}")
-
-if __name__ == "__main__":
-    main()
-~~~
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Python installed (download from https://python.org — tick "Add Python to PATH" during install)
-- AWS CLI installed and configured (`aws configure` run at least once)
-- The `boto3` package installed
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** (Windows key → search for Notepad)
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Set "Save as type" to **All Files**
-5. Name it `ec2_audit.py` and save to your Desktop
-
-**Step 2 — Fill in your details**
-
-Open the saved file and update these values near the top:
-
-| Variable | What to enter | Where to find it |
-|---|---|---|
-| `REGIONS` | Leave empty for all regions, or add specific ones like `["us-east-1", "eu-west-1"]` | AWS Console → region names |
-| `OUTPUT_FILE` | Where to save the CSV report | Default is `ec2_audit.csv` in the same folder |
-| `STOPPED_DAYS_THRESHOLD` | Number of days stopped before flagging | Default is `7` |
-
-**Step 3 — Open the right terminal**
-
-- **For .py (Python):** Open Command Prompt. Install Python from python.org if not installed yet.
-
-**Step 4 — Install the required package and run**
-
-```bash
-cd C:\Users\YourName\Desktop
-pip install boto3
-python ec2_audit.py
+┌──────────────────────────────── AWS Operations — Scripts & Automation ────────────────────────────────┐
+│                                                                                                       │
+│  Operational scripts for resource inventory, cost reporting, and routine automation tasks.            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Inventory Scripts               │  │                 Cost Scripts                │   │
+│   │      List EC2: describe-instances query      │  │        Unattached EBS: cost recovery        │   │
+│   │      IAM report: credential report CSV       │  │      Unused EIPs: identify and release      │   │
+│   │       Security groups: find 0.0.0.0/0        │  │        Rightsizing: low CPU instances       │   │
+│   │      S3 bucket sizes: list-buckets loop      │  │        Snapshot age: old snap cleanup       │   │
+│   │      Tag compliance: untagged resources      │  │        Reserved vs on-demand analysis       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Lambda + EventBridge schedules operationalise scripts without managing servers.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Security Scripts               │  │               Script Delivery               │   │
+│   │     Rotate access keys: detect old keys      │  │      Lambda: scheduled via EventBridge      │   │
+│   │       GuardDuty findings: export to S3       │  │      SSM Run Command: push to instances     │   │
+│   │     Config non-compliant: list resources     │  │       Step Functions: multi-step flows      │   │
+│   │         MFA audit: users without MFA         │  │       S3 + Athena: output query result      │   │
+│   │        CloudTrail: detect root usage         │  │       SNS: notify on script completion      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Lambda compute · EventBridge scheduling plane · S3 output storage · Regional endpoints               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  aws ec2 describe-instances= List all EC2 instances with attributes; filter with --query              │
+│  credential report= IAM-generated CSV of all users with last-activity timestamps                      │
+│  Unattached EBS  = Volume in available state; incurring cost with no instance attached                │
+│  Unused EIP      = Elastic IP not associated with a running instance; billed hourly                   │
+│  Rightsizing     = Identifying oversized instances based on CloudWatch CPU/memory data                │
+│  EventBridge schedule= Cron or rate rule triggering Lambda or SSM on a timed basis                    │
+│  SSM Run Command = Execute scripts on EC2 instances without SSH access                                │
+│  Step Functions  = Serverless workflow orchestrator for multi-step operational flows                  │
+│  Tag compliance  = Checking resources have required tags: env, owner, team, cost-center               │
+│  GuardDuty findings= Security threat detections exported via EventBridge to S3/SIEM                   │
+│  Config non-compliant= AWS Config rule evaluation returning NON_COMPLIANT for resources               │
+│  Root usage detect= CloudTrail filter for events where userIdentity.type = Root                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **What you should see**

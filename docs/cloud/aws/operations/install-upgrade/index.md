@@ -23,26 +23,51 @@ aws ssm send-command \
 aws ssm describe-instance-patches --instance-id <i-xxxx> \
     --filters "Key=State,Values=Missing"
 ```
-
-Patching schedule:
-- Second week of each month (aligned to Patch Tuesday + 1 week)
-- Dev → Staging → Production in rolling waves separated by 3 days
-- Auto Scaling Groups: replace instances with updated launch template (blue/green via Instance Refresh)
-
-## RDS Version Management
-
-```bash
-# Check current RDS engine version
-aws rds describe-db-instances --db-instance-identifier <db-id> \
-    --query 'DBInstances[*].[DBInstanceIdentifier,EngineVersion,PendingModifiedValues]'
-
-# List available upgrade targets
-aws rds describe-db-engine-versions --engine postgres \
-    --query "DBEngineVersions[?ValidUpgradeTarget != null].[EngineVersion]" --output text
-
-# Apply minor version upgrade immediately
-aws rds modify-db-instance --db-instance-identifier <db-id> \
-    --engine-version <new-version> --apply-immediately
+┌───────────────────────────────── AWS Operations — Install & Upgrade ──────────────────────────────────┐
+│                                                                                                       │
+│  Patching, agent upgrades, AMI refresh, and service version management procedures.                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 EC2 Patching                 │  │                Agent Upgrades               │   │
+│   │      SSM Patch Manager: baseline + scan      │  │      CloudWatch agent: SSM distributor      │   │
+│   │      Patch groups: tag-based targeting       │  │        SSM agent: auto-update setting       │   │
+│   │      Maintenance window: scheduled run       │  │          X-Ray daemon: via userdata         │   │
+│   │        Pre-patch: snapshot AMI first         │  │      CodeDeploy agent: SSM distributor      │   │
+│   │     Post-patch: compliance report in CW      │  │        Inspector agent: auto-managed        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  AMI refresh strategy: build new AMI with Packer, replace instances via Auto Scaling.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             RDS & Other Services             │  │            Blue/Green & Immutable           │   │
+│   │          RDS: modify engine version          │  │        Auto Scaling: instance refresh       │   │
+│   │     RDS: apply during maintenance window     │  │      CodeDeploy: blue/green deployment      │   │
+│   │        EKS: managed node group update        │  │      Elastic Beanstalk: rolling update      │   │
+│   │      Lambda: version + alias promotion       │  │        CloudFormation: rolling update       │   │
+│   │     ElastiCache: cluster version update      │  │      Bake new AMI: never patch in place     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS EC2 host fleet · RDS managed hardware · EKS control plane infrastructure                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Patch baseline  = SSM policy defining which patches to install; OS and severity filters              │
+│  Patch group     = Tag value (Patch Group) used to associate instances with a baseline                │
+│  Maintenance window= SSM scheduled time window for patch and other automation tasks                   │
+│  Distributor     = SSM feature for installing and updating agent packages on instances                │
+│  Instance refresh= Auto Scaling feature replacing instances with updated launch template              │
+│  AMI bake        = Build a new AMI with all patches baked in; replace running instances               │
+│  Blue/green      = New environment deployed alongside old; traffic switched at cutover                │
+│  Rolling update  = Update subset of instances at a time; maintains partial availability               │
+│  RDS apply-immediately= Forces maintenance change immediately vs next window                          │
+│  Lambda alias    = Pointer to a function version; shift traffic between versions                      │
+│  Compliance report= SSM Patch Manager scan result: compliant/non-compliant per instance               │
+│  Immutable upgrade= Never patch in place; always replace with pre-patched AMI                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Major version upgrades require:

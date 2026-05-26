@@ -14,34 +14,51 @@ aws health describe-events \
 # Current caller identity (confirm correct account/role)
 aws sts get-caller-identity
 ```
-
----
-
-## EC2 Instance Health
-
-```bash
-# Instance status checks
-aws ec2 describe-instance-status \
-  --query 'InstanceStatuses[*].[InstanceId,InstanceState.Name,SystemStatus.Status,InstanceStatus.Status]' \
-  --output table
-
-# Instances failing status checks
-aws ec2 describe-instance-status \
-  --filters "Name=system-status.status,Values=impaired" \
-  --query 'InstanceStatuses[*].[InstanceId,SystemStatus.Details[0].Status]' \
-  --output table
-
-# CPU utilization — last 5 minutes (single instance)
-aws cloudwatch get-metric-statistics \
-  --namespace AWS/EC2 \
-  --metric-name CPUUtilization \
-  --dimensions Name=InstanceId,Value=i-0abc123 \
-  --start-time $(date -u -v-5M +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -d '5 minutes ago' +%Y-%m-%dT%H:%M:%SZ) \
-  --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ) \
-  --period 300 \
-  --statistics Average Maximum \
-  --query 'Datapoints[*].[Timestamp,Average,Maximum]' \
-  --output table
+┌─────────────────────────────────── AWS Operations — Health Checks ────────────────────────────────────┐
+│                                                                                                       │
+│  Health verification procedures for EC2 instances, load balancers, RDS, and services.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              EC2 Health Checks               │  │              ELB Health Checks              │   │
+│   │      System status: hardware + network       │  │       HTTP path + expected status code      │   │
+│   │        Instance status: OS + software        │  │        Interval: 5s or 30s (ALB/NLB)        │   │
+│   │      Auto-recovery on system check fail      │  │       Healthy threshold: N consecutive      │   │
+│   │     CloudWatch: StatusCheckFailed alarm      │  │       Unhealthy: removed from rotation      │   │
+│   │        SSM: run command to verify app        │  │      Route 53 health check: DNS remove      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Failed health checks trigger alarm actions and Auto Scaling replacement of instances.                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Database Health                │  │             Service-Level Checks            │   │
+│   │       RDS: Enhanced Monitoring metrics       │  │       CloudWatch alarms: CPU/mem/disk       │   │
+│   │      RDS: describe-db-instances status       │  │        CloudWatch Synthetics canaries       │   │
+│   │      RDS: Performance Insights queries       │  │       Route 53: endpoint health checks      │   │
+│   │        DynamoDB: ConsumedCapacity CW         │  │       AWS Health: account event status      │   │
+│   │       ElastiCache: cluster node status       │  │       Systems Manager OpsCenter items       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS EC2 host hardware · ELB infrastructure per AZ · CloudWatch data collection agents                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  System status check= EC2 check for AWS hardware and network issues under the instance                │
+│  Instance status check= EC2 check for OS-level software and network configuration                     │
+│  Auto-recovery   = EC2 action that migrates instance to healthy host on system failure                │
+│  ELB health check= Load balancer probe that marks targets healthy or unhealthy                        │
+│  Healthy threshold= Number of consecutive successful checks to mark target healthy                    │
+│  Unhealthy threshold= Consecutive failures before target removed from load balancer                   │
+│  Synthetics canary= Scripted check that simulates user actions against an endpoint                    │
+│  Enhanced Monitoring= Per-second RDS OS metrics via CloudWatch agent on the host                      │
+│  Performance Insights= RDS query-level analysis tool showing wait states and top SQL                  │
+│  OpsCenter item  = Systems Manager work item created from CloudWatch alarm or event                   │
+│  StatusCheckFailed= CloudWatch metric: 1 if either EC2 status check is failing                        │
+│  Route 53 health = External probe; fails DNS failover if endpoint unreachable                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
