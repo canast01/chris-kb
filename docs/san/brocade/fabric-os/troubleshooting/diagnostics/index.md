@@ -30,35 +30,51 @@ flowchart LR
 
     counters -->|"threshold exceeded"| alert
 ```
-
-## Overview
-
-Diagnostic data collection is the first priority when a switch or fabric problem is reported. Capture state before making changes — the evidence may be transient. Use `supportshow` or `supportsave` for TAC case submissions. Individual commands (`errshow`, `portlogshow`, `sfpshow`) provide targeted diagnostic information for specific port or fabric issues.
-
----
-
-## Diagnostic Scope: Port → Fabric → Performance
-
-```mermaid
-flowchart TD
-    symptom(["Symptom reported"]) --> scope{"Scope?"}
-
-    scope -->|"Port / Device"| portDiag["portshow slot/port\nsfpshow slot/port\nportstatsshow slot/port\nportlogshow slot/port"]
-    portDiag --> portTest{"porttest PASS?"}
-    portTest -->|No| tacEsc["Escalate to Broadcom TAC\nblade / ASIC fault"]
-    portTest -->|Yes| sfpReplace["Replace SFP / cable\nRe-enable port"]
-
-    scope -->|"Fabric"| fabricDiag["fabricshow\ntopologyshow\nislshow · trunkshow\nnslookup WWPN"]
-    fabricDiag --> segmented{"Segmented?"}
-    segmented -->|Yes| domainId["Check domain ID conflict\nCheck SCC policy\nportlogshow E_Port"]
-    segmented -->|No| zoneDiag["cfgshow · zoneshow\nalishow · nsallshow"]
-
-    scope -->|"Performance"| perfDiag["portperfshow\nbottleneckmon --show\nportbufshow slot/port\nporterrshow disc_c3"]
-    perfDiag --> slowDrain{"BB credits\nzero?"}
-    slowDrain -->|Yes| isolate["portdisable slow drain port\nmapsdb check credit alerts"]
-    slowDrain -->|No| ispUtil["islshow — ISL utilization\nAdd ISL capacity if > 70%"]
-
-    scope -->|"TAC Case"| supportsave["supportsave -h server\nUpload to TAC SR immediately"]
+┌─────────────────────────────────── Brocade Fabric OS — Diagnostics ───────────────────────────────────┐
+│                                                                                                       │
+│  Diagnostics: error logs, portshow, MAPS rules, raslog, supportshow, and port tests.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Log & Event Diagnostics            │  │         Port & Hardware Diagnostics         │   │
+│   │          errshow: fabric error log           │  │         portshow: port state + stats        │   │
+│   │         raslog: RAS event log detail         │  │        portstatsshow: counters delta        │   │
+│   │           errdump: dump to syslog            │  │        porttest: loopback diagnostic        │   │
+│   │        MAPS: mapsconfig + mapspolicy         │  │         sensorshow: temp + fan + PSU        │   │
+│   │         syslogdipadd: send to syslog         │  │        diagstatus: blade diagnostics        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  errshow and raslog are the primary event sources; portshow for per-port analysis.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Fabric-Level Diagnostics           │  │        Collection for TAC Escalation        │   │
+│   │             nsshow + fabricshow              │  │           supportshow: full bundle          │   │
+│   │        cfgshow: zone config snapshot         │  │         supportsave: save to USB/SCP        │   │
+│   │        islshow: ISL utilisation data         │  │         portdump: binary port trace         │   │
+│   │          switchstatusshow: overall           │  │           mgmtshow: management NIC          │   │
+│   │        licenseshow: FOS license check        │  │           pcap: port frame capture          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Brocade FC switch · serial console · USB drive for supportsave · syslog server                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  errshow         = displays fabric error log; most recent errors first with severity                  │
+│  raslog          = RAS (Reliability/Availability/Serviceability) detailed event log                   │
+│  portshow        = per-port status: state, speed, SFP type, credits, error counters                   │
+│  portstatsshow   = per-port frame counter snapshot; use twice for delta                               │
+│  porttest        = in-service loopback; port must be disabled first                                   │
+│  sensorshow      = hardware sensor readings: temperature, fan RPM, PSU voltage                        │
+│  diagstatus      = blade/chassis diagnostic test results and pass/fail status                         │
+│  supportshow     = full diagnostic bundle; run on both switches in HA pair                            │
+│  supportsave     = saves supportshow output to SCP/FTP/USB for offline analysis                       │
+│  MAPS            = Monitoring and Alerting Policy Suite; tracks thresholds over time                  │
+│  pcap            = port frame capture; captures FC frames for protocol analysis                       │
+│  syslogdipadd    = adds a syslog server IP; Fabric OS sends events to SIEM                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Switch-Level Diagnostics

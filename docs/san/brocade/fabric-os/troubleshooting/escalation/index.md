@@ -35,57 +35,49 @@ supportsave
 # - Port statistics
 # - SNMP trap history
 ```
-
-Attach the generated `.tar.gz` to the support case.
-
----
-
-## Required Information for SR
-
-| Field | Where to Find |
-|---|---|
-| Fabric OS version | `version` command on affected switch |
-| Switch serial number | `chassisshow` or chassis label |
-| Fabric topology | `fabricshow` — list of all switches in fabric |
-| Zone count | `zoneshow --count` |
-| Error message / log excerpts | `rasshow -l 200` — last 200 RAS events |
-| Timestamps | When the issue first occurred (timezone) |
-
----
-
-## Severity Levels
-
-| Severity | Criteria | Response Time |
-|---|---|---|
-| P1 | Fabric-wide outage; production I/O impacted | 1–2 hours (24/7) |
-| P2 | Significant degradation; redundancy lost | Same business day |
-| P3 | Non-critical issue; workaround available | 2–3 business days |
-| P4 | Enhancement, cosmetic, how-to question | Best effort |
-
----
-
-## Support Contract Entitlement
-
-Verify support coverage before opening a case:
-- Serial number lookup: [support.broadcom.com](https://support.broadcom.com) → Entitlement
-- `chassisshow` shows serial number; check against CMDB entry
-
----
-
-## Common Escalation Path
-
-1. Initial SR — Tier 1 support review
-2. No progress within SLA → comment "Request escalation to Tier 2 SAN engineering"
-3. For fabric-wide outage (P1): phone TAC directly; provide SR number from web submission
-4. For chronic issues: request TAC account manager involvement
-
----
-
-## SANnav Support
-
-For SANnav-related issues, open the SR against "Brocade Network Advisor / SANnav" product:
-
-```bash
-# Collect SANnav support bundle
-# SANnav UI → Administration → Support → Generate Support Bundle
+┌─────────────────────────── Brocade Fabric OS — Troubleshooting Escalation ────────────────────────────┐
+│                                                                                                       │
+│  Escalation path: internal SAN team → Broadcom TAC with supportshow bundle and timeline.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Internal Escalation              │  │           Broadcom TAC Escalation           │   │
+│   │        SAN L1 → SAN L2: logs+timeline        │  │         Open case: support.broadcom         │   │
+│   │       SAN L2 → L3: supportsave bundle        │  │         Serial/contract number req.         │   │
+│   │           L3 → TAC: full diag data           │  │          Sev-1: fabric down in prod         │   │
+│   │          Incident manager for Sev-1          │  │          Remote: TAC SSH to switch          │   │
+│   │        Change freeze during incident         │  │          Escalation to engineering          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Collect supportsave from all affected switches before engaging Broadcom TAC.                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Escalation Data Package            │  │             Escalation Criteria             │   │
+│   │         supportsave from each switch         │  │          Sev-1: fabric/storage down         │   │
+│   │         Fabric topology: fabricshow          │  │          Sev-2: degraded production         │   │
+│   │         Zone config: cfgshow output          │  │          Sev-3: non-critical issue          │   │
+│   │         Error timeline from errshow          │  │           Sev-4: general question           │   │
+│   │        Recent changes before failure         │  │          Post-incident: RCA request         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Brocade FC switch · management Ethernet · serial console · Broadcom TAC upload portal                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  supportsave     = saves full diagnostic bundle to SCP/FTP/USB; required for TAC                      │
+│  errshow         = error log snapshot; provides timeline of events before failure                     │
+│  fabricshow      = fabric topology; shows all domain IDs and switch names                             │
+│  cfgshow         = zone config snapshot; shows active and saved zone databases                        │
+│  Sev-1           = production down; fabric or storage completely inaccessible                         │
+│  RCA             = Root Cause Analysis; post-incident document requested from TAC                     │
+│  Broadcom TAC    = Technical Assistance Center; opened at support.broadcom.com                        │
+│  Incident manager= internal role; coordinates bridge call and vendor TAC engagement                   │
+│  Serial number   = switch chassis serial; required to open Broadcom support case                      │
+│  Change freeze   = no config changes during active Sev-1 incident investigation                       │
+│  Remote access   = TAC engineer SSH into switch via customer-granted access                           │
+│  Post-incident   = RCA + preventive actions + monitoring improvements after resolution                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
