@@ -3091,28 +3091,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#ad-dns-dependency" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AD / DNS Dependency
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#domain-join" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Domain Join
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -3510,7 +3488,7 @@
 <h2 id="active-directory-domain-authentication">Active Directory Domain Authentication<a class="headerlink" href="#active-directory-domain-authentication" title="Permanent link">&para;</a></h2>
 <p>Windows Server uses Kerberos as the primary authentication protocol within an AD domain. NTLM is a legacy fallback used only when Kerberos is not available.</p>
 <h3 id="kerberos-authentication-sequence">Kerberos Authentication Sequence<a class="headerlink" href="#kerberos-authentication-sequence" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>sequenceDiagram
+<p><pre class="mermaid"><code>sequenceDiagram
     participant client as Client\n(workstation)
     participant kdc as KDC (Domain Controller)\nAS + TGS
     participant server as Target Server\n(e.g. file server)
@@ -3522,36 +3500,67 @@
     client-&gt;&gt;server: AP-REQ — Service Ticket + authenticator
     server--&gt;&gt;client: AP-REP — mutual auth confirmation
     client-&gt;&gt;server: Application request (authorised session)</code></pre>
-<h3 id="ad-dns-dependency">AD / DNS Dependency<a class="headerlink" href="#ad-dns-dependency" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TD
-    dns["DNS Server\nSRV records for KDC · LDAP · GC"]
-    kdc["KDC\nKey Distribution Center\n(lsass.exe on DC)"]
-    ldap["LDAP\nDirectory queries\nport 389 / 636"]
-    netlogon["Netlogon\nDC locator · secure channel"]
-    client["Domain Member\nworkstation / server"]
-    ad["AD Database\nNTDS.dit"]
-
-    dns --&gt; kdc
-    kdc --&gt; ad
-    ldap --&gt; ad
-    client --&gt;|"DC locator via DNS"| dns
-    client --&gt;|"Kerberos port 88"| kdc
-    client --&gt;|"LDAP port 389"| ldap
-    client --&gt;|"secure channel"| netlogon
-    netlogon --&gt; kdc</code></pre>
-<h3 id="domain-join">Domain Join<a class="headerlink" href="#domain-join" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Add a server to an AD domain</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Add-Computer</span> <span class="n">-DomainName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span> <span class="n">-Restart</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Verify domain membership</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">(</span><span class="nb">Get-WmiObject</span> <span class="n">Win32_ComputerSystem</span><span class="p">).</span><span class="n">Domain</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">sc_query</span><span class="p">:</span><span class="n">CORP</span><span class="p">.</span><span class="n">LOCAL</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Check the secure channel to a domain controller</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Test-ComputerSecureChannel</span> <span class="n">-Verbose</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Repair if broken</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Test-ComputerSecureChannel</span> <span class="n">-Repair</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-</code></pre></div>
+┌─────────────────────────────────── Windows Server — Authentication ───────────────────────────────────┐
+│                                                                                                       │
+│  Authentication stack: Kerberos primary, NTLM fallback, certificate-based, MFA enforcement.           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Kerberos Authentication            │  │             NTLM Authentication             │   │
+│   │        Default AD protocol (port 88)         │  │          Fallback: no DC reachable          │   │
+│   │            AS-REQ → AS-REP (TGT)             │  │           Challenge-response 3-way          │   │
+│   │         TGS-REQ → TGS-REP (service)          │  │        Disable NTLMv1; allow v2 only        │   │
+│   │        Mutual authentication built-in        │  │          Block NTLM via GPO Network         │   │
+│   │         SPNs register services in AD         │  │          Monitor event 4776 for use         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Kerberos preferred; NTLM restricted by GPO; both generate audit events 4624/4625.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Certificate &amp; Smart Card           │  │           MFA &amp; Conditional Access          │   │
+│   │       PKI: Enterprise CA issues certs        │  │         Azure AD MFA per-user policy        │   │
+│   │         Smart card logon: PIN + cert         │  │           Duo MFA proxy on DC/RDS           │   │
+│   │          PKINIT: Kerberos via cert           │  │        Conditional access: compliant        │   │
+│   │       SCEP/ACME enrollment for devices       │  │          NPS for RADIUS 802.1x auth         │   │
+│   │         Autoenroll via GPO certtempl         │  │          Event 4625 lockout alerts          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Domain controller servers · HSM for CA key storage · smart card readers · NPS servers                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Kerberos       = network auth protocol; ticket-based; default in AD domains since Win2000            │
+│  TGT            = Ticket-Granting Ticket; issued by KDC AS; used to request service tickets           │
+│  TGS            = Ticket-Granting Service; issues service tickets from presented TGT                  │
+│  SPN            = Service Principal Name; identifies service instance for Kerberos                    │
+│  NTLM           = NT LAN Manager; older challenge-response; kept for compatibility                    │
+│  NTLMv2         = improved NTLM; uses HMAC-MD5; still weaker than Kerberos                            │
+│  PKI            = Public Key Infrastructure; CA hierarchy issuing X.509 certificates                  │
+│  PKINIT         = Kerberos extension; uses X.509 certs for initial TGT request                        │
+│  NPS            = Network Policy Server; RADIUS server for 802.1x and VPN auth                        │
+│  Event 4624     = successful logon audit event; includes logon type and auth package                  │
+│  Event 4625     = failed logon audit event; source for lockout and brute-force alerts                 │
+│  Event 4776     = NTLM authentication attempt; monitor to detect NTLM usage                           │
+│  Conditional Access= Azure AD policy evaluating signals before granting resource access               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Domain Join
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```powershell
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Add a server to an AD domain
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Add-Computer -DomainName &quot;corp.local&quot; -Credential (Get-Credential) -Restart
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Verify domain membership
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>(Get-WmiObject Win32_ComputerSystem).Domain
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>nltest /sc_query:CORP.LOCAL
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Check the secure channel to a domain controller
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>Test-ComputerSecureChannel -Verbose
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Repair if broken
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Test-ComputerSecureChannel -Repair -Credential (Get-Credential)
+</code></pre></div></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>REM Command-line alternative
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>netdom join %COMPUTERNAME% /domain:corp.local /userd:corp\administrator /passwordd:* /reboot:30
 </code></pre></div>
