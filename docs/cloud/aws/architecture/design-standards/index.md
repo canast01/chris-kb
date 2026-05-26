@@ -57,39 +57,51 @@ flowchart LR
     glacier -->|"Transition rule\n≥ 180 days"| deepArchive
     deepArchive -->|"Expiration rule"| expire
 ```
-
-## S3 Standards
-
-| Setting | Requirement |
-|---|---|
-| Block Public Access | Enabled on all buckets (account-level + bucket-level) |
-| Server-side encryption | SSE-S3 minimum; SSE-KMS for sensitive data |
-| Versioning | Enabled on all buckets containing production data |
-| MFA delete | Enabled on backup/compliance buckets |
-| Lifecycle rules | Transition to S3-IA after 30 days, Glacier after 90 days (for archival buckets) |
-| Bucket policy | Deny HTTP (require HTTPS); deny cross-account unless explicitly required |
-
-## IAM Policy Evaluation Logic
-
-```mermaid
-flowchart TD
-    request["API Request"]
-    explicitDeny{"Explicit Deny\nin any policy?"}
-    scpAllow{"SCP allows\nthe action?"}
-    iamAllow{"IAM policy\nexplicitly allows?"}
-    resourcePolicy{"Resource-based policy\nallows?"}
-    defaultDeny["Default DENY\nAccess denied"]
-    allow["ALLOW\nRequest proceeds"]
-
-    request --> explicitDeny
-    explicitDeny -- Yes --> defaultDeny
-    explicitDeny -- No --> scpAllow
-    scpAllow -- No --> defaultDeny
-    scpAllow -- Yes --> iamAllow
-    iamAllow -- Yes --> allow
-    iamAllow -- No --> resourcePolicy
-    resourcePolicy -- Yes --> allow
-    resourcePolicy -- No --> defaultDeny
+┌───────────────────────────────── AWS Architecture — Design Standards ─────────────────────────────────┐
+│                                                                                                       │
+│  Standards covering account structure, tagging, naming, networking, and security baseline.            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Account Standards               │  │              Tagging Standards              │   │
+│   │           One workload per account           │  │          Required: env, owner, team         │   │
+│   │          No production in mgmt acct          │  │          Required: cost-centre, app         │   │
+│   │           OU hierarchy: env-based            │  │          Enforce: SCP deny untagged         │   │
+│   │          Separate audit + log accts          │  │         Naming: kebab-case standard         │   │
+│   │           Email alias per account            │  │          Automation: tag on create          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Account and tagging standards enforced via SCPs and AWS Config rules                                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Networking Standards             │  │              Security Baseline              │   │
+│   │          Non-overlapping VPC CIDRs           │  │             MFA: enforced by SCP            │   │
+│   │        Private subnets for workloads         │  │          Root: no programmatic keys         │   │
+│   │           Public: only LB + NAT GW           │  │            CloudTrail: always on            │   │
+│   │            VPC flow logs: enabled            │  │            GuardDuty: org-wide on           │   │
+│   │           TGW: centralised egress            │  │          CIS AWS Benchmark: target          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS Regions · Availability Zones · data centres · DirectConnect · internet edge                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CIS AWS Benchmark= Center for Internet Security prescriptive AWS security controls                   │
+│  Non-overlapping CIDR= VPC address ranges that do not conflict; required for TGW                      │
+│  Private subnet = No internet gateway route; workloads access internet via NAT GW                     │
+│  Public subnet  = Has internet gateway route; only load balancers and NAT GW placed here              │
+│  Centralised egress= All internet-bound traffic routed through shared inspection VPC                  │
+│  Email alias    = Shared mailbox per account; avoids personal email ownership                         │
+│  Kebab-case     = Naming convention using lowercase words separated by hyphens                        │
+│  SCP deny untagged= Preventive control blocking resource creation without required tags               │
+│  Cost-centre tag= Tag linking resources to financial cost allocation unit                             │
+│  VPC flow logs  = Network traffic metadata logs; required for security investigations                 │
+│  Audit account  = Dedicated account for security tooling (Security Hub, Config agg.)                  │
+│  OU hierarchy   = Organizational Unit tree: Root → Security → Workloads → env OUs                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## CloudFormation Stack Lifecycle
