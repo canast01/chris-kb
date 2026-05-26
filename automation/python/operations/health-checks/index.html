@@ -3575,25 +3575,36 @@
 
 
 <h1 id="python-automation-health-checks">Python Automation — Health Checks<a class="headerlink" href="#python-automation-health-checks" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────── Python — Health Checks ────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │  Python health checks: verify interpreter version, venv, dependency currency, test pass rate  │   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │      CI pipeline is the primary health gate: ruff + mypy + bandit + pytest must all pass      │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │             Dependency audit: pip list --outdated; safety check; monthly CVE scan             │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │              Environment Checks              │  │                Quality Checks               │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │          python3 --version (&gt;=3.11)          │  │           pytest (all tests pass)           │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │             pip list --outdated              │  │          ruff check . (zero errors)         │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │           safety check (CVE scan)            │  │           mypy src/ (zero errors)           │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │           python -c &quot;import &lt;lib&gt;&quot;           │  │          bandit -r src/ (zero high)         │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │         Check .python-version match          │  │            Coverage report &gt;= 80%           │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │   safety check   = queries PyPI advisory database; reports known CVEs in installed packages   │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │    .python-version= pyenv file; records required Python version; auto-activates with pyenv    │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │        Dependabot     = GitHub service; auto-creates PRs to update dependencies weekly        │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="python-automation-health-check-flow">Python Automation Health Check Flow<a class="headerlink" href="#python-automation-health-check-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    start["Start Health Check"] --&gt; checkPython["python3 --version\nExpected version?"]
-    checkPython --&gt;|OK| checkVenv["venv intact?\npip check passes?"]
-    checkPython --&gt;|Fail| alertPython["Alert: Python version\nmismatch or missing"]
-    checkVenv --&gt;|OK| checkImports["Critical packages\nimportable?"]
-    checkVenv --&gt;|Fail| alertVenv["Alert: Recreate venv\npip install -r requirements.txt"]
-    checkImports --&gt;|OK| checkAPI["Target APIs\nreachable?"]
-    checkImports --&gt;|Fail| alertImport["Alert: pip install\nmissing package"]
-    checkAPI --&gt;|OK| checkLogs["Error lines in\nrecent logs?"]
-    checkAPI --&gt;|Fail| alertAPI["Alert: Network /\nAPI endpoint issue"]
-    checkLogs --&gt;|None| healthy["Status: HEALTHY"]
-    checkLogs --&gt;|Errors found| alertLogs["Alert: Review\nlog file errors"]</code></pre>
 <h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
 <p><strong>On alert or issue:</strong>
 1. Identify the failing script and the last successful run time — check cron logs (<code>grep CRON /var/log/syslog</code>) and script log files
 2. Reproduce the failure manually in a test shell to get the full traceback:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>python3<span class="w"> </span>/opt/automation/scripts/failing_script.py<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/debug_run.log
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>python3<span class="w"> </span>/opt/automation/scripts/failing_script.py<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/debug_run.log
 </code></pre></div>
 3. Check the error type in the traceback to determine the root cause category
 4. Apply the appropriate fix from the triage table below

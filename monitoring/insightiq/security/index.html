@@ -4203,39 +4203,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rbac" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network-access-restriction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Access Restriction
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#onefs-service-account-security" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        OneFS Service Account Security
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#database-backup-encryption" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4429,7 +4396,7 @@
 - A break-glass account in case LDAP is unavailable</p>
 <p>Do not use local accounts for day-to-day operations.</p>
 <h3 id="ldap-active-directory-integration">LDAP / Active Directory Integration<a class="headerlink" href="#ldap-active-directory-integration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>InsightIQ web UI &gt; Administration &gt; Authentication &gt; LDAP
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>InsightIQ web UI &gt; Administration &gt; Authentication &gt; LDAP
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- LDAP server: ldaps://&lt;DC-FQDN&gt;:636 (use LDAPS — not plain LDAP)
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- Bind DN: CN=svc-iiq-ldap,OU=ServiceAccounts,DC=company,DC=com
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Base DN: OU=StorageTeam,DC=company,DC=com
@@ -4437,63 +4404,63 @@
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>- Admin group → InsightIQ Administrator role
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>- Viewer group → InsightIQ ReadOnly role
 </code></pre></div>
-<p>Enforce HTTPS redirect: configure the InsightIQ web server to redirect HTTP (port 80) to HTTPS (port 443).</p>
-<h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
-<p>InsightIQ has two access levels:</p>
-<table>
-<thead>
-<tr>
-<th>Role</th>
-<th>Capabilities</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Administrator</td>
-<td>Full access: cluster management, configuration, user management, report creation, alert configuration</td>
-</tr>
-<tr>
-<td>ReadOnly (Viewer)</td>
-<td>View dashboards, run reports, view cluster performance data — no configuration changes</td>
-</tr>
-</tbody>
-</table>
-<p>Assign ReadOnly to all operations staff who need dashboard access but do not manage the appliance. Restrict Administrator to designated InsightIQ administrators.</p>
-<h2 id="network-access-restriction">Network Access Restriction<a class="headerlink" href="#network-access-restriction" title="Permanent link">&para;</a></h2>
-<p>InsightIQ management should only be accessible from the operations management subnet.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Example: iptables rule to restrict web UI access</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">443</span><span class="w"> </span>-s<span class="w"> </span>&lt;mgmt-subnet&gt;/24<span class="w"> </span>-j<span class="w"> </span>ACCEPT
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">443</span><span class="w"> </span>-j<span class="w"> </span>DROP
+┌──────────────────────────────────────── InsightIQ — Security ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Access Control                │  │               Network Security              │   │
+│   │             Local admin account              │  │              HTTPS only TCP 443             │   │
+│   │               LDAP/AD optional               │  │                Mgmt VLAN only               │   │
+│   │              RBAC: Admin/Viewer              │  │                SSH restricted               │   │
+│   │               Audit log local                │  │                 TLS to PAPI                 │   │
+│   │             Annual access audit              │  │             Firewall inbound 443            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  InsightIQ VM on management cluster · SSH from jump host only · PAPI on TLS                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Local admin = InsightIQ admin user; strong password; not shared                                      │
+│  LDAP integration = Optional AD/LDAP for InsightIQ UI login; centralises auth                         │
+│  RBAC = Admin (full) vs Viewer (read-only) roles in InsightIQ                                         │
+│  PAPI user = Read-only account on PowerScale; InsightIQ credential; rotate annually                   │
+│  TLS to PAPI = HTTPS connection to PAPI TCP 8083; verify or accept self-signed                        │
+│  SSH restriction = Limit SSH to InsightIQ VM to jump host IP only via firewall                        │
+│  Audit log = InsightIQ logs login and config changes locally                                          │
+│  Mgmt VLAN = InsightIQ on management network; no direct access from user VLANs                        │
+│  Firewall inbound 443 = Allow only management hosts to reach InsightIQ UI                             │
+│  Annual review = Yearly audit of InsightIQ users and PAPI credentials                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Ensure these rules are persistent across reboots (via iptables-save or firewalld).
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## OneFS Service Account Security
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Restrict SSH access to ops management subnet</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">22</span><span class="w"> </span>-s<span class="w"> </span>&lt;mgmt-subnet&gt;/24<span class="w"> </span>-j<span class="w"> </span>ACCEPT
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">22</span><span class="w"> </span>-j<span class="w"> </span>DROP
-</code></pre></div>
-<p>Ensure these rules are persistent across reboots (via iptables-save or firewalld).</p>
-<h2 id="onefs-service-account-security">OneFS Service Account Security<a class="headerlink" href="#onefs-service-account-security" title="Permanent link">&para;</a></h2>
-<p>The <code>svc-insightiq</code> service account on OneFS must be read-only and scoped to the minimum required privileges.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify the InsightIQ service account privileges on OneFS</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>IIQ
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>view<span class="w"> </span>IIQ_ReadOnly
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Confirm the account is not in any admin group</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>svc-insightiq
-</code></pre></div>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>The `svc-insightiq` service account on OneFS must be read-only and scoped to the minimum required privileges.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Verify the InsightIQ service account privileges on OneFS
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>isi auth roles list | grep IIQ
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>isi auth roles view IIQ_ReadOnly
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Confirm the account is not in any admin group
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>isi auth users view svc-insightiq
+</code></pre></div></p>
 <p>Rotate the service account password on the 12-month schedule. Update the credential in InsightIQ immediately after rotation.</p>
 <h2 id="database-backup-encryption">Database Backup Encryption<a class="headerlink" href="#database-backup-encryption" title="Permanent link">&para;</a></h2>
 <p>InsightIQ database backups contain performance data and should be encrypted at rest.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Encrypted backup using GPG</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pg_dump<span class="w"> </span>-U<span class="w"> </span>iiq<span class="w"> </span>iiq<span class="w"> </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span><span class="p">|</span><span class="w"> </span>gpg<span class="w"> </span>--cipher-algo<span class="w"> </span>AES256<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--compress-algo<span class="w"> </span>none<span class="w"> </span>--symmetric<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--batch<span class="w"> </span>--passphrase-fd<span class="w"> </span><span class="m">0</span><span class="w"> </span>&gt;<span class="w"> </span>/backup/iiq_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.sql.gz.gpg<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_PASSPHRASE</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Encrypted backup using GPG</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pg_dump<span class="w"> </span>-U<span class="w"> </span>iiq<span class="w"> </span>iiq<span class="w"> </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span><span class="p">|</span><span class="w"> </span>gpg<span class="w"> </span>--cipher-algo<span class="w"> </span>AES256<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--compress-algo<span class="w"> </span>none<span class="w"> </span>--symmetric<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--batch<span class="w"> </span>--passphrase-fd<span class="w"> </span><span class="m">0</span><span class="w"> </span>&gt;<span class="w"> </span>/backup/iiq_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.sql.gz.gpg<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_PASSPHRASE</span><span class="s2">&quot;</span>
 </code></pre></div>
 <p>Store the backup passphrase in the secrets manager. Backup files should be stored on an encrypted backup target or an encrypted datastore.</p>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>InsightIQ logs admin actions (user logins, configuration changes, cluster add/remove) in the appliance logs. Forward to SIEM via syslog.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># /etc/rsyslog.d/insightiq.conf</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>*.*<span class="w"> </span>@@&lt;SIEM-IP&gt;:514<span class="w">    </span><span class="c1"># TCP syslog to SIEM</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># /etc/rsyslog.d/insightiq.conf</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>*.*<span class="w"> </span>@@&lt;SIEM-IP&gt;:514<span class="w">    </span><span class="c1"># TCP syslog to SIEM</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
 </code></pre></div>
 <p>Key events to monitor in SIEM:
 - User login failures

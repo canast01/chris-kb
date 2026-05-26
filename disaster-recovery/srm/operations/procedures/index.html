@@ -3895,68 +3895,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#creating-recovery-plans" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Creating Recovery Plans
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Creating Recovery Plans">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#recovery-plan-design-rules" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recovery Plan Design Rules
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#creating-a-recovery-plan" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Creating a Recovery Plan
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#attaching-custom-scripts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Attaching Custom Scripts
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-failover-non-disruptive-dr-drill" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Failover (Non-Disruptive DR Drill)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Test Failover (Non-Disruptive DR Drill)">
+    <nav class="md-nav" aria-label="Operational Flow Overview">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -4319,7 +4258,7 @@
 <p>VMware Live Site Recovery (formerly Site Recovery Manager) orchestrates disaster recovery workflows between two vCenter-managed sites. This page covers the full operational procedure set: creating protection groups, building recovery plans, running test failovers, performing planned migrations, executing emergency failovers, failing back, and re-protecting.</p>
 <hr />
 <h2 id="operational-flow-overview">Operational Flow Overview<a class="headerlink" href="#operational-flow-overview" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     start([Trigger Event]) --&gt; assess{Planned or\nUnplanned?}
 
     assess --&gt;|Planned migration / DR drill| pm[Planned Migration\nor Test Failover]
@@ -4343,90 +4282,79 @@
     class reprotect,reprotect2,failback action
     class assess decision
     class start,pm,fo terminal</code></pre>
-<hr />
-<h2 id="creating-recovery-plans">Creating Recovery Plans<a class="headerlink" href="#creating-recovery-plans" title="Permanent link">&para;</a></h2>
-<p>A recovery plan references one or more protection groups and defines the power-on sequence, IP customisation rules, and pre/post-recovery scripts.</p>
-<h3 id="recovery-plan-design-rules">Recovery Plan Design Rules<a class="headerlink" href="#recovery-plan-design-rules" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Standard</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Name convention</td>
-<td><code>RP-P&lt;priority&gt;-&lt;tier&gt;-&lt;site-pair&gt;</code> (e.g., <code>RP-P1-DB-DC1DC2</code>)</td>
-</tr>
-<tr>
-<td>Boot order</td>
-<td>Infrastructure (DC/DNS) → DB tier → App tier → Web/presentation tier</td>
-</tr>
-<tr>
-<td>Step delay</td>
-<td>120 s after DC/DNS; 60 s after DB tier before app start</td>
-</tr>
-<tr>
-<td>IP customisation</td>
-<td>Required for all VMs in non-routed test/recovery networks</td>
-</tr>
-<tr>
-<td>Max VMs per plan</td>
-<td>500 VMs (VLSR 9.0 supports up to 1500 VMs per protection group)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="creating-a-recovery-plan">Creating a Recovery Plan<a class="headerlink" href="#creating-a-recovery-plan" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Navigate to <strong>Site Recovery</strong> &gt; <strong>Recovery Plans</strong> &gt; <strong>New Recovery Plan</strong>.</li>
-<li>Enter plan name using the naming convention above.</li>
-<li>Select the protection group(s) to include.</li>
-<li>Configure the recovery site.</li>
-<li>Set the <strong>Test network</strong> — use the dedicated bubble/test portgroup (e.g., <code>vPG-SRM-Test-Bubble</code>) to isolate test VMs from production networks.</li>
-<li>Define VM boot sequence — drag VMs into numbered recovery steps; set per-step delays.</li>
-<li>Add IP customisation rules for VMs that need different IP configuration at the recovery site.</li>
-<li>Optionally attach <strong>pre-power-on scripts</strong> (e.g., DNS record update, load balancer pool drain) and <strong>post-power-on scripts</strong> (e.g., application health check, monitoring alert suppression).</li>
-<li>Finish and run a validation before first use.</li>
-</ol>
-<h3 id="attaching-custom-scripts">Attaching Custom Scripts<a class="headerlink" href="#attaching-custom-scripts" title="Permanent link">&para;</a></h3>
-<p>SRM supports PowerShell and shell scripts called as recovery steps:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Example: post-power-on script to verify a Windows service is running</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">param</span><span class="p">(</span><span class="no">[string]</span><span class="nv">$ServerName</span><span class="p">,</span> <span class="no">[string]</span><span class="nv">$ServiceName</span><span class="p">)</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">$svc</span> <span class="p">=</span> <span class="nb">Get-Service</span> <span class="n">-ComputerName</span> <span class="nv">$ServerName</span> <span class="n">-Name</span> <span class="nv">$ServiceName</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">if</span> <span class="p">(</span><span class="nv">$svc</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s1">&#39;Running&#39;</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="k">throw</span> <span class="s2">&quot;Service $ServiceName on $ServerName is not running after failover&quot;</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">}</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">Write-Output</span> <span class="s2">&quot;Service $ServiceName is running on $ServerName&quot;</span>
-</code></pre></div>
-<p>Place scripts in a location accessible to the SRM server service account and reference the UNC path in the recovery plan step.</p>
-<hr />
-<h2 id="test-failover-non-disruptive-dr-drill">Test Failover (Non-Disruptive DR Drill)<a class="headerlink" href="#test-failover-non-disruptive-dr-drill" title="Permanent link">&para;</a></h2>
-<p>Test failover powers on recovered VMs in an isolated bubble network without disrupting production replication or the protected site.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Admin
-    participant SRM as SRM Server
-    participant SRA as SRA / vSphere Rep
-    participant Storage as DR Storage
-    participant ESXI as Recovery ESXi
-
-    Admin-&gt;&gt;SRM: Click Test on Recovery Plan
-    SRM-&gt;&gt;SRM: Optional — replicate recent changes
-    SRM-&gt;&gt;SRA: Create test snapshot / FlexClone of replica LUNs
-    SRA-&gt;&gt;Storage: Snapshot replica volumes (non-disruptive)
-    Storage--&gt;&gt;SRA: Snapshot ready
-    SRM-&gt;&gt;ESXI: Present snapshot datastores (read-only for production, R/W for test)
-    ESXI--&gt;&gt;SRM: Datastores accessible
-    SRM-&gt;&gt;ESXI: Register VMs from snapshot datastores
-    SRM-&gt;&gt;ESXI: Power on VMs in defined boot sequence (bubble network)
-    ESXI--&gt;&gt;SRM: VMs online
-    SRM-&gt;&gt;SRM: Execute per-step delays and post-power-on scripts
-    SRM--&gt;&gt;Admin: Test running — validate services
-    Admin-&gt;&gt;SRM: Click Cleanup
-    SRM-&gt;&gt;ESXI: Power off test VMs
-    SRM-&gt;&gt;SRA: Remove test snapshot / FlexClone
-    SRA-&gt;&gt;Storage: Delete snapshot
-    SRM--&gt;&gt;Admin: Test cleanup complete; generate test report</code></pre>
+┌────────────────────────────────────────── SRM — Procedures ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Routine Procedures              │  │                DR Procedures                │   │
+│   │          Add new protection source           │  │              Initiate failover              │   │
+│   │           Modify retention policy            │  │               Validate replica              │   │
+│   │          Expire old recover points           │  │              Redirect host I/O              │   │
+│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
+│   │           Service account rotation           │  │            Failback to production           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                              Change Control Requirements for SRM                              │   │
+│   │           All changes to protection policies require change ticket with rollback plan         │   │
+│   │                      Failover tests must be scheduled in maintenance window                   │   │
+│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
+│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Place scripts in a location accessible to the SRM server service account and reference the UNC path in the recovery plan step.
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>---
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>## Test Failover (Non-Disruptive DR Drill)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Test failover powers on recovered VMs in an isolated bubble network without disrupting production replication or the protected site.
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>```mermaid
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>sequenceDiagram
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    participant Admin
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    participant SRM as SRM Server
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    participant SRA as SRA / vSphere Rep
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    participant Storage as DR Storage
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    participant ESXI as Recovery ESXi
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    Admin-&gt;&gt;SRM: Click Test on Recovery Plan
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    SRM-&gt;&gt;SRM: Optional — replicate recent changes
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    SRM-&gt;&gt;SRA: Create test snapshot / FlexClone of replica LUNs
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    SRA-&gt;&gt;Storage: Snapshot replica volumes (non-disruptive)
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    Storage--&gt;&gt;SRA: Snapshot ready
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    SRM-&gt;&gt;ESXI: Present snapshot datastores (read-only for production, R/W for test)
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    ESXI--&gt;&gt;SRM: Datastores accessible
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    SRM-&gt;&gt;ESXI: Register VMs from snapshot datastores
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    SRM-&gt;&gt;ESXI: Power on VMs in defined boot sequence (bubble network)
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    ESXI--&gt;&gt;SRM: VMs online
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    SRM-&gt;&gt;SRM: Execute per-step delays and post-power-on scripts
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    SRM--&gt;&gt;Admin: Test running — validate services
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    Admin-&gt;&gt;SRM: Click Cleanup
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    SRM-&gt;&gt;ESXI: Power off test VMs
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    SRM-&gt;&gt;SRA: Remove test snapshot / FlexClone
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    SRA-&gt;&gt;Storage: Delete snapshot
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    SRM--&gt;&gt;Admin: Test cleanup complete; generate test report
+</code></pre></div></p>
 <h3 id="test-failover-procedure">Test Failover Procedure<a class="headerlink" href="#test-failover-procedure" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Navigate to <strong>Recovery Plans</strong> &gt; select plan &gt; <strong>Test</strong>.</li>

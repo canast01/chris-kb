@@ -3963,44 +3963,48 @@
 
 
 <h1 id="netbackup-hardening">NetBackup — Hardening<a class="headerlink" href="#netbackup-hardening" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────── NetBackup — Hardening ────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                NetBackup — Hardening Checklist                                │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │               [ ] Disable default/admin accounts; create named admin accounts only            │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │                   [ ] Enable MFA for all interactive logins via IdP / SAML SSO                │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │            [ ] Restrict management port (443 (Web UI)) to jump host / management VLAN         │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │               [ ] Enable audit logging and forward to SIEM (syslog, TLS port 6514)            │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │                 [ ] Apply all security patches within 30 days of vendor release               │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │                                       Network Hardening                                       │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │               [ ] Separate backup VLAN — no direct production host access to repo             │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │               [ ] Firewall: allow only 443 (Web UI) · 1556 (vnetd) · 13724 (bprd)             │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │                  [ ] Disable unused ports and protocols on management interface               │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │              [ ] Immutable repository: enable WORM or object lock on backup target            │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │                 [ ] Encryption in transit: disable TLS 1.0/1.1; enforce TLS 1.2+              │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                                                                                       │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Media Server  = data mover between client and storage; can be co-located with master                 │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│                                                                                                       │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="netbackup-security-architecture">NetBackup Security Architecture<a class="headerlink" href="#netbackup-security-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    subgraph accessControl [Access Control]
-        nbac["NBAC\nRole-based access\nAD group mappings"]
-        opscenterRBAC["OpsCenter RBAC\nBackup admin group only"]
-    end
-
-    subgraph authLayer [Authentication &amp; Certificates]
-        nbuCA["NetBackup CA\nclient certificates\nfor all hosts"]
-        cyberArk["CyberArk AAM\nruntime credential\nretrieval"]
-    end
-
-    subgraph networkSecurity [Network Security]
-        fw["Firewall rules\n1556, 13724, 13782\nonly from authorised subnets"]
-        ssh["SSH restricted to\nmanagement jump hosts"]
-        pbx["PBX disabled\non client hosts"]
-    end
-
-    subgraph auditLogging [Audit &amp; Monitoring]
-        audit["nbauditreport\nweekly review"]
-        siem["SIEM forwarding\nnblog syslog output"]
-    end
-
-    master["Primary Server"]
-    master --&gt; nbac
-    master --&gt; nbuCA
-    master --&gt; cyberArk
-    master --&gt; fw
-    master --&gt; ssh
-    master --&gt; audit
-    audit --&gt; siem
-
-    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef sec fill:#be123c,stroke:#9f1239,color:#fff
-    classDef mon fill:#b45309,stroke:#92400e,color:#fff
-    class master ctrl
-    class nbac,opscenterRBAC,nbuCA,cyberArk,fw,ssh,pbx sec
-    class audit,siem mon</code></pre>
 <p>Forward to SIEM: configure <code>nblog</code> syslog output or use a log shipper agent pointing to <code>/usr/openv/netbackup/logs/audit/</code>.</p>
 <h2 id="firewall-ports">Firewall Ports<a class="headerlink" href="#firewall-ports" title="Permanent link">&para;</a></h2>
 <table>

@@ -3735,39 +3735,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#commserve-high-availability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CommServe High Availability
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mediaagent-and-deduplication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MediaAgent and Deduplication
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#storage-library-types" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3974,7 +3941,7 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Commvault provides enterprise backup, recovery, replication, archive, and data protection management. The CommServe is the single command-and-control server — it holds the configuration database (SQL Server) mapping every backup job, client, and storage policy. MediaAgents perform data movement and host the Deduplication Database (DDB). Clients are the protected hosts (VMs, databases, filesystems).</p>
 <h2 id="component-topology">Component Topology<a class="headerlink" href="#component-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
+<p><pre class="mermaid"><code>graph TB
   CS["CommServe\n(command &amp; control)"] --&gt; WEBCON["Web Console\n&amp; Command Center"]
   MA1["Media Agent 1\n(data mover)"] &amp; MA2["Media Agent 2"] --&gt; CS
   SRC(["Source — VMs / DBs / Files"]) --&gt; MA1 &amp; MA2
@@ -3989,78 +3956,104 @@
   class DISK,TAPE store
   class SRC,ADMIN host
   class WEBCON mgmt</code></pre>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Role</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CommServe</td>
-<td>Management, scheduling, SQL DB</td>
-<td>HA pair (passive standby) for critical environments</td>
-</tr>
-<tr>
-<td>MediaAgent</td>
-<td>Data movement, deduplication (DDB)</td>
-<td>Multiple; one DDB per storage pool</td>
-</tr>
-<tr>
-<td>Client</td>
-<td>Backup agent (Windows, Linux, VSA)</td>
-<td>VSA agent for VMware vSphere</td>
-</tr>
-<tr>
-<td>Command Center</td>
-<td>Web UI for administration</td>
-<td>Replaces legacy Java GUI in FR32+</td>
-</tr>
-<tr>
-<td>Storage Policy</td>
-<td>Job-to-storage mapping</td>
-<td>Primary copy + secondary (offsite) copy</td>
-</tr>
-</tbody>
-</table>
-<h2 id="commserve-high-availability">CommServe High Availability<a class="headerlink" href="#commserve-high-availability" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Passive standby</strong>: Second CommServe instance with SQL log shipping; manual failover</li>
-<li><strong>CommServe Failover (active/passive HA)</strong>: Automated failover via CommServe HA option</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify CommServe DB backup job status</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">qlist</span> <span class="n">job</span> <span class="n">-j</span> <span class="n">CommServeDB_Backup</span> <span class="n">-detail</span>
-</code></pre></div>
-<h2 id="mediaagent-and-deduplication">MediaAgent and Deduplication<a class="headerlink" href="#mediaagent-and-deduplication" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    client(["Client Agent\n(VM / DB / File)"])
-    client --&gt;|"raw data stream\nTCP 8403"| ma["MediaAgent"]
-
-    subgraph maBlock [MediaAgent Processing]
-        direction TB
-        chunk["Chunk data into\nvariable blocks"]
-        hash["Hash each block\n(SHA-256)"]
-        ddb[("DDB\nDeduplication DB\nSSD-backed")]
-        chunk --&gt; hash
-        hash --&gt;|"block seen before?"| ddb
-    end
-
-    ma --&gt; maBlock
-
-    ddb --&gt;|"New block\nwrite to library"| diskLib[("Disk Library\nPrimary copy")]
-    ddb --&gt;|"Duplicate block\nskip write"| dedupSave["Dedup saving\n(reference only)"]
-
-    diskLib --&gt;|"Aux copy"| secondary[("Secondary copy\nOffsite / Cloud / Tape")]
-
-    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    class ma,chunk,hash ctrl
-    class ddb,diskLib,secondary store
-    class client host</code></pre>
+┌─────────────────────────────── Commvault — How It Works: Job Lifecycle ───────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                          Job Trigger                                          │   │
+│   │         Backup initiated by schedule (storage policy window) or on-demand from GUI/CLI        │   │
+│   │             CommServe Job Manager evaluates resource availability (MA, bandwidth)             │   │
+│   │        Priority queue: queued if resource slots full; max concurrent jobs configurable        │   │
+│   │             Subclient pre-post scripts execute before/after data collection phase             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Step 1: CommServe assigns MediaAgent and dispatches job control packets to client iDA              │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                  Data Collection (Client iDA)                                 │   │
+│   │          File iDA: changed-block tracking (CBT) via journal or full scan on first run         │   │
+│   │                VM iDA: VMware CBT API or Hyper-V RCT for incremental VM backup                │   │
+│   │         DB iDA: Oracle RMAN / SQL VDI / SAP BR*Tools integration for consistent backup        │   │
+│   │          IntelliSnap: array-level snapshot via storage array API before data transfer         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Step 2: iDA streams changed data to assigned MediaAgent over TCP 8403 data tunnel                  │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                   Data Pipeline (MediaAgent)                                  │   │
+│   │           Deduplication: SHA-256 fingerprint per 64-128 KB block checked against DDB          │   │
+│   │                 Compression: LZ4 or gzip applied to unique blocks before write                │   │
+│   │                Encryption: AES-256 with key managed by CommServe Key Management               │   │
+│   │               Chunks written to library (disk path, tape, or cloud object store)              │   │
+│   │             Chunk metadata (size, offset, dedup refs) sent back to CommServe CSDB             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Step 3: MA writes data to library; CommServe records metadata for catalog/restore                  │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Auxiliary Copy (Replication)         │  │                 Restore Flow                │   │
+│   │       Aux copy job replicates primary        │  │        User browses CommCell catalog        │   │
+│   │        copy to secondary (tape/cloud)        │  │      CS locates chunk locations in CSDB     │   │
+│   │       MA-to-MA direct transfer (no CS)       │  │         MA reads chunks from library        │   │
+│   │       Schedules: continuous or weekly        │  │      Data decompressed/decrypted in MA      │   │
+│   │         Cloud: S3 / Azure Blob / GCS         │  │          Streams back to client iDA         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Data tunnel: client NIC → switch → backup VLAN → MA NIC (10/25 GbE recommended)                      │
+│  Disk library: NAS share (NFS/CIFS) or SAN LUN formatted with NTFS/ext4                               │
+│  Tape library: FC-attached via HBA; media management through CommServe tape manager                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CBT            = Changed Block Tracking; OS/hypervisor mechanism to identify modified blocks         │
+│  RCT            = Resilient Change Tracking; Hyper-V equivalent of VMware CBT                         │
+│  DDB            = Deduplication Database; stores block fingerprints for dedup lookup                  │
+│  IntelliSnap    = Pre-backup hardware snapshot at array level for application consistency             │
+│  Chunk          = Variable-size data segment (64-128 KB) written as unit to library                   │
+│  Aux Copy       = Secondary replication job moving primary copy to another destination                │
+│  RMAN           = Oracle Recovery Manager; used by Oracle iDA for consistent DB backup                │
+│  VDI            = SQL Server Virtual Device Interface; used by SQL iDA for hot backups                │
+│  Subclient      = Named subset of client data with its own schedule and storage policy                │
+│  Synthetic Full = Full backup built from incremental chains on MA (no client re-read)                 │
+│  Job Queue      = CommServe priority queue; throttles concurrent jobs per resource                    │
+│  Catalog        = CommCell browse index enabling file-level restore from any backup                   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## MediaAgent and Deduplication
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```mermaid
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>flowchart LR
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    client([&quot;Client Agent\n(VM / DB / File)&quot;])
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    client --&gt;|&quot;raw data stream\nTCP 8403&quot;| ma[&quot;MediaAgent&quot;]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    subgraph maBlock [MediaAgent Processing]
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        direction TB
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        chunk[&quot;Chunk data into\nvariable blocks&quot;]
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        hash[&quot;Hash each block\n(SHA-256)&quot;]
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        ddb[(&quot;DDB\nDeduplication DB\nSSD-backed&quot;)]
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        chunk --&gt; hash
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        hash --&gt;|&quot;block seen before?&quot;| ddb
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    end
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    ma --&gt; maBlock
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    ddb --&gt;|&quot;New block\nwrite to library&quot;| diskLib[(&quot;Disk Library\nPrimary copy&quot;)]
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    ddb --&gt;|&quot;Duplicate block\nskip write&quot;| dedupSave[&quot;Dedup saving\n(reference only)&quot;]
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    diskLib --&gt;|&quot;Aux copy&quot;| secondary[(&quot;Secondary copy\nOffsite / Cloud / Tape&quot;)]
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    classDef host fill:#15803d,stroke:#166534,color:#fff
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    class ma,chunk,hash ctrl
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    class ddb,diskLib,secondary store
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    class client host
+</code></pre></div></p>
 <p>MediaAgent best practices:
 - Deploy one MediaAgent per site for local backups
 - Place DDB on SSD-backed storage — IOPS are critical for large dedup pools

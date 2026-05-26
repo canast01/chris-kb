@@ -3275,34 +3275,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Secrets Management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#secret-scopes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Secret Scopes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#oidc-keyless-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        OIDC — Keyless Authentication
-      
-    </span>
-  </a>
-  
 </li>
       
         <li class="md-nav__item">
@@ -3574,7 +3546,7 @@
 <p>Part of the <a href="../">GitHub Actions Security</a> reference.</p>
 </blockquote>
 <h2 id="secrets-management">Secrets Management<a class="headerlink" href="#secrets-management" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     wfTrigger(["Workflow triggered"])
     jobCtx["Job context\nenvironment: production"]
     envSecret["Environment secret\nRequired reviewers enforced"]
@@ -3589,55 +3561,49 @@
     repoSecret --&gt; secretCtx
     orgSecret --&gt; secretCtx
     secretCtx --&gt; step</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Manage secrets via CLI</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>DEPLOY_SSH_KEY<span class="w"> </span>&lt;<span class="w"> </span>~/.ssh/deploy_key
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>gh<span class="w"> </span>secret<span class="w"> </span>list
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>gh<span class="w"> </span>secret<span class="w"> </span>delete<span class="w"> </span>OLD_TOKEN
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>PROD_DB_PASSWORD<span class="w"> </span>--env<span class="w"> </span>production
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>SHARED_TOKEN<span class="w"> </span>--org<span class="w"> </span>myorg
-</code></pre></div>
-<h3 id="secret-scopes">Secret Scopes<a class="headerlink" href="#secret-scopes" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Scope</th>
-<th>Where set</th>
-<th>Accessible by</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Repository</td>
-<td>Repo Settings → Secrets</td>
-<td>All workflows in that repo</td>
-</tr>
-<tr>
-<td>Environment</td>
-<td>Repo Settings → Environments</td>
-<td>Jobs targeting that environment</td>
-</tr>
-<tr>
-<td>Organisation</td>
-<td>Org Settings → Secrets</td>
-<td>Repos granted access</td>
-</tr>
-<tr>
-<td><code>GITHUB_TOKEN</code></td>
-<td>Auto-generated</td>
-<td>All jobs (scoped to the run)</td>
-</tr>
-</tbody>
-</table>
-<h2 id="oidc-keyless-authentication">OIDC — Keyless Authentication<a class="headerlink" href="#oidc-keyless-authentication" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Job as Workflow Job
-    participant GH as GitHub OIDC
-    participant Cloud as Cloud Provider
-
-    Job-&gt;&gt;GH: Request OIDC JWT\n(permissions: id-token: write)
-    GH--&gt;&gt;Job: Signed JWT\n(sub: repo:org/repo:ref:...)
-    Job-&gt;&gt;Cloud: Exchange JWT for credentials
-    Cloud--&gt;&gt;Job: Temporary credentials\n(auto-expire)</code></pre>
+┌─────────────────────────────────── GitHub Actions — Access Control ───────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     GitHub Actions access: who can trigger workflows, approve deployments, manage secrets     │   │
+│   │    Repo permissions: read (view logs), write (trigger/cancel runs), admin (manage settings)   │   │
+│   │  Environment protection: required reviewers, wait timers, branch restrictions for deployments │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Workflow Permissions             │  │              Environment Gates              │   │
+│   │         GITHUB_TOKEN scoped per job          │  │          Required reviewers (team)          │   │
+│   │        permissions: read-all default         │  │            Wait timer: 10 min min           │   │
+│   │         Fork PRs: no secrets access          │  │        Branch restriction: main only        │   │
+│   │         workflow_dispatch: user auth         │  │          Deployment logs: auditable         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      CODEOWNERS     = file mapping code paths to review teams; auto-request review on PR      │   │
+│   │     Branch protection = require PR + CI pass + review before merge; enforces pipeline gate    │   │
+│   │Deployment review = env requires named team approval; reviewer sees context and approves/reject│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Secret Scopes
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Scope | Where set | Accessible by |
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|---|---|---|
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| Repository | Repo Settings → Secrets | All workflows in that repo |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| Environment | Repo Settings → Environments | Jobs targeting that environment |
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| Organisation | Org Settings → Secrets | Repos granted access |
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| `GITHUB_TOKEN` | Auto-generated | All jobs (scoped to the run) |
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>## OIDC — Keyless Authentication
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>```mermaid
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>sequenceDiagram
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    participant Job as Workflow Job
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    participant GH as GitHub OIDC
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    participant Cloud as Cloud Provider
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    Job-&gt;&gt;GH: Request OIDC JWT\n(permissions: id-token: write)
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    GH--&gt;&gt;Job: Signed JWT\n(sub: repo:org/repo:ref:...)
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    Job-&gt;&gt;Cloud: Exchange JWT for credentials
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    Cloud--&gt;&gt;Job: Temporary credentials\n(auto-expire)
+</code></pre></div></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">permissions</span><span class="p">:</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">id-token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>

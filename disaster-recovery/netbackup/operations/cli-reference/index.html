@@ -3898,45 +3898,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#backup-operations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backup Operations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#restore-operations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Restore Operations
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Restore Operations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#catalog-restore-sequence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Catalog Restore Sequence
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#catalog-media" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4142,7 +4103,7 @@
 <h1 id="netbackup-cli-reference">NetBackup CLI Reference<a class="headerlink" href="#netbackup-cli-reference" title="Permanent link">&para;</a></h1>
 <h2 id="master-media-client-topology">Master → Media → Client Topology<a class="headerlink" href="#master-media-client-topology" title="Permanent link">&para;</a></h2>
 <p>Understanding the three-tier topology is essential before using the CLI — commands execute at the correct tier.</p>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     subgraph masterTier [Primary / Master Server]
         master["Primary Server\n(catalog, policy DB,\njob scheduler, EMM)"]
         catalog[("NetBackup Catalog\nbpdbm — image metadata")]
@@ -4187,44 +4148,75 @@
     class ms1,ms2,ms3 media
     class vmHost,dbHost,nasHost client
     class dd,msdp,s3 storage</code></pre>
-<hr />
-<h2 id="backup-operations">Backup Operations<a class="headerlink" href="#backup-operations" title="Permanent link">&para;</a></h2>
-<p>Initiate manual backups and inspect policy configuration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Initiate manual backup for a policy/schedule/client</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>bpbackup<span class="w"> </span>-p<span class="w"> </span>&lt;policy&gt;<span class="w"> </span>-s<span class="w"> </span>&lt;schedule&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;client&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List all policies</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>bppllist<span class="w"> </span>-allpolicies<span class="w"> </span>-L
+┌────────────────────────────────────── NetBackup — CLI Reference ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 NetBackup — Command Reference                                 │   │
+│   │           Use these commands for routine operations, scripting, and troubleshooting           │   │
+│   │                                       bpbackup / bprestore                                    │   │
+│   │                                        bplist / bpdbjobs                                      │   │
+│   │                                         nbpemreq / bpps                                       │   │
+│   │                                       tpconfig / nbstlutil                                    │   │
+│   │                                     bpexpdate / bpimmediate                                   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Ports: 443 (Web UI) · 1556 (vnetd) · 13724 (bprd)                                                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Command Categories                                      │   │
+│   │                  Status / Query  — check current state, list jobs, show config                │   │
+│   │                  Operations      — start, stop, failover, restore, sync, expire               │   │
+│   │                Configuration   — add/modify policies, schedules, storage targets              │   │
+│   │               Diagnostics     — collect logs, run health checks, test connectivity            │   │
+│   │                  Scripting       — REST API or CLI for automation and reporting               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+│  Media Server  = data mover between client and storage; can be co-located with master                 │
+│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Restore Operations
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>### Catalog Restore Sequence
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List file list for a policy</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>bpplinclude<span class="w"> </span>-L<span class="w"> </span>-p<span class="w"> </span>&lt;policy&gt;
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List schedules for a policy</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>bpplschedrep<span class="w"> </span>&lt;policy&gt;
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List clients assigned to a policy</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>bpplclients<span class="w"> </span>&lt;policy&gt;
-</code></pre></div>
-<hr />
-<h2 id="restore-operations">Restore Operations<a class="headerlink" href="#restore-operations" title="Permanent link">&para;</a></h2>
-<h3 id="catalog-restore-sequence">Catalog Restore Sequence<a class="headerlink" href="#catalog-restore-sequence" title="Permanent link">&para;</a></h3>
-<p>When the catalog is lost, recovery must happen before any other restore is possible.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Admin
-    participant Master as Primary Server
-    participant Catalog as Catalog Backup (offline copy)
-    participant Media as Media Server
-
-    Admin-&gt;&gt;Master: Install / reinstall NetBackup\n(matching version)
-    Admin-&gt;&gt;Master: Run bprecover or\nbpcatarc -r (recover from catalog backup)
-    Master-&gt;&gt;Catalog: Locate catalog backup\n(separate STU or cold copy)
-    Catalog--&gt;&gt;Master: Catalog images transferred
-    Master-&gt;&gt;Master: Rebuild EMM database\nnbemmcmd -machinealias
-    Master-&gt;&gt;Media: Reconnect media servers\nbpclntcmd -hn &lt;media&gt; -chk
-    Media--&gt;&gt;Master: Media servers re-registered
-    Admin-&gt;&gt;Master: Run bpdbjobs -summary\nverify catalog integrity
-    Admin-&gt;&gt;Master: Resume backup policies\nbpbackup -p &lt;policy&gt;
-    note over Admin,Media: Catalog recovery enables\nall image restores to resume</code></pre>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>When the catalog is lost, recovery must happen before any other restore is possible.
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>```mermaid
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>sequenceDiagram
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    participant Admin
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    participant Master as Primary Server
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    participant Catalog as Catalog Backup (offline copy)
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    participant Media as Media Server
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    Admin-&gt;&gt;Master: Install / reinstall NetBackup\n(matching version)
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    Admin-&gt;&gt;Master: Run bprecover or\nbpcatarc -r (recover from catalog backup)
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    Master-&gt;&gt;Catalog: Locate catalog backup\n(separate STU or cold copy)
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    Catalog--&gt;&gt;Master: Catalog images transferred
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    Master-&gt;&gt;Master: Rebuild EMM database\nnbemmcmd -machinealias
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    Master-&gt;&gt;Media: Reconnect media servers\nbpclntcmd -hn &lt;media&gt; -chk
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    Media--&gt;&gt;Master: Media servers re-registered
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    Admin-&gt;&gt;Master: Run bpdbjobs -summary\nverify catalog integrity
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    Admin-&gt;&gt;Master: Resume backup policies\nbpbackup -p &lt;policy&gt;
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    note over Admin,Media: Catalog recovery enables\nall image restores to resume
+</code></pre></div></p>
 <p>Run restores from the CLI. Always verify client name, backup time, and policy before executing.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Restore files for a client</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>bprestore<span class="w"> </span>-C<span class="w"> </span>&lt;client&gt;<span class="w"> </span>-t<span class="w"> </span>&lt;policy_type&gt;<span class="w"> </span>-L<span class="w"> </span>/tmp/restore.log<span class="w"> </span>&lt;file_path&gt;

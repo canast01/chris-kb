@@ -3724,39 +3724,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#performance-diagnostics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Performance Diagnostics
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#log-locations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Log Locations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#san-switch-diagnostics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SAN Switch Diagnostics
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#diagnostic-data-export-for-dell-support" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3943,7 +3910,7 @@
 </blockquote>
 <hr />
 <h2 id="srdfs-triage-flow">SRDF/S Triage Flow<a class="headerlink" href="#srdfs-triage-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     alert["Alert or Issue Reported"]
     collectState["Collect Pair State\nsymrdf query -g group -v"]
     pairOk{"Pairs\nSynchronized?"}
@@ -3972,71 +3939,82 @@
     style alert fill:#be123c,color:#fff
     style resolved fill:#15803d,color:#fff
     style notifyNetwork fill:#b45309,color:#fff</code></pre>
-<hr />
-<h2 id="performance-diagnostics">Performance Diagnostics<a class="headerlink" href="#performance-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check current SRDF link RTT and write pending counts</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group_num&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RTT\|Pending\|Link&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Write latency per device</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symdev<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>show<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Write|Response&quot;</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># SRDF link statistics — bandwidth and utilisation</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-v
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># WAN RTT measurement</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">20</span><span class="w"> </span>&lt;dr_site_gateway_or_storage_ip&gt;
-</code></pre></div>
-<hr />
-<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Log</th>
-<th>Location</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Solutions Enabler daemon log</td>
-<td><code>/var/symapi/log/</code></td>
-</tr>
-<tr>
-<td>SE disconnect/reconnect events</td>
-<td><code>/var/symapi/log/symapi.log</code></td>
-</tr>
-<tr>
-<td>Unisphere event log</td>
-<td>Unisphere GUI → Events, or export via REST API</td>
-</tr>
-<tr>
-<td>Array audit log</td>
-<td><code>symevent list -sid &lt;SID&gt; -type rdf -output csv &gt; /tmp/rdf_events.csv</code></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="san-switch-diagnostics">SAN Switch Diagnostics<a class="headerlink" href="#san-switch-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Cisco MDS</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>fcip<span class="w"> </span>session
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>show<span class="w"> </span>port-channel<span class="w"> </span>summary
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>show<span class="w"> </span>interface<span class="w"> </span>gigabitEthernet<span class="w"> </span>X/X
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Brocade</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>portshow<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>portcfgshow
-</code></pre></div>
+┌──────────────────────────────────────── SRDF/S — Diagnostics ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                  SRDF/S — Diagnostic Commands                                 │   │
+│   │                       Collect these before opening a vendor support case                      │   │
+│   │                                           symrdf query                                        │   │
+│   │                                        symrdf -rdfg list                                      │   │
+│   │                       Check system logs: /var/log/ or Windows Event Viewer                    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Log Collection                │  │               Live Diagnostics              │   │
+│   │            Application log bundle            │  │             Network connectivity            │   │
+│   │            OS syslog (journalctl)            │  │              Storage path check             │   │
+│   │             Core dump if crashed             │  │              Process list check             │   │
+│   │             Config export/backup             │  │              Port reachability              │   │
+│   │                 symrdf query                 │  │              symrdf -rdfg list              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (&lt; 200 km) · RF director ports │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
+│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
+│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
+│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
+│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
+│  RTO           = Recovery Time Objective; SRDF/S failover typically &lt; 5 minutes manual, &lt; 1 min       │
+│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
+│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
+│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
+│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
+│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
+│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
+│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
+│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Log Locations
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| Log | Location |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>|---|---|
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| Solutions Enabler daemon log | `/var/symapi/log/` |
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| SE disconnect/reconnect events | `/var/symapi/log/symapi.log` |
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Unisphere event log | Unisphere GUI → Events, or export via REST API |
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| Array audit log | `symevent list -sid &lt;SID&gt; -type rdf -output csv &gt; /tmp/rdf_events.csv` |
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>---
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>## SAN Switch Diagnostics
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>```bash
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Cisco MDS
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>show fcip session
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>show port-channel summary
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>show interface gigabitEthernet X/X
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a># Brocade
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>portshow &lt;port&gt;
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>portcfgshow
+</code></pre></div></p>
 <hr />
 <h2 id="diagnostic-data-export-for-dell-support">Diagnostic Data Export for Dell Support<a class="headerlink" href="#diagnostic-data-export-for-dell-support" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Export array event log</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-output<span class="w"> </span>csv<span class="w"> </span>&gt;<span class="w"> </span>/tmp/rdf_events_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Capture full pair state baseline</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-detail<span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf_diagnostic_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.txt
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>all<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/srdf_diagnostic_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.txt
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-v<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/srdf_diagnostic_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.txt
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Collect Unisphere logs via GUI</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Unisphere for PowerMax → System → Export Logs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Export array event log</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-output<span class="w"> </span>csv<span class="w"> </span>&gt;<span class="w"> </span>/tmp/rdf_events_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Capture full pair state baseline</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-detail<span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf_diagnostic_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.txt
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>all<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/srdf_diagnostic_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.txt
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-v<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/srdf_diagnostic_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.txt
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Collect Unisphere logs via GUI</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Unisphere for PowerMax → System → Export Logs</span>
 </code></pre></div>
 
 

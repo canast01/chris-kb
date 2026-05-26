@@ -3394,28 +3394,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#plan" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Plan
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#apply-destroy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Apply &amp; Destroy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#validate-format-providers" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3635,7 +3613,7 @@
 <p>Install with <code>brew install terraform</code> (macOS), <code>apt install terraform</code> (Debian), or download from terraform.io. Run <code>terraform init</code> in any new working directory before other commands.</p>
 </blockquote>
 <h2 id="state-backend-topology">State Backend Topology<a class="headerlink" href="#state-backend-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
+<p><pre class="mermaid"><code>graph TD
     tfClient["Terraform Client\n(local / CI runner)"]
 
     subgraph localBackend["Local Backend"]
@@ -3664,147 +3642,162 @@
     blobStorage --&gt; blobLease
     tfClient --&gt;|backend remote| tfcState
     tfcState --&gt; tfcRuns</code></pre>
-<hr />
-<h2 id="plan">Plan<a class="headerlink" href="#plan" title="Permanent link">&para;</a></h2>
-<p>Preview what Terraform will do before making any changes. Always run <code>plan</code> before <code>apply</code>. Save the plan to a file to guarantee that <code>apply</code> runs exactly what you reviewed.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Preview changes</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>terraform<span class="w"> </span>plan
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>tfplan<span class="w">           </span><span class="c1"># save plan to file (apply this file to guarantee exact changes)</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-var<span class="w"> </span><span class="s1">&#39;env=prod&#39;</span><span class="w">       </span><span class="c1"># pass a variable</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-var-file<span class="o">=</span>prod.tfvars<span class="w"> </span><span class="c1"># load variables from file</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-target<span class="o">=</span>resource_type.name<span class="w">   </span><span class="c1"># only plan a specific resource</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Destroy plan (preview what would be deleted)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-destroy
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Detailed exit codes (useful in CI/CD scripts)</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-detailed-exitcode
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Exit code: 0 = no changes, 1 = error, 2 = changes present</span>
-</code></pre></div>
-<hr />
-<h2 id="apply-destroy">Apply &amp; Destroy<a class="headerlink" href="#apply-destroy" title="Permanent link">&para;</a></h2>
-<p>Apply makes the changes from a plan. Destroy removes all resources managed by Terraform. Use <code>-target</code> to operate on a specific resource instead of everything.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Apply changes</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>terraform<span class="w"> </span>apply
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>terraform<span class="w"> </span>apply<span class="w"> </span>tfplan<span class="w">               </span><span class="c1"># apply a saved plan (recommended — no surprises)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-auto-approve<span class="w">        </span><span class="c1"># skip confirmation prompt (for CI/CD)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-var<span class="w"> </span><span class="s1">&#39;env=prod&#39;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-var-file<span class="o">=</span>prod.tfvars
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-target<span class="o">=</span>resource_type.name
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-parallelism<span class="o">=</span><span class="m">10</span><span class="w">      </span><span class="c1"># concurrent operations (default: 10)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Replace a specific resource (force recreation)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-replace<span class="o">=</span>resource_type.name
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Destroy all resources</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>terraform<span class="w"> </span>destroy
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>terraform<span class="w"> </span>destroy<span class="w"> </span>-auto-approve
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>terraform<span class="w"> </span>destroy<span class="w"> </span>-target<span class="o">=</span>resource_type.name
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>terraform<span class="w"> </span>destroy<span class="w"> </span>-var-file<span class="o">=</span>prod.tfvars
-</code></pre></div>
+┌────────────────────────────────────── Terraform — CLI Reference ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │              Essential Terraform CLI commands for daily infrastructure operations             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Workflow Commands               │  │               Utility Commands              │   │
+│   │          terraform init [-upgrade]           │  │           terraform fmt -recursive          │   │
+│   │          terraform plan -out=tfplan          │  │              terraform validate             │   │
+│   │            terraform apply tfplan            │  │            terraform graph | dot            │   │
+│   │        terraform destroy [-target=X]         │  │            terraform output -json           │   │
+│   │              terraform refresh               │  │           terraform providers lock          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                State Commands                │  │              Workspace Commands             │   │
+│   │             terraform state list             │  │           terraform workspace list          │   │
+│   │          terraform state show <res>          │  │         terraform workspace new prod        │   │
+│   │            terraform state mv A B            │  │       terraform workspace select prod       │   │
+│   │           terraform import addr id           │  │           terraform workspace show          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │terraform graph = exports dependency graph in DOT format; pipe to graphviz dot for visualisatio│   │
+│   │      terraform refresh= updates state to match real-world without applying config changes     │   │
+│   │  providers lock   = regenerates .terraform.lock.hcl with all platforms; use before committing │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Apply &amp; Destroy
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Apply makes the changes from a plan. Destroy removes all resources managed by Terraform. Use `-target` to operate on a specific resource instead of everything.
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```bash
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Apply changes
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>terraform apply
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>terraform apply tfplan               # apply a saved plan (recommended — no surprises)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>terraform apply -auto-approve        # skip confirmation prompt (for CI/CD)
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>terraform apply -var &#39;env=prod&#39;
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>terraform apply -var-file=prod.tfvars
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>terraform apply -target=resource_type.name
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>terraform apply -parallelism=10      # concurrent operations (default: 10)
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Replace a specific resource (force recreation)
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>terraform apply -replace=resource_type.name
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a># Destroy all resources
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>terraform destroy
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>terraform destroy -auto-approve
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>terraform destroy -target=resource_type.name
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>terraform destroy -var-file=prod.tfvars
+</code></pre></div></p>
 <hr />
 <h2 id="validate-format-providers">Validate, Format &amp; Providers<a class="headerlink" href="#validate-format-providers" title="Permanent link">&para;</a></h2>
 <p>Check syntax, auto-format code, and inspect provider dependencies. Run <code>validate</code> and <code>fmt -check</code> in CI before planning.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Validate configuration syntax</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>terraform<span class="w"> </span>validate
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Auto-format code to canonical style</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>terraform<span class="w"> </span>fmt
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>terraform<span class="w"> </span>fmt<span class="w"> </span>-recursive<span class="w">            </span><span class="c1"># format all subdirectories</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>terraform<span class="w"> </span>fmt<span class="w"> </span>-check<span class="w">                </span><span class="c1"># exit non-zero if any files need formatting (CI use)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>terraform<span class="w"> </span>fmt<span class="w"> </span>-diff<span class="w">                 </span><span class="c1"># show what would change without writing</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Provider management</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>terraform<span class="w"> </span>providers<span class="w">                 </span><span class="c1"># list required providers and their versions</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>terraform<span class="w"> </span>providers<span class="w"> </span>lock<span class="w">            </span><span class="c1"># lock provider versions in .terraform.lock.hcl</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>terraform<span class="w"> </span>get<span class="w">                       </span><span class="c1"># download modules referenced in configuration</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>terraform<span class="w"> </span>get<span class="w"> </span>-update<span class="w">               </span><span class="c1"># update modules to latest allowed version</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Dependency graph (requires graphviz)</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>terraform<span class="w"> </span>graph<span class="w"> </span><span class="p">|</span><span class="w"> </span>dot<span class="w"> </span>-Tsvg<span class="w"> </span>&gt;<span class="w"> </span>graph.svg
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>terraform<span class="w"> </span>graph<span class="w"> </span>-type<span class="o">=</span>plan<span class="w"> </span><span class="p">|</span><span class="w"> </span>dot<span class="w"> </span>-Tpng<span class="w"> </span>&gt;<span class="w"> </span>plan.png
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Validate configuration syntax</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>terraform<span class="w"> </span>validate
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Auto-format code to canonical style</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>terraform<span class="w"> </span>fmt
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>terraform<span class="w"> </span>fmt<span class="w"> </span>-recursive<span class="w">            </span><span class="c1"># format all subdirectories</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>terraform<span class="w"> </span>fmt<span class="w"> </span>-check<span class="w">                </span><span class="c1"># exit non-zero if any files need formatting (CI use)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>terraform<span class="w"> </span>fmt<span class="w"> </span>-diff<span class="w">                 </span><span class="c1"># show what would change without writing</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Provider management</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>terraform<span class="w"> </span>providers<span class="w">                 </span><span class="c1"># list required providers and their versions</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>terraform<span class="w"> </span>providers<span class="w"> </span>lock<span class="w">            </span><span class="c1"># lock provider versions in .terraform.lock.hcl</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>terraform<span class="w"> </span>get<span class="w">                       </span><span class="c1"># download modules referenced in configuration</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>terraform<span class="w"> </span>get<span class="w"> </span>-update<span class="w">               </span><span class="c1"># update modules to latest allowed version</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Dependency graph (requires graphviz)</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>terraform<span class="w"> </span>graph<span class="w"> </span><span class="p">|</span><span class="w"> </span>dot<span class="w"> </span>-Tsvg<span class="w"> </span>&gt;<span class="w"> </span>graph.svg
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>terraform<span class="w"> </span>graph<span class="w"> </span>-type<span class="o">=</span>plan<span class="w"> </span><span class="p">|</span><span class="w"> </span>dot<span class="w"> </span>-Tpng<span class="w"> </span>&gt;<span class="w"> </span>plan.png
 </code></pre></div>
 <hr />
 <h2 id="state-output">State &amp; Output<a class="headerlink" href="#state-output" title="Permanent link">&para;</a></h2>
 <p>State is Terraform's source of truth about what's deployed. Use <code>state</code> commands carefully — modifying state incorrectly can cause Terraform to recreate resources or lose track of existing ones.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all resources tracked in state</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>terraform<span class="w"> </span>state<span class="w"> </span>list
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>terraform<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span>module.name<span class="w">    </span><span class="c1"># resources in a specific module</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Show a resource&#39;s current state</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>terraform<span class="w"> </span>state<span class="w"> </span>show<span class="w"> </span>resource_type.name
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>terraform<span class="w"> </span>state<span class="w"> </span>show<span class="w"> </span><span class="s1">&#39;resource_type.name[&quot;key&quot;]&#39;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Move a resource (rename without destroying)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>terraform<span class="w"> </span>state<span class="w"> </span>mv<span class="w"> </span>resource_type.old<span class="w"> </span>resource_type.new
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Remove a resource from state (without deleting the real resource)</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>terraform<span class="w"> </span>state<span class="w"> </span>rm<span class="w"> </span>resource_type.name
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Backup and restore state</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>terraform<span class="w"> </span>state<span class="w"> </span>pull<span class="w"> </span>&gt;<span class="w"> </span>backup.tfstate
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>terraform<span class="w"> </span>state<span class="w"> </span>push<span class="w"> </span>backup.tfstate
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Release a stuck state lock</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>terraform<span class="w"> </span>force-unlock<span class="w"> </span>&lt;lock_id&gt;
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># Import an existing resource into Terraform management</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>terraform<span class="w"> </span>import<span class="w"> </span>resource_type.name<span class="w"> </span>&lt;resource_id&gt;
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>terraform<span class="w"> </span>import<span class="w"> </span>-var-file<span class="o">=</span>prod.tfvars<span class="w"> </span>resource_type.name<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="c1"># Generate config from existing resources (Terraform 1.5+)</span>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-generate-config-out<span class="o">=</span>generated.tf
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="c1"># Outputs</span>
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>terraform<span class="w"> </span>output
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>terraform<span class="w"> </span>output<span class="w"> </span>&lt;output_name&gt;
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>terraform<span class="w"> </span>output<span class="w"> </span>-json
-<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>&lt;output_name&gt;<span class="w">   </span><span class="c1"># plain string without quotes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all resources tracked in state</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>terraform<span class="w"> </span>state<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>terraform<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span>module.name<span class="w">    </span><span class="c1"># resources in a specific module</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Show a resource&#39;s current state</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>terraform<span class="w"> </span>state<span class="w"> </span>show<span class="w"> </span>resource_type.name
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>terraform<span class="w"> </span>state<span class="w"> </span>show<span class="w"> </span><span class="s1">&#39;resource_type.name[&quot;key&quot;]&#39;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Move a resource (rename without destroying)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>terraform<span class="w"> </span>state<span class="w"> </span>mv<span class="w"> </span>resource_type.old<span class="w"> </span>resource_type.new
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Remove a resource from state (without deleting the real resource)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>terraform<span class="w"> </span>state<span class="w"> </span>rm<span class="w"> </span>resource_type.name
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Backup and restore state</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>terraform<span class="w"> </span>state<span class="w"> </span>pull<span class="w"> </span>&gt;<span class="w"> </span>backup.tfstate
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>terraform<span class="w"> </span>state<span class="w"> </span>push<span class="w"> </span>backup.tfstate
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Release a stuck state lock</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>terraform<span class="w"> </span>force-unlock<span class="w"> </span>&lt;lock_id&gt;
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># Import an existing resource into Terraform management</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>terraform<span class="w"> </span>import<span class="w"> </span>resource_type.name<span class="w"> </span>&lt;resource_id&gt;
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>terraform<span class="w"> </span>import<span class="w"> </span>-var-file<span class="o">=</span>prod.tfvars<span class="w"> </span>resource_type.name<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1"># Generate config from existing resources (Terraform 1.5+)</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-generate-config-out<span class="o">=</span>generated.tf
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="c1"># Outputs</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>terraform<span class="w"> </span>output
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>terraform<span class="w"> </span>output<span class="w"> </span>&lt;output_name&gt;
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>terraform<span class="w"> </span>output<span class="w"> </span>-json
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>&lt;output_name&gt;<span class="w">   </span><span class="c1"># plain string without quotes</span>
 </code></pre></div>
 <hr />
 <h2 id="workspaces">Workspaces<a class="headerlink" href="#workspaces" title="Permanent link">&para;</a></h2>
 <p>Workspaces let you manage multiple independent deployments (e.g., dev, staging, prod) from the same configuration with separate state files. Not available with all backends.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List workspaces</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>list
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Create and switch</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>new<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>terraform<span class="w"> </span>workspace<span class="w"> </span><span class="k">select</span><span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Show current workspace</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>show
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Delete (must switch away first)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>delete<span class="w"> </span>&lt;name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List workspaces</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Create and switch</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>new<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>terraform<span class="w"> </span>workspace<span class="w"> </span><span class="k">select</span><span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Show current workspace</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>show
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Delete (must switch away first)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>delete<span class="w"> </span>&lt;name&gt;
 </code></pre></div>
 <hr />
 <h2 id="console-debug-patterns">Console, Debug &amp; Patterns<a class="headerlink" href="#console-debug-patterns" title="Permanent link">&para;</a></h2>
 <p>The interactive console evaluates expressions against your current state. Debug logging helps trace provider API calls when something isn't working.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Interactive console (evaluate expressions against current state)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>terraform<span class="w"> </span>console
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># &gt; module.name.output_value</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># &gt; var.my_var</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># &gt; length(var.list)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Debug logging</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nv">TF_LOG</span><span class="o">=</span>DEBUG<span class="w"> </span>terraform<span class="w"> </span>plan
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nv">TF_LOG</span><span class="o">=</span>TRACE<span class="w"> </span>terraform<span class="w"> </span>apply
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nv">TF_LOG_PATH</span><span class="o">=</span>./debug.log<span class="w"> </span>terraform<span class="w"> </span>plan
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Common workflow patterns</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Full cycle (plan → save → apply saved plan)</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>terraform<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>terraform<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>tfplan<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>terraform<span class="w"> </span>apply<span class="w"> </span>tfplan
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Refresh-only (sync state with reality without changing resources)</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-refresh-only
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Import an existing resource then verify nothing would change</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>terraform<span class="w"> </span>import<span class="w"> </span>resource_type.name<span class="w"> </span>&lt;id&gt;<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>terraform<span class="w"> </span>plan
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># CI/CD pattern (non-interactive)</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>terraform<span class="w"> </span>init<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-out<span class="o">=</span>tfplan
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span>tfplan
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Interactive console (evaluate expressions against current state)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>terraform<span class="w"> </span>console
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># &gt; module.name.output_value</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># &gt; var.my_var</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># &gt; length(var.list)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Debug logging</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nv">TF_LOG</span><span class="o">=</span>DEBUG<span class="w"> </span>terraform<span class="w"> </span>plan
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nv">TF_LOG</span><span class="o">=</span>TRACE<span class="w"> </span>terraform<span class="w"> </span>apply
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nv">TF_LOG_PATH</span><span class="o">=</span>./debug.log<span class="w"> </span>terraform<span class="w"> </span>plan
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Common workflow patterns</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Full cycle (plan → save → apply saved plan)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>terraform<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>terraform<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>tfplan<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>terraform<span class="w"> </span>apply<span class="w"> </span>tfplan
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Refresh-only (sync state with reality without changing resources)</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-refresh-only
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Import an existing resource then verify nothing would change</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>terraform<span class="w"> </span>import<span class="w"> </span>resource_type.name<span class="w"> </span>&lt;id&gt;<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>terraform<span class="w"> </span>plan
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># CI/CD pattern (non-interactive)</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>terraform<span class="w"> </span>init<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-out<span class="o">=</span>tfplan
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span>tfplan
 </code></pre></div>
 
 

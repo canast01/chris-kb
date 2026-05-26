@@ -3931,51 +3931,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#failback-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Failback Procedure
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Failback Procedure">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#failback-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Failback Steps
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-copy-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Copy Workflow
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Test Copy Workflow">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
   <a href="#creating-a-test-copy-via-rpma" class="md-nav__link">
     <span class="md-ellipsis">
@@ -4241,7 +4196,7 @@
 <li>Click <strong>OK</strong>.</li>
 </ol>
 <h3 id="via-cli-boxmgmt-rpsc">Via CLI (boxmgmt / rpsc)<a class="headerlink" href="#via-cli-boxmgmt-rpsc" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Connect to RecoverPoint appliance</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Connect to RecoverPoint appliance</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@rpa01.example.com
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List consistency groups</span>
@@ -4253,63 +4208,86 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List bookmarks for a CG</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>get_bookmarks<span class="w"> </span>--cg<span class="w"> </span><span class="s2">&quot;CG_PROD_SQL&quot;</span>
 </code></pre></div>
-<hr />
-<h2 id="failback-procedure">Failback Procedure<a class="headerlink" href="#failback-procedure" title="Permanent link">&para;</a></h2>
-<p>After the primary site is recovered, fail back from DR to primary.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Primary as Primary Site
-    participant RP as RecoverPoint
-    participant DR as DR Site
-
-    Note over DR: DR is running production (post-failover)
-
-    Primary-&gt;&gt;RP: Primary site restored — initiate failback
-    RP-&gt;&gt;RP: Establish reverse replication (DR→Primary)
-    RP-&gt;&gt;Primary: Sync delta changes from DR to Primary
-    Note over RP: Full sync or delta sync depending on state
-
-    RP-&gt;&gt;Primary: Sync complete — confirm cutover window
-    Primary-&gt;&gt;RP: Initiate failback cutover
-    RP-&gt;&gt;DR: Quiesce I/O on DR volumes briefly
-    RP-&gt;&gt;Primary: Promote Primary volumes
-    RP-&gt;&gt;RP: Flip replication direction (Primary→DR)
-    DR-&gt;&gt;RP: DR resumes as replica
-    Primary-&gt;&gt;Primary: Restart production workloads</code></pre>
-<h3 id="failback-steps">Failback Steps<a class="headerlink" href="#failback-steps" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Confirm the primary site is healthy and volumes are accessible.</li>
-<li><strong>Consistency Groups</strong> → select the CG → <strong>Failback</strong>.</li>
-<li>RecoverPoint will:</li>
-<li>Establish reverse replication (DR to primary).</li>
-<li>Sync changes made during failover back to the primary volumes.</li>
-<li>Monitor sync progress — wait for delta sync to minimize cutover window.</li>
-<li>When sync is current, click <strong>Commit Failback</strong>:</li>
-<li>DR I/O quiesces briefly.</li>
-<li>Primary volumes are promoted.</li>
-<li>Replication direction flips back to DR.</li>
-<li>Start production workloads on the primary.</li>
-</ol>
-<hr />
-<h2 id="test-copy-workflow">Test Copy Workflow<a class="headerlink" href="#test-copy-workflow" title="Permanent link">&para;</a></h2>
-<p>A Test Copy provides a writeable DR test without disrupting ongoing replication.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Admin
-    participant RP as RecoverPoint
-    participant TestHost as Test Host (DR Site)
-    participant Prod as Production (Primary)
-
-    Admin-&gt;&gt;RP: Create Test Copy from CG bookmark
-    RP-&gt;&gt;RP: Branch journal at test point
-    RP-&gt;&gt;TestHost: Present writeable test volume
-    Note over Prod,RP: Production replication continues unaffected
-
-    TestHost-&gt;&gt;TestHost: Start test workload\nValidate data integrity
-    Admin-&gt;&gt;RP: Run DR test scripts / application checks
-
-    Admin-&gt;&gt;RP: Complete test — discard test copy
-    RP-&gt;&gt;RP: Discard all writes on test copy
-    RP-&gt;&gt;TestHost: Remove test volume
-    Note over RP: Journal continues — no impact to production RPO</code></pre>
+┌─────────────────────────────────── RecoverPoint — Backup &amp; Restore ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │RecoverPoint provides CDP-based recovery; no traditional backup agent needed for replicated VMs│   │
+│   │Recovery options: image access (non-disruptive), test copy, failover, and restore to production│   │
+│   │  RPA config backup: export system settings from Unisphere; store off-site after every change  │   │
+│   │              Recovery granularity: any point in journal window, or named bookmark             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Recovery flow: select CG ──► choose point-in-time ──► image access or failover ──► validate        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Recovery Methods               │  │                Config Backup                │   │
+│   │           Image access (read-only)           │  │           Export system config XML          │   │
+│   │          Image access (r/w enabled)          │  │           Store after every change          │   │
+│   │           Test copy (bubble VLAN)            │  │            RPA appliance snapshot           │   │
+│   │           Failover (prod cutover)            │  │             Re-import on rebuild            │   │
+│   │         Failback (resync + cutback)          │  │              Test import on lab             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: failover powers on replica VMs at DR site; requires pre-configured VM networks and IP poo│
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Image access     = Non-disruptive mount of journal image; source VMs continue running unchanged    │
+│    Read/write image = Enable writes to image copy; journal paused; useful for data mining recovery    │
+│    Test copy        = Full VM boot of replica in isolated bubble network; validates recoverability    │
+│    Failover         = Commit image to replica; power on VMs at DR site; redirect production traffic   │
+│    Failback         = After failover; reverse replicate from DR to prod; restore original direction   │
+│    Bookmark         = Named time marker; set before patching, app changes, or maintenance windows     │
+│    Config export    = Unisphere → System → Export Config; saves all CG definitions and RPA settings   │
+│    Journal rollback = Roll journal pointer back to earlier timestamp; expose older write sequence     │
+│    Bubble VLAN      = Isolated portgroup; test copy VMs powered on here; no prod network access       │
+│    RPO validation   = Confirm lag at time of failover; determines actual data loss window             │
+│    Resync           = After failback; re-establish replication from production to DR direction        │
+│    Recovery point   = Specific second-level timestamp in journal window chosen for recovery           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Failback Steps
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>1. Confirm the primary site is healthy and volumes are accessible.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2. **Consistency Groups** → select the CG → **Failback**.
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>3. RecoverPoint will:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   - Establish reverse replication (DR to primary).
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>   - Sync changes made during failover back to the primary volumes.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>4. Monitor sync progress — wait for delta sync to minimize cutover window.
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>5. When sync is current, click **Commit Failback**:
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>   - DR I/O quiesces briefly.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>   - Primary volumes are promoted.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>   - Replication direction flips back to DR.
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>6. Start production workloads on the primary.
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>---
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>## Test Copy Workflow
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>A Test Copy provides a writeable DR test without disrupting ongoing replication.
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>```mermaid
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>sequenceDiagram
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    participant Admin
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    participant RP as RecoverPoint
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    participant TestHost as Test Host (DR Site)
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    participant Prod as Production (Primary)
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    Admin-&gt;&gt;RP: Create Test Copy from CG bookmark
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    RP-&gt;&gt;RP: Branch journal at test point
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    RP-&gt;&gt;TestHost: Present writeable test volume
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    Note over Prod,RP: Production replication continues unaffected
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    TestHost-&gt;&gt;TestHost: Start test workload\nValidate data integrity
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    Admin-&gt;&gt;RP: Run DR test scripts / application checks
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>    Admin-&gt;&gt;RP: Complete test — discard test copy
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    RP-&gt;&gt;RP: Discard all writes on test copy
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    RP-&gt;&gt;TestHost: Remove test volume
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    Note over RP: Journal continues — no impact to production RPO
+</code></pre></div></p>
 <h3 id="creating-a-test-copy-via-rpma">Creating a Test Copy via RPMA<a class="headerlink" href="#creating-a-test-copy-via-rpma" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>Consistency Groups</strong> → select CG → <strong>Test Copy</strong>.</li>

@@ -3259,28 +3259,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#phase-3-plan-the-cutover-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 3 — Plan the Cutover Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#phase-4-initiate-failback" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 4 — Initiate Failback
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#phase-5-post-failback-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3471,7 +3449,7 @@
 <p><strong>Failback is not urgent.</strong> Running stable on DR is better than a rushed failback that causes a second outage.</p>
 </blockquote>
 <h2 id="phase-1-prepare-primary-site">Phase 1 — Prepare Primary Site<a class="headerlink" href="#phase-1-prepare-primary-site" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Confirm primary storage arrays healthy</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Confirm primary storage arrays healthy</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># ONTAP</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
@@ -3484,75 +3462,100 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>show<span class="w"> </span>interface<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>brief<span class="w">           </span><span class="c1"># Cisco MDS</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>switchshow<span class="w">                        </span><span class="c1"># Brocade</span>
 </code></pre></div>
-<p><strong>SRDF — restore R1 as source:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Restore normal direction after failover</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfgroup&gt;<span class="w"> </span>restore<span class="w"> </span>-noprompt
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Confirm R1 is synchronized</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfgroup&gt;<span class="w"> </span>query
-</code></pre></div></p>
-<p><strong>Veeam — run a final backup at DR before failback:</strong>
-1. Veeam Backup &amp; Replication → Replication jobs → Run job
-2. Confirm backup completes before proceeding</p>
-<h2 id="phase-3-plan-the-cutover-window">Phase 3 — Plan the Cutover Window<a class="headerlink" href="#phase-3-plan-the-cutover-window" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Agree on maintenance window with application owners</li>
-<li>Set DNS TTL to 60 seconds at least 1 hour before cutover</li>
-<li>Notify users of planned outage window</li>
-<li>Have rollback plan documented: if failback fails, return to DR</li>
-</ul>
-<h2 id="phase-4-initiate-failback">Phase 4 — Initiate Failback<a class="headerlink" href="#phase-4-initiate-failback" title="Permanent link">&para;</a></h2>
-<p><strong>Graceful shutdown at DR:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>&lt;application-service&gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Confirm no active sessions</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ss<span class="w"> </span>-tnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;
+┌──────────────────────────────────────── DR Failback Procedure ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      DR Failback Procedure — reverse replicate, re-sync, validate, cut back to production     │   │
+│   │                   See product-specific sub-sections for detailed procedures                   │   │
+│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
+│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
+│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Production site · DR site · Replication link · Management network · Vault network                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
+│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
+│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
+│  Failback      = returning operations to production site after DR resolved                            │
+│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
+│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
+│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
+│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
+│  DR Test       = planned failover test; validates RTO without real disaster                           │
+│  Replication   = continuous or periodic data copy to secondary site or vault                          │
+│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
+│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Veeam — run a final backup at DR before failback:**
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>1. Veeam Backup &amp; Replication → Replication jobs → Run job
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2. Confirm backup completes before proceeding
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Phase 3 — Plan the Cutover Window
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- Agree on maintenance window with application owners
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- Set DNS TTL to 60 seconds at least 1 hour before cutover
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- Notify users of planned outage window
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- Have rollback plan documented: if failback fails, return to DR
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>## Phase 4 — Initiate Failback
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>**Graceful shutdown at DR:**
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>```bash
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>systemctl stop &lt;application-service&gt;
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># Confirm no active sessions
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>ss -tnp | grep &lt;port&gt;
 </code></pre></div></p>
 <p><strong>Wait for replication to catch up:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># ONTAP — confirm lag is zero before breaking</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;primary-svm&gt;:&lt;primary-vol&gt;<span class="w"> </span>-fields<span class="w"> </span>lag-time
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># lag-time should be 00:00:00 or very small</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Break mirror — primary volume becomes writable</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;primary-svm&gt;:&lt;primary-vol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># ONTAP — confirm lag is zero before breaking</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;primary-svm&gt;:&lt;primary-vol&gt;<span class="w"> </span>-fields<span class="w"> </span>lag-time
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># lag-time should be 00:00:00 or very small</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Break mirror — primary volume becomes writable</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;primary-svm&gt;:&lt;primary-vol&gt;
 </code></pre></div></p>
 <p><strong>VMware SRM — reprotect and failback:</strong>
 1. Site Recovery → Recovery Plans → select plan
 2. Click <strong>Reprotect</strong> (reverses protection direction)
 3. After reprotect completes — <strong>Run</strong> → choose <strong>Planned Migration</strong></p>
 <p><strong>Manual VM failback (PowerCLI):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Shut down VM at DR</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Stop-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm-name&gt;&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Power on at primary (VM should already be registered from original config)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm-name&gt;&quot;</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">primary-vcenter</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Shut down VM at DR</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Stop-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm-name&gt;&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Power on at primary (VM should already be registered from original config)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm-name&gt;&quot;</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">primary-vcenter</span><span class="p">&gt;</span>
 </code></pre></div></p>
 <h2 id="phase-5-post-failback-validation">Phase 5 — Post-Failback Validation<a class="headerlink" href="#phase-5-post-failback-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Storage visible at primary hosts</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>multipath<span class="w"> </span>-ll
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>lsblk
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>df<span class="w"> </span>-h
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Application services</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>systemctl<span class="w"> </span>start<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Application health</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>curl<span class="w"> </span>-vk<span class="w"> </span>https://&lt;primary-app-url&gt;/health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Storage visible at primary hosts</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>lsblk
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>df<span class="w"> </span>-h
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Application services</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>systemctl<span class="w"> </span>start<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Application health</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>curl<span class="w"> </span>-vk<span class="w"> </span>https://&lt;primary-app-url&gt;/health
 </code></pre></div>
 <p><strong>Database integrity check:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># PostgreSQL</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_database_size(&#39;&lt;db&gt;&#39;);&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># MSSQL (PowerShell)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Invoke-Sqlcmd<span class="w"> </span>-Query<span class="w"> </span><span class="s2">&quot;DBCC CHECKDB(&#39;&lt;db&gt;&#39;) WITH NO_INFOMSGS&quot;</span><span class="w"> </span>-ServerInstance<span class="w"> </span>&lt;primary-sql&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># PostgreSQL</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_database_size(&#39;&lt;db&gt;&#39;);&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># MSSQL (PowerShell)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Invoke-Sqlcmd<span class="w"> </span>-Query<span class="w"> </span><span class="s2">&quot;DBCC CHECKDB(&#39;&lt;db&gt;&#39;) WITH NO_INFOMSGS&quot;</span><span class="w"> </span>-ServerInstance<span class="w"> </span>&lt;primary-sql&gt;
 </code></pre></div></p>
 <h2 id="phase-6-restore-normal-replication">Phase 6 — Restore Normal Replication<a class="headerlink" href="#phase-6-restore-normal-replication" title="Permanent link">&para;</a></h2>
 <p>Once primary is confirmed stable, re-establish replication from primary → DR:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># ONTAP — resync back to original direction</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;primary-svm&gt;:&lt;primary-vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dr-svm&gt;:&lt;dr-vol&gt;
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Confirm</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dr-svm&gt;:&lt;dr-vol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># ONTAP — resync back to original direction</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;primary-svm&gt;:&lt;primary-vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dr-svm&gt;:&lt;dr-vol&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Confirm</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dr-svm&gt;:&lt;dr-vol&gt;
 </code></pre></div>
 <h2 id="failback-checklist">Failback Checklist<a class="headerlink" href="#failback-checklist" title="Permanent link">&para;</a></h2>
 <ul>

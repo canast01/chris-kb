@@ -3925,50 +3925,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#license-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        License Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#eol-tracking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        EOL Tracking
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#migrating-from-array-replication-to-vsphere-replication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Migrating from Array Replication to vSphere Replication
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#srm-appliance-backup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SRM Appliance Backup
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -4180,7 +4136,7 @@
 </table>
 <h2 id="upgrade-sequence">Upgrade Sequence<a class="headerlink" href="#upgrade-sequence" title="Permanent link">&para;</a></h2>
 <h3 id="upgrade-order-dependency-chain">Upgrade Order Dependency Chain<a class="headerlink" href="#upgrade-order-dependency-chain" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     start(["Start upgrade\nmaintenance window"])
     start --&gt; vc["1. Upgrade vCenter\nboth protected + recovery sites"]
     vc --&gt; srmCheck{"Plugins load\ncorrectly?"}
@@ -4198,44 +4154,57 @@
     class vc,srmUpgrade,vrUpgrade,sraUpdate,validate,fixVC action
     class srmCheck check
     class start,done terminal</code></pre>
-<p>Validate all protection groups show <code>OK</code> and all VMs show <code>Protected</code> after each upgrade step before proceeding.</p>
-<h2 id="license-management">License Management<a class="headerlink" href="#license-management" title="Permanent link">&para;</a></h2>
-<p>SRM licenses are per protected VM:
-- <strong>Perpetual + SnS</strong>: Annual renewal of Support and Subscription
-- <strong>Subscription</strong>: Monthly or annual via Broadcom Advantage portal
-- <strong>License compliance threshold</strong>: Review at 80% utilisation; initiate procurement at 90%</p>
-<p>Check current protected VM count:
-- SRM UI → Inventory → Virtual Machines → Protected (count in top bar)</p>
-<p>Track in CMDB:
-| Field | Value |
-|---|---|
-| License type | Perpetual / Subscription |
-| Licensed VM count | <number> |
-| Current protected VM count | <number from SRM UI> |
-| Renewal date | <date> |</p>
-<h2 id="eol-tracking">EOL Tracking<a class="headerlink" href="#eol-tracking" title="Permanent link">&para;</a></h2>
-<p>SRM lifecycle is tied to vSphere:
-- SRM 8.x aligned to vSphere 8.x lifecycle
-- vSphere 7.x general support ended: October 2025
-- Track End of General Support and End of Technical Guidance dates in CMDB</p>
-<h2 id="migrating-from-array-replication-to-vsphere-replication">Migrating from Array Replication to vSphere Replication<a class="headerlink" href="#migrating-from-array-replication-to-vsphere-replication" title="Permanent link">&para;</a></h2>
-<p>When decommissioning array-based SRA in favour of vSphere Replication:</p>
-<ol>
-<li>Document all VMs in array-based protection groups</li>
-<li>Create new vSphere Replication-based protection group</li>
-<li>Enable vSphere Replication on each VM (configure RPO)</li>
-<li>Wait for initial sync to complete</li>
-<li>Remove VMs from old array-based protection group</li>
-<li>Retire old protection group and delete SRA configuration</li>
-<li>Deregister old array manager in SRM → Array Managers</li>
-</ol>
-<p>Expect initial sync to take hours to days depending on VMDK size and link bandwidth.</p>
-<h2 id="srm-appliance-backup">SRM Appliance Backup<a class="headerlink" href="#srm-appliance-backup" title="Permanent link">&para;</a></h2>
-<p>Back up the SRM configuration database daily:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Windows-based SRM: back up via SQL Server or embedded DB backup</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># Linux-based SRM (8.8+): use VAMI backup or API</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="s2">&quot;https://&lt;srm-appliance&gt;:5480/api/v1/config/export&quot;</span> <span class="n">-OutFile</span> <span class="n">srm-config-backup</span><span class="p">.</span><span class="n">zip</span>
-</code></pre></div></p>
+┌─────────────────────────────────────── SRM — Install &amp; Upgrade ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                SRM — Installation Prerequisites                               │   │
+│   │             OS: supported Linux or Windows Server (see vendor compatibility matrix)           │   │
+│   │         Network: 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) — ensure firewall allows these      │   │
+│   │      Auth: vCenter SSO / AD integration; SRM admin role; site-pairing certificate exchange    │   │
+│   │  Storage: Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Ar│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        Install Sequence                                       │   │
+│   │                  1  Deploy control plane component and configure network access               │   │
+│   │                          2  Configure storage and network connectivity                        │   │
+│   │                        3  Install agent/proxy/splitter on protected hosts                     │   │
+│   │                      4  Register sources and configure protection policies                    │   │
+│   │                        5  Run first job; verify completion; test restore                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        Upgrade Sequence                                       │   │
+│   │                 1  Review release notes and compatibility matrix before upgrade               │   │
+│   │                   2  Snapshot or backup the control plane VM before upgrading                 │   │
+│   │                  3  Upgrade control plane first, then proxies/agents/appliances               │   │
+│   │                       4  Validate jobs resume automatically after upgrade                     │   │
+│   │                        5  Document version change and update CMDB record                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 
 
 

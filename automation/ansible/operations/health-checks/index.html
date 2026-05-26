@@ -3564,23 +3564,34 @@
 
 
 <h1 id="ansible-health-checks">Ansible — Health Checks<a class="headerlink" href="#ansible-health-checks" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────── Ansible — Health Checks ───────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │ Ansible health checks: verify control node, AWX services, connectivity, and job success rates │   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │     Control node: check ansible version, Python version, SSH connectivity to managed nodes    │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │         AWX: check service pods (Kubernetes), job queue depth, credential expiry dates        │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │             Control Node Checks              │  │                  AWX Checks                 │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │              ansible --version               │  │           kubectl get pods -n awx           │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │       ansible all -m ping (all hosts)        │  │         AWX UI: Dashboard job stats         │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │       ansible-inventory --list --graph       │  │        awx jobs list --status failed        │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │       Check Vault password accessible        │  │        Check credential expiry dates        │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │         Verify EE images are current         │  │         AWX capacity: forks headroom        │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │ansible all -m ping   = fastest connectivity check; returns pong on success, unreachable on fai│   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │      Job success rate      = AWX dashboard; alert if &gt;5% failure rate over rolling 7 days     │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │      EE freshness          = execution environment images; rebuild if base OS CVEs exist      │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <blockquote>
 <p>Part of the <a href="../">Ansible Operations</a> reference.</p>
 </blockquote>
 <hr />
 <h2 id="ansible-health-check-flow">Ansible Health Check Flow<a class="headerlink" href="#ansible-health-check-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    start["Start Health Check"] --&gt; checkVersion["ansible --version\nExpected version?"]
-    checkVersion --&gt;|OK| pingAll["ansible all -m ping\nAll hosts reachable?"]
-    checkVersion --&gt;|Fail| alertVersion["Alert: Wrong\nAnsible version"]
-    pingAll --&gt;|OK| checkVault["Vault password\naccessible?"]
-    pingAll --&gt;|Unreachable| alertPing["Alert: SSH\nConnectivity Failure"]
-    checkVault --&gt;|OK| checkCollections["Galaxy collections\nat expected versions?"]
-    checkVault --&gt;|Fail| alertVault["Alert: Vault\nDecryption Failure"]
-    checkCollections --&gt;|OK| checkDryRun["Dry-run\n--check mode passes?"]
-    checkCollections --&gt;|Outdated| alertCollections["Alert: Update\nCollections"]
-    checkDryRun --&gt;|OK| healthy["Status: HEALTHY"]
-    checkDryRun --&gt;|Fail| alertDryRun["Alert: Playbook\nCheck-mode Errors"]</code></pre>
 
 
 

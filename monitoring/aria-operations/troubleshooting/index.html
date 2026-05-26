@@ -4175,28 +4175,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#login-and-authentication-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Login and Authentication Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#collection-failures-and-data-gaps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Collection Failures and Data Gaps
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#performance-degradation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4375,7 +4353,7 @@
 <h2 id="checking-adapter-and-collector-status">Checking Adapter and Collector Status<a class="headerlink" href="#checking-adapter-and-collector-status" title="Permanent link">&para;</a></h2>
 <p>Most data problems originate from an adapter instance that has stopped collecting.</p>
 <p>Navigation: <strong>Administration &gt; Solutions &gt; Cloud Accounts / Adapter Instances</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check adapter instance status via API</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check adapter instance status via API</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;https://aria-ops.example.com/suite-api/api/adapterinstances&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -4387,62 +4365,69 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span>
 </code></pre></div>
-<h2 id="login-and-authentication-issues">Login and Authentication Issues<a class="headerlink" href="#login-and-authentication-issues" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Issue</th>
-<th>Likely Cause</th>
-<th>Fix</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>"Invalid credentials" on login</td>
-<td>Password expired or LDAP failure</td>
-<td>Reset local admin password via vApp console</td>
-</tr>
-<tr>
-<td>SSO login loop</td>
-<td>vCenter SSO misconfigured</td>
-<td>Reconfigure SSO under Administration &gt; Authentication</td>
-</tr>
-<tr>
-<td>Session expires too quickly</td>
-<td>Default session timeout</td>
-<td>Change in Administration &gt; Global Settings &gt; Session Timeout</td>
-</tr>
-<tr>
-<td>API token rejected</td>
-<td>Token expired (24-hour TTL)</td>
-<td>Re-authenticate to get a new token</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Obtain a new API auth token</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://aria-ops.example.com/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;: &quot;admin&quot;, &quot;authSource&quot;: &quot;LOCAL&quot;, &quot;password&quot;: &quot;yourpassword&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.token&#39;</span>
-</code></pre></div>
-<h2 id="collection-failures-and-data-gaps">Collection Failures and Data Gaps<a class="headerlink" href="#collection-failures-and-data-gaps" title="Permanent link">&para;</a></h2>
-<p>If objects show stale or missing data:</p>
-<ol>
-<li>Check adapter status (see above).</li>
-<li>Verify network connectivity from collector to monitored system.</li>
-<li>Confirm credentials have not expired.</li>
-<li>Check for certificate errors (common after vCenter recertification).</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test connectivity from Aria Ops node to vCenter</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@aria-ops.example.com
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vcenter.example.com/sdk/vimService.wsdl<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Force a collection cycle for an adapter instance</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="s2">&quot;https://aria-ops.example.com/suite-api/api/adapterinstances/&lt;adapterId&gt;/testconnection&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken &lt;token&gt;&quot;</span>
-</code></pre></div>
+┌────────────────────────────────── Aria Operations — Troubleshooting ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Adapter Not Collecting            │  │               UI / API Issues               │   │
+│   │               Check credential               │  │             Restart web service             │   │
+│   │             Verify network reach             │  │             Check master status             │   │
+│   │              Review adapter log              │  │             vracli cluster list             │   │
+│   │             Re-test in Solutions             │  │             Clear browser cache             │   │
+│   │             Check firewall rules             │  │             Check cert validity             │   │
+│   │                Reinstall PAK                 │  │            Collect support bundle           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Support bundle via vrops-support-get command; logs in /var/log/vmware/vcops on each node           │
+│                                                                                                       │
+│                                                  ▼                                                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Performance Issues              │  │            Alert / Policy Issues            │   │
+│   │              Check node CPU/mem              │  │             Check symptom state             │   │
+│   │             Review object count              │  │              Policy inheritance             │   │
+│   │            Reduce collection int             │  │              Alert dedup check              │   │
+│   │                Add data nodes                │  │             Outbound plugin test            │   │
+│   │               Archive old data               │  │             Notification history            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Logs: /var/log/vmware/vcops · support bundle: vrops-support-get from master node SSH                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Support bundle = Compressed archive of logs and config; used by VMware GSS for diagnosis             │
+│  vrops-support-get = CLI command on Aria Ops appliance to collect support bundle                      │
+│  Solutions UI = Administration &gt; Solutions; shows adapter status and allows credential test           │
+│  Cluster list = vracli cluster list shows node health: ONLINE/OFFLINE/INITIALIZING                    │
+│  PAK reinstall = Remove and re-add adapter package; resets adapter state without data loss            │
+│  Collection interval = How often adapter polls source; reduce if master is overloaded                 │
+│  Symptom state = True/False evaluation of a threshold condition for an object                         │
+│  Policy inheritance = Child policy inheriting settings from parent; override at child level           │
+│  Alert dedup = Aria Ops suppressing repeat alerts for same symptom within cool-down window            │
+│  Notification history = Log of outbound alert notifications sent; in Administration &gt; Outbound        │
+│  Object count = Number of monitored objects; growth reduces collection capacity per node              │
+│  Data node = Worker node; adding nodes scales collection capacity linearly                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Collection Failures and Data Gaps
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>If objects show stale or missing data:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>1. Check adapter status (see above).
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>2. Verify network connectivity from collector to monitored system.
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>3. Confirm credentials have not expired.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>4. Check for certificate errors (common after vCenter recertification).
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>```bash
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Test connectivity from Aria Ops node to vCenter
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ssh admin@aria-ops.example.com
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>curl -sk https://vcenter.example.com/sdk/vimService.wsdl | head -5
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Force a collection cycle for an adapter instance
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>curl -sk -X POST \
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  &quot;https://aria-ops.example.com/suite-api/api/adapterinstances/&lt;adapterId&gt;/testconnection&quot; \
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  -H &quot;Authorization: vRealizeOpsToken &lt;token&gt;&quot;
+</code></pre></div></p>
 <h2 id="performance-degradation">Performance Degradation<a class="headerlink" href="#performance-degradation" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -4475,13 +4460,13 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check Aria Ops cluster node resource usage</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>admin@aria-ops.example.com
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Check CPU and memory</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>top<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Check disk usage on key partitions</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/db<span class="w"> </span>/storage/log<span class="w"> </span>/storage/core
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check Aria Ops cluster node resource usage</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@aria-ops.example.com
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Check CPU and memory</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>top<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Check disk usage on key partitions</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/db<span class="w"> </span>/storage/log<span class="w"> </span>/storage/core
 </code></pre></div>
 <h2 id="common-issues-reference">Common Issues Reference<a class="headerlink" href="#common-issues-reference" title="Permanent link">&para;</a></h2>
 <table>

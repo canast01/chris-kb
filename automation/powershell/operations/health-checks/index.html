@@ -3622,34 +3622,29 @@
 
 
 <h1 id="powershell-health-checks">PowerShell — Health Checks<a class="headerlink" href="#powershell-health-checks" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── PowerShell — Health Checks ──────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │  PowerShell health checks: verify PS version, remoting, module currency, and script execution │   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │      Check: $PSVersionTable.PSVersion, Test-WSMan, Get-PSRepository, PSScriptAnalyzer run     │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │           Version and Environment            │  │               Remoting Health               │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │          $PSVersionTable.PSVersion           │  │            Test-WSMan &lt;hostname&gt;            │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │          Get-Module -ListAvailable           │  │        Test-NetConnection -port 5985        │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │       Get-InstalledModule (PSGallery)        │  │          Get-PSSessionConfiguration         │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │          Get-ExecutionPolicy -List           │  │            winrm get winrm/config           │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │        Invoke-ScriptAnalyzer -Path .         │  │          Check JEA endpoints active         │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │           $PSVersionTable = hash table with PS version, OS, runtime, and build info           │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │     Test-WSMan      = validates WinRM connectivity and config on remote host; returns XML     │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │ExecutionPolicy = check per scope: Process, CurrentUser, LocalMachine; Restricted blocks all .p│   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="powershell-environment-health-check-flow">PowerShell Environment Health Check Flow<a class="headerlink" href="#powershell-environment-health-check-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    start["Start Health Check"]
-    checkVersion["$PSVersionTable\nExpected PS version?"]
-    checkPolicy["Get-ExecutionPolicy\nRemoteSigned or better?"]
-    checkModules["Required modules\ninstalled at expected versions?"]
-    checkWinRM["Test-WSMan target hosts\nWinRM reachable?"]
-    checkTasks["Get-ScheduledTask\nAny Disabled that should run?"]
-    checkLogs["Get-WinEvent PowerShell/Operational\nErrors in last 24h?"]
-    healthy["Status: HEALTHY"]
-    alertVersion["Alert: Update\nPowerShell version"]
-    alertPolicy["Alert: Fix\nexecution policy"]
-    alertModules["Alert: Update-Module\nor Install-Module"]
-    alertWinRM["Alert: Enable-PSRemoting\non target hosts"]
-    alertLogs["Alert: Review\nPS operational log"]
-
-    start --&gt; checkVersion
-    checkVersion --&gt;|OK| checkPolicy
-    checkVersion --&gt;|Fail| alertVersion
-    checkPolicy --&gt;|OK| checkModules
-    checkPolicy --&gt;|Fail| alertPolicy
-    checkModules --&gt;|OK| checkWinRM
-    checkModules --&gt;|Fail| alertModules
-    checkWinRM --&gt;|OK| checkTasks
-    checkWinRM --&gt;|Fail| alertWinRM
-    checkTasks --&gt; checkLogs
-    checkLogs --&gt;|None| healthy
-    checkLogs --&gt;|Errors| alertLogs</code></pre>
 
 
 

@@ -3568,28 +3568,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#credential-isolation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Credential Isolation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#storage-isolation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage Isolation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#isolation-verification-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3772,7 +3750,7 @@
 - Re-encrypt or corrupt systems being restored.</p>
 <p>Isolation eliminates these lateral movement paths.</p>
 <h2 id="network-isolation-architecture">Network Isolation Architecture<a class="headerlink" href="#network-isolation-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
+<p><pre class="mermaid"><code>graph TB
     PROD["Production Environment\n(potentially compromised)"]
     JUMP["Jump Host\n(IRE management access\nMFA required)"]
     IRE["Isolated Recovery Environment\n(dedicated VLANs / VNet)"]
@@ -3784,61 +3762,55 @@
     FW --&gt; IRE
     STORE --&gt; IRE
     IRE -.-&gt;|No route back to PROD| PROD</code></pre>
-<h2 id="credential-isolation">Credential Isolation<a class="headerlink" href="#credential-isolation" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Requirement</th>
-<th>Rationale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Dedicated IRE admin accounts</td>
-<td>Production accounts may be compromised</td>
-</tr>
-<tr>
-<td>No shared service accounts</td>
-<td>Compromised service account credentials span both environments</td>
-</tr>
-<tr>
-<td>Separate AD/IdP</td>
-<td>IRE domain controllers are not replicas of production AD</td>
-</tr>
-<tr>
-<td>Break-glass accounts</td>
-<td>Dedicated, MFA-protected, stored offline (sealed envelope / PAW)</td>
-</tr>
-<tr>
-<td>No domain trust</td>
-<td>IRE domain has no trust relationship with production domain</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check for domain trusts in IRE AD (should return nothing)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-ADTrust</span> <span class="n">-Filter</span> <span class="p">*</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Verify IRE domain controller has no replication partners outside IRE</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-ADReplicationPartnerMetadata</span> <span class="n">-Target</span> <span class="p">(</span><span class="n">hostname</span><span class="p">)</span> <span class="n">-Scope</span> <span class="n">Server</span>
-</code></pre></div>
-<h2 id="storage-isolation">Storage Isolation<a class="headerlink" href="#storage-isolation" title="Permanent link">&para;</a></h2>
-<p>Backup copies used for IRE restoration must be:</p>
-<ul>
-<li><strong>Immutable</strong> — write-once, cannot be deleted or modified by any account including backup admins.</li>
-<li><strong>Isolated</strong> — stored in a separate cloud tenant, offline media, or vault-locked object storage.</li>
-<li><strong>Access-controlled</strong> — no production system has read or write access to the backup store.</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Azure: enable immutable blob storage for backup container</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>storage<span class="w"> </span>container<span class="w"> </span>immutability-policy<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--account-name<span class="w"> </span>&lt;backup-storage-account&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--container-name<span class="w"> </span>&lt;container-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--allow-protected-append-writes<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>az<span class="w"> </span>storage<span class="w"> </span>container<span class="w"> </span>immutability-policy<span class="w"> </span>lock<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--account-name<span class="w"> </span>&lt;backup-storage-account&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--container-name<span class="w"> </span>&lt;container-name&gt;
-</code></pre></div>
+┌──────────────────────────────────────── IRE Network Isolation ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      IRE Network Isolation — air-gap switch config, VLAN separation, no production routes     │   │
+│   │                   See product-specific sub-sections for detailed procedures                   │   │
+│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
+│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
+│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Production site · DR site · Replication link · Management network · Vault network                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
+│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
+│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
+│  Failback      = returning operations to production site after DR resolved                            │
+│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
+│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
+│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
+│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
+│  DR Test       = planned failover test; validates RTO without real disaster                           │
+│  Replication   = continuous or periodic data copy to secondary site or vault                          │
+│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
+│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Storage Isolation
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Backup copies used for IRE restoration must be:
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- **Immutable** — write-once, cannot be deleted or modified by any account including backup admins.
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>- **Isolated** — stored in a separate cloud tenant, offline media, or vault-locked object storage.
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>- **Access-controlled** — no production system has read or write access to the backup store.
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>```bash
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Azure: enable immutable blob storage for backup container
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>az storage container immutability-policy create \
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  --account-name &lt;backup-storage-account&gt; \
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  --container-name &lt;container-name&gt; \
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  --period 30 \
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  --allow-protected-append-writes false
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>az storage container immutability-policy lock \
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  --account-name &lt;backup-storage-account&gt; \
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  --container-name &lt;container-name&gt;
+</code></pre></div></p>
 <h2 id="isolation-verification-checklist">Isolation Verification Checklist<a class="headerlink" href="#isolation-verification-checklist" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

@@ -4244,28 +4244,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pagerduty-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PagerDuty Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#email-alert-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Email Alert Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#aria-operations-integration-pure-storage-management-pack" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4455,7 +4433,7 @@
 <p>Pure1 integrates natively with all Pure Storage FlashArray and FlashBlade systems via outbound telemetry. External integrations extend Pure1 data and alerts into ITSM, observability, on-call, and notification platforms.</p>
 <h2 id="native-array-integration">Native Array Integration<a class="headerlink" href="#native-array-integration" title="Permanent link">&para;</a></h2>
 <p>All Pure arrays connect to Pure1 automatically over outbound HTTPS. No on-premises collector is required.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify array connectivity from Purity CLI</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify array connectivity from Purity CLI</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connection
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Expected: pure1.purestorage.com connected</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
@@ -4465,38 +4443,50 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Set proxy if needed</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>purearray<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--proxy<span class="w"> </span>https://&lt;proxy-host&gt;:&lt;port&gt;
 </code></pre></div>
-<p>Test the webhook before enabling: <strong>Notifications &gt; [Rule] &gt; Test</strong>.</p>
-<h2 id="pagerduty-integration">PagerDuty Integration<a class="headerlink" href="#pagerduty-integration" title="Permanent link">&para;</a></h2>
-<p>For CRITICAL alerts requiring immediate on-call response:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Pure1 &gt; Administration &gt; Notifications &gt; Add Rule
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- Trigger: Alert Severity = CRITICAL
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Action: Webhook (PagerDuty Events API v2)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- URL: https://events.pagerduty.com/v2/enqueue
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Payload:
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  {
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    &quot;routing_key&quot;: &quot;&lt;PagerDuty integration key&gt;&quot;,
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    &quot;event_action&quot;: &quot;trigger&quot;,
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    &quot;payload&quot;: {
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>      &quot;summary&quot;: &quot;Pure1 CRITICAL: {{alert.summary}}&quot;,
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>      &quot;severity&quot;: &quot;critical&quot;,
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>      &quot;source&quot;: &quot;{{array.name}}&quot;
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    }
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  }
-</code></pre></div>
-<h2 id="email-alert-integration">Email Alert Integration<a class="headerlink" href="#email-alert-integration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Pure1 &gt; Administration &gt; Notifications &gt; Add Rule
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>- Trigger: Alert Severity = WARNING
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- Action: Email
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- Recipients: storage-ops@company.com
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>- Include: array name, health score, alert description
-</code></pre></div>
+┌────────────────────────────────────── Pure1 — Integration Guide ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               ITSM Integration               │  │               Monitoring Stack              │   │
+│   │              ServiceNow webhook              │  │                 Aria Ops PAK                │   │
+│   │                Auto-incident                 │  │                Grafana panels               │   │
+│   │               PagerDuty events               │  │                  Splunk HEC                 │   │
+│   │                Slack webhook                 │  │              Custom REST script             │   │
+│   │                 Email alerts                 │  │                py-pure-client               │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Pure1 in cloud · webhooks outbound to ITSM SaaS · REST API for on-prem consumers                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ServiceNow webhook = Pure1 POST to ServiceNow event endpoint on proactive alert                      │
+│  Auto-incident = ServiceNow incident created from Pure1 alert payload                                 │
+│  PagerDuty = On-call routing; Pure1 webhook delivers to PagerDuty Events API v2                       │
+│  Slack webhook = Pure1 proactive alert posted to storage channel                                      │
+│  Aria Ops PAK = VMware adapter pulling FlashArray/FlashBlade metrics into Aria Ops                    │
+│  Grafana panels = Pure1 REST API proxied as Grafana data source                                       │
+│  Splunk HEC = Pure1 alerts forwarded as events to Splunk for SIEM correlation                         │
+│  py-pure-client = Pure-provided Python library for Pure1 and Purity REST APIs                         │
+│  Custom REST script = Polling Pure1 API and pushing to proprietary dashboard/tooling                  │
+│  Email = Pure1 SMTP notification for proactive alerts; configure in org settings                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Email Alert Integration
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```text
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Pure1 &gt; Administration &gt; Notifications &gt; Add Rule
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Trigger: Alert Severity = WARNING
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- Action: Email
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- Recipients: storage-ops@company.com
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- Include: array name, health score, alert description
+</code></pre></div></p>
 <p>Separate rules for WARNING (email) and CRITICAL (PagerDuty + ServiceNow) are the recommended pattern.</p>
 <h2 id="aria-operations-integration-pure-storage-management-pack">Aria Operations Integration (Pure Storage Management Pack)<a class="headerlink" href="#aria-operations-integration-pure-storage-management-pack" title="Permanent link">&para;</a></h2>
 <p>The Pure Storage Management Pack for Aria Operations pulls FlashArray metrics into vROps for correlated VMware + storage dashboards.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Aria Operations &gt; Admin &gt; Solutions &gt; Pure Storage Management Pack
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>- Pure1 API endpoint: https://api.pure1.purestorage.com
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- API key / private key: (service account key from Pure1)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>- Collection interval: 5 minutes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Aria Operations &gt; Admin &gt; Solutions &gt; Pure Storage Management Pack
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>- Pure1 API endpoint: https://api.pure1.purestorage.com
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- API key / private key: (service account key from Pure1)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- Collection interval: 5 minutes
 </code></pre></div>
 <p>Key metrics available in Aria Operations from this integration:
 - Array IOPS, throughput, latency
@@ -4504,24 +4494,24 @@
 - Array capacity used / available / data reduction ratio</p>
 <h2 id="splunk-integration">Splunk Integration<a class="headerlink" href="#splunk-integration" title="Permanent link">&para;</a></h2>
 <p>A Splunk Heavy Forwarder or a scheduled script pulls Pure1 API data for fleet health and capacity dashboards in Splunk.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Example: scheduled Pure1 API pull for Splunk index</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Runs every 15 minutes via Splunk scripted input or cron</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span><span class="o">,</span><span class="w"> </span><span class="nn">json</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Auth using Pure1 RSA private key (see scripts/pure1/authentication.py)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">get_pure1_token</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">resp</span>    <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>                       <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="k">for</span> <span class="n">array</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;items&quot;</span><span class="p">]:</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">event</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;pure1&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">array</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>        <span class="s2">&quot;os&quot;</span><span class="p">:</span> <span class="n">array</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;os&quot;</span><span class="p">),</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">array</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">),</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>        <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    <span class="p">}</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>  <span class="c1"># Splunk scripted input reads stdout</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Example: scheduled Pure1 API pull for Splunk index</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Runs every 15 minutes via Splunk scripted input or cron</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span><span class="o">,</span><span class="w"> </span><span class="nn">json</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Auth using Pure1 RSA private key (see scripts/pure1/authentication.py)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">get_pure1_token</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">resp</span>    <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>                       <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">for</span> <span class="n">array</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;items&quot;</span><span class="p">]:</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">event</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;pure1&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">array</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        <span class="s2">&quot;os&quot;</span><span class="p">:</span> <span class="n">array</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;os&quot;</span><span class="p">),</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">array</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">),</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>        <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="p">}</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>  <span class="c1"># Splunk scripted input reads stdout</span>
 </code></pre></div>
 <h2 id="integration-summary">Integration Summary<a class="headerlink" href="#integration-summary" title="Permanent link">&para;</a></h2>
 <table>

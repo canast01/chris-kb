@@ -3724,39 +3724,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pure-flasharray-snapshot-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pure FlashArray (Snapshot Client)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#aws-s3-cloud-storage-unit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AWS S3 Cloud Storage Unit
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#siem-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SIEM Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#cyberark-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3950,7 +3917,7 @@
 
 <h1 id="netbackup-integration">NetBackup Integration<a class="headerlink" href="#netbackup-integration" title="Permanent link">&para;</a></h1>
 <h2 id="integration-architecture">Integration Architecture<a class="headerlink" href="#integration-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     master["NetBackup\nPrimary Server"]
 
     subgraph storageIntegrations [Storage Integrations]
@@ -3987,30 +3954,60 @@
     class ostDD,msdpPool,pureSnap,s3Cloud storage
     class vadp,cyberark source
     class opscenter,siem ops</code></pre>
-<h2 id="pure-flasharray-snapshot-client">Pure FlashArray (Snapshot Client)<a class="headerlink" href="#pure-flasharray-snapshot-client" title="Permanent link">&para;</a></h2>
-<p>Use NetBackup Snapshot Client with the Pure Storage plug-in for near-zero RPO application-consistent backups:</p>
-<ol>
-<li>Install Pure FlashArray Snapshot Client plugin on media server</li>
-<li>Configure array credentials: <code>nbdevconfig -liststs</code> to verify array visibility</li>
-<li>Create policy with snapshot method: <code>puredisk_instant_recovery</code></li>
-</ol>
-<h2 id="aws-s3-cloud-storage-unit">AWS S3 Cloud Storage Unit<a class="headerlink" href="#aws-s3-cloud-storage-unit" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create cloud storage server</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nbdevconfig<span class="w"> </span>-creatests<span class="w"> </span>-stype<span class="w"> </span>CloudStorage<span class="w"> </span>-storage_server<span class="w"> </span>amazon.com<span class="w"> </span>-media_server<span class="w"> </span>&lt;media_server&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Provide AWS credentials when prompted</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Create cloud storage unit</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>nbdevconfig<span class="w"> </span>-createstu<span class="w"> </span>-stype<span class="w"> </span>CloudStorage<span class="w"> </span>-storage_server<span class="w"> </span>amazon.com<span class="w"> </span>-stu<span class="w"> </span>S3_LongTerm
-</code></pre></div>
-<p>Configure lifecycle rules on S3 to transition to Glacier after 90 days for cost reduction.</p>
-<h2 id="siem-integration">SIEM Integration<a class="headerlink" href="#siem-integration" title="Permanent link">&para;</a></h2>
-<p>Forward NetBackup audit logs to SIEM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Audit log location</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/usr/openv/netbackup/logs/audit/
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Configure syslog forwarding for NetBackup events</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>/usr/openv/netbackup/bin/nblog<span class="w"> </span>-syslog<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-syslog_host<span class="w"> </span>&lt;siem_ip&gt;<span class="w"> </span>-syslog_port<span class="w"> </span><span class="m">514</span>
-</code></pre></div>
+┌──────────────────────────────── NetBackup — Architecture Integrations ────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                            NetBackup — External Integration Points                            │   │
+│   │            Auth: NBU CA host-ID certificates; AD/LDAP for web UI login; RBAC roles            │   │
+│   │                       Storage: connected via 443 (Web UI) · 1556 (vnetd)                      │   │
+│   │            Monitoring: SNMP traps / syslog / REST API to ITSM and alerting systems            │   │
+│   │      Encryption: AES-256 backup encryption; KMS key management; TLS 1.2+ on all channels      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                        ▼                        ▼                          │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Identity          │  │           Storage           │  │          Monitoring         │   │
+│   │          AD / LDAP          │  │         443 (Web UI)        │  │        SNMP / syslog        │   │
+│   │           SAML SSO          │  │         1556 (vnetd)        │  │         REST webhook        │   │
+│   │          RBAC roles         │  │       NFS / iSCSI / FC      │  │         Email alerts        │   │
+│   │         MFA optional        │  │       Dedup appliance       │  │          ServiceNow         │   │
+│   │          Cert auth          │  │        Object storage       │  │          Prometheus         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+│  Media Server  = data mover between client and storage; can be co-located with master                 │
+│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Configure lifecycle rules on S3 to transition to Glacier after 90 days for cost reduction.
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## SIEM Integration
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Forward NetBackup audit logs to SIEM:
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```bash
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Audit log location
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>/usr/openv/netbackup/logs/audit/
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Configure syslog forwarding for NetBackup events
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>/usr/openv/netbackup/bin/nblog -syslog enable -syslog_host &lt;siem_ip&gt; -syslog_port 514
+</code></pre></div></p>
 <p>Alert on: <code>backup failed</code>, <code>policy modified</code>, <code>client deleted</code>, <code>catalog backup failed</code>.</p>
 <h2 id="cyberark-integration">CyberArk Integration<a class="headerlink" href="#cyberark-integration" title="Permanent link">&para;</a></h2>
 <p>NetBackup retrieves service account passwords from CyberArk at runtime:</p>
@@ -4021,8 +4018,8 @@
 </ol>
 <h2 id="opscenter-it-analytics">OpsCenter / IT Analytics<a class="headerlink" href="#opscenter-it-analytics" title="Permanent link">&para;</a></h2>
 <p>Connect OpsCenter to the master server for centralised reporting:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify master server is connected to OpsCenter</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/opt/SYMCOpsCenterServer/bin/opscenteragent<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify master server is connected to OpsCenter</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/opt/SYMCOpsCenterServer/bin/opscenteragent<span class="w"> </span>status
 </code></pre></div>
 <p>Key reports:
 - Job success rate by policy

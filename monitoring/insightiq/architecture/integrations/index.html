@@ -4553,14 +4553,41 @@
 InsightIQ integrates exclusively with PowerScale (Isilon) clusters via the OneFS REST API. External integrations are limited to email alerting, syslog forwarding, and the InsightIQ REST API for report automation.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────── InsightIQ — Architecture Integrations ────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                    Inputs                    │                    Outputs                     │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │          PowerScale PAPI (primary)           │               Web UI dashboards                │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │          Multiple clusters per IIQ           │             PDF/CSV report export              │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │            PAPI TCP 8080 or 8083             │           Email alert notifications            │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │           SmartConnect for DNS LB            │             API for custom tooling             │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │           Cluster admin read-only            │             Grafana via REST proxy             │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  InsightIQ VM → PAPI TCP 8080 → PowerScale nodes · UI on TCP 443 from browser                         │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  PAPI = PowerScale Platform API; primary data source for InsightIQ                                    │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  TCP 8080 = Default PAPI port; 8083 used for TLS PAPI                                                 │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  SmartConnect = PowerScale DNS name for PAPI; InsightIQ connects via SmartConnect zone                │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Multiple clusters = Single InsightIQ VM can monitor multiple PowerScale clusters                     │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Email alert = SMTP notification when threshold exceeded; recipient list in InsightIQ settings        │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  REST API = InsightIQ exposes limited API for programmatic data retrieval                             │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Grafana = Custom metrics panels built by exposing InsightIQ data via REST proxy                      │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  CSV export = Downloading metric data for external BI or spreadsheet analysis                         │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="powerscale-onefs-integration">PowerScale OneFS Integration<a class="headerlink" href="#powerscale-onefs-integration" title="Permanent link">&para;</a></h2>
 <p>InsightIQ collects data from PowerScale using a dedicated read-only API account:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create read-only service account on PowerScale</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>create<span class="w"> </span>insightiq-svc<span class="w"> </span>--enabled<span class="w"> </span>yes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--set-password
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Assign audit and read-only platform API role</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>AuditAdmin<span class="w"> </span>--add-user<span class="w"> </span>insightiq-svc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create read-only service account on PowerScale</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>create<span class="w"> </span>insightiq-svc<span class="w"> </span>--enabled<span class="w"> </span>yes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--set-password
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Assign audit and read-only platform API role</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>AuditAdmin<span class="w"> </span>--add-user<span class="w"> </span>insightiq-svc
 </code></pre></div>
 <h2 id="scope-limitation">Scope Limitation<a class="headerlink" href="#scope-limitation" title="Permanent link">&para;</a></h2>
 <ul>

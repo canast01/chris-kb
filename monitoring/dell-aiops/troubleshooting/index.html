@@ -4175,28 +4175,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#integration-failures" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Integration Failures
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reviewing-aiops-system-events" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reviewing AIOps System Events
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#common-troubleshooting-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4363,7 +4341,7 @@
 <p>This page covers common operational problems with Dell AIOps: AI alert false positives, data gaps in the analytics pipeline, and failures in the integration between AIOps and connected systems.</p>
 <h2 id="diagnosing-false-positive-ai-alerts">Diagnosing False Positive AI Alerts<a class="headerlink" href="#diagnosing-false-positive-ai-alerts" title="Permanent link">&para;</a></h2>
 <p>False positives occur when the model fires an alert for a normal but unusual event (scheduled backup, bulk migration, test run).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List recent AI alerts with confidence scores</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List recent AI alerts with confidence scores</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/alerts?filter=state%20eq%20%27ACTIVE%27&amp;select=id,type,metric,confidence,started_at,system_name&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -4376,92 +4354,56 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;reason&quot;: &quot;FALSE_POSITIVE&quot;, &quot;comment&quot;: &quot;Weekly backup job 22:00–02:00, expected anomaly&quot;}&#39;</span>
 </code></pre></div>
-<p>Data gap causes and resolution:</p>
-<table>
-<thead>
-<tr>
-<th>Cause</th>
-<th>Symptom</th>
-<th>Fix</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SRS/ESRS gateway offline</td>
-<td>All data stops at same time</td>
-<td>Restart gateway service; check internet path</td>
-</tr>
-<tr>
-<td>System firmware bug</td>
-<td>Gaps in specific metric streams</td>
-<td>Apply firmware update for known telemetry issues</td>
-</tr>
-<tr>
-<td>New system &lt; 14 days old</td>
-<td>No predictions, limited insights</td>
-<td>Wait for baseline accumulation period</td>
-</tr>
-<tr>
-<td>System type not fully supported</td>
-<td>Only basic health visible</td>
-<td>Check AIOps supported systems matrix</td>
-</tr>
-<tr>
-<td>Tenant configuration error</td>
-<td>System in wrong site group</td>
-<td>Reassign system to correct site in CloudIQ settings</td>
-</tr>
-</tbody>
-</table>
-<h2 id="integration-failures">Integration Failures<a class="headerlink" href="#integration-failures" title="Permanent link">&para;</a></h2>
-<p>AIOps integrates with CloudIQ system registration, ESRS telemetry, and optional ITSM connectors (ServiceNow). Integration failures prevent alerts from being acted upon.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test CloudIQ API authentication</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/auth/oauth/v2/token&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&amp;client_id=&lt;clientId&gt;&amp;client_secret=&lt;clientSecret&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{access_token, expires_in}&#39;</span>
-</code></pre></div>
-<p>Common integration issues:</p>
-<table>
-<thead>
-<tr>
-<th>Integration</th>
-<th>Error</th>
-<th>Fix</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CloudIQ API auth</td>
-<td>401 Unauthorized</td>
-<td>Regenerate API client credentials in Settings</td>
-</tr>
-<tr>
-<td>ServiceNow webhook</td>
-<td>403 Forbidden</td>
-<td>Verify ServiceNow MID server and integration user</td>
-</tr>
-<tr>
-<td>ESRS telemetry</td>
-<td>No data after gateway restart</td>
-<td>Restart phone-home agent on storage system</td>
-</tr>
-<tr>
-<td>Email notifications</td>
-<td>Connection refused to SMTP</td>
-<td>Check relay hostname and port in notification settings</td>
-</tr>
-</tbody>
-</table>
-<h2 id="reviewing-aiops-system-events">Reviewing AIOps System Events<a class="headerlink" href="#reviewing-aiops-system-events" title="Permanent link">&para;</a></h2>
-<p>CloudIQ maintains an audit log of AIOps model events, which is useful when investigating why an alert fired or was suppressed.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get AIOps audit events for the last 7 days</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/audit_events?filter=created_at%20gt%20%272026-04-30%27&amp;order_by=created_at%20desc&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {event_type, description, created_at}&#39;</span>
-</code></pre></div>
+┌──────────────────────────────────── Dell AIOps — Troubleshooting ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Adapter Not Collecting            │  │               Platform Issues               │   │
+│   │               Check credential               │  │             Check /api/v1/health            │   │
+│   │             Verify network reach             │  │               Restart services              │   │
+│   │              Review adapter log              │  │               Check disk space              │   │
+│   │               Re-save adapter                │  │             Time-series DB check            │   │
+│   │                Check firewall                │  │            Collect support bundle           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Logs: /var/log/aiops/ on each node · support bundle via aiops-admin support collect                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Adapter log = Per-adapter log in /var/log/aiops/adapters/; shows collection errors                   │
+│  Health endpoint = GET /api/v1/health returns status of all AIOps services                            │
+│  Re-save adapter = Resaving adapter config resets its state; often fixes transient errors             │
+│  Disk space = Time-series DB fills disk over time; monitor and archive/purge old data                 │
+│  Time-series DB = Check DB health with aiops-admin db status                                          │
+│  Support bundle = aiops-admin support collect creates compressed log archive                          │
+│  Service restart = aiops-admin service restart <name> to recover failed service                       │
+│  Firewall = Check management host can reach infrastructure API ports (443, 8080)                      │
+│  Credential = Wrong or expired password causes No Data state; update in adapter settings              │
+│  Network reach = Test from AIOps host: curl -k https://<array>:443/api/types                          │
+│  Log level = Increase to DEBUG in adapter settings for detailed collection tracing                    │
+│  Dell support = Open case at support.dell.com; attach support bundle                                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Common integration issues:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Integration | Error | Fix |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|---|
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| CloudIQ API auth | 401 Unauthorized | Regenerate API client credentials in Settings |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| ServiceNow webhook | 403 Forbidden | Verify ServiceNow MID server and integration user |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| ESRS telemetry | No data after gateway restart | Restart phone-home agent on storage system |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Email notifications | Connection refused to SMTP | Check relay hostname and port in notification settings |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>## Reviewing AIOps System Events
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>CloudIQ maintains an audit log of AIOps model events, which is useful when investigating why an alert fired or was suppressed.
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>```bash
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Get AIOps audit events for the last 7 days
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>curl -sk -X GET \
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/audit_events?filter=created_at%20gt%20%272026-04-30%27&amp;order_by=created_at%20desc&quot; \
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  -H &quot;Accept: application/json&quot; | jq &#39;.results[] | {event_type, description, created_at}&#39;
+</code></pre></div></p>
 <h2 id="common-troubleshooting-reference">Common Troubleshooting Reference<a class="headerlink" href="#common-troubleshooting-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
