@@ -16,4 +16,3 @@ vSphere Replication Appliance:
 SRA logs (Dell PowerMax SRA example):
   C:\Program Files\VMware\VMware vCenter Site Recovery Manager\storage\sra\dell-emc-srm\logs\
 ```
-```

@@ -20,7 +20,6 @@ acs logs --type alert
 # Check ND cluster node connectivity
 acs nodes
 ```
-```
 
 ## Connectivity Issues Between ND and Fabrics
 

@@ -37,7 +37,6 @@ graph LR
     linkLabel -->|"ack to R1"| r1
     linkLabel --> r2
 ```
-```
 
 ---
 

@@ -21,7 +21,6 @@ The SCG has its own version lifecycle and must be kept current for compatibility
 3. Note the current SCG version
 4. Compare against the latest available version in the Dell Support Portal
 ```
-```
 
 ### SCG Compatibility
 

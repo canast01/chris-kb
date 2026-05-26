@@ -23,7 +23,6 @@ graph LR
     installPkgs --> runScript
     runScript --> deactivate
 ```
-```
 
 Or simply double-click the `run-py-script.bat` file in File Explorer.
 

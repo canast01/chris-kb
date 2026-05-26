@@ -22,7 +22,6 @@ graph TB
   class NDFC,NDI,NDO mgmt
   class ADMIN,FABRICS host
 ```
-```
 
 ---
 

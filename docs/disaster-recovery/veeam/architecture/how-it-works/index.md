@@ -23,7 +23,6 @@ graph TB
   class VCTR,ADMIN host
   class OBJ cloud
 ```
-```
 
 ## Supported Platforms
 

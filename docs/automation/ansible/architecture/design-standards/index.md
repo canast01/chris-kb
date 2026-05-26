@@ -31,7 +31,6 @@ ansible-project/
 │   └── postgresql/
 └── molecule/
 ```
-```
 
 !!! warning "Never commit credentials in ansible.cfg"
     `ansible.cfg` is version-controlled. Never store passwords, tokens, or private key contents here.

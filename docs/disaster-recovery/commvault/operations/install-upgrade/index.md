@@ -37,7 +37,6 @@ flowchart TD
     class start,done terminal
     class halt warn
 ```
-```
 
 Verify in Command Center: Jobs → Active Jobs — confirm no jobs stuck in queued state.
 

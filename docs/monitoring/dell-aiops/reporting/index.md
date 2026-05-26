@@ -46,7 +46,6 @@ curl -sk -X GET "<download_url>" \
   -H "Authorization: Bearer <access_token>" \
   -o aiops-exec-summary.pdf
 ```
-```
 
 Capacity planning export fields:
 

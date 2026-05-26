@@ -40,7 +40,6 @@ flowchart LR
     style F fill:#1565c0,color:#fff
     style I fill:#2e7d32,color:#fff
 ```
-```
 
 - `begin {}` block runs once before pipeline input arrives
 - `process {}` block runs once per input object (`$_` / `$PSItem`)

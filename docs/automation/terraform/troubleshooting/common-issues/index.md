@@ -17,7 +17,6 @@ flowchart TD
     errType -->|Unknown| enableDebug["TF_LOG=DEBUG\nTF_LOG_PATH=debug.log"]
     enableDebug --> reviewLog["Review provider\nAPI call trace"]
 ```
-```
 
 ## State Conflicts and Errors
 

@@ -41,4 +41,3 @@ curl -H "Authorization: Bearer <token>" \
 curl -H "Authorization: Bearer <token>" \
   "https://api.pure1.purestorage.com/api/1.latest/metrics/history?names=array_total_capacity&ids=<array_id>"
 ```
-```

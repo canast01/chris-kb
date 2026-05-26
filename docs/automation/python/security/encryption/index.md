@@ -25,7 +25,6 @@ graph TD
     script --> tlsVerify
     tlsVerify --> apiCall
 ```
-```
 
 ## TLS and Certificate Verification
 

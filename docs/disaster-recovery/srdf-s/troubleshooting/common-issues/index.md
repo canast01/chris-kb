@@ -58,7 +58,6 @@ flowchart TD
     style escalateNet fill:#b45309,color:#fff
     style checkDataAuth fill:#be123c,color:#fff
 ```
-```
 
 **Root cause:** Any increase in the WAN RTT adds directly to host write latency for SRDF/S. Every 1ms of additional RTT adds ~2ms to host write response time.
 

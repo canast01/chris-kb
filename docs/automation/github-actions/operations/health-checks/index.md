@@ -21,7 +21,6 @@ flowchart TD
     result -->|No| ok(["Health check passed"])
     result -->|Yes| investigate(["Investigate and remediate"])
 ```
-```
 
 ## Validation
 

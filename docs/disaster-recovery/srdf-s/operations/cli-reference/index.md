@@ -37,7 +37,6 @@ flowchart TD
     style cmdFailover fill:#be123c,color:#fff
     style cmdFailback fill:#7c3aed,color:#fff
 ```
-```
 
 ---
 

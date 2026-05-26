@@ -24,7 +24,6 @@ graph LR
   class H_A host
   class H_B dr
 ```
-```
 
 ## Recovery Plan Modes
 

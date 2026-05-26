@@ -14,7 +14,6 @@ def get_token(host, username, password):
     resp.raise_for_status()
     return resp.json()["token"]
 ```
-```
 
 ## Query Resource Metrics
 

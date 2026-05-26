@@ -21,7 +21,6 @@ graph TB
   class PURE1,HEALTH,CAP,PERF,SUP cloud
   class ADMIN host
 ```
-```
 
 ---
 

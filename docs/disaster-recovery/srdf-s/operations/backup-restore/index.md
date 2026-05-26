@@ -31,7 +31,6 @@ symrdf -sg PROD_SG query -detail
 # Query by RDF group number
 symrdf list -rdfg <rdf_group_number> -detail
 ```
-```
 
 ### Planned Failover Command
 

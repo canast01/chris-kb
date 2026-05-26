@@ -25,7 +25,6 @@ graph TD
     secureString -->|New-PSSession -UseSSL| winrmHTTPS
     winrmHTTPS --> remoteSession
 ```
-```
 
 ## Encrypting Strings with DPAPI
 

@@ -28,7 +28,6 @@ flowchart TD
     class q1,snapQ decision
     class fail terminal
 ```
-```
 
 Common causes: VMware Tools not installed, VSS writer error inside the guest, services not quiescing in time.
 

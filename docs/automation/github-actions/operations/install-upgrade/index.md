@@ -16,7 +16,6 @@ On each runner host, check the installed version:
 cd /opt/actions-runner   # or wherever the runner is installed
 ./config.sh --version
 ```
-```
 
 Wait for any in-flight workflow jobs to complete before proceeding. If runners are registered in a runner group, temporarily remove the runner from active job queues via the GitHub UI (Settings > Actions > Runners) rather than hard-stopping the service.
 

@@ -20,7 +20,6 @@
 # Via boxmgmt
 boxmgmt support collect_bundle
 ```
-```
 
 ---
 

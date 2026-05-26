@@ -22,7 +22,6 @@ graph TD
     tfApply --> stateFile
     stateFile --> s3Encrypted
 ```
-```
 
 ```bash
 # Verify S3 bucket has default encryption enabled

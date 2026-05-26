@@ -12,7 +12,6 @@ SRDF/E (SRDF Encryption) encrypts data over FCIP using AES-256. Verify per SRDF 
 symcfg list -rdfg -v | grep -i encrypt
 # Output should show: Encryption: Enabled
 ```
-```
 
 ---
 

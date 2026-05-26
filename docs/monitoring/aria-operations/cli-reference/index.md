@@ -19,7 +19,6 @@ vracli services
 tail -f /data/vcops/log/analytics.log
 tail -f /data/vcops/log/collector.log
 ```
-```
 
 ---
 

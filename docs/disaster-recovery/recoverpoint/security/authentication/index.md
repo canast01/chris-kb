@@ -16,7 +16,6 @@ curl -k -u admin:password -X POST https://<rpa-ip>/rest/users/sessions
 # Use token in subsequent calls
 curl -k -H "Authorization: Bearer <token>" https://<rpa-ip>/rest/consistency_groups
 ```
-```
 
 Forward to SIEM via syslog: Management Console → System Settings → Syslog Notifications. Alert on:
 - Any admin account login outside business hours

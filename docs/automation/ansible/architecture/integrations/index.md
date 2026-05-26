@@ -10,7 +10,6 @@ The `community.vmware` collection automates vSphere, ESXi, vCenter, vSAN, and NS
 ansible-galaxy collection install community.vmware
 pip install PyVmomi vsphere-automation-sdk-python
 ```
-```
 
 | Module | Purpose |
 |---|---|

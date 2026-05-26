@@ -23,7 +23,6 @@ flowchart LR
     CN -->|HTTPS API| MN4[Cloud API\nAWS / Azure / vSphere]
     CN -->|SSH| MN5[Linux Host]
 ```
-```
 
 ```ini
 [webservers]

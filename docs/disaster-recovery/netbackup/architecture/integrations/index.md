@@ -41,7 +41,6 @@ flowchart TD
     class vadp,cyberark source
     class opscenter,siem ops
 ```
-```
 
 ## Pure FlashArray (Snapshot Client)
 

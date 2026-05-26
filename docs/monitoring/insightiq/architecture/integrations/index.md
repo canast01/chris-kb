@@ -16,7 +16,6 @@ isi auth users create insightiq-svc --enabled yes \
 # Assign audit and read-only platform API role
 isi auth roles modify AuditAdmin --add-user insightiq-svc
 ```
-```
 
 ## Scope Limitation
 

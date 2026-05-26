@@ -21,7 +21,6 @@ flowchart TD
     K --> L[Reintroduce to production\nIRE isolation maintained until complete]
     L --> M([IRE stand-down])
 ```
-```
 
 ## VM Restore Procedure
 

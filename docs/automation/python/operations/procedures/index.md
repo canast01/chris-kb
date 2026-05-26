@@ -78,7 +78,6 @@ graph TD
     logFile --> siem
     syslogHandler --> siem
 ```
-```
 
 ```bash
 # Crontab examples

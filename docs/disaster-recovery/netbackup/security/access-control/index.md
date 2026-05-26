@@ -12,4 +12,3 @@ nbac_admin -enable
 nbac_admin -list_users
 nbac_admin -list_roles
 ```
-```

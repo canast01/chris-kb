@@ -15,7 +15,6 @@ Admin > Sites > Add Site
 - Password: stored in secrets manager
 - For NDO (multi-site): add all APIC clusters across all sites
 ```
-```
 
 NDFC communicates with switches via SSH (provisioning) and SNMP (telemetry/faults).
 

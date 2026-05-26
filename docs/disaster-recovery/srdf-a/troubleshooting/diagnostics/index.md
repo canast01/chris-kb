@@ -42,4 +42,3 @@ symevent -sid <r1_sid> list -last 30 | grep -i "SRDF\|suspend"
 # Check target array thin pool utilisation
 symcfg -sid <r2_sid> list -pool -thin -v | grep -E "Pool|Used|Free"
 ```
-```

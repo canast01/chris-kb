@@ -10,7 +10,6 @@ winget install --id Microsoft.PowerShell --source winget
 # After install, verify:
 pwsh --version
 ```
-```
 
 ## Install VMware PowerCLI
 

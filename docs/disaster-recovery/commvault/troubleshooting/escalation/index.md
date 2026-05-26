@@ -11,4 +11,3 @@ qsystem log export -path C:\cv_support_bundle
 # Alternatively via Command Center:
 # Settings > Support > Generate Support Bundle
 ```
-```

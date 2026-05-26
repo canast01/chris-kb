@@ -48,4 +48,3 @@ curl -k -X GET https://ariaops.corp.example.com/suite-api/api/alerts \
   -H "Authorization: vRealizeOpsToken <token>" \
   -G --data-urlencode "alertCriticality=CRITICAL"
 ```
-```

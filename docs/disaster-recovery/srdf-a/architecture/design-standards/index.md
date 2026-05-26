@@ -18,7 +18,6 @@ Monitor actual achieved RPO — it is always ≤ cycle time in normal operation:
 ```bash
 symrdf -g <rdfg> query -v | grep "Minimum Cycle Time"
 ```
-```
 
 Examples:
 - `RDFG-DC1DC2-DB-01` — first DB-tier group between DC1 and DC2

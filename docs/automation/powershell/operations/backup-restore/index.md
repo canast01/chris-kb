@@ -19,7 +19,6 @@ foreach ($p in $ProfilePaths) {
     }
 }
 ```
-```
 
 ## Script Repository Backup
 

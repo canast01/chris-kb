@@ -20,4 +20,3 @@ flowchart TD
     checkDryRun -->|OK| healthy["Status: HEALTHY"]
     checkDryRun -->|Fail| alertDryRun["Alert: Playbook\nCheck-mode Errors"]
 ```
-```

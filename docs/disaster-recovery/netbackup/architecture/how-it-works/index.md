@@ -53,7 +53,6 @@ flowchart TD
     class msdp1,msdp2,cloud storageNode
     class vmHost,dbHost,nasHost clientNode
 ```
-```
 
 Store the DR file off-host (NAS/object storage) and the passphrase in a secure vault — both are required for catalog recovery.
 

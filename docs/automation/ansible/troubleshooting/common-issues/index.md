@@ -22,7 +22,6 @@ flowchart TD
     checkModule -->|No| installCol["ansible-galaxy collection install\n<namespace.collection>"]
     checkModule -->|Yes| resolved["Examine task output\n& register debug"]
 ```
-```
 
 ## Unreachable Hosts
 

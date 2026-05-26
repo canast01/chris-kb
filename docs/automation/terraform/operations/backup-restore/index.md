@@ -15,7 +15,6 @@ aws s3 cp s3://my-tf-state/project/terraform.tfstate \
 # Pull remote state locally for inspection
 terraform state pull > terraform.tfstate.local-$(date +%Y%m%d)
 ```
-```
 
 ## Restore State from Backup
 

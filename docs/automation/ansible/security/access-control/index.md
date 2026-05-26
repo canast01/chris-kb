@@ -16,7 +16,6 @@ graph TD
     ORG --> JT[Job Templates]
     USER --> ROLE[Role Assignment\nAdmin / Execute / Use / Read]
 ```
-```
 
 ### Assign Roles via Playbook
 

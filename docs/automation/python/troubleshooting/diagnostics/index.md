@@ -25,7 +25,6 @@ graph LR
     checkLogs -->|Warnings| devMode
     devMode --> resolved
 ```
-```
 
 ```bash
 # Run with pdb from the command line — breaks at first line

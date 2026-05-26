@@ -41,7 +41,6 @@ flowchart TD
     class nbac,opscenterRBAC,nbuCA,cyberArk,fw,ssh,pbx sec
     class audit,siem mon
 ```
-```
 
 Forward to SIEM: configure `nblog` syslog output or use a log shipper agent pointing to `/usr/openv/netbackup/logs/audit/`.
 

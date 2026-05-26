@@ -22,7 +22,6 @@ graph LR
   class EG mgmt
   class ADMIN,DNS host
 ```
-```
 
 RTO: typically 5–15 minutes for file services, depending on share count.
 

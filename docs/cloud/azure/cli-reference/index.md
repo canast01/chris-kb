@@ -60,7 +60,6 @@ Commonly used Azure CLI (`az`) commands for managing compute, storage, networkin
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
 
 ---
 

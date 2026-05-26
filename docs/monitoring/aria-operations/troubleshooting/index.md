@@ -21,7 +21,6 @@ curl -sk -X GET \
   -H "Authorization: vRealizeOpsToken <token>" \
   -H "Accept: application/json"
 ```
-```
 
 ## Login and Authentication Issues
 

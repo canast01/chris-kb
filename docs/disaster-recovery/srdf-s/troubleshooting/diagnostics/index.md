@@ -37,7 +37,6 @@ flowchart TD
     style resolved fill:#15803d,color:#fff
     style notifyNetwork fill:#b45309,color:#fff
 ```
-```
 
 ---
 

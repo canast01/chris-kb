@@ -15,7 +15,6 @@ symcfg -sid <r1_sid> list -rdfg <rdf_group_number> >> /tmp/srdf_s_prechange_$(da
 symrdf -sid <r1_sid> -rdfg <rdf_group_number> verify -synchronized
 echo "Baseline captured at $(date)"
 ```
-```
 
 Two modes exist: **failover** (splits the pair and makes R2 read/write) and **failover -establish** (for a planned switch where the primary site remains available and replication is immediately reversed).
 

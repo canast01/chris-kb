@@ -61,7 +61,6 @@ curl -s -X POST "https://<vbr-server>:9419/api/oauth2/token" \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "grant_type=password&username=<user>&password=<pass>&use_short_term_refresh=false"
 ```
-```
 
 ### Token Expiry
 

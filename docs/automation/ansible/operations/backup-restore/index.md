@@ -27,7 +27,6 @@ git push origin --tags
 git remote add backup git@backup-gitlab.example.com:ansible/infrastructure.git
 git push backup --mirror
 ```
-```
 
 ```bash
 echo "0 2 * * * ansible /usr/local/bin/ansible-git-backup.sh" | crontab -

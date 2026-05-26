@@ -23,7 +23,6 @@ graph LR
     checkRetry -->|No| raiseAlert
     checkStatus -->|ConnectionError\nTimeout| checkRetry
 ```
-```
 
 ```python
 import requests

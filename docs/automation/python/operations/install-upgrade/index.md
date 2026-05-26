@@ -43,7 +43,6 @@ pyenv local 3.12.3
 python --version
 which python   # Should point to ~/.pyenv/shims/python
 ```
-```
 
 ### System packages (RHEL/Rocky/AlmaLinux)
 

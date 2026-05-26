@@ -34,7 +34,6 @@ flowchart TD
     class assess decision
     class start,pm,fo terminal
 ```
-```
 
 ---
 

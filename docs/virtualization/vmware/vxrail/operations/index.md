@@ -61,7 +61,6 @@ Day-to-day operational reference for VxRail in the VMware product context. Cover
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
 
 ---
 

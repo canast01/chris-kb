@@ -20,7 +20,6 @@ graph TD
     tfRole --> auditLog
     humanReview --> auditLog
 ```
-```
 
 ```json
 // S3 bucket policy — restrict to the Terraform automation role only

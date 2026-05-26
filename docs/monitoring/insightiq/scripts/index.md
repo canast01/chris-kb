@@ -16,7 +16,6 @@ def iiq_get(path: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
-```
 
 ## Cluster Connection Health Check
 

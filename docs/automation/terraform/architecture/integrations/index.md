@@ -25,7 +25,6 @@ provider "aws" {
   # Never: hardcoded credentials in .tf files
 }
 ```
-```
 
 ---
 

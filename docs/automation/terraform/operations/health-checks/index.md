@@ -25,7 +25,6 @@ flowchart TD
     parsePlan --> alertOps
     alertOps --> remediate
 ```
-```
 
 ---
 

@@ -24,7 +24,6 @@ Recovery Media (USB / iDRAC virtual ISO)
 └── WinPE boot environment
       └── RASR Recovery Engine + Dell hardware drivers
 ```
-```
 
 ## Dell Hardware Integration
 

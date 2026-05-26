@@ -17,7 +17,6 @@ flowchart TD
     H --> J[Resolved]
     I --> J
 ```
-```
 
 ## Verbosity Levels
 

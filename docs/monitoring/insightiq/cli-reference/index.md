@@ -21,7 +21,6 @@ tail -f /var/log/insightiq/insightiq.log
 # Check disk space (InsightIQ database can grow large)
 df -h /home/insightiq
 ```
-```
 
 ---
 

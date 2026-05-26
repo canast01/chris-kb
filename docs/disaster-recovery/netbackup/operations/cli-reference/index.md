@@ -51,7 +51,6 @@ flowchart TD
     class vmHost,dbHost,nasHost client
     class dd,msdp,s3 storage
 ```
-```
 
 ---
 

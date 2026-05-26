@@ -21,7 +21,6 @@ cat /var/lib/nd/version.txt
 # View logs
 kubectl logs -n nd-base <pod_name>
 ```
-```
 
 ---
 

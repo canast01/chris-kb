@@ -99,7 +99,6 @@ flowchart TD
     N2 --> DB
     N3 --> DB
 ```
-```
 
 ---
 

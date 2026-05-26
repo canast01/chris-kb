@@ -19,7 +19,6 @@ Verify current version:
 ```bash
 symcfg list -v | grep "Microcode"
 ```
-```
 
 ---
 

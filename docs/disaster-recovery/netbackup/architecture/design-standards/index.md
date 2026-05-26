@@ -49,7 +49,6 @@ flowchart TD
     class policy,schedule terminal
     class done terminal
 ```
-```
 
 ## Encryption Standard
 

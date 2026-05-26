@@ -16,7 +16,6 @@ Before initiating failover, confirm:
 symrdf -g <rdfgroup> query
 # Confirm R2 volumes are Synchronized or Consistent before failing over
 ```
-```
 
 **Veeam — check last successful backup:**
 Navigate to: Home → Jobs → check Last Result and Last Run columns

@@ -11,7 +11,6 @@
 ```text
 CG-<app>-<env>
 ```
-```
 
 Example: `JRN-CG-ORACLE-PROD-DR`
 

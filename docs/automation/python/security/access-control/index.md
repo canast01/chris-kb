@@ -18,7 +18,6 @@ graph TD
     svcAccount --> auditLog
     iamRole --> auditLog
 ```
-```
 
 ```python
 # Verify the script is running as the expected user at startup

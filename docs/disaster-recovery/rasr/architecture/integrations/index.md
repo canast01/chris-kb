@@ -21,7 +21,6 @@ RASR ships as part of the **Dell OpenManage Systems Management** bundle. The RAS
 ```powershell
 Get-Service -Name "DellRASR" | Select-Object Status, StartType
 ```
-```
 
 **Supported iDRAC versions:** iDRAC8 (14G), iDRAC9 (15G/16G). Virtual media ISO mount is available on Express and Enterprise licenses.
 

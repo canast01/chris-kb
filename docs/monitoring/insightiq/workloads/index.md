@@ -50,7 +50,6 @@ isi statistics client list \
   --limit=10 \
   --format table
 ```
-```
 
 Workload classification criteria:
 

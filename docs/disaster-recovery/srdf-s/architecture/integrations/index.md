@@ -35,7 +35,6 @@ graph TD
     sra1 --> r1
     sra2 --> r2
 ```
-```
 
 Map each protection group to an SRDF group:
 - One protection group per SRDF group (one per application tier)

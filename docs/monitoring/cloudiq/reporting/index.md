@@ -45,7 +45,6 @@ curl -sk -X GET \
   -H "Authorization: Bearer <access_token>" \
   -o cloudiq-health-report.pdf
 ```
-```
 
 ## Exporting Data for External Analysis
 

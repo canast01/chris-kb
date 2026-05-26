@@ -39,7 +39,6 @@ flowchart LR
     EG --> NFS
     EG --> SFTP
 ```
-```
 
 ---
 

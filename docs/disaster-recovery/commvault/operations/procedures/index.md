@@ -16,7 +16,6 @@ qlist jobs
 # Check CommServe services status
 qlist services
 ```
-```
 
 Verify all secondary copy jobs completed successfully. Investigate any that failed or did not run.
 

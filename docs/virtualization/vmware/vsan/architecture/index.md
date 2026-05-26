@@ -61,4 +61,3 @@ vSAN pools local NVMe and SSD disks across ESXi hosts into a shared distributed 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```

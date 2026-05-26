@@ -23,7 +23,6 @@ graph LR
     VALIDATE -->|"Approved"| REINTRODUCE["Reintroduce to Production"]
     VALIDATE -->|"Issues found"| RESTORE
 ```
-```
 
 ## Data Validation Checklist
 

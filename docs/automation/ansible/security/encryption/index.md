@@ -22,7 +22,6 @@ graph LR
     vcKeyFile -->|decrypt at runtime| playbook
     playbook -->|over SSH| managedHost["Managed Host"]
 ```
-```
 
 ### Inline Encrypted Strings
 

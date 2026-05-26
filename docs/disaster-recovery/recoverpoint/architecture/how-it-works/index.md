@@ -22,7 +22,6 @@ graph LR
   class STG_A,STG_B store
   class H_A host
 ```
-```
 
 ## Consistency Group Commands
 

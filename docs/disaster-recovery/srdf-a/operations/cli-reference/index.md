@@ -43,7 +43,6 @@ flowchart TD
     style need fill:#2563eb,color:#fff
     style cmdFailover fill:#be123c,color:#fff
 ```
-```
 
 ---
 

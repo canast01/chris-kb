@@ -24,7 +24,6 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
-```
 
 ## Anomaly Trend Analysis (30-Day Rolling Window)
 

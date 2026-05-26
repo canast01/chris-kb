@@ -21,7 +21,6 @@ flowchart TD
     orgSecret --> secretCtx
     secretCtx --> step
 ```
-```
 
 ```bash
 # Manage secrets via CLI

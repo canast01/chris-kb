@@ -21,7 +21,6 @@ curl -u user:token \
 curl -u user:token \
   "https://your-instance.atlassian.net/wiki/rest/api/template/TEMPLATE_ID"
 ```
-```
 
 To create via UI: **Space Settings → Look and Feel → Templates → Create New Template**.
 

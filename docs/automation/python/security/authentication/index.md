@@ -21,7 +21,6 @@ graph TD
     apiKey --> bearerHeader
     bearerHeader --> apiEndpoint
 ```
-```
 
 ```bash
 # Set at runtime — key is not stored in the script or shell history

@@ -20,7 +20,6 @@ graph LR
     envVars --> tfProvider
     tfProvider --> cloudAPI
 ```
-```
 
 ```hcl
 # provider.tf — uses environment variables automatically

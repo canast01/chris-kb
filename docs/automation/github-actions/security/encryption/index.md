@@ -19,7 +19,6 @@ flowchart LR
     ghEncrypted -->|"injected at runtime\nnot stored on disk"| wfRun
     wfRun --> step --> logs
 ```
-```
 
 Managing secrets via `gh` CLI:
 

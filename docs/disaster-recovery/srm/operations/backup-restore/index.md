@@ -41,7 +41,6 @@ The VAMI backup captures the SRM appliance state, database, and configuration in
 ls -lh /var/lib/applmgmt/backup/
 # Should show recent .tar.gz archive files
 ```
-```
 
 Schedule via SQL Agent job, and ensure the `.bak` files are protected by your enterprise backup solution.
 

@@ -23,7 +23,6 @@ graph TB
   class SRC,ADMIN host
   class WEBCON mgmt
 ```
-```
 
 ## Components
 

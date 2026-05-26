@@ -22,7 +22,6 @@ flowchart TD
     style B fill:#1565c0,color:#fff
     style C fill:#2e7d32,color:#fff
 ```
-```
 
 ---
 

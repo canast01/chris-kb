@@ -35,7 +35,6 @@ flowchart TD
     class srmCheck check
     class start,done terminal
 ```
-```
 
 Validate all protection groups show `OK` and all VMs show `Protected` after each upgrade step before proceeding.
 

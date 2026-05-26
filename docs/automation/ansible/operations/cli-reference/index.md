@@ -29,7 +29,6 @@ graph TD
     groupDB -->|SSH| db02["db02"]
     groupNet -->|SSH| router01["router01"]
 ```
-```
 
 ## Role Directory Structure
 

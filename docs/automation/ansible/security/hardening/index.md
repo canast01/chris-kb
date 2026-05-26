@@ -35,7 +35,6 @@ AllowAgentForwarding no
 EOF
 systemctl reload sshd
 ```
-```
 
 ### Secure ansible.cfg
 

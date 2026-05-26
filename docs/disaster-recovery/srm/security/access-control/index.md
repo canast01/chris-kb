@@ -17,7 +17,6 @@ Privileges to include:
   Virtual Machine:
     - Virtual Machine.Provisioning.* (for recovery)
 ```
-```
 
 ### Local SRM Account (Break-Glass)
 

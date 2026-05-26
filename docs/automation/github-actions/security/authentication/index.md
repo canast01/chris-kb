@@ -23,7 +23,6 @@ jobs:
           curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
                https://api.github.com/repos/${{ github.repository }}
 ```
-```
 
 OIDC lets workflows authenticate to cloud providers without storing long-lived credentials as secrets.
 

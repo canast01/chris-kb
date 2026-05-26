@@ -24,7 +24,6 @@ All Aria Operations upgrades in multi-node deployments must be orchestrated via 
 7. Verify all nodes are Online in Admin > Cluster Management post-upgrade
 8. Verify all adapters are Collecting in Admin > Solutions
 ```
-```
 
 ## Backup
 

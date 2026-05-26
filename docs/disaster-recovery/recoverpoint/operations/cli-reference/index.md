@@ -47,7 +47,6 @@ flowchart TD
     style enableAccess fill:#b45309,color:#fff
     style disableAccess fill:#b45309,color:#fff
 ```
-```
 
 The `boxmgmt` interface is menu-driven. Navigate by number. Common menu paths:
 

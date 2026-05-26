@@ -39,7 +39,6 @@ flowchart TD
     class halt warn
     class start,done terminal
 ```
-```
 
 ## Migration: Physical Master to Appliance
 

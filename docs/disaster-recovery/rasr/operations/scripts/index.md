@@ -95,7 +95,6 @@ function New-RASRImage {
 #               -ShareUser "CORP\svc-rasr" `
 #               -SharePassword "S3cr3t!"
 ```
-```
 
 ---
 

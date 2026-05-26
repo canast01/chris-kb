@@ -56,7 +56,6 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
 
 Common causes:
 - NSG deny rule at NIC level (NIC NSG takes precedence over Subnet NSG)

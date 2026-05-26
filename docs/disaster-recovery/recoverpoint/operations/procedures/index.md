@@ -129,7 +129,6 @@ flowchart TD
     style disableImageAccess fill:#b45309,color:#fff
     style confirmActive fill:#15803d,color:#fff
 ```
-```
 
 ### DR Test — Image Access (Non-Disruptive)
 

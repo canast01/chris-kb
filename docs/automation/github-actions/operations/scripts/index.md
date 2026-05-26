@@ -37,7 +37,6 @@ rotate_secret "SLACK_BOT_TOKEN"       "secret/data/slack" "bot_token"
 
 echo "All secrets rotated."
 ```
-```
 
 ## Artifact Cleanup Script
 

@@ -57,7 +57,6 @@ def process_widgets(
 
     return len(results)
 ```
-```
 
 ```bash
 # Run mypy

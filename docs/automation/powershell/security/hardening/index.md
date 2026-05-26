@@ -25,7 +25,6 @@ graph TD
     scriptBlock --> siem
     moduleAllow --> siem
 ```
-```
 
 ## Script Signing
 

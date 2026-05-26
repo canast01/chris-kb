@@ -21,7 +21,6 @@ flowchart TD
     repo --> secretScan
     repo --> selfHostedIsolate
 ```
-```
 
 ## Pinning Action Versions
 

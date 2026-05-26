@@ -17,4 +17,3 @@ symrdf -g <rdfg> split -noprompt
 symrdf -g <rdfg> set encrypt enable
 symrdf -g <rdfg> establish -noprompt
 ```
-```

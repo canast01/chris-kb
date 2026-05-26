@@ -16,7 +16,6 @@ flowchart TD
     checkLogs -->|None| healthy["Status: HEALTHY"]
     checkLogs -->|Errors found| alertLogs["Alert: Review\nlog file errors"]
 ```
-```
 
 ## Incident Triage
 

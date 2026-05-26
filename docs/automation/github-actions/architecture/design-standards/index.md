@@ -12,7 +12,6 @@
     ├── security.yml    # weekly security scans
     └── cleanup.yml     # scheduled resource cleanup
 ```
-```
 
 ## Trigger Standards
 

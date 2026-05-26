@@ -24,7 +24,6 @@ flowchart TD
     ready -->|Yes| triggerFO
     triggerFO --> breakSync --> activateZones --> dnsSwitch --> notify --> validate --> done
 ```
-```
 
 ### Initiating Failover via Eyeglass CLI
 

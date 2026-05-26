@@ -19,7 +19,6 @@ graph LR
     exportOutput --> sendReport
     runScript --> logResult
 ```
-```
 
 ---
 

@@ -18,4 +18,3 @@ symauth -sid <SID> add -username svc_dr_ops -role StorageAdmin -scope rdfg:<grou
 # Add monitoring account — read-only
 symauth -sid <SID> add -username svc_monitoring -role StorageMonitor
 ```
-```

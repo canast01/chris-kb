@@ -24,7 +24,6 @@ flowchart TD
     jobB -->|"all matrix legs pass"| jobC
     jobC --> deploy
 ```
-```
 
 ### Reusable Workflows
 

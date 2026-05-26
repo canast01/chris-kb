@@ -37,7 +37,6 @@ graph TD
     tfClient -->|backend remote| tfcState
     tfcState --> tfcRuns
 ```
-```
 
 ---
 

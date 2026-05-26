@@ -30,7 +30,6 @@ sequenceDiagram
     VBR->>vCenter: Unregister IVR VM
     VBR->>Proxy: Unmount vPower NFS datastore
 ```
-```
 
 ### File-Level Restore Test
 

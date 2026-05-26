@@ -83,7 +83,6 @@ graph LR
     awxExecutor -->|ansible-playbook| managed
     awxExecutor --> jobHistory
 ```
-```
 
 ### Tasks, Handlers, and Notify
 

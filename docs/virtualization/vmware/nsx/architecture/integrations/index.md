@@ -54,7 +54,6 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
 
 Once registered, vCenter clusters appear under **System → Fabric → Hosts**. Use them to apply transport node profiles at cluster scope.
 

@@ -14,7 +14,6 @@ nbcertcmd -getCertificate -server <master_server> -force
 # Check certificate expiry across all clients
 nbcertcmd -listCerts | grep -E "Host|Expiry"
 ```
-```
 
 ### Map AD Groups to NetBackup Roles
 

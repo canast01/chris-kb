@@ -29,7 +29,6 @@ graph TD
     collectResults --> exportCsv
     collectResults --> flagIssues
 ```
-```
 
 **Step 5 — Run it**
 

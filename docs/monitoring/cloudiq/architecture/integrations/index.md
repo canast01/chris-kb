@@ -47,4 +47,3 @@ curl -H "Authorization: Bearer <token>" \
 curl -H "Authorization: Bearer <token>" \
   "https://cloudiq.dell.com/v1/storage-systems/{id}/capacity"
 ```
-```

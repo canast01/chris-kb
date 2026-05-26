@@ -20,7 +20,6 @@ curl -sk -X POST \
   -H "Content-Type: application/json" \
   -d '{"reason": "FALSE_POSITIVE", "comment": "Weekly backup job 22:00–02:00, expected anomaly"}'
 ```
-```
 
 Data gap causes and resolution:
 

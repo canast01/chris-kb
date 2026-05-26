@@ -33,7 +33,6 @@ graph TD
     azKeyVault --> psCred
     psCred --> cmdlet
 ```
-```
 
 ## Storing Credentials Securely
 

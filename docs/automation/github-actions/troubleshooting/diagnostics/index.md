@@ -24,7 +24,6 @@ flowchart TD
     uiCheck -->|"Context issue"| dumpCtx --> identify
     uiCheck -->|"Logs clear"| runLogs --> identify
 ```
-```
 
 ```yaml
 # Add a debug step to print all context objects

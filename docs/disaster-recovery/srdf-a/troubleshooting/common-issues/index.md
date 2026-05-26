@@ -56,7 +56,6 @@ flowchart TD
     style throttleIO fill:#b45309,color:#fff
     style checkNetOps fill:#b45309,color:#fff
 ```
-```
 
 **Triage path:**
 

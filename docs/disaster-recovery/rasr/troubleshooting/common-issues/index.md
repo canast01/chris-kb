@@ -20,7 +20,6 @@ Get-WinEvent -LogName System -MaxEvents 50 |
 Get-Service -Name LanmanWorkstation, lmhosts | Start-Service
 Start-Service RASRAgent
 ```
-```
 
 ### Image capture completes but file is corrupted
 

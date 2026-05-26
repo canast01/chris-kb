@@ -24,7 +24,6 @@ CloudIQ portal > Settings > Identity Providers > Add
   - role attribute → Admin or Viewer (via IdP group claim)
 - Enable Just-in-Time (JIT) provisioning if supported
 ```
-```
 
 ### API Token Rotation
 

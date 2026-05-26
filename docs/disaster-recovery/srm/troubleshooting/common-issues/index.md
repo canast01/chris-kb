@@ -30,7 +30,6 @@ flowchart TD
     class q1,planFailed decision
     class start terminal
 ```
-```
 
 1. vSphere Client → Site Recovery → Replications → find the VM → check status
 2. If status is `Error`: click the VM → History tab → view error detail

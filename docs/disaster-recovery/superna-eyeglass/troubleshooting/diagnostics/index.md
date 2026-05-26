@@ -15,7 +15,6 @@ flowchart TD
     serviceStatus --> apiConn --> syncLog --> dnsLog --> foLog
     foLog --> resolved(["Root cause identified\nRemediate or escalate"])
 ```
-```
 
 ## Log Locations (on Eyeglass Appliance)
 

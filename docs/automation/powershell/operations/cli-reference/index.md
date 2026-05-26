@@ -19,7 +19,6 @@ graph LR
     exportCsv --> sendEmail
     processLogic --> logResult
 ```
-```
 
 ---
 

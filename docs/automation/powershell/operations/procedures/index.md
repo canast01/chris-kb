@@ -85,7 +85,6 @@ flowchart TD
     success --> finallyBlock
     finallyBlock --> exitCode
 ```
-```
 
 ### HTML Reports with ConvertTo-Html
 

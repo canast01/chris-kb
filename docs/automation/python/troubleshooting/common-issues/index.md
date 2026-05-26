@@ -18,7 +18,6 @@ flowchart TD
     errType -->|PermissionError| checkPath["ls -la on output\ndirectory"]
     checkPath --> fixPerms["chmod / chown\noutput directory"]
 ```
-```
 
 ## Import Errors
 

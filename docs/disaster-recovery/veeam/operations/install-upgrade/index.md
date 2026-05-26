@@ -29,7 +29,6 @@ flowchart TD
     class jobCheck decision
     class start,done terminal
 ```
-```
 
 Additional checks:
 - [ ] Veeam ONE version is compatible with target VBR version

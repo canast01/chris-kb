@@ -25,7 +25,6 @@ graph LR
     reviewGate -->|Approved| tfApply
     reviewGate -->|Changes| prOpen
 ```
-```
 
 ## Policy Enforcement with Sentinel / OPA
 

@@ -25,7 +25,6 @@ graph TD
     adGroup -->|Member| svcAccount
     svcAccount --> transcript
 ```
-```
 
 | Policy | Behaviour |
 |---|---|

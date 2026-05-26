@@ -27,7 +27,6 @@ $share   = "\\nas01\rasr-images\prod\$(hostname)"
                        Sort-Object LastWriteTime -Descending | Select-Object -First 1).Name
 } | Format-List
 ```
-```
 
 ### 2. Image Integrity
 

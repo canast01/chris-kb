@@ -68,7 +68,6 @@ Get-Service -Name "DellRASR" | Select-Object Name, Status, StartType
 # Verify CLI is accessible
 & "C:\Program Files\Dell\RASR\rasrutil.exe" /?
 ```
-```
 
 ---
 

@@ -23,7 +23,6 @@ dnf install -y ansible         # full community package
 
 ansible --version
 ```
-```
 
 ### pip (Any Platform — Recommended for Version Pinning)
 

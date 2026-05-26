@@ -58,7 +58,6 @@ links statistics
 # Cluster quorum state
 cluster quorum check
 ```
-```
 
 ---
 

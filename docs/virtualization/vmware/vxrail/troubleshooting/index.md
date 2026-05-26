@@ -61,7 +61,6 @@ Troubleshooting guide for VxRail in the VMware product context. Covers VxRail pl
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
 
 ---
 

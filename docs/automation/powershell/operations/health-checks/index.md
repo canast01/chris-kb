@@ -31,4 +31,3 @@ flowchart TD
     checkLogs -->|None| healthy
     checkLogs -->|Errors| alertLogs
 ```
-```

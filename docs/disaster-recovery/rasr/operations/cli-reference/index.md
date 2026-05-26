@@ -7,7 +7,6 @@
 ```text
 C:\Program Files\Dell\RASR\rasrutil.exe
 ```
-```
 
 ---
 

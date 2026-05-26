@@ -25,7 +25,6 @@ flowchart TD
     class q1 decision
     class alert terminal
 ```
-```
 
 ## Support Bundle Collection
 

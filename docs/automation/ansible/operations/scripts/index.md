@@ -25,7 +25,6 @@ graph LR
     runPlaybook -->|exit 0| success
     runPlaybook -->|exit 1| rollback
 ```
-```
 
 ## Infrastructure Health Check Playbook
 

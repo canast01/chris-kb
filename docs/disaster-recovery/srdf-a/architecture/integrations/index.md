@@ -30,7 +30,6 @@ graph TD
     r1array -->|"SRDF/A async replication"| r2array
     srmProd <-->|"SRM pairing channel"| srmDr
 ```
-```
 
 This pattern ensures production I/O is not affected by backup processing and provides a consistent point-in-time copy independent of the SRDF/A cycle boundary.
 

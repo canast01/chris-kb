@@ -37,7 +37,6 @@ $report | Format-Table -AutoSize
 Write-Host "`nReport saved: $OutputPath" -ForegroundColor Green
 Disconnect-VIServer -Confirm:$false
 ```
-```
 
 ## Snapshot Cleanup
 

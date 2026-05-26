@@ -33,7 +33,6 @@ CloudIQ portal > Settings > Notifications > Add Notification Rule
     "assignment_group": "storage-ops"
   }
 ```
-```
 
 Separate notification rules for WARNING (email) and CRITICAL (PagerDuty/webhook) are recommended.
 

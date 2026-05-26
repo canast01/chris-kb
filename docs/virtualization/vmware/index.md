@@ -87,4 +87,3 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```

@@ -20,7 +20,6 @@ Key compatibility rules:
 5. Download the InsightIQ upgrade package from the NetApp Support Portal
 6. Verify available disk space: InsightIQ requires at least 10 GB free on the OS disk for upgrade staging
 ```
-```
 
 ## Upgrade Procedure (Linux Installer)
 

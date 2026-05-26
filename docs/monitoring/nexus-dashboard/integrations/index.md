@@ -29,7 +29,6 @@ curl -sk -X POST \
   -H "Content-Type: multipart/form-data" \
   -F "file=@nd-insights-4.2.1.tar.gz"
 ```
-```
 
 ## Configuring NDO Multi-Site
 

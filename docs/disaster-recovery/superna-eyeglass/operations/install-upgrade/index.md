@@ -17,7 +17,6 @@ flowchart TD
 
     exportCfg --> deployOVA --> importCfg --> verifyScore --> validate24h --> decommOld --> done
 ```
-```
 
 ### Upgrade Process
 

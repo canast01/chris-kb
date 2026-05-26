@@ -20,7 +20,6 @@ steps:
   - name: Deploy to ECS
     run: aws ecs update-service --cluster prod --service app --force-new-deployment
 ```
-```
 
 ### GCP — Workload Identity Federation
 

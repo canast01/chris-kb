@@ -36,7 +36,6 @@ symrdf -g <dgname> -sid <r1_sid> resume -noprompt
 symrdf -g <dgname> -sid <r1_sid> query
 # Wait for SyncInProg → Consistent transition before closing the change window
 ```
-```
 
 Initial synchronisation copies the full volume from R1 to R2. Schedule this during low-write periods to avoid saturating the WAN link and delaying existing SRDF/A cycles.
 

@@ -44,4 +44,3 @@ curl -k -H "Cookie: AuthCookie=<token>" \
 curl -k -H "Cookie: AuthCookie=<token>" \
   https://nd.corp.example.com/appcenter/cisco/ndfc/api/v1/san/fabrics
 ```
-```

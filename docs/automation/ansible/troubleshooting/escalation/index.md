@@ -21,7 +21,6 @@ flowchart LR
     L2 --> L3[Platform Team / SME\nAWX admin access\nExecution environment rebuild]
     L3 --> Vendor[Red Hat Support\nor GitHub issue]
 ```
-```
 
 ## AWX / AAP Escalation Data
 

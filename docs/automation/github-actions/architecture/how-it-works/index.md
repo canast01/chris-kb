@@ -21,7 +21,6 @@ flowchart TD
     S5 --> A
     A --> NOTIFY[Notification / Downstream Jobs]
 ```
-```
 
 | Property | Purpose |
 |---|---|

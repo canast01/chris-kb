@@ -25,7 +25,6 @@ flowchart TB
     eyeglass -->|"DNS cutover\nzone delegation"| dns
     eyeglass -->|"SNMP traps\nsyslog events"| siem
 ```
-```
 
 Verify Eyeglass can see SyncIQ policies: DR → Replication Policies — all SyncIQ policies should appear.
 

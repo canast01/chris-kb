@@ -44,7 +44,6 @@ graph LR
     applyProd -->|OK| done
     applyProd -->|Fail| abort
 ```
-```
 
 **What you should see**
 

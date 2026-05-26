@@ -42,7 +42,6 @@ uemcli /sys/auth/ldapgroup create -name "CORP\\DR-Operators" -role recovery_mana
 # View LDAP group role assignments
 uemcli /sys/auth/ldapgroup show
 ```
-```
 
 ## iDRAC Access Control
 

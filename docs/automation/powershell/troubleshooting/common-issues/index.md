@@ -22,7 +22,6 @@ flowchart TD
     errType -->|Script logic\nundefined var| strictMode["Set-StrictMode -Version Latest\nadd breakpoint()"]
     strictMode --> stepDebug["Set-PSBreakpoint\nstep through execution"]
 ```
-```
 
 | Policy | Behaviour |
 |---|---|

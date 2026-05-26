@@ -12,7 +12,6 @@ PowerShell enforces a fixed set of approved verbs. Using unapproved verbs genera
 # List all approved verbs
 Get-Verb | Sort-Object Group, Verb | Format-Table -AutoSize
 ```
-```
 
 Root module pattern — dot-source all files:
 

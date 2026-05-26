@@ -14,7 +14,6 @@ Admin > Solutions > VMware vCenter > Configure
 - Collection interval: 5 minutes (default)
 - Advanced: enable object tagging collection for custom group membership
 ```
-```
 
 Key objects collected: Logical Routers, Transport Nodes, Edge Clusters, Tier-0/Tier-1 Gateways.
 

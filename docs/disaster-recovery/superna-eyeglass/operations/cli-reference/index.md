@@ -16,7 +16,6 @@ flowchart LR
     operator --> restAPI --> eyeglassSvc
     eyeglassSvc --> psApi --> synciq
 ```
-```
 
 ---
 

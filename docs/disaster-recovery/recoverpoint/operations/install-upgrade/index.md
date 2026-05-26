@@ -58,7 +58,6 @@ flowchart TD
     class hA,hB host
     class spA,spB splitter
 ```
-```
 
 ### Step 2 — Launch Deployment Manager
 

@@ -28,7 +28,6 @@ graph LR
     symptom --> debugLog
     debugLog --> resolved
 ```
-```
 
 ## Validation and Syntax Checks
 

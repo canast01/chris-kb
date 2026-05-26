@@ -31,7 +31,6 @@ Examples:
   db02_prod_20260503_weekly.wim
   dc01_prod_20260101_post-patch.wim
 ```
-```
 
 ## Storage Sizing
 

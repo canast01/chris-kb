@@ -24,7 +24,6 @@ flowchart TD
     H --> J
     I --> J
 ```
-```
 
 ```powershell
 # Via PowerShell (Veeam PowerShell Toolkit)

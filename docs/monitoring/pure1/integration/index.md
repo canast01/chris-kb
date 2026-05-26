@@ -18,7 +18,6 @@ purearray list --network
 # Set proxy if needed
 purearray set --proxy https://<proxy-host>:<port>
 ```
-```
 
 Test the webhook before enabling: **Notifications > [Rule] > Test**.
 

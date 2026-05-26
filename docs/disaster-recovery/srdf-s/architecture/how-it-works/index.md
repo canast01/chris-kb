@@ -19,7 +19,6 @@ graph LR
   class HA host
   class HB dr
 ```
-```
 
 ## Components
 

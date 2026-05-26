@@ -14,7 +14,6 @@ curl -X POST https://cloudiq.apis.dell.com/auth/oauth/v2/token   -H "Content-Typ
 # The response contains access_token — use it as Bearer token in all requests
 # Token expires in 3600 seconds (1 hour)
 ```
-```
 
 ---
 

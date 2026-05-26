@@ -40,7 +40,6 @@ def pure1_get(path: str, token: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
-```
 
 ## Capacity Report
 

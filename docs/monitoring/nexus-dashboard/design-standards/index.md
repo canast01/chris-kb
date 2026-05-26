@@ -67,4 +67,3 @@ Admin > Authentication > Remote Login Domains > Add
 - Bind DN: CN=svc-nd-ldap,OU=ServiceAccounts,DC=company,DC=com
 - Role mapping: LDAP group → ND role
 ```
-```

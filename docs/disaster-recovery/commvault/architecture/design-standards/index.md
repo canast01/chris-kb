@@ -39,7 +39,6 @@ flowchart TD
     class calcFull,calcDaily,calcRetention,calcPrimary,calcSecondary,ddbSize,alert action
     class input terminal
 ```
-```
 
 ## VMware vSphere Standards
 

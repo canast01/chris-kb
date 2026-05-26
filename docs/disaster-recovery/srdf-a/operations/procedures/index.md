@@ -92,7 +92,6 @@ flowchart TD
     style validateApp fill:#15803d,color:#fff
     style waitSite fill:#6b7280,color:#fff
 ```
-```
 
 If R2 is in `Transmitting` state at the moment of failover, the current cycle in flight will be discarded. RPO will be one full cycle older than the lag counter shows. Confirm this with stakeholders before proceeding.
 

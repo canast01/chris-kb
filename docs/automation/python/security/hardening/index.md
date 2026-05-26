@@ -25,7 +25,6 @@ flowchart TD
     filePerms --> noLogs
     noLogs --> ready
 ```
-```
 
 ```python
 # Avoid eval() and exec() with untrusted data

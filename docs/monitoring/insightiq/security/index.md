@@ -22,7 +22,6 @@ InsightIQ web UI > Administration > Authentication > LDAP
 - Admin group → InsightIQ Administrator role
 - Viewer group → InsightIQ ReadOnly role
 ```
-```
 
 Enforce HTTPS redirect: configure the InsightIQ web server to redirect HTTP (port 80) to HTTPS (port 443).
 

@@ -27,7 +27,6 @@ flowchart TD
     stepFail --> secretErr
     stepFail --> wdErr
 ```
-```
 
 ```bash
 # Check if GITHUB_TOKEN can push to a protected branch

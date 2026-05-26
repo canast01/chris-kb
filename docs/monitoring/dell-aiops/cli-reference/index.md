@@ -12,7 +12,6 @@ curl -s -X POST "https://api.cloudiq.dell.com/auth/oauth/v2/token" \
   -d "grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}" \
   | jq -r '.access_token'
 ```
-```
 
 ## Key API Endpoints
 

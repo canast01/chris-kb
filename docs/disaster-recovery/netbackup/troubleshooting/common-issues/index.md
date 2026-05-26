@@ -42,7 +42,6 @@ tail -200 /usr/openv/netbackup/logs/bpcd/log.<yyyymmdd>
 # Review bpbrm log on master
 tail -200 /usr/openv/netbackup/logs/bpbrm/log.<yyyymmdd>
 ```
-```
 
 Mismatches between DNS short name and FQDN are a common cause. Ensure `CLIENT_NAME` is set to exactly the name the master server uses.
 

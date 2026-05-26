@@ -22,7 +22,6 @@ graph LR
     apply --> postPlan
     apply --> stateBackup
 ```
-```
 
 ### Saving and Applying Plan Files
 

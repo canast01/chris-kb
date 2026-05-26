@@ -9,7 +9,6 @@ Enable AES-256 encryption per backup job:
 # Enter encryption password — stored in VBR config DB
 # Export encryption keys after creation: Main Menu → Manage Passwords → Export
 ```
-```
 
 ### S3 Object Lock (SOBR Capacity Tier)
 
