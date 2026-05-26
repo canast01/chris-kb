@@ -15,80 +15,49 @@ flowchart LR
 
     gitRepo --> sccm --> servers --> schedTask --> output --> monitoring
 ```
-
-## Daily Health Check
-
-Generates a summary report of disk space, services, and recent errors. Run via scheduled task or manually.
-
-```powershell
-<#
-.SYNOPSIS
-  Windows Server daily health check report
-.DESCRIPTION
-  Checks disk space, stopped automatic services, recent event log errors,
-  and Windows Defender status. Outputs a summary to the console and optionally
-  emails the report.
-#>
-
-param(
-    [string]$ComputerName = $env:COMPUTERNAME,
-    [int]$DiskWarnPct     = 20,
-    [int]$DiskCritPct     = 10,
-    [int]$EventHours      = 24
-)
-
-$report = [System.Collections.Generic.List[string]]::new()
-$report.Add("=== Windows Server Health Check: $ComputerName ===")
-$report.Add("Generated: $(Get-Date -Format 'yyyy-MM-dd HH:mm')")
-$report.Add("")
-
-# --- Disk Space ---
-$report.Add("--- Disk Space ---")
-Get-PSDrive -PSProvider FileSystem | Where-Object { ($_.Used + $_.Free) -gt 0 } | ForEach-Object {
-    $total = $_.Used + $_.Free
-    $freePct = [math]::Round($_.Free / $total * 100, 1)
-    $freeGB  = [math]::Round($_.Free / 1GB, 1)
-    $totalGB = [math]::Round($total / 1GB, 1)
-    $status  = if ($freePct -le $DiskCritPct) { "CRITICAL" } elseif ($freePct -le $DiskWarnPct) { "WARNING" } else { "OK" }
-    $report.Add("  [$status] $($_.Name): $freeGB GB free of $totalGB GB ($freePct%)")
-}
-$report.Add("")
-
-# --- Stopped Automatic Services ---
-$report.Add("--- Stopped Automatic Services ---")
-$stopped = Get-Service | Where-Object { $_.StartType -eq 'Automatic' -and $_.Status -ne 'Running' }
-if ($stopped) {
-    $stopped | ForEach-Object { $report.Add("  [WARNING] $($_.DisplayName) ($($_.Name)) - $($_.Status)") }
-} else {
-    $report.Add("  [OK] All automatic services are running")
-}
-$report.Add("")
-
-# --- Recent Event Log Errors ---
-$report.Add("--- Event Log Errors (last $EventHours hours) ---")
-$since = (Get-Date).AddHours(-$EventHours)
-$events = Get-EventLog -LogName System -EntryType Error -After $since -ErrorAction SilentlyContinue
-if ($events) {
-    $events | Select-Object -First 10 | ForEach-Object {
-        $report.Add("  [ERROR] $($_.TimeGenerated) | EventID $($_.EventID) | $($_.Source) | $($_.Message -replace '\s+', ' ' | Select-Object -First 1)")
-    }
-} else {
-    $report.Add("  [OK] No errors in System log")
-}
-$report.Add("")
-
-# --- Defender Status ---
-$report.Add("--- Windows Defender ---")
-try {
-    $def = Get-MpComputerStatus
-    $report.Add("  Real-time protection: $($def.RealTimeProtectionEnabled)")
-    $report.Add("  Signature date: $($def.AntivirusSignatureLastUpdated)")
-    $report.Add("  Last quick scan: $($def.QuickScanStartTime)")
-} catch {
-    $report.Add("  [WARNING] Could not retrieve Defender status")
-}
-
-$report | ForEach-Object { Write-Host $_ }
+┌───────────────────────────────── Windows Server — Operations Scripts ─────────────────────────────────┐
+│                                                                                                       │
+│  PowerShell scripts for Windows Server operations: AD, disk, patching, and health checks.             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            AD Management Scripts             │  │                System Scripts               │   │
+│   │           New-ADUser + Set-ADUser            │  │        Get-EventLog: filtered export        │   │
+│   │         Get-ADGroupMember -Recursive         │  │           Get-Disk + Get-Partition          │   │
+│   │          Search-ADAccount -Inactive          │  │             Get-WindowsUpdateLog            │   │
+│   │         repadmin /replsummary parse          │  │         Restart-Service, Get-Service        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Scripts in version control; test in non-prod; log all changes                                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Scheduled Task Scripts            │  │               Hyper-V Scripts               │   │
+│   │            Register-ScheduledTask            │  │            Get-VM + Start/Stop-VM           │   │
+│   │       Log to event log: Write-EventLog       │  │           Checkpoint-VM: snapshot           │   │
+│   │          Error handling: try/catch           │  │          Get-VMReplication: status          │   │
+│   │           Send-MailMessage: alerts           │  │           Move-VM: live migration           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Domain Controllers · WSUS · Hyper-V hosts · task scheduler on managed servers                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  New-ADUser   = creates AD user; must set -AccountPassword -Enabled $true                             │
+│  Search-ADAccount= finds inactive/locked/expired accounts in AD                                       │
+│  Get-EventLog = queries Windows Event Log; use -EntryType Error to filter                             │
+│  Write-EventLog= writes entry to event log; use registered event source                               │
+│  Register-ScheduledTask= creates Windows scheduled task via PowerShell                                │
+│  Checkpoint-VM= creates Hyper-V checkpoint (snapshot); state + disk                                   │
+│  Get-VMReplication= shows Hyper-V Replica status and lag                                              │
+│  Move-VM      = live migration of running VM to another host                                          │
+│  try/catch    = error handling in PowerShell; $_ contains error details                               │
+│  Send-MailMessage= sends email from script; SMTP relay required                                       │
+│  Get-WindowsUpdateLog= converts ETW trace to readable Windows Update log                              │
+│  repadmin     = AD replication tool; output parsed by PS for reporting                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Disk Space Alert

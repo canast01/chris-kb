@@ -27,25 +27,49 @@ flowchart TD
     rebootCheck -- No --> allGood
     rebootCheck -- Yes --> investigate
 ```
-
-## Daily Health Checks
-
-Run the following checks at the start of each operational shift or as part of an automated morning report.
-
-### Event Viewer — Critical Errors
-
-```powershell
-# System log errors in last 24 hours
-Get-EventLog -LogName System -EntryType Error,Warning `
-  -After (Get-Date).AddHours(-24) |
-  Select-Object TimeGenerated, EntryType, Source, EventID, Message |
-  Sort-Object TimeGenerated -Descending
-
-# Application log errors
-Get-EventLog -LogName Application -EntryType Error `
-  -After (Get-Date).AddHours(-24) |
-  Select-Object TimeGenerated, Source, EventID, Message |
-  Sort-Object TimeGenerated -Descending
+┌─────────────────────────────────── Windows Server — Health Checks ────────────────────────────────────┐
+│                                                                                                       │
+│  Regular health checks: disk, AD replication, services, and event log review.                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                System Health                 │  │                  AD Health                  │   │
+│   │          Disk: > 20 % free required          │  │            repadmin /replsummary            │   │
+│   │            CPU: < 80 % sustained             │  │               dcdiag /test:all              │   │
+│   │          Memory: paging < 100 MB/s           │  │         netlogon: running on all DCs        │   │
+│   │        Event log: filter 1xxx errors         │  │       SYSVOL: replicated + accessible       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    System + AD checks should run daily; cluster and security checks weekly                            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Cluster Health (WSFC)             │  │               Security Posture              │   │
+│   │           Get-ClusterNode: all up            │  │         Missing patches: age < 30 d         │   │
+│   │            Cluster log: no errors            │  │         Defender: signatures current        │   │
+│   │          Quorum: witness reachable           │  │         Local admins: minimum count         │   │
+│   │           CSV: available + healthy           │  │              Audit log: no gaps             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · Domain Controllers · cluster shared storage · SIEM                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  repadmin      = AD replication admin tool; /replsummary shows lag and errors                         │
+│  dcdiag        = DC diagnostic tool; runs test battery against all DCs                                │
+│  netlogon      = Windows service; required for domain auth and GPO application                        │
+│  SYSVOL        = shared folder on all DCs; must be replicated and accessible                          │
+│  Get-ClusterNode= PowerShell command; shows all cluster nodes and their state                         │
+│  Quorum        = cluster voting mechanism; requires majority to stay online                           │
+│  Witness       = quorum tie-breaker; disk witness or cloud witness                                    │
+│  CSV           = Cluster Shared Volume; shared storage for Hyper-V VMs                                │
+│  Paging        = excessive page file activity indicates RAM shortage                                  │
+│  Event 1xxx    = common error range in Windows event logs; filter by level                            │
+│  Audit log gap = gap in security event log sequence; may indicate tampering                           │
+│  LAPS          = auto-rotated local admin password; check rotation age                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Windows Services Status
