@@ -27,34 +27,49 @@ VPC CLI: Network Resource Hierarchy
   │  └─────────────────────┘                             │
   └──────────────────────────────────────────────────────┘
 ```
-
-> Part of the AWS CLI Reference.
-
----
-
-```bash
-# VPCs
-aws ec2 describe-vpcs
-aws ec2 create-vpc --cidr-block 10.0.0.0/16
-aws ec2 delete-vpc --vpc-id <id>
-
-# Subnets
-aws ec2 describe-subnets
-aws ec2 describe-subnets --filters "Name=vpc-id,Values=<vpc_id>"
-aws ec2 create-subnet --vpc-id <id> --cidr-block 10.0.1.0/24 --availability-zone us-east-1a
-
-# Route tables
-aws ec2 describe-route-tables
-aws ec2 create-route --route-table-id <rt_id> --destination-cidr-block 0.0.0.0/0 --gateway-id <igw_id>
-
-# Internet gateways
-aws ec2 describe-internet-gateways
-aws ec2 create-internet-gateway
-aws ec2 attach-internet-gateway --internet-gateway-id <igw_id> --vpc-id <vpc_id>
-
-# Elastic IPs
-aws ec2 describe-addresses
-aws ec2 allocate-address --domain vpc
-aws ec2 associate-address --instance-id <id> --allocation-id <eip_id>
-aws ec2 release-address --allocation-id <eip_id>
+┌──────────────────────────────────────────── AWS CLI — VPC ────────────────────────────────────────────┐
+│                                                                                                       │
+│  VPC CLI commands for network creation, subnets, routing, security groups, and peering.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                VPC and Subnet                │  │                   Routing                   │   │
+│   │             create-vpc: new VPC              │  │              create-route-table             │   │
+│   │             describe-vpcs: list              │  │           create-route: add route           │   │
+│   │            create-subnet: segment            │  │            associate-route-table            │   │
+│   │            describe-subnets: list            │  │           create-internet-gateway           │   │
+│   │       modify-subnet-attribute: auto-ip       │  │           attach-internet-gateway           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  VPC and subnets created first; route tables and IGW attached to enable connectivity                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Security Groups                │  │            Peering and Endpoints            │   │
+│   │            create-security-group             │  │        create-vpc-peering-connection        │   │
+│   │       authorize-security-group-ingress       │  │        accept-vpc-peering-connection        │   │
+│   │       authorize-security-group-egress        │  │             create-vpc-endpoint             │   │
+│   │        revoke-security-group-ingress         │  │            describe-vpc-endpoints           │   │
+│   │           describe-security-groups           │  │       describe-vpc-peering-connections      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS VPC hardware (Nitro cards) · internet edge (IGW) · NAT GW · Transit Gateway                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  create-vpc      = Provisions new VPC with specified CIDR; no subnets yet                             │
+│  modify-subnet-attribute= Enables auto-assign public IP on instance launch                            │
+│  Security group  = Stateful virtual firewall on ENI; inbound + outbound rules                         │
+│  authorize-ingress= Adds inbound allow rule to security group                                         │
+│  VPC endpoint    = Gateway or interface endpoint for private AWS service access                       │
+│  Gateway endpoint= S3 and DynamoDB only; free; route-table based                                      │
+│  Interface endpoint= PrivateLink ENI for other services; costs per hour                               │
+│  VPC peering     = Direct routing between two VPCs; no transitive routing                             │
+│  Transit Gateway = Hub router for transitive VPC connectivity                                         │
+│  Internet Gateway= Allows internet access for public subnet resources                                 │
+│  NAT Gateway     = Outbound-only internet for private subnet resources                                │
+│  Nitro card      = AWS-built network card handling VPC packet forwarding                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
