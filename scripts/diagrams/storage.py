@@ -1257,4 +1257,432 @@ def pure_operations_hub():
     return lines
 
 
+@kb_diagram(
+    'pure-flasharray-arch',
+    'docs/storage/pure/flasharray/architecture/index.md',
+    'Pure FlashArray Architecture — dual-controller HA, NVMe flash, Purity//FA, data services',
+)
+def pure_flasharray_arch():
+    """Pure FlashArray Architecture overview — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Pure FlashArray Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FlashArray Architecture — Purity//FA Operating System')))
+    lines.append(R(bMid(IV_L, IV_R, 'Dual-controller HA: CT0 + CT1 active/active, NVRAM write mirroring, < 1 ms write ACK')))
+    lines.append(R(bMid(IV_L, IV_R, 'NVMe flash shelves: DirectFlash modules eliminate SSD translation layer for lower latency')))
+    lines.append(R(bMid(IV_L, IV_R, 'Inline dedup + compression + thin provisioning applied before data hits flash media')))
+    lines.append(R(bMid(IV_L, IV_R, 'Scale-up: add flash shelves to existing array; scale-out via FlashArray//X and FlashArray//C')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Purity//FA manages the full data path from host I/O down to DirectFlash modules'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Controller Layer (CT0 / CT1)'),
+        bMid(B2_L, B2_R, 'Data Services Layer'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Active/active: both serve I/O'),
+        bMid(B2_L, B2_R, 'Inline dedup: global hash table'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'NVRAM: mirror write buffer CT0-CT1'),
+        bMid(B2_L, B2_R, 'Compression: LZ4 + pattern detect'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Failover: < 30 s automatic takeover'),
+        bMid(B2_L, B2_R, 'Thin provisioning: no pre-allocation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'FC / iSCSI / NVMe/FC host ports'),
+        bMid(B2_L, B2_R, 'Snapshots: read-only space-efficient'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Mgmt: REST API + GUI + CLI'),
+        bMid(B2_L, B2_R, 'Clones: writable snapshot copies'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Controllers handle protocol termination · Data services run inline on every I/O'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Controller HW', 'Flash Shelves', 'Protocols', 'Replication', 'HA Behavior'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Dual-port HBAs', 'DirectFlash DFM', 'FC: 16/32G', 'ActiveDR: async', 'CT failover <30s'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['NVRAM modules', 'NVMe-attached', 'iSCSI: 10/25G', 'ActiveCluster sync', 'NVRAM protects'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['10/25G eth mgmt', 'No RAID overhead', 'NVMe/FC ports', 'PG schedules', 'No data loss'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Out-of-band IPMI', 'Hot-pluggable', 'NVMe/RoCE', 'Cloud snap target', 'Transparent'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('FlashArray chassis (//X, //C, //E) · DirectFlash Shelf · FC/iSCSI HBAs · SAN switches · dual PSU'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Purity//FA    = FlashArray OS; manages data services, protocols, and replication'))
+    lines.append(txt_row('CT0 / CT1     = Controller 0 and 1; active/active HA pair serving I/O simultaneously'))
+    lines.append(txt_row('NVRAM         = Non-volatile RAM write buffer; mirrored between controllers before host ACK'))
+    lines.append(txt_row('DirectFlash   = Pure custom NVMe SSD (DFM); removes FTL layer for deterministic low latency'))
+    lines.append(txt_row('Inline dedup  = Global deduplication run inline on every write; reduces effective flash usage'))
+    lines.append(txt_row('ActiveCluster = Synchronous replication stretch cluster; zero RPO, zero RTO failover'))
+    lines.append(txt_row('ActiveDR      = Asynchronous replication; RPO measured in minutes; automated failover'))
+    lines.append(txt_row('Protection Group= PG; set of volumes/hosts replicated together on a defined schedule'))
+    lines.append(txt_row('Snapshot      = Read-only, space-efficient point-in-time copy; metadata pointer only'))
+    lines.append(txt_row('Clone         = Writable copy from snapshot; instant, no data movement required'))
+    lines.append(txt_row('NVMe/RoCE     = NVMe over RDMA over Converged Ethernet; low-latency block over IP'))
+    lines.append(txt_row('SafeMode      = Immutable snapshot protection; delete operations require Pure Storage PIN'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'pure-flasharray-arch-how',
+    'docs/storage/pure/flasharray/architecture/how-it-works/index.md',
+    'Pure FlashArray How It Works — I/O path, NVRAM, dedup, compression, HA failover',
+)
+def pure_flasharray_arch_how():
+    """Pure FlashArray How It Works — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Pure FlashArray — How It Works'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Write I/O Path: Host to HBA to Controller to NVRAM to Dedup/Compress to Flash')))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 1: Host writes LUN; controller receives I/O on FC / iSCSI / NVMe port')))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 2: Write lands in NVRAM on active CT; mirrored to peer CT via NVRAM link')))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 3: ACK returned to host after NVRAM mirror; data is durable before ACK')))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 4: Purity destages NVRAM to DirectFlash: hash dedup then compress then write DFM')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Host sees < 1 ms latency; NVRAM absorbs burst while destage happens asynchronously'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'NVRAM Write Buffer'),
+        bMid(B2_L, B2_R, 'Dedup / Compress Engine'),
+        bMid(B3_L, B3_R, 'DirectFlash (DFM) Layer'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'CT0 NVRAM: primary'),
+        bMid(B2_L, B2_R, 'Global hash: SHA fingerprint'),
+        bMid(B3_L, B3_R, 'NVMe-native: no FTL layer'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'CT1 NVRAM: mirror copy'),
+        bMid(B2_L, B2_R, 'Pattern: zero-block detect'),
+        bMid(B3_L, B3_R, 'DFM wear-levelled by Purity'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'ACK: after both mirrors'),
+        bMid(B2_L, B2_R, 'LZ4: inline compression'),
+        bMid(B3_L, B3_R, 'Hot/warm/cold data tiers'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Capacitor backup: safe flush'),
+        bMid(B2_L, B2_R, 'Reduction: 4:1 typical'),
+        bMid(B3_L, B3_R, 'NAND: MLC/QLC modules'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'NVRAM drain on destage'),
+        bMid(B2_L, B2_R, 'Written unique chunks only'),
+        bMid(B3_L, B3_R, 'SSD life: Purity manages'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  HA failover: CT0 fails, CT1 takes all I/O; NVRAM safe; < 30 s transparent failover'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Write Path', 'Read Path', 'HA Failover', 'Dedup Stats', 'CLI Verify'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Host to CT NVRAM', 'CT to DFM read', 'CT0 heartbeat lost', 'puredataset list', 'purearray get'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Mirror to peer CT', 'Cache hit first', 'CT1 takes over', 'Data reduction %', 'purearray monitor'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['ACK to host', 'NVRAM prefetch', '< 30 s RTO', 'Unique data GB', 'puredrive list'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Destage to flash', 'No rebuild needed', 'Transparent host', 'Space savings %', 'purevolume list'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('CT0 + CT1 controllers · NVRAM DIMMs · DirectFlash modules · SAS/NVMe shelf interconnect · FC switch'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('NVRAM mirror  = Synchronous mirror of write buffer between CT0 and CT1 before host ACK'))
+    lines.append(txt_row('Destage       = Process of draining NVRAM writes to flash; runs continuously in background'))
+    lines.append(txt_row('Inline dedup  = Deduplication applied on every I/O before write; global hash fingerprint'))
+    lines.append(txt_row('LZ4           = Compression algorithm used by Purity; fast, low-CPU, good ratio on block data'))
+    lines.append(txt_row('DFM           = DirectFlash Module; Pure-custom NVMe SSD with no FTL overhead layer'))
+    lines.append(txt_row('FTL           = Flash Translation Layer; removed in DFM so Purity handles flash mapping directly'))
+    lines.append(txt_row('Data reduction= Ratio of logical written to physical flash used; includes dedup + compression'))
+    lines.append(txt_row('Capacitor     = Backup power on NVRAM; ensures safe flush to flash on power loss'))
+    lines.append(txt_row('HA failover   = Automatic controller failover; CT1 adopts all I/O from failed CT0 within 30 s'))
+    lines.append(txt_row('Read path     = Reads served from NVRAM cache or DirectFlash; no read penalty from dedup'))
+    lines.append(txt_row('Zero-block    = Pattern-detected zero blocks stored as metadata only; highest dedup ratio'))
+    lines.append(txt_row('Heartbeat     = Inter-controller health signal; loss triggers failover to surviving controller'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'pure-flasharray-arch-int',
+    'docs/storage/pure/flasharray/architecture/integrations/index.md',
+    'Pure FlashArray Integrations — VMware, Kubernetes, vVols, Pure Service Orchestrator',
+)
+def pure_flasharray_arch_int():
+    """Pure FlashArray Integrations — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Pure FlashArray Integrations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FlashArray Integration Ecosystem — VMware, Kubernetes, Backup, Cloud, Automation')))
+    lines.append(R(bMid(IV_L, IV_R, 'VMware: VASA/VAAI plugin · vVols datastore · SPBM policy-driven provisioning')))
+    lines.append(R(bMid(IV_L, IV_R, 'Kubernetes: Pure Service Orchestrator (PSO) / Portworx; dynamic PVC provisioning')))
+    lines.append(R(bMid(IV_L, IV_R, 'Backup: Veeam, Commvault, Veritas via snapshot-based offload via Pure APIs')))
+    lines.append(R(bMid(IV_L, IV_R, 'Automation: Ansible collection, Terraform provider, REST API v2 for all operations')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Pure REST API v2 is the integration backbone — all plugins and tools consume it'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VMware Integration'),
+        bMid(B2_L, B2_R, 'Kubernetes / Containers'),
+        bMid(B3_L, B3_R, 'Backup + Automation'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VASA: storage policy mgmt'),
+        bMid(B2_L, B2_R, 'PSO: dynamic PVC on-demand'),
+        bMid(B3_L, B3_R, 'Veeam: snap-based offload'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'VAAI: HW-accelerated ops'),
+        bMid(B2_L, B2_R, 'CSI driver: standard K8s API'),
+        bMid(B3_L, B3_R, 'Commvault: snap management'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'vVols: per-VM volumes'),
+        bMid(B2_L, B2_R, 'Portworx: data services layer'),
+        bMid(B3_L, B3_R, 'Ansible: purestorage.flasharray'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SPBM: QoS per datastore'),
+        bMid(B2_L, B2_R, 'StatefulSet persistent store'),
+        bMid(B3_L, B3_R, 'Terraform: volume lifecycle'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'SRM: site recovery plans'),
+        bMid(B2_L, B2_R, 'Multi-attach: RWX volumes'),
+        bMid(B3_L, B3_R, 'REST v2: token auth + JSON'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  All integrations leverage REST API · VMware via VASA/VAAI · K8s via CSI/PSO'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['VMware Setup', 'K8s Setup', 'Backup Config', 'REST API', 'Automation'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Install VASA plugin', 'Deploy PSO helm', 'Register array IP', 'GET /arrays', 'ansible-galaxy'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Create vVol store', 'Set storage class', 'API token creds', 'POST /volumes', 'terraform init'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SPBM policy assign', 'Test dynamic PVC', 'Snapshot schedule', 'PATCH /hosts', 'pureuser API add'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['SRM plugin config', 'Verify PV bind', 'Offload verify', 'DELETE /volumes', 'Idempotent runs'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('FlashArray controllers · ESXi hosts · K8s worker nodes · Backup media server · IP/FC SAN fabric'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('VASA          = vSphere API for Storage Awareness; allows vSphere to query array capabilities'))
+    lines.append(txt_row('VAAI          = vSphere API for Array Integration; offloads clone, zero, lock ops to array HW'))
+    lines.append(txt_row('vVols         = Virtual Volumes; per-VM volume objects managed directly by FlashArray'))
+    lines.append(txt_row('SPBM          = Storage Policy-Based Management; assigns QoS and protection to VMs by policy'))
+    lines.append(txt_row('PSO           = Pure Service Orchestrator; Kubernetes dynamic storage provisioner for Pure arrays'))
+    lines.append(txt_row('CSI           = Container Storage Interface; standard Kubernetes block/file storage API'))
+    lines.append(txt_row('Portworx      = Pure-owned container data platform; distributed storage layer for K8s workloads'))
+    lines.append(txt_row('SRM           = Site Recovery Manager; VMware DR orchestration using Pure replication snapshots'))
+    lines.append(txt_row('REST v2       = Pure FlashArray REST API version 2; JSON, token auth, full CRUD for all objects'))
+    lines.append(txt_row('Ansible coll  = purestorage.flasharray Galaxy collection; modules for volumes, hosts, PGs'))
+    lines.append(txt_row('Terraform     = HashiCorp IaC; purestorage/flasharray provider for declarative volume management'))
+    lines.append(txt_row('API token     = Authentication credential for REST and automation; scoped to array user role'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'pure-flasharray-arch-design',
+    'docs/storage/pure/flasharray/architecture/design-standards/index.md',
+    'Pure FlashArray Design Standards — naming, zoning, host config, data reduction targets',
+)
+def pure_flasharray_arch_design():
+    """Pure FlashArray Design Standards — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Pure FlashArray Design Standards'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FlashArray Design Standards — Naming, Zoning, Host Config, Capacity Planning')))
+    lines.append(R(bMid(IV_L, IV_R, 'Naming: array-name, volume, host, hgroup follow site-consistent lowercase-hyphen scheme')))
+    lines.append(R(bMid(IV_L, IV_R, 'FC zoning: single-initiator / single-target; each HBA port zoned to one array port')))
+    lines.append(R(bMid(IV_L, IV_R, 'Host connect: create host, add WWN/IQN, add to hgroup, connect volume to hgroup')))
+    lines.append(R(bMid(IV_L, IV_R, 'Capacity: provision at 2x data-reduction estimate; alert threshold 80% array capacity')))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Standards ensure consistent deployments across sites and reduce operational errors'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Naming and Zoning Standards'),
+        bMid(B2_L, B2_R, 'Capacity and Performance Design'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Volume: appname-function-lun01'),
+        bMid(B2_L, B2_R, 'Target data reduction: 4:1+'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'Host: hostname matches DNS'),
+        bMid(B2_L, B2_R, 'Provision: 2x DR estimate'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'hgroup: cluster or app group'),
+        bMid(B2_L, B2_R, 'Alert: 80% capacity threshold'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'FC zone: SI-ST per HBA port'),
+        bMid(B2_L, B2_R, 'QoS: bandwidth + IOPS limits'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'iSCSI: CHAP + portal per port'),
+        bMid(B2_L, B2_R, 'Snap retention: 24h/7d/4w/1y'),
+    )))
+    lines.append(R(merge(
+        bMid(B1_L, B1_R, 'PG: one PG per app tier'),
+        bMid(B2_L, B2_R, 'Volume size: multiples of 1 TB'),
+    )))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Consistent naming and single-initiator zoning are the two most impactful design decisions'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Volume Design', 'Host Design', 'FC Zoning', 'PG Design', 'Monitoring'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['512-byte aligned', 'One host one hgroup', 'SI-ST mandatory', '1 PG per app', 'Pure1 DR metric'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Thin: no reserve', 'WWNs per HBA port', 'Zone activation', 'Hourly schedule', 'Capacity alerts'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['Limit QoS shared', 'iSCSI: 2+ portals', 'Alias hostname_p1', 'Retain: 24 snaps', 'Latency < 1 ms'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+        ['LUN ID consistent', 'MPIO multipath', 'Verify login', 'Target: remote PG', 'purearray monitor'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('FlashArray pair · FC director switches · iSCSI ToR switches · ESXi/bare-metal hosts · Pure1 portal'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('SI-ST zoning  = Single-Initiator/Single-Target; best practice FC zoning reduces blast radius'))
+    lines.append(txt_row('hgroup        = Host group; collection of hosts sharing access to the same volumes'))
+    lines.append(txt_row('Protection Group= PG; volumes/hosts replicated together on schedule; one PG per application'))
+    lines.append(txt_row('Data reduction= Ratio of written logical data to physical flash used; 4:1 typical on VMs'))
+    lines.append(txt_row('QoS limits    = Per-volume IOPS/bandwidth cap; set with purevolume setattr --iops-limit'))
+    lines.append(txt_row('CHAP          = Challenge Handshake Auth Protocol; iSCSI authentication between host and array'))
+    lines.append(txt_row('MPIO          = Multipath I/O; host multipath driver balances I/O across multiple array ports'))
+    lines.append(txt_row('Thin provision= Volume allocated on demand; no physical flash reserved until data is written'))
+    lines.append(txt_row('Snap retention= Schedule of snapshots kept: hourly, daily, weekly, monthly, yearly counts'))
+    lines.append(txt_row('Portal        = iSCSI target endpoint; IP:port on array for iSCSI initiator discovery'))
+    lines.append(txt_row('WWN           = World Wide Name; 64-bit FC identifier for initiator HBA port and target port'))
+    lines.append(txt_row('Pure1 DR      = Pure1 shows data-reduction ratio per array; used to validate design targets'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
 # ── AWS sub-section diagrams ───────────────────────────────────────────────────

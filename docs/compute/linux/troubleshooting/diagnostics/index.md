@@ -27,50 +27,49 @@ flowchart LR
     journalSrc --> rsyslogSrc --> siemDst
     journalctl --> grep
 ```
-
-## Log Locations
-
-| Log | Path / Command | Content |
-|---|---|---|
-| System journal | `journalctl` | All systemd units, kernel, boot |
-| Kernel messages | `dmesg` / `journalctl -k` | Hardware, driver events |
-| Auth / SSH | `journalctl _SYSTEMD_UNIT=sshd.service` | Login, sudo, SSH |
-| Audit | `/var/log/audit/audit.log` | SELinux denials, syscall auditing |
-| Application | `/var/log/<app>/` or `journalctl -u <svc>` | Per-service |
-| cron | `/var/log/cron` (RHEL) / `journalctl -u cron` | Scheduled job output |
-| Boot log | `journalctl -b` | Full boot sequence |
-| DNF/YUM history | `/var/log/dnf.log` + `dnf history` | Package installs/removals (RHEL) |
-| APT history | `/var/log/apt/history.log` | Package changes (Ubuntu) |
-
-## journalctl — Common Queries
-
-```bash
-# Errors and above — last hour
-journalctl -p err --since "1 hour ago"
-
-# Follow a service in real time
-journalctl -u nginx.service -f
-
-# Messages since last boot
-journalctl -b
-
-# Previous boot (for crashed systems)
-journalctl -b -1
-
-# Between timestamps
-journalctl --since "2026-05-01 08:00:00" --until "2026-05-01 09:00:00"
-
-# By PID
-journalctl _PID=1234
-
-# Kernel messages only
-journalctl -k
-
-# Output as JSON (for parsing)
-journalctl -u myservice -o json | jq '.MESSAGE'
-
-# Export for TAC/vendor
-journalctl --since "yesterday" > /tmp/journal-export.txt
+┌───────────────────────────────────────── Linux — Diagnostics ─────────────────────────────────────────┐
+│                                                                                                       │
+│  Linux diagnostic tools and techniques for CPU, memory, I/O, network, and kernel issues.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                CPU and Memory                │  │                   Disk I/O                  │   │
+│   │           top -H: per-thread view            │  │         iostat -x 1: extended stats         │   │
+│   │           perf top: hot functions            │  │            iotop: per-process I/O           │   │
+│   │          vmstat 1 10: memory trend           │  │         blktrace / blkparse: tracing        │   │
+│   │        strace -p <pid>: syscall trace        │  │         smartctl -a /dev/sdX: health        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Start broad (top/vmstat); narrow with perf/strace for root cause                                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Network Diagnostics              │  │              Kernel and System              │   │
+│   │           tcpdump -i eth0 port 443           │  │          dmesg -T: timestamped msgs         │   │
+│   │           nmap -sV host: port scan           │  │        journalctl -xe: recent errors        │   │
+│   │        netstat -s: protocol counters         │  │         eBPF / bpftrace: deep trace         │   │
+│   │        ethtool -S eth0: NIC counters         │  │          coredump: systemd-coredump         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · NIC · storage controller · serial console                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  perf top     = live profiling; shows functions consuming most CPU cycles                             │
+│  strace -p    = attach to running process; shows each syscall with args/return                        │
+│  iotop        = like top but shows I/O per process; requires root                                     │
+│  blktrace     = block I/O tracer; shows complete I/O lifecycle per request                            │
+│  smartctl     = query drive SMART data; -a shows all attributes                                       │
+│  tcpdump      = raw packet capture; -w file saves for Wireshark analysis                              │
+│  ethtool -S   = NIC statistics; shows errors, drops, ring buffer usage                                │
+│  netstat -s   = per-protocol counters; TCP retransmits visible here                                   │
+│  eBPF         = extended Berkeley Packet Filter; safe kernel tracing                                  │
+│  bpftrace     = high-level eBPF scripting language for kernel/user tracing                            │
+│  coredump     = crash memory snapshot; analysed with gdb or crash tool                                │
+│  journalctl -xe= show most recent journal with explanations (-x)                                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## dmesg — Kernel Ring Buffer

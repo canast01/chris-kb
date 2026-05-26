@@ -2140,3 +2140,795 @@ def fabric_os_integrations():
 
     lines.append('└' + '─' * W2 + '┘')
     return lines
+
+
+# ─── Batch 1: Brocade Fabric OS (1-10) ───────────────────────────────────────
+
+@kb_diagram(
+    'brocade-fabric-os',
+    'docs/san/brocade/fabric-os/index.md',
+    'Brocade Fabric OS — switch OS overview, fabric services, zoning, management interfaces',
+)
+def brocade_fabric_os():
+    """Brocade Fabric OS overview — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Brocade Fabric OS — Overview'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Fabric OS (FOS): Brocade switch OS for FC SAN — zoning, routing, management')))
+    lines.append(R(bMid(IV_L, IV_R, 'Runs on all Brocade FC switches (G630, G720, G730, X7 director platforms)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Core services: FCNS (name server), FCSM, zone management, ISL trunking')))
+    lines.append(R(bMid(IV_L, IV_R, 'Management interfaces: CLI (SSH), REST API (FOS 8.2+), SANnav GUI integration')))
+    lines.append(R(bMid(IV_L, IV_R, 'Fabric-wide config distribution: zone DB, fabric parameters, principal switch election')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Core OS services -> fabric-level functions -> management and integration layer'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'FC Services'), bMid(B2_L, B2_R, 'Fabric Layer'), bMid(B3_L, B3_R, 'Management'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'FCNS name server'), bMid(B2_L, B2_R, 'Zone DB sync'), bMid(B3_L, B3_R, 'CLI via SSH'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Port login (FLOGI)'), bMid(B2_L, B2_R, 'ISL trunking'), bMid(B3_L, B3_R, 'REST API'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'FC routing (FSPF)'), bMid(B2_L, B2_R, 'Principal switch'), bMid(B3_L, B3_R, 'SANnav GUI'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'FCSM security'), bMid(B2_L, B2_R, 'Fabric params'), bMid(B3_L, B3_R, 'SNMP/syslog'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'RAS/diagnostics'), bMid(B2_L, B2_R, 'Domain ID mgmt'), bMid(B3_L, B3_R, 'LDAP auth'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Zone changes replicated across fabric; principal switch coordinates domain IDs'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Component', 'Role', 'Protocol', 'Version', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['FCNS', 'Name server', 'FC-GS', 'FOS 6+', 'Per-fabric DB'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['FSPF', 'FC routing', 'FC-SW', 'FOS 6+', 'Least-cost path'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['REST API', 'Mgmt interface', 'HTTPS', 'FOS 8.2+', 'JSON/XML'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: Brocade G630/G720/G730 switches · X7-8/X7-4 directors · FC SFP optics · ISL cables'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Fabric OS      = Brocade proprietary OS running on all Brocade FC switch hardware'))
+    lines.append(txt_row('  FCNS           = Fibre Channel Name Server; maps WWN to N_Port ID within the fabric'))
+    lines.append(txt_row('  FSPF           = Fabric Shortest Path First; FC link-state routing protocol'))
+    lines.append(txt_row('  FLOGI          = Fabric Login; HBA registers with fabric and obtains FC address (FCID)'))
+    lines.append(txt_row('  FCSM           = FC Security Manager; enforces DH-CHAP switch authentication'))
+    lines.append(txt_row('  Zone DB        = Fabric-wide zone configuration replicated to all switches in fabric'))
+    lines.append(txt_row('  ISL trunk      = Multiple ISLs bundled for bandwidth aggregation between switches'))
+    lines.append(txt_row('  Principal switch = Elected switch managing domain ID assignments for the fabric'))
+    lines.append(txt_row('  Domain ID      = Unique numeric identifier for each switch in the fabric (1-239)'))
+    lines.append(txt_row('  REST API       = FOS 8.2+ HTTP management interface; JSON/XML payloads over HTTPS'))
+    lines.append(txt_row('  MAPS           = Monitoring and Alerting Policy Suite; FOS threshold alert engine'))
+    lines.append(txt_row('  portcfg        = FOS CLI command to configure port speed, mode, and behaviour'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'brocade-fabric-os-arch',
+    'docs/san/brocade/fabric-os/architecture/index.md',
+    'Brocade FOS Architecture — OS layers, fabric services, hardware abstraction, data plane',
+)
+def brocade_fabric_os_arch():
+    """Brocade FOS Architecture — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Brocade Fabric OS — Architecture'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FOS architecture: layered OS on embedded Linux with FC ASIC hardware abstraction')))
+    lines.append(R(bMid(IV_L, IV_R, 'Data plane: FC frames switched in ASIC at line rate; no CPU involvement per frame')))
+    lines.append(R(bMid(IV_L, IV_R, 'Control plane: FSPF routing, FCNS updates, zone DB distribution across fabric')))
+    lines.append(R(bMid(IV_L, IV_R, 'Management plane: CLI daemon, REST server, SNMP agent, syslog forwarder')))
+    lines.append(R(bMid(IV_L, IV_R, 'HA on directors: CP blade active/standby; failover <10 s non-disruptive')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Hardware (ASIC) -> FOS kernel/drivers -> fabric services -> management interfaces'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'HW / ASIC'), bMid(B2_L, B2_R, 'Fabric Services'), bMid(B3_L, B3_R, 'Management'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'FC frame switch'), bMid(B2_L, B2_R, 'FCNS/FSPF'), bMid(B3_L, B3_R, 'CLI (SSH)'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SFP PHY layer'), bMid(B2_L, B2_R, 'Zone DB dist'), bMid(B3_L, B3_R, 'REST API'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Port buffers'), bMid(B2_L, B2_R, 'Domain ID mgmt'), bMid(B3_L, B3_R, 'SNMP agent'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'CP blade (HA)'), bMid(B2_L, B2_R, 'FCSM security'), bMid(B3_L, B3_R, 'Syslog fwd'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'RAS sensors'), bMid(B2_L, B2_R, 'MAPS alerting'), bMid(B3_L, B3_R, 'SANnav link'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  CP blade failover is non-disruptive; FC frame forwarding continues during switchover'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Layer', 'Component', 'Function', 'Plane', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['HW', 'FC ASIC', 'Frame switching', 'Data', 'Line-rate'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Kernel', 'FOS Linux', 'Driver/OS', 'Control', 'Embedded'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Services', 'FCNS/FSPF', 'Fabric ctrl', 'Control', 'Distributed'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: FC ASIC chips · CP/line blades on X7 directors · SFP optics · RAS sensors'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  FC ASIC        = Custom silicon switching FC frames at line rate with no CPU overhead'))
+    lines.append(txt_row('  CP blade       = Control Processor blade on X7 directors; runs FOS management plane'))
+    lines.append(txt_row('  Data plane     = FC frame forwarding in hardware; unaffected by control plane events'))
+    lines.append(txt_row('  Control plane  = FSPF routing, FCNS updates, zone DB sync; CPU-managed services'))
+    lines.append(txt_row('  FSPF           = Fabric Shortest Path First; computes optimal ISL paths'))
+    lines.append(txt_row('  RAS sensors    = Reliability/Availability/Serviceability sensors for temp, fan, PSU'))
+    lines.append(txt_row('  HA failover    = CP blade switchover; non-disruptive to data-plane traffic'))
+    lines.append(txt_row('  Buffer credits = Per-port FC flow control mechanism; prevents frame loss on congested links'))
+    lines.append(txt_row('  MAPS           = Monitoring and Alerting Policy Suite; threshold-based alerting engine'))
+    lines.append(txt_row('  SFP PHY        = Physical layer transceiver; digital diagnostics accessible via FOS CLI'))
+    lines.append(txt_row('  FOS Linux      = Embedded Linux kernel underpinning FabricOS user-space services'))
+    lines.append(txt_row('  Zone DB dist   = Zone configuration replicated from principal switch to all fabric switches'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'brocade-fabric-os-arch-how',
+    'docs/san/brocade/fabric-os/architecture/how-it-works/index.md',
+    'FOS How It Works — fabric init, FLOGI, zone enforcement, frame routing, ISL trunking',
+)
+def brocade_fabric_os_arch_how():
+    """Brocade FOS How It Works — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Brocade Fabric OS — How It Works'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FOS operational flow: fabric init, device login, zone enforcement, frame routing')))
+    lines.append(R(bMid(IV_L, IV_R, 'Fabric init: switches exchange E_Port BRCDs, elect principal switch, assign domain IDs')))
+    lines.append(R(bMid(IV_L, IV_R, 'Device login: HBA sends FLOGI, fabric assigns FCID, FCNS records WWN-to-FCID mapping')))
+    lines.append(R(bMid(IV_L, IV_R, 'Zone enforcement: each frame checked against active zone set at ingress port ASIC')))
+    lines.append(R(bMid(IV_L, IV_R, 'Frame routing: FSPF computes least-cost path; ISL trunk distributes load across links')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Fabric init -> device login (FLOGI/PLOGI) -> zone check -> FSPF routing -> delivery'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Fabric Init'), bMid(B2_L, B2_R, 'Device Login'), bMid(B3_L, B3_R, 'Frame Routing'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'E_Port detect'), bMid(B2_L, B2_R, 'FLOGI from HBA'), bMid(B3_L, B3_R, 'FSPF lookup'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Principal elect'), bMid(B2_L, B2_R, 'FCID assigned'), bMid(B3_L, B3_R, 'ISL selection'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Domain ID assign'), bMid(B2_L, B2_R, 'FCNS register'), bMid(B3_L, B3_R, 'Zone check'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Zone DB push'), bMid(B2_L, B2_R, 'PLOGI/PRLI'), bMid(B3_L, B3_R, 'Credit flow'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Fabric stable'), bMid(B2_L, B2_R, 'I/O begins'), bMid(B3_L, B3_R, 'Error detect'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Zone enforcement happens in ASIC at ingress; denied frames dropped before routing'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Phase', 'Event', 'Initiator', 'Result', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Init', 'BRCD exchange', 'Switches', 'Fabric formed', 'ISL up'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Login', 'FLOGI', 'HBA', 'FCID assigned', 'FCNS updated'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Routing', 'FSPF calc', 'FOS', 'Path selected', 'ISL trunk'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: HBA in server -> FC cable -> switch port -> ISL -> storage target port'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  FLOGI          = Fabric Login; first FC login HBA performs to join the fabric'))
+    lines.append(txt_row('  FCID           = Fabric Controller ID; 24-bit address assigned to device by fabric'))
+    lines.append(txt_row('  PLOGI          = Port Login; HBA-to-target login establishing parameters for I/O'))
+    lines.append(txt_row('  PRLI           = Process Login; FCP/NVMe service parameters negotiated after PLOGI'))
+    lines.append(txt_row('  E_Port         = Expansion port; ISL port connecting two FC switches'))
+    lines.append(txt_row('  Principal switch = Switch elected to manage domain IDs; owns zone DB distribution'))
+    lines.append(txt_row('  Domain ID      = Unique 8-bit number per switch in a fabric (1-239 valid range)'))
+    lines.append(txt_row('  FSPF           = Fabric Shortest Path First; link-state protocol for optimal routing'))
+    lines.append(txt_row('  ISL trunk      = Multiple ISL links aggregated; FSPF load-balances frames across them'))
+    lines.append(txt_row('  Zone check     = ASIC validates source/destination WWN pair against active zone set'))
+    lines.append(txt_row('  Buffer credit  = Per-link flow control token; receiver grants credit to allow transmission'))
+    lines.append(txt_row('  BRCD exchange  = Brocade-specific capability exchange over E_Port during fabric init'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'brocade-fabric-os-arch-int',
+    'docs/san/brocade/fabric-os/architecture/integrations/index.md',
+    'FOS Integrations — SANnav, REST API, SNMP, syslog, LDAP, Ansible, vCenter plugin',
+)
+def brocade_fabric_os_arch_int():
+    """Brocade FOS Integrations — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Brocade Fabric OS — Integrations'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FOS integrates with management tools, monitoring platforms, and automation frameworks')))
+    lines.append(R(bMid(IV_L, IV_R, 'SANnav: primary GUI management via SSH + REST API; fabric discovery and monitoring')))
+    lines.append(R(bMid(IV_L, IV_R, 'SNMP v3: NMS integration for trap forwarding; Brocade MIBs cover port/fabric OIDs')))
+    lines.append(R(bMid(IV_L, IV_R, 'LDAP/AD: centralised authentication; role mapping via group membership')))
+    lines.append(R(bMid(IV_L, IV_R, 'REST API: JSON-based programmatic management for Ansible and CI/CD pipelines')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Management tools -> monitoring/alerting -> identity -> automation integrations'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Management'), bMid(B2_L, B2_R, 'Monitoring'), bMid(B3_L, B3_R, 'Automation'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SANnav GUI'), bMid(B2_L, B2_R, 'SNMP v3 traps'), bMid(B3_L, B3_R, 'REST API'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SSH CLI'), bMid(B2_L, B2_R, 'Syslog (SIEM)'), bMid(B3_L, B3_R, 'Ansible modules'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'LDAP/AD auth'), bMid(B2_L, B2_R, 'MAPS alerts'), bMid(B3_L, B3_R, 'Python scripts'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'vCenter plugin'), bMid(B2_L, B2_R, 'Email alerts'), bMid(B3_L, B3_R, 'CI/CD pipeline'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'NTP sync'), bMid(B2_L, B2_R, 'Dashboard'), bMid(B3_L, B3_R, 'Terraform'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  All integrations use out-of-band Ethernet management; FC data plane unaffected'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Integration', 'Protocol', 'Auth', 'Use case', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['SANnav', 'SSH+REST', 'Password/key', 'Full mgmt', 'Primary tool'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['SNMP v3', 'UDP 162', 'AuthPriv', 'NMS traps', 'Brocade MIBs'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['REST API', 'HTTPS 443', 'Session token', 'Automation', 'FOS 8.2+'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: mgmt Ethernet port on each switch · OOB management network · NTP server'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  SANnav         = Brocade SAN management GUI; primary operational tool for FOS switches'))
+    lines.append(txt_row('  REST API       = HTTPS-based FOS management API; returns JSON; requires FOS 8.2+'))
+    lines.append(txt_row('  SNMP v3        = SNMPv3 with authentication (SHA) and encryption (AES) for secure traps'))
+    lines.append(txt_row('  Brocade MIBs   = SNMP MIB files defining Brocade-specific OIDs for port/fabric telemetry'))
+    lines.append(txt_row('  LDAP/AD        = Switch authenticates admin users against Active Directory'))
+    lines.append(txt_row('  MAPS           = Monitoring and Alerting Policy Suite; configures thresholds and actions'))
+    lines.append(txt_row('  Syslog         = Switch event log forwarded to SIEM (Splunk, QRadar) for correlation'))
+    lines.append(txt_row('  Ansible module = brocade_fibrechannel Ansible collection for zone/port automation'))
+    lines.append(txt_row('  vCenter plugin = Shows FC path visibility from VM HBA through fabric to storage'))
+    lines.append(txt_row('  Session token  = REST API Bearer token returned on login; used in subsequent API calls'))
+    lines.append(txt_row('  NTP sync       = Switch clock synchronised to NTP for accurate log timestamps'))
+    lines.append(txt_row('  OOB mgmt       = Out-of-band management via dedicated Ethernet port; separate from FC'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'brocade-fabric-os-arch-design',
+    'docs/san/brocade/fabric-os/architecture/design-standards/index.md',
+    'FOS Design Standards — fabric topology, domain IDs, ISL design, zone naming, HA',
+)
+def brocade_fabric_os_arch_design():
+    """Brocade FOS Design Standards — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Brocade Fabric OS — Design Standards'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FOS design standards for production SAN: topology, naming, ISL sizing, HA, security')))
+    lines.append(R(bMid(IV_L, IV_R, 'Topology: dual-fabric A/B design; no single-fabric dependency for storage access')))
+    lines.append(R(bMid(IV_L, IV_R, 'Domain IDs: statically assigned; Fabric A starts at 1, Fabric B starts at 100')))
+    lines.append(R(bMid(IV_L, IV_R, 'ISL sizing: minimum 2 ISLs per switch pair; trunk for bandwidth and redundancy')))
+    lines.append(R(bMid(IV_L, IV_R, 'Zone naming: host_alias_storage_alias format; no generic zone names in production')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Topology standards -> naming conventions -> ISL design -> HA and redundancy rules'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Topology'), bMid(B2_L, B2_R, 'Naming / IDs'), bMid(B3_L, B3_R, 'HA / ISL'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Dual fabric A/B'), bMid(B2_L, B2_R, 'Static domain IDs'), bMid(B3_L, B3_R, 'Min 2 ISLs'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Core-edge design'), bMid(B2_L, B2_R, 'Zone naming std'), bMid(B3_L, B3_R, 'ISL trunking'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No single fabric'), bMid(B2_L, B2_R, 'Alias per HBA'), bMid(B3_L, B3_R, 'Director core'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Separate VSANs'), bMid(B2_L, B2_R, 'Config naming'), bMid(B3_L, B3_R, 'Redundant PSU'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Buffer planning'), bMid(B2_L, B2_R, 'FW rev tracking'), bMid(B3_L, B3_R, 'OOB mgmt path'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Core switches (directors) connect to all edge switches; no edge-to-edge ISLs'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Standard', 'Rule', 'Rationale', 'Tool', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Dual fabric', 'A+B always', 'HA for hosts', 'Multi-pathing', 'MPIO required'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Domain ID', 'Static assign', 'Predictability', 'portcfg', 'A=1-99, B=100+'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['ISL trunk', 'Min 2 per pair', 'Redundancy', 'SANnav/CLI', 'Same speed ISLs'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: dual directors at core · edge switches per row · redundant ISL paths'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Dual fabric    = Two independent FC fabrics (A and B); each host has one HBA in each'))
+    lines.append(txt_row('  Core-edge      = Directors at core; fixed-port switches at edge; no edge-to-edge ISLs'))
+    lines.append(txt_row('  Domain ID      = Statically assigned switch identifier; dynamic assignment risks reconfiguring'))
+    lines.append(txt_row('  ISL trunk      = Bundled ISLs between same switch pair for bandwidth and redundancy'))
+    lines.append(txt_row('  Zone naming    = Standard: srvname_hba0_arrayname_sp0; enables instant identification'))
+    lines.append(txt_row('  Alias          = WWN alias per HBA port; one alias per physical port, not per LUN'))
+    lines.append(txt_row('  Buffer credit  = Must be planned for long-distance ISLs; insufficient credits cause congestion'))
+    lines.append(txt_row('  MPIO           = Multi-path I/O on host; uses both fabric A and B paths for redundancy'))
+    lines.append(txt_row('  OOB mgmt       = Out-of-band Ethernet management must be redundant and always accessible'))
+    lines.append(txt_row('  PSU redundancy = Each switch/director must have redundant power supplies from separate PDUs'))
+    lines.append(txt_row('  FW tracking    = Firmware version matrix maintained; all switches in fabric same minor version'))
+    lines.append(txt_row('  Config naming  = Zone config names include date/ticket reference for auditability'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'brocade-fabric-os-ops-procedures',
+    'docs/san/brocade/fabric-os/operations/procedures/index.md',
+    'FOS Operations Procedures — zone changes, port management, firmware upgrade, backup',
+)
+def brocade_fabric_os_ops_procedures():
+    """Brocade FOS Operations Procedures — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Brocade Fabric OS — Operations Procedures'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Standard FOS operational procedures for day-to-day SAN administration')))
+    lines.append(R(bMid(IV_L, IV_R, 'Zone change: create alias -> create zone -> add to zone set -> cfgenable')))
+    lines.append(R(bMid(IV_L, IV_R, 'Port management: portdisable/portenable; portcfgpersistentdisable for permanent off')))
+    lines.append(R(bMid(IV_L, IV_R, 'Firmware upgrade: firmwaredownload -s; verify with firmwareshow after reboot')))
+    lines.append(R(bMid(IV_L, IV_R, 'Config backup: configupload to save switch config to SCP/FTP server')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Pre-checks -> change procedure -> post-checks -> documentation and rollback plan'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Zone Mgmt'), bMid(B2_L, B2_R, 'Port Mgmt'), bMid(B3_L, B3_R, 'Lifecycle'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'alicreate'), bMid(B2_L, B2_R, 'portdisable'), bMid(B3_L, B3_R, 'firmwaredownload'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'zonecreate'), bMid(B2_L, B2_R, 'portenable'), bMid(B3_L, B3_R, 'configupload'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'cfgadd'), bMid(B2_L, B2_R, 'portcfgspeed'), bMid(B3_L, B3_R, 'configdownload'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'cfgenable'), bMid(B2_L, B2_R, 'portcfgmode'), bMid(B3_L, B3_R, 'supportshow'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'cfgsave'), bMid(B2_L, B2_R, 'portshow'), bMid(B3_L, B3_R, 'firmwareshow'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Always cfgsave after cfgenable; changes without cfgsave lost on switch reboot'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Procedure', 'CLI command', 'Impact', 'Rollback', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Zone add', 'cfgenable', 'Fabric-wide', 'cfgenable old', 'CAB required'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Port disable', 'portdisable', 'Port only', 'portenable', 'Log first'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['FW upgrade', 'firmwaredownload', 'Switch reboot', 'Prior version', 'NDU for HA'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: SSH to switch mgmt IP · SCP server for config/firmware files'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  alicreate      = FOS CLI command to create a WWN alias for a host or storage port'))
+    lines.append(txt_row('  zonecreate     = Creates a new zone with specified member aliases or WWNs'))
+    lines.append(txt_row('  cfgadd         = Adds a zone to an existing zone configuration'))
+    lines.append(txt_row('  cfgenable      = Activates the named zone configuration across the entire fabric'))
+    lines.append(txt_row('  cfgsave        = Saves the zone database to non-volatile memory on all switches'))
+    lines.append(txt_row('  portdisable    = Administratively disables an FC port (state: No_Light or D_Port)'))
+    lines.append(txt_row('  portcfgspeed   = Sets port speed (auto, 8G, 16G, 32G, 64G)'))
+    lines.append(txt_row('  firmwaredownload = Downloads FOS image from SCP/FTP and reboots switch to activate'))
+    lines.append(txt_row('  configupload   = Uploads running switch config to SCP/FTP for backup'))
+    lines.append(txt_row('  configdownload = Restores switch config from previously uploaded backup file'))
+    lines.append(txt_row('  supportshow    = Collects full diagnostic data bundle for TAC support'))
+    lines.append(txt_row('  NDU            = Non-Disruptive Upgrade; HA chassis upgrades one blade at a time'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'brocade-fabric-os-ops-backup',
+    'docs/san/brocade/fabric-os/operations/backup-restore/index.md',
+    'FOS Backup and Restore — configupload, configdownload, zone DB backup, disaster recovery',
+)
+def brocade_fabric_os_ops_backup():
+    """Brocade FOS Backup and Restore — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Brocade Fabric OS — Backup and Restore'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FOS backup and restore: switch config, zone DB, and full switch replacement recovery')))
+    lines.append(R(bMid(IV_L, IV_R, 'configupload: saves switch config (not zone DB) to SCP/FTP; schedule weekly')))
+    lines.append(R(bMid(IV_L, IV_R, 'Zone DB backup: cfgsave persists to flash; also export zone DB via SANnav')))
+    lines.append(R(bMid(IV_L, IV_R, 'Switch replacement: configdownload restores config; re-cable and verify fabric')))
+    lines.append(R(bMid(IV_L, IV_R, 'Director blade: hot-swap with NDU; config on CP blade survives blade failure')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Schedule backup -> verify backup file -> test restore -> store off-site copy securely'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Config Backup'), bMid(B2_L, B2_R, 'Zone DB'), bMid(B3_L, B3_R, 'Recovery'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'configupload'), bMid(B2_L, B2_R, 'cfgsave'), bMid(B3_L, B3_R, 'configdownload'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SCP/FTP target'), bMid(B2_L, B2_R, 'SANnav export'), bMid(B3_L, B3_R, 'Switch replace'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Weekly schedule'), bMid(B2_L, B2_R, 'Before changes'), bMid(B3_L, B3_R, 'Re-cable fabric'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Version tagged'), bMid(B2_L, B2_R, 'Zone DB export'), bMid(B3_L, B3_R, 'Verify zones'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Off-site copy'), bMid(B2_L, B2_R, 'Audit history'), bMid(B3_L, B3_R, 'Test restore'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Test restore quarterly; zone DB and config backup are independent procedures'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Backup type', 'Command', 'Frequency', 'Target', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Switch config', 'configupload', 'Weekly', 'SCP server', 'All settings'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Zone DB', 'cfgsave+export', 'Pre-change', 'SANnav/file', 'Fabric-wide'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Full restore', 'configdownload', 'On failure', 'New switch', 'Re-cable needed'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: SCP/FTP backup server · offline config archive · replacement switch spare'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  configupload   = FOS CLI: uploads switch config to SCP/FTP; includes port/security settings'))
+    lines.append(txt_row('  configdownload = FOS CLI: restores switch config from remote file; triggers partial reboot'))
+    lines.append(txt_row('  cfgsave        = Persists zone DB to non-volatile flash; must run after every zone change'))
+    lines.append(txt_row('  Zone DB export = SANnav can export zone config as text file; keep with config backup'))
+    lines.append(txt_row('  Switch replace = Install new switch, configdownload, re-cable ISLs and host/storage ports'))
+    lines.append(txt_row('  NDU            = Non-Disruptive Upgrade; director blades hot-swapped with no fabric impact'))
+    lines.append(txt_row('  Spare switch   = Pre-configured standby switch for rapid replacement; test restore regularly'))
+    lines.append(txt_row('  SCP server     = Secure Copy Protocol server; preferred over FTP for encrypted transfer'))
+    lines.append(txt_row('  Off-site copy  = Backup files replicated to secondary site or object storage for DR'))
+    lines.append(txt_row('  Audit history  = SANnav logs all zone config changes; export as evidence for compliance'))
+    lines.append(txt_row('  Version tag    = Include FOS version and date in backup filename for traceability'))
+    lines.append(txt_row('  Test restore   = Quarterly restore test on lab/spare switch to validate backup integrity'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'brocade-fabric-os-ops-health',
+    'docs/san/brocade/fabric-os/operations/health-checks/index.md',
+    'FOS Health Checks — switchshow, porterrshow, SFP diagnostics, MAPS alerts, fabric health',
+)
+def brocade_fabric_os_ops_health():
+    """Brocade FOS Health Checks — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Brocade Fabric OS — Health Checks'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Daily FOS health checks: switch state, port errors, SFP optics, MAPS alerts')))
+    lines.append(R(bMid(IV_L, IV_R, 'switchshow: verify all ports Online; check switch health state (Healthy)')))
+    lines.append(R(bMid(IV_L, IV_R, 'porterrshow: review CRC, LOS, LOSync counters; nonzero values require investigation')))
+    lines.append(R(bMid(IV_L, IV_R, 'sfpshow: review Tx/Rx power dBm; compare against SFP vendor thresholds')))
+    lines.append(R(bMid(IV_L, IV_R, 'MAPS dashboard: check active alert policy; review mapsDb for rule violations')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Switch state -> port errors -> SFP optics -> MAPS alerts -> fabric topology review'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Switch Health'), bMid(B2_L, B2_R, 'Port Health'), bMid(B3_L, B3_R, 'SFP / Optics'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'switchshow'), bMid(B2_L, B2_R, 'porterrshow'), bMid(B3_L, B3_R, 'sfpshow'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'switchstatusshow'), bMid(B2_L, B2_R, 'portstatsclear'), bMid(B3_L, B3_R, 'Tx power dBm'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'MAPS dashboard'), bMid(B2_L, B2_R, 'CRC counter'), bMid(B3_L, B3_R, 'Rx power dBm'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Fan/PSU status'), bMid(B2_L, B2_R, 'Loss of Signal'), bMid(B3_L, B3_R, 'Temperature'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'fabricshow'), bMid(B2_L, B2_R, 'Loss of Sync'), bMid(B3_L, B3_R, 'Vendor limits'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Clear error counters only after investigating and resolving the underlying cause'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Check', 'Command', 'Frequency', 'Threshold', 'Action'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Switch state', 'switchshow', 'Daily', 'All Online', 'Investigate faults'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Port errors', 'porterrshow', 'Daily', 'Zero CRC', 'Replace cable/SFP'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['SFP power', 'sfpshow', 'Weekly', 'Vendor range', 'Replace SFP'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: FC switches · SFP transceivers · ISL cables · console/mgmt access'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  switchshow     = Lists all ports with state (Online/Offline/Faulty) and connected device WWN'))
+    lines.append(txt_row('  porterrshow    = Displays error counters per port: CRC, LOS, LOSync, ITW, Enc_in'))
+    lines.append(txt_row('  portstatsclear = Resets error counters to zero; use only after resolving the issue'))
+    lines.append(txt_row('  sfpshow        = Displays SFP diagnostics: Tx/Rx power, temperature, voltage'))
+    lines.append(txt_row('  switchstatusshow = Summary health status of switch: Healthy, Marginal, or Down'))
+    lines.append(txt_row('  fabricshow     = Lists all switches in fabric with domain IDs and WWNs'))
+    lines.append(txt_row('  MAPS dashboard = SANnav MAPS view showing active policy and current rule violations'))
+    lines.append(txt_row('  CRC error      = Cyclic Redundancy Check error; indicates corrupt FC frame; cable/SFP issue'))
+    lines.append(txt_row('  Loss of Signal = LOS: no optical signal detected; SFP or cable failure'))
+    lines.append(txt_row('  Loss of Sync   = LOSync: signal present but frame sync lost; speed mismatch or noise'))
+    lines.append(txt_row('  Tx/Rx power    = SFP optical power in dBm; each SFP type has defined acceptable range'))
+    lines.append(txt_row('  MAPS alert     = Automated rule-based alert when metric breaches configured threshold'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'brocade-fabric-os-ops-install',
+    'docs/san/brocade/fabric-os/operations/install-upgrade/index.md',
+    'FOS Install and Upgrade — firmwaredownload, NDU for directors, pre/post checks, rollback',
+)
+def brocade_fabric_os_ops_install():
+    """Brocade FOS Install and Upgrade — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Brocade Fabric OS — Install and Upgrade'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FOS firmware upgrade: firmwaredownload command; NDU for HA directors')))
+    lines.append(R(bMid(IV_L, IV_R, 'Pre-checks: switchshow all Online, no MAPS critical alerts, config backed up')))
+    lines.append(R(bMid(IV_L, IV_R, 'Download: firmwaredownload -s <scp-server> <path>; switch reboots automatically')))
+    lines.append(R(bMid(IV_L, IV_R, 'Director NDU: upgrades standby CP first, then failover; no fabric disruption')))
+    lines.append(R(bMid(IV_L, IV_R, 'Post-checks: firmwareshow, switchshow, porterrshow; verify no new errors')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Pre-checks -> firmware stage -> upgrade trigger -> reboot -> post-verify -> sign-off'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Pre-Checks'), bMid(B2_L, B2_R, 'Upgrade'), bMid(B3_L, B3_R, 'Post-Checks'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'switchshow OK'), bMid(B2_L, B2_R, 'firmwaredownload'), bMid(B3_L, B3_R, 'firmwareshow'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No MAPS alerts'), bMid(B2_L, B2_R, 'Stage firmware'), bMid(B3_L, B3_R, 'switchshow'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Config backed up'), bMid(B2_L, B2_R, 'CP failover NDU'), bMid(B3_L, B3_R, 'porterrshow'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Change ticket'), bMid(B2_L, B2_R, 'Auto-reboot'), bMid(B3_L, B3_R, 'fabricshow'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Peer fabric OK'), bMid(B2_L, B2_R, 'Rollback option'), bMid(B3_L, B3_R, 'MAPS check'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Always upgrade one fabric at a time; never both A and B fabrics simultaneously'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Step', 'Action', 'Command', 'Expected', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Pre', 'Health check', 'switchshow', 'All Online', 'Per switch'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Upgrade', 'Download FW', 'firmwaredownload', 'Rebooting', 'NDU director'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Post', 'Verify version', 'firmwareshow', 'New version', 'Check errors'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: SCP server with FOS image · switch mgmt Ethernet · console for recovery'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  firmwaredownload = Downloads FOS image and reboots switch to activate new version'))
+    lines.append(txt_row('  NDU            = Non-Disruptive Upgrade; director upgrades without disrupting FC traffic'))
+    lines.append(txt_row('  firmwareshow   = Displays current and committed FOS version on each blade'))
+    lines.append(txt_row('  Stage firmware = Download to flash before activating; allows verification before commit'))
+    lines.append(txt_row('  CP failover    = Standby CP takes over; data plane continues; new standby then upgrades'))
+    lines.append(txt_row('  Rollback       = firmwaredownload to prior version if new version has critical defects'))
+    lines.append(txt_row('  Pre-checks     = Confirm fabric is healthy before maintenance; document baseline state'))
+    lines.append(txt_row('  Change ticket  = All firmware upgrades require approved change management ticket'))
+    lines.append(txt_row('  Peer fabric    = Verify peer fabric (B while upgrading A) is fully healthy first'))
+    lines.append(txt_row('  Post-verify    = Check firmwareshow, switchshow, porterrshow, MAPS after upgrade'))
+    lines.append(txt_row('  SCP image      = FOS firmware .zip downloaded from Broadcom support portal'))
+    lines.append(txt_row('  One fabric     = Upgrade one fabric completely before touching the peer fabric'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'brocade-fabric-os-ops-scripts',
+    'docs/san/brocade/fabric-os/operations/scripts/index.md',
+    'FOS Scripts — automation scripts for zone management, health checks, bulk port operations',
+)
+def brocade_fabric_os_ops_scripts():
+    """Brocade FOS Scripts — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Brocade Fabric OS — Scripts'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'FOS automation: Python/Ansible scripts using REST API and SSH for bulk operations')))
+    lines.append(R(bMid(IV_L, IV_R, 'Zone automation: Ansible brocade_fibrechannel modules for alias/zone/cfgenable')))
+    lines.append(R(bMid(IV_L, IV_R, 'Health scripts: SSH-based porterrshow/sfpshow collection across all switches')))
+    lines.append(R(bMid(IV_L, IV_R, 'REST API scripts: Python requests; authenticate, query port stats, parse JSON')))
+    lines.append(R(bMid(IV_L, IV_R, 'Bulk port ops: loop portdisable/portenable via paramiko SSH for mass changes')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  REST API / SSH access -> script logic -> output parsing -> action or reporting'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Zone Scripts'), bMid(B2_L, B2_R, 'Health Scripts'), bMid(B3_L, B3_R, 'REST Scripts'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Ansible playbook'), bMid(B2_L, B2_R, 'SSH paramiko'), bMid(B3_L, B3_R, 'Python requests'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'alicreate batch'), bMid(B2_L, B2_R, 'porterrshow'), bMid(B3_L, B3_R, 'Token auth'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'zonecreate batch'), bMid(B2_L, B2_R, 'sfpshow collect'), bMid(B3_L, B3_R, 'Port stats GET'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'cfgenable auto'), bMid(B2_L, B2_R, 'Report generate'), bMid(B3_L, B3_R, 'JSON parse'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Idempotent runs'), bMid(B2_L, B2_R, 'Alert on errors'), bMid(B3_L, B3_R, 'Alert trigger'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  All scripts run from jump host; never from fabric switches directly'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Script type', 'Tool', 'Auth', 'Output', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Zone mgmt', 'Ansible', 'SSH key', 'Zone change', 'Idempotent'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['Health check', 'Python+SSH', 'Password/key', 'CSV report', 'All switches'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                             ['REST query', 'Python', 'Bearer token', 'JSON/CSV', 'FOS 8.2+'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: jump host -> mgmt network -> switch mgmt Ethernet ports'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Ansible module = brocade_fibrechannel collection; idempotent zone/alias/cfgenable tasks'))
+    lines.append(txt_row('  paramiko       = Python SSH library; executes FOS CLI commands programmatically'))
+    lines.append(txt_row('  Bearer token   = REST API authentication token; obtained via POST /rest/v1/login'))
+    lines.append(txt_row('  Idempotent     = Script produces same result whether run once or multiple times'))
+    lines.append(txt_row('  Jump host      = Dedicated management host with access to switch mgmt network'))
+    lines.append(txt_row('  porterrshow    = FOS CLI command parsed by health scripts to detect port errors'))
+    lines.append(txt_row('  sfpshow        = FOS CLI command reporting SFP optical power values per port'))
+    lines.append(txt_row('  REST GET       = Read-only REST API call; fetches port stats, switch info, zone config'))
+    lines.append(txt_row('  CSV report     = Health script output format; imported into Excel or monitoring tool'))
+    lines.append(txt_row('  cfgenable auto = Ansible task to activate zone set after alias and zone creation'))
+    lines.append(txt_row('  Batch alias    = Create multiple aliases from CSV input file in single script run'))
+    lines.append(txt_row('  Alert trigger  = Script sends email or webhook when health metric exceeds threshold'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines

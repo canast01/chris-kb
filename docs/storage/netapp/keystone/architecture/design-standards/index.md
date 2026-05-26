@@ -1,5 +1,59 @@
 # Keystone — Standards
 
+```
+┌─────────────────────────── NetApp Keystone — Architecture Design Standards ───────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Design standards: service level -> hardware, network redundancy, sizing, burst        │   │
+│   │          Extreme: AFF A-series NVMe; <1ms latency; 10k+ IOPS/TB committed throughput          │   │
+│   │            Network: dedicated NFS/iSCSI VLAN MTU 9000; dual FC; separate mgmt VLAN            │   │
+│   │           HA: dual-node ONTAP cluster; storage failover within 60 s; SFO/CFO policy           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Workload SLO -> tier -> NW design -> multipath -> committed sizing -> burst budget                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Tier Standards       │  │        Network Design       │  │         HA & Sizing         │   │
+│   │        Extreme: NVMe        │  │        Dedicated VLAN       │  │         Dual node HA        │   │
+│   │       Premium: AFF SSD      │  │         MTU 9000 NFS        │  │         SFO 60 s RTO        │   │
+│   │        Standard: SSD        │  │        Dual FC fabric       │  │        MPIO 4+ paths        │   │
+│   │          Value: HDD         │  │        OOB mgmt VLAN        │  │        Commit 70-80%        │   │
+│   │       Burst 20% extra       │  │         IPMI/BMC OOB        │  │       Burst alert 90%       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Commit 70-80% of expected peak; burst rate covers spikes; review quarterly with KSM                │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Area       │     Standard     │        Why        │      Verify      │      Notes       │   │
+│   │     NFS MTU      │    9000 jumbo    │     Throughput    │   ping -s 8972   │    End-to-end    │   │
+│   │    Multipath     │    ALUA/MPIO     │      4 paths      │   sanlun show    │     FC/iSCSI     │   │
+│   │    Committed     │   70-80% peak    │      Cost ctl     │    Active IQ     │    Quarterly     │   │
+│   │   Burst alert    │   90% of burst   │     Avoid fees    │    Alert rule    │   Auto notify    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: AFF/FAS nodes in rack · dual 10/25 GbE per node · 16/32Gb HBAs for FC                    │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SFO      = Storage Failover; ONTAP HA takeover of partner node storage in <60 s                    │
+│    CFO      = Controller Failover; faster variant; non-disruptive LIF failover                        │
+│    MPIO     = Multipath I/O; OS driver balancing I/O across multiple HBA/NIC paths                    │
+│    ALUA     = Asymmetric Logical Unit Access; preferred vs non-preferred path hints                   │
+│    MTU 9000 = Jumbo frames for NFS/iSCSI; requires end-to-end switch config                           │
+│    Burst    = Capacity above committed level; billed at premium burst rate                            │
+│    KSM      = Keystone Success Manager; NetApp advisor for capacity planning                          │
+│    BMC      = Baseboard Management Controller; OOB access for remote power/console                    │
+│    IPMI     = Intelligent Platform Management Interface; OOB management standard                      │
+│    NVMe-oF  = NVMe over Fabrics (FC or TCP); <100 us block latency                                    │
+│    AFF A    = AFF A-series; all-NVMe flash; highest performance tier                                  │
+│    AFF C    = AFF C-series; capacity-optimised all-flash; QLC NAND                                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 > Part of the [Keystone Architecture](../index.md) reference.
 
 ---

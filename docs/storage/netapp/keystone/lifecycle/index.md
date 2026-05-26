@@ -25,28 +25,58 @@ The Keystone Collector reports consumption telemetry continuously. NetApp aggreg
 ```text
 Monthly Invoice = (Committed capacity × committed rate) + (Burst TiB × burst rate)
 ```
-
-### True-Up Review Process
-
-1. Before the end of each calendar month, log into BlueXP → Digital Wallet → Keystone Subscriptions
-2. Download the month-to-date consumption report for each subscription
-3. Compare consumed capacity per tier against committed capacity — identify any burst usage
-4. For unexpected burst, trace back to the source: new volume provisioning, snapshot growth, or workload growth
-5. If burst consumption appears incorrect (not matching ONTAP volume usage), raise a discrepancy with the KSM before the invoice is finalised
-6. After invoice receipt, reconcile the invoice against the downloaded consumption report and archive both for audit records
-
-```bash
-# ONTAP: compare logical used capacity vs. what Keystone is billing
-# Run on the ONTAP cluster backing the subscription
-
-# Total logical used per SVM (what Keystone measures)
-volume show -vserver * -fields vserver,volume,logical-used,size | sort -k4 -rn
-
-# Check snapshot contribution to capacity
-snapshot show -vserver * -volume * -fields vserver,volume,size | sort -k4 -rn | head -20
-
-# Aggregate-level physical used (for cross-check)
-storage aggregate show -fields aggregate,size,used,available
+┌───────────────────────────────────── NetApp Keystone — Lifecycle ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Keystone lifecycle: contract -> install -> operate -> capacity change -> renew        │   │
+│   │          Contract: 1-5 year term; committed TB per service level; burst allowance set         │   │
+│   │         Install: NetApp ships AFF/FAS; rack + cable + ONTAP config by NetApp engineer         │   │
+│   │         Capacity change: add TB via KSM; contract amendment; hardware added if needed         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Contract sign -> install -> operate -> capacity change -> renew or exit                            │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Pre-Deploy         │  │           In-Life           │  │         End of Term         │   │
+│   │        Contract sign        │  │          Operations         │  │        Renewal option       │   │
+│   │          HW sizing          │  │       Capacity review       │  │         Upgrade term        │   │
+│   │         Site survey         │  │       Burst monitoring      │  │       Exit: data move       │   │
+│   │         Rack install        │  │         Capacity add        │  │          HW return          │   │
+│   │         ONTAP config        │  │        ONTAP upgrade        │  │        Contract close       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Quarterly review with KSM: usage vs committed; plan capacity change before burst                   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Phase       │      Action      │       Owner       │       SLA        │      Notes       │   │
+│   │      Deploy      │   Rack/install   │       NetApp      │    30-60 days    │  Site ready req  │   │
+│   │     Cap add      │  Contract amend  │        KSM        │     30 days      │   HW lead time   │   │
+│   │    ONTAP upg     │  Patch/upgrade   │    NetApp/cust    │    Scheduled     │  Non-disruptive  │   │
+│   │       Exit       │  Data migration  │      Customer     │     EOL date     │   HW returned    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: NetApp ships AFF/FAS + disk shelves; customer provides rack/power/cooling                │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    KSM                = Keystone Success Manager; lifecycle advisor; quarterly reviews                │
+│    Contract term      = 1, 3, or 5 years; defines committed TB and burst allowance                    │
+│    Capacity amendment = Formal change to contract committed TB; requires KSM sign-off                 │
+│    Site survey        = Pre-install assessment: rack space, power, cooling, network                   │
+│    Non-disruptive upg = ONTAP upgrade without host I/O interruption via rolling                       │
+│    Exit plan          = 90-day notice; customer migrates data; NetApp reclaims HW                     │
+│    Burst monitoring   = Active IQ alerts at 80%, 90% of burst ceiling                                 │
+│    ONTAP upgrade      = Cluster rolling upgrade; one node at a time; HA takes over                    │
+│    HW return          = Hardware is NetApp property; decommission on contract end                     │
+│    SFO                = Storage Failover; HA takeover during ONTAP upgrade cycles                     │
+│    Quarterly review   = KSM meets customer; reviews usage, forecasts, adjusts plan                    │
+│    HW lead time       = 30-60 days for new AFF/FAS nodes post-amendment                               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Billing Discrepancy Procedure

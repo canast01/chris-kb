@@ -21,61 +21,58 @@ flowchart TD
     style done fill:#15803d,color:#fff
     style start fill:#2563eb,color:#fff
 ```
-
-## Change Readiness
-
-- [ ] Zone configuration backup taken: run `cfgsave` and export offline copy via `configupload`
-- [ ] Both Fabric A and Fabric B are healthy before touching either
-- [ ] ISL utilization has headroom — no ISL above 70% sustained load
-- [ ] NPIV usage documented: note which ports have NPIV-enabled devices logged in
-- [ ] `porterrshow` counters clear or baselined before change
-- [ ] Maintenance window approved and communicated to affected teams
-- [ ] Rollback plan documented: zone config restore procedure confirmed
-
-| Item | Status | Notes |
-|---|---|---|
-| Zone config backup | | `configupload` to jump host |
-| Both fabrics healthy | | `switchshow` on both |
-| ISL headroom confirmed | | `islshow` bandwidth check |
-| NPIV inventory current | | Port-to-host mapping |
-| Change window approved | | Ticket reference |
-
----
-
-## Maintenance Window
-
-1. Confirm both fabrics are healthy via `switchshow` and `fabricshow` on all switches
-2. Take a configuration backup: `configupload` to a secure jump host
-3. Notify storage and compute teams that Fabric A (or B) will be affected
-4. Perform the change on one fabric only — leave the other fabric carrying full host I/O
-5. After change, run `switchshow`, `fabricshow`, and `islshow` to confirm fabric is stable
-6. Validate host multipath paths via host-side `esxcli storage nmp device list` or `multipath -ll`
-7. Confirm zone configuration is correct: `cfgshow` and compare to pre-change backup
-8. Repeat procedure on second fabric only after first fabric is fully validated
-
----
-
-## Zoning
-
-### Zone Membership Model
-
-### Zoning Rules
-
-| Rule | Reason |
-|---|---|
-| Single-initiator zoning — one HBA per zone | Prevents cross-talk between hosts; limits fault blast radius |
-| Zone by WWN (alias-based) — not port ID | Port-based zones break on cable moves or switch port changes |
-| Use aliases for all WWNs | Aliases make zones readable and portable across fabrics |
-| One zone per initiator per target array | LUN masking is handled on the array — zones control path visibility only |
-| Name: `<host>_<hbaN>__<array>_<ctrl>_<portN>` | Consistent naming makes audit and troubleshooting fast |
-
-### Naming Convention
-
-```yaml
-  Alias:    <hostname>_<hbaN>               e.g.  esxi01_hba0
-  Alias:    <array>_<controller>_<portN>    e.g.  fa01_ct0_p0
-  Zone:     <host-alias>__<array-alias>     e.g.  esxi01_hba0__fa01_ct0_p0
-  Zone set: <sitecode>-<fabric>-prod        e.g.  dc1-fabA-prod
+┌────────────────────────────── Brocade Fabric OS — Operations Procedures ──────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │             Standard FOS operational procedures for day-to-day SAN administration             │   │
+│   │            Zone change: create alias -> create zone -> add to zone set -> cfgenable           │   │
+│   │      Port management: portdisable/portenable; portcfgpersistentdisable for permanent off      │   │
+│   │          Firmware upgrade: firmwaredownload -s; verify with firmwareshow after reboot         │   │
+│   │              Config backup: configupload to save switch config to SCP/FTP server              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Pre-checks -> change procedure -> post-checks -> documentation and rollback plan                   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Zone Mgmt          │  │          Port Mgmt          │  │          Lifecycle          │   │
+│   │          alicreate          │  │         portdisable         │  │       firmwaredownload      │   │
+│   │          zonecreate         │  │          portenable         │  │         configupload        │   │
+│   │            cfgadd           │  │         portcfgspeed        │  │        configdownload       │   │
+│   │          cfgenable          │  │         portcfgmode         │  │         supportshow         │   │
+│   │           cfgsave           │  │           portshow          │  │         firmwareshow        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Always cfgsave after cfgenable; changes without cfgsave lost on switch reboot                      │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Procedure     │   CLI command    │       Impact      │     Rollback     │      Notes       │   │
+│   │     Zone add     │    cfgenable     │    Fabric-wide    │  cfgenable old   │   CAB required   │   │
+│   │   Port disable   │   portdisable    │     Port only     │    portenable    │    Log first     │   │
+│   │    FW upgrade    │ firmwaredownload │   Switch reboot   │  Prior version   │    NDU for HA    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: SSH to switch mgmt IP · SCP server for config/firmware files                             │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    alicreate      = FOS CLI command to create a WWN alias for a host or storage port                  │
+│    zonecreate     = Creates a new zone with specified member aliases or WWNs                          │
+│    cfgadd         = Adds a zone to an existing zone configuration                                     │
+│    cfgenable      = Activates the named zone configuration across the entire fabric                   │
+│    cfgsave        = Saves the zone database to non-volatile memory on all switches                    │
+│    portdisable    = Administratively disables an FC port (state: No_Light or D_Port)                  │
+│    portcfgspeed   = Sets port speed (auto, 8G, 16G, 32G, 64G)                                         │
+│    firmwaredownload = Downloads FOS image from SCP/FTP and reboots switch to activate                 │
+│    configupload   = Uploads running switch config to SCP/FTP for backup                               │
+│    configdownload = Restores switch config from previously uploaded backup file                       │
+│    supportshow    = Collects full diagnostic data bundle for TAC support                              │
+│    NDU            = Non-Disruptive Upgrade; HA chassis upgrades one blade at a time                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### View Current State

@@ -25,15 +25,49 @@ passwd -S username
 # List all accounts with UID >= 1000 (non-system)
 awk -F: '$3 >= 1000 { print $1, $3, $7 }' /etc/passwd
 ```
-
-### Password Policy — /etc/login.defs
-
-```bash
-# /etc/login.defs — enforce organisation password age policy
-PASS_MAX_DAYS   90
-PASS_MIN_DAYS   1
-PASS_WARN_AGE   14
-PASS_MIN_LEN    14
+┌─────────────────────────────────────── Linux — Authentication ────────────────────────────────────────┐
+│                                                                                                       │
+│  Linux authentication: SSH keys, PAM modules, SSSD for AD/LDAP, and MFA enforcement.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            SSH Key Authentication            │  │              PAM Authentication             │   │
+│   │       Generate: ssh-keygen -t ed25519        │  │         /etc/pam.d/sshd: auth stack         │   │
+│   │        Deploy: ssh-copy-id user@host         │  │            pam_unix: local passwd           │   │
+│   │       ~/.ssh/authorized_keys: pub key        │  │          pam_google_auth: TOTP MFA          │   │
+│   │      PasswordAuthentication no in sshd       │  │             pam_ldap: LDAP bind             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SSH key auth preferred; disable password; use PAM for MFA + LDAP                                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          SSSD (AD/LDAP Integration)          │  │           Local Account Management          │   │
+│   │        realm join domain.example.com         │  │         useradd / usermod / userdel         │   │
+│   │         /etc/sssd/sssd.conf: config          │  │       passwd / chpasswd: set password       │   │
+│   │       sssctl user-checks: diagnostics        │  │        chage: password expiry policy        │   │
+│   │        Kerberos tickets: kinit/klist         │  │        /etc/shadow: hashed passwords        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · AD domain controllers · LDAP server · NTP                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ed25519      = modern elliptic-curve SSH key type; preferred over RSA                                │
+│  authorized_keys= file listing public keys allowed to authenticate via SSH                            │
+│  PAM          = Pluggable Authentication Modules; stacked auth policy                                 │
+│  pam_google_auth= PAM module adding TOTP (Google Authenticator) second factor                         │
+│  SSSD         = System Security Services Daemon; caches AD/LDAP credentials                           │
+│  realm join   = joins Linux host to AD domain; configures Kerberos + SSSD                             │
+│  Kerberos     = ticket-based network auth; realm join enables it on Linux                             │
+│  kinit        = obtain Kerberos ticket-granting ticket                                                │
+│  chage        = change password aging info: expiry, min/max days                                      │
+│  /etc/shadow  = stores hashed passwords; root-readable only                                           │
+│  sssctl       = SSSD control tool; check user/group lookup and auth                                   │
+│  PasswordAuthentication= sshd_config option; set to no to disable SSH passwords                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Apply changed settings to existing accounts:

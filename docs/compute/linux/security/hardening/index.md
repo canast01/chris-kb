@@ -32,25 +32,49 @@ flowchart TD
     kernel --> mac --> auth --> audit
     fs --> audit
 ```
-
-## CIS Benchmark Baseline
-
-The CIS (Center for Internet Security) Benchmark for Linux provides a prioritised set of controls. Level 1 covers essential, low-risk hardening; Level 2 is for high-security environments.
-
-### Assessment Tools
-
-```bash
-# OpenSCAP — automated CIS/STIG assessment (RHEL)
-dnf install -y openscap-scanner scap-security-guide
-
-# Run CIS Level 1 benchmark assessment
-oscap xccdf eval \
-  --profile xccdf_org.ssgproject.content_profile_cis \
-  --results /tmp/cis-results.xml \
-  --report /tmp/cis-report.html \
-  /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml
-
-# Open the HTML report to review findings
+┌────────────────────────────────────────── Linux — Hardening ──────────────────────────────────────────┐
+│                                                                                                       │
+│  Linux server hardening: CIS benchmark, kernel tuning, service reduction, and audit logging.          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 OS Baseline                  │  │              Network Hardening              │   │
+│   │       Patch: auto-update critical CVEs       │  │        Firewall: default-deny inbound       │   │
+│   │       Remove unused packages/services        │  │         sshd: port 22 → custom port         │   │
+│   │            Disable root SSH login            │  │        AllowUsers: restrict SSH users       │   │
+│   │          CIS-CAT or OpenSCAP: scan           │  │        TCP wrappers: hosts.allow/deny       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Patch first; reduce attack surface; enforce audit trail                                            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Kernel Parameters (sysctl)          │  │              Audit and Logging              │   │
+│   │            net.ipv4.ip_forward=0             │  │            auditd: enable at boot           │   │
+│   │          net.ipv4.tcp_syncookies=1           │  │          auditctl: add watch rules          │   │
+│   │         kernel.randomize_va_space=2          │  │           rsyslog: forward to SIEM          │   │
+│   │              fs.suid_dumpable=0              │  │         logrotate: retention policy         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · Secure Boot · TPM · SIEM log destination                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CIS benchmark= Center for Internet Security Linux hardening guide                                    │
+│  OpenSCAP     = open-source SCAP scanner; checks system against policy profiles                       │
+│  sysctl       = runtime kernel parameter adjustment; persist in /etc/sysctl.d/                        │
+│  ASLR         = Address Space Layout Randomisation; randomize_va_space=2                              │
+│  SYN cookies  = mitigate TCP SYN flood; tcp_syncookies=1                                              │
+│  ip_forward   = route packets between interfaces; disable on non-routers                              │
+│  auditd       = kernel audit daemon; logs file/syscall/network events                                 │
+│  auditctl     = add/remove audit rules at runtime                                                     │
+│  rsyslog      = syslog daemon; can forward events to SIEM over TCP/TLS                                │
+│  logrotate    = manages log file rotation, compression, and retention                                 │
+│  suid_dumpable= 0 disables core dumps for SUID programs                                               │
+│  AllowUsers   = sshd_config whitelist; only listed users can SSH in                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash

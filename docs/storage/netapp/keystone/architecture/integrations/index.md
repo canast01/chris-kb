@@ -1,5 +1,59 @@
 # Keystone — Integrations
 
+```
+┌───────────────────────────── NetApp Keystone — Architecture Integrations ─────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Keystone integrations: Active IQ, BlueXP, Ansible ONTAP, ServiceNow, Prometheus        │   │
+│   │         BlueXP: unified cloud manager; controls Keystone ordering and capacity changes        │   │
+│   │          Ansible NetApp collection: automates SVM, volume, LUN provisioning on ONTAP          │   │
+│   │          Prometheus exporter: exposes ONTAP perf metrics; Grafana dashboards for ops          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    ONTAP REST API <- Ansible/Terraform/BlueXP; ONTAP -> Prometheus -> Grafana -> alerts               │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      Cloud Integrations     │  │          Automation         │  │          Monitoring         │   │
+│   │         Active IQ DA        │  │        Ansible netapp       │  │          Prometheus         │   │
+│   │        BlueXP portal        │  │       Terraform ONTAP       │  │        Grafana boards       │   │
+│   │         Keystone UI         │  │        REST API calls       │  │          SNMP traps         │   │
+│   │         AutoSupport         │  │          ServiceNow         │  │          EMS alerts         │   │
+│   │          SR portal          │  │          Python SDK         │  │        Syslog export        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    ONTAP REST API is the integration backbone; all modern tools use JSON/HTTPS                        │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Tool       │     Use Case     │      Protocol     │       Auth       │      Notes       │   │
+│   │      BlueXP      │  Capacity order  │       HTTPS       │      OAuth2      │   NetApp cloud   │   │
+│   │     Ansible      │   Provisioning   │     REST/ZAPI     │    Basic/cert    │    na_ontap_*    │   │
+│   │    Prometheus    │   Perf metrics   │    HTTP scrape    │    None/token    │  ONTAP exporter  │   │
+│   │    ServiceNow    │   ITSM tickets   │    REST webhook   │      OAuth       │   EMS -> SNOW    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Ansible controller VM · Prometheus server · Grafana in mgmt network                      │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    BlueXP           = NetApp cloud manager; unified UI for on-prem and cloud storage                  │
+│    Ansible na_ontap = NetApp Ansible collection; 200+ modules for ONTAP automation                    │
+│    Terraform ONTAP  = NetApp provider for Terraform; declarative ONTAP provisioning                   │
+│    Prometheus       = Time-series metrics DB; scrapes ONTAP exporter endpoint                         │
+│    EMS              = Event Management System; ONTAP event log and alert engine                       │
+│    SNMP trap        = UDP event notification; ONTAP -> monitoring system                              │
+│    AutoSupport      = ONTAP built-in support telemetry; HTTPS to support.netapp.com                   │
+│    ServiceNow       = ITSM platform; EMS webhooks create incident tickets                             │
+│    Python SDK       = netapp-lib / ontap-rest-python; scripting ONTAP REST API                        │
+│    Syslog           = ONTAP EMS forwarded to syslog server (Splunk, Graylog, etc.)                    │
+│    OAuth2           = Token-based auth for BlueXP and modern REST API clients                         │
+│    ZAPI             = Legacy XML-based ONTAP API; deprecated from ONTAP 9.13 onward                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 > Part of the [Keystone Architecture](../index.md) reference.
 
 ---

@@ -47,37 +47,60 @@ flowchart LR
   EVENT --> CT1
   P0 -.->|"MPIO promotes P1\nas Active/Optimised"| P1
 ```
-
-## Connectivity
-
-| Protocol | Media | Port Speed | Notes |
-|---|---|---|---|
-| FC | Fibre Channel | 16 Gb / 32 Gb | Traditional SAN fabric; requires FC switches and zoning |
-| iSCSI | Ethernet | 10 GbE / 25 GbE | IP-SAN; jumbo frames (MTU 9000) recommended |
-| NVMe/FC | Fibre Channel | 32 Gb | NVMe-oF over FC; requires NVMe-capable HBAs and FC switches |
-| NVMe/RoCE | Ethernet (RoCE v2) | 25 GbE / 100 GbE | NVMe-oF over RDMA Ethernet; requires RoCE-capable NICs |
-| NVMe/TCP | Ethernet | 25 GbE / 100 GbE | NVMe-oF over standard TCP/IP; no special fabric required |
-
-Network requirements: management on dedicated 1/10 GbE; replication on dedicated VLAN (10 GbE minimum); iSCSI data with MTU 9000 end-to-end; Pure1 phone-home via outbound HTTPS (443) to `*.purestorage.com`.
-
-## Purity//FA Data Services
-
-| Service | Description |
-|---|---|
-| Thin provisioning | Volumes consume only actual flash capacity; allocated size is a logical ceiling |
-| Inline deduplication | Identical blocks across all volumes stored once; always-on, no configuration required |
-| Inline compression | Data compressed before flash write using pattern removal and block compression |
-| Snapshots | Space-efficient, crash-consistent point-in-time copies; writable clones available from any snapshot |
-| Protection Groups | Policy-based snapshot scheduling and async replication; multiple volumes grouped for consistency |
-| ActiveCluster | Synchronous replication in a pod; RPO=0, active-active access from both sites |
-| ActiveDR | Async replication for DR; recovery via pod promotion at DR site |
-| SafeMode | Admin-delete-locked snapshots; deletion requires dual-approval via Pure Support |
-| QoS | Per-volume IOPS and bandwidth limits; protects shared workloads from noisy neighbours |
-
-```bash
-purearray list --space     # capacity and data reduction metrics
-purearray monitor          # real-time performance (latency, IOPS, bandwidth)
-purearray monitor --latency
+┌─────────────────────────────────── Pure FlashArray — How It Works ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Write I/O Path: Host to HBA to Controller to NVRAM to Dedup/Compress to Flash         │   │
+│   │           Step 1: Host writes LUN; controller receives I/O on FC / iSCSI / NVMe port          │   │
+│   │         Step 2: Write lands in NVRAM on active CT; mirrored to peer CT via NVRAM link         │   │
+│   │          Step 3: ACK returned to host after NVRAM mirror; data is durable before ACK          │   │
+│   │     Step 4: Purity destages NVRAM to DirectFlash: hash dedup then compress then write DFM     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Host sees < 1 ms latency; NVRAM absorbs burst while destage happens asynchronously                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      NVRAM Write Buffer     │  │   Dedup / Compress Engine   │  │   DirectFlash (DFM) Layer   │   │
+│   │      CT0 NVRAM: primary     │  │ Global hash: SHA fingerprint│  │  NVMe-native: no FTL layer  │   │
+│   │    CT1 NVRAM: mirror copy   │  │  Pattern: zero-block detect │  │ DFM wear-levelled by Purity │   │
+│   │   ACK: after both mirrors   │  │   LZ4: inline compression   │  │   Hot/warm/cold data tiers  │   │
+│   │ Capacitor backup: safe flush│  │    Reduction: 4:1 typical   │  │    NAND: MLC/QLC modules    │   │
+│   │    NVRAM drain on destage   │  │  Written unique chunks only │  │   SSD life: Purity manages  │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    HA failover: CT0 fails, CT1 takes all I/O; NVRAM safe; < 30 s transparent failover                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Write Path    │    Read Path     │    HA Failover    │   Dedup Stats    │    CLI Verify    │   │
+│   │ Host to CT NVRAM │  CT to DFM read  │ CT0 heartbeat lost│ puredataset list │  purearray get   │   │
+│   │Mirror to peer CT │ Cache hit first  │   CT1 takes over  │ Data reduction % │purearray monitor │   │
+│   │   ACK to host    │  NVRAM prefetch  │     < 30 s RTO    │  Unique data GB  │  puredrive list  │   │
+│   │ Destage to flash │No rebuild needed │  Transparent host │ Space savings %  │ purevolume list  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  CT0 + CT1 controllers · NVRAM DIMMs · DirectFlash modules · SAS/NVMe shelf interconnect · FC switch  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  NVRAM mirror  = Synchronous mirror of write buffer between CT0 and CT1 before host ACK               │
+│  Destage       = Process of draining NVRAM writes to flash; runs continuously in background           │
+│  Inline dedup  = Deduplication applied on every I/O before write; global hash fingerprint             │
+│  LZ4           = Compression algorithm used by Purity; fast, low-CPU, good ratio on block data        │
+│  DFM           = DirectFlash Module; Pure-custom NVMe SSD with no FTL overhead layer                  │
+│  FTL           = Flash Translation Layer; removed in DFM so Purity handles flash mapping directly     │
+│  Data reduction= Ratio of logical written to physical flash used; includes dedup + compression        │
+│  Capacitor     = Backup power on NVRAM; ensures safe flush to flash on power loss                     │
+│  HA failover   = Automatic controller failover; CT1 adopts all I/O from failed CT0 within 30 s        │
+│  Read path     = Reads served from NVRAM cache or DirectFlash; no read penalty from dedup             │
+│  Zero-block    = Pattern-detected zero blocks stored as metadata only; highest dedup ratio            │
+│  Heartbeat     = Inter-controller health signal; loss triggers failover to surviving controller       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## ActiveCluster (Pods)

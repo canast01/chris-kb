@@ -136,153 +136,58 @@ Edit these lines near the top of the script:
 chmod +x brocade_fabric_health.sh
 SWITCH_HOST=192.168.1.10 SWITCH_USER=admin ./brocade_fabric_health.sh
 ```
-
-When prompted, enter the SSH password for the switch.
-
-**What you should see**
-
-Six check sections, each labelled PASS, WARNING, or CRITICAL: switch port states, fabric segmentation, ISL link status, port error counters (after a 30-second collection window), error log entries, and SFP optical warnings. The final line shows the overall status.
-
----
-
-## Port Error Monitor (Perl)
-
-Run every 15 minutes via cron. Reads a baseline file, compares current `portstatsshow` counters, and alerts if any delta exceeds threshold.
-
-~~~perl
-#!/usr/bin/env perl
-# brocade_port_error_monitor.pl
-# Cron: */15 * * * * /opt/scripts/brocade_port_error_monitor.pl
-# Config via environment: SWITCH_HOST, SWITCH_USER, BASELINE_FILE
-
-use strict;
-use warnings;
-use POSIX qw(strftime);
-
-my $SWITCH_HOST    = $ENV{SWITCH_HOST}    // '192.168.1.10';
-my $SWITCH_USER    = $ENV{SWITCH_USER}    // 'admin';
-my $BASELINE_FILE  = $ENV{BASELINE_FILE}  // '/var/tmp/brocade_baseline.dat';
-my $SSH_OPTS       = '-o StrictHostKeyChecking=no -o ConnectTimeout=10 -o BatchMode=yes';
-
-# Per-counter thresholds (delta over 15 min)
-my %THRESHOLD = (
-    enc_in      => 100,
-    enc_out     => 100,
-    bad_eof     => 20,
-    disc_c3     => 50,
-    timeout_c3  => 50,
-    link_fail   => 5,
-    loss_sig    => 5,
-    loss_sync   => 10,
-);
-
-sub run_switch_cmd {
-    my ($cmd) = @_;
-    my $out = `ssh $SSH_OPTS ${SWITCH_USER}\@${SWITCH_HOST} "$cmd" 2>/dev/null`;
-    die "SSH failed for command: $cmd\n" if $? != 0;
-    return $out;
-}
-
-# Parse portstatsshow output into { portN => { counter => value } }
-sub parse_portstats {
-    my ($raw) = @_;
-    my %data;
-    my $cur_port;
-    for my $line (split /\n/, $raw) {
-        if ($line =~ /^port\s+(\d+)/i) {
-            $cur_port = "port$1";
-        } elsif ($cur_port && $line =~ /^\s*(enc_in|enc_out|bad_eof|disc_c3|timeout_c3|link_fail|loss_sig|loss_sync)\s+(\d+)/) {
-            $data{$cur_port}{$1} = int($2);
-        }
-    }
-    return %data;
-}
-
-# Load baseline from file
-sub load_baseline {
-    my %base;
-    return %base unless -f $BASELINE_FILE;
-    open my $fh, '<', $BASELINE_FILE or return %base;
-    while (<$fh>) {
-        chomp;
-        my ($port, $counter, $val) = split /\t/;
-        $base{$port}{$counter} = int($val);
-    }
-    close $fh;
-    return %base;
-}
-
-# Save current readings as new baseline
-sub save_baseline {
-    my (%data) = @_;
-    open my $fh, '>', $BASELINE_FILE or die "Cannot write baseline: $!\n";
-    for my $port (sort keys %data) {
-        for my $counter (sort keys %{$data{$port}}) {
-            print $fh "${port}\t${counter}\t$data{$port}{$counter}\n";
-        }
-    }
-    close $fh;
-}
-
-# --- Main ---
-my $ts = strftime('%Y-%m-%dT%H:%M:%SZ', gmtime);
-my $raw    = run_switch_cmd('portstatsshow');
-my %current = parse_portstats($raw);
-my %baseline = load_baseline();
-
-my @alerts;
-
-for my $port (sort keys %current) {
-    for my $counter (sort keys %{$current{$port}}) {
-        my $cur = $current{$port}{$counter};
-        my $base = $baseline{$port}{$counter} // 0;
-        my $delta = $cur - $base;
-        $delta = 0 if $delta < 0;   # counter wrap
-        my $thresh = $THRESHOLD{$counter} // 9999;
-        if ($delta >= $thresh) {
-            push @alerts, sprintf("  %-12s  %-12s  delta=%d  (threshold=%d)",
-                $port, $counter, $delta, $thresh);
-        }
-    }
-}
-
-if (@alerts) {
-    print "[$ts] ALERT: Brocade port error threshold exceeded on $SWITCH_HOST\n";
-    print "$_\n" for @alerts;
-    # Replace with your alerting mechanism (mail, PagerDuty, etc.)
-} else {
-    print "[$ts] OK: All port error counters within threshold on $SWITCH_HOST\n";
-}
-
-save_baseline(%current);
-exit scalar(@alerts) ? 1 : 0;
-~~~
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux or macOS machine with Perl installed (`perl --version` to check; install with `sudo apt install perl`)
-- SSH key-based authentication set up to the Brocade switch (so the script can run non-interactively via cron)
-- Network access to the Brocade switch management IP
-
-**Step 1 — Save the file**
-
-1. Open a text editor
-2. Copy the entire code block above
-3. Save it as `brocade_port_error_monitor.pl` in `/opt/scripts/` or your home directory
-
-**Step 2 — Fill in your details**
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `$SWITCH_HOST` | IP address of the Brocade switch | Switch management IP |
-| `$SWITCH_USER` | SSH username | Usually `admin` |
-| `$BASELINE_FILE` | Path to store the counter baseline | Any writable path, e.g. `/var/tmp/brocade_baseline.dat` |
-
-**Step 3 — Make the script executable and schedule via cron**
-
-```bash
-chmod +x /opt/scripts/brocade_port_error_monitor.pl
+┌───────────────────────────────────── Brocade Fabric OS — Scripts ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       FOS automation: Python/Ansible scripts using REST API and SSH for bulk operations       │   │
+│   │         Zone automation: Ansible brocade_fibrechannel modules for alias/zone/cfgenable        │   │
+│   │          Health scripts: SSH-based porterrshow/sfpshow collection across all switches         │   │
+│   │         REST API scripts: Python requests; authenticate, query port stats, parse JSON         │   │
+│   │          Bulk port ops: loop portdisable/portenable via paramiko SSH for mass changes         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    REST API / SSH access -> script logic -> output parsing -> action or reporting                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Zone Scripts        │  │        Health Scripts       │  │         REST Scripts        │   │
+│   │       Ansible playbook      │  │         SSH paramiko        │  │       Python requests       │   │
+│   │       alicreate batch       │  │         porterrshow         │  │          Token auth         │   │
+│   │       zonecreate batch      │  │       sfpshow collect       │  │        Port stats GET       │   │
+│   │        cfgenable auto       │  │       Report generate       │  │          JSON parse         │   │
+│   │       Idempotent runs       │  │       Alert on errors       │  │        Alert trigger        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    All scripts run from jump host; never from fabric switches directly                                │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Script type    │       Tool       │        Auth       │      Output      │      Notes       │   │
+│   │    Zone mgmt     │     Ansible      │      SSH key      │   Zone change    │    Idempotent    │   │
+│   │   Health check   │    Python+SSH    │    Password/key   │    CSV report    │   All switches   │   │
+│   │    REST query    │      Python      │    Bearer token   │     JSON/CSV     │     FOS 8.2+     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: jump host -> mgmt network -> switch mgmt Ethernet ports                                  │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Ansible module = brocade_fibrechannel collection; idempotent zone/alias/cfgenable tasks            │
+│    paramiko       = Python SSH library; executes FOS CLI commands programmatically                    │
+│    Bearer token   = REST API authentication token; obtained via POST /rest/v1/login                   │
+│    Idempotent     = Script produces same result whether run once or multiple times                    │
+│    Jump host      = Dedicated management host with access to switch mgmt network                      │
+│    porterrshow    = FOS CLI command parsed by health scripts to detect port errors                    │
+│    sfpshow        = FOS CLI command reporting SFP optical power values per port                       │
+│    REST GET       = Read-only REST API call; fetches port stats, switch info, zone config             │
+│    CSV report     = Health script output format; imported into Excel or monitoring tool               │
+│    cfgenable auto = Ansible task to activate zone set after alias and zone creation                   │
+│    Batch alias    = Create multiple aliases from CSV input file in single script run                  │
+│    Alert trigger  = Script sends email or webhook when health metric exceeds threshold                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Add to crontab (`crontab -e`):

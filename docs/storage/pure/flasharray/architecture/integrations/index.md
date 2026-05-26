@@ -20,47 +20,60 @@ FlashArray Integration Map
                       └──────────────► Remote FlashArray
                                        (ActiveDR / ActiveCluster)
 ```
-
-## Integration Architecture Overview
-
-```mermaid
-graph TD
-  subgraph "FlashArray"
-    FA["FlashArray\nCT0 / CT1"]
-    MGMT["Management Port\n(HTTPS 443 / SSH 22)"]
-    REPL["Replication Port\n(TLS inter-array)"]
-    HOST["FC / iSCSI / NVMe Ports\n(host I/O)"]
-    FA --- MGMT & REPL & HOST
-  end
-
-  subgraph "Management Integrations"
-    PURE1["Pure1 Cloud\n(phone-home HTTPS)"]
-    VCENTER["VMware vCenter\n(VASA / vSphere Plugin)"]
-    VEEAM["Veeam B&R\n(FlashArray Plugin)"]
-    ANSIBLE["Ansible / Terraform\n(REST API — api-token)"]
-    SNMP["SNMP NMS\n(SNMPv3 polls + traps)"]
-    SIEM["SIEM\n(TLS syslog)"]
-  end
-
-  subgraph "Host Layer"
-    ESX["ESXi Hosts\n(FC / iSCSI)"]
-    DB["Database Hosts\n(FC / NVMe-oF)"]
-  end
-
-  MGMT -->|"HTTPS"| PURE1
-  MGMT -->|"HTTPS / VASA"| VCENTER
-  MGMT -->|"REST API"| VEEAM & ANSIBLE
-  MGMT -->|"SNMP"| SNMP
-  MGMT -->|"syslog"| SIEM
-  REPL -->|"sync / async replication"| REMOTE["Remote FlashArray\n(ActiveCluster / ActiveDR)"]
-  HOST --> ESX & DB
-
-  classDef fa fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmtInt fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class FA,MGMT,REPL,HOST fa
-  class PURE1,VCENTER,VEEAM,ANSIBLE,SNMP,SIEM mgmtInt
-  class ESX,DB host
+┌──────────────────────────────────── Pure FlashArray Integrations ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        FlashArray Integration Ecosystem — VMware, Kubernetes, Backup, Cloud, Automation       │   │
+│   │          VMware: VASA/VAAI plugin · vVols datastore · SPBM policy-driven provisioning         │   │
+│   │        Kubernetes: Pure Service Orchestrator (PSO) / Portworx; dynamic PVC provisioning       │   │
+│   │           Backup: Veeam, Commvault, Veritas via snapshot-based offload via Pure APIs          │   │
+│   │       Automation: Ansible collection, Terraform provider, REST API v2 for all operations      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Pure REST API v2 is the integration backbone — all plugins and tools consume it                    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      VMware Integration     │  │   Kubernetes / Containers   │  │     Backup + Automation     │   │
+│   │  VASA: storage policy mgmt  │  │  PSO: dynamic PVC on-demand │  │  Veeam: snap-based offload  │   │
+│   │   VAAI: HW-accelerated ops  │  │ CSI driver: standard K8s API│  │  Commvault: snap management │   │
+│   │    vVols: per-VM volumes    │  │Portworx: data services layer│  │Ansible: purestorage.flasharr│   │
+│   │   SPBM: QoS per datastore   │  │ StatefulSet persistent store│  │ Terraform: volume lifecycle │   │
+│   │   SRM: site recovery plans  │  │  Multi-attach: RWX volumes  │  │  REST v2: token auth + JSON │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    All integrations leverage REST API · VMware via VASA/VAAI · K8s via CSI/PSO                        │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   VMware Setup   │    K8s Setup     │   Backup Config   │     REST API     │    Automation    │   │
+│   │Install VASA plugi│ Deploy PSO helm  │ Register array IP │   GET /arrays    │  ansible-galaxy  │   │
+│   │Create vVol store │Set storage class │  API token creds  │  POST /volumes   │  terraform init  │   │
+│   │SPBM policy assign│ Test dynamic PVC │ Snapshot schedule │   PATCH /hosts   │ pureuser API add │   │
+│   │SRM plugin config │  Verify PV bind  │   Offload verify  │ DELETE /volumes  │ Idempotent runs  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  FlashArray controllers · ESXi hosts · K8s worker nodes · Backup media server · IP/FC SAN fabric      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VASA          = vSphere API for Storage Awareness; allows vSphere to query array capabilities        │
+│  VAAI          = vSphere API for Array Integration; offloads clone, zero, lock ops to array HW        │
+│  vVols         = Virtual Volumes; per-VM volume objects managed directly by FlashArray                │
+│  SPBM          = Storage Policy-Based Management; assigns QoS and protection to VMs by policy         │
+│  PSO           = Pure Service Orchestrator; Kubernetes dynamic storage provisioner for Pure arrays    │
+│  CSI           = Container Storage Interface; standard Kubernetes block/file storage API              │
+│  Portworx      = Pure-owned container data platform; distributed storage layer for K8s workloads      │
+│  SRM           = Site Recovery Manager; VMware DR orchestration using Pure replication snapshots      │
+│  REST v2       = Pure FlashArray REST API version 2; JSON, token auth, full CRUD for all objects      │
+│  Ansible coll  = purestorage.flasharray Galaxy collection; modules for volumes, hosts, PGs            │
+│  Terraform     = HashiCorp IaC; purestorage/flasharray provider for declarative volume management     │
+│  API token     = Authentication credential for REST and automation; scoped to array user role         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## VMware Integration

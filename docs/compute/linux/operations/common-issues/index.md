@@ -30,26 +30,49 @@ flowchart TD
     hardware -- No --> changed
     changed --> resources --> services --> resolve
 ```
-
-## High CPU
-
-```bash
-# Which processes are consuming CPU?
-ps aux --sort=-%cpu | head -15
-top -b -n1 | head -25
-
-# Is load from CPU-bound work or I/O wait?
-# wa% in top/iostat = I/O wait — not a CPU problem
-iostat -xz 1 3 | grep -E "Device|avg-cpu"
-
-# Per-thread breakdown
-ps -eLf | sort -k4 -rn | head -20
-
-# Zombie processes
-ps aux | grep Z
-
-# CPU throttling (thermal)
-dmesg | grep -i "throttl\|cpu freq" | tail -10
+┌──────────────────────────────────────── Linux — Common Issues ────────────────────────────────────────┐
+│                                                                                                       │
+│  Most frequent Linux operational issues: disk full, high load, OOM kills, and network errors.         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Disk and Filesystem              │  │                 Performance                 │   │
+│   │        Disk full → df -h, find large         │  │           High load → top, iostat           │   │
+│   │           Inode exhausted → df -i            │  │          High mem → free -h, ps aux         │   │
+│   │          Mount fails → fstab syntax          │  │         OOM kill → /var/log/messages        │   │
+│   │        FS corrupt → fsck (unmounted)         │  │            Swap usage → swapon -s           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Disk and inode issues are separate; high load can be CPU or I/O wait                               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                   Network                    │  │               Service and Boot              │   │
+│   │          No route → ip route check           │  │       Service fail → systemctl status       │   │
+│   │           DNS fails → resolv.conf            │  │         Boot hang → systemd-analyze         │   │
+│   │         Port blocked → ss, iptables          │  │      Unit not found → systemctl enable      │   │
+│   │          SSH refused → sshd status           │  │         Kernel panic → dmesg | tail         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · CPU · RAM · NIC · storage disks                                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Inode        = metadata entry for a file; exhausted when too many small files                        │
+│  OOM kill     = Out of Memory killer terminates process to free RAM                                   │
+│  I/O wait     = CPU idle waiting for disk; high iowait = storage bottleneck                           │
+│  fsck         = filesystem check; must run on unmounted filesystem                                    │
+│  fstab        = /etc/fstab; lists filesystems to mount at boot                                        │
+│  resolv.conf  = /etc/resolv.conf; nameserver config for DNS resolution                                │
+│  swapon -s    = list swap devices and usage                                                           │
+│  systemd-analyze= shows boot time per unit; blame shows slowest units                                 │
+│  dmesg        = kernel ring buffer; shows hardware and boot messages                                  │
+│  ss           = socket statistics; replacement for netstat                                            │
+│  iostat       = I/O statistics per disk; part of sysstat package                                      │
+│  Kernel panic = fatal error; system halts; check dmesg before reboot                                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## High Memory / OOM

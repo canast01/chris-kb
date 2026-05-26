@@ -26,18 +26,49 @@ mkfs.xfs /dev/mapper/secure-data
 mkdir /mnt/secure-data
 mount /dev/mapper/secure-data /mnt/secure-data
 ```
-
-### Inspect a LUKS Device
-
-```bash
-# View header and key slot status
-cryptsetup luksDump /dev/sdb
-
-# Check if a device is LUKS
-cryptsetup isLuks /dev/sdb && echo "LUKS device"
-
-# Device info
-cryptsetup status secure-data
+┌───────────────────────────────────────── Linux — Encryption ──────────────────────────────────────────┐
+│                                                                                                       │
+│  Linux encryption: LUKS disk encryption, TLS for services, GPG for files, and key management.         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Disk Encryption (LUKS)            │  │                  TLS / PKI                  │   │
+│   │        cryptsetup luksFormat /dev/sdX        │  │          openssl req: generate CSR          │   │
+│   │        cryptsetup open: mapped device        │  │        certbot: Let Encrypt TLS cert        │   │
+│   │        /etc/crypttab: unlock at boot         │  │        update-ca-certificates: trust        │   │
+│   │       Tang/Clevis: network auto-unlock       │  │         stunnel: TLS wrapper for TCP        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    LUKS for data at rest; TLS for data in transit; GPG for file-level                                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             GPG File Encryption              │  │           SSH Transport Encryption          │   │
+│   │        gpg --gen-key: create keypair         │  │         AES-256-GCM: session cipher         │   │
+│   │           gpg -e -r recipient file           │  │         ed25519: host key algorithm         │   │
+│   │           gpg -d file.gpg: decrypt           │  │         known_hosts: host key trust         │   │
+│   │           gpg-agent: key in memory           │  │          StrictHostKeyChecking yes          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · TPM · HSM (optional) · CA infrastructure                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  LUKS         = Linux Unified Key Setup; standard for block device encryption                         │
+│  cryptsetup   = tool to create/manage LUKS containers and dm-crypt devices                            │
+│  crypttab     = /etc/crypttab; lists encrypted volumes to unlock at boot                              │
+│  Tang/Clevis  = network-bound disk encryption; auto-unlock via NBDE server                            │
+│  GPG          = GNU Privacy Guard; PGP-compatible asymmetric encryption                               │
+│  CSR          = Certificate Signing Request; submitted to CA for signed cert                          │
+│  certbot      = Let Encrypt ACME client; automates cert issuance/renewal                              │
+│  update-ca-certificates= adds CA cert to system trust store (Debian/Ubuntu)                           │
+│  stunnel      = wraps plain TCP in TLS; useful for legacy app encryption                              │
+│  known_hosts  = ~/.ssh/known_hosts; stores trusted server public key hashes                           │
+│  StrictHostKeyChecking= reject connection if host key not in known_hosts                              │
+│  dm-crypt     = kernel device mapper; LUKS sits on top as a key manager                               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Key Slot Management

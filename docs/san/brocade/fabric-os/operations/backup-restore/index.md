@@ -25,31 +25,58 @@ flowchart TD
     style change fill:#2563eb,color:#fff
     style failure fill:#dc2626,color:#fff
 ```
-
-## Overview
-
-Configuration backup is mandatory before any firmware upgrade, major zone change, or switch replacement. The primary backup mechanism is `configupload`, which captures the complete switch configuration including zone database, port settings, SNMP, AAA, Virtual Fabric assignments, and security policies. The zone database is separately saved with `cfgsave` and is included in the full config backup.
-
-Backups are stored on an SCP/FTP server reachable from the switch management network. Retain at least 30 days of daily backups and an additional pre-change snapshot before every maintenance window.
-
----
-
-## configupload — Backing Up a Switch
-
-`configupload` exports the full switch configuration to a remote server over SCP or FTP.
-
-```bash
-# Backup to an SCP server (recommended — encrypted transfer)
-configupload -all -scp -host <backup-server-ip> -u <username> -f /backups/brocade/<switchname>_config_$(date +%Y%m%d).cfg
-
-# Backup to an FTP server
-configupload -all -host <backup-server-ip> -u <username> -p <password> -f /backups/brocade/<switchname>_config.cfg
-
-# Interactive mode (prompts for all parameters)
-configupload
-
-# Show what is included in the backup
-configupload --showoptions
+┌─────────────────────────────── Brocade Fabric OS — Backup and Restore ────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      FOS backup and restore: switch config, zone DB, and full switch replacement recovery     │   │
+│   │          configupload: saves switch config (not zone DB) to SCP/FTP; schedule weekly          │   │
+│   │           Zone DB backup: cfgsave persists to flash; also export zone DB via SANnav           │   │
+│   │         Switch replacement: configdownload restores config; re-cable and verify fabric        │   │
+│   │          Director blade: hot-swap with NDU; config on CP blade survives blade failure         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Schedule backup -> verify backup file -> test restore -> store off-site copy securely              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Config Backup        │  │           Zone DB           │  │           Recovery          │   │
+│   │         configupload        │  │           cfgsave           │  │        configdownload       │   │
+│   │        SCP/FTP target       │  │        SANnav export        │  │        Switch replace       │   │
+│   │       Weekly schedule       │  │        Before changes       │  │       Re-cable fabric       │   │
+│   │        Version tagged       │  │        Zone DB export       │  │         Verify zones        │   │
+│   │        Off-site copy        │  │        Audit history        │  │         Test restore        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Test restore quarterly; zone DB and config backup are independent procedures                       │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Backup type    │     Command      │     Frequency     │      Target      │      Notes       │   │
+│   │  Switch config   │   configupload   │       Weekly      │    SCP server    │   All settings   │   │
+│   │     Zone DB      │  cfgsave+export  │     Pre-change    │   SANnav/file    │   Fabric-wide    │   │
+│   │   Full restore   │  configdownload  │     On failure    │    New switch    │ Re-cable needed  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: SCP/FTP backup server · offline config archive · replacement switch spare                │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    configupload   = FOS CLI: uploads switch config to SCP/FTP; includes port/security settings        │
+│    configdownload = FOS CLI: restores switch config from remote file; triggers partial reboot         │
+│    cfgsave        = Persists zone DB to non-volatile flash; must run after every zone change          │
+│    Zone DB export = SANnav can export zone config as text file; keep with config backup               │
+│    Switch replace = Install new switch, configdownload, re-cable ISLs and host/storage ports          │
+│    NDU            = Non-Disruptive Upgrade; director blades hot-swapped with no fabric impact         │
+│    Spare switch   = Pre-configured standby switch for rapid replacement; test restore regularly       │
+│    SCP server     = Secure Copy Protocol server; preferred over FTP for encrypted transfer            │
+│    Off-site copy  = Backup files replicated to secondary site or object storage for DR                │
+│    Audit history  = SANnav logs all zone config changes; export as evidence for compliance            │
+│    Version tag    = Include FOS version and date in backup filename for traceability                  │
+│    Test restore   = Quarterly restore test on lab/spare switch to validate backup integrity           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 The `-all` flag is required to capture Virtual Fabric configurations, logical switch assignments, and port-level settings. Without `-all`, only the base switch configuration is exported.

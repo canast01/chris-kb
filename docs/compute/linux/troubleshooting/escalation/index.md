@@ -23,28 +23,49 @@ flowchart TD
     openSR --> monitor
     monitor -->|"No progress 24h"| escalateAccount
 ```
-
-## Red Hat (RHEL)
-
-### Opening a Support Case
-
-Support portal: [access.redhat.com](https://access.redhat.com)
-
-1. Log in with the team's Red Hat account
-2. Support → Open a Support Case
-3. Select: Product = Red Hat Enterprise Linux, Version = deployed RHEL version
-4. Describe the issue with: hostname, RHEL version, kernel version, and sosreport
-
-### Collecting the sosreport
-
-Always collect a sosreport before opening an SR:
-
-```bash
-# Generate sosreport
-sosreport
-
-# Output: /var/tmp/sosreport-<hostname>-<timestamp>.tar.xz
-# Attach to the Red Hat support case via the portal
+┌───────────────────────────────────────── Linux — Escalation ──────────────────────────────────────────┐
+│                                                                                                       │
+│  Linux escalation paths: kernel panics, hardware failures, data corruption, security incidents.       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Kernel Panic / Crash             │  │               Hardware Failure              │   │
+│   │          1. Capture dmesg / vmcore           │  │          1. Check dmesg for errors          │   │
+│   │          2. Analyse with crash tool          │  │           2. Run smartctl on disks          │   │
+│   │      3. Report kernel BZ if kernel bug       │  │         3. Replace failed component         │   │
+│   │            4. Patch or workaround            │  │        4. Restore from backup if data       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Kernel issues → vendor support; hardware → ops team + replacement parts                            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Data Corruption                │  │              Security Incident              │   │
+│   │          1. Stop writes immediately          │  │         1. Isolate host from network        │   │
+│   │          2. Snapshot / backup image          │  │          2. Preserve logs + memory          │   │
+│   │           3. fsck on unmounted FS            │  │         3. Escalate to security team        │   │
+│   │       4. Restore from last good backup       │  │         4. Forensic image + analysis        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · backup storage · IPMI/iDRAC · SIEM                                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vmcore       = kernel crash dump; saved to /var/crash by kdump service                               │
+│  kdump        = kernel crash dump mechanism; second kernel captures vmcore                            │
+│  crash tool   = analyses vmcore with debug symbols; bt command shows stack                            │
+│  kernel BZ    = kernel bug report to bugzilla.kernel.org or vendor tracker                            │
+│  smartctl     = SMART disk health; Reallocated_Sector_Ct indicates bad blocks                         │
+│  fsck         = filesystem check/repair; must run on unmounted filesystem                             │
+│  Forensic image= dd or dcfldd to preserve disk state; chain of custody                                │
+│  Isolate      = remove network access; preserve state without shutdown                                │
+│  Preserve logs= copy /var/log before shutdown; volatile data lost on reboot                           │
+│  IPMI/iDRAC   = out-of-band management; access console without network                                │
+│  fsck -n      = dry-run check only; -y auto-fixes; use interactively                                  │
+│  Snapshot     = VM snapshot or LVM snapshot before repair attempts                                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 If the system is non-interactive (no TTY), use:

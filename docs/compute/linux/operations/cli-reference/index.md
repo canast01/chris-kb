@@ -27,20 +27,49 @@ flowchart LR
         auditCmds["ausearch · aureport\nauditd"]
     end
 ```
-
-## Service Management (systemctl)
-
-```bash
-systemctl start <service>
-systemctl stop <service>
-systemctl restart <service>
-systemctl reload <service>          # Reload config without full restart
-systemctl status <service>
-systemctl enable --now <service>    # Enable at boot and start immediately
-systemctl disable --now <service>
-systemctl --failed                  # List failed units
-systemctl list-units --type=service --state=active
-systemctl cat <service>             # Show unit file
+┌──────────────────────────────────────── Linux — CLI Reference ────────────────────────────────────────┐
+│                                                                                                       │
+│  Essential Linux CLI commands grouped by area: files, processes, network, and services.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             File and Filesystem              │  │              Process Management             │   │
+│   │           ls -lah / find / locate            │  │             ps aux / top / htop             │   │
+│   │             cp / mv / rm / mkdir             │  │            kill -9 <pid> / pkill            │   │
+│   │            chmod / chown / chgrp             │  │            nice / renice / ionice           │   │
+│   │            df -h / du -sh / lsblk            │  │         systemctl start/stop/status         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    File ops are atomic where possible; use systemctl over service for systemd                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                   Network                    │  │                Text and Logs                │   │
+│   │        ip addr / ip route / ss -tulpn        │  │            grep / awk / sed / cut           │   │
+│   │           ping / traceroute / dig            │  │           tail -f / journalctl -f           │   │
+│   │               curl / wget / nc               │  │             sort / uniq / wc -l             │   │
+│   │            iptables -L / nft list            │  │            less / vim / cat / tee           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · TTY/SSH terminal · NIC · storage                                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ss -tulpn    = socket stats: TCP/UDP listening sockets with PID/process                              │
+│  ip addr      = show/manage IP addresses; replaces ifconfig                                           │
+│  ip route     = show/manage routing table; replaces route                                             │
+│  journalctl   = query systemd journal; -f follows, -u filters by unit                                 │
+│  lsblk        = list block devices in tree view; shows mounts                                         │
+│  df -h        = disk free in human-readable units per filesystem                                      │
+│  du -sh       = disk usage of directory recursively, summarised                                       │
+│  chmod        = change file permissions: chmod 755 file                                               │
+│  chown        = change file owner/group: chown user:group file                                        │
+│  nice/renice  = set process priority (-20 highest, 19 lowest)                                         │
+│  ionice       = set I/O scheduler class for a process                                                 │
+│  tee          = reads stdin, writes to both stdout and file                                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Package Management

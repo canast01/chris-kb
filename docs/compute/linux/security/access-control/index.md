@@ -27,37 +27,49 @@ chmod 1775 /opt/shared
 # SGID on a directory — new files inherit group
 chmod 2775 /opt/projects
 ```
-
-### POSIX ACLs
-
-Use ACLs when you need per-user permissions beyond the three owner/group/other slots.
-
-```bash
-# Install acl tools (usually pre-installed)
-# RHEL: dnf install -y acl
-# Ubuntu: apt install -y acl
-
-# View ACLs
-getfacl /opt/app/data/
-
-# Grant a specific user read+write on a file
-setfacl -m u:jsmith:rw /opt/app/data/report.csv
-
-# Grant a group read access
-setfacl -m g:analysts:r /opt/app/data/
-
-# Set default ACL — all new files in directory inherit these entries
-setfacl -d -m g:developers:rwx /opt/projects/
-setfacl -d -m o::--- /opt/projects/
-
-# Remove a specific ACL entry
-setfacl -x u:jsmith /opt/app/data/report.csv
-
-# Remove all ACL entries (revert to standard permissions)
-setfacl -b /opt/app/data/report.csv
-
-# Copy ACLs from one file to another
-getfacl /opt/app/data/report.csv | setfacl --set-file=- /opt/app/data/report2.csv
+┌─────────────────────────────────────── Linux — Access Control ────────────────────────────────────────┐
+│                                                                                                       │
+│  Linux access control: DAC permissions, ACLs, sudo, and privilege management.                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            File Permissions (DAC)            │  │              sudo Configuration             │   │
+│   │      Mode: rwxrwxrwx owner/group/other       │  │         /etc/sudoers: NOPASSWD rules        │   │
+│   │             chmod 750: rwxr-x---             │  │      visudo: safe edit with validation      │   │
+│   │           SUID: run as file owner            │  │        sudo -l: list user allowances        │   │
+│   │       Sticky bit: dir delete restrict        │  │         sudoers.d: drop-in includes         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Standard permissions first; ACLs for exceptions; sudo for admin escalation                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                     ACLs                     │  │              Capability Control             │   │
+│   │          setfacl -m u:user:rwx file          │  │        getcap / setcap: fine-grained        │   │
+│   │         getfacl file: view all ACLs          │  │          CAP_NET_BIND: port < 1024          │   │
+│   │         Default ACL on dir: inherit          │  │           Drop root caps via capsh          │   │
+│   │       mask: effective permission limit       │  │        Ambient caps in systemd units        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · LDAP/AD for user provisioning · audit logging                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  DAC          = Discretionary Access Control; owner controls permissions                              │
+│  SUID         = Set User ID bit; process runs as file owner, not caller                               │
+│  Sticky bit   = on directory: only owner can delete their own files                                   │
+│  ACL          = Access Control List; per-user permissions beyond owner/group                          │
+│  setfacl      = set ACL entries; -m modifies, -x removes, -b removes all                              │
+│  getfacl      = display ACL entries for a file or directory                                           │
+│  Default ACL  = ACL on directory inherited by new files created within                                │
+│  mask         = maximum effective ACL permission; limits named user/group ACEs                        │
+│  Capability   = fine-grained privilege; alternative to SUID root                                      │
+│  CAP_NET_BIND = allows binding to port < 1024 without root                                            │
+│  visudo       = validates /etc/sudoers before writing; prevents lock-out                              │
+│  sudoers.d    = /etc/sudoers.d/ directory; separate include files per role                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Sensitive File Permissions Baseline

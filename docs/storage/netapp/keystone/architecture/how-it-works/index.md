@@ -20,54 +20,58 @@ graph TB
   class KS,COMMIT,BURST,BILL cloud
   class ADMIN host
 ```
-
-## Service Tiers
-
-| Tier | Protocol / Platform | Use Case |
-|---|---|---|
-| Extreme | NVMe-AF (all-flash NVMe) | Latency-sensitive databases, high-IOPS transactional workloads |
-| Premium | AFF (all-flash SAS/NVMe) | Mixed workloads, virtualization, general-purpose high-performance |
-| Standard | FAS (hybrid or capacity flash) | File storage, backup targets, less latency-sensitive workloads |
-| Object | StorageGRID | Unstructured data, backups, archives, S3-compatible object storage |
-
-## Components
-
-| Component | Description |
-|---|---|
-| NetApp-managed storage controllers | AFF/FAS/StorageGRID hardware; NetApp owns, installs, and manages; customer does not purchase or depreciate |
-| Keystone Collector | VM agent on the customer's infrastructure; collects consumption data from ONTAP and StorageGRID; forwards telemetry to NetApp for billing |
-| BlueXP / ActiveIQ Digital Advisor | Web portal at `activeiq.netapp.com`; Keystone dashboard shows committed vs. consumed capacity, burst status, and SLA compliance per tier |
-| Keystone Success Manager (KSM) | Dedicated NetApp contact; handles capacity planning, billing queries, escalations, and renewal |
-
-## Service Level Performance Targets
-
-| Service Level | IOPS/TB | Latency Target | Workload Type |
-|---|---|---|---|
-| Extreme | Up to 12,000 | < 1 ms | Latency-sensitive (databases, VDI) |
-| Premium | Up to 4,000 | < 1 ms | High-performance mixed workloads |
-| Performance | Up to 2,000 | < 2 ms | General-purpose mixed I/O |
-| Value | Up to 64 | < 17 ms | Archival, backup, infrequent access |
-
-> Exact service level names and IOPS targets vary by region and contract version — always refer to your subscription order form.
-
-## Connectivity
-
-Storage protocols are identical to the underlying platform: NFS, SMB/CIFS, iSCSI, FC, and S3 (StorageGRID). The Keystone Collector VM requires outbound HTTPS (port 443) to `keystone.netapp.com` for telemetry reporting — no inbound ports are required.
-
-## Capacity Model
-
-- **Committed capacity** — minimum monthly capacity contracted per service tier; billed whether used or not
-- **Burst capacity** — headroom above committed capacity up to a defined burst limit; billed at a higher per-TB rate when consumed
-- **True-up cadence** — monthly; Collector consumption report is reconciled and the invoice reflects committed plus burst usage
-- Committed capacity can be increased mid-term but cannot be decreased; plan initial sizing conservatively and use burst for growth headroom
-
-## QoS Policy Mapping
-
-Keystone service levels map to ONTAP QoS adaptive policies:
-
-```bash
-# View assigned adaptive QoS policy groups
-qos adaptive-policy-group show
+┌─────────────────────────────────── NetApp Keystone — How It Works ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          Keystone Collector VM polls ONTAP REST API every 5 min; aggregates capacity          │   │
+│   │          Metrics compressed and uploaded to Active IQ via HTTPS/TLS to cloud endpoint         │   │
+│   │         Billing engine computes committed + burst consumed; monthly invoice generated         │   │
+│   │           Customer views usage in Active IQ Digital Advisor; exports CSV for finance          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    ONTAP REST poll -> Collector aggregates -> HTTPS upload -> IQ billing -> invoice                   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Collection         │  │            Upload           │  │           Billing           │   │
+│   │        REST API poll        │  │          HTTPS/TLS          │  │        Committed calc       │   │
+│   │         Every 5 min         │  │       Compressed JSON       │  │          Burst calc         │   │
+│   │       Volume capacity       │  │         IQ endpoint         │  │       Monthly invoice       │   │
+│   │        Perf counters        │  │        Retry on fail        │  │          CSV export         │   │
+│   │         SVM metadata        │  │        Proxy support        │  │         Usage charts        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Collector must reach ONTAP mgmt LIF on 443 and Active IQ cloud endpoint on 443                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Step       │      Action      │     Frequency     │     Outcome      │      Notes       │   │
+│   │       Poll       │  REST API call   │       5 min       │   Raw metrics    │     Per SVM      │   │
+│   │    Aggregate     │    Summarise     │      Per poll     │   JSON bundle    │    Compressed    │   │
+│   │      Upload      │   HTTPS to IQ    │     Per cycle     │   Cloud stored   │     TLS 1.2+     │   │
+│   │       Bill       │   Compute cost   │      Monthly      │   Invoice PDF    │   Burst extra    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Collector VM 2 vCPU 8 GB RAM needs outbound TCP 443 to cloud                             │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Keystone Collector = Linux VM; polls ONTAP and ships metrics to Active IQ                          │
+│    ONTAP REST API     = Native JSON/HTTPS API (v9.6+); replaces legacy ZAPI                           │
+│    Active IQ          = NetApp cloud analytics; stores metrics; computes billing                      │
+│    Committed cap.     = Baseline TB contracted; billed at flat rate monthly                           │
+│    Burst cap.         = TB used above committed; billed at higher per-TB rate                         │
+│    Service level SLO  = Max latency + min IOPS/TB guaranteed per tier                                 │
+│    SVM                = Storage VM; ONTAP tenancy unit; polled individually                           │
+│    JSON bundle        = Compressed payload Collector uploads: volumes, capacity, perf                 │
+│    Proxy support      = Collector can route HTTPS uploads via HTTP/SOCKS proxy                        │
+│    Retry              = Collector queues failed uploads; retries up to 24 h                           │
+│    CSV export         = Active IQ provides usage CSV for chargeback/finance                           │
+│    TLS 1.2+           = Minimum encryption standard for all Collector communications                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Each Keystone service level corresponds to a named adaptive QoS policy group applied to volumes — e.g., `extreme-ks`, `premium-ks`, `standard-ks`.

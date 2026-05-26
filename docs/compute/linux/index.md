@@ -5,71 +5,35 @@ Linux server infrastructure running RHEL and Ubuntu — systemd service manageme
 </div>
 
 ```
-┌───────────────────────────────────────── Linux Server Stack ──────────────────────────────────────────┐
+┌────────────────────────────────────────── Linux — Overview ───────────────────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                      Linux Administration                                     │   │
-│   │        SSH: remote access · systemctl: service management · journalctl: log inspection        │   │
-│   │            Package management: dnf (RHEL/Rocky) · apt (Ubuntu/Debian) · rpm / dpkg            │   │
-│   │           Performance: perf/sar/iostat/vmstat/top · tracing: strace / ltrace / eBPF           │   │
-│   │       Automation: Bash scripting · Python · Ansible: idempotent configuration management      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Administration tools span all subsystems from the kernel to application processes                  │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
+│  Linux is the open-source OS kernel underpinning servers, containers, and cloud infrastructure.       │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Architecture        │  │          Networking         │  │           Storage           │   │
-│   │   Linux kernel: monolithic  │  │   ip/ss: iproute2 toolkit   │  │   LVM: PV → VG → LV chain   │   │
-│   │    Namespaces: isolation    │  │    iptables/nftables: FW    │  │    XFS · ext4 · Btrfs: FS   │   │
-│   │   cgroups: resource limits  │  │    NetworkManager/netplan   │  │   NFS/CIFS: network mounts  │   │
-│   │     systemd: PID 1, init    │  │     NIC bonding: 802.3ad    │  │   multipath: I/O failover   │   │
-│   │   VFS: unified file layer   │  │   DNS: resolv.conf+systemd  │  │    RAID: md software RAID   │   │
+│   │       Core Subsystems       │  │      Key Distributions      │  │          Use Cases          │   │
+│   │   Kernel: process + memory  │  │   RHEL/CentOS: enterprise   │  │       Web/app servers       │   │
+│   │  Filesystem: VFS + ext4/xfs │  │   Ubuntu: cloud + desktop   │  │       Container hosts       │   │
+│   │  Network: TCP/IP + iptables │  │     Debian: stable base     │  │        HPC workloads        │   │
+│   │   Systemd: service + boot   │  │    SUSE: SAP + Kubernetes   │  │         Embedded/IoT        │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Kernel subsystems provide isolation, networking, and storage to all processes                      │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Operations         │  │           Security          │  │       Troubleshooting       │   │
-│   │   cron/anacron: scheduling  │  │   SELinux: MAC enforcement  │  │   strace: syscall tracing   │   │
-│   │    systemd timers: modern   │  │AppArmor: profile confinement│  │   tcpdump: packet capture   │   │
-│   │   logrotate: log lifecycle  │  │   sudo/PAM: privilege ctrl  │  │  dmesg: kernel ring buffer  │   │
-│   │  tuned: performance tuning  │  │   auditd: syscall auditing  │  │   lsof: open file/port map  │   │
-│   │    ulimits: resource caps   │  │     SSH: key auth + MFA     │  │     perf: CPU profiling     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Operations, security, and troubleshooting tools work at the OS and kernel level                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       SSH        │    SFTP / SCP    │        NFS        │    SMB / CIFS    │      rsync       │   │
-│   │   Secure shell   │  File transfer   │   Unix FS mounts  │  Windows shares  │  Sync + backup   │   │
-│   │   TCP port 22    │  SSH subsystem   │    TCP/UDP 2049   │     TCP 445      │     TCP 873      │   │
-│   │  PubKey + TOTP   │  sftp/scp cmds   │   exports+fstab   │  smb.conf+fstab  │   rsync daemon   │   │
-│   │   sshd_config    │   SFTP server    │     mount.nfs     │    mount.cifs    │   Incremental    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 servers · NIC teaming · FC/iSCSI HBAs · iDRAC/iLO BMC · Power & Cooling                       │
+│  Physical or virtual server · CPU · RAM · NIC · storage disks/LUNs                                    │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  systemd  = PID 1 init system; manages service units, timers, mounts, and boot targets                │
-│  SELinux  = Security-Enhanced Linux; mandatory access control using kernel labels                     │
-│  LVM      = Logical Volume Manager; abstracts physical disks into flexible logical volumes            │
-│  iproute2 = Modern Linux networking toolkit; ip, ss, tc replace ifconfig and route                    │
-│  iptables = Linux kernel packet-filter firewall; replaced by nftables in newer kernels                │
-│  NFS      = Network File System; mounts remote directories over IP using exports/fstab                │
-│  cgroups  = Control Groups; kernel feature that limits CPU, memory, and I/O per process               │
-│  strace   = System call tracer; shows every kernel call a process makes in real time                  │
-│  auditd   = Linux audit daemon; logs syscall events for compliance and forensic analysis              │
-│  PAM      = Pluggable Authentication Modules; controls how logins and sudo authenticate               │
-│  tuned    = Linux performance daemon; applies OS profiles for different workload types                │
-│  multipath= Device mapper feature; aggregates HBA paths to a single block device                      │
+│  Kernel       = core OS code managing hardware, memory, processes, drivers                            │
+│  VFS          = Virtual File System; abstraction layer over real filesystems                          │
+│  Systemd      = init system and service manager; PID 1 on most modern distros                         │
+│  RHEL         = Red Hat Enterprise Linux; subscription-based enterprise distro                        │
+│  CentOS       = RHEL-compatible free rebuild; CentOS Stream is upstream of RHEL                       │
+│  iptables     = netfilter firewall rules; nftables is modern replacement                              │
+│  ext4         = default Linux filesystem; journalled, supports large files                            │
+│  xfs          = high-performance journalled FS; default on RHEL 7+                                    │
+│  cgroups      = control groups; limit CPU/memory/IO per process group                                 │
+│  namespaces   = isolate PID/net/mount/user views; foundation of containers                            │
+│  SELinux      = mandatory access control; labels processes and files                                  │
+│  systemctl    = command to start/stop/enable/status systemd services                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

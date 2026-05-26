@@ -30,34 +30,49 @@ flowchart TD
     portOpen -- Yes --> fwBlock
     fwBlock --> resolved
 ```
-
-## Triage Order
-
-1. **Is the host reachable?** — ping, SSH, IPMI/iDRAC console
-2. **Is it a hardware or OS issue?** — dmesg errors, IPMI SEL
-3. **What changed recently?** — yum/dnf history, git log, cron, deployments
-4. **What is the resource state?** — CPU, memory, disk, network
-5. **Which services/processes are involved?** — systemctl, ps, journalctl
-
-## High CPU
-
-```bash
-# Which processes are consuming CPU?
-ps aux --sort=-%cpu | head -15
-top -b -n1 | head -25
-
-# Is load from CPU-bound work or I/O wait?
-# wa% in top/iostat = I/O wait — not a CPU problem
-iostat -xz 1 3 | grep -E "Device|avg-cpu"
-
-# Per-thread breakdown
-ps -eLf | sort -k4 -rn | head -20
-
-# Zombie processes
-ps aux | grep Z
-
-# CPU throttling (thermal)
-dmesg | grep -i "throttl\|cpu freq" | tail -10
+┌──────────────────────────────── Linux — Troubleshooting Common Issues ────────────────────────────────┐
+│                                                                                                       │
+│  Common Linux issues: SSH failures, boot problems, OOM kills, and permission errors.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  SSH Issues                  │  │                Boot Problems                │   │
+│   │        Connection refused: sshd down?        │  │         Hang: systemd-analyze blame         │   │
+│   │         Permission denied: check key         │  │         grub rescue: boot partition         │   │
+│   │        Host key changed: known_hosts         │  │          Emergency mode: root fs ro         │   │
+│   │         MaxSessions: too many logins         │  │          Kernel panic: dmesg serial         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SSH issues: check daemon, then key, then host; boot: single-user or rescue                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Permission Errors               │  │                 Memory / OOM                │   │
+│   │    Operation not permitted: capabilities     │  │          OOM kill: dmesg | grep oom         │   │
+│   │        Access denied: SELinux context        │  │        Adjust /proc/sys/vm/overcommit       │   │
+│   │        Cannot write: check owner/mode        │  │            Add swap: dd + mkswap            │   │
+│   │        sudo: not in sudoers: add user        │  │           Tune vm.swappiness value          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · serial console (for boot) · SSH client                                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Connection refused= port closed or sshd not running; check systemctl status sshd                     │
+│  known_hosts  = remove stale entry: ssh-keygen -R hostname                                            │
+│  Emergency mode= systemd fallback; root filesystem mounted read-only for repair                       │
+│  GRUB rescue  = minimal grub shell; set root/prefix then insmod + boot                                │
+│  SELinux      = context mismatch causes silent denial; check audit.log                                │
+│  OOM killer   = selects victim by oom_score; protect with oom_score_adj                               │
+│  overcommit   = 0=heuristic, 1=always, 2=never; 2 prevents OOM but limits malloc                      │
+│  swappiness   = 0-100; lower = prefer RAM; 60 default; 10 for database hosts                          │
+│  Capabilities = sudo not required; use CAP_NET_ADMIN etc. for specific ops                            │
+│  MaxSessions  = sshd_config; default 10 mux sessions per connection                                   │
+│  single-user  = boot target for recovery; append single to kernel cmdline                             │
+│  serial console= kernel console on COM1; needed when SSH/VGA unavailable                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## High Memory / OOM
