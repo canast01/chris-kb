@@ -71,53 +71,51 @@ acs backup status
 # List available backups
 acs backup list
 ```
-
----
-
-## Restore Procedure
-
-### Restore to Same Cluster
-
-Use when the cluster is functional but data needs recovery (e.g., accidental zone deletion, NDFC misconfiguration).
-
-1. Navigate to **Admin Console > Operations > Backup & Restore > Restore**.
-2. Select the backup to restore from (either from the remote target list or upload a file).
-3. Click **Restore**. The cluster restarts its application services during restore.
-4. After restore completes (10-30 minutes), validate:
-   - NDFC fabric inventory and zone databases
-   - ND user accounts and LDAP settings
-   - Site registrations
-
-**Warning:** Restore overwrites all current state. Any changes made after the backup point are lost. Always export zone databases immediately before triggering a restore.
-
-### Restore to a New Cluster (DR Recovery)
-
-Use when the original ND cluster is unrecoverable (all nodes lost).
-
-```bash
-# Step 1: Deploy a fresh 3-node ND cluster (same version as the backup)
-# Follow the install procedure in Install & Upgrade
-
-# Step 2: On the new cluster, configure the remote backup destination
-acs backup remote add \
-  --server backup-server.corp.example.com \
-  --path /backups/nexus-dashboard/dc1/ \
-  --user nd-bkp
-
-# Step 3: List available backups
-acs backup list --remote
-
-# Step 4: Restore from the remote backup
-acs restore \
-  --backup-id <backup-id-from-list> \
-  --encryption-passphrase-file /home/ndadmin/.nd-backup-pass
-
-# Step 5: Monitor restore
-acs restore status
-
-# Step 6: After restore, validate
-acs health
-acs apps status
+┌───────────────────────── Cisco Nexus Dashboard — Operations Backup & Restore ─────────────────────────┐
+│                                                                                                       │
+│  Cluster configuration backup to remote storage; restore via UI or CLI for DR recovery.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Backup Configuration             │  │                 Backup Scope                │   │
+│   │          Remote: SCP or NFS target           │  │        Cluster config: all node data        │   │
+│   │         Schedule: daily/weekly cron          │  │            App data: NDFC/NDI/NDO           │   │
+│   │         Encryption: AES-256 at rest          │  │         Secrets: encrypted in backup        │   │
+│   │          Retention: keep N backups           │  │        Sites: site credentials incl.        │   │
+│   │          Alert: backup success/fail          │  │          Certificates: not included         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Schedule backup before any upgrade; verify remote target is writable                                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Restore Process                │  │              Disaster Recovery              │   │
+│   │         Bootstrap new cluster first          │  │          DR: rebuild cluster nodes          │   │
+│   │          Upload backup file via UI           │  │          Same software version req.         │   │
+│   │          Validate: checksum verify           │  │           IP/hostnames must match           │   │
+│   │         Restore: node-by-node apply          │  │        Certs re-issued after restore        │   │
+│   │          Post-restore: verify sites          │  │            RTO: ~2-4 hrs typical            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ND cluster nodes · remote SCP/NFS server · management network · spare hardware for DR                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SCP            = Secure Copy Protocol; encrypted file transfer to remote backup target               │
+│  NFS            = Network File System; shared storage mount for backup destination                    │
+│  AES-256        = Advanced Encryption Standard 256-bit; encrypts backup archive                       │
+│  Bootstrap      = Initial cluster bring-up before restoring configuration                             │
+│  Checksum       = SHA hash validating backup file integrity before restore                            │
+│  RTO            = Recovery Time Objective; target time to restore service                             │
+│  DR             = Disaster Recovery; rebuilding ND cluster at alternate site                          │
+│  Secrets        = Passwords and API keys stored encrypted within backup bundle                        │
+│  Retention      = Policy defining how many backup files are kept before purging                       │
+│  Site credentials= Per-site username/password ND uses to reach APIC/switches                          │
+│  Certs re-issued= SSL certificates are regenerated fresh on restore; not restored                     │
+│  Version match  = Restore requires identical ND software version as backup source                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **If the ND management IP changed (new hardware):**
