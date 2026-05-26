@@ -32,86 +32,51 @@ kubectl get nodes
 # Check failing pods on the affected node
 kubectl get pods --all-namespaces --field-selector spec.nodeName=<node-hostname> | grep -v Running
 ```
-
-**Common causes:**
-
-| Cause | Fix |
-|---|---|
-| Node VM has insufficient memory | Increase VM RAM; check for memory overcommit on hypervisor |
-| Cluster internal network (app0) unreachable | Verify L2 connectivity on the cluster VLAN between nodes |
-| etcd quorum lost (2 of 3 nodes down) | Restore at least 2 nodes; contact Cisco TAC if etcd is corrupted |
-| Pod stuck in CrashLoopBackOff | `kubectl logs -n <ns> <pod> --previous` to view crash reason |
-| Disk full on node | `df -h` on the node; purge old logs or expand storage |
-
----
-
-## NDFC Cannot Discover Switches
-
-**Symptom:** After adding a seed switch in NDFC, the fabric shows only the seed switch or no switches at all.
-
-**Resolution:**
-
-1. Verify SSH from the ND data network to the switch management IP:
-   ```bash
-   ssh ndadmin@nd-dc1-1.corp.example.com
-   acs network test --host <switch-ip> --port 22
-   # If this fails: routing or firewall issue on the data network
-   ```
-2. Verify the `ndfc_mgmt` account has `network-admin` role on the switch:
-   ```bash
-   # On the MDS switch (NX-OS CLI)
-   show user-account ndfc_mgmt
-   ```
-3. Verify SNMPv3 credentials match:
-   ```bash
-   # On the MDS switch
-   show snmp user
-   # Confirm dcnm_poll (or ndfc_poll) user is present with correct auth/priv protocols
-   ```
-4. Check NDFC discovery logs:
-   ```bash
-   kubectl logs -n ndfc deployment/ndfc-discovery-manager --tail=200 | grep -i "error\|fail\|<switch-ip>"
-   ```
-
----
-
-## Zone Activation Fails in NDFC
-
-**Symptom:** Zone set activation from NDFC returns an error or the zone set does not propagate to all switches.
-
-**Resolution:**
-
-1. Navigate to **NDFC > Fabrics > [Fabric] > Zoning > Zone Status** — check for merge conflicts.
-2. Check on the principal MDS switch:
-   ```bash
-   show zone status vsan <vsan-id>
-   # Check: Mode, Default-zone, Merge Status
-   show zone merge-failure vsan <vsan-id>
-   ```
-3. If a merge conflict is reported:
-   - Identify the switch with the conflicting zone database
-   - Trigger a zone re-sync from NDFC: **Fabrics > [Fabric] > Deploy All** to re-push the NDFC zone set
-4. Verify the `ndfc_mgmt` account has `network-admin` role (required for zone operations)
-
----
-
-## NDFC Performance Data Missing
-
-**Symptom:** **NDFC > Monitor > Performance** shows no data or stale data.
-
-**Resolution:**
-
-```bash
-# Check Performance Manager pod status
-kubectl get pods -n ndfc | grep pm
-# Should be Running
-
-# Check PM logs for polling errors
-kubectl logs -n ndfc deployment/ndfc-pm --tail=100 | grep -i "error\|timeout\|fail"
-
-# Restart PM pod
-kubectl rollout restart deployment/ndfc-pm -n ndfc
-kubectl rollout status deployment/ndfc-pm -n ndfc
+┌────────────────────────── Cisco Nexus Dashboard — Operations Common Issues ───────────────────────────┐
+│                                                                                                       │
+│  Frequent ND operational issues: cluster quorum loss, app failures, site disconnects.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Cluster Issues                │  │                 App Failures                │   │
+│   │          Quorum lost: 2 nodes down           │  │            NDFC pod crash-looping           │   │
+│   │       etcd split-brain: net partition        │  │         NDI no telemetry: gRPC down         │   │
+│   │        Node offline: NIC/cable fault         │  │         NDO deploy stuck: APIC busy         │   │
+│   │        Disk full: log or data volume         │  │           OOM: pod evicted by K8s           │   │
+│   │       NTP drift: cert validation fail        │  │          App upgrade failed: retry          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Cluster health checked first; then app-level pod logs for targeted troubleshooting                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Site Connectivity Issues           │  │               Resolution Steps              │   │
+│   │        Site unreachable: REST timeout        │  │          acs health: cluster state          │   │
+│   │         Cred expired: 401 from APIC          │  │         acs logs: pod error messages        │   │
+│   │         SSL cert expired: handshake          │  │         kubectl describe pod detail         │   │
+│   │          Firewall: port 443 blocked          │  │          Renew cert or rotate creds         │   │
+│   │        Version mismatch: app incompat        │  │         TAC: if quorum unrecoverable        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ND cluster nodes · management switches · APIC cluster · NTP server · firewall                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Quorum         = Minimum node count for cluster consensus; loss stops all writes                     │
+│  etcd           = K8s state store; split-brain means two halves disagree on state                     │
+│  Split-brain    = Network partition causing cluster halves to diverge independently                   │
+│  Crash-loop     = Pod repeatedly starting and failing; check logs for root cause                      │
+│  OOM            = Out Of Memory; Kubernetes evicts pod when node memory exhausted                     │
+│  gRPC           = Streaming protocol; NDI telemetry stops if gRPC session drops                       │
+│  NDO deploy     = Pushing policy templates to remote APIC; can time out if APIC busy                  │
+│  NTP drift      = Time skew between nodes breaks TLS cert validation                                  │
+│  401 error      = HTTP Unauthorized; credentials rejected by APIC REST API                            │
+│  Version mismatch= ND app version incompatible with connected fabric controller                       │
+│  kubectl describe= Kubernetes command showing pod events and failure reason                           │
+│  TAC            = Cisco Technical Assistance Center; escalate unrecoverable faults                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Common causes:
