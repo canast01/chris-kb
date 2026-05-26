@@ -52,22 +52,51 @@ openssl s_client -connect dcnm-dc1.corp.example.com:443 \
   -servername dcnm-dc1.corp.example.com </dev/null 2>/dev/null \
   | openssl x509 -noout -subject -issuer -enddate
 ```
-
-#### TLS Version Hardening
-
-DCNM defaults to TLS 1.2+. Verify:
-
-```bash
-# Test which TLS versions are accepted
-openssl s_client -tls1 -connect dcnm-dc1.corp.example.com:443 </dev/null 2>&1 | grep "Cipher\|alert"
-# Expected: handshake failure (TLS 1.0 not accepted)
-
-openssl s_client -tls1_2 -connect dcnm-dc1.corp.example.com:443 </dev/null 2>&1 | grep "^SSL\|Cipher"
-# Expected: successful handshake
-
-# If TLS 1.0/1.1 is enabled, disable it in Tomcat configuration:
-grep -i "TLSv1" /usr/local/cisco/dcm/dcnm/conf/server.xml
-# Edit to: sslProtocol="TLSv1.2+TLSv1.3" or sslEnabledProtocols="TLSv1.2,TLSv1.3"
+┌─────────────────────────────────────── Cisco DCNM — Encryption ───────────────────────────────────────┐
+│                                                                                                       │
+│  DCNM encryption: TLS 1.2/1.3 management, SNMPv3 privacy, OS disk encryption at rest.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │        Management Traffic Encryption         │  │           Data at Rest Encryption           │   │
+│   │          HTTPS: TLS 1.2/1.3 GUI/API          │  │           OS-level: LUKS/dm-crypt           │   │
+│   │           REST API: HTTPS port 443           │  │           PostgreSQL on enc volume          │   │
+│   │         SNMPv3: AES-128 privacy mode         │  │           Elasticsearch on enc vol          │   │
+│   │        syslog: TLS encrypted forward         │  │           Backup: encrypted at NFS          │   │
+│   │         Disable HTTP; HTTPS redirect         │  │           Audit trail: append-only          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  TLS on all management channels; LUKS disk encryption protects data at rest.                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Certificate Management            │  │              Protocol Hardening             │   │
+│   │        Replace self-signed cert day 1        │  │           Disable TLS 1.0/1.1 SSL           │   │
+│   │          CA-signed cert: production          │  │          Cipher: AES-GCM preferred          │   │
+│   │         PKCS#12 import via admin CLI         │  │             HSTS: enforce HTTPS             │   │
+│   │         Monitor expiry: 60-day warn          │  │             Disable v1/v2c SNMP             │   │
+│   │         Annual renewal: update cert          │  │          SSH key-based: admin only          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  DCNM Linux VM · vSphere encrypted datastore · PKI CA for certificate issuance                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  TLS 1.3         = Transport Layer Security 1.3; forward secrecy; preferred version                   │
+│  SNMPv3 privacy  = AES-128 encryption of SNMP PDU payload; auth + privacy mode                        │
+│  LUKS            = Linux Unified Key Setup; full-disk encryption for DCNM VM volumes                  │
+│  dm-crypt        = Linux kernel disk encryption subsystem; LUKS uses dm-crypt                         │
+│  PostgreSQL enc  = DCNM config DB on encrypted volume; offline access blocked                         │
+│  Elasticsearch enc= performance DB on encrypted volume; data protected at rest                        │
+│  Audit trail     = append-only log; integrity verifiable; used for forensics                          │
+│  PKCS#12         = certificate container format; bundles cert + private key                           │
+│  HSTS            = HTTP Strict Transport Security; browser forces HTTPS always                        │
+│  AES-GCM         = AES Galois Counter Mode; authenticated encryption cipher suite                     │
+│  CA-signed cert  = TLS cert from internal or public CA; replace self-signed in prod                   │
+│  syslog TLS      = encrypted syslog forwarding; audit events protected in transit                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### DCNM to Switch Communication (SSH)

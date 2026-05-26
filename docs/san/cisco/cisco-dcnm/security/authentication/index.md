@@ -73,59 +73,51 @@ keytool -import -trustcacerts -alias corp-ldap-ca \
 # Restart DCNM to apply
 /usr/local/cisco/dcm/dcnm/sbin/dcnm-server restart
 ```
-
-### Test LDAP Authentication
-
-After saving LDAP settings, click **Test**. Enter a test AD user and password. DCNM will report success (including the groups resolved) or a specific error.
-
----
-
-## 3. TACACS+ Integration
-
-TACACS+ provides per-command accounting and is the preferred AAA method for MDS switches. DCNM itself can also authenticate via TACACS+:
-
-Configure under **Administration > Security > Authentication > TACACS+**:
-
-| Field | Value |
-|---|---|
-| Server 1 | `10.10.1.10` |
-| Server 2 | `10.10.1.11` |
-| Server port | 49 |
-| Shared key | Stored in vault |
-| Authentication type | PAP or CHAP |
-| Role from TACACS+ | Enabled (uses AV-pair `cisco-av-pair=shell:roles*dcnm-role`) |
-
-When TACACS+ is configured:
-- DCNM sends user credentials to the TACACS+ server
-- The TACACS+ server returns a role AV-pair that DCNM maps to a DCNM role
-- If TACACS+ is unreachable, DCNM falls back to local accounts (ensure break-glass account exists)
-
----
-
-## 4. Session Management
-
-Configure under **Administration > Security > Session Settings**:
-
-| Setting | Recommended Value |
-|---|---|
-| Session idle timeout | 15 minutes |
-| Maximum session lifetime | 8 hours |
-| Concurrent sessions per user | 3 |
-
-REST API sessions: use `expirationTime` in the login call (in seconds). Always call `/rest/logout` at the end of automation scripts. Long-lived API tokens that are never invalidated accumulate and may cause session exhaustion.
-
----
-
-## 5. Audit Trail
-
-All authentication events are logged in DCNM's audit log:
-- View under **Administration > Logs > Audit Logs**
-- Filter by category: **Security**, event type: **Login/Logout**
-- Export to CSV for SIEM ingestion
-
-Authentication failures also appear in the DCNM server log:
-```bash
-grep -i "authentication\|login failed\|unauthorized" /var/log/dcnm/server.log | tail -50
+┌───────────────────────────────────── Cisco DCNM — Authentication ─────────────────────────────────────┐
+│                                                                                                       │
+│  DCNM auth: ISE TACACS+ for GUI, REST JWT, SAML SSO, local accounts as break-glass.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              GUI Authentication              │  │              API Authentication             │   │
+│   │         ISE TACACS+: primary method          │  │            POST /rest/logon → JWT           │   │
+│   │          LDAP: AD group-to-role map          │  │           Token expiry: 8h default          │   │
+│   │         SAML 2.0 SSO: IdP-federated          │  │           HTTPS: TLS 1.2/1.3 only           │   │
+│   │           Local: break-glass only            │  │            Service acct: API key            │   │
+│   │          Lockout: 5 failed attempts          │  │           Rate limit: brute-force           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  ISE TACACS+ for human GUI login; JWT for automation; SAML SSO integrates MFA.                        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Session & Audit Control            │  │           Switch Auth (DCNM-side)           │   │
+│   │         All logins: user + timestamp         │  │         SSH creds stored per switch         │   │
+│   │         Failed logins: alert to SIEM         │  │            NX-OS TACACS+ separate           │   │
+│   │         Concurrent sessions: limited         │  │         Credential vault: HashiCorp         │   │
+│   │          Action audit: all changes           │  │            SNMPv3: auth + privacy           │   │
+│   │          Export audit: syslog / CSV          │  │          Rotation: quarterly creds          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  DCNM VM · Cisco ISE · LDAP/AD · IdP for SAML · Cisco MDS switch management                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ISE TACACS+     = Cisco ISE provides TACACS+ protocol; maps to DCNM role                             │
+│  LDAP            = AD group-to-DCNM role mapping via LDAP bind                                        │
+│  SAML 2.0        = SSO federation; MFA enforced at identity provider level                            │
+│  JWT             = JSON Web Token; bearer token returned on /rest/logon                               │
+│  Service account = dedicated API user; separate credentials for automation                            │
+│  Lockout         = DCNM locks account after 5 failed logins; unlock via admin                         │
+│  Rate limiting   = blocks repeated failed attempts to prevent brute-force                             │
+│  Session timeout = idle GUI/API session terminated after configurable period                          │
+│  Action audit    = all DCNM GUI clicks and API calls logged with user/timestamp                       │
+│  NX-OS TACACS+   = MDS switch CLI authentication via ISE; separate from DCNM                          │
+│  HashiCorp Vault = credential vault; stores DCNM switch passwords for automation                      │
+│  SNMPv3 auth     = SNMP v3 authentication (SHA); privacy (AES) for polling                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
