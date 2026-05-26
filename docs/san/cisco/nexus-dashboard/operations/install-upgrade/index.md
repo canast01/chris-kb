@@ -77,76 +77,51 @@ acs cluster init \
 acs health
 # Wait until all nodes show Healthy
 ```
-
-### Step 3: Access the UI and Initial Configuration
-
-Open a browser to `https://nd-dc1-1.corp.example.com` (or the cluster VIP once configured) and log in as `admin`.
-
-**Initial configuration checklist:**
-
-1. **Admin Console > System > NTP** — verify NTP is synchronized on all nodes
-2. **Admin Console > Security > Certificates** — replace the default self-signed certificate with a corporate CA certificate
-3. **Admin Console > Security > Authentication** — configure LDAP or TACACS+
-4. **Admin Console > Operations > Backup** — configure backup schedule and remote target
-5. **Admin Console > Infrastructure > Cluster Configuration** — confirm all three nodes are healthy
-
-### Step 4: Install Applications
-
-Navigate to **Admin Console > Apps** to install NDFC and/or NDI:
-
-1. Click **Install App**
-2. Upload the NDFC or NDI application image (`.tar.gz`)
-3. Click **Install** and wait for deployment (5-10 minutes per app)
-4. After installation, the app appears in the ND left navigation
-
-For NDFC SAN deployment:
-- Select persona: **SAN Controller**
-- Configure seed switches for fabric discovery after installation
-
----
-
-## In-Place Upgrade
-
-### Pre-Upgrade Checklist
-
-- [ ] Review ND Release Notes and compatibility matrix for the target version
-- [ ] Confirm target ND version is compatible with currently installed app versions (NDFC, NDI)
-- [ ] Take a full ND cluster backup: **Admin Console > Operations > Backup > Backup Now**
-- [ ] Take VM snapshots of all three cluster nodes in vCenter
-- [ ] Export NDFC zone databases for all fabrics
-- [ ] Confirm no critical NDFC alarms are active
-- [ ] Confirm all ND cluster nodes are healthy: `acs health`
-- [ ] Schedule a maintenance window (ND UI unavailable for 30-60 minutes during upgrade)
-- [ ] Notify stakeholders
-
-### Upgrade Procedure
-
-#### Option A: GUI Upgrade
-
-1. Navigate to **Admin Console > System > Software Update**.
-2. Click **Upload** and select the ND upgrade image (`.iso` or upgrade bundle).
-3. Click **Upgrade**. The cluster upgrades nodes sequentially (rolling upgrade).
-4. During the upgrade, the UI may be intermittently unavailable.
-5. After completion, verify: **Admin Console > System > About** — shows new platform version.
-
-#### Option B: CLI Upgrade
-
-```bash
-ssh ndadmin@nd-dc1-1.corp.example.com
-
-# Transfer upgrade image to the cluster
-acs upgrade upload /path/to/aci-nd-dk9.3.1.1.ova
-
-# Start the upgrade
-acs upgrade start --version 3.1.1
-
-# Monitor upgrade progress
-acs upgrade status
-# Shows progress per node (each node is upgraded sequentially)
-
-# After completion:
-acs health
-# All nodes should return to Healthy
+┌──────────────────────── Cisco Nexus Dashboard — Operations Install & Upgrade ─────────────────────────┐
+│                                                                                                       │
+│  ND cluster initial build and rolling upgrade process with pre/post validation steps.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Initial Install                │  │                Prerequisites                │   │
+│   │          Deploy OVA/ISO: 3 node min          │  │          Hardware: 16 vCPU/64GB RAM         │   │
+│   │         Bootstrap: node 1 as primary         │  │         Storage: 500GB min per node         │   │
+│   │          Join: nodes 2+3 to cluster          │  │          Network: OOB + data VLANs          │   │
+│   │           Configure: IP, NTP, DNS            │  │          NTP: synced before install         │   │
+│   │          Install apps: NDFC/NDI/NDO          │  │          Cisco CCO: download images         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Bootstrap node 1 first; other nodes join via cluster join token; apps installed last                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Upgrade Process                │  │           Post-Upgrade Validation           │   │
+│   │            Backup: before upgrade            │  │         acs health: all nodes green         │   │
+│   │           Upload image: UI or CLI            │  │             Apps: verify running            │   │
+│   │         Rolling: one node at a time          │  │             Sites: all connected            │   │
+│   │            Duration: ~45 min/node            │  │          Telemetry: flowing to NDI          │   │
+│   │        Apps auto-upgrade post-cluster        │  │           Rollback: restore backup          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ND nodes (UCS/VM) · management switch · NTP/DNS server · CCO download server                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OVA            = Open Virtualization Appliance; VMware VM image format for ND                        │
+│  ISO            = Disk image for bare-metal ND node installation                                      │
+│  Bootstrap      = First-node initialization creating the cluster with initial config                  │
+│  Cluster join token= One-time secret additional nodes use to securely join cluster                    │
+│  Rolling upgrade= ND upgrades one node at a time; cluster stays available throughout                  │
+│  CCO            = Cisco Connection Online; software download portal                                   │
+│  App auto-upgrade= After cluster upgrade, apps detect new platform and self-upgrade                   │
+│  OOB VLAN       = Management VLAN on dedicated out-of-band network                                    │
+│  Data VLAN      = In-band network VLAN used for site-to-ND app communication                          │
+│  NTP pre-sync   = NTP must be configured and synced before cluster forms                              │
+│  acs health     = Validates all nodes report green status after upgrade completes                     │
+│  Rollback       = Only via backup restore; no in-place cluster downgrade supported                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Post-Upgrade Validation

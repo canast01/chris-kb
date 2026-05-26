@@ -40,26 +40,51 @@ acs apps status
 kubectl get pods --all-namespaces | grep -Ev "Running|Completed"
 # Zero output = all pods healthy; any output needs investigation
 ```
-
----
-
-## 2. NDFC Service Health
-
-### UI
-
-Navigate to **NDFC > Dashboard**:
-- Fabric summary should show all fabrics reachable
-- No fabrics in degraded or unknown state
-
-### CLI
-
-```bash
-# Check NDFC-specific services (Kubernetes pods)
-kubectl get pods -n ndfc --no-headers | grep -v Running
-# Expected: no output (all pods Running)
-
-# Check NDFC logs for errors
-kubectl logs -n ndfc deployment/ndfc-server --tail=50 | grep -i "ERROR\|FATAL\|Exception"
+┌────────────────────────── Cisco Nexus Dashboard — Operations Health Checks ───────────────────────────┐
+│                                                                                                       │
+│  Routine health verification covering cluster nodes, hosted apps, and connected sites.                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Cluster Health Checks             │  │              App Health Checks              │   │
+│   │         acs health: all nodes green          │  │          NDFC: SAN services running         │   │
+│   │            Node CPU/memory < 70%             │  │         NDI: telemetry collection on        │   │
+│   │         Disk usage < 80% on all vols         │  │           NDO: site sync status OK          │   │
+│   │          NTP: all nodes synced < 1s          │  │        Pods: all Running, none Error        │   │
+│   │        etcd: leader elected + healthy        │  │        App version: check for updates       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Cluster health verified before app health; failing node impacts all apps                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Site Connectivity Checks           │  │            Security Health Checks           │   │
+│   │         All sites: Connected status          │  │         SSL certs: expiry > 30 days         │   │
+│   │         Fabric site: APIC version OK         │  │            AAA servers: reachable           │   │
+│   │         Telemetry: data flowing NDI          │  │           RBAC: review user access          │   │
+│   │           Latency: < 150ms to site           │  │           Audit log: no anomalies           │   │
+│   │          Backup: last success < 24h          │  │         Backup: encryption verified         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ND cluster nodes · management switch · NTP server · APIC · AAA server · backup target                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  acs health     = ND CLI command showing cluster node and service health summary                      │
+│  etcd leader    = Elected node managing all etcd writes; loss blocks cluster updates                  │
+│  NTP sync       = All nodes must agree on time within 1 second for TLS to work                        │
+│  Pod state      = Kubernetes pod lifecycle: Pending → Running → Error/CrashLoopBackOff                │
+│  NDO site sync  = Verification that template state matches deployed APIC config                       │
+│  NDI telemetry  = Streaming flow and latency data from switches to NDI analytics                      │
+│  SSL expiry     = TLS cert expiration causing connection failures if not renewed                      │
+│  AAA reachable  = RADIUS/TACACS+ server responds; local fallback active if not                        │
+│  Audit log      = Records of all user actions and API calls for compliance review                     │
+│  Disk usage     = Storage consumed on each ND node; Elasticsearch fills fast                          │
+│  Latency 150ms  = Recommended maximum RTT between ND cluster and remote site                          │
+│  Backup success = Verification that scheduled backup completed and is retrievable                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
