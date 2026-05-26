@@ -32,24 +32,51 @@ aws iam get-account-summary \
 
 # MFA for root must be enabled via Console — cannot be set via CLI
 ```
-
----
-
-## IAM Password Policy
-
-```bash
-aws iam update-account-password-policy \
-  --minimum-password-length 14 \
-  --require-symbols \
-  --require-numbers \
-  --require-uppercase-characters \
-  --require-lowercase-characters \
-  --allow-users-to-change-password \
-  --max-password-age 90 \
-  --password-reuse-prevention 12 \
-  --hard-expiry
-
-aws iam get-account-password-policy
+┌──────────────────────────────── AWS Security Hardening — CIS Baseline ────────────────────────────────┐
+│                                                                                                       │
+│  Account and resource hardening following CIS AWS Benchmark and AWS Security Best Practices.          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Account-Level Controls            │  │                IAM Hardening                │   │
+│   │       Root MFA: hardware key required        │  │             No root access keys             │   │
+│   │         No root access keys created          │  │          Password policy: 14+ chars         │   │
+│   │      CloudTrail: org trail all regions       │  │            MFA for all IAM users            │   │
+│   │     Config: record all resource changes      │  │        Access keys rotated < 90 days        │   │
+│   │       GuardDuty: enabled all accounts        │  │          Inactive users deactivated         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SCPs enforce preventive controls; Config rules detect drift; Security Hub aggregates.                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Network Hardening               │  │             Monitoring Baseline             │   │
+│   │       No 0.0.0.0/0 on sensitive ports        │  │             CW alarm: root usage            │   │
+│   │         Default SG: deny all traffic         │  │        CW alarm: console login no MFA       │   │
+│   │       VPC Flow Logs: all VPCs enabled        │  │      CW alarm: CloudTrail config change     │   │
+│   │        No default VPC in use for prod        │  │       CW alarm: unauthorised API calls      │   │
+│   │          WAF on public-facing ALBs           │  │           Security Hub score > 80%          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS global IAM plane · CloudTrail infrastructure · Config recorders per region                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CIS AWS Benchmark= Center for Internet Security published hardening checklist for AWS                │
+│  Org trail       = Single CloudTrail trail capturing all accounts and all regions                     │
+│  Config recorder = Regional AWS Config component tracking resource configuration history              │
+│  SCP             = Preventive guardrail; denies actions org-wide; enforces policy                     │
+│  Default SG      = Harden by removing all rules; new instances should use custom SGs                  │
+│  Password policy = IAM setting enforcing min length, complexity, rotation for IAM users               │
+│  Security Hub score= Percentage of enabled controls passing; target > 80%                             │
+│  Preventive control= Config rule or SCP that blocks non-compliant actions before they occur           │
+│  Detective control= Config rule or GuardDuty finding that identifies non-compliance after             │
+│  WAF             = Web Application Firewall; filters HTTP requests on ALB/CloudFront                  │
+│  VPC Flow Logs   = Network traffic metadata; enable on all VPCs for security audit                    │
+│  Root MFA        = Hardware MFA on root is CIS level 1 requirement; highest priority                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

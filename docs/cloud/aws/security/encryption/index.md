@@ -38,51 +38,51 @@ aws kms create-alias \
 # Verify rotation is enabled
 aws kms get-key-rotation-status --key-id $KEY_ID
 ```
-
----
-
-## S3 — Enforce Encryption
-
-```bash
-# Set default encryption on bucket (SSE-KMS with CMK)
-aws s3api put-bucket-encryption \
-  --bucket my-prod-bucket \
-  --server-side-encryption-configuration '{
-    "Rules": [{
-      "ApplyServerSideEncryptionByDefault": {
-        "SSEAlgorithm": "aws:kms",
-        "KMSMasterKeyID": "arn:aws:kms:eu-west-1:<account>:alias/prod-s3-cmk"
-      },
-      "BucketKeyEnabled": true
-    }]
-  }'
-
-# Bucket policy — deny unencrypted uploads
-aws s3api put-bucket-policy --bucket my-prod-bucket --policy '{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "DenyNonSSL",
-      "Effect": "Deny",
-      "Principal": "*",
-      "Action": "s3:*",
-      "Resource": ["arn:aws:s3:::my-prod-bucket","arn:aws:s3:::my-prod-bucket/*"],
-      "Condition": {"Bool": {"aws:SecureTransport": "false"}}
-    },
-    {
-      "Sid": "DenyUnencryptedUploads",
-      "Effect": "Deny",
-      "Principal": "*",
-      "Action": "s3:PutObject",
-      "Resource": "arn:aws:s3:::my-prod-bucket/*",
-      "Condition": {
-        "StringNotEquals": {
-          "s3:x-amz-server-side-encryption": "aws:kms"
-        }
-      }
-    }
-  ]
-}'
+┌──────────────────────────────── AWS Encryption — At Rest & In Transit ────────────────────────────────┐
+│                                                                                                       │
+│  Encryption at rest via KMS keys; in transit via TLS; key management and rotation policy.             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              At-Rest Encryption              │  │            In-Transit Encryption            │   │
+│   │          S3: SSE-S3, SSE-KMS, SSE-C          │  │          ALB/NLB: TLS 1.2+ policies         │   │
+│   │           EBS: AES-256 via KMS CMK           │  │        API calls: HTTPS/TLS enforced        │   │
+│   │       RDS: encryption at creation only       │  │       S3: enforce-HTTPS bucket policy       │   │
+│   │         DynamoDB: enabled by default         │  │         VPN: IPSec tunnel encryption        │   │
+│   │       EFS / FSx / ElastiCache: KMS opt       │  │        DirectConnect: MACsec Layer 2        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Use CMKs over AWS-managed keys for full control, key policy, and cross-account access.               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Key Management                │  │            Encryption in Practice           │   │
+│   │        CMK: customer-managed KMS key         │  │       S3 bucket policy: deny non-HTTPS      │   │
+│   │        Key policy: who can use/admin         │  │       EBS default encryption: account       │   │
+│   │        Annual auto-rotation available        │  │          RDS: encrypt before launch         │   │
+│   │     Cross-region: copy snapshot with key     │  │        Config rule: encrypted-volumes       │   │
+│   │      Secrets Manager: KMS envelope enc       │  │      Security Hub: encryption findings      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS KMS HSMs (FIPS 140-2 Level 3) · S3 encryption hardware · TLS termination nodes                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CMK             = Customer-Managed Key; KMS key fully controlled by the customer                     │
+│  AWS-managed key = Managed by AWS per service; auto-rotate annually; less control                     │
+│  Envelope encryption= Data encrypted with data key; data key encrypted with CMK                       │
+│  SSE-KMS         = S3 server-side encryption using a KMS key; auditable in CloudTrail                 │
+│  SSE-S3          = S3 server-side encryption with AWS-managed S3 key; no KMS audit                    │
+│  SSE-C           = S3 encryption with customer-provided key; AWS does not store key                   │
+│  Key rotation    = Annual automatic replacement of key material; aliases unchanged                    │
+│  Key policy      = Resource-based policy on CMK defining who can use/manage the key                   │
+│  Cross-region copy= Snapshot copied to another region must be re-encrypted with region key            │
+│  MACsec          = Layer 2 encryption on dedicated Direct Connect connections                         │
+│  TLS policy      = ALB security policy selecting supported TLS versions and ciphers                   │
+│  EBS default enc = Account-level setting encrypting all new EBS volumes automatically                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
