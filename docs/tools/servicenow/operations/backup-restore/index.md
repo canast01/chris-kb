@@ -17,88 +17,49 @@ flowchart LR
     PROD -- "Scheduled Clone\n(weekly)" --> UAT
     PROD -- "On-demand Clone\n(before major release)" --> DEV
 ```
-
-**What is cloned:**
-- All table data (records)
-- System configuration (properties, business rules, workflows)
-- Update Sets (in Complete or In Progress state)
-- Attachments and stored files
-
-**What is excluded by default:**
-- Instance-specific integration credentials (replaced by excluder)
-- Email notification settings (can be suppressed post-clone)
-- MID Server configuration records (MID re-registers after clone)
-
----
-
-## Pre-Clone Checklist
-
-Before initiating a clone, complete all items:
-
-- [ ] Confirm clone target instance is not in active use (coordinate with development team)
-- [ ] Export any in-progress Update Sets from the target that have not been promoted to production
-- [ ] Note any custom scheduled jobs or integration URLs configured on the target — these will be overwritten
-- [ ] Confirm the Clone Excluder list is up to date (see below)
-- [ ] Verify clone target has adequate storage (ServiceNow manages this; confirm with ServiceNow support if target is smaller)
-- [ ] Schedule clone during a low-activity window (clones take 2–8 hours depending on instance size)
-- [ ] Notify affected teams via Change Request
-
----
-
-## Configuring Clone Excluders
-
-Clone excluders preserve specific records on the target instance, preventing them from being overwritten by the source data.
-
-Navigate to: **System Clone > Exclude Tables**
-
-Recommended excluders for sub-production targets:
-
-| Table | Field | Reason |
-|---|---|---|
-| `sys_properties` | `name LIKE 'mid.%'` | Preserve MID Server config |
-| `sys_properties` | `name LIKE 'glide.email%'` | Prevent production emails from sub-production |
-| `sys_email_account` | All | Suppress email sending |
-| `ecc_agent` | All | MID Server registrations |
-| `oauth_entity` | All | OAuth tokens (replace post-clone) |
-| `sys_certificate` | All | Instance certificates |
-
----
-
-## Initiating a Clone (On-Demand)
-
-1. Log in to the **target** sub-production instance as an administrator
-2. Navigate to **System Clone > Request Clone**
-3. Fill in the clone request form:
-
-| Field | Value |
-|---|---|
-| Source instance | `<prod-instance-name>` |
-| Target instance | (current instance — pre-filled) |
-| Clone options | Select appropriate excluder profiles |
-| Preserve theme | Optional (recommended: No — take production theme) |
-| Notify on completion | Your email address |
-
-4. Click **Submit**
-5. A clone request is sent to ServiceNow. The instance becomes unavailable during the clone operation.
-6. ServiceNow sends an email notification when the clone is complete.
-
----
-
-## Scheduling Recurring Clones
-
-Recurring clones are configured by raising a request with **ServiceNow Support** (HI portal). You cannot schedule recurring clones from the instance UI directly.
-
-Information to provide in the HI request:
-
-```yaml
-Subject: Schedule Recurring Clone - <instance-name>
-
-- Source instance: <prod-instance>.service-now.com
-- Target instance: <dev-instance>.service-now.com
-- Frequency: Weekly
-- Preferred day/time: Sunday 02:00 UTC
-- Excluder profiles: [list]
-- Notification email: <your-team-dl>
+┌─────────────────────────────────── ServiceNow — Backup and Restore ───────────────────────────────────┐
+│                                                                                                       │
+│  ServiceNow SaaS backup model: ServiceNow manages infrastructure backups; tenant manages exports.     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          ServiceNow Managed Backups          │  │            Tenant-Managed Exports           │   │
+│   │      Full DB backup: nightly automated       │  │     Data export: XML/CSV via sys_export     │   │
+│   │      Retention: 7 days rolling snapshot      │  │      Scheduled export jobs → SFTP/email     │   │
+│   │        Restore: raise P1 case with SN        │  │       Update Set export → XML archive       │   │
+│   │        Clone: prod → sub-prod refresh        │  │     Table rotation: archive old records     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Restore request via ServiceNow support; tenant exports supplement for self-service recovery        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Clone Procedures               │  │                Data Archival                │   │
+│   │         Request clone from HI portal         │  │       Archive rule: age + record count      │   │
+│   │        Pre-clone: export update sets         │  │        Destination: ar_ shadow tables       │   │
+│   │       Post-clone: disable prod integr.       │  │       Destroy rule: purge after N days      │   │
+│   │       Post-clone: reset user passwords       │  │       Compliance: audit log preserved       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ServiceNow data centres · HI portal · SFTP export destination · sub-prod instances                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  HI portal    = ServiceNow internal support portal for instance management requests                   │
+│  sys_export   = platform mechanism for scheduled or on-demand table data export                       │
+│  Update Set   = container of customisations; exported as XML for promotion/backup                     │
+│  Clone        = copy of production instance pushed to sub-prod; refreshes dev/test                    │
+│  ar_ tables   = archive shadow tables; records moved here by archive rules                            │
+│  Destroy rule = deletes archived records after configured retention period                            │
+│  Table rotation= periodic job moves old closed records to archive to trim live DB                     │
+│  P1 case      = priority 1 support case; required to trigger SN-managed restore                       │
+│  Post-clone   = steps run after clone: disable integrations, reset passwords, notify                  │
+│  SFTP export  = file transfer to tenant-owned server for off-platform data retention                  │
+│  7-day window = SN retention period; restore only possible within this window                         │
+│  Audit log    = sys_audit table; preserved through archival for compliance evidence                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Typical schedule options: daily, weekly, bi-weekly, monthly.

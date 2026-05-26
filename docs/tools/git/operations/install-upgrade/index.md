@@ -23,19 +23,49 @@ sudo apt-get install -y git
 # Upgrade only
 sudo apt-get install --only-upgrade git
 ```
-
-### Linux (RHEL / CentOS / Rocky)
-
-```bash
-# RHEL 8/9 — install from AppStream
-sudo dnf install -y git
-
-# Upgrade to latest from IUS or Wandisco repo (RHEL 7)
-sudo yum install -y https://packages.ius.io/stable/rhel/7/x86_64/ius-release-1.0-15.ius.el7.noarch.rpm
-sudo yum install -y git236
-
-# Rocky Linux 9
-sudo dnf update -y git
+┌────────────────────────────────────── Git — Install and Upgrade ──────────────────────────────────────┐
+│                                                                                                       │
+│  Git client and server installation, upgrade paths, and self-hosted platform setup.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Git Client Install              │  │            GitHub / GitLab Server           │   │
+│   │          Linux: apt/yum install git          │  │       GitHub Enterprise: VM appliance       │   │
+│   │           macOS: brew install git            │  │       GitLab: omnibus package + config      │   │
+│   │        Windows: git-scm.com installer        │  │      Gitea: single binary; lightweight      │   │
+│   │            Verify: git --version             │  │            Backup before upgrade            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Client upgrade is non-breaking; server upgrade requires maintenance window                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Git Configuration               │  │              Post-Install Steps             │   │
+│   │        git config --global user.name         │  │         Generate SSH key: ssh-keygen        │   │
+│   │        git config --global user.email        │  │         Add pub key to GitHub/GitLab        │   │
+│   │       git config --global core.editor        │  │          Test: git clone <ssh-url>          │   │
+│   │       git config --global pull.rebase        │  │           Set default branch: main          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Developer workstations · self-hosted Git server VM · package repositories                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  git-scm.com    = official Git download site for Windows installer                                    │
+│  omnibus        = GitLab all-in-one package including Nginx, Postgres, Redis                          │
+│  Gitea          = lightweight self-hosted Git service; single Go binary                               │
+│  GHE            = GitHub Enterprise Server; VM-based on-prem deployment                               │
+│  ssh-keygen     = generates RSA/Ed25519 key pair for SSH authentication                               │
+│  pull.rebase    = config to rebase instead of merge on git pull                                       │
+│  core.editor    = sets preferred text editor for commit messages                                      │
+│  Maintenance window= server upgrade downtime; plan for hook + webhook reconnect                       │
+│  Default branch = initialises as main; change default in server settings                              │
+│  Ed25519        = modern elliptic-curve SSH key type; preferred over RSA                              │
+│  git config     = reads/writes ~/.gitconfig (global) or .git/config (repo)                            │
+│  Appliance      = GitHub Enterprise is a VM image (OVA/AMI); managed internally                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### macOS

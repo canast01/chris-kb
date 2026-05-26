@@ -33,51 +33,49 @@ git remote update --prune
 git fsck --full
 git count-objects -vH
 ```
-
-A `--mirror` clone differs from a bare clone:
-
-| Clone type | Branches | Remote-tracking refs | Config fetch refspec |
-|------------|----------|---------------------|----------------------|
-| `--bare` | local branches only | no | `+refs/heads/*:refs/heads/*` |
-| `--mirror` | all refs | yes | `+refs/*:refs/*` |
-
-### Automated Mirror Script
-
-```bash
-#!/usr/bin/env bash
-# mirror-repos.sh — Mirror a list of repos to local backup storage
-set -euo pipefail
-
-BACKUP_DIR="/backup/git"
-REPOS_FILE="/etc/git-backup/repos.txt"   # one URL per line
-LOG="/var/log/git-mirror.log"
-TIMESTAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
-
-exec >> "$LOG" 2>&1
-echo "=== Mirror run: $TIMESTAMP ==="
-
-while IFS= read -r repo_url; do
-  [[ -z "$repo_url" || "$repo_url" == \#* ]] && continue
-
-  repo_name=$(basename "$repo_url" .git)
-  dest="$BACKUP_DIR/${repo_name}.git"
-
-  if [[ -d "$dest" ]]; then
-    echo "Updating mirror: $repo_name"
-    git -C "$dest" remote update --prune
-  else
-    echo "Creating mirror: $repo_name"
-    git clone --mirror "$repo_url" "$dest"
-  fi
-
-  # Verify integrity
-  if ! git -C "$dest" fsck --quiet; then
-    echo "ERROR: fsck failed for $repo_name" >&2
-  fi
-
-done < "$REPOS_FILE"
-
-echo "=== Done: $(date -u '+%Y-%m-%dT%H:%M:%SZ') ==="
+┌────────────────────────────────────── Git — Backup and Restore ───────────────────────────────────────┐
+│                                                                                                       │
+│  Git backup strategies: mirror clones, bundle exports, and recovery from history.                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Mirror Clone Backup              │  │                Bundle Export                │   │
+│   │           git clone --mirror <url>           │  │     git bundle create repo.bundle --all     │   │
+│   │         Includes all refs + objects          │  │        Single file; portable offline        │   │
+│   │          Update: git remote update           │  │        Restore: git clone repo.bundle       │   │
+│   │         Schedule via cron to NAS/S3          │  │          Use for air-gap or DR copy         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Mirror backup preserves all refs; bundle is portable for offline/air-gap use                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Restore / Recovery              │  │               History Recovery              │   │
+│   │      Restore from mirror: push --mirror      │  │        git reflog: find lost commits        │   │
+│   │        Restore from bundle: git clone        │  │       git fsck: find dangling objects       │   │
+│   │        Verify: git fsck after restore        │  │        git cherry-pick <sha>: recover       │   │
+│   │       Point DNS/webhook to new remote        │  │        git reset --hard <sha>: rewind       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  GitHub/GitLab server · backup NAS or S3 bucket · DR Git server · cron jobs                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  git clone --mirror= clones bare repo with all refs; differs from --bare (no refspec)                 │
+│  git remote update = re-fetches all remotes; updates mirror without re-cloning                        │
+│  git bundle        = exports all commits/refs into portable binary file                               │
+│  Air-gap           = isolated network; bundle is only transfer mechanism                              │
+│  push --mirror     = pushes all refs from local mirror to new remote; used in restore                 │
+│  git reflog        = per-ref log of all pointer movements; survives reset                             │
+│  git fsck          = verifies object store integrity; finds dangling commits                          │
+│  Dangling object   = commit/blob not reachable from any ref; recoverable via fsck                     │
+│  Cherry-pick       = applies diff of specific commit to current branch                                │
+│  reset --hard      = moves HEAD and index to commit; discards working tree                            │
+│  DR server         = disaster-recovery Git host; receives nightly mirror push                         │
+│  Webhook           = must be updated to point to restored remote URL                                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash

@@ -35,33 +35,49 @@ flowchart TD
     REPL -- Errors found --> INV5["Purge stale ECC records\nCheck MID Server logs"]
     REPL -- Clear --> OK
 ```
-
----
-
-## 1. Instance Availability
-
-### Manual Check
-
-Navigate to `https://<instance>.service-now.com/` and confirm:
-
-- Login page renders in < 3 seconds
-- No maintenance banner displayed
-- Able to log in and reach the homepage
-
-### Automated Check
-
-```bash
-#!/bin/bash
-INSTANCE="https://mycompany.service-now.com"
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
-  --max-time 10 "$INSTANCE/api/now/table/sys_user?sysparm_limit=1" \
-  -u "$SN_USER:$SN_PASS" -H "Accept: application/json")
-
-if [ "$HTTP_CODE" -ne 200 ]; then
-  echo "ALERT: Instance returned HTTP $HTTP_CODE" >&2
-  exit 1
-fi
-echo "OK: Instance responding (HTTP 200)"
+┌───────────────────────────────────── ServiceNow — Health Checks ──────────────────────────────────────┐
+│                                                                                                       │
+│  Proactive health monitoring for instance performance, integrations, and ITSM data quality.           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Instance Performance             │  │              Integration Health             │   │
+│   │      Instance Stats: thread pool usage       │  │      MID server: connected + version OK     │   │
+│   │        DB statistics: slow query log         │  │         ECC queue: no stuck messages        │   │
+│   │         Memory: GC frequency + heap          │  │      REST: endpoint connectivity tests      │   │
+│   │          Scheduled jobs: no backlog          │  │       LDAP: last sync timestamp < 24 h      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Performance and integration checks → escalate to ServiceNow support if thresholds exceeded         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              ITSM Data Quality               │  │               Security Posture              │   │
+│   │         Open P1/P2 incidents: < SLA          │  │    ACL audit: no over-permissioned roles    │   │
+│   │         SLA compliance rate: > 95 %          │  │     Login failures: review sys_log_auth     │   │
+│   │       Stale changes: review RFC queue        │  │      Admin count: minimum required only     │   │
+│   │        CMDB coverage: CI pop. > 90 %         │  │      MFA enforcement: all users enabled     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ServiceNow SaaS nodes · MID server hosts · LDAP/AD · monitoring dashboard                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Instance Stats  = stats.do page; shows node thread pool, DB pool, memory usage                       │
+│  Slow query log  = DB performance log; identifies queries > threshold (default 5 s)                   │
+│  GC frequency    = Java garbage collection rate; high frequency indicates memory pressure             │
+│  ECC queue       = External Communication Channel; integration message buffer                         │
+│  MID server      = on-prem agent for discovery/integrations; version must match instance              │
+│  SLA compliance  = % of SLA goals met; breach indicates staffing or workflow issue                    │
+│  RFC queue       = Request for Change queue; stale records indicate process gaps                      │
+│  CMDB coverage   = % of expected CIs populated; low coverage weakens impact analysis                  │
+│  sys_log_auth    = authentication log table; failed logins visible here                               │
+│  ACL audit       = review of access control lists for over-permissioned roles                         │
+│  Heap            = JVM memory space; approaching limit causes slowness before OOM                     │
+│  Sched job backlog= queued jobs not yet executed; indicates thread starvation                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### ServiceNow Status Page

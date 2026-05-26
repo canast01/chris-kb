@@ -71,63 +71,49 @@ fi
 
 echo "Done. Repositories in: $DEST_DIR"
 ```
-
----
-
-## Stale Branch Cleaner
-
-Identifies and optionally deletes branches that have had no commits for a configurable number of days.
-
-```bash
-#!/usr/bin/env bash
-# clean-stale-branches.sh
-# Usage: DRY_RUN=true STALE_DAYS=90 REPO_PATH=/path/to/repo.git ./clean-stale-branches.sh
-set -euo pipefail
-
-REPO_PATH="${REPO_PATH:?Set REPO_PATH to the git repo directory}"
-STALE_DAYS="${STALE_DAYS:-90}"
-DRY_RUN="${DRY_RUN:-true}"
-PROTECTED_BRANCHES="${PROTECTED_BRANCHES:-main master develop release}"
-CUTOFF_EPOCH=$(date -d "$STALE_DAYS days ago" +%s 2>/dev/null || date -v-${STALE_DAYS}d +%s)
-
-echo "Scanning for branches with no commits since $(date -d @$CUTOFF_EPOCH 2>/dev/null || date -r $CUTOFF_EPOCH)"
-echo "DRY_RUN=$DRY_RUN | Repo: $REPO_PATH"
-echo "---"
-
-DELETED=0
-SKIPPED=0
-
-git -C "$REPO_PATH" for-each-ref \
-  --format='%(refname:short) %(authordate:unix) %(authorname)' \
-  'refs/heads/' | \
-while read -r branch epoch author; do
-  # Skip protected branches
-  is_protected=false
-  for pb in $PROTECTED_BRANCHES; do
-    [[ "$branch" == "$pb" || "$branch" == "origin/$pb" ]] && is_protected=true && break
-  done
-
-  if $is_protected; then
-    echo "[PROTECTED] $branch"
-    ((SKIPPED++)) || true
-    continue
-  fi
-
-  if [[ "$epoch" -lt "$CUTOFF_EPOCH" ]]; then
-    age=$(( ($(date +%s) - epoch) / 86400 ))
-    echo "[STALE ${age}d] $branch — last commit by $author"
-    if [[ "$DRY_RUN" != "true" ]]; then
-      git -C "$REPO_PATH" branch -d "$branch" 2>/dev/null || \
-        git -C "$REPO_PATH" branch -D "$branch"
-      echo "  → Deleted"
-      ((DELETED++)) || true
-    fi
-  fi
-done
-
-echo "---"
-echo "Stale branches deleted: $DELETED | Protected/skipped: $SKIPPED"
-[[ "$DRY_RUN" == "true" ]] && echo "(DRY RUN — no branches were deleted)"
+┌────────────────────────────────────── Git — Operations Scripts ───────────────────────────────────────┐
+│                                                                                                       │
+│  Shell scripts and hooks for automating Git operations: cleanup, audit, and enforcement.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Branch Cleanup Scripts            │  │                Audit Scripts                │   │
+│   │        Delete merged branches locally        │  │       List repos without branch prot.       │   │
+│   │          Prune remote tracking refs          │  │       Find repos with secrets in hist.      │   │
+│   │       Find stale branches: last commit       │  │          Report large files > 50 MB         │   │
+│   │           Batch delete via gh CLI            │  │      List contributors + commit counts      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Cleanup scripts run weekly; audit scripts run monthly or on-demand                                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  Git Hooks                   │  │             Automation Patterns             │   │
+│   │        pre-commit: lint + secret scan        │  │         gh CLI: scripting GitHub API        │   │
+│   │       commit-msg: enforce conv. format       │  │        glab CLI: scripting GitLab API       │   │
+│   │         pre-push: run tests locally          │  │       Cron: mirror backup sync nightly      │   │
+│   │       pre-receive: server enforcement        │  │       GitHub Actions: automate cleanup      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Developer workstations · CI runners · GitHub/GitLab server hooks · cron jobs                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  pre-commit hook  = client-side script run before git commit creates commit                           │
+│  commit-msg hook  = validates commit message format; rejects non-conforming                           │
+│  pre-push hook    = client-side; runs before push; can block if tests fail                            │
+│  pre-receive hook = server-side; enforces policy before refs update                                   │
+│  gh CLI           = GitHub official CLI; scriptable access to repos, PRs, issues                      │
+│  glab CLI         = GitLab official CLI; mirrors gh functionality for GitLab                          │
+│  Stale branch     = branch with last commit > 60 days; candidate for deletion                         │
+│  Secret scan      = detect API keys/passwords in diffs before commit                                  │
+│  Conv. format     = Conventional Commits: type(scope): subject                                        │
+│  Mirror sync      = nightly cron: cd mirror && git remote update                                      │
+│  GitHub Actions   = workflow YAML in .github/workflows/ triggered by events                           │
+│  Batch delete     = gh api /repos/{owner}/{repo}/branches/{branch} -X DELETE                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

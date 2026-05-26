@@ -26,26 +26,49 @@ git -C /backup/repo.git fsck --full
 # "missing blob <sha>"       — CORRUPTION — object referenced but missing from disk
 # "broken link from tree"    — CORRUPTION — tree references a missing object
 ```
-
-Interpreting results:
-
-| Message | Severity | Action |
-|---------|----------|--------|
-| `dangling commit` | Info | Normal after force-push or branch delete; safe to prune |
-| `dangling blob` | Info | Orphaned from `git add`; safe to prune |
-| `unreachable commit` | Info | Not referenced by any branch/tag |
-| `missing blob/tree/commit` | **Critical** | Corruption — restore from backup immediately |
-| `broken link` | **Critical** | Corruption — restore from backup immediately |
-| `warning: git-fsck: object corruption` | **Critical** | Restore from backup |
-
-```bash
-# Remove unreachable dangling objects (after confirming no legitimate use)
-git fsck --unreachable | grep "unreachable commit" | awk '{print $3}' | \
-  xargs -r git cat-file -t
-
-# Prune orphaned objects older than 2 weeks (default expiry)
-git prune --expire=2.weeks.ago --dry-run
-git prune --expire=2.weeks.ago
+┌───────────────────────────────────────── Git — Health Checks ─────────────────────────────────────────┐
+│                                                                                                       │
+│  Regular health checks for repositories: object integrity, size, stale refs, and CI status.           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Repository Integrity             │  │             Size and Performance            │   │
+│   │         git fsck: no errors expected         │  │       git count-objects -vH: pack size      │   │
+│   │       git gc --auto: run periodically        │  │         Large files: git lfs status         │   │
+│   │        Verify remotes: git remote -v         │  │          Clone time: < 30 s target          │   │
+│   │        Backup age: last mirror < 24 h        │  │        .git/objects: run gc if large        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Integrity and size checks prevent clone degradation; stale refs waste bandwidth                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Stale Ref Cleanup               │  │              CI Pipeline Health             │   │
+│   │       Merged branches: delete after PR       │  │         Success rate: > 95 % on main        │   │
+│   │       Remote prune: git fetch --prune        │  │        Build time: monitor for drift        │   │
+│   │       Stale PRs: weekly review cadence       │  │         Test coverage: no regression        │   │
+│   │        Orphaned tags: audit quarterly        │  │        Dependency alerts: Dependabot        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  GitHub/GitLab · mirror backup storage · CI runner · Dependabot alerts                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  git fsck         = file system consistency check; verifies object store                              │
+│  git gc           = garbage collection; repacks loose objects into pack files                         │
+│  count-objects    = shows loose object count and pack file sizes                                      │
+│  git fetch --prune= removes remote-tracking refs deleted from remote                                  │
+│  Pack file        = compressed bundle of objects; single file for many objects                        │
+│  Stale PR         = open pull request with no activity for > 14 days                                  │
+│  Orphaned tag     = tag pointing to commit on a deleted or unreachable branch                         │
+│  Clone time       = time to git clone full repo; indicator of repo bloat                              │
+│  Dependabot       = GitHub bot that opens PRs for dependency security updates                         │
+│  Success rate     = % of CI runs on main passing; below 95 % warrants investigation                   │
+│  Mirror age       = time since last backup sync; alert if > 24 hours                                  │
+│  Build time drift = CI duration creeping up; indicates test suite growth or slowness                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

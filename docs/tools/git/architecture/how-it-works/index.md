@@ -30,42 +30,49 @@ graph TD
     LC -->|git push| FORK
     FORK -->|Pull Request / MR| REMOTE
 ```
-
-| Term | Description |
-|------|-------------|
-| **Working Tree** | Files currently checked out on disk |
-| **Index / Staging Area** | Snapshot being prepared for the next commit |
-| **Local Repository** | `.git/` directory containing the full object database |
-| **Remote** | Named reference to another repository URL (`origin`, `upstream`) |
-| **Fork** | Server-side clone owned by a different user/org |
-
----
-
-## Git Object Model
-
-Everything stored by Git is content-addressed — identified by the SHA-1 (or SHA-256 in newer repos) hash of its content.
-
-```mermaid
-graph BT
-    B1[blob<br/>README.md content]
-    B2[blob<br/>main.go content]
-    B3[blob<br/>go.mod content]
-
-    T1[tree<br/>root/]
-    T2[tree<br/>src/]
-
-    C1[commit<br/>abc1234<br/>Initial commit]
-    C2[commit<br/>def5678<br/>Add feature X]
-
-    TAG[annotated tag<br/>v1.0.0]
-
-    B1 --> T1
-    T2 --> T1
-    B2 --> T2
-    B3 --> T1
-    T1 --> C1
-    C1 --> C2
-    TAG --> C2
+┌───────────────────────────────────────── Git — How It Works ──────────────────────────────────────────┐
+│                                                                                                       │
+│  Git commit lifecycle: working tree → index → local repo → remote repo.                               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Commit Creation                │  │              Branch Operations              │   │
+│   │       git add → writes blob to objects       │  │          Create: git branch <name>          │   │
+│   │      git add → updates index with tree       │  │      Switch: git checkout / git switch      │   │
+│   │       git commit → creates commit obj        │  │         Merge: 3-way or fast-forward        │   │
+│   │         HEAD ref moves to new commit         │  │         Delete: git branch -d <name>        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Commits chain via parent pointers; branches are just movable pointers                              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Merge vs Rebase                │  │                 Remote Sync                 │   │
+│   │        Merge: preserves history fork         │  │        git fetch: update remote refs        │   │
+│   │          Merge commit: two parents           │  │        git pull: fetch + merge/rebase       │   │
+│   │          Rebase: linearises history          │  │     git push: send commits + update ref     │   │
+│   │         Rebase rewrites SHA-1 hashes         │  │       Force push: dangerous on shared       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Developer workstation · Git remote server · CI trigger on push event                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  3-way merge  = git identifies common ancestor to resolve two diverged branches                       │
+│  Fast-forward = no merge commit; branch pointer advances along linear history                         │
+│  Rebase       = moves or re-applies commits; produces new SHAs; rewrites history                      │
+│  Force push   = overwrites remote history; use only on personal/feature branches                      │
+│  Reflog       = local recovery log; git reflog finds commits after accidental reset                   │
+│  Detached HEAD= HEAD points to commit, not branch; commits not attached to branch                     │
+│  Conflict     = overlapping changes in same file; must resolve manually                               │
+│  Squash merge = combine PR commits into single commit on target branch                                │
+│  Cherry-pick  = applies diff of specific commit onto current branch                                   │
+│  Bisect       = binary search through history to find commit that introduced bug                      │
+│  Amend        = rewrites last commit; do not amend pushed commits                                     │
+│  Stash        = stores dirty working tree temporarily; git stash pop restores                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 | Object | Description | Storage Key |

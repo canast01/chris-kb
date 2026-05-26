@@ -20,95 +20,49 @@ flowchart TD
     L2 -->|Corruption / data loss confirmed| EMERG
     L3 -->|Vendor escalation| EMERG
 ```
-
-### Tier Responsibilities
-
-| Tier | Team | Scope | Tools |
-|------|------|-------|-------|
-| **L1** | On-call ops / helpdesk | User access, auth failures, basic clone/push issues, CI pipeline failures | GitLab UI, GitHub UI, `ssh -vT`, `git remote -v`, credential troubleshooting |
-| **L2** | Platform / Git engineers | Server-side issues, replication lag, disk exhaustion, Gitaly errors, webhook failures, upgrade issues | `gitlab-ctl`, `gitlab-rake`, Prometheus/Grafana, Gitaly gRPC debugging |
-| **L3** | Vendor support / SRE | Appliance bugs, data corruption, pack file recovery, Geo failover, catastrophic outages | Access to vendor engineering, internal tooling, heap dumps |
-| **Emergency** | L2 + L3 + on-call lead | Data loss, repository corruption, full platform outage > 30 min | Everything; full access required |
-
-### Escalation Triggers — Do Not Wait
-
-Escalate to L2 immediately (skip L1 timer) for:
-
-- Repository reports missing or corrupted objects (`git fsck` errors)
-- GitLab readiness endpoint returns non-`ok` status for > 5 minutes
-- Gitaly service is down or returning gRPC errors
-- Geo secondary replication lag > 30 minutes
-- Disk utilisation on git-data > 90%
-- `gitlab-ctl status` shows services in crash-loop
-- Any confirmed data loss or accidental destructive operation on a shared branch
-
----
-
-## SLA Table
-
-| Severity | Definition | Initial Response | Status Update Frequency | Resolution Target |
-|----------|-----------|-----------------|------------------------|-------------------|
-| **P1 — Critical** | Full platform outage; all users blocked; data loss confirmed or suspected | 15 minutes | Every 30 minutes | 4 hours |
-| **P2 — High** | Major feature unavailable (e.g., all pushes failing, CI not triggering); significant user impact | 30 minutes | Every 1 hour | 8 hours |
-| **P3 — Medium** | Degraded performance; single project/group affected; workaround available | 2 hours | Every 4 hours | 2 business days |
-| **P4 — Low** | Cosmetic issue; documentation; feature request; single-user issue | Next business day | Weekly | Best effort |
-
-### Vendor SLA (GitHub Enterprise / GitLab Ultimate)
-
-| Vendor | Support Tier | P1 Response | P1 Escalation to Engineering |
-|--------|-------------|-------------|------------------------------|
-| GitHub | Premium / Enterprise | 30 minutes (24/7) | 2 hours |
-| GitHub | Standard | 8 hours | 24 hours |
-| GitLab | Ultimate (Premium Support) | 30 minutes (24/7) | 4 hours |
-| GitLab | Premium | 4 hours (business hours) | 8 hours |
-
----
-
-## GitHub Support Ticket Format
-
-Open tickets at: **https://support.github.com/contact**
-
-```yaml
-Subject: [P1] GHES 3.13 — Gitaly service unavailable, all git operations failing
-
-Environment:
-- Product: GitHub Enterprise Server (GHES)
-- Version: 3.13.2
-- Deployment: VM (VMware vSphere) / AWS EC2 / Azure VM [choose one]
-- Instance URL: https://github.example.com
-- HA enabled: Yes/No
-- Geo enabled: Yes/No
-
-Incident Summary:
-[One paragraph description of what is broken, since when, and impact]
-
-Timeline:
-- 14:32 UTC — First alert triggered (Gitaly health probe failing)
-- 14:35 UTC — Confirmed: git push/pull returning 500 errors for all users
-- 14:40 UTC — Attempted: gitlab-ctl restart gitaly — did not resolve
-- 14:45 UTC — Escalated to L3 / opening this ticket
-
-Steps Taken:
-1. Checked service status: sudo gitlab-ctl status → gitaly: down
-2. Restarted Gitaly: sudo gitlab-ctl restart gitaly → fails to start
-3. Checked logs: sudo gitlab-ctl tail gitaly → [paste relevant log lines]
-4. Disk usage: df -h → git-data at 94% (possible cause)
-
-Diagnostic Data (attached):
-- git-diagnostics.txt (output of collect-git-diagnostics.sh)
-- gitaly.log (last 500 lines)
-- gitlab-rails/production.log (last 500 lines)
-- gitlab-ctl status output
-
-Expected Behaviour:
-Gitaly service starts and serves git operations normally.
-
-Actual Behaviour:
-Gitaly fails to start. All git operations return 500 Internal Server Error.
-
-Business Impact:
-All 350 engineers cannot push code. CI/CD pipelines are blocked.
-Release scheduled for 17:00 UTC today is at risk.
+┌────────────────────────────────────────── Git — Escalation ───────────────────────────────────────────┐
+│                                                                                                       │
+│  Escalation paths for Git issues: corrupt repos, leaked secrets, and access incidents.                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Corrupt Repository              │  │                Leaked Secrets               │   │
+│   │      1. git fsck: identify bad objects       │  │         1. Rotate secret immediately        │   │
+│   │        2. Restore from mirror backup         │  │           2. BFG: rewrite history           │   │
+│   │        3. Re-push from backup mirror         │  │        3. Force-push cleaned history        │   │
+│   │       4. Notify teams + update remotes       │  │         4. Audit access logs for use        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Corruption → restore from backup; secrets → rotate first, clean history second                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Access Incident                │  │              Data Loss Recovery             │   │
+│   │           1. Revoke PAT + SSH key            │  │         1. git reflog: find lost SHA        │   │
+│   │           2. Remove user from org            │  │           2. git fsck --lost-found          │   │
+│   │       3. Review audit log for actions        │  │           3. git cherry-pick <sha>          │   │
+│   │         4. Escalate to security team         │  │       4. Restore from mirror if needed      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  GitHub/GitLab audit log · mirror backup · security team · SIEM alerting                              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  BFG Repo Cleaner= fast history rewriter; removes files or strings from all commits                   │
+│  Force-push      = required after BFG history rewrite; coordinate with all cloners                    │
+│  git reflog      = local ref movement log; finds commits lost after reset/rebase                      │
+│  fsck --lost-found= writes dangling objects to .git/lost-found/ for inspection                        │
+│  Audit log       = org-level event history on GitHub; available 90 days default                       │
+│  Rotate secret   = change credential before cleaning history; assume it was used                      │
+│  Mirror restore  = push --mirror from backup to new/repaired remote URL                               │
+│  Revoke PAT      = Settings → Developer Settings → Personal access tokens → Revoke                    │
+│  Access incident = unauthorised access to repo; treat as security incident                            │
+│  Cherry-pick     = recover specific commit without full branch merge                                  │
+│  Notify teams    = after force-push all cloners must git fetch + reset --hard                         │
+│  SIEM alert      = audit log webhook to SIEM; enables real-time access alerts                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

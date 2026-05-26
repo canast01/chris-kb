@@ -15,43 +15,49 @@ Role
                     ├── Record-level (specific conditions)
                     └── Field-level (specific fields)
 ```
-
----
-
-## Roles
-
-Roles are the primary mechanism for granting capabilities. Roles are assigned to groups (not directly to users where possible).
-
-### Core ITSM Roles
-
-| Role | Description |
-|---|---|
-| `admin` | Full system administrator |
-| `security_admin` | Manage ACLs, roles, and security policies |
-| `itil` | Core ITSM: Incident, Problem, Change, CMDB read/write |
-| `itil_admin` | ITSM administration (assignment groups, templates) |
-| `change_manager` | Change management approval and oversight |
-| `asset` | Asset and CMDB management |
-| `catalog` | Service catalog management |
-| `report_admin` | Create and share reports |
-| `rest_api_explorer` | Browse REST API documentation |
-| `sn_customerservice_agent` | CSM agent capabilities |
-
-### Role Hierarchy
-
-Roles can contain other roles (inheritance). Always assign the minimum required role.
-
-```javascript
-// Check a user's effective roles via Script Editor
-var user = 'jsmith';
-var roles = [];
-var roleRec = new GlideRecord('sys_user_has_role');
-roleRec.addQuery('user.user_name', user);
-roleRec.query();
-while (roleRec.next()) {
-    roles.push(roleRec.role.name.toString());
-}
-gs.info('Roles for ' + user + ': ' + roles.join(', '));
+┌────────────────────────────────────── ServiceNow Access Control ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                      ACL Evaluation Order                                     │   │
+│   │            Deny-all default → explicit allow rules → role check → condition script            │   │
+│   │                     Evaluated: table ACL → field ACL → row-level condition                    │   │
+│   │                      Operations: read / write / create / delete / execute                     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐                                                    │
+│   │                Role Hierarchy                │                                                    │
+│   │             admin (full access)              │                                                    │
+│   │             itil (service desk)              │                                                    │
+│   │          catalog (service catalog)           │                                                    │
+│   │          approver_user (approvals)           │                                                    │
+│   └──────────────────────────────────────────────┘                                                    │
+│                                                     ┌─────────────────────────────────────────────┐   │
+│                                                     │              Group-Based Access             │   │
+│                                                     │           Users assigned to groups          │   │
+│                                                     │            Groups assigned roles            │   │
+│                                                     │              LDAP/AD group sync             │   │
+│                                                     │          Dynamic groups via script          │   │
+│                                                     └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ServiceNow SaaS · LDAP servers for group sync · IdP for SSO role mapping                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ACL        = Access Control List; rule on table/field controlling who can do what                    │
+│  Role       = named permission set; assigned to users or groups                                       │
+│  itil       = core service management role; access to incidents, problems, changes                    │
+│  admin      = full platform access; should be restricted to named individuals                         │
+│  Group      = collection of users; roles assigned at group level for scale                            │
+│  Condition  = ACL script returning true/false; allows row-level access logic                          │
+│  Deny-all   = ServiceNow default; nothing accessible unless explicitly permitted                      │
+│  LDAP sync  = imports group membership from AD; keeps ServiceNow roles in sync                        │
+│  Row-level  = ACL condition evaluating current record fields; per-record access                       │
+│  execute    = ACL operation type for scripts and UI actions                                           │
+│  catalog    = role for self-service portal; can order items, view own requests                        │
+│  approver   = role enabling approval tasks; does not grant broader ITSM access                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Role Assignment Best Practices

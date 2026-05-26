@@ -39,23 +39,49 @@ jobs:
       - name: Test
         run: go test -race ./...
 ```
-
-Key GitHub Actions concepts:
-
-| Concept | Description |
-|---------|-------------|
-| **Workflow** | YAML file in `.github/workflows/`; triggered by events |
-| **Job** | Unit of execution running on a runner; jobs run in parallel by default |
-| **Step** | Individual command or action within a job |
-| **Runner** | Compute that executes jobs (GitHub-hosted or self-hosted) |
-| **Event** | Trigger: `push`, `pull_request`, `schedule`, `workflow_dispatch`, etc. |
-| **GITHUB_TOKEN** | Auto-generated secret scoped to the repo for API calls within the workflow |
-
-```bash
-# List workflows via gh CLI
-gh workflow list
-gh run list --workflow=ci.yml --limit 20
-gh run view <run-id> --log
+┌───────────────────────────────────────── Git — Integrations ──────────────────────────────────────────┐
+│                                                                                                       │
+│  Git integrations: CI/CD pipelines, issue tracking, IaC tools, and IDE plugins.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              CI/CD Integration               │  │                Issue Tracking               │   │
+│   │         GitHub Actions: on: push/PR          │  │       Jira: commit message references       │   │
+│   │       Jenkins: webhook triggers build        │  │         GitHub Issues: linked via PR        │   │
+│   │        Branch policy: require CI pass        │  │           Auto-close: "Fixes #123"          │   │
+│   │        Artifact: publish on tag push         │  │       Smart commit: time / transition       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Push events trigger CI; issue keys in commits auto-update tracking systems                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               IaC / Automation               │  │               IDE Integration               │   │
+│   │        Terraform: repo per workspace         │  │         VS Code: Git Graph / GitLens        │   │
+│   │          Ansible: playbooks in Git           │  │       JetBrains: built-in VCS tooling       │   │
+│   │          GitOps: Argo CD / Flux CD           │  │        Conflict resolution: 3-pane UI       │   │
+│   │      Secret scanning: pre-receive hook       │  │         SSH key management per user         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  GitHub/GitLab server · CI runners · Jira/issue tracker · developer workstations                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  GitHub Actions = event-driven CI/CD built into GitHub; triggered by push/PR/tag                      │
+│  Webhook        = HTTP POST from Git server to CI system on push events                               │
+│  Smart commit   = Jira commit syntax: ABC-123 #comment #time 1h #done                                 │
+│  GitOps         = Git as single source of truth for infrastructure state                              │
+│  Argo CD        = GitOps controller for Kubernetes; syncs repo to cluster state                       │
+│  Flux CD        = alternative GitOps operator; push-based reconciliation                              │
+│  Pre-receive    = server-side hook; runs before refs update; blocks bad pushes                        │
+│  Branch policy  = GitHub/GitLab rule requiring CI + reviews before merge                              │
+│  Auto-close     = PR/commit message "Fixes #n" closes issue on merge to default                       │
+│  GitLens        = VS Code extension showing inline blame and history                                  │
+│  Workspace      = Terraform isolated state environment mapped to a Git branch                         │
+│  Artifact       = built output (container, binary) published on tag push to registry                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### GitLab CI/CD

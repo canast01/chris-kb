@@ -45,97 +45,49 @@ flowchart TD
     K -- Fail --> L --> J
     K -- Pass --> M --> N --> O --> P
 ```
-
----
-
-## Upgrade Planner
-
-The Upgrade Planner is the primary pre-upgrade tool. Access it at:
-
-**System Update Sets > Upgrade Center > Upgrade Planner**
-
-It performs a pre-flight analysis comparing your customizations against the new release, identifying:
-
-- **Skipped changes** — ServiceNow changed a file you also customized; your version will override the patch
-- **Reverted changes** — your customization will be lost if not manually re-applied
-- **New features** — highlights capabilities worth enabling post-upgrade
-
-**Action on skipped changes:**
-
-1. Review each skipped file in the planner
-2. Determine whether the ServiceNow update is important (security fix, bug fix, new behavior)
-3. If yes, merge your customization with the ServiceNow version
-4. Mark the item as reviewed in the planner before proceeding
-
----
-
-## Skipped Versions Policy
-
-ServiceNow supports upgrading across multiple versions. However:
-
-| Versions Skipped | ServiceNow Support | Recommendation |
-|---|---|---|
-| 0 (sequential upgrade) | Full | Preferred |
-| 1 version | Supported | Acceptable |
-| 2 versions | Supported with caveats | Requires thorough ATF testing |
-| 3+ versions | Not recommended | Contact ServiceNow for guidance |
-
-When skipping versions:
-
-- Run the Upgrade Planner for **each skipped version** to surface all breaking changes cumulatively
-- ATF coverage must be > 80% of critical business processes before proceeding
-- Allow double the normal UAT window
-- Document all customizations that required changes during the skip
-
----
-
-## Pre-Upgrade Checklist
-
-Complete before any instance upgrade:
-
-### Platform Health
-
-- [ ] Instance Stats page shows no critical alerts
-- [ ] All scheduled jobs running cleanly
-- [ ] No active P1/P2 incidents related to the platform
-- [ ] ECC Queue error count = 0
-
-### Customization Review
-
-- [ ] Upgrade Planner run and all items reviewed
-- [ ] Skipped changes documented and merged where required
-- [ ] Update Sets in **Complete** state (no In Progress sets that could conflict)
-- [ ] Custom applications reviewed against release notes for API changes
-
-### Testing Preparation
-
-- [ ] ATF test suites are up to date and cover all critical processes
-- [ ] Test data verified in sub-production instance
-- [ ] Regression test plan reviewed by team leads
-
-### Communication
-
-- [ ] Change Request raised and approved (Normal change type)
-- [ ] Stakeholders notified of maintenance windows
-- [ ] On-call rota confirmed for production upgrade window
-- [ ] Rollback decision tree agreed (see below)
-
----
-
-## Upgrade Process (Cloud / Auto-Upgrade)
-
-For ServiceNow cloud instances, the upgrade is performed by ServiceNow's automation. Customer action is limited to scheduling and validation.
-
-### Step 1 — Request Sub-Production Upgrade (HI Portal)
-
-Log in to `https://hi.service-now.com` and raise an upgrade request:
-
-```yaml
-Category: Instance Upgrade
-Instance: mycompany-dev.service-now.com
-Target version: Yokohama
-Requested window: 2026-01-15, 02:00–06:00 UTC
-Contact: platform-team@example.com
+┌────────────────────────────────── ServiceNow — Install and Upgrade ───────────────────────────────────┐
+│                                                                                                       │
+│  ServiceNow upgrade process: SN delivers patches; tenant validates and activates via HI.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Upgrade Planning               │  │             Plugin Installation             │   │
+│   │        Review release notes (SN docs)        │  │        Request via HI portal or in-UI       │   │
+│   │       Identify custom scope conflicts        │  │         Test in sub-prod before prod        │   │
+│   │       Schedule upgrade window with SN        │  │       Verify license entitlement first      │   │
+│   │      Pre-upgrade: snapshot update sets       │  │      Dependencies resolved by platform      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Plan in sub-prod first → promote to production only after full regression validation               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Upgrade Execution               │  │           Post-Upgrade Validation           │   │
+│   │       Upgrade Monitor: track progress        │  │       Skipped: review skipped records       │   │
+│   │       SN handles DB migration + patch        │  │     Regression: test critical workflows     │   │
+│   │      Customisations flagged if conflict      │  │         Integration smoke tests run         │   │
+│   │      Rollback: previous version restore      │  │      User acceptance sign-off required      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ServiceNow data centres · HI portal · sub-prod + production instances                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  HI portal       = ServiceNow internal portal; used to request upgrades, clones, plugins              │
+│  Release notes   = SN docs page listing changes, deprecations, new features per version               │
+│  Custom scope    = scoped application or customisation that may conflict with base upgrade            │
+│  Update Set snap = XML export of current customisations before upgrade begins                         │
+│  Upgrade Monitor = sys_upgrade_history; tracks status of all upgrade steps                            │
+│  Skipped records = customisations that conflicted; admin must resolve manually                        │
+│  DB migration    = schema changes applied automatically during upgrade                                │
+│  Rollback        = SN-managed; tenant must request via P1 case within window                          │
+│  Regression test = scripted or manual test of core workflows post-upgrade                             │
+│  Smoke test      = quick integration check: REST/LDAP/MID connections verified                        │
+│  Entitlement     = licensed plugins only; check contract before activation                            │
+│  Dependency      = plugin A requires plugin B; platform resolves automatically                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Step 2 — ServiceNow Performs Upgrade

@@ -23,38 +23,49 @@ chore(deps): upgrade boto3 to 1.34.0
 docs(runbook): add k8s drain procedure
 refactor(cache): replace in-memory store with Redis
 ```
-
-| Type | When to Use |
-|------|------------|
-| `feat` | New feature or capability |
-| `fix` | Bug fix |
-| `chore` | Maintenance, tooling, deps |
-| `docs` | Documentation only |
-| `refactor` | Code change with no behaviour change |
-| `test` | Adding or fixing tests |
-| `ci` | CI/CD pipeline changes |
-| `perf` | Performance improvement |
-
-## Making and Amending Commits
-
-```bash
-# Stage specific files and commit
-git add src/auth.py tests/test_auth.py
-git commit -m "feat(auth): add OAuth2 PKCE flow"
-
-# Stage all tracked changes
-git add -u
-git commit -m "fix(api): handle null billing response"
-
-# Amend the most recent commit message (before push)
-git commit --amend -m "fix(api): handle null response from billing service"
-
-# Amend and add a forgotten file
-git add forgotten_file.py
-git commit --amend --no-edit
-
-# Add a GPG signature to a commit
-git commit -S -m "feat: signed release commit"
+┌─────────────────────────────────────── Git — Design Standards ────────────────────────────────────────┐
+│                                                                                                       │
+│  Branching strategy, commit conventions, and repository standards for team-managed Git repos.         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Branching Strategy              │  │              Commit Conventions             │   │
+│   │           main: always deployable            │  │      Type: feat/fix/chore/docs/refactor     │   │
+│   │       feature/<ticket>-<desc> pattern        │  │          Scope: component in parens         │   │
+│   │        release/<semver> for cutpoints        │  │       Subject: imperative, < 72 chars       │   │
+│   │        hotfix/<ticket>-<desc> pattern        │  │        Body: why, not what (optional)       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Naming standards enable automation; message conventions power changelog generation                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Repository Standards             │  │               Review Standards              │   │
+│   │        .gitignore: language-specific         │  │        Require ≥ 2 approvals on main        │   │
+│   │         README: purpose + quickstart         │  │      Dismiss stale reviews on new push      │   │
+│   │        CODEOWNERS: auto-assign review        │  │        Require status checks to pass        │   │
+│   │      Branch protection on main/release       │  │       Squash or rebase merge preferred      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  GitHub/GitLab · branch protection rules · CODEOWNERS file · CI status checks                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Conventional Commits= specification for structured commit messages (type(scope): subject)            │
+│  CODEOWNERS   = file mapping path patterns to required reviewers                                      │
+│  Semver       = semantic versioning: MAJOR.MINOR.PATCH                                                │
+│  Squash merge = combines all PR commits to one; cleaner main history                                  │
+│  Status check = CI job result required before merge; blocks broken code                               │
+│  Stale review = approval dismissed when new commits pushed; forces re-review                          │
+│  Hotfix       = emergency fix branch off main/release; merged back to both                            │
+│  Cutpoint     = release branch created at a specific commit to stabilise                              │
+│  Imperative   = commit subject in present tense: "Add feature" not "Added"                            │
+│  Branch prot. = GitHub/GitLab rule preventing direct push to protected branch                         │
+│  .gitignore   = lists file patterns excluded from tracking (secrets, build artifacts)                 │
+│  Changelog    = auto-generated from conventional commits by tools like release-it                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Only amend commits that have not been pushed to a shared branch.

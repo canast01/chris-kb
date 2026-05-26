@@ -55,43 +55,57 @@ while (gr.next()) {
     gs.print(gr.getValue('name') + ' | ' + gr.getValue('duration') + ' | ' + gr.getValue('thread'));
 }
 ```
-
-- Identify and disable the offending Business Rule or Scheduled Job temporarily
-- For slow queries: add a filter index via **System Definition > Tables & Columns**
-- For heap exhaustion: raise with ServiceNow support for instance sizing review
-- For outbound HTTP blocks: change the REST call to **asynchronous** (use `executeAsync()`)
-
----
-
-## 2. MID Server Disconnected
-
-### Symptoms
-
-- **MID Server > MID Servers** shows status **Down** or **Stopped**
-- Discovery jobs not completing; ECC Queue accumulating Output records
-- Orchestration activities timing out
-
-### Common Root Causes
-
-| Cause | Indicator |
-|---|---|
-| MID Server process crashed | Service not running on host |
-| Network connectivity broken | HTTPS to instance blocked |
-| MID credentials expired | 401 errors in MID log |
-| JVM memory exhaustion | OutOfMemoryError in agent log |
-| Host OS resource exhaustion | High CPU/RAM on MID host |
-
-### Diagnostic Steps
-
-```bash
-# Linux — check service state
-systemctl status mid-server
-
-# Check MID Server log for errors
-grep -i "error\|exception\|failed" /opt/servicenow/mid/agent/logs/agent0.log.0 | tail -50
-
-# Test HTTPS connectivity to instance
-curl -v --max-time 10 https://mycompany.service-now.com/api/now/table/sys_user?sysparm_limit=1
+┌────────────────────────────────────── ServiceNow Common Issues ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐                                                    │
+│   │                Login / Access                │                                                    │
+│   │       SSO redirect loop → clear cookie       │                                                    │
+│   │        Account locked → admin unlock         │                                                    │
+│   │       No role → check group membership       │                                                    │
+│   │        MFA failure → reset TOTP seed         │                                                    │
+│   └──────────────────────────────────────────────┘                                                    │
+│                                                     ┌─────────────────────────────────────────────┐   │
+│                                                     │                 Performance                 │   │
+│                                                     │         Slow list → add table index         │   │
+│                                                     │         Form loads slow → GlideAjax         │   │
+│                                                     │       High memory → review sched jobs       │   │
+│                                                     │        Timeout → semaphore leak check       │   │
+│                                                     └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐                                                    │
+│   │                 Integration                  │                                                    │
+│   │        REST fails → check ECC errors         │                                                    │
+│   │        MID offline → restart service         │                                                    │
+│   │         LDAP sync fail → bind creds          │                                                    │
+│   │         Email not sent → SMTP config         │                                                    │
+│   └──────────────────────────────────────────────┘                                                    │
+│                                                     ┌─────────────────────────────────────────────┐   │
+│                                                     │               Workflow / ITSM               │   │
+│                                                     │       Stuck approval → manual reassign      │   │
+│                                                     │       SLA not running → check timezone      │   │
+│                                                     │          Notif not sent → event log         │   │
+│                                                     │       Cat item error → variable check       │   │
+│                                                     └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ServiceNow SaaS · MID server · SMTP relay · LDAP/AD servers · IdP                                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SSO redirect loop= SAML response rejected; clear browser cookies and retry                           │
+│  GlideAjax  = client-server script framework; slow calls block form rendering                         │
+│  Semaphore  = thread lock; leaked semaphore holds thread pool causing timeouts                        │
+│  ECC queue  = integration message queue; error state shows failed REST/SOAP calls                     │
+│  MID server = on-prem agent; must be running and connected to instance                                │
+│  Bind creds = LDAP service account credentials; rotation requires UI update                           │
+│  Event log  = sys_event table; notification triggers logged here for debug                            │
+│  Cat item   = service catalog item; variable errors prevent form submission                           │
+│  SLA timezone= SLA schedule uses instance timezone; mismatch causes wrong calc                        │
+│  TOTP seed  = secret key for authenticator app; reset via admin user record                           │
+│  Table index= DB index on column; missing index on filter field causes slow lists                     │
+│  Sched jobs = background scheduled tasks; excessive jobs starve user threads                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```powershell

@@ -49,37 +49,57 @@ Object.keys(criticalProps).forEach(function(prop) {
   gs.info('[' + status + '] ' + prop + ': expected=' + expected + ' actual=' + actual);
 });
 ```
-
----
-
-## Admin Account Hardening
-
-### Admin Access Controls
-
-| Control | Target | Action |
-|---|---|---|
-| Maximum admin accounts | 3–5 individuals | Audit and reduce |
-| Admin accounts use SSO + MFA | All admins | Enforce via IdP policy |
-| Admin sessions re-authenticate | Sensitive operations | WebSudo equivalent: elevated privilege |
-| Admin actions logged | All changes | Security audit log |
-| Break-glass account exists | 1 local account | Vault-managed credentials |
-| Break-glass account monitored | Continuous | Alert on any login |
-
-```javascript
-// Audit admin group members
-var adminMembers = new GlideRecord('sys_user_grmember');
-adminMembers.addQuery('group.name', 'SNOW-Administrators');
-adminMembers.addQuery('user.active', true);
-adminMembers.query();
-var admins = [];
-while (adminMembers.next()) {
-    admins.push({
-        username: adminMembers.user.user_name.toString(),
-        name: adminMembers.user.name.toString(),
-        lastLogin: adminMembers.user.last_login.toString()
-    });
-}
-gs.info('Active admins (' + admins.length + '): ' + JSON.stringify(admins));
+┌──────────────────────────────────────── ServiceNow Hardening ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐                                                    │
+│   │              Instance Hardening              │                                                    │
+│   │            Disable unused plugins            │                                                    │
+│   │           Remove demo/sample data            │                                                    │
+│   │            Restrict public pages             │                                                    │
+│   │          Set session timeout 30min           │                                                    │
+│   └──────────────────────────────────────────────┘                                                    │
+│                                                     ┌─────────────────────────────────────────────┐   │
+│                                                     │              Network Hardening              │   │
+│                                                     │            IP allowlist enforced            │   │
+│                                                     │           Mutual TLS integrations           │   │
+│                                                     │           Outbound firewall rules           │   │
+│                                                     │             No direct DB access             │   │
+│                                                     └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐                                                    │
+│   │                User Hardening                │                                                    │
+│   │            MFA all admin accounts            │                                                    │
+│   │            Least-privilege roles             │                                                    │
+│   │           Service accounts locked            │                                                    │
+│   │           Dormant accounts purged            │                                                    │
+│   └──────────────────────────────────────────────┘                                                    │
+│                                                     ┌─────────────────────────────────────────────┐   │
+│                                                     │               Change Hardening              │   │
+│                                                     │         Update sets for all changes         │   │
+│                                                     │           Dev→Test→Prod promotion           │   │
+│                                                     │         Script review before deploy         │   │
+│                                                     │          Business rule audit trail          │   │
+│                                                     └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ServiceNow SaaS · WAF at edge · DDoS protection · SOC 24x7 monitoring                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Plugin      = optional capability; unused plugins expand attack surface unnecessarily                │
+│  IP Allowlist= network policy restricting instance access to known source IP ranges                   │
+│  Session timeout= auto-logout after inactivity; 30 minutes recommended for admin                      │
+│  Update Set  = bundled configuration changes; promotes safely through environments                    │
+│  Business Rule= server-side script triggered on record events; reviewed before deploy                 │
+│  Least privilege= assign minimum roles required; no broad admin unless necessary                      │
+│  mTLS        = mutual TLS; both client and server authenticate with certificates                      │
+│  Demo data   = sample records shipped with plugins; must be removed in production                     │
+│  Dormant acct= accounts inactive >90 days; disable then delete per policy                             │
+│  WAF         = Web Application Firewall; blocks OWASP top-10 at ServiceNow edge                       │
+│  ACL order   = deny-all default; explicit allow rules grant access to tables/fields                   │
+│  Script review= security check of Business Rules/Client Scripts before promotion                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Break-Glass Procedure

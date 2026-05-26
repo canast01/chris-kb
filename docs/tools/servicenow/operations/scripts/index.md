@@ -8,63 +8,49 @@ export SN_INSTANCE="https://mycompany.service-now.com"
 export SN_USER="api_svc_account"
 export SN_PASS="your-password"
 ```
-
----
-
-## 1. REST API Health Check
-
-Verifies instance availability, authentication, and response time. Suitable for cron-based monitoring or pipeline pre-checks.
-
-```bash
-#!/bin/bash
-# sn_health_check.sh
-# Usage: ./sn_health_check.sh
-# Exit 0 = healthy, Exit 1 = degraded/unavailable
-
-set -euo pipefail
-
-INSTANCE="${SN_INSTANCE:-}"
-USER="${SN_USER:-}"
-PASS="${SN_PASS:-}"
-WARN_MS=3000
-CRIT_MS=8000
-
-if [[ -z "$INSTANCE" || -z "$USER" || -z "$PASS" ]]; then
-  echo "ERROR: SN_INSTANCE, SN_USER, SN_PASS must be set" >&2
-  exit 2
-fi
-
-START=$(date +%s%3N)
-
-RESPONSE=$(curl -s -o /tmp/sn_health_response.json -w "%{http_code}" \
-  --max-time 15 \
-  -u "$USER:$PASS" \
-  -H "Accept: application/json" \
-  "$INSTANCE/api/now/table/sys_user?sysparm_limit=1&sysparm_fields=sys_id")
-
-END=$(date +%s%3N)
-ELAPSED=$((END - START))
-
-echo "HTTP Status : $RESPONSE"
-echo "Response Time: ${ELAPSED}ms"
-
-if [[ "$RESPONSE" -ne 200 ]]; then
-  echo "CRITICAL: HTTP $RESPONSE — instance may be down or credentials invalid"
-  exit 1
-fi
-
-if [[ "$ELAPSED" -gt "$CRIT_MS" ]]; then
-  echo "CRITICAL: Response time ${ELAPSED}ms exceeds ${CRIT_MS}ms threshold"
-  exit 1
-fi
-
-if [[ "$ELAPSED" -gt "$WARN_MS" ]]; then
-  echo "WARNING: Response time ${ELAPSED}ms exceeds ${WARN_MS}ms threshold"
-  exit 0
-fi
-
-echo "OK: Instance healthy"
-exit 0
+┌─────────────────────────────────── ServiceNow — Operations Scripts ───────────────────────────────────┐
+│                                                                                                       │
+│  GlideRecord scripts, background scripts, and automation used in day-to-day operations.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Background Script Patterns          │  │              GlideRecord Basics             │   │
+│   │        Run in: System > Scripts > BG         │  │       var gr = new GlideRecord(table)       │   │
+│   │        Always scope to specific table        │  │          gr.addQuery(field, value)          │   │
+│   │      Use setLimit() to avoid full scan       │  │         gr.query(); while(gr.next())        │   │
+│   │       Log output: gs.info() / gs.log()       │  │          gr.setValue(); gr.update()         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Script development in sub-prod → tested → promoted via Update Set to production                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Common Admin Scripts             │  │          Scheduled Script Execution         │   │
+│   │       Bulk-close old incidents by age        │  │        Trigger: scheduled job record        │   │
+│   │      Reassign tasks from inactive user       │  │       Script Include for shared logic       │   │
+│   │         Sync CMDB CIs from discovery         │  │      Business Rule: on-save automation      │   │
+│   │        Purge expired export job logs         │  │       Flow Designer for no-code flows       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ServiceNow SaaS · background script engine · scheduler · sub-prod test instance                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Background Script= server-side JS run immediately; use for one-off admin tasks                       │
+│  GlideRecord      = server-side API for DB operations; analogous to ORM query                         │
+│  gs.info()        = writes to system log (syslog); use for script output                              │
+│  setLimit()       = limits GlideRecord result set; prevents accidental full-table scan                │
+│  Script Include   = reusable server-side library called from other scripts                            │
+│  Business Rule    = server-side trigger on DB operation (before/after insert/update)                  │
+│  Flow Designer    = low-code/no-code automation builder using actions and triggers                    │
+│  Scheduled Job    = record in sysauto_script; runs script on cron schedule                            │
+│  Update Set       = change container; promotes script customisations to production                    │
+│  Scope            = application scope; isolates customisations to prevent conflicts                   │
+│  setValue()       = sets field value in memory before gr.update() commits to DB                       │
+│  addQuery()       = adds WHERE clause condition to GlideRecord query                                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
