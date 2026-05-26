@@ -3487,28 +3487,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#epld-upgrade" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        EPLD Upgrade
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adding-a-new-switch-to-the-fabric" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adding a New Switch to the Fabric
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#decommission-procedure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3771,7 +3749,7 @@
 <li>[ ] Dual-fabric confirmed — the other fabric will carry all I/O during the reload</li>
 </ul>
 <p><strong>Upgrade steps:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1 — Copy the target NX-OS image to the switch bootflash</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1 — Copy the target NX-OS image to the switch bootflash</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>copy<span class="w"> </span>scp://&lt;server&gt;/&lt;path&gt;/nxos.bin<span class="w"> </span>bootflash:
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Step 2 — Verify the image MD5 checksum</span>
@@ -3791,28 +3769,68 @@
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>show<span class="w"> </span>vsan<span class="w">             </span><span class="c1"># all VSANs active</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w">   </span><span class="c1"># zoning intact</span>
 </code></pre></div>
-<hr />
-<h2 id="epld-upgrade">EPLD Upgrade<a class="headerlink" href="#epld-upgrade" title="Permanent link">&para;</a></h2>
-<p>EPLD (FPGA firmware) upgrades are required for some major NX-OS version transitions and for hardware compatibility.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check current EPLD versions</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>version<span class="w"> </span>module<span class="w"> </span>all<span class="w">  </span><span class="c1"># includes module EPLD version</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Upgrade EPLD (requires switch reload)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>upgrade<span class="w"> </span>epld<span class="w"> </span>bootflash:&lt;epld-image&gt;.img<span class="w"> </span>module<span class="w"> </span>all
-</code></pre></div>
-<p>EPLD upgrades are always disruptive — they require a module reload or full switch reload depending on the platform.</p>
-<hr />
-<h2 id="adding-a-new-switch-to-the-fabric">Adding a New Switch to the Fabric<a class="headerlink" href="#adding-a-new-switch-to-the-fabric" title="Permanent link">&para;</a></h2>
-<p>When adding a new MDS switch to an existing fabric:</p>
-<ol>
-<li>Configure the new switch with a unique domain ID before connecting ISLs.</li>
-<li>Pre-configure NTP, AAA (TACACS+/RADIUS), SNMP, and syslog from the baseline template.</li>
-<li>Connect the ISL — the new switch will join the fabric.</li>
-<li>Verify the new switch appears in <code>show topology</code>:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>show topology
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show fcdomain domain-list vsan 10
-</code></pre></div>
+┌──────────────────────────────── Cisco MDS 9000 — Install and Upgrade ─────────────────────────────────┐
+│                                                                                                       │
+│  MDS initial setup: rack, cable, NX-OS boot, initial config; ISSU upgrade procedure.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Initial Setup                 │  │         NX-OS Initial Configuration         │   │
+│   │           1. Rack and cable switch           │  │          1. Set hostname + IP mgmt          │   │
+│   │          2. Console: 9600 baud 8N1           │  │           2. Configure NTP servers          │   │
+│   │          3. Power on: boot sequence          │  │            3. Set admin password            │   │
+│   │           4. Initial config wizard           │  │           4. Configure TACACS+ ISE          │   │
+│   │          5. Set management IP + SSH          │  │            5. Add to DCNM fabric            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Console access required for initial setup; TACACS+ and NTP before adding to fabric.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            ISSU Upgrade Procedure            │  │           Post-Upgrade Validation           │   │
+│   │         1. Backup config + zone set          │  │          1. show version: new NX-OS         │   │
+│   │          2. Copy NX-OS to bootflash          │  │          2. show system health: OK          │   │
+│   │          3. show install all impact          │  │         3. show interface: no errors        │   │
+│   │         4. install all nxos <image>          │  │          4. Host I/O: verify access         │   │
+│   │           5. copy run start after            │  │           5. DCNM: verify version           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS director chassis · console cable · management Ethernet · SFP transceivers                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ISSU            = In-Service Software Upgrade; NX-OS upgrade without traffic drop                    │
+│  show install all impact= previews ISSU upgrade impact; shows module reloads                          │
+│  install all     = ISSU trigger; upgrades standby supervisor first then failover                      │
+│  bootflash       = switch internal flash storage; holds NX-OS images                                  │
+│  copy run start  = saves running config to startup; required after every change                       │
+│  Console         = serial connection; 9600 baud 8N1; required for initial setup                       │
+│  Initial config wizard= first-boot setup; sets admin password and IP                                  │
+│  TACACS+         = configure before adding to fabric; ISE must be reachable                           │
+│  NTP             = configure before DCNM discovery; event timestamps must sync                        │
+│  DCNM            = add switch to DCNM after SSH is configured; enables zone mgmt                      │
+│  show version    = verify NX-OS version after ISSU upgrade completes                                  │
+│  show system health= post-upgrade health check; all modules should be online                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>EPLD upgrades are always disruptive — they require a module reload or full switch reload depending on the platform.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Adding a New Switch to the Fabric
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>When adding a new MDS switch to an existing fabric:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>1. Configure the new switch with a unique domain ID before connecting ISLs.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>2. Pre-configure NTP, AAA (TACACS+/RADIUS), SNMP, and syslog from the baseline template.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>3. Connect the ISL — the new switch will join the fabric.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>4. Verify the new switch appears in `show topology`:
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>```text
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>show topology
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>show fcdomain domain-list vsan 10
+</code></pre></div></p>
 <ol>
 <li>Configure VSANs on the ISL trunk port to allow only the required VSANs.</li>
 <li>Update CMDB and SAN design register with the new switch domain ID and port allocation.</li>
@@ -3820,16 +3838,16 @@
 <hr />
 <h2 id="decommission-procedure">Decommission Procedure<a class="headerlink" href="#decommission-procedure" title="Permanent link">&para;</a></h2>
 <p>When removing a switch from the fabric:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Step 1 — Move all host and storage ports to other switches</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Step 2 — Disable the ISL port-channels to isolate the switch from the fabric</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>interface<span class="w"> </span>port-channel1
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>shutdown
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Step 3 — Confirm no devices are still logged in</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>show<span class="w"> </span>flogi<span class="w"> </span>database
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Step 4 — Physically remove the switch</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Step 5 — Update CMDB and domain ID register</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1 — Move all host and storage ports to other switches</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Step 2 — Disable the ISL port-channels to isolate the switch from the fabric</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>interface<span class="w"> </span>port-channel1
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>shutdown
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Step 3 — Confirm no devices are still logged in</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>show<span class="w"> </span>flogi<span class="w"> </span>database
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Step 4 — Physically remove the switch</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Step 5 — Update CMDB and domain ID register</span>
 </code></pre></div>
 
 
