@@ -48,31 +48,51 @@ sequenceDiagram
   ESXi->>FA: PLOGI + PRLI to CT1 via Fabric B
   FA-->>ESXi: Volumes visible via both paths (ALUA)
 ```
-
-**Zone a new ESXi host:**
-
-```bash
-# Step 1 — Find the host HBA WWPN after it logs in
-show flogi database vsan 10 | grep <host-ip-or-note>
-# Or check the host HBA WWPNs from the ESXi console:
-esxcli storage san fc list
-
-# Step 2 — Create a device alias for each HBA port
-device-alias database
-  device-alias name esxi-host01_hba0 pwwn 21:00:00:xx:xx:xx:xx:xx
-  device-alias name esxi-host01_hba1 pwwn 21:00:00:xx:xx:xx:xx:xx
-device-alias commit
-
-# Step 3 — Create zones (one per host-port to storage-port pair)
-zone name esxi-host01_hba0-powermax01_fa0 vsan 10
-  member device-alias esxi-host01_hba0
-  member device-alias powermax01_fa0
-
-# Step 4 — Add zones to the active zone set and activate
-zoneset name prod-zoneset vsan 10
-  member esxi-host01_hba0-powermax01_fa0
-
-zoneset activate name prod-zoneset vsan 10
+┌──────────────────────────────────── Cisco MDS 9000 — Integrations ────────────────────────────────────┐
+│                                                                                                       │
+│  MDS integrations: DCNM, Cisco ISE, SIEM, storage arrays, VMware vSphere, automation.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Management Integrations            │  │            Security Integrations            │   │
+│   │          DCNM: zone + firmware mgmt          │  │           ISE: TACACS+/RADIUS auth          │   │
+│   │             SNMP v3: NMS polling             │  │           Syslog: SIEM forwarding           │   │
+│   │           NETCONF/gRPC: automation           │  │          DH-CHAP: switch-to-switch          │   │
+│   │          NTP: time sync all events           │  │           AES-256: link encryption          │   │
+│   │           DNS: hostname resolution           │  │             SNMPv3 auth+privacy             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  DCNM manages zones; ISE provides TACACS+; SIEM gets syslog for security events.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Storage & Compute Connect           │  │           Automation Integrations           │   │
+│   │         NetApp ONTAP: FC LUN target          │  │             Ansible: cisco.nxos             │   │
+│   │          Pure FlashArray: FC target          │  │           Terraform: DCNM provider          │   │
+│   │          Dell PowerStore: FC target          │  │          Python: NX-API / RESTCONF          │   │
+│   │          VMware vSphere: VMFS LUNs           │  │             GitOps: zone as code            │   │
+│   │         IBM mainframe: FICON zoning          │  │           ServiceNow: CMDB CI sync          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS switch chassis · FC cables · management Ethernet · Cisco ISE appliance                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  DCNM            = Data Center Network Manager; zones, firmware, topology for MDS                     │
+│  ISE             = Cisco Identity Services Engine; TACACS+ and RADIUS source                          │
+│  TACACS+         = centralised CLI auth; every MDS command logged with username                       │
+│  NETCONF         = XML-based configuration protocol; supported on MDS NX-OS                           │
+│  gRPC            = modern API transport; MDS telemetry streaming protocol                             │
+│  DH-CHAP         = Diffie-Hellman CHAP; ISL authentication between switches                           │
+│  AES-256 link    = optional MDS port-level encryption; requires AES license                           │
+│  NX-API          = NX-OS REST-like API; JSON over HTTP for automation                                 │
+│  RESTCONF        = YANG-based configuration protocol; RFC 8040                                        │
+│  cisco.nxos      = Ansible Galaxy collection for MDS and Nexus NX-OS automation                       │
+│  FICON           = IBM mainframe FC I/O protocol; requires FICON zone on MDS                          │
+│  VMFS            = VMware File System; FC LUN presented to ESXi as datastore                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Verify the host can see the storage:**
