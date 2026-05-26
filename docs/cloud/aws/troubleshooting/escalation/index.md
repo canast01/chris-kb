@@ -1,5 +1,52 @@
 # AWS — Escalation
 
+```
+┌───────────────────────────── AWS Escalation — Support & Trusted Advisor ──────────────────────────────┐
+│                                                                                                       │
+│  AWS support tiers, escalation paths, and Trusted Advisor checks for proactive guidance.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Support Plans                 │  │               Escalation Path               │   │
+│   │       Developer: 12h business response       │  │         1. Internal runbook attempt         │   │
+│   │       Business: 1h production response       │  │         2. AWS console support case         │   │
+│   │      Enterprise On-Ramp: 30min critical      │  │       3. Severity: Urgent/High/Normal       │   │
+│   │     Enterprise: 15min + TAM + Concierge      │  │       4. TAM escalation if Enterprise       │   │
+│   │    Business+: all Trusted Advisor checks     │  │       5. AWS executive escalation path      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Include CloudTrail events, CloudWatch metrics, and resource IDs when opening cases.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Trusted Advisor Checks            │  │            AWS Health & Proactive           │   │
+│   │      Cost: idle instances, underused RI      │  │          AWS Health: account events         │   │
+│   │       Security: MFA, open SGs, key age       │  │      Proactive events: TAM notification     │   │
+│   │       Fault tolerance: AZ coverage, DR       │  │        Well-Architected Tool: review        │   │
+│   │      Performance: overloaded instances       │  │       re:Post: community Q&A platform       │   │
+│   │      Service limits: approaching quotas      │  │      Service Quotas: self-service raise     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS support infrastructure · TAM engagement portal · Trusted Advisor analysis plane                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  TAM             = Technical Account Manager; designated AWS engineer for Enterprise plans            │
+│  Severity Urgent  = Production system down; 15-min response time on Enterprise plan                   │
+│  Severity High   = Significant business impact; 1h response on Business plan                          │
+│  Trusted Advisor = AWS automated best-practice checks across 5 pillars                                │
+│  Well-Architected = AWS framework review across 6 pillars; tool generates findings                    │
+│  Service Quotas  = Service that tracks and enables self-service quota increase requests               │
+│  Concierge       = Enterprise support specialist for billing and account questions                    │
+│  re:Post         = AWS community Q&A platform replacing forums; AWS experts answer                    │
+│  Proactive event = TAM-initiated notification about upcoming maintenance or risk                      │
+│  Support case    = Ticket opened in AWS console with issue details and severity                       │
+│  Cost optimisation check= Trusted Advisor identifies idle/underutilised resources                     │
+│  Service limit   = Account-level quota on AWS resources; some auto-raise, some manual                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 > Part of the [Troubleshooting](../index.md) section.
 
 ---
