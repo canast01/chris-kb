@@ -3232,17 +3232,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#mid-server-tls-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MID Server TLS Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -3683,7 +3672,7 @@
 </tbody>
 </table>
 <h3 id="tls-verification-setting">TLS Verification Setting<a class="headerlink" href="#tls-verification-setting" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// Verify TLS certificate validation is enforced for outbound calls</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// Verify TLS certificate validation is enforced for outbound calls</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1">// System Properties → glide.http.ssl_check_cert = true (default)</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">getProperty</span><span class="p">(</span><span class="s1">&#39;glide.http.ssl_check_cert&#39;</span><span class="p">)</span><span class="w">  </span><span class="c1">// Should return &#39;true&#39;</span>
@@ -3692,43 +3681,77 @@
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1">// System Web Services → Outbound → REST Messages</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1">// Open REST Message → HTTP Methods → SSL enforcement: Enforce SSL/TLS</span>
 </code></pre></div>
-<p><strong>Never disable SSL certificate verification</strong> (<code>glide.http.ssl_check_cert = false</code>) in production. This creates a man-in-the-middle vulnerability for all outbound integrations.</p>
-<h3 id="mid-server-tls-configuration">MID Server TLS Configuration<a class="headerlink" href="#mid-server-tls-configuration" title="Permanent link">&para;</a></h3>
-<p>The MID Server establishes an encrypted tunnel to the ServiceNow instance.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># MID Server config.xml — TLS configuration</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Location: /opt/servicenow/mid/agent/config.xml</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="na">&lt;parameter</span><span class="w"> </span><span class="s">name=&quot;mid.instance.ssl.verify&quot; value=&quot;true&quot;/&gt;</span>
+┌──────────────────────────────────────── ServiceNow Encryption ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Encryption Layers                                       │   │
+│   │                  Transit: TLS 1.2+ browser↔instance; TLS on all integrations                  │   │
+│   │                  At rest: AES-256 DB encryption (ServiceNow managed or BYOK)                  │   │
+│   │                Field-level: Edge Encryption proxy encrypts before cloud upload                │   │
+│   │                  Attachments: encrypted in object storage; scanned on upload                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    In-transit TLS → at-rest DB encryption → field-level Edge Encryption                               │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐                                                    │
+│   │               Edge Encryption                │                                                    │
+│   │              On-prem proxy node              │                                                    │
+│   │            Encrypts before cloud             │                                                    │
+│   │              Customer holds key              │                                                    │
+│   │             AES-256 field cipher             │                                                    │
+│   └──────────────────────────────────────────────┘                                                    │
+│                                                     ┌─────────────────────────────────────────────┐   │
+│                                                     │                Key Management               │   │
+│                                                     │           ServiceNow KMS (default)          │   │
+│                                                     │           BYOK via AWS KMS / Azure          │   │
+│                                                     │            Key rotation schedule            │   │
+│                                                     │           HSM integration optional          │   │
+│                                                     └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ServiceNow SaaS datacentres · HSM appliances (BYOK) · TLS termination at load balancer               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Edge Encryption = on-prem proxy that encrypts field values before sending to ServiceNow              │
+│  BYOK       = Bring Your Own Key; customer manages encryption keys in their KMS                       │
+│  KMS        = Key Management Service; stores and rotates encryption keys                              │
+│  HSM        = Hardware Security Module; tamper-proof key storage device                               │
+│  AES-256    = Advanced Encryption Standard 256-bit; symmetric cipher for data at rest                 │
+│  TLS 1.2+   = Transport Layer Security; encrypts data in transit                                      │
+│  Field-level= per-field encryption; fields marked "encrypted" stored as ciphertext                    │
+│  Attachment = files stored in object storage; encrypted independently of DB records                   │
+│  BYOK proxy = Edge Encryption node hosted on-prem; only encrypted data leaves network                 │
+│  Key rotation= periodic replacement of encryption keys; reduces exposure window                       │
+│  Object store= S3-compatible storage for attachments; AES-256 server-side encryption                  │
+│  Cipher suite= agreed TLS algorithms; ServiceNow enforces strong suites only                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a># Verify MID Server is using TLS 1.2+
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>openssl s_client -connect &lt;instance&gt;.service-now.com:443 \
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  -tls1_2 -servername &lt;instance&gt;.service-now.com 2&gt;&amp;1 | grep &quot;Protocol&quot;
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Minimum TLS version for MID outbound connections</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="na">&lt;parameter</span><span class="w"> </span><span class="s">name=&quot;mid.ssl.minimum.protocol&quot; value=&quot;TLSv1.2&quot;/&gt;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Cipher suite restriction</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="na">&lt;parameter</span><span class="w"> </span><span class="s">name=&quot;mid.ssl.cipher.suites&quot;</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="na">value</span><span class="o">=</span><span class="s">&quot;TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256&quot;/&gt;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify MID Server is using TLS 1.2+</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;instance&gt;.service-now.com:443<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-tls1_2<span class="w"> </span>-servername<span class="w"> </span>&lt;instance&gt;.service-now.com<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check MID Server certificate trust store</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">$JAVA_HOME</span>/bin/keytool<span class="w"> </span>-list<span class="w"> </span>-keystore<span class="w"> </span>/opt/servicenow/mid/agent/security/keystore.jks<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-storepass<span class="w"> </span>midserver
-</code></pre></div>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Check MID Server certificate trust store
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>$JAVA_HOME/bin/keytool -list -keystore /opt/servicenow/mid/agent/security/keystore.jks \
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  -storepass midserver
+</code></pre></div></p>
 <hr />
 <h2 id="field-level-encryption">Field-Level Encryption<a class="headerlink" href="#field-level-encryption" title="Permanent link">&para;</a></h2>
 <p>ServiceNow supports field-level encryption for sensitive data stored in database fields. This is distinct from transport encryption — it protects data at rest in the database.</p>
 <h3 id="enabling-field-encryption">Enabling Field Encryption<a class="headerlink" href="#enabling-field-encryption" title="Permanent link">&para;</a></h3>
 <p>Requires: System Encryption Context feature activated on the instance.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// Enable field encryption on a specific field</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1">// Navigate to: Dictionary Entry for the field</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1">// System Definition → Dictionary → find table/field</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">// Set: Encryption context = Default Encryption Context</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">// Example: encrypt the &#39;password&#39; field on an integration table</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1">// Table: u_integration_credentials</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1">// Field: u_password</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1">// In Dictionary: Encryption context → select encryption context</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Enable field encryption on a specific field</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1">// Navigate to: Dictionary Entry for the field</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">// System Definition → Dictionary → find table/field</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">// Set: Encryption context = Default Encryption Context</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">// Example: encrypt the &#39;password&#39; field on an integration table</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">// Table: u_integration_credentials</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">// Field: u_password</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">// In Dictionary: Encryption context → select encryption context</span>
 </code></pre></div>
 <h3 id="encryption-contexts">Encryption Contexts<a class="headerlink" href="#encryption-contexts" title="Permanent link">&para;</a></h3>
 <p>Navigate to: System Security → Encryption Contexts</p>
@@ -3758,13 +3781,13 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// Script to list fields with encryption enabled</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">dictRec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideRecord</span><span class="p">(</span><span class="s1">&#39;sys_dictionary&#39;</span><span class="p">);</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nx">dictRec</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;encryption_type&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;ENCRYPT&#39;</span><span class="p">);</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nx">dictRec</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">dictRec</span><span class="p">.</span><span class="nx">next</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nx">gs</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;Table: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">dictRec</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39; | Field: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">dictRec</span><span class="p">.</span><span class="nx">element</span><span class="p">);</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// Script to list fields with encryption enabled</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">dictRec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideRecord</span><span class="p">(</span><span class="s1">&#39;sys_dictionary&#39;</span><span class="p">);</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nx">dictRec</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;encryption_type&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;ENCRYPT&#39;</span><span class="p">);</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nx">dictRec</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">dictRec</span><span class="p">.</span><span class="nx">next</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nx">gs</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;Table: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">dictRec</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39; | Field: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">dictRec</span><span class="p">.</span><span class="nx">element</span><span class="p">);</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="data-classification-and-encryption-requirements">Data Classification and Encryption Requirements<a class="headerlink" href="#data-classification-and-encryption-requirements" title="Permanent link">&para;</a></h3>
 <table>
@@ -3808,16 +3831,16 @@
 <p>ServiceNow provides a Credential Store for integration credentials. Never store credentials in plain-text fields or workflow variables.</p>
 <h3 id="discovery-credentials">Discovery Credentials<a class="headerlink" href="#discovery-credentials" title="Permanent link">&para;</a></h3>
 <p>Navigate to: Discovery → Credentials</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// Retrieve a credential programmatically (Script Include)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">credMgr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">CredentialResolver</span><span class="p">();</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kd">var</span><span class="w"> </span><span class="nx">creds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">credMgr</span><span class="p">.</span><span class="nx">getCredentials</span><span class="p">(</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;target-host.corp.example.com&#39;</span><span class="p">);</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1">// Returns: {user_name: &#39;...&#39;, password: &#39;...&#39;}  — encrypted in transit within the instance</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// Retrieve a credential programmatically (Script Include)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">credMgr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">CredentialResolver</span><span class="p">();</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kd">var</span><span class="w"> </span><span class="nx">creds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">credMgr</span><span class="p">.</span><span class="nx">getCredentials</span><span class="p">(</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;target-host.corp.example.com&#39;</span><span class="p">);</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">// Returns: {user_name: &#39;...&#39;, password: &#39;...&#39;}  — encrypted in transit within the instance</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all discovery credentials via REST API</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;instance&gt;.service-now.com/api/now/table/discovery_credentials&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.result[] | {name: .name, type: .type, active: .active}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all discovery credentials via REST API</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;instance&gt;.service-now.com/api/now/table/discovery_credentials&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.result[] | {name: .name, type: .type, active: .active}&#39;</span>
 </code></pre></div>
 <p><strong>Credential controls:</strong></p>
 <ul>
@@ -3828,44 +3851,44 @@
 </ul>
 <h3 id="connection-aliases-external-credential-storage">Connection Aliases (External Credential Storage)<a class="headerlink" href="#connection-aliases-external-credential-storage" title="Permanent link">&para;</a></h3>
 <p>For integration with CyberArk, HashiCorp Vault, or Azure Key Vault:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// External credential resolver — CyberArk integration</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">// Plugin: com.snc.integration.credential_resolver.cyberark</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">// System Properties:</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1">// credential_resolver.cyberark.url = https://cyberark.corp.example.com</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1">// credential_resolver.cyberark.app_id = SNOW-Integration</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1">// credential_resolver.cyberark.safe = SNOW-Credentials</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1">// credential_resolver.cyberark.certificate = &lt;path to cert&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// External credential resolver — CyberArk integration</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1">// Plugin: com.snc.integration.credential_resolver.cyberark</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1">// System Properties:</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1">// credential_resolver.cyberark.url = https://cyberark.corp.example.com</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1">// credential_resolver.cyberark.app_id = SNOW-Integration</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1">// credential_resolver.cyberark.safe = SNOW-Credentials</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1">// credential_resolver.cyberark.certificate = &lt;path to cert&gt;</span>
 </code></pre></div>
 <hr />
 <h2 id="outbound-integration-encryption">Outbound Integration Encryption<a class="headerlink" href="#outbound-integration-encryption" title="Permanent link">&para;</a></h2>
 <p>All outbound REST, SOAP, and JDBC connections must use TLS.</p>
 <h3 id="rest-message-security-configuration">REST Message Security Configuration<a class="headerlink" href="#rest-message-security-configuration" title="Permanent link">&para;</a></h3>
 <p>Navigate to: System Web Services → Outbound → REST Messages</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// Enforce per REST message via script</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">sm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">sn_ws</span><span class="p">.</span><span class="nx">RESTMessageV2</span><span class="p">(</span><span class="s1">&#39;MyIntegration&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;get_data&#39;</span><span class="p">);</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nx">sm</span><span class="p">.</span><span class="nx">setEndpoint</span><span class="p">(</span><span class="s1">&#39;https://api.corp.example.com/data&#39;</span><span class="p">);</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nx">sm</span><span class="p">.</span><span class="nx">setHttpMethod</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">);</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1">// These are set in the UI on the REST Message record:</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1">// Authentication Type: Basic | OAuth 2.0 | Mutual Authentication</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1">// Mutual Authentication: Select certificate alias</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1">// Enforce SSL: true</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="kd">var</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">sm</span><span class="p">.</span><span class="nx">execute</span><span class="p">();</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;Status: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">getStatusCode</span><span class="p">());</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// Enforce per REST message via script</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">sm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">sn_ws</span><span class="p">.</span><span class="nx">RESTMessageV2</span><span class="p">(</span><span class="s1">&#39;MyIntegration&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;get_data&#39;</span><span class="p">);</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nx">sm</span><span class="p">.</span><span class="nx">setEndpoint</span><span class="p">(</span><span class="s1">&#39;https://api.corp.example.com/data&#39;</span><span class="p">);</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nx">sm</span><span class="p">.</span><span class="nx">setHttpMethod</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">);</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1">// These are set in the UI on the REST Message record:</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1">// Authentication Type: Basic | OAuth 2.0 | Mutual Authentication</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1">// Mutual Authentication: Select certificate alias</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1">// Enforce SSL: true</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="kd">var</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">sm</span><span class="p">.</span><span class="nx">execute</span><span class="p">();</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;Status: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">getStatusCode</span><span class="p">());</span>
 </code></pre></div>
 <h3 id="certificate-management-for-mtls">Certificate Management for mTLS<a class="headerlink" href="#certificate-management-for-mtls" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Import a CA certificate into ServiceNow trust store</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Navigate to: System Definition → Certificates → New</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Type: CA certificate</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># PEM certificate: paste CA certificate PEM</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Import a client certificate for mTLS</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Navigate to: System Definition → Certificates → New</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Type: Client certificate</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># PEM certificate: paste client cert</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># PEM private key: paste private key (stored encrypted)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Import a CA certificate into ServiceNow trust store</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Navigate to: System Definition → Certificates → New</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Type: CA certificate</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># PEM certificate: paste CA certificate PEM</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Import a client certificate for mTLS</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Navigate to: System Definition → Certificates → New</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Type: Client certificate</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># PEM certificate: paste client cert</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># PEM private key: paste private key (stored encrypted)</span>
 </code></pre></div>
 <hr />
 <h2 id="email-encryption">Email Encryption<a class="headerlink" href="#email-encryption" title="Permanent link">&para;</a></h2>
@@ -3901,22 +3924,22 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// Test SMTP configuration</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">mailer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideEmailOutbound</span><span class="p">();</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nx">mailer</span><span class="p">.</span><span class="nx">setSubject</span><span class="p">(</span><span class="s1">&#39;Test email from ServiceNow&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nx">mailer</span><span class="p">.</span><span class="nx">setBody</span><span class="p">(</span><span class="s1">&#39;TLS connectivity test&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nx">mailer</span><span class="p">.</span><span class="nx">addAddress</span><span class="p">(</span><span class="s1">&#39;to&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;admin@corp.example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Admin&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nx">mailer</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// Test SMTP configuration</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">mailer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideEmailOutbound</span><span class="p">();</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nx">mailer</span><span class="p">.</span><span class="nx">setSubject</span><span class="p">(</span><span class="s1">&#39;Test email from ServiceNow&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nx">mailer</span><span class="p">.</span><span class="nx">setBody</span><span class="p">(</span><span class="s1">&#39;TLS connectivity test&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nx">mailer</span><span class="p">.</span><span class="nx">addAddress</span><span class="p">(</span><span class="s1">&#39;to&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;admin@corp.example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Admin&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nx">mailer</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
 </code></pre></div>
 <hr />
 <h2 id="backup-and-export-encryption">Backup and Export Encryption<a class="headerlink" href="#backup-and-export-encryption" title="Permanent link">&para;</a></h2>
 <h3 id="export-encryption">Export Encryption<a class="headerlink" href="#export-encryption" title="Permanent link">&para;</a></h3>
 <p>ServiceNow data exports (CSV, XML, Excel) are unencrypted by default. Control who can export:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// ACL preventing export of sensitive tables</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1">// Name: read_sc_request.export</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1">// Operation: export (custom operation)</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">// Condition:</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;report_admin&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// ACL preventing export of sensitive tables</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1">// Name: read_sc_request.export</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1">// Operation: export (custom operation)</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1">// Condition:</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;report_admin&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="scheduled-export-security">Scheduled Export Security<a class="headerlink" href="#scheduled-export-security" title="Permanent link">&para;</a></h3>
 <p>Navigate to: System Import Sets → Scheduled Exports</p>

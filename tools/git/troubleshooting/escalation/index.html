@@ -3149,84 +3149,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Escalation Matrix">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#tier-responsibilities" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tier Responsibilities
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#escalation-triggers-do-not-wait" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Escalation Triggers — Do Not Wait
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sla-table" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SLA Table
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="SLA Table">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#vendor-sla-github-enterprise-gitlab-ultimate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Vendor SLA (GitHub Enterprise / GitLab Ultimate)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#github-support-ticket-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GitHub Support Ticket Format
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gitlab-support-ticket-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GitLab Support Ticket Format
-      
-    </span>
-  </a>
-  
 </li>
       
         <li class="md-nav__item">
@@ -3525,7 +3447,7 @@
 <p>Escalation paths for Git platform incidents, support ticket procedures, data collection requirements, emergency repository recovery, and SLA commitments.</p>
 <hr />
 <h2 id="escalation-matrix">Escalation Matrix<a class="headerlink" href="#escalation-matrix" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     INC([Incident Reported]) --&gt; L1
 
     L1["L1 — Platform Operations\nOn-call / helpdesk\nResponse: 15 min"]
@@ -3537,273 +3459,148 @@
     L2 --&gt;|Unresolved after 60 min\nor data loss suspected| L3
     L2 --&gt;|Corruption / data loss confirmed| EMERG
     L3 --&gt;|Vendor escalation| EMERG</code></pre>
-<h3 id="tier-responsibilities">Tier Responsibilities<a class="headerlink" href="#tier-responsibilities" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Tier</th>
-<th>Team</th>
-<th>Scope</th>
-<th>Tools</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>L1</strong></td>
-<td>On-call ops / helpdesk</td>
-<td>User access, auth failures, basic clone/push issues, CI pipeline failures</td>
-<td>GitLab UI, GitHub UI, <code>ssh -vT</code>, <code>git remote -v</code>, credential troubleshooting</td>
-</tr>
-<tr>
-<td><strong>L2</strong></td>
-<td>Platform / Git engineers</td>
-<td>Server-side issues, replication lag, disk exhaustion, Gitaly errors, webhook failures, upgrade issues</td>
-<td><code>gitlab-ctl</code>, <code>gitlab-rake</code>, Prometheus/Grafana, Gitaly gRPC debugging</td>
-</tr>
-<tr>
-<td><strong>L3</strong></td>
-<td>Vendor support / SRE</td>
-<td>Appliance bugs, data corruption, pack file recovery, Geo failover, catastrophic outages</td>
-<td>Access to vendor engineering, internal tooling, heap dumps</td>
-</tr>
-<tr>
-<td><strong>Emergency</strong></td>
-<td>L2 + L3 + on-call lead</td>
-<td>Data loss, repository corruption, full platform outage &gt; 30 min</td>
-<td>Everything; full access required</td>
-</tr>
-</tbody>
-</table>
-<h3 id="escalation-triggers-do-not-wait">Escalation Triggers — Do Not Wait<a class="headerlink" href="#escalation-triggers-do-not-wait" title="Permanent link">&para;</a></h3>
-<p>Escalate to L2 immediately (skip L1 timer) for:</p>
-<ul>
-<li>Repository reports missing or corrupted objects (<code>git fsck</code> errors)</li>
-<li>GitLab readiness endpoint returns non-<code>ok</code> status for &gt; 5 minutes</li>
-<li>Gitaly service is down or returning gRPC errors</li>
-<li>Geo secondary replication lag &gt; 30 minutes</li>
-<li>Disk utilisation on git-data &gt; 90%</li>
-<li><code>gitlab-ctl status</code> shows services in crash-loop</li>
-<li>Any confirmed data loss or accidental destructive operation on a shared branch</li>
-</ul>
-<hr />
-<h2 id="sla-table">SLA Table<a class="headerlink" href="#sla-table" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Severity</th>
-<th>Definition</th>
-<th>Initial Response</th>
-<th>Status Update Frequency</th>
-<th>Resolution Target</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>P1 — Critical</strong></td>
-<td>Full platform outage; all users blocked; data loss confirmed or suspected</td>
-<td>15 minutes</td>
-<td>Every 30 minutes</td>
-<td>4 hours</td>
-</tr>
-<tr>
-<td><strong>P2 — High</strong></td>
-<td>Major feature unavailable (e.g., all pushes failing, CI not triggering); significant user impact</td>
-<td>30 minutes</td>
-<td>Every 1 hour</td>
-<td>8 hours</td>
-</tr>
-<tr>
-<td><strong>P3 — Medium</strong></td>
-<td>Degraded performance; single project/group affected; workaround available</td>
-<td>2 hours</td>
-<td>Every 4 hours</td>
-<td>2 business days</td>
-</tr>
-<tr>
-<td><strong>P4 — Low</strong></td>
-<td>Cosmetic issue; documentation; feature request; single-user issue</td>
-<td>Next business day</td>
-<td>Weekly</td>
-<td>Best effort</td>
-</tr>
-</tbody>
-</table>
-<h3 id="vendor-sla-github-enterprise-gitlab-ultimate">Vendor SLA (GitHub Enterprise / GitLab Ultimate)<a class="headerlink" href="#vendor-sla-github-enterprise-gitlab-ultimate" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Vendor</th>
-<th>Support Tier</th>
-<th>P1 Response</th>
-<th>P1 Escalation to Engineering</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>GitHub</td>
-<td>Premium / Enterprise</td>
-<td>30 minutes (24/7)</td>
-<td>2 hours</td>
-</tr>
-<tr>
-<td>GitHub</td>
-<td>Standard</td>
-<td>8 hours</td>
-<td>24 hours</td>
-</tr>
-<tr>
-<td>GitLab</td>
-<td>Ultimate (Premium Support)</td>
-<td>30 minutes (24/7)</td>
-<td>4 hours</td>
-</tr>
-<tr>
-<td>GitLab</td>
-<td>Premium</td>
-<td>4 hours (business hours)</td>
-<td>8 hours</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="github-support-ticket-format">GitHub Support Ticket Format<a class="headerlink" href="#github-support-ticket-format" title="Permanent link">&para;</a></h2>
-<p>Open tickets at: <strong>https://support.github.com/contact</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">Subject</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">P1</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GHES 3.13 — Gitaly service unavailable, all git operations failing</span>
+┌────────────────────────────────────────── Git — Escalation ───────────────────────────────────────────┐
+│                                                                                                       │
+│  Escalation paths for Git issues: corrupt repos, leaked secrets, and access incidents.                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Corrupt Repository              │  │                Leaked Secrets               │   │
+│   │      1. git fsck: identify bad objects       │  │         1. Rotate secret immediately        │   │
+│   │        2. Restore from mirror backup         │  │           2. BFG: rewrite history           │   │
+│   │        3. Re-push from backup mirror         │  │        3. Force-push cleaned history        │   │
+│   │       4. Notify teams + update remotes       │  │         4. Audit access logs for use        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Corruption → restore from backup; secrets → rotate first, clean history second                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Access Incident                │  │              Data Loss Recovery             │   │
+│   │           1. Revoke PAT + SSH key            │  │         1. git reflog: find lost SHA        │   │
+│   │           2. Remove user from org            │  │           2. git fsck --lost-found          │   │
+│   │       3. Review audit log for actions        │  │           3. git cherry-pick <sha>          │   │
+│   │         4. Escalate to security team         │  │       4. Restore from mirror if needed      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  GitHub/GitLab audit log · mirror backup · security team · SIEM alerting                              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  BFG Repo Cleaner= fast history rewriter; removes files or strings from all commits                   │
+│  Force-push      = required after BFG history rewrite; coordinate with all cloners                    │
+│  git reflog      = local ref movement log; finds commits lost after reset/rebase                      │
+│  fsck --lost-found= writes dangling objects to .git/lost-found/ for inspection                        │
+│  Audit log       = org-level event history on GitHub; available 90 days default                       │
+│  Rotate secret   = change credential before cleaning history; assume it was used                      │
+│  Mirror restore  = push --mirror from backup to new/repaired remote URL                               │
+│  Revoke PAT      = Settings → Developer Settings → Personal access tokens → Revoke                    │
+│  Access incident = unauthorised access to repo; treat as security incident                            │
+│  Cherry-pick     = recover specific commit without full branch merge                                  │
+│  Notify teams    = after force-push all cloners must git fetch + reset --hard                         │
+│  SIEM alert      = audit log webhook to SIEM; enables real-time access alerts                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">Environment</span><span class="p">:</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GitHub Enterprise Server (GHES)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.13.2</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Deployment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VM (VMware vSphere) / AWS EC2 / Azure VM [choose one]</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Instance URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.example.com</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">HA enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Yes/No</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Geo enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Yes/No</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nt">Incident Summary</span><span class="p">:</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p p-Indicator">[</span><span class="nv">One paragraph description of what is broken</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">since when</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">and impact</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nt">Timeline</span><span class="p">:</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14:32 UTC — First alert triggered (Gitaly health probe failing)</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">14:35 UTC — Confirmed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git push/pull returning 500 errors for all users</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">14:40 UTC — Attempted</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gitlab-ctl restart gitaly — did not resolve</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14:45 UTC — Escalated to L3 / opening this ticket</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## GitLab Support Ticket Format
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Open tickets at: **https://support.gitlab.com** (requires valid license)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```yaml
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Subject: [P1] GitLab 17.0 — Repository corruption detected on 3 projects
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>License: EE Ultimate — License ID: xxxxx
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Instance URL: https://gitlab.example.com
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>Version: 17.0.2-ee
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>Installation type: Omnibus / Docker / Helm [choose one]
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>OS: Ubuntu 22.04 LTS
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>Describe the problem:
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>After running the nightly backup on 2024-05-07, git fsck reports missing blob objects
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>in 3 repositories. Affected projects: group/project-a, group/project-b, group/project-c.
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nt">Steps Taken</span><span class="p">:</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nt">1. Checked service status: sudo gitlab-ctl status → gitaly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">down</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nt">2. Restarted Gitaly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sudo gitlab-ctl restart gitaly → fails to start</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nt">3. Checked logs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sudo gitlab-ctl tail gitaly → [paste relevant log lines]</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="nt">4. Disk usage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">df -h → git-data at 94% (possible cause)</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="nt">Diagnostic Data (attached)</span><span class="p">:</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git-diagnostics.txt (output of collect-git-diagnostics.sh)</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gitaly.log (last 500 lines)</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gitlab-rails/production.log (last 500 lines)</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gitlab-ctl status output</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="nt">Expected Behaviour</span><span class="p">:</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="l l-Scalar l-Scalar-Plain">Gitaly service starts and serves git operations normally.</span>
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="nt">Actual Behaviour</span><span class="p">:</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="l l-Scalar l-Scalar-Plain">Gitaly fails to start. All git operations return 500 Internal Server Error.</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="nt">Business Impact</span><span class="p">:</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="l l-Scalar l-Scalar-Plain">All 350 engineers cannot push code. CI/CD pipelines are blocked.</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="l l-Scalar l-Scalar-Plain">Release scheduled for 17:00 UTC today is at risk.</span>
-</code></pre></div>
-<hr />
-<h2 id="gitlab-support-ticket-format">GitLab Support Ticket Format<a class="headerlink" href="#gitlab-support-ticket-format" title="Permanent link">&para;</a></h2>
-<p>Open tickets at: <strong>https://support.gitlab.com</strong> (requires valid license)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">Subject</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">P1</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GitLab 17.0 — Repository corruption detected on 3 projects</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">License: EE Ultimate — License ID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxx</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">Instance URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://gitlab.example.com</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nt">Version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">17.0.2-ee</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nt">Installation type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Omnibus / Docker / Helm [choose one]</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nt">OS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ubuntu 22.04 LTS</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nt">Describe the problem</span><span class="p">:</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="l l-Scalar l-Scalar-Plain">After running the nightly backup on 2024-05-07, git fsck reports missing blob objects</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nt">in 3 repositories. Affected projects</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group/project-a, group/project-b, group/project-c.</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nt">Error messages (exact)</span><span class="p">:</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="nt">error</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object file .git/objects/ab/cd1234... is empty</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="nt">error</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sha1 mismatch 4f3a2b1c...</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">missing blob 4f3a2b1c... known as &#39;src/main.go&#39;</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="nt">Steps to reproduce</span><span class="p">:</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="l l-Scalar l-Scalar-Plain">1. git clone git@gitlab.example.com:group/project-a.git</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="l l-Scalar l-Scalar-Plain">2. git fsck --full</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="l l-Scalar l-Scalar-Plain">3. Error output as above</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="nt">Relevant logs</span><span class="p">:</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="p p-Indicator">[</span><span class="nv">Paste gitaly log excerpt</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">production.log excerpt</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="nt">What we have already tried</span><span class="p">:</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git fsck --full — confirmed corruption</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git prune — did not resolve</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Checked disk for errors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">smartctl -a /dev/sda — no hardware errors reported</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Attempted restore from last night&#39;s backup — backup also shows corruption (investigating)</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="nt">Urgency</span><span class="p">:</span>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="l l-Scalar l-Scalar-Plain">Project-a is on the critical path for a release. Engineers are blocked on that repository.</span>
-</code></pre></div>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>Error messages (exact):
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  error: object file .git/objects/ab/cd1234... is empty
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  error: sha1 mismatch 4f3a2b1c...
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  missing blob 4f3a2b1c... known as &#39;src/main.go&#39;
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>Steps to reproduce:
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>1. git clone git@gitlab.example.com:group/project-a.git
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>2. git fsck --full
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>3. Error output as above
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>Relevant logs:
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>[Paste gitaly log excerpt, production.log excerpt]
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>What we have already tried:
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>- git fsck --full — confirmed corruption
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>- git prune — did not resolve
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>- Checked disk for errors: smartctl -a /dev/sda — no hardware errors reported
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>- Attempted restore from last night&#39;s backup — backup also shows corruption (investigating)
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>Urgency:
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>Project-a is on the critical path for a release. Engineers are blocked on that repository.
+</code></pre></div></p>
 <hr />
 <h2 id="data-to-collect-before-escalating">Data to Collect Before Escalating<a class="headerlink" href="#data-to-collect-before-escalating" title="Permanent link">&para;</a></h2>
 <p>Collect this data immediately when a P1/P2 incident begins — do not wait until you open the ticket.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="ch">#!/usr/bin/env bash</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># collect-platform-diagnostics.sh — run on GitLab server</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Requires: sudo access to gitlab-ctl / gitlab-rake</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">OUT_DIR</span><span class="o">=</span><span class="s2">&quot;/tmp/gitlab-diag-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d-%H%M%S<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Collecting diagnostics to </span><span class="nv">$OUT_DIR</span><span class="s2"> ...&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Service status</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>status<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/ctl-status.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Disk usage</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>df<span class="w"> </span>-h<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/disk-usage.txt&quot;</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/opt/gitlab/git-data<span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/disk-usage.txt&quot;</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Recent logs (last 500 lines each)</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="k">for</span><span class="w"> </span>svc<span class="w"> </span><span class="k">in</span><span class="w"> </span>gitaly<span class="w"> </span>puma<span class="w"> </span>sidekiq<span class="w"> </span>postgresql<span class="w"> </span>nginx<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>tail<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$svc</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-500<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/log-</span><span class="si">${</span><span class="nv">svc</span><span class="si">}</span><span class="s2">.txt&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="k">done</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># Rails check</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:check<span class="w"> </span><span class="nv">SANITIZE</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/gitlab-check.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1"># Environment info</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:env:info<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/env-info.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="c1"># Geo status (if applicable)</span>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>geo:status<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/geo-status.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="c1"># Background migration status</span>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>sudo<span class="w"> </span>gitlab-rails<span class="w"> </span>runner<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="s2">  puts Gitlab::Database::BackgroundMigration::BatchedMigration</span>
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="s2">         .where(status: [:active, :queued])</span>
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="s2">         .count</span>
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/bg-migrations.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>
-<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="c1"># System resources</span>
-<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>top<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/top.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>free<span class="w"> </span>-h<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/memory.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>
-<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="c1"># Package version</span>
-<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>dpkg<span class="w"> </span>-l<span class="w"> </span>gitlab-ee<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>rpm<span class="w"> </span>-q<span class="w"> </span>gitlab-ee<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/version.txt&quot;</span>
-<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>
-<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a><span class="c1"># Gitaly gRPC health</span>
-<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a>/opt/gitlab/embedded/bin/grpc_health_probe<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a><span class="w">  </span>-addr<span class="o">=</span>unix:///var/opt/gitlab/gitaly/gitaly.socket<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a><span class="w">  </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/gitaly-health.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a>
-<a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a><span class="c1"># Bundle and archive</span>
-<a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a>tar<span class="w"> </span>-czf<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">OUT_DIR</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span><span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>dirname<span class="w"> </span><span class="nv">$OUT_DIR</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>basename<span class="w"> </span><span class="nv">$OUT_DIR</span><span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a>
-<a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Diagnostics bundle: </span><span class="si">${</span><span class="nv">OUT_DIR</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span>
-<a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Review for secrets before uploading to vendor support portal.&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># collect-platform-diagnostics.sh — run on GitLab server</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Requires: sudo access to gitlab-ctl / gitlab-rake</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">OUT_DIR</span><span class="o">=</span><span class="s2">&quot;/tmp/gitlab-diag-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d-%H%M%S<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Collecting diagnostics to </span><span class="nv">$OUT_DIR</span><span class="s2"> ...&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Service status</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>status<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/ctl-status.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Disk usage</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>df<span class="w"> </span>-h<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/disk-usage.txt&quot;</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/opt/gitlab/git-data<span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/disk-usage.txt&quot;</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Recent logs (last 500 lines each)</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="k">for</span><span class="w"> </span>svc<span class="w"> </span><span class="k">in</span><span class="w"> </span>gitaly<span class="w"> </span>puma<span class="w"> </span>sidekiq<span class="w"> </span>postgresql<span class="w"> </span>nginx<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>tail<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$svc</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-500<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/log-</span><span class="si">${</span><span class="nv">svc</span><span class="si">}</span><span class="s2">.txt&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="k">done</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># Rails check</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:check<span class="w"> </span><span class="nv">SANITIZE</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/gitlab-check.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1"># Environment info</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:env:info<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/env-info.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1"># Geo status (if applicable)</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>geo:status<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/geo-status.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1"># Background migration status</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>sudo<span class="w"> </span>gitlab-rails<span class="w"> </span>runner<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="s2">  puts Gitlab::Database::BackgroundMigration::BatchedMigration</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="s2">         .where(status: [:active, :queued])</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="s2">         .count</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/bg-migrations.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="c1"># System resources</span>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>top<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/top.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>free<span class="w"> </span>-h<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/memory.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="c1"># Package version</span>
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>dpkg<span class="w"> </span>-l<span class="w"> </span>gitlab-ee<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>rpm<span class="w"> </span>-q<span class="w"> </span>gitlab-ee<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/version.txt&quot;</span>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="c1"># Gitaly gRPC health</span>
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>/opt/gitlab/embedded/bin/grpc_health_probe<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="w">  </span>-addr<span class="o">=</span>unix:///var/opt/gitlab/gitaly/gitaly.socket<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="w">  </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/gitaly-health.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="c1"># Bundle and archive</span>
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>tar<span class="w"> </span>-czf<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">OUT_DIR</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span><span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>dirname<span class="w"> </span><span class="nv">$OUT_DIR</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>basename<span class="w"> </span><span class="nv">$OUT_DIR</span><span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Diagnostics bundle: </span><span class="si">${</span><span class="nv">OUT_DIR</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span>
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Review for secrets before uploading to vendor support portal.&quot;</span>
 </code></pre></div>
 <h3 id="data-collection-checklist">Data Collection Checklist<a class="headerlink" href="#data-collection-checklist" title="Permanent link">&para;</a></h3>
 <ul>
@@ -3822,96 +3619,96 @@
 <h2 id="emergency-repository-recovery-procedure">Emergency Repository Recovery Procedure<a class="headerlink" href="#emergency-repository-recovery-procedure" title="Permanent link">&para;</a></h2>
 <p>Use this procedure when a repository has confirmed object corruption or a critical branch has been accidentally destroyed.</p>
 <h3 id="step-1-contain">Step 1 — Contain<a class="headerlink" href="#step-1-contain" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Put GitLab in maintenance mode to prevent further writes</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sudo<span class="w"> </span>gitlab-rails<span class="w"> </span>runner<span class="w"> </span><span class="s2">&quot;Gitlab::CurrentSettings.update!(maintenance_mode: true)&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Or via UI: Admin Area → Settings → General → Maintenance mode</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Put GitLab in maintenance mode to prevent further writes</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>gitlab-rails<span class="w"> </span>runner<span class="w"> </span><span class="s2">&quot;Gitlab::CurrentSettings.update!(maintenance_mode: true)&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Or via UI: Admin Area → Settings → General → Maintenance mode</span>
 </code></pre></div>
 <h3 id="step-2-assess-damage">Step 2 — Assess Damage<a class="headerlink" href="#step-2-assess-damage" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Identify which objects are missing/corrupt</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">REPO_PATH</span><span class="o">=</span><span class="s2">&quot;/var/opt/gitlab/git-data/repositories/group/project.git&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>fsck<span class="w"> </span>--full<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/fsck-report.txt
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Count severity</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;missing&quot;</span><span class="w"> </span>/tmp/fsck-report.txt
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;error&quot;</span><span class="w"> </span>/tmp/fsck-report.txt
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Check if any branches are still accessible</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>branch<span class="w"> </span>-a
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-10<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;HEAD not accessible&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Identify which objects are missing/corrupt</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">REPO_PATH</span><span class="o">=</span><span class="s2">&quot;/var/opt/gitlab/git-data/repositories/group/project.git&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>fsck<span class="w"> </span>--full<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/fsck-report.txt
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Count severity</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;missing&quot;</span><span class="w"> </span>/tmp/fsck-report.txt
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;error&quot;</span><span class="w"> </span>/tmp/fsck-report.txt
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Check if any branches are still accessible</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>branch<span class="w"> </span>-a
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-10<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;HEAD not accessible&quot;</span>
 </code></pre></div>
 <h3 id="step-3-recover-from-mirrorbackup">Step 3 — Recover from Mirror/Backup<a class="headerlink" href="#step-3-recover-from-mirrorbackup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Option A: Recover from a mirror backup repo</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">MIRROR</span><span class="o">=</span><span class="s2">&quot;/backup/git/project.git&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">DEST</span><span class="o">=</span><span class="s2">&quot;/var/opt/gitlab/git-data/repositories/group/project.git&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Copy missing objects from mirror</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>rsync<span class="w"> </span>-av<span class="w"> </span>--ignore-existing<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$MIRROR</span><span class="s2">/objects/&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$DEST</span><span class="s2">/objects/&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Re-verify</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DEST</span><span class="s2">&quot;</span><span class="w"> </span>fsck<span class="w"> </span>--full
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Option B: Re-clone from mirror into a fresh path, then switch</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nv">NEW_REPO</span><span class="o">=</span><span class="s2">&quot;/var/opt/gitlab/git-data/repositories/group/project-recovered.git&quot;</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>--mirror<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$MIRROR</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_REPO</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_REPO</span><span class="s2">&quot;</span><span class="w"> </span>fsck<span class="w"> </span>--full
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Swap (stop services first, then rename directories)</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>stop<span class="w"> </span>puma<span class="w"> </span>sidekiq
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>sudo<span class="w"> </span>mv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DEST</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DEST</span><span class="si">}</span><span class="s2">.corrupt-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>sudo<span class="w"> </span>mv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_REPO</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DEST</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>sudo<span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span>git:git<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DEST</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>start<span class="w"> </span>puma<span class="w"> </span>sidekiq
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Option A: Recover from a mirror backup repo</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">MIRROR</span><span class="o">=</span><span class="s2">&quot;/backup/git/project.git&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">DEST</span><span class="o">=</span><span class="s2">&quot;/var/opt/gitlab/git-data/repositories/group/project.git&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Copy missing objects from mirror</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>rsync<span class="w"> </span>-av<span class="w"> </span>--ignore-existing<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$MIRROR</span><span class="s2">/objects/&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$DEST</span><span class="s2">/objects/&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Re-verify</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DEST</span><span class="s2">&quot;</span><span class="w"> </span>fsck<span class="w"> </span>--full
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Option B: Re-clone from mirror into a fresh path, then switch</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nv">NEW_REPO</span><span class="o">=</span><span class="s2">&quot;/var/opt/gitlab/git-data/repositories/group/project-recovered.git&quot;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>--mirror<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$MIRROR</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_REPO</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_REPO</span><span class="s2">&quot;</span><span class="w"> </span>fsck<span class="w"> </span>--full
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Swap (stop services first, then rename directories)</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>stop<span class="w"> </span>puma<span class="w"> </span>sidekiq
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>sudo<span class="w"> </span>mv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DEST</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DEST</span><span class="si">}</span><span class="s2">.corrupt-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>sudo<span class="w"> </span>mv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_REPO</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DEST</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>sudo<span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span>git:git<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DEST</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>start<span class="w"> </span>puma<span class="w"> </span>sidekiq
 </code></pre></div>
 <h3 id="step-4-recover-a-deleted-branch-no-corruption">Step 4 — Recover a Deleted Branch (No Corruption)<a class="headerlink" href="#step-4-recover-a-deleted-branch-no-corruption" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On the GitLab server — check Gitaly reflog</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>reflog<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;branch-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Recreate branch at the found SHA</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>sudo<span class="w"> </span>gitlab-rails<span class="w"> </span>runner<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s2">  project = Project.find_by_full_path(&#39;group/project&#39;)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s2">  repository = project.repository</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s2">  repository.raw.write_ref(&#39;refs/heads/recovered-branch&#39;, &#39;&lt;sha-from-reflog&gt;&#39;)</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s2">  puts &#39;Branch created&#39;</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s2">&quot;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Or via API (if GitLab is accessible)</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span>--header<span class="w"> </span><span class="s2">&quot;PRIVATE-TOKEN: </span><span class="nv">$ADMIN_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="s2">&quot;https://gitlab.example.com/api/v4/projects/:id/repository/branches&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span>--data<span class="w"> </span><span class="s2">&quot;branch=recovered-branch&amp;ref=&lt;sha&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On the GitLab server — check Gitaly reflog</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>reflog<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;branch-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Recreate branch at the found SHA</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>sudo<span class="w"> </span>gitlab-rails<span class="w"> </span>runner<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s2">  project = Project.find_by_full_path(&#39;group/project&#39;)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s2">  repository = project.repository</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s2">  repository.raw.write_ref(&#39;refs/heads/recovered-branch&#39;, &#39;&lt;sha-from-reflog&gt;&#39;)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s2">  puts &#39;Branch created&#39;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s2">&quot;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Or via API (if GitLab is accessible)</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>--header<span class="w"> </span><span class="s2">&quot;PRIVATE-TOKEN: </span><span class="nv">$ADMIN_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="s2">&quot;https://gitlab.example.com/api/v4/projects/:id/repository/branches&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span>--data<span class="w"> </span><span class="s2">&quot;branch=recovered-branch&amp;ref=&lt;sha&gt;&quot;</span>
 </code></pre></div>
 <h3 id="step-5-restore-from-gitlab-backup">Step 5 — Restore from GitLab Backup<a class="headerlink" href="#step-5-restore-from-gitlab-backup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Last resort — full restore from gitlab-backup archive</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>stop<span class="w"> </span>puma<span class="w"> </span>sidekiq
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>sudo<span class="w"> </span>gitlab-backup<span class="w"> </span>restore<span class="w"> </span><span class="nv">BACKUP</span><span class="o">=</span>&lt;timestamp&gt;_gitlab_backup
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Restore secrets file if required</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/secure/gitlab-secrets.json<span class="w"> </span>/etc/gitlab/
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>reconfigure
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>restart
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:check<span class="w"> </span><span class="nv">SANITIZE</span><span class="o">=</span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Last resort — full restore from gitlab-backup archive</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>stop<span class="w"> </span>puma<span class="w"> </span>sidekiq
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>sudo<span class="w"> </span>gitlab-backup<span class="w"> </span>restore<span class="w"> </span><span class="nv">BACKUP</span><span class="o">=</span>&lt;timestamp&gt;_gitlab_backup
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Restore secrets file if required</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/secure/gitlab-secrets.json<span class="w"> </span>/etc/gitlab/
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>reconfigure
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>restart
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:check<span class="w"> </span><span class="nv">SANITIZE</span><span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 <h3 id="step-6-post-recovery-validation">Step 6 — Post-Recovery Validation<a class="headerlink" href="#step-6-post-recovery-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify the recovered repository</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>fsck<span class="w"> </span>--full
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-20
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>show-ref<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Verify via API</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>curl<span class="w"> </span>-sf<span class="w"> </span>--header<span class="w"> </span><span class="s2">&quot;PRIVATE-TOKEN: </span><span class="nv">$GITLAB_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="s2">&quot;https://gitlab.example.com/api/v4/projects/:id/repository/commits?per_page=5&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[].title&#39;</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Test a real clone</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>git<span class="w"> </span>clone<span class="w"> </span>git@gitlab.example.com:group/project.git<span class="w"> </span>/tmp/verify-clone
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>git<span class="w"> </span>-C<span class="w"> </span>/tmp/verify-clone<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-10
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>git<span class="w"> </span>-C<span class="w"> </span>/tmp/verify-clone<span class="w"> </span>fsck
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Disable maintenance mode</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>sudo<span class="w"> </span>gitlab-rails<span class="w"> </span>runner<span class="w"> </span><span class="s2">&quot;Gitlab::CurrentSettings.update!(maintenance_mode: false)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Verify the recovered repository</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>fsck<span class="w"> </span>--full
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-20
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>sudo<span class="w"> </span>-u<span class="w"> </span>git<span class="w"> </span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>show-ref<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Verify via API</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>curl<span class="w"> </span>-sf<span class="w"> </span>--header<span class="w"> </span><span class="s2">&quot;PRIVATE-TOKEN: </span><span class="nv">$GITLAB_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="s2">&quot;https://gitlab.example.com/api/v4/projects/:id/repository/commits?per_page=5&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[].title&#39;</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Test a real clone</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>git<span class="w"> </span>clone<span class="w"> </span>git@gitlab.example.com:group/project.git<span class="w"> </span>/tmp/verify-clone
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>git<span class="w"> </span>-C<span class="w"> </span>/tmp/verify-clone<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-10
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>git<span class="w"> </span>-C<span class="w"> </span>/tmp/verify-clone<span class="w"> </span>fsck
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># Disable maintenance mode</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>sudo<span class="w"> </span>gitlab-rails<span class="w"> </span>runner<span class="w"> </span><span class="s2">&quot;Gitlab::CurrentSettings.update!(maintenance_mode: false)&quot;</span>
 </code></pre></div>
 <h3 id="recovery-decision-tree">Recovery Decision Tree<a class="headerlink" href="#recovery-decision-tree" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart TD

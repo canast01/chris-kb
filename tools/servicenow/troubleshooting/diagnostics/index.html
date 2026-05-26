@@ -3180,45 +3180,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#thread-monitor-thread_monitordo" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Thread Monitor (/thread_monitor.do)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Thread Monitor (/thread_monitor.do)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#reading-thread-state" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reading Thread State
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#identifying-problematic-threads" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Identifying Problematic Threads
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#db-activity-monitor" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3653,121 +3614,93 @@
 <p>Access: <code>https://&lt;instance&gt;.service-now.com/stats.do</code></p>
 <h3 id="key-sections">Key Sections<a class="headerlink" href="#key-sections" title="Permanent link">&para;</a></h3>
 <p><strong>System Information:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Instance Build:         Yokohama Patch 5
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Instance Build:         Yokohama Patch 5
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Node ID:                app-node-02
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Instance started:       2026-05-01 03:14:22 UTC
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>JVM version:            17.0.11
 </code></pre></div>
-<p><strong>Memory:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Metric</th>
-<th>Healthy</th>
-<th>Warning</th>
-<th>Critical</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Total JVM memory</td>
-<td>Varies</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Used heap</td>
-<td>&lt; 70%</td>
-<td>70–85%</td>
-<td>&gt; 85%</td>
-</tr>
-<tr>
-<td>Free heap</td>
-<td>&gt; 30%</td>
-<td>15–30%</td>
-<td>&lt; 15%</td>
-</tr>
-<tr>
-<td>GC overhead</td>
-<td>&lt; 5%</td>
-<td>5–15%</td>
-<td>&gt; 15%</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Threads:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Worker threads (busy/total):   12 / 40     &lt;- aim for &lt; 80%
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Scheduler threads (running):    3
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>DB connections (active/max):   18 / 50
-</code></pre></div>
-<p><strong>Cache Hit Rates:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Cache</th>
-<th>Healthy Hit Rate</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Query result cache</td>
-<td>&gt; 70%</td>
-</tr>
-<tr>
-<td>GlideRecord cache</td>
-<td>&gt; 80%</td>
-</tr>
-<tr>
-<td>ACL cache</td>
-<td>&gt; 90%</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="thread-monitor-thread_monitordo">Thread Monitor (<code>/thread_monitor.do</code>)<a class="headerlink" href="#thread-monitor-thread_monitordo" title="Permanent link">&para;</a></h2>
-<p>Shows every active Java thread with current state and stack trace. Use to identify blocked or runaway threads.</p>
-<p>Access: <code>https://&lt;instance&gt;.service-now.com/thread_monitor.do</code></p>
-<h3 id="reading-thread-state">Reading Thread State<a class="headerlink" href="#reading-thread-state" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Thread State</th>
-<th>Meaning</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RUNNABLE</td>
-<td>Executing code</td>
-<td>Normal</td>
-</tr>
-<tr>
-<td>WAITING</td>
-<td>Waiting on a lock or condition</td>
-<td>Investigate if &gt; 5 minutes</td>
-</tr>
-<tr>
-<td>BLOCKED</td>
-<td>Blocked on a monitor lock</td>
-<td>Immediate investigation</td>
-</tr>
-<tr>
-<td>TIMED_WAITING</td>
-<td>Sleeping — waiting for signal</td>
-<td>Usually normal (scheduled work)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="identifying-problematic-threads">Identifying Problematic Threads<a class="headerlink" href="#identifying-problematic-threads" title="Permanent link">&para;</a></h3>
-<p>Look for threads showing the same script or Business Rule name repeatedly across multiple calls. This indicates a lock contention or infinite loop.</p>
-<p>Example stack trace pattern indicating a Business Rule loop:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>&quot;GlideWorker-42&quot; BLOCKED
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  at com.glide.db.DBSynchronizer.lock(DBSynchronizer.java:...)
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  at com.glide.db.DBSynchronizer.acquire(...)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  at com.glide.script.ScriptLoader.loadScript(...)
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  ...invoked from: BR_AutoAssignIncidents on incident
-</code></pre></div>
+┌─────────────────────────────────────── ServiceNow Diagnostics ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                            Diagnostic URLs (append to instance URL)                           │   │
+│   │                stats.do — node health: memory, threads, DB pool, request queue                │   │
+│   │              incident_list.do?sysparm_query= — direct table queries for any table             │   │
+│   │                 sys_log_list.do — application log; filter by source and level                 │   │
+│   │                  fixscripts.do — one-time scripts for data fixes (admin only)                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐                                                    │
+│   │           Performance Diagnostics            │                                                    │
+│   │           Transaction log analysis           │                                                    │
+│   │            Slow query log review             │                                                    │
+│   │        Script profiler (sys_ui_page)         │                                                    │
+│   │             Semaphore leak check             │                                                    │
+│   └──────────────────────────────────────────────┘                                                    │
+│                                                     ┌─────────────────────────────────────────────┐   │
+│                                                     │           Integration Diagnostics           │   │
+│                                                     │            ECC queue error review           │   │
+│                                                     │            REST message log check           │   │
+│                                                     │            MID server log tailing           │   │
+│                                                     │           Discovery status review           │   │
+│                                                     └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ServiceNow SaaS nodes · MID server VM · log aggregation (Splunk/ELK)                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  stats.do    = real-time node statistics page; memory heap, thread counts, queue depth                │
+│  sys_log     = application log table; records script errors and info messages                         │
+│  Transaction = single user request from arrival to response; logged with duration                     │
+│  Semaphore   = concurrency lock; leaks cause requests to queue and time out                           │
+│  Script profiler= measures script execution time; identifies slow business rules                      │
+│  ECC queue   = External Communication Channel; queues outbound REST/SOAP calls                        │
+│  MID server log= agent.log on MID server host; shows discovery and integration errors                 │
+│  Slow query  = SQL taking &gt;1s; logged in transaction log; requires index review                       │
+│  fixscripts.do= admin page to run server-side fix scripts for data corrections                        │
+│  Discovery   = ServiceNow CMDB auto-population via MID server network scans                           │
+│  REST message= outbound HTTP integration; result logged in sys_rest_message_fn                        │
+│  Queue depth = pending requests waiting for available thread; high depth = saturation                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Cache Hit Rates:**
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Cache | Healthy Hit Rate |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Query result cache | &gt; 70% |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| GlideRecord cache | &gt; 80% |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| ACL cache | &gt; 90% |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>---
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>## Thread Monitor (`/thread_monitor.do`)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Shows every active Java thread with current state and stack trace. Use to identify blocked or runaway threads.
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Access: `https://&lt;instance&gt;.service-now.com/thread_monitor.do`
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>### Reading Thread State
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| Thread State | Meaning | Action |
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>|---|---|---|
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>| RUNNABLE | Executing code | Normal |
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>| WAITING | Waiting on a lock or condition | Investigate if &gt; 5 minutes |
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>| BLOCKED | Blocked on a monitor lock | Immediate investigation |
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>| TIMED_WAITING | Sleeping — waiting for signal | Usually normal (scheduled work) |
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>### Identifying Problematic Threads
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Look for threads showing the same script or Business Rule name repeatedly across multiple calls. This indicates a lock contention or infinite loop.
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>Example stack trace pattern indicating a Business Rule loop:
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>```text
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>&quot;GlideWorker-42&quot; BLOCKED
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  at com.glide.db.DBSynchronizer.lock(DBSynchronizer.java:...)
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  at com.glide.db.DBSynchronizer.acquire(...)
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  at com.glide.script.ScriptLoader.loadScript(...)
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>  ...invoked from: BR_AutoAssignIncidents on incident
+</code></pre></div></p>
 <p><strong>Action:</strong> Disable the offending Business Rule and investigate the script logic.</p>
 <hr />
 <h2 id="db-activity-monitor">DB Activity Monitor<a class="headerlink" href="#db-activity-monitor" title="Permanent link">&para;</a></h2>
@@ -3877,35 +3810,35 @@
 <h3 id="mid-server-logs-on-premises">MID Server Logs (on-premises)<a class="headerlink" href="#mid-server-logs-on-premises" title="Permanent link">&para;</a></h3>
 <p>MID Server logs are stored on the host running the MID Server agent.</p>
 <p><strong>Linux:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/opt/servicenow/mid/agent/logs/
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── agent0.log.0          # Current log (active)
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├── agent0.log.1          # Previous rotation
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>├── agent0.log.2
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>└── agent.err.0           # Error output stream
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/opt/servicenow/mid/agent/logs/
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├── agent0.log.0          # Current log (active)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>├── agent0.log.1          # Previous rotation
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>├── agent0.log.2
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>└── agent.err.0           # Error output stream
 </code></pre></div>
 <p><strong>Windows:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>C:\ServiceNow\MID Server\agent\logs\
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── agent0.log.0
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>├── agent0.log.1
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>└── agent.err.0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>C:\ServiceNow\MID Server\agent\logs\
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── agent0.log.0
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├── agent0.log.1
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>└── agent.err.0
 </code></pre></div>
 <p><strong>Common log search commands:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Find all ERROR lines in the last 500 lines</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>tail<span class="w"> </span>-500<span class="w"> </span>/opt/servicenow/mid/agent/logs/agent0.log.0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception\|failed&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Watch live log</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/opt/servicenow/mid/agent/logs/agent0.log.0
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Find authentication failures</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;401\|unauthorized\|invalid credentials&quot;</span><span class="w"> </span>/opt/servicenow/mid/agent/logs/agent0.log.0
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Find connectivity issues</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;connection refused\|timeout\|unreachable&quot;</span><span class="w"> </span>/opt/servicenow/mid/agent/logs/agent0.log.0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Find all ERROR lines in the last 500 lines</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>tail<span class="w"> </span>-500<span class="w"> </span>/opt/servicenow/mid/agent/logs/agent0.log.0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception\|failed&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Watch live log</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/opt/servicenow/mid/agent/logs/agent0.log.0
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Find authentication failures</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;401\|unauthorized\|invalid credentials&quot;</span><span class="w"> </span>/opt/servicenow/mid/agent/logs/agent0.log.0
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Find connectivity issues</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;connection refused\|timeout\|unreachable&quot;</span><span class="w"> </span>/opt/servicenow/mid/agent/logs/agent0.log.0
 </code></pre></div>
 <h3 id="increasing-mid-server-log-verbosity">Increasing MID Server Log Verbosity<a class="headerlink" href="#increasing-mid-server-log-verbosity" title="Permanent link">&para;</a></h3>
 <p>Edit <code>/opt/servicenow/mid/agent/config.xml</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="cm">&lt;!-- Change INFO to DEBUG for verbose output --&gt;</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">&lt;parameter</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;loglevel&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;DEBUG&quot;</span><span class="nt">/&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="cm">&lt;!-- Change INFO to DEBUG for verbose output --&gt;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">&lt;parameter</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;loglevel&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;DEBUG&quot;</span><span class="nt">/&gt;</span>
 </code></pre></div>
 <p>Restart the MID Server service after changing. Remember to set back to <code>INFO</code> after debugging — DEBUG logs are verbose and fill disk quickly.</p>
 <hr />
@@ -3944,7 +3877,7 @@
 </tbody>
 </table>
 <p><strong>To enable for your own session:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>https://&lt;instance&gt;.service-now.com/session_debug.do
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>https://&lt;instance&gt;.service-now.com/session_debug.do
 </code></pre></div>
 <p>Check the desired debug flags, then reproduce the issue. Debug output appears inline on pages or in <strong>System Diagnostics &gt; Session Debug Log</strong>.</p>
 <p><strong>Caution:</strong> SQL debug generates very large output. Only enable for targeted investigation and disable immediately after.</p>
@@ -3952,10 +3885,10 @@
 <h2 id="support-information-gathering">Support Information Gathering<a class="headerlink" href="#support-information-gathering" title="Permanent link">&para;</a></h2>
 <p>When raising a ServiceNow support ticket, gather the following before submitting:</p>
 <h3 id="instance-information">Instance Information<a class="headerlink" href="#instance-information" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Retrieve via API</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SN_USER</span><span class="s2">:</span><span class="nv">$SN_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$SN_INSTANCE</span><span class="s2">/api/now/table/sys_properties?sysparm_query=nameLIKEglide.buildtag&amp;sysparm_fields=name,value&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.result[] | {name, value}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Retrieve via API</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SN_USER</span><span class="s2">:</span><span class="nv">$SN_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$SN_INSTANCE</span><span class="s2">/api/now/table/sys_properties?sysparm_query=nameLIKEglide.buildtag&amp;sysparm_fields=name,value&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.result[] | {name, value}&#39;</span>
 </code></pre></div>
 <ul>
 <li>Instance name and URL</li>
@@ -3978,76 +3911,76 @@
 <li>System Diagnostics results if available</li>
 </ul>
 <h3 id="hi-portal-ticket-template">HI Portal Ticket Template<a class="headerlink" href="#hi-portal-ticket-template" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">Subject</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Instance</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">mycompany</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Short description of issue&gt;</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nt">Instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mycompany.service-now.com</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nt">Version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Yokohama Patch 5</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nt">Affected node</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-node-02 (if known)</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nt">Time of issue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2026-05-08 09:15 UTC</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nt">Impact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">P2 — Department level degradation</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nt">DESCRIPTION</span><span class="p">:</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="l l-Scalar l-Scalar-Plain">&lt;What is happening, what the expected behavior is&gt;</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="nt">STEPS TO REPRODUCE</span><span class="p">:</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="l l-Scalar l-Scalar-Plain">1.</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="l l-Scalar l-Scalar-Plain">2.</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="l l-Scalar l-Scalar-Plain">3.</span>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="nt">LOGS</span><span class="p">:</span>
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="p p-Indicator">[</span><span class="nv">Paste relevant log excerpts</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="nt">DIAGNOSTICS</span><span class="p">:</span>
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="p p-Indicator">[</span><span class="nv">Attach stats.do screenshot</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="p p-Indicator">[</span><span class="nv">Attach thread_monitor.do screenshot if relevant</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>
-<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="nt">BUSINESS IMPACT</span><span class="p">:</span>
-<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="l l-Scalar l-Scalar-Plain">&lt;Number of users affected, business processes impacted&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">Subject</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Instance</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">mycompany</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Short description of issue&gt;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nt">Instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mycompany.service-now.com</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nt">Version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Yokohama Patch 5</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nt">Affected node</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-node-02 (if known)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nt">Time of issue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2026-05-08 09:15 UTC</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nt">Impact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">P2 — Department level degradation</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nt">DESCRIPTION</span><span class="p">:</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="l l-Scalar l-Scalar-Plain">&lt;What is happening, what the expected behavior is&gt;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nt">STEPS TO REPRODUCE</span><span class="p">:</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="l l-Scalar l-Scalar-Plain">1.</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="l l-Scalar l-Scalar-Plain">2.</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="l l-Scalar l-Scalar-Plain">3.</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="nt">LOGS</span><span class="p">:</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="p p-Indicator">[</span><span class="nv">Paste relevant log excerpts</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="nt">DIAGNOSTICS</span><span class="p">:</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="p p-Indicator">[</span><span class="nv">Attach stats.do screenshot</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="p p-Indicator">[</span><span class="nv">Attach thread_monitor.do screenshot if relevant</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="nt">BUSINESS IMPACT</span><span class="p">:</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="l l-Scalar l-Scalar-Plain">&lt;Number of users affected, business processes impacted&gt;</span>
 </code></pre></div>
 <hr />
 <h2 id="diagnostic-script-instance-snapshot">Diagnostic Script — Instance Snapshot<a class="headerlink" href="#diagnostic-script-instance-snapshot" title="Permanent link">&para;</a></h2>
 <p>Run this Background Script to capture a diagnostic snapshot:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// Navigate to: System Definition &gt; Scripts - Background</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1">// Run this to capture key instance metrics</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="kd">var</span><span class="w"> </span><span class="nx">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1">// Instance version</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;=== Instance Info ===&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;Version: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">getProperty</span><span class="p">(</span><span class="s1">&#39;glide.buildtag&#39;</span><span class="p">));</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;Node: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">getNodeName</span><span class="p">());</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1">// Active sessions</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="kd">var</span><span class="w"> </span><span class="nx">sessions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideAggregate</span><span class="p">(</span><span class="s1">&#39;sys_user_session&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="nx">sessions</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;active&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="nx">sessions</span><span class="p">.</span><span class="nx">addAggregate</span><span class="p">(</span><span class="s1">&#39;COUNT&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="nx">sessions</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="nx">sessions</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;Active sessions: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">sessions</span><span class="p">.</span><span class="nx">getAggregate</span><span class="p">(</span><span class="s1">&#39;COUNT&#39;</span><span class="p">));</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1">// Failed scheduled jobs</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="kd">var</span><span class="w"> </span><span class="nx">jobs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideAggregate</span><span class="p">(</span><span class="s1">&#39;sysauto&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="nx">jobs</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;state&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;error&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="nx">jobs</span><span class="p">.</span><span class="nx">addAggregate</span><span class="p">(</span><span class="s1">&#39;COUNT&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="nx">jobs</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
-<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="nx">jobs</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span>
-<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;Failed scheduled jobs: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">jobs</span><span class="p">.</span><span class="nx">getAggregate</span><span class="p">(</span><span class="s1">&#39;COUNT&#39;</span><span class="p">));</span>
-<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>
-<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="c1">// MID Server status</span>
-<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="kd">var</span><span class="w"> </span><span class="nx">mids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideRecord</span><span class="p">(</span><span class="s1">&#39;ecc_agent&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="nx">mids</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;!=&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Up&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a><span class="nx">mids</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
-<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a><span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;MID Servers not Up: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">mids</span><span class="p">.</span><span class="nx">getRowCount</span><span class="p">());</span>
-<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>
-<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a><span class="c1">// ECC queue errors</span>
-<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a><span class="kd">var</span><span class="w"> </span><span class="nx">ecc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideAggregate</span><span class="p">(</span><span class="s1">&#39;ecc_queue&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a><span class="nx">ecc</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;state&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;error&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a><span class="nx">ecc</span><span class="p">.</span><span class="nx">addAggregate</span><span class="p">(</span><span class="s1">&#39;COUNT&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a><span class="nx">ecc</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
-<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a><span class="nx">ecc</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span>
-<a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a><span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;ECC Queue errors: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">ecc</span><span class="p">.</span><span class="nx">getAggregate</span><span class="p">(</span><span class="s1">&#39;COUNT&#39;</span><span class="p">));</span>
-<a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a>
-<a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">print</span><span class="p">(</span><span class="nx">output</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// Navigate to: System Definition &gt; Scripts - Background</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1">// Run this to capture key instance metrics</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="kd">var</span><span class="w"> </span><span class="nx">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1">// Instance version</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;=== Instance Info ===&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;Version: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">getProperty</span><span class="p">(</span><span class="s1">&#39;glide.buildtag&#39;</span><span class="p">));</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;Node: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">getNodeName</span><span class="p">());</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1">// Active sessions</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="kd">var</span><span class="w"> </span><span class="nx">sessions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideAggregate</span><span class="p">(</span><span class="s1">&#39;sys_user_session&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="nx">sessions</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;active&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="nx">sessions</span><span class="p">.</span><span class="nx">addAggregate</span><span class="p">(</span><span class="s1">&#39;COUNT&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="nx">sessions</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="nx">sessions</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;Active sessions: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">sessions</span><span class="p">.</span><span class="nx">getAggregate</span><span class="p">(</span><span class="s1">&#39;COUNT&#39;</span><span class="p">));</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="c1">// Failed scheduled jobs</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="kd">var</span><span class="w"> </span><span class="nx">jobs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideAggregate</span><span class="p">(</span><span class="s1">&#39;sysauto&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="nx">jobs</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;state&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;error&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="nx">jobs</span><span class="p">.</span><span class="nx">addAggregate</span><span class="p">(</span><span class="s1">&#39;COUNT&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="nx">jobs</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="nx">jobs</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;Failed scheduled jobs: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">jobs</span><span class="p">.</span><span class="nx">getAggregate</span><span class="p">(</span><span class="s1">&#39;COUNT&#39;</span><span class="p">));</span>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="c1">// MID Server status</span>
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="kd">var</span><span class="w"> </span><span class="nx">mids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideRecord</span><span class="p">(</span><span class="s1">&#39;ecc_agent&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a><span class="nx">mids</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;!=&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Up&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="nx">mids</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;MID Servers not Up: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">mids</span><span class="p">.</span><span class="nx">getRowCount</span><span class="p">());</span>
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a><span class="c1">// ECC queue errors</span>
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a><span class="kd">var</span><span class="w"> </span><span class="nx">ecc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideAggregate</span><span class="p">(</span><span class="s1">&#39;ecc_queue&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a><span class="nx">ecc</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;state&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;error&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a><span class="nx">ecc</span><span class="p">.</span><span class="nx">addAggregate</span><span class="p">(</span><span class="s1">&#39;COUNT&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a><span class="nx">ecc</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a><span class="nx">ecc</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span>
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a><span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;ECC Queue errors: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">ecc</span><span class="p">.</span><span class="nx">getAggregate</span><span class="p">(</span><span class="s1">&#39;COUNT&#39;</span><span class="p">));</span>
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>
+<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">print</span><span class="p">(</span><span class="nx">output</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">));</span>
 </code></pre></div>
 
 

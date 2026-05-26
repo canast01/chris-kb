@@ -3326,50 +3326,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-clone-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pre-Clone Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuring-clone-excluders" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuring Clone Excluders
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#initiating-a-clone-on-demand" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Initiating a Clone (On-Demand)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scheduling-recurring-clones" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scheduling Recurring Clones
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#post-clone-validation-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3666,135 +3622,57 @@
 <hr />
 <h2 id="instance-clone-overview">Instance Clone Overview<a class="headerlink" href="#instance-clone-overview" title="Permanent link">&para;</a></h2>
 <p>Instance cloning copies the full data and configuration of a source instance to a target instance. The most common use case is refreshing a sub-production instance with a recent production snapshot.</p>
-<pre class="mermaid"><code>flowchart LR
+<p><pre class="mermaid"><code>flowchart LR
     PROD["Production Instance\n(source)"]
     UAT["UAT Instance\n(target)"]
     DEV["Dev Instance\n(target)"]
 
     PROD -- "Scheduled Clone\n(weekly)" --&gt; UAT
     PROD -- "On-demand Clone\n(before major release)" --&gt; DEV</code></pre>
-<p><strong>What is cloned:</strong>
-- All table data (records)
-- System configuration (properties, business rules, workflows)
-- Update Sets (in Complete or In Progress state)
-- Attachments and stored files</p>
-<p><strong>What is excluded by default:</strong>
-- Instance-specific integration credentials (replaced by excluder)
-- Email notification settings (can be suppressed post-clone)
-- MID Server configuration records (MID re-registers after clone)</p>
-<hr />
-<h2 id="pre-clone-checklist">Pre-Clone Checklist<a class="headerlink" href="#pre-clone-checklist" title="Permanent link">&para;</a></h2>
-<p>Before initiating a clone, complete all items:</p>
-<ul>
-<li>[ ] Confirm clone target instance is not in active use (coordinate with development team)</li>
-<li>[ ] Export any in-progress Update Sets from the target that have not been promoted to production</li>
-<li>[ ] Note any custom scheduled jobs or integration URLs configured on the target — these will be overwritten</li>
-<li>[ ] Confirm the Clone Excluder list is up to date (see below)</li>
-<li>[ ] Verify clone target has adequate storage (ServiceNow manages this; confirm with ServiceNow support if target is smaller)</li>
-<li>[ ] Schedule clone during a low-activity window (clones take 2–8 hours depending on instance size)</li>
-<li>[ ] Notify affected teams via Change Request</li>
-</ul>
-<hr />
-<h2 id="configuring-clone-excluders">Configuring Clone Excluders<a class="headerlink" href="#configuring-clone-excluders" title="Permanent link">&para;</a></h2>
-<p>Clone excluders preserve specific records on the target instance, preventing them from being overwritten by the source data.</p>
-<p>Navigate to: <strong>System Clone &gt; Exclude Tables</strong></p>
-<p>Recommended excluders for sub-production targets:</p>
-<table>
-<thead>
-<tr>
-<th>Table</th>
-<th>Field</th>
-<th>Reason</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>sys_properties</code></td>
-<td><code>name LIKE 'mid.%'</code></td>
-<td>Preserve MID Server config</td>
-</tr>
-<tr>
-<td><code>sys_properties</code></td>
-<td><code>name LIKE 'glide.email%'</code></td>
-<td>Prevent production emails from sub-production</td>
-</tr>
-<tr>
-<td><code>sys_email_account</code></td>
-<td>All</td>
-<td>Suppress email sending</td>
-</tr>
-<tr>
-<td><code>ecc_agent</code></td>
-<td>All</td>
-<td>MID Server registrations</td>
-</tr>
-<tr>
-<td><code>oauth_entity</code></td>
-<td>All</td>
-<td>OAuth tokens (replace post-clone)</td>
-</tr>
-<tr>
-<td><code>sys_certificate</code></td>
-<td>All</td>
-<td>Instance certificates</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="initiating-a-clone-on-demand">Initiating a Clone (On-Demand)<a class="headerlink" href="#initiating-a-clone-on-demand" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Log in to the <strong>target</strong> sub-production instance as an administrator</li>
-<li>Navigate to <strong>System Clone &gt; Request Clone</strong></li>
-<li>Fill in the clone request form:</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Source instance</td>
-<td><code>&lt;prod-instance-name&gt;</code></td>
-</tr>
-<tr>
-<td>Target instance</td>
-<td>(current instance — pre-filled)</td>
-</tr>
-<tr>
-<td>Clone options</td>
-<td>Select appropriate excluder profiles</td>
-</tr>
-<tr>
-<td>Preserve theme</td>
-<td>Optional (recommended: No — take production theme)</td>
-</tr>
-<tr>
-<td>Notify on completion</td>
-<td>Your email address</td>
-</tr>
-</tbody>
-</table>
-<ol>
-<li>Click <strong>Submit</strong></li>
-<li>A clone request is sent to ServiceNow. The instance becomes unavailable during the clone operation.</li>
-<li>ServiceNow sends an email notification when the clone is complete.</li>
-</ol>
-<hr />
-<h2 id="scheduling-recurring-clones">Scheduling Recurring Clones<a class="headerlink" href="#scheduling-recurring-clones" title="Permanent link">&para;</a></h2>
-<p>Recurring clones are configured by raising a request with <strong>ServiceNow Support</strong> (HI portal). You cannot schedule recurring clones from the instance UI directly.</p>
-<p>Information to provide in the HI request:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">Subject</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schedule Recurring Clone - &lt;instance-name&gt;</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Source instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;prod-instance&gt;.service-now.com</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Target instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;dev-instance&gt;.service-now.com</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Frequency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Weekly</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Preferred day/time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sunday 02:00 UTC</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Excluder profiles</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">list</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Notification email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;your-team-dl&gt;</span>
-</code></pre></div>
+┌─────────────────────────────────── ServiceNow — Backup and Restore ───────────────────────────────────┐
+│                                                                                                       │
+│  ServiceNow SaaS backup model: ServiceNow manages infrastructure backups; tenant manages exports.     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          ServiceNow Managed Backups          │  │            Tenant-Managed Exports           │   │
+│   │      Full DB backup: nightly automated       │  │     Data export: XML/CSV via sys_export     │   │
+│   │      Retention: 7 days rolling snapshot      │  │      Scheduled export jobs → SFTP/email     │   │
+│   │        Restore: raise P1 case with SN        │  │       Update Set export → XML archive       │   │
+│   │        Clone: prod → sub-prod refresh        │  │     Table rotation: archive old records     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Restore request via ServiceNow support; tenant exports supplement for self-service recovery        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Clone Procedures               │  │                Data Archival                │   │
+│   │         Request clone from HI portal         │  │       Archive rule: age + record count      │   │
+│   │        Pre-clone: export update sets         │  │        Destination: ar_ shadow tables       │   │
+│   │       Post-clone: disable prod integr.       │  │       Destroy rule: purge after N days      │   │
+│   │       Post-clone: reset user passwords       │  │       Compliance: audit log preserved       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ServiceNow data centres · HI portal · SFTP export destination · sub-prod instances                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  HI portal    = ServiceNow internal support portal for instance management requests                   │
+│  sys_export   = platform mechanism for scheduled or on-demand table data export                       │
+│  Update Set   = container of customisations; exported as XML for promotion/backup                     │
+│  Clone        = copy of production instance pushed to sub-prod; refreshes dev/test                    │
+│  ar_ tables   = archive shadow tables; records moved here by archive rules                            │
+│  Destroy rule = deletes archived records after configured retention period                            │
+│  Table rotation= periodic job moves old closed records to archive to trim live DB                     │
+│  P1 case      = priority 1 support case; required to trigger SN-managed restore                       │
+│  Post-clone   = steps run after clone: disable integrations, reset passwords, notify                  │
+│  SFTP export  = file transfer to tenant-owned server for off-platform data retention                  │
+│  7-day window = SN retention period; restore only possible within this window                         │
+│  Audit log    = sys_audit table; preserved through archival for compliance evidence                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <p>Typical schedule options: daily, weekly, bi-weekly, monthly.</p>
 <hr />
 <h2 id="post-clone-validation-checklist">Post-Clone Validation Checklist<a class="headerlink" href="#post-clone-validation-checklist" title="Permanent link">&para;</a></h2>

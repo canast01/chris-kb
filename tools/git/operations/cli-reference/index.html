@@ -3326,28 +3326,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#status-log" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Status &amp; Log
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#staging-committing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Staging &amp; Committing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#branches" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3652,7 +3630,7 @@
 <hr />
 <h2 id="setup-config-remotes">Setup, Config &amp; Remotes<a class="headerlink" href="#setup-config-remotes" title="Permanent link">&para;</a></h2>
 <p>One-time configuration for Git identity and editor preferences. Remotes are named pointers to other copies of the repository (typically <code>origin</code> = the server you cloned from).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Identity (required — used in every commit you make)</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Identity (required — used in every commit you make)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.name<span class="w"> </span><span class="s2">&quot;Your Name&quot;</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.email<span class="w"> </span><span class="s2">&quot;you@example.com&quot;</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>core.editor<span class="w"> </span>vim
@@ -3673,165 +3651,193 @@
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>git<span class="w"> </span>remote<span class="w"> </span>remove<span class="w"> </span>&lt;name&gt;
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>git<span class="w"> </span>remote<span class="w"> </span>set-url<span class="w"> </span>origin<span class="w"> </span>&lt;new_url&gt;
 </code></pre></div>
-<hr />
-<h2 id="status-log">Status &amp; Log<a class="headerlink" href="#status-log" title="Permanent link">&para;</a></h2>
-<p>See what's changed in your working directory, what's staged, and the commit history. These are the most frequently used read-only commands.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Working directory and staging area</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>status
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>git<span class="w"> </span>diff<span class="w">                        </span><span class="c1"># unstaged changes</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>git<span class="w"> </span>diff<span class="w"> </span>--staged<span class="w">               </span><span class="c1"># staged changes (what will be committed)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>git<span class="w"> </span>diff<span class="w"> </span>&lt;branch1&gt;..&lt;branch2&gt;<span class="w">   </span><span class="c1"># difference between two branches</span>
+┌───────────────────────────────────────── Git — CLI Reference ─────────────────────────────────────────┐
+│                                                                                                       │
+│  Essential Git CLI commands grouped by workflow area with common flags and usage patterns.            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Basic Operations               │  │                  Branching                  │   │
+│   │          git init / git clone <url>          │  │           git branch [-a|-r|-d|-D]          │   │
+│   │         git add [-p | .] / git reset         │  │            git checkout -b <name>           │   │
+│   │             git commit -m "msg"              │  │            git switch [-c] <name>           │   │
+│   │       git status / git diff [--cached]       │  │         git merge [--no-ff] <branch>        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    add -p stages hunks interactively; diff --cached shows staged vs last commit                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Remote and History              │  │                   Advanced                  │   │
+│   │        git fetch [--prune] / git pull        │  │            git rebase [-i] <base>           │   │
+│   │      git push [-u] [--force-with-lease]      │  │          git stash [push|pop|list]          │   │
+│   │         git log [--oneline --graph]          │  │            git cherry-pick <sha>            │   │
+│   │        git tag -a <v> -m / push <tag>        │  │          git bisect start/good/bad          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Developer workstation · terminal / shell · Git remote server                                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  git add -p        = interactive hunk staging; review each change before staging                      │
+│  diff --cached     = shows staged changes relative to last commit                                     │
+│  --force-with-lease= safe force push; fails if remote has unexpected commits                          │
+│  rebase -i         = interactive rebase; squash/edit/reorder commits                                  │
+│  git bisect        = binary search commits to find regression-introducing commit                      │
+│  stash push        = save dirty working tree with optional message                                    │
+│  stash pop         = restore last stash and remove from stash stack                                   │
+│  cherry-pick       = apply diff of specific commit to current branch                                  │
+│  --no-ff           = always create merge commit even for fast-forward                                 │
+│  branch -D         = force-delete branch even if not merged                                           │
+│  git switch -c     = create and switch (modern alternative to checkout -b)                            │
+│  log --graph       = ASCII graph of branch/merge topology in terminal                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Staging &amp; Committing
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Changes must be explicitly staged before they&#39;re included in a commit. `git add -p` lets you stage individual hunks — useful for splitting one set of edits into multiple focused commits.
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Commit history</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>git<span class="w"> </span>log
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>git<span class="w"> </span>log<span class="w"> </span>--oneline
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>--graph<span class="w"> </span>--all<span class="w">  </span><span class="c1"># visual branch graph</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>git<span class="w"> </span>log<span class="w"> </span>-p<span class="w">                       </span><span class="c1"># with full diffs</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>git<span class="w"> </span>log<span class="w"> </span>--author<span class="o">=</span><span class="s2">&quot;name&quot;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>git<span class="w"> </span>log<span class="w"> </span>--since<span class="o">=</span><span class="s2">&quot;2 weeks ago&quot;</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>git<span class="w"> </span>log<span class="w"> </span>--follow<span class="w"> </span>&lt;file&gt;<span class="w">          </span><span class="c1"># history of a specific file, including renames</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>git<span class="w"> </span>show<span class="w"> </span>&lt;commit&gt;<span class="w">                </span><span class="c1"># details of a single commit</span>
-</code></pre></div>
-<hr />
-<h2 id="staging-committing">Staging &amp; Committing<a class="headerlink" href="#staging-committing" title="Permanent link">&para;</a></h2>
-<p>Changes must be explicitly staged before they're included in a commit. <code>git add -p</code> lets you stage individual hunks — useful for splitting one set of edits into multiple focused commits.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>add<span class="w"> </span>&lt;file&gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>add<span class="w"> </span>.<span class="w">                        </span><span class="c1"># stage everything in the current directory</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>git<span class="w"> </span>add<span class="w"> </span>-p<span class="w">                       </span><span class="c1"># interactive: choose which hunks to stage</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;message&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>git<span class="w"> </span>commit<span class="w"> </span>--amend<span class="w">               </span><span class="c1"># rewrite the last commit (local-only — don&#39;t amend pushed commits)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>git<span class="w"> </span>commit<span class="w"> </span>--amend<span class="w"> </span>--no-edit<span class="w">     </span><span class="c1"># amend without changing the message</span>
-</code></pre></div>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>git add &lt;file&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>git add .                        # stage everything in the current directory
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>git add -p                       # interactive: choose which hunks to stage
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>git commit -m &quot;message&quot;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>git commit --amend               # rewrite the last commit (local-only — don&#39;t amend pushed commits)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>git commit --amend --no-edit     # amend without changing the message
+</code></pre></div></p>
 <hr />
 <h2 id="branches">Branches<a class="headerlink" href="#branches" title="Permanent link">&para;</a></h2>
 <p>Branches are cheap and fast in Git — create them freely to isolate work. The modern <code>git switch</code> command is cleaner than <code>git checkout</code> for branch operations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>git<span class="w"> </span>branch
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>git<span class="w"> </span>branch<span class="w"> </span>-a<span class="w">                   </span><span class="c1"># include remote-tracking branches</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>git<span class="w"> </span>branch<span class="w"> </span>-v<span class="w">                   </span><span class="c1"># with last commit</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Create / switch</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>git<span class="w"> </span>branch<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>&lt;name&gt;<span class="w">          </span><span class="c1"># create and switch (classic syntax)</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>&lt;name&gt;<span class="w">            </span><span class="c1"># create and switch (modern syntax)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>git<span class="w"> </span>switch<span class="w"> </span>&lt;name&gt;<span class="w">               </span><span class="c1"># switch to existing branch</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Rename</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>git<span class="w"> </span>branch<span class="w"> </span>-m<span class="w"> </span>&lt;old&gt;<span class="w"> </span>&lt;new&gt;
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Delete</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>git<span class="w"> </span>branch<span class="w"> </span>-d<span class="w"> </span>&lt;name&gt;<span class="w">            </span><span class="c1"># safe delete (refuses if unmerged)</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>git<span class="w"> </span>branch<span class="w"> </span>-D<span class="w"> </span>&lt;name&gt;<span class="w">            </span><span class="c1"># force delete</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>--delete<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="c1"># delete the remote branch</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># Set upstream (track remote branch)</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>git<span class="w"> </span>branch<span class="w"> </span>--set-upstream-to<span class="o">=</span>origin/&lt;name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>branch
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>git<span class="w"> </span>branch<span class="w"> </span>-a<span class="w">                   </span><span class="c1"># include remote-tracking branches</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>git<span class="w"> </span>branch<span class="w"> </span>-v<span class="w">                   </span><span class="c1"># with last commit</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Create / switch</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>git<span class="w"> </span>branch<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>&lt;name&gt;<span class="w">          </span><span class="c1"># create and switch (classic syntax)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>&lt;name&gt;<span class="w">            </span><span class="c1"># create and switch (modern syntax)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>git<span class="w"> </span>switch<span class="w"> </span>&lt;name&gt;<span class="w">               </span><span class="c1"># switch to existing branch</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Rename</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>git<span class="w"> </span>branch<span class="w"> </span>-m<span class="w"> </span>&lt;old&gt;<span class="w"> </span>&lt;new&gt;
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Delete</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>git<span class="w"> </span>branch<span class="w"> </span>-d<span class="w"> </span>&lt;name&gt;<span class="w">            </span><span class="c1"># safe delete (refuses if unmerged)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>git<span class="w"> </span>branch<span class="w"> </span>-D<span class="w"> </span>&lt;name&gt;<span class="w">            </span><span class="c1"># force delete</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>--delete<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="c1"># delete the remote branch</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Set upstream (track remote branch)</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>git<span class="w"> </span>branch<span class="w"> </span>--set-upstream-to<span class="o">=</span>origin/&lt;name&gt;
 </code></pre></div>
 <hr />
 <h2 id="merge-rebase">Merge &amp; Rebase<a class="headerlink" href="#merge-rebase" title="Permanent link">&para;</a></h2>
 <p>Merge integrates changes from another branch. Rebase replays your commits on top of another branch — it creates a linear history but rewrites commits (never rebase shared/pushed commits).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Merge</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>merge<span class="w"> </span>&lt;branch&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>git<span class="w"> </span>merge<span class="w"> </span>--no-ff<span class="w"> </span>&lt;branch&gt;<span class="w">      </span><span class="c1"># always create a merge commit (even if fast-forward possible)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>git<span class="w"> </span>merge<span class="w"> </span>--squash<span class="w"> </span>&lt;branch&gt;<span class="w">     </span><span class="c1"># squash all branch commits into one unstaged change</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>git<span class="w"> </span>merge<span class="w"> </span>--abort<span class="w">               </span><span class="c1"># abort a conflicted merge</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Rebase (replay current branch commits on top of &lt;branch&gt;)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>git<span class="w"> </span>rebase<span class="w"> </span>&lt;branch&gt;
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>git<span class="w"> </span>rebase<span class="w"> </span>-i<span class="w"> </span>HEAD~3<span class="w">            </span><span class="c1"># interactive rebase of last 3 commits (squash, reword, drop)</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>git<span class="w"> </span>rebase<span class="w"> </span>--continue<span class="w">           </span><span class="c1"># after resolving conflicts</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>git<span class="w"> </span>rebase<span class="w"> </span>--abort
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>git<span class="w"> </span>rebase<span class="w"> </span>--skip
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Merge</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>git<span class="w"> </span>merge<span class="w"> </span>&lt;branch&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>git<span class="w"> </span>merge<span class="w"> </span>--no-ff<span class="w"> </span>&lt;branch&gt;<span class="w">      </span><span class="c1"># always create a merge commit (even if fast-forward possible)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>git<span class="w"> </span>merge<span class="w"> </span>--squash<span class="w"> </span>&lt;branch&gt;<span class="w">     </span><span class="c1"># squash all branch commits into one unstaged change</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>git<span class="w"> </span>merge<span class="w"> </span>--abort<span class="w">               </span><span class="c1"># abort a conflicted merge</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Rebase (replay current branch commits on top of &lt;branch&gt;)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>git<span class="w"> </span>rebase<span class="w"> </span>&lt;branch&gt;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>git<span class="w"> </span>rebase<span class="w"> </span>-i<span class="w"> </span>HEAD~3<span class="w">            </span><span class="c1"># interactive rebase of last 3 commits (squash, reword, drop)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>git<span class="w"> </span>rebase<span class="w"> </span>--continue<span class="w">           </span><span class="c1"># after resolving conflicts</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>git<span class="w"> </span>rebase<span class="w"> </span>--abort
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>git<span class="w"> </span>rebase<span class="w"> </span>--skip
 </code></pre></div>
 <hr />
 <h2 id="fetch-pull-push">Fetch, Pull &amp; Push<a class="headerlink" href="#fetch-pull-push" title="Permanent link">&para;</a></h2>
 <p>Fetch downloads changes from the remote without applying them. Pull downloads and merges (or rebases) them. Push uploads your commits to the remote.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>git<span class="w"> </span>fetch
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>git<span class="w"> </span>fetch<span class="w"> </span>--all<span class="w">                 </span><span class="c1"># fetch all remotes</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>git<span class="w"> </span>fetch<span class="w"> </span>--prune<span class="w">               </span><span class="c1"># also remove remote-tracking branches that no longer exist</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>git<span class="w"> </span>pull
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>git<span class="w"> </span>pull<span class="w"> </span>--rebase<span class="w">               </span><span class="c1"># rebase instead of merge (keeps linear history)</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>&lt;branch&gt;
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>git<span class="w"> </span>push
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>&lt;branch&gt;<span class="w">     </span><span class="c1"># push and set upstream tracking</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>git<span class="w"> </span>push<span class="w"> </span>--force-with-lease<span class="w">     </span><span class="c1"># safe force push — fails if remote has changes you haven&#39;t seen</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>git<span class="w"> </span>push<span class="w"> </span>--tags<span class="w">                 </span><span class="c1"># push all tags</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>:&lt;branch&gt;<span class="w">       </span><span class="c1"># delete a remote branch (older syntax)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git<span class="w"> </span>fetch
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>fetch<span class="w"> </span>--all<span class="w">                 </span><span class="c1"># fetch all remotes</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>git<span class="w"> </span>fetch<span class="w"> </span>--prune<span class="w">               </span><span class="c1"># also remove remote-tracking branches that no longer exist</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>git<span class="w"> </span>pull
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>git<span class="w"> </span>pull<span class="w"> </span>--rebase<span class="w">               </span><span class="c1"># rebase instead of merge (keeps linear history)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>&lt;branch&gt;
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>git<span class="w"> </span>push
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>&lt;branch&gt;<span class="w">     </span><span class="c1"># push and set upstream tracking</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>git<span class="w"> </span>push<span class="w"> </span>--force-with-lease<span class="w">     </span><span class="c1"># safe force push — fails if remote has changes you haven&#39;t seen</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>git<span class="w"> </span>push<span class="w"> </span>--tags<span class="w">                 </span><span class="c1"># push all tags</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>:&lt;branch&gt;<span class="w">       </span><span class="c1"># delete a remote branch (older syntax)</span>
 </code></pre></div>
 <hr />
 <h2 id="stash">Stash<a class="headerlink" href="#stash" title="Permanent link">&para;</a></h2>
 <p>Stash saves your uncommitted changes temporarily so you can switch context. It's a stack — you can have multiple stashes, each identified by <code>stash@{n}</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>git<span class="w"> </span>stash
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>stash<span class="w"> </span>push<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;description&quot;</span><span class="w">  </span><span class="c1"># stash with a label</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>git<span class="w"> </span>stash<span class="w"> </span>list
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>git<span class="w"> </span>stash<span class="w"> </span>pop<span class="w">                    </span><span class="c1"># apply top stash and remove it from the stack</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>git<span class="w"> </span>stash<span class="w"> </span>apply<span class="w"> </span>stash@<span class="o">{</span><span class="m">0</span><span class="o">}</span><span class="w">        </span><span class="c1"># apply without removing from stack</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>git<span class="w"> </span>stash<span class="w"> </span>drop<span class="w"> </span>stash@<span class="o">{</span><span class="m">0</span><span class="o">}</span><span class="w">         </span><span class="c1"># remove a specific stash</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>git<span class="w"> </span>stash<span class="w"> </span>clear<span class="w">                  </span><span class="c1"># remove all stashes</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>git<span class="w"> </span>stash<span class="w"> </span>show<span class="w"> </span>-p<span class="w"> </span>stash@<span class="o">{</span><span class="m">0</span><span class="o">}</span><span class="w">      </span><span class="c1"># view the diff of a stash</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>git<span class="w"> </span>stash
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>git<span class="w"> </span>stash<span class="w"> </span>push<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;description&quot;</span><span class="w">  </span><span class="c1"># stash with a label</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>git<span class="w"> </span>stash<span class="w"> </span>list
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>git<span class="w"> </span>stash<span class="w"> </span>pop<span class="w">                    </span><span class="c1"># apply top stash and remove it from the stack</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>git<span class="w"> </span>stash<span class="w"> </span>apply<span class="w"> </span>stash@<span class="o">{</span><span class="m">0</span><span class="o">}</span><span class="w">        </span><span class="c1"># apply without removing from stack</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>git<span class="w"> </span>stash<span class="w"> </span>drop<span class="w"> </span>stash@<span class="o">{</span><span class="m">0</span><span class="o">}</span><span class="w">         </span><span class="c1"># remove a specific stash</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>git<span class="w"> </span>stash<span class="w"> </span>clear<span class="w">                  </span><span class="c1"># remove all stashes</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>git<span class="w"> </span>stash<span class="w"> </span>show<span class="w"> </span>-p<span class="w"> </span>stash@<span class="o">{</span><span class="m">0</span><span class="o">}</span><span class="w">      </span><span class="c1"># view the diff of a stash</span>
 </code></pre></div>
 <hr />
 <h2 id="tags">Tags<a class="headerlink" href="#tags" title="Permanent link">&para;</a></h2>
 <p>Tags mark specific commits — typically used for release versions. Annotated tags include a message and are the standard for releases. Lightweight tags are just a pointer to a commit.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>git<span class="w"> </span>tag<span class="w">                          </span><span class="c1"># list all tags</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>git<span class="w"> </span>tag<span class="w"> </span>&lt;name&gt;<span class="w">                   </span><span class="c1"># create lightweight tag at HEAD</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;msg&quot;</span><span class="w">       </span><span class="c1"># create annotated tag (preferred for releases)</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>&lt;name&gt;<span class="w"> </span>&lt;commit&gt;<span class="w">       </span><span class="c1"># annotate a specific past commit</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>&lt;tag&gt;<span class="w">            </span><span class="c1"># push a single tag</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>git<span class="w"> </span>push<span class="w"> </span>--tags<span class="w">                  </span><span class="c1"># push all tags</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>git<span class="w"> </span>tag<span class="w"> </span>-d<span class="w"> </span>&lt;name&gt;<span class="w">                </span><span class="c1"># delete local tag</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>--delete<span class="w"> </span>&lt;tag&gt;<span class="w">   </span><span class="c1"># delete remote tag</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>git<span class="w"> </span>tag<span class="w">                          </span><span class="c1"># list all tags</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>tag<span class="w"> </span>&lt;name&gt;<span class="w">                   </span><span class="c1"># create lightweight tag at HEAD</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;msg&quot;</span><span class="w">       </span><span class="c1"># create annotated tag (preferred for releases)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>&lt;name&gt;<span class="w"> </span>&lt;commit&gt;<span class="w">       </span><span class="c1"># annotate a specific past commit</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>&lt;tag&gt;<span class="w">            </span><span class="c1"># push a single tag</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>git<span class="w"> </span>push<span class="w"> </span>--tags<span class="w">                  </span><span class="c1"># push all tags</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>git<span class="w"> </span>tag<span class="w"> </span>-d<span class="w"> </span>&lt;name&gt;<span class="w">                </span><span class="c1"># delete local tag</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>--delete<span class="w"> </span>&lt;tag&gt;<span class="w">   </span><span class="c1"># delete remote tag</span>
 </code></pre></div>
 <hr />
 <h2 id="reset-restore">Reset &amp; Restore<a class="headerlink" href="#reset-restore" title="Permanent link">&para;</a></h2>
 <p>Undo staged changes, discard working directory edits, or move the branch pointer back to an earlier commit. <code>--hard</code> discards everything — use with care.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Unstage a file (keep the changes in working directory)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>git<span class="w"> </span>restore<span class="w"> </span>--staged<span class="w"> </span>&lt;file&gt;
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Discard working directory changes (permanent — gone immediately)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>git<span class="w"> </span>restore<span class="w"> </span>&lt;file&gt;
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Move branch pointer back N commits</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>git<span class="w"> </span>reset<span class="w"> </span>--soft<span class="w"> </span>HEAD~1<span class="w">          </span><span class="c1"># move pointer back, keep changes staged</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>git<span class="w"> </span>reset<span class="w"> </span>--mixed<span class="w"> </span>HEAD~1<span class="w">         </span><span class="c1"># move pointer back, keep changes unstaged (default)</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>HEAD~1<span class="w">          </span><span class="c1"># move pointer back, discard all changes</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Reset to match the remote branch exactly</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>git<span class="w"> </span>fetch<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>origin/&lt;branch&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Unstage a file (keep the changes in working directory)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>git<span class="w"> </span>restore<span class="w"> </span>--staged<span class="w"> </span>&lt;file&gt;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Discard working directory changes (permanent — gone immediately)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>git<span class="w"> </span>restore<span class="w"> </span>&lt;file&gt;
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Move branch pointer back N commits</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>git<span class="w"> </span>reset<span class="w"> </span>--soft<span class="w"> </span>HEAD~1<span class="w">          </span><span class="c1"># move pointer back, keep changes staged</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>git<span class="w"> </span>reset<span class="w"> </span>--mixed<span class="w"> </span>HEAD~1<span class="w">         </span><span class="c1"># move pointer back, keep changes unstaged (default)</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>HEAD~1<span class="w">          </span><span class="c1"># move pointer back, discard all changes</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Reset to match the remote branch exactly</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>git<span class="w"> </span>fetch<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>origin/&lt;branch&gt;
 </code></pre></div>
 <hr />
 <h2 id="advanced-cherry-pick-bisect-submodules">Advanced (Cherry-pick, Bisect, Submodules)<a class="headerlink" href="#advanced-cherry-pick-bisect-submodules" title="Permanent link">&para;</a></h2>
 <p>Specialized tools for precise commit selection, binary-search debugging, and managing repositories-within-repositories.</p>
 <h3 id="cherry-pick">Cherry-pick<a class="headerlink" href="#cherry-pick" title="Permanent link">&para;</a></h3>
 <p>Apply a specific commit from another branch onto the current branch — useful when you want one fix without merging an entire feature branch.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>git<span class="w"> </span>cherry-pick<span class="w"> </span>&lt;commit&gt;
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>git<span class="w"> </span>cherry-pick<span class="w"> </span>&lt;commit1&gt;..&lt;commit2&gt;<span class="w">   </span><span class="c1"># range (exclusive start)</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>git<span class="w"> </span>cherry-pick<span class="w"> </span>--no-commit<span class="w"> </span>&lt;commit&gt;<span class="w">   </span><span class="c1"># apply changes without committing</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>git<span class="w"> </span>cherry-pick<span class="w"> </span>--abort
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>git<span class="w"> </span>cherry-pick<span class="w"> </span>&lt;commit&gt;
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>git<span class="w"> </span>cherry-pick<span class="w"> </span>&lt;commit1&gt;..&lt;commit2&gt;<span class="w">   </span><span class="c1"># range (exclusive start)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>git<span class="w"> </span>cherry-pick<span class="w"> </span>--no-commit<span class="w"> </span>&lt;commit&gt;<span class="w">   </span><span class="c1"># apply changes without committing</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>git<span class="w"> </span>cherry-pick<span class="w"> </span>--abort
 </code></pre></div>
 <h3 id="bisect">Bisect<a class="headerlink" href="#bisect" title="Permanent link">&para;</a></h3>
 <p>Binary-search through commit history to find which commit introduced a bug. Git checks out the midpoint, you test and mark good/bad, and it narrows down automatically.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>git<span class="w"> </span>bisect<span class="w"> </span>start
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>git<span class="w"> </span>bisect<span class="w"> </span>bad<span class="w">                   </span><span class="c1"># mark current commit as broken</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>git<span class="w"> </span>bisect<span class="w"> </span>good<span class="w"> </span>&lt;commit&gt;<span class="w">         </span><span class="c1"># mark last known working commit</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Git checks out the midpoint — test it, then:</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>git<span class="w"> </span>bisect<span class="w"> </span>good<span class="w">                  </span><span class="c1"># or: git bisect bad</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>git<span class="w"> </span>bisect<span class="w"> </span>reset<span class="w">                 </span><span class="c1"># end bisect session</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>git<span class="w"> </span>bisect<span class="w"> </span>start
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>git<span class="w"> </span>bisect<span class="w"> </span>bad<span class="w">                   </span><span class="c1"># mark current commit as broken</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>git<span class="w"> </span>bisect<span class="w"> </span>good<span class="w"> </span>&lt;commit&gt;<span class="w">         </span><span class="c1"># mark last known working commit</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Git checks out the midpoint — test it, then:</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>git<span class="w"> </span>bisect<span class="w"> </span>good<span class="w">                  </span><span class="c1"># or: git bisect bad</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>git<span class="w"> </span>bisect<span class="w"> </span>reset<span class="w">                 </span><span class="c1"># end bisect session</span>
 </code></pre></div>
 <h3 id="submodules">Submodules<a class="headerlink" href="#submodules" title="Permanent link">&para;</a></h3>
 <p>Embed another Git repository inside your repo. Useful for vendored dependencies or shared libraries managed separately.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>git<span class="w"> </span>submodule<span class="w"> </span>add<span class="w"> </span>&lt;url&gt;<span class="w"> </span>&lt;path&gt;
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init<span class="w"> </span>--recursive<span class="w">   </span><span class="c1"># after cloning a repo with submodules</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>git<span class="w"> </span>submodule<span class="w"> </span>foreach<span class="w"> </span>git<span class="w"> </span>pull<span class="w">            </span><span class="c1"># update all submodules to latest</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>git<span class="w"> </span>submodule<span class="w"> </span>add<span class="w"> </span>&lt;url&gt;<span class="w"> </span>&lt;path&gt;
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init<span class="w"> </span>--recursive<span class="w">   </span><span class="c1"># after cloning a repo with submodules</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>git<span class="w"> </span>submodule<span class="w"> </span>foreach<span class="w"> </span>git<span class="w"> </span>pull<span class="w">            </span><span class="c1"># update all submodules to latest</span>
 </code></pre></div>
 <h3 id="useful-aliases">Useful Aliases<a class="headerlink" href="#useful-aliases" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>alias.lg<span class="w"> </span><span class="s2">&quot;log --oneline --graph --all --decorate&quot;</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>alias.undo<span class="w"> </span><span class="s2">&quot;reset --soft HEAD~1&quot;</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>alias.unstage<span class="w"> </span><span class="s2">&quot;restore --staged&quot;</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>alias.aliases<span class="w"> </span><span class="s2">&quot;config --get-regexp alias&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>alias.lg<span class="w"> </span><span class="s2">&quot;log --oneline --graph --all --decorate&quot;</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>alias.undo<span class="w"> </span><span class="s2">&quot;reset --soft HEAD~1&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>alias.unstage<span class="w"> </span><span class="s2">&quot;restore --staged&quot;</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>alias.aliases<span class="w"> </span><span class="s2">&quot;config --get-regexp alias&quot;</span>
 </code></pre></div>
 
 
