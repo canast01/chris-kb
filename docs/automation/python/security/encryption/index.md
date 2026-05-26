@@ -25,26 +25,27 @@ graph TD
     script --> tlsVerify
     tlsVerify --> apiCall
 ```
-
-## TLS and Certificate Verification
-
-Always verify TLS certificates. Only disable verification in isolated test environments.
-
-```python
-import requests
-
-# Default: verify=True — always leave enabled in production
-resp = requests.get("https://api.example.com/v1/data", timeout=30)
-
-# Custom CA bundle (e.g. internal PKI)
-resp = requests.get(
-    "https://internal.example.com/api",
-    verify="/etc/ssl/certs/internal-ca.crt",
-    timeout=30,
-)
-
-# Disable verification — development only, never in production
-# resp = requests.get(url, verify=False)   # triggers InsecureRequestWarning
+┌───────────────────────────────────────── Python — Encryption ─────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Python encryption: cryptography library for AES/RSA; TLS via ssl/requests; key management   │   │
+│   │     Use: cryptography library (PyCA); avoid: pycrypto (unmaintained), roll-your-own crypto    │   │
+│   │     Transport: requests library uses SSL by default; verify=True (default) validates certs    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Encryption Patterns              │  │                Key Management               │   │
+│   │        Fernet: symmetric AES-128-CBC         │  │        AWS KMS: boto3 encrypt/decrypt       │   │
+│   │        RSA: asymmetric (sign/verify)         │  │             Azure Key Vault: SDK            │   │
+│   │           PBKDF2: password hashing           │  │        HashiCorp Vault: hvac library        │   │
+│   │        hashlib: sha256/sha512 digests        │  │        Never store key in code or git       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Fernet       = symmetric auth encryption; from cryptography.fernet import Fernet       │   │
+│   │        hvac         = HashiCorp Vault Python client; read secrets, write, authenticate        │   │
+│   │           verify=False = requests flag to skip TLS verification; NEVER in production          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash

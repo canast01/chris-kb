@@ -16,33 +16,35 @@ Before initiating failover, confirm:
 symrdf -g <rdfgroup> query
 # Confirm R2 volumes are Synchronized or Consistent before failing over
 ```
-
-**Veeam — check last successful backup:**
-Navigate to: Home → Jobs → check Last Result and Last Run columns
-
-**VMware SRM:**
-- Protection Groups → check replication state of all protected VMs
-- Recovery Plan → Review plan before executing
-
-## Phase 2 — Notify Stakeholders
-
-- Application owners (impact notification)
-- Service desk (user-facing message, expected RTO)
-- Management chain
-- Vendor TAC if array/fabric fault is involved
-
-## Phase 3 — Initiate Failover
-
-### Storage Failover
-
-**NetApp SnapMirror — break and make R2 writeable:**
-```bash
-# Break mirror (R2 becomes writable, R1 no longer replicating)
-snapmirror break -destination-path <dr-svm>:<dr-vol>
-
-# Verify
-snapmirror show -destination-path <dr-svm>:<dr-vol>
-# State should show: Broken-off
+┌──────────────────────────────────────── DR Failover Procedure ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      DR Failover Procedure — declare disaster, activate DR site, redirect hosts, validate     │   │
+│   │                   See product-specific sub-sections for detailed procedures                   │   │
+│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
+│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
+│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Production site · DR site · Replication link · Management network · Vault network                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
+│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
+│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
+│  Failback      = returning operations to production site after DR resolved                            │
+│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
+│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
+│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
+│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
+│  DR Test       = planned failover test; validates RTO without real disaster                           │
+│  Replication   = continuous or periodic data copy to secondary site or vault                          │
+│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
+│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **SRDF — failover to R2:**

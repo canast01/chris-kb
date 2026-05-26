@@ -29,19 +29,34 @@ flowchart TD
     L -- Yes --> M[Review scheduled jobs\nfor failures]
     M --> N([Health Check Complete\nLog result])
 ```
-
----
-
-## 1. Service Status
-
-### Process Check
-
-```bash
-# Verify the Confluence JVM process is running
-pgrep -fl "confluence" || echo "ALERT: Confluence process not found"
-
-# Verify the HTTP listener is active
-ss -tlnp | grep 8090 || echo "ALERT: Port 8090 not listening"
+┌───────────────────────────────────── Confluence — Health Checks ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Application Health              │  │            Infrastructure Health            │   │
+│   │               GET /status → OK               │  │                DB connection                │   │
+│   │               Heap usage < 80%               │  │                  Disk < 80%                 │   │
+│   │             Thread count normal              │  │               NFS mount check               │   │
+│   │                No OOM in logs                │  │               Backup completed              │   │
+│   │               Search index OK                │  │                  SMTP test                  │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Confluence server · PostgreSQL · NFS for home dir · SMTP relay · load balancer                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  GET /status = Confluence health endpoint; returns RUNNING or error state                             │
+│  Heap usage = JVM heap percentage; >80% risks OOM; check via Admin > System Info                      │
+│  OOM = OutOfMemoryError; kills Confluence if heap exhausted; check catalina.out                       │
+│  Thread count = Active HTTP threads; high count indicates slow requests backing up                    │
+│  Search index = Lucene index in CONFLUENCE_HOME/index; trigger reindex if stale                       │
+│  DB connection = Confluence checks DB pool; if exhausted, pages fail to load                          │
+│  NFS mount = CONFLUENCE_HOME on NFS; if unmounted, attachments return 404                             │
+│  SMTP test = Send test email from Admin > Mail Servers; confirms notifications work                   │
+│  Backup completed = Check CONFLUENCE_HOME/backups/ for fresh archive                                  │
+│  System Info = Admin > System Information; shows memory, JVM version, and config                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### HTTP Health Endpoint

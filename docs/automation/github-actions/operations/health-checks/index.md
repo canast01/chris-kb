@@ -21,32 +21,28 @@ flowchart TD
     result -->|No| ok(["Health check passed"])
     result -->|Yes| investigate(["Investigate and remediate"])
 ```
-
-## Validation
-
-### Linting Workflow Files with actionlint
-
-`actionlint` is a static analysis tool for GitHub Actions workflow YAML files.
-
-```bash
-# Install actionlint (macOS)
-brew install actionlint
-
-# Lint all workflows in the current repository
-actionlint
-
-# Lint a specific file
-actionlint .github/workflows/ci.yml
-
-# Output as JSON for integration with other tools
-actionlint -format '{{json .}}'
-
-# Ignore a specific rule
-actionlint -ignore 'expression syntax error'
-
-# Run inside a Docker container (no install required)
-docker run --rm -v "$(pwd):/repo" --workdir /repo \
-  rhysd/actionlint:latest
+┌─────────────────────────────────── GitHub Actions — Health Checks ────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Health checks for GitHub Actions: runner availability, job queue depth, workflow failure rate │   │
+│   │          Monitor: Org Settings → Actions → Runners — check idle/active/offline count          │   │
+│   │    Alert conditions: self-hosted runner offline >5 min, queue depth >10, failure rate >10%    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Runner Health                 │  │               Workflow Health               │   │
+│   │          gh api /orgs/{org}/runners          │  │         gh run list --status failure        │   │
+│   │        Runner status: online/offline         │  │         Workflow failure rate trend         │   │
+│   │      Runner version: check for updates       │  │          Queue wait time (Insights)         │   │
+│   │         Runner disk and CPU on host          │  │           Billing minutes consumed          │   │
+│   │         Runner labels match workflow         │  │             Secrets expiry dates            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Runner labels   = tags assigned to self-hosted runners; workflows select runner via runs-on: │   │
+│   │   Insights tab    = repo/org-level: workflow run history, duration trends, billing breakdown  │   │
+│   │     Queue wait time = time from trigger to job start; high values = runner pool undersized    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Schema Validation

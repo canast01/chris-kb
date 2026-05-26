@@ -12,20 +12,28 @@ PowerShell enforces a fixed set of approved verbs. Using unapproved verbs genera
 # List all approved verbs
 Get-Verb | Sort-Object Group, Verb | Format-Table -AutoSize
 ```
-
-Root module pattern — dot-source all files:
-
-```powershell
-# MyModule.psm1
-$Private = Get-ChildItem -Path "$PSScriptRoot/Private" -Filter '*.ps1' -Recurse
-$Public  = Get-ChildItem -Path "$PSScriptRoot/Public"  -Filter '*.ps1' -Recurse
-
-foreach ($file in ($Private + $Public)) {
-    try   { . $file.FullName }
-    catch { Write-Error "Failed to import $($file.FullName): $_" }
-}
-
-Export-ModuleMember -Function $Public.BaseName
+┌──────────────────────────────────── PowerShell — Design Standards ────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    PowerShell standards: approved verbs, CmdletBinding, proper error handling, Pester tests   │   │
+│   │ Use PSScriptAnalyzer in CI; pin module versions with #Requires or RequiredModules in manifest │   │
+│   │         All scripts require help block: .SYNOPSIS, .DESCRIPTION, .PARAMETER, .EXAMPLE         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Script Structure               │  │                Error Handling               │   │
+│   │    [CmdletBinding(SupportsShouldProcess)]    │  │        $ErrorActionPreference = Stop        │   │
+│   │           param() block with types           │  │         try { } catch { } finally {}        │   │
+│   │           begin/process/end blocks           │  │           Write-Error -ErrorRecord          │   │
+│   │           comment-based help block           │  │         Throw for terminating errors        │   │
+│   │            #Requires -Version 7.0            │  │            Log with Write-Verbose           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   SupportsShouldProcess = enables -WhatIf and -Confirm; use $PSCmdlet.ShouldProcess() guard   │   │
+│   │ PSScriptAnalyzer      = static analysis; run in CI with Invoke-ScriptAnalyzer -Severity Error │   │
+│   │   Pester                = PS testing framework; Describe/Context/It blocks; mock with Mock{}  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

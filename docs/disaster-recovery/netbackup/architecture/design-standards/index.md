@@ -1,5 +1,49 @@
 # NetBackup Standards
 
+```
+┌──────────────────────────────────── NetBackup — Design Standards ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Sizing Guidelines               │  │               HA Requirements               │   │
+│   │         Deduplicate where supported          │  │           N+1 component redundancy          │   │
+│   │          Bandwidth: 10 GbE minimum           │  │          Heartbeat / health monitor         │   │
+│   │          Storage: 130% of raw data           │  │          Separate mgmt / data VLANs         │   │
+│   │         Latency: < 10 ms to storage          │  │          Out-of-band access (IPMI)          │   │
+│   │           CPU: 8+ vCPU for engine            │  │          Anti-affinity VM placement         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Ports: 443 (Web UI) · 1556 (vnetd) · 13724 (bprd)                                                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                Standard NetBackup Design Rules                                │   │
+│   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
+│   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
+│   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
+│   │Encryption enabled on all channels: AES-256 backup encryption; KMS key management; TLS 1.2+ on │   │
+│   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+│  Media Server  = data mover between client and storage; can be co-located with master                 │
+│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Naming Conventions
 
 | Object | Convention | Example |
@@ -23,32 +67,7 @@ Compliance requirements may extend yearly retention to 10 years for regulated da
 
 ## Backup Policy to Job Flow
 
-```mermaid
-flowchart TD
-    policy["Backup Policy\n(application type,\nclient list, schedules)"]
-    policy --> schedule["Schedule\n(full-14d, incr-7d, weekly-8w)"]
-    schedule --> trigger{Schedule\ntrigger}
-    trigger -->|"Window opens"| jm["Job Manager\n(allocate media server + STU)"]
-    jm --> clientConn["Connect to client\nbpcd TCP 13724"]
-    clientConn --> dataStream["Stream data to media server\nbpbrm TCP 13782"]
-    dataStream --> dedup{Storage\ntype?}
-    dedup -->|"OST / Data Domain"| ddDedup["DD Boost\ninline dedup on media server"]
-    dedup -->|"MSDP"| msdpDedup["MSDP\ndedup on media server"]
-    dedup -->|"BasicDisk"| basicDisk["Write directly\nno dedup"]
-    ddDedup --> catalog["Catalog image in\nNetBackup DB\nbpdbm"]
-    msdpDedup --> catalog
-    basicDisk --> catalog
-    catalog --> done(["Job complete\nlog in bpdbjobs"])
 
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
-    class jm,clientConn,dataStream,ddDedup,msdpDedup,basicDisk,catalog action
-    class trigger,dedup decision
-    class policy,schedule terminal
-    class done terminal
-```
 
 ## Encryption Standard
 

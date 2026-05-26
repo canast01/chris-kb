@@ -14,17 +14,34 @@ Configuration: InsightIQ web UI > Administration > Clusters > Add Cluster
 - Collection interval: configurable (default: 30 seconds, aggregated to 5-minute buckets)
 - TLS: enforce HTTPS for API calls to OneFS management port (TCP 8080)
 ```
-
-## Active Directory SSO (LDAP Integration)
-
-InsightIQ supports LDAP/AD integration for centralised user authentication.
-
-```text
-InsightIQ web UI > Administration > Authentication > LDAP
-- LDAP server: ldap://<DC-FQDN>:389 or ldaps://<DC-FQDN>:636
-- Bind DN: CN=svc-iiq-ldap,OU=ServiceAccounts,DC=company,DC=com
-- Base DN: OU=StorageTeam,DC=company,DC=com
-- Group mapping: LDAP group → InsightIQ admin or viewer role
+┌──────────────────────────────────── InsightIQ — Integration Guide ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Email Notifications              │  │                External Tools               │   │
+│   │              SMTP configuration              │  │              REST API (limited)             │   │
+│   │               Threshold alerts               │  │               CSV for BI tools              │   │
+│   │               Report delivery                │  │              Grafana REST proxy             │   │
+│   │                Recipient list                │  │              Scheduled reports              │   │
+│   │              Alert cadence cfg               │  │              PDF to management              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  InsightIQ VM → SMTP relay → email · PDF/CSV download from UI · REST on TCP 443                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SMTP = Email relay configured in InsightIQ for threshold alerts and report delivery                  │
+│  Threshold alert = Email when a metric (latency, utilisation) exceeds defined limit                   │
+│  Report delivery = Scheduled InsightIQ report emailed as PDF to recipient list                        │
+│  REST API = InsightIQ exposes limited REST for programmatic data retrieval                            │
+│  CSV for BI = Metric data exported as CSV for Power BI, Tableau, or Excel                             │
+│  Grafana proxy = REST proxy exposing InsightIQ metrics as Grafana data source                         │
+│  Scheduled report = Weekly/monthly report generated and emailed automatically                         │
+│  PDF to management = Formatted performance report for storage operations review                       │
+│  Recipient list = Email addresses configured in InsightIQ notification settings                       │
+│  Alert cadence = How often InsightIQ re-sends alert if threshold remains exceeded                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Use LDAPS (TCP 636) to encrypt LDAP traffic. Store the bind account password in the secrets manager.

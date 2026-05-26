@@ -21,31 +21,47 @@ RASR ships as part of the **Dell OpenManage Systems Management** bundle. The RAS
 ```powershell
 Get-Service -Name "DellRASR" | Select-Object Status, StartType
 ```
-
-**Supported iDRAC versions:** iDRAC8 (14G), iDRAC9 (15G/16G). Virtual media ISO mount is available on Express and Enterprise licenses.
-
----
-
-## Active Directory — Post-Recovery Domain Rejoin
-
-After a bare-metal restore, the server's **machine account** in Active Directory may be out of sync with the restored OS image (particularly if the image is older than the machine account password rotation cycle — typically 30 days).
-
-### Symptoms
-
-- Event ID **3210** or **5719** in System log.
-- "The secure channel to domain controller is broken."
-- `nltest /sc_verify:<domain>` returns `ERROR_NO_LOGON_SERVERS`.
-
-### Remediation Steps
-
-**Option 1 — Reset secure channel (no rejoin required):**
-
-```powershell
-# Test the secure channel first
-Test-ComputerSecureChannel -Verbose
-
-# Repair without full rejoin
-Test-ComputerSecureChannel -Repair -Credential (Get-Credential)
+┌────────────────────────────────── RASR — Architecture Integrations ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               RASR — External Integration Points                              │   │
+│   │      Auth: Vault operator role; 2-person integrity for unlock; AD integration for PPDM UI     │   │
+│   │                 Storage: connected via 443 (PPDM REST API) · 2049 (NFS vault)                 │   │
+│   │            Monitoring: SNMP traps / syslog / REST API to ITSM and alerting systems            │   │
+│   │Encryption: AES-256 at rest on vault; TLS 1.3 for all management; vault lock enforces immutabil│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                        ▼                        ▼                          │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Identity          │  │           Storage           │  │          Monitoring         │   │
+│   │          AD / LDAP          │  │     443 (PPDM REST API)     │  │        SNMP / syslog        │   │
+│   │           SAML SSO          │  │       2049 (NFS vault)      │  │         REST webhook        │   │
+│   │          RBAC roles         │  │       NFS / iSCSI / FC      │  │         Email alerts        │   │
+│   │         MFA optional        │  │       Dedup appliance       │  │          ServiceNow         │   │
+│   │          Cert auth          │  │        Object storage       │  │          Prometheus         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Option 2 — Full domain rejoin:**

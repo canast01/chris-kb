@@ -30,25 +30,27 @@ graph LR
     configure --> disconnect
     migrateDS --> disconnect
 ```
-
-### Get-VM and Filtering
-
-```powershell
-# List all VMs
-Get-VM
-
-# Filter by name pattern
-Get-VM -Name 'web*'
-
-# Filter by power state
-Get-VM | Where-Object { $_.PowerState -eq 'PoweredOff' }
-
-# VMs on a specific host
-Get-VMHost -Name esx01.example.com | Get-VM
-
-# Get VM hardware details
-Get-VM web01 | Select-Object Name, NumCpu, MemoryGB, PowerState,
-    @{N='ProvisionedGB';E={[math]::Round($_.ProvisionedSpaceGB,2)}}
+┌────────────────────────────────────── PowerShell — Integrations ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    PowerShell integrates with Microsoft ecosystem and infrastructure platforms via modules    │   │
+│   │   Key modules: Az (Azure), ActiveDirectory, VMware.PowerCLI, DellEMC.OpenManage, ImportExcel  │   │
+│   │      REST API integration via Invoke-RestMethod; parses JSON/XML responses to PS objects      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      Microsoft Platform     │  │        Infra Platform       │  │          Automation         │   │
+│   │     Az: Azure management    │  │       VMware.PowerCLI       │  │    GitHub Actions runner    │   │
+│   │    ActiveDirectory module   │  │       Dell OpenManage       │  │     Ansible WinRM target    │   │
+│   │   ExchangeOnlineManagement  │  │      NetApp PowerShell      │  │  Scheduled Task (schtasks)  │   │
+│   │    Microsoft.Graph module   │  │    Rubrik Security Cloud    │  │   PS Remoting (WinRM/SSH)   │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Invoke-RestMethod = HTTP client; returns PS objects from JSON APIs; handles auth headers   │   │
+│   │       PowerCLI          = VMware.PowerCLI; Connect-VIServer then Get-VM, Start-VM, etc.       │   │
+│   │        Az module         = Connect-AzAccount; then Get-AzVM, New-AzResourceGroup, etc.        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Set-VM and VM Configuration

@@ -27,28 +27,36 @@ def nd_get(path: str, token: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
-
-## ND Cluster Health Check
-
-```python
-def nd_cluster_health(token: str) -> list:
-    """Return node status for all cluster nodes."""
-    data = nd_get("/nexus/infra/nodes", token)
-    nodes = []
-    for node in data.get("nodes", []):
-        nodes.append({
-            "name": node["name"],
-            "status": node["status"],
-            "role": node.get("role"),
-            "ip": node.get("management_ip")
-        })
-    return nodes
-
-if __name__ == "__main__":
-    token = nd_login("svc-nd-script", "<password>")
-    for node in nd_cluster_health(token):
-        status = "OK" if node["status"] == "active" else "ALERT"
-        print(f"[{status}] {node['name']} ({node['ip']}) — {node['status']}")
+┌───────────────────────────────── Nexus Dashboard — Scripts Reference ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                             NDI REST API scripts — Python examples                            │   │
+│   │                   get-token.py: POST /sedgeapi/v1/auth/token → Bearer token                   │   │
+│   │                 get-anomalies.py: GET /sedgeapi/v1/ndi/anomalies?status=ACTIVE                │   │
+│   │            site-health.py: GET /sedgeapi/v1/ndi/sites/{id}/health — score per site            │   │
+│   │               acs-health-check.sh: SSH to ND master → acs health → parse output               │   │
+│   │              nd-backup.sh: SSH to ND → acs backup create → verify archive exists              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Scripts from management host · Python 3 + requests + paramiko · ND TCP 443/22                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  sedgeapi = NDI REST API path prefix; all NDI endpoints start with /sedgeapi/v1                       │
+│  Bearer token = Auth credential from /auth/token; pass in Authorization header                        │
+│  anomalies endpoint = NDI list of active anomalies with severity and affected objects                 │
+│  site health endpoint = NDI health score for a specific fabric site                                   │
+│  acs health = CLI command on ND master showing cluster node status                                    │
+│  paramiko = Python SSH library for running acs commands remotely                                      │
+│  acs backup create = Creates ND config snapshot; verify with acs backup list                          │
+│  Status filter = ?status=ACTIVE to return only unresolved anomalies                                   │
+│  Site ID = UUID of fabric site; retrieve from /sedgeapi/v1/ndi/sites                                  │
+│  Pagination = NDI API uses offset/limit; default 25 records per page                                  │
+│  Cron = Schedule scripts via crontab for daily health and backup checks                               │
+│  JSON response = NDI API returns JSON; parse with json module or jq                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Fabric Fault Export

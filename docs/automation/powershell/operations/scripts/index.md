@@ -37,38 +37,25 @@ $report | Format-Table -AutoSize
 Write-Host "`nReport saved: $OutputPath" -ForegroundColor Green
 Disconnect-VIServer -Confirm:$false
 ```
-
-## Snapshot Cleanup
-
-Finds and optionally removes snapshots older than N days.
-
-```powershell
-# snap-cleanup.ps1
-param(
-    [int]    $OlderThanDays = 7,
-    [switch] $WhatIf
-)
-
-$cutoff = (Get-Date).AddDays(-$OlderThanDays)
-$oldSnaps = Get-VM | Get-Snapshot | Where-Object { $_.Created -lt $cutoff }
-
-if ($oldSnaps.Count -eq 0) {
-    Write-Host "No snapshots older than $OlderThanDays days found."
-    return
-}
-
-$oldSnaps | Select-Object VM, Name, Created, @{N="SizeGB";E={[math]::Round($_.SizeGB,2)}} |
-    Format-Table -AutoSize
-
-if (-not $WhatIf) {
-    $confirm = Read-Host "Remove $($oldSnaps.Count) snapshot(s)? [yes/no]"
-    if ($confirm -eq "yes") {
-        $oldSnaps | Remove-Snapshot -Confirm:$false
-        Write-Host "Done." -ForegroundColor Green
-    }
-} else {
-    Write-Host "[WhatIf] No changes made."
-}
+┌────────────────────────────────── PowerShell — Scripts (Operations) ──────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           Operational PowerShell scripts for common infrastructure management tasks           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Windows Admin Scripts             │  │              Reporting Scripts              │   │
+│   │              Get-DiskHealth.ps1              │  │           Get-ServerInventory.ps1           │   │
+│   │          Set-LocalAdminPassword.ps1          │  │            Get-EventLogErrors.ps1           │   │
+│   │            Enable-WinRMHTTPS.ps1             │  │           Export-ADUserReport.ps1           │   │
+│   │         Install-RequiredModules.ps1          │  │             Check-CertExpiry.ps1            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Script header = always include #Requires, help block, param block with ValidateSet/Mandatory │   │
+│   │       Logging       = use Write-Verbose for debug; Start-Transcript for full session log      │   │
+│   │     Return values = output objects not strings; allows caller to filter with Where-Object     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Datastore Utilization Alert

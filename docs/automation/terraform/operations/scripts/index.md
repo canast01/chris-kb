@@ -44,146 +44,25 @@ graph LR
     applyProd -->|OK| done
     applyProd -->|Fail| abort
 ```
-
-**What you should see**
-
-The script prints timestamped log lines as it selects the workspace, runs `terraform init`, and runs `terraform plan`. If no drift is found it prints `RESULT: No changes` and exits. If drift exists it prints a change summary listing resources to add (`+`), modify (`~`), or destroy (`-`), sends an alert if a webhook is configured, and exits with code 1. A log file is written to `/var/log/` with a timestamp in the name.
-
----
-
-## Multi-Workspace Deploy Script (Bash)
-
-Deploy Terraform across dev, staging, and prod workspaces in sequence. Prompts for approval before each workspace (unless auto-approve is configured for dev). Stops and alerts on any workspace failure.
-
-~~~bash
-#!/usr/bin/env bash
-# tf-multi-workspace-deploy.sh
-# Usage: TF_DIR=<path> ./tf-multi-workspace-deploy.sh [--destroy]
-#
-# Set AUTO_APPROVE_DEV=true to skip approval for dev workspace.
-
-set -euo pipefail
-
-TF_DIR="${TF_DIR:?TF_DIR is required}"
-WORKSPACES=("dev" "staging" "prod")
-AUTO_APPROVE_DEV="${AUTO_APPROVE_DEV:-false}"
-DESTROY=false
-LOGFILE="/var/log/tf-deploy-$(date +%Y%m%d-%H%M%S).log"
-
-for arg in "$@"; do
-    [[ "$arg" == "--destroy" ]] && DESTROY=true
-done
-
-log() {
-    local msg="[$(date '+%Y-%m-%d %H:%M:%S')] $*"
-    echo "${msg}"
-    echo "${msg}" >> "${LOGFILE}"
-}
-
-alert_failure() {
-    local ws="$1"
-    log "ALERT: Deployment failed in workspace '${ws}'. Stopping pipeline."
-    log "Review errors above and check state with: terraform workspace select ${ws} && terraform plan"
-}
-
-cd "${TF_DIR}"
-
-log "=== Terraform Multi-Workspace Deploy ==="
-log "Directory   : ${TF_DIR}"
-log "Workspaces  : ${WORKSPACES[*]}"
-${DESTROY} && log "MODE: DESTROY" || log "MODE: APPLY"
-
-for WS in "${WORKSPACES[@]}"; do
-    log ""
-    log "--- Workspace: ${WS} ---"
-
-    log "Selecting workspace '${WS}'..."
-    terraform workspace select "${WS}" 2>&1 | tee -a "${LOGFILE}"
-
-    log "Running terraform init..."
-    terraform init -reconfigure -input=false 2>&1 | tee -a "${LOGFILE}"
-
-    PLANFILE="/tmp/tfplan-${WS}-$(date +%Y%m%d%H%M%S).out"
-    if ${DESTROY}; then
-        log "Planning destroy for workspace '${WS}'..."
-        terraform plan -destroy -detailed-exitcode -input=false -out="${PLANFILE}" 2>&1 | tee -a "${LOGFILE}" || true
-    else
-        log "Planning for workspace '${WS}'..."
-        terraform plan -detailed-exitcode -input=false -out="${PLANFILE}" 2>&1 | tee -a "${LOGFILE}" || true
-    fi
-
-    AUTO_APPROVE=false
-    if [[ "${WS}" == "dev" ]] && [[ "${AUTO_APPROVE_DEV}" == "true" ]]; then
-        AUTO_APPROVE=true
-        log "Auto-approve enabled for dev workspace."
-    fi
-
-    if ! ${AUTO_APPROVE}; then
-        echo ""
-        read -r -p "Apply changes for workspace '${WS}'? [yes/no]: " CONFIRM
-        if [[ "${CONFIRM}" != "yes" ]]; then
-            log "Skipped workspace '${WS}' by operator choice."
-            rm -f "${PLANFILE}"
-            continue
-        fi
-    fi
-
-    if ${DESTROY}; then
-        log "Running terraform destroy for workspace '${WS}'..."
-        if ! terraform apply -destroy -auto-approve -input=false "${PLANFILE}" 2>&1 | tee -a "${LOGFILE}"; then
-            alert_failure "${WS}"
-            exit 1
-        fi
-    else
-        log "Running terraform apply for workspace '${WS}'..."
-        if ! terraform apply -auto-approve -input=false "${PLANFILE}" 2>&1 | tee -a "${LOGFILE}"; then
-            alert_failure "${WS}"
-            exit 1
-        fi
-    fi
-
-    rm -f "${PLANFILE}"
-    log "Workspace '${WS}': SUCCESS"
-done
-
-log ""
-log "=== All workspaces processed successfully. ==="
-log "Log: ${LOGFILE}"
-~~~
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux or macOS machine (or Windows with Git Bash installed from gitforwindows.org)
-- Terraform installed and in your PATH
-- Three Terraform workspaces already created: `dev`, `staging`, `prod` (create with `terraform workspace new <name>`)
-- A Terraform project directory with valid configuration files
-- Operator access to approve changes interactively (or set `AUTO_APPROVE_DEV=true` to skip dev approval)
-
-**Step 1 — Save the file**
-
-1. Copy the entire code block above into a text editor
-2. Save it as `tf-multi-workspace-deploy.sh`
-3. Make it executable: `chmod +x tf-multi-workspace-deploy.sh`
-
-**Step 2 — Fill in your details**
-
-| Variable | What to enter | Where to find it |
-|---|---|---|
-| `TF_DIR` | Full path to your Terraform project folder | The folder containing your `.tf` files |
-| `AUTO_APPROVE_DEV` | Set to `true` to skip manual approval for dev | Omit or set `false` for interactive approval |
-| `--destroy` flag | Pass as argument to run a destroy instead of apply | Only use intentionally |
-
-**Step 3 — Open a terminal**
-
-- **On Linux/macOS:** Open Terminal
-- **On Windows:** Install Git for Windows (gitforwindows.org) then open Git Bash
-
-**Step 4 — Run the script**
-
-```bash
-cd ~/Desktop
-TF_DIR=/path/to/your/terraform ./tf-multi-workspace-deploy.sh
+┌───────────────────────────────────────── Terraform — Scripts ─────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Terraform utility scripts: drift report, stale lock check, state backup, plan summary     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Operations Scripts              │  │                CI/CD Scripts                │   │
+│   │        drift_check.sh (plan + alert)         │  │            tf_plan_pr_comment.py            │   │
+│   │          backup_state.sh (S3 copy)           │  │               tf_apply_gate.sh              │   │
+│   │        unlock_stale.sh (force-unlock)        │  │               tf_fmt_check.sh               │   │
+│   │       list_drift.py (parse plan JSON)        │  │              checkov_report.sh              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Plan JSON     = terraform plan -out=tfplan; terraform show -json tfplan > plan.json      │   │
+│   │    PR comment    = use GitHub API or atlantis to post plan output as PR comment for review    │   │
+│   │         -detailed-exitcode= exit 0: no changes, exit 1: error, exit 2: changes present        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 To run a destroy instead:

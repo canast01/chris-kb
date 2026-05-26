@@ -37,27 +37,45 @@ vxlogview -o 117 -d 24h -t "DEBUG|WARNING|ERROR" | less
 # 119 — nbstserv (storage service)
 # 143 — nbwebsvc (NetBackup web service)
 ```
-
----
-
-## Job Diagnostics
-
-```bash
-# Summary of all jobs in the last 24 hours
-bpdbjobs -report -all_columns -hoursago 24
-
-# Detail for a specific failed job
-bpdbjobs -jobid <job-id> -report
-
-# Show failed jobs in last 24 hours with status code
-bpdbjobs -report -failed -hoursago 24 | grep -E "jobid|status"
-
-# Get the status code explanation
-bperror -S <status-code> -L
-
-# Trace a job end-to-end (requires debug logging enabled)
-grep "<job-id>" /usr/openv/netbackup/logs/bpbrm/log.<yyyymmdd>
-grep "<job-id>" /usr/openv/netbackup/logs/bprd/log.<yyyymmdd>
+┌─────────────────────────────────────── NetBackup — Diagnostics ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                NetBackup — Diagnostic Commands                                │   │
+│   │                       Collect these before opening a vendor support case                      │   │
+│   │                                         nbpemreq / bpps                                       │   │
+│   │                                       tpconfig / nbstlutil                                    │   │
+│   │                       Check system logs: /var/log/ or Windows Event Viewer                    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Log Collection                │  │               Live Diagnostics              │   │
+│   │            Application log bundle            │  │             Network connectivity            │   │
+│   │            OS syslog (journalctl)            │  │              Storage path check             │   │
+│   │             Core dump if crashed             │  │              Process list check             │   │
+│   │             Config export/backup             │  │              Port reachability              │   │
+│   │               nbpemreq / bpps                │  │             tpconfig / nbstlutil            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+│  Media Server  = data mover between client and storage; can be co-located with master                 │
+│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

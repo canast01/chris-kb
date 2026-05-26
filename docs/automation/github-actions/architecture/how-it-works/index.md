@@ -21,40 +21,28 @@ flowchart TD
     S5 --> A
     A --> NOTIFY[Notification / Downstream Jobs]
 ```
-
-| Property | Purpose |
-|---|---|
-| `runs-on` | Specifies the runner label or group |
-| `needs` | Declares upstream job dependencies |
-| `if` | Conditional execution expression |
-| `environment` | Links to a protected deployment environment |
-| `concurrency` | Prevents duplicate runs for the same group |
-| `timeout-minutes` | Hard deadline for the job (default 360) |
-| `strategy.matrix` | Fan-out across multiple configurations |
-| `outputs` | Key-value data passed to dependent jobs |
-
----
-
-## Steps
-
-```yaml
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
-
-  - name: Install dependencies
-    run: npm ci
-
-  - name: Run tests
-    run: npm test
-    env:
-      NODE_ENV: test
-
-  - name: Upload coverage
-    uses: actions/upload-artifact@v4
-    with:
-      name: coverage
-      path: coverage/
+┌──────────────────────────────────── GitHub Actions — How It Works ────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Event fires → GitHub evaluates on: triggers → matching workflows queued → runner picks up job │   │
+│   │     Runner clones repo, restores cache, executes steps, uploads artifacts, reports status     │   │
+│   │          Secrets injected as env vars at runtime; masked in log output automatically          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Trigger Phase        │  │       Execution Phase       │  │         Result Phase        │   │
+│   │   Event: push/PR/schedule   │  │      Runner accepts job     │  │     Status check posted     │   │
+│   │    on: filter evaluation    │  │        Repo checkout        │  │     Artifacts available     │   │
+│   │     Workflow file parsed    │  │        Cache restore        │  │      Logs retained 90d      │   │
+│   │     Jobs queued parallel    │  │      Steps run in order     │  │      Notify: PR, Slack      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     GITHUB_TOKEN    = auto-generated per-job token; scoped to repo; expires when job ends     │   │
+│   │      permissions:    = restrict GITHUB_TOKEN scopes per job; principle of least privilege     │   │
+│   │    needs:          = declare job dependency; forces sequential execution and output passing   │   │
+│   │        if: condition   = conditional step/job execution; uses expression syntax ${{ }}        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

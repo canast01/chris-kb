@@ -95,66 +95,45 @@ function New-RASRImage {
 #               -ShareUser "CORP\svc-rasr" `
 #               -SharePassword "S3cr3t!"
 ```
-
----
-
-## Remove-OldRASRImages
-
-Retains the N most recent images and deletes the rest. Outputs a summary of deleted files and space reclaimed.
-
-```powershell
-<#
-.SYNOPSIS
-    Removes RASR images from a share, keeping only the most recent N images.
-.PARAMETER SharePath
-    UNC path to the server's image directory.
-.PARAMETER KeepCount
-    Number of most-recent images to retain.
-.PARAMETER WhatIf
-    When specified, shows what would be deleted without deleting.
-#>
-function Remove-OldRASRImages {
-    [CmdletBinding(SupportsShouldProcess)]
-    param(
-        [Parameter(Mandatory)]
-        [string]$SharePath,
-
-        [int]$KeepCount = 4
-    )
-
-    if (-not (Test-Path $SharePath)) {
-        Write-Error "Share path not accessible: $SharePath"
-        return
-    }
-
-    $images = Get-ChildItem -Path $SharePath -Filter "*.rasr" |
-              Sort-Object LastWriteTime -Descending
-
-    if ($images.Count -le $KeepCount) {
-        Write-Host "Only $($images.Count) image(s) found — nothing to delete (keep count: $KeepCount)."
-        return
-    }
-
-    $toDelete     = $images | Select-Object -Skip $KeepCount
-    $totalSizeGB  = [math]::Round(($toDelete | Measure-Object -Property Length -Sum).Sum / 1GB, 2)
-
-    foreach ($img in $toDelete) {
-        $ageDays = (New-TimeSpan -Start $img.LastWriteTime -End (Get-Date)).Days
-        Write-Host "Deleting: $($img.Name) | Age: $ageDays days | Size: $([math]::Round($img.Length/1GB,2)) GB"
-
-        if ($PSCmdlet.ShouldProcess($img.FullName, "Delete")) {
-            Remove-Item -Path $img.FullName -Force
-        }
-    }
-
-    Write-Host "Removed $($toDelete.Count) image(s), reclaimed ~$totalSizeGB GB."
-}
-
-# Example — dry run:
-# Remove-OldRASRImages -SharePath "\\nas01\rasr-images\SERVER01" -KeepCount 4 -WhatIf
-
-# Example — actual run:
-# Remove-OldRASRImages -SharePath "\\nas01\rasr-images\SERVER01" -KeepCount 4
+┌─────────────────────────────────────────── RASR — Scripts ────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                   RASR — Automation Scripts                                   │   │
+│   │                Scripts automate routine RASR operations — run via cron or CI/CD               │   │
+│   │               Always store credentials in vault (not in script); log all output               │   │
+│   │                 Test scripts in non-production before scheduling in production                │   │
+│   │                        Scope scripts to least-privilege service account                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Status / Reporting Scripts          │  │              Automation Scripts             │   │
+│   │           Job success rate report            │  │            Auto-expire old points           │   │
+│   │              Capacity trending               │  │          Auto-add new VMs to policy         │   │
+│   │            SLA compliance report             │  │          Nightly DR test validation         │   │
+│   │             RPO / RTO dashboard              │  │             Alert on job failure            │   │
+│   │               cybersense scan                │  │             vault lock / unlock             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

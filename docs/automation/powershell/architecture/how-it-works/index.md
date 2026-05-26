@@ -40,30 +40,27 @@ flowchart LR
     style F fill:#1565c0,color:#fff
     style I fill:#2e7d32,color:#fff
 ```
-
-- `begin {}` block runs once before pipeline input arrives
-- `process {}` block runs once per input object (`$_` / `$PSItem`)
-- `end {}` block runs once after all input is consumed
-
----
-
-## Remoting
-
-### WinRM (Windows Remote Management)
-
-WinRM uses HTTP (5985) or HTTPS (5986) and SOAP/WSMan.
-
-```powershell
-Enable-PSRemoting -Force
-Test-WSMan -ComputerName srv-prod-01 -Authentication Default
-
-Invoke-Command -ComputerName srv-prod-01 -ScriptBlock {
-    Get-Service -Name WinRM
-}
-
-$session = New-PSSession -ComputerName srv-prod-01 -Credential (Get-Credential)
-Invoke-Command -Session $session -ScriptBlock { hostname }
-Remove-PSSession $session
+┌────────────────────────────────────── PowerShell — How It Works ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    PowerShell execution: script parsed to AST → pipeline stages → cmdlet execution → output   │   │
+│   │      Pipeline stages: BeginProcessing → ProcessRecord (per input object) → EndProcessing      │   │
+│   │Error streams: terminating (throw/exception) vs non-terminating (Write-Error); $ErrorActionPref│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Parse Phase         │  │        Execute Phase        │  │         Output Phase        │   │
+│   │    Script → tokens → AST    │  │        Cmdlet Begin()       │  │         Write-Output        │   │
+│   │      Syntax validation      │  │     Process() per object    │  │     Select-Object filter    │   │
+│   │     AMSI scan (Windows)     │  │        End() finalise       │  │     Format-* for display    │   │
+│   │    Execution policy check   │  │    Error stream handling    │  │    Export-Csv, ConvertTo    │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │AST             = Abstract Syntax Tree; PS parses script before executing; enables static analy│   │
+│   │    $ErrorActionPreference = Stop causes all errors to be terminating; catches via try/catch   │   │
+│   │ Runspace        = isolated execution context; enables parallel processing via Start-ThreadJob │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### SSH Remoting (PowerShell 7+)

@@ -42,31 +42,43 @@ uemcli /sys/auth/ldapgroup create -name "CORP\\DR-Operators" -role recovery_mana
 # View LDAP group role assignments
 uemcli /sys/auth/ldapgroup show
 ```
-
-## iDRAC Access Control
-
-iDRAC roles control who can manage hardware and trigger out-of-band operations, including RASR boot sequences.
-
-| iDRAC Role | Permissions | Use Case |
-|---|---|---|
-| Administrator | Full iDRAC control, power, virtual media | DR team for recovery operations |
-| Operator | Power management, virtual media access | DR operators initiating recovery boot |
-| Read Only | View-only | Monitoring, NOC |
-| None | No access | Revoke access |
-
-```bash
-# Assign an AD group to iDRAC Operator role
-racadm set iDRAC.Users.4.Enable 1
-racadm set iDRAC.Users.4.UserName "DR-Operators"
-racadm set iDRAC.Users.4.Privilege 0x1F3   # Operator privilege bitmask
-
-# Or via LDAP group mapping (preferred for AD integration)
-racadm set iDRAC.LDAPRoleGroup.1.DN "CN=DR-Operators,OU=Groups,DC=corp,DC=local"
-racadm set iDRAC.LDAPRoleGroup.1.Privilege 0x1F3
-
-# View current privilege assignments
-racadm get iDRAC.Users
-racadm get iDRAC.LDAPRoleGroup
+┌──────────────────────────────────────── RASR — Access Control ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 RASR — RBAC and Access Control                                │   │
+│   │      Auth: Vault operator role; 2-person integrity for unlock; AD integration for PPDM UI     │   │
+│   │             Principle of least privilege: each role gets only required permissions            │   │
+│   │              Service accounts: dedicated, non-interactive; rotation every 90 days             │   │
+│   │               Emergency break-glass: documented, monitored, time-limited access               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │       Role       │   Access Level   │    Typical User   │   Review Freq    │    Granted By    │   │
+│   │      Admin       │ Full config/ops  │   Sr Backup Eng   │    Quarterly     │  Security team   │   │
+│   │     Operator     │ Start/stop jobs  │     Backup Eng    │    Quarterly     │    Team lead     │   │
+│   │     Monitor      │  Read-only view  │      NOC / L1     │    Quarterly     │    Team lead     │   │
+│   │   Service Acct   │  API / headless  │     Automation    │   Per rotation   │  Security team   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Recovery Media Access Control

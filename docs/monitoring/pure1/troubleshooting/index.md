@@ -33,26 +33,36 @@ purearray set --proxy https://<proxy-host>:<port>
 # Array management IP must have outbound TCP 443 to pure1.purestorage.com
 # Verify with network team if connectivity test fails
 ```
-
-### API Rate Limiting (HTTP 429)
-
-**Symptoms**: Automation scripts return `HTTP 429 Too Many Requests`.
-
-```python
-# Implement exponential backoff in all scripts
-import time, requests
-
-def api_get_with_retry(url, headers, max_retries=5):
-    for attempt in range(max_retries):
-        resp = requests.get(url, headers=headers)
-        if resp.status_code == 429:
-            wait = (2 ** attempt) + (random.random() * 0.5)
-            print(f"Rate limited — retrying in {wait:.1f}s")
-            time.sleep(wait)
-            continue
-        resp.raise_for_status()
-        return resp.json()
-    raise RuntimeError("Max retries exceeded due to rate limiting")
+┌─────────────────────────────────────── Pure1 — Troubleshooting ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Phonehome Issues               │  │             Alert / Data Issues             │   │
+│   │            Check TCP 443 outbound            │  │             Verify array status             │   │
+│   │            Verify DNS resolution             │  │                Check data age               │   │
+│   │            purearray setattr show            │  │              Check alert config             │   │
+│   │             Re-enable phonehome              │  │            Test webhook delivery            │   │
+│   │             Check proxy settings             │  │                Open TAC case                │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Troubleshoot from array CLI (purearray) and pure1.purestorage.com UI                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Disconnected = Array shows Disconnected in Pure1; phonehome not received > 5 min                     │
+│  TCP 443 test = From array: curl -s https://pure1.purestorage.com >/dev/null; check rc                │
+│  DNS resolution = Array must resolve pure1.purestorage.com; check array DNS settings                  │
+│  purearray setattr show = View phonehome enabled/disabled state on FlashArray                         │
+│  Re-enable phonehome = purearray setattr --phonehome true on FlashArray CLI                           │
+│  Proxy settings = purearray setattr --proxy http://proxy:port if array uses proxy                     │
+│  Data age = Time since last phonehome; check in Pure1 > array detail                                  │
+│  Alert config = Verify email and webhook targets in Pure1 > Admin > Notifications                     │
+│  Webhook test = Pure1 UI has a test button; verify delivery to endpoint                               │
+│  TAC case = support.purestorage.com; include array serial and phonehome status                        │
+│  FlashBlade phonehome = pureauthapp setattr --phonehome true on FlashBlade CLI                        │
+│  Firewall rule = Allow outbound TCP 443 from array mgmt IP to pure1.purestorage.com                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Additional steps:

@@ -14,39 +14,45 @@ nbcertcmd -getCertificate -server <master_server> -force
 # Check certificate expiry across all clients
 nbcertcmd -listCerts | grep -E "Host|Expiry"
 ```
-
-### Map AD Groups to NetBackup Roles
-
-In the NetBackup Web UI: **Security** → **Access Control** → **Smart Groups** — map AD security groups to built-in NetBackup roles (Administrator, Security Administrator, Default User, etc.).
-
-| NetBackup Role | Typical AD Group | Permissions |
-|---|---|---|
-| NetBackup Administrator | `grp-netbackup-admins` | Full access; manage policies, storage, catalog |
-| Security Administrator | `grp-netbackup-security` | CA, certificates, RBAC config only |
-| Default User | `grp-netbackup-operators` | View jobs, submit restores for owned assets |
-| Backup Operator | `grp-netbackup-operators` | Run manual backups, monitor jobs |
-
----
-
-## API Token Authentication
-
-The NetBackup REST API uses JWT-based API tokens (not the same as CA certificates).
-
-### Create an API Token
-
-```bash
-# Create a token via REST API (authenticate first with username/password)
-curl -s -X POST "https://<master>:1556/netbackup/login" \
-  -H "Content-Type: application/vnd.netbackup+json;version=9.0" \
-  -d '{"userName":"admin","password":"<pass>","domainType":"vx","domainName":"<master>"}' \
-  | jq -r '.token'
-
-# Create a named API token with expiry (via Web UI: Security → API Tokens → Add)
-# Or via API:
-curl -s -X POST "https://<master>:1556/netbackup/security/api-tokens" \
-  -H "Authorization: Bearer <login_token>" \
-  -H "Content-Type: application/vnd.netbackup+json;version=9.0" \
-  -d '{"tokenName":"ci-pipeline","expiryInHours":720}'
+┌───────────────────────────────────── NetBackup — Authentication ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               NetBackup — Authentication Methods                              │   │
+│   │               NBU CA host-ID certificates; AD/LDAP for web UI login; RBAC roles               │   │
+│   │                   Management UI: HTTPS on 443 (Web UI) — browser-based login                  │   │
+│   │               API: bearer token or service account; rotate credentials quarterly              │   │
+│   │                 Inter-component: certificate-based mutual TLS between engines                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Human Access                 │  │                Machine Access               │   │
+│   │            AD / LDAP integration             │  │               Service account               │   │
+│   │              SAML SSO optional               │  │               API key / token               │   │
+│   │                 MFA via IdP                  │  │               Certificate auth              │   │
+│   │            Session timeout 15 min            │  │              Rotate every 90 d              │   │
+│   │              Audit login events              │  │             Vault-stored secrets            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+│  Media Server  = data mover between client and storage; can be co-located with master                 │
+│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### List and Revoke API Tokens

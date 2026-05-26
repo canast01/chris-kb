@@ -1,28 +1,68 @@
 # Veeam — How It Works
 
+```
+┌──────────────────────────────────────── Veeam — How It Works ─────────────────────────────────────────┐
+│                                                                                                       │
+│    Veeam data flow — from source to target through the protection pipeline:                           │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 1  Source / Production System                                 │   │
+│   │            Veeam Backup Server — scheduler, job engine, catalog, REST API (port 9419)         │   │
+│   │                Host writes are intercepted or snapshotted by the Veeam agent/proxy            │   │
+│   │                  Changed blocks tracked via CBT / journal / delta-set mechanism               │   │
+│   │                 Consistency ensured at quiesce point before data transfer begins              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Changed data forwarded to the Veeam engine — compression and encryption applied in transit         │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        2  Veeam Engine                                        │   │
+│   │        Backup Proxy        — data mover; VMware VADP for CBT snapshots; SAN/NAS/LAN modes     │   │
+│   │                    Data compressed, deduplicated, and encrypted before storage                │   │
+│   │                  Metadata catalog updated; job status reported to control plane               │   │
+│   │                                     Add-VBRJob / Start-VBRJob                                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     3  Target / Repository                                    │   │
+│   │         Backup Repository   — target storage: SOBR, CIFS/NFS, S3 object, dedup appliance      │   │
+│   │                  Recovery point written; retention policy applied automatically               │   │
+│   │                                   Restore: Get-VBRRestorePoint                                │   │
+│   │                     RTO driven by target storage performance and data volume                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
+│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
+│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
+│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
+│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
+│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
+│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
+│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
+│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
+│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
+│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
+│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
+│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
+│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Overview
 
 Veeam Backup & Replication provides backup, replication, recovery, and disaster recovery for virtual, physical, and cloud workloads. The Backup Server manages scheduling and configuration. Backup Proxies perform data movement via VMware VADP or agent-based reads. The Scale-Out Backup Repository (SOBR) provides tiered storage — fast disk for short-term, object storage for long-term.
 
 ## Architecture
 
-```mermaid
-graph TB
-  VBR["Veeam Backup & Replication Server"] --> PROXY["Backup Proxy\n(data mover)"]
-  PROXY --> REPO[("Backup Repository\nSOBR / immutable")]
-  VCTR(["VMware vCenter\nsource VMs"]) --> PROXY
-  REPO -->|"capacity tier"| OBJ[("Object Storage\nS3 / Azure Blob")]
-  REPO -->|"tape offload"| TAPE[("Tape Library")]
-  ADMIN(["Backup Admin"]) -->|"console"| VBR
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  class VBR,PROXY ctrl
-  class REPO,TAPE store
-  class VCTR,ADMIN host
-  class OBJ cloud
-```
+
 
 ## Supported Platforms
 

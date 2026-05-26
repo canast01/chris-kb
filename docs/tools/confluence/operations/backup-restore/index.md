@@ -22,35 +22,34 @@ flowchart TD
     D --> D2[Index]
     D --> D3[Plugins / Avatars]
 ```
-
-| Method | Scope | Speed | Cross-version? | Recommended For |
-|---|---|---|---|---|
-| XML site export | All content | Slow (hours) | Yes | Migration, audit |
-| Space XML export | Single space | Moderate | Yes | Space migration |
-| `pg_dump` | Full database | Fast | Yes (logical) | Production DR |
-| DB volume snapshot | Full database | Very fast | No (same version) | Same-version restore |
-| Filesystem snapshot | Attachments + index | Fast | No | Paired with DB snapshot |
-
----
-
-## XML Export (Built-in)
-
-### Space-Level Export
-
-**Admin > Spaces > [Space] > Space Tools > Content Tools > Export**
-
-Options:
-- **HTML export** — for archiving / offline reading
-- **XML export** — for import into another Confluence instance
-
-```bash
-# Via REST API (trigger space export programmatically)
-curl -u admin:token \
-  -X POST \
-  "https://confluence.example.com/rest/api/space/OPS/export" \
-  -H "Content-Type: application/json" \
-  -d '{"type": "xml"}'
-# Returns a download URL for the generated .zip
+┌─────────────────────────────────── Confluence — Backup and Restore ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Backup Strategy                │  │              Restore Procedure              │   │
+│   │               DB dump nightly                │  │               Stop Confluence               │   │
+│   │              Home dir snapshot               │  │               Restore DB first              │   │
+│   │             XML backup (weekly)              │  │               Restore home dir              │   │
+│   │                 Verify daily                 │  │               Start Confluence              │   │
+│   │                Off-site copy                 │  │                Verify via UI                │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Confluence server · PostgreSQL DB · CONFLUENCE_HOME on NFS or SAN · backup to NFS                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  XML backup = Confluence built-in export; content only; portable but slow for large instances         │
+│  DB dump = pg_dump for PostgreSQL; fastest and most reliable backup method                            │
+│  CONFLUENCE_HOME = File system directory containing attachments, config, and indexes                  │
+│  Home dir snapshot = Filesystem or VM snapshot of CONFLUENCE_HOME for quick restore                   │
+│  Restore order = Always restore DB before restoring home directory                                    │
+│  Verify restore = Log in, check recent pages and attachments exist after restore                      │
+│  Off-site copy = Backup archive copied to secondary location or object store                          │
+│  Quarterly test = Full restore to test environment quarterly to verify recoverability                 │
+│  RTO = Recovery Time Objective; target time from failure to restored service                          │
+│  RPO = Recovery Point Objective; maximum acceptable data loss in time                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Site-Level XML Backup

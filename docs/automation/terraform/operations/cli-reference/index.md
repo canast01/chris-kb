@@ -37,27 +37,34 @@ graph TD
     tfClient -->|backend remote| tfcState
     tfcState --> tfcRuns
 ```
-
----
-
-## Plan
-
-Preview what Terraform will do before making any changes. Always run `plan` before `apply`. Save the plan to a file to guarantee that `apply` runs exactly what you reviewed.
-
-```bash
-# Preview changes
-terraform plan
-terraform plan -out=tfplan           # save plan to file (apply this file to guarantee exact changes)
-terraform plan -var 'env=prod'       # pass a variable
-terraform plan -var-file=prod.tfvars # load variables from file
-terraform plan -target=resource_type.name   # only plan a specific resource
-
-# Destroy plan (preview what would be deleted)
-terraform plan -destroy
-
-# Detailed exit codes (useful in CI/CD scripts)
-terraform plan -detailed-exitcode
-# Exit code: 0 = no changes, 1 = error, 2 = changes present
+┌────────────────────────────────────── Terraform — CLI Reference ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │              Essential Terraform CLI commands for daily infrastructure operations             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Workflow Commands               │  │               Utility Commands              │   │
+│   │          terraform init [-upgrade]           │  │           terraform fmt -recursive          │   │
+│   │          terraform plan -out=tfplan          │  │              terraform validate             │   │
+│   │            terraform apply tfplan            │  │            terraform graph | dot            │   │
+│   │        terraform destroy [-target=X]         │  │            terraform output -json           │   │
+│   │              terraform refresh               │  │           terraform providers lock          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                State Commands                │  │              Workspace Commands             │   │
+│   │             terraform state list             │  │           terraform workspace list          │   │
+│   │          terraform state show <res>          │  │         terraform workspace new prod        │   │
+│   │            terraform state mv A B            │  │       terraform workspace select prod       │   │
+│   │           terraform import addr id           │  │           terraform workspace show          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │terraform graph = exports dependency graph in DOT format; pipe to graphviz dot for visualisatio│   │
+│   │      terraform refresh= updates state to match real-world without applying config changes     │   │
+│   │  providers lock   = regenerates .terraform.lock.hcl with all platforms; use before committing │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

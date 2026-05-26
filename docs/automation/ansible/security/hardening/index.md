@@ -35,30 +35,29 @@ AllowAgentForwarding no
 EOF
 systemctl reload sshd
 ```
-
-### Secure ansible.cfg
-
-```ini
-[defaults]
-# Never use host_key_checking = False in production
-host_key_checking  = True
-
-# Disable retry files — they can expose inventory paths
-retry_files_enabled = False
-
-# Suppress fact cache to avoid sensitive data on disk
-# (or encrypt the cache directory)
-fact_caching       = memory
-
-# Log to syslog for centralized collection
-log_path           = /var/log/ansible/ansible.log
-
-[ssh_connection]
-# Enforce strong ciphers
-ssh_args           = -C -o ControlMaster=auto -o ControlPersist=60s \
-                     -o Ciphers=chacha20-poly1305@openssh.com,aes256-gcm@openssh.com \
-                     -o StrictHostKeyChecking=yes \
-                     -o UserKnownHostsFile=/home/ansible/.ssh/known_hosts
+┌───────────────────────────────────────── Ansible — Hardening ─────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Harden Ansible control node and AWX to reduce attack surface and prevent unauthorised automatio│   │
+│   │    Control node: restrict SSH access, pin package versions, run in isolated network segment   │   │
+│   │      AWX: HTTPS only, MFA, LDAP groups, session timeout, disable API browsable UI in prod     │   │
+│   │          Playbook hygiene: no_log on secrets, FQCN for all modules, lint before merge         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Control Node Hardening            │  │                AWX Hardening                │   │
+│   │          OS hardened baseline (CIS)          │  │            HTTPS only, valid cert           │   │
+│   │         SSH: AllowUsers ansible only         │  │           MFA + LDAP group mapping          │   │
+│   │        Pip packages pinned + audited         │  │           Session timeout: 30 min           │   │
+│   │            Outbound 22/5986 only             │  │        Disable local accounts (prod)        │   │
+│   │     ansible.cfg: host_key_checking=True      │  │          Kubernetes network policy          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     host_key_checking = True prevents connecting to hosts not in known_hosts; blocks MITM     │   │
+│   │        Network policy    = Kubernetes NetworkPolicy restricting AWX pod ingress/egress        │   │
+│   │    CIS baseline      = Centre for Internet Security hardening guide for the control node OS   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Known Hosts Management

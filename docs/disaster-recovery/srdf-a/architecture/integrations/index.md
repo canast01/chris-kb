@@ -30,39 +30,45 @@ graph TD
     r1array -->|"SRDF/A async replication"| r2array
     srmProd <-->|"SRM pairing channel"| srmDr
 ```
-
-This pattern ensures production I/O is not affected by backup processing and provides a consistent point-in-time copy independent of the SRDF/A cycle boundary.
-
-**Important:** Confirm the R2 SRDF/A pair is in a consistent state before creating the snapshot — taking a snapshot mid-cycle may capture a transitional state.
-
----
-
-## RecoverPoint Co-existence
-
-RecoverPoint (RP) journaling and SRDF/A can co-exist on the same PowerMax array provided:
-
-- RecoverPoint journal volumes are **not in the same SRDF device groups** as SRDF/A volumes.
-- RP-protected LUNs use separate SRDF groups if they also require SRDF replication (cascaded protection).
-- Zone isolation prevents RP I/O splitters from interfering with SRDF director ports.
-
-Consult Dell Professional Services before deploying RecoverPoint and SRDF/A on the same array if the configuration is non-trivial.
-
----
-
-## SYMCLI Integration Points
-
-SRDF/A can be scripted via SYMCLI for automated pre/post hooks in SRM and DR runbooks:
-
-```bash
-# Query all SRDF/A pairs for a device group
-symrdf -g <dgname> -sid <r1_sid> query
-
-# Suspend SRDF/A before maintenance (pre-hook in SRM custom scripts)
-symrdf -g <dgname> -sid <r1_sid> suspend -noprompt
-
-# Resume after maintenance (post-hook)
-symrdf -g <dgname> -sid <r1_sid> resume -noprompt
-
-# Verify pair state after resume before confirming maintenance complete
-symrdf -g <dgname> -sid <r1_sid> verify -consistent
+┌───────────────────────────────── SRDF/A — Architecture Integrations ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                              SRDF/A — External Integration Points                             │   │
+│   │  Auth: Symmetrix/PowerMax admin credentials; Solutions Enabler (SYMAPI); role-based Unisphere │   │
+│   │                 Storage: connected via FC dark fiber / DWDM · FCIP (TCP 3225)                 │   │
+│   │            Monitoring: SNMP traps / syslog / REST API to ITSM and alerting systems            │   │
+│   │      Encryption: SRDF encryption at the FA/RF port level; Unisphere HTTPS; SE service TLS     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                        ▼                        ▼                          │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Identity          │  │           Storage           │  │          Monitoring         │   │
+│   │          AD / LDAP          │  │     FC dark fiber / DWDM    │  │        SNMP / syslog        │   │
+│   │           SAML SSO          │  │       FCIP (TCP 3225)       │  │         REST webhook        │   │
+│   │          RBAC roles         │  │       NFS / iSCSI / FC      │  │         Email alerts        │   │
+│   │         MFA optional        │  │       Dedup appliance       │  │          ServiceNow         │   │
+│   │          Cert auth          │  │        Object storage       │  │          Prometheus         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
+│  R1            = source SRDF volume on production array; host writes flow here                        │
+│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
+│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
+│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
+│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
+│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
+│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
+│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
+│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
+│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
+│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
+│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
+│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

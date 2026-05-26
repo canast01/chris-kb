@@ -20,28 +20,36 @@ curl -sk -X POST \
   -H "Content-Type: application/json" \
   -d '{"reason": "FALSE_POSITIVE", "comment": "Weekly backup job 22:00–02:00, expected anomaly"}'
 ```
-
-Data gap causes and resolution:
-
-| Cause | Symptom | Fix |
-|---|---|---|
-| SRS/ESRS gateway offline | All data stops at same time | Restart gateway service; check internet path |
-| System firmware bug | Gaps in specific metric streams | Apply firmware update for known telemetry issues |
-| New system < 14 days old | No predictions, limited insights | Wait for baseline accumulation period |
-| System type not fully supported | Only basic health visible | Check AIOps supported systems matrix |
-| Tenant configuration error | System in wrong site group | Reassign system to correct site in CloudIQ settings |
-
-## Integration Failures
-
-AIOps integrates with CloudIQ system registration, ESRS telemetry, and optional ITSM connectors (ServiceNow). Integration failures prevent alerts from being acted upon.
-
-```bash
-# Test CloudIQ API authentication
-curl -sk -X POST \
-  "https://cloudiq.apis.dell.com/auth/oauth/v2/token" \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=client_credentials&client_id=<clientId>&client_secret=<clientSecret>" \
-  | jq '{access_token, expires_in}'
+┌──────────────────────────────────── Dell AIOps — Troubleshooting ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Adapter Not Collecting            │  │               Platform Issues               │   │
+│   │               Check credential               │  │             Check /api/v1/health            │   │
+│   │             Verify network reach             │  │               Restart services              │   │
+│   │              Review adapter log              │  │               Check disk space              │   │
+│   │               Re-save adapter                │  │             Time-series DB check            │   │
+│   │                Check firewall                │  │            Collect support bundle           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Logs: /var/log/aiops/ on each node · support bundle via aiops-admin support collect                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Adapter log = Per-adapter log in /var/log/aiops/adapters/; shows collection errors                   │
+│  Health endpoint = GET /api/v1/health returns status of all AIOps services                            │
+│  Re-save adapter = Resaving adapter config resets its state; often fixes transient errors             │
+│  Disk space = Time-series DB fills disk over time; monitor and archive/purge old data                 │
+│  Time-series DB = Check DB health with aiops-admin db status                                          │
+│  Support bundle = aiops-admin support collect creates compressed log archive                          │
+│  Service restart = aiops-admin service restart <name> to recover failed service                       │
+│  Firewall = Check management host can reach infrastructure API ports (443, 8080)                      │
+│  Credential = Wrong or expired password causes No Data state; update in adapter settings              │
+│  Network reach = Test from AIOps host: curl -k https://<array>:443/api/types                          │
+│  Log level = Increase to DEBUG in adapter settings for detailed collection tracing                    │
+│  Dell support = Open case at support.dell.com; attach support bundle                                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Common integration issues:

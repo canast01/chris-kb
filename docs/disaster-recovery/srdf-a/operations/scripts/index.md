@@ -116,163 +116,45 @@ Pass as environment variables when running, or set defaults in the script:
 chmod +x srdf-cycle-time-monitor.sh
 SID=000123456789 RDF_GROUP=1 ./srdf-cycle-time-monitor.sh
 ```
-
-**What you should see**
-
-A state summary table counting how many device pairs are in each state (e.g. Synchronized=50), with CRITICAL or WARN flags next to problem states. If any devices are not in Synchronized/Consistent state, they are listed individually. Exit code 0 = all OK, 1 = warnings, 2 = critical.
-
----
-
-## SRDF Planned Failover (Bash)
-
-Perform a planned SRDF failover — compatible with both SRDF/A and SRDF/S. Validates current state, suspends the consistency group, splits devices, and confirms R2 accessibility. Includes dry-run mode.
-
-~~~bash
-#!/usr/bin/env bash
-# srdf-planned-failover.sh
-# Usage: SID=<sid> RDF_GROUP=<rdfg> CG_NAME=<cg> [MODE=sym|cg] [--dry-run]
-#
-# MODE=sym : operate on all devices in the RDF group via symrdf
-# MODE=cg  : operate on a consistency group via symcg + symrdf
-
-set -euo pipefail
-
-SID="${SID:?SID is required}"
-RDF_GROUP="${RDF_GROUP:?RDF_GROUP is required}"
-CG_NAME="${CG_NAME:?CG_NAME is required}"
-MODE="${MODE:-cg}"
-DRY_RUN=false
-LOGFILE="/var/log/srdf-failover-$(date +%Y%m%d-%H%M%S).log"
-
-for arg in "$@"; do
-    [[ "$arg" == "--dry-run" ]] && DRY_RUN=true
-done
-
-log() {
-    local msg="[$(date '+%Y-%m-%d %H:%M:%S')] $*"
-    echo "${msg}"
-    echo "${msg}" >> "${LOGFILE}"
-}
-
-run_cmd() {
-    log "CMD: $*"
-    if ! ${DRY_RUN}; then
-        "$@" 2>&1 | tee -a "${LOGFILE}"
-    else
-        log "[DRY-RUN] Would run: $*"
-    fi
-}
-
-log "=== SRDF Planned Failover ==="
-log "SID=${SID}  RDFG=${RDF_GROUP}  CG=${CG_NAME}  MODE=${MODE}"
-${DRY_RUN} && log "*** DRY-RUN MODE — no changes will be made ***"
-
-# --- Step 1: Verify current state ---
-log "Step 1: Verifying current SRDF state..."
-CURRENT_STATE=$(symrdf query -sid "${SID}" -rdfg "${RDF_GROUP}" 2>&1 | \
-    grep -E "Synchronized|Consistent" | head -1 || true)
-
-if [[ -z "${CURRENT_STATE}" ]]; then
-    log "ERROR: SRDF group does not appear to be in Synchronized or Consistent state."
-    log "       Verify with: symrdf query -sid ${SID} -rdfg ${RDF_GROUP}"
-    log "       Do NOT proceed with failover until state is confirmed."
-    exit 1
-fi
-log "State confirmed: ${CURRENT_STATE}"
-
-# --- Step 2: Suspend CG / RDF group ---
-log "Step 2: Suspending SRDF relationships..."
-if [[ "${MODE}" == "cg" ]]; then
-    run_cmd symrdf -sid "${SID}" -rdfg "${RDF_GROUP}" -cg "${CG_NAME}" suspend -noprompt
-else
-    run_cmd symrdf -sid "${SID}" -rdfg "${RDF_GROUP}" suspend -noprompt
-fi
-
-# --- Step 3: Wait for suspend confirmation ---
-log "Step 3: Waiting for Suspended state..."
-MAX_WAIT=120
-ELAPSED=0
-while [[ $ELAPSED -lt $MAX_WAIT ]]; do
-    if ${DRY_RUN}; then
-        log "[DRY-RUN] Skipping state wait."
-        break
-    fi
-    SUSPEND_CHECK=$(symrdf query -sid "${SID}" -rdfg "${RDF_GROUP}" 2>&1 | \
-        grep -c "Suspended" || true)
-    if [[ "${SUSPEND_CHECK}" -gt 0 ]]; then
-        log "Suspended state confirmed."
-        break
-    fi
-    log "Waiting for Suspended... (${ELAPSED}s elapsed)"
-    sleep 10
-    ELAPSED=$((ELAPSED + 10))
-done
-
-if [[ $ELAPSED -ge $MAX_WAIT ]] && ! ${DRY_RUN}; then
-    log "ERROR: Timed out waiting for Suspended state."
-    exit 1
-fi
-
-# --- Step 4: Split ---
-log "Step 4: Splitting SRDF group..."
-if [[ "${MODE}" == "cg" ]]; then
-    run_cmd symrdf -sid "${SID}" -rdfg "${RDF_GROUP}" -cg "${CG_NAME}" split -noprompt
-else
-    run_cmd symrdf -sid "${SID}" -rdfg "${RDF_GROUP}" split -noprompt
-fi
-
-# --- Step 5: Verify R2 accessibility ---
-log "Step 5: Verifying R2 device states..."
-if ! ${DRY_RUN}; then
-    R2_CHECK=$(symrdf query -sid "${SID}" -rdfg "${RDF_GROUP}" 2>&1 | grep -E "Write Disabled|R/W" | head -5)
-    log "R2 device states:"
-    echo "${R2_CHECK}" | while IFS= read -r line; do log "  ${line}"; done
-fi
-
-# --- Step 6: Instructions for host team ---
-log ""
-log "=== NEXT STEPS FOR HOST TEAM ==="
-log "  1. Present / mount the R2 LUNs on the DR hosts."
-log "     (LUNs should now be in Write Disabled or R/W state depending on SRDF mode.)"
-log "  2. Run fsck / volume group activation as required."
-log "  3. Start application services in the DR site."
-log "  4. Validate application connectivity."
-log "  5. When returning to production, run srdf-resync-after-dr-test.sh."
-log ""
-log "Failover script complete. Log: ${LOGFILE}"
-~~~
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux server with SYMCLI installed and connectivity to the PowerMax array
-- The SID, RDF group number, and Consistency Group name
-- Approval from your change management process — this script makes changes to replication state
-
-**Step 1 — Save the file**
-
-1. Open a text editor on the SYMCLI Linux management server
-2. Copy the entire code block above
-3. Save it as `srdf-planned-failover.sh`
-
-**Step 2 — Fill in your details**
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `SID` | Symmetrix array serial number | `symcfg list` |
-| `RDF_GROUP` | RDF group number | `symrdf list -sid <SID>` |
-| `CG_NAME` | Consistency group name | `symcg list -sid <SID>` |
-| `MODE` | `cg` (default) to operate on a CG, or `sym` for all devices in the RDF group | Use `cg` for most production failovers |
-
-**Step 3 — Open a terminal**
-
-- **For .sh:** Log into the SYMCLI Linux management server and open a terminal
-
-**Step 4 — Test with dry-run first (recommended)**
-
-```bash
-chmod +x srdf-planned-failover.sh
-SID=000123456789 RDF_GROUP=1 CG_NAME=MyAppCG ./srdf-planned-failover.sh --dry-run
+┌────────────────────────────────────────── SRDF/A — Scripts ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                  SRDF/A — Automation Scripts                                  │   │
+│   │               Scripts automate routine SRDF/A operations — run via cron or CI/CD              │   │
+│   │               Always store credentials in vault (not in script); log all output               │   │
+│   │                 Test scripts in non-production before scheduling in production                │   │
+│   │                        Scope scripts to least-privilege service account                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Status / Reporting Scripts          │  │              Automation Scripts             │   │
+│   │           Job success rate report            │  │            Auto-expire old points           │   │
+│   │              Capacity trending               │  │          Auto-add new VMs to policy         │   │
+│   │            SLA compliance report             │  │          Nightly DR test validation         │   │
+│   │             RPO / RTO dashboard              │  │             Alert on job failure            │   │
+│   │                 symrdf query                 │  │           symrdf suspend / resume           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
+│  R1            = source SRDF volume on production array; host writes flow here                        │
+│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
+│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
+│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
+│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
+│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
+│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
+│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
+│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
+│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
+│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
+│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
+│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 The dry-run prints every command it would execute without making any changes.

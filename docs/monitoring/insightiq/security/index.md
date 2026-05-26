@@ -22,32 +22,34 @@ InsightIQ web UI > Administration > Authentication > LDAP
 - Admin group → InsightIQ Administrator role
 - Viewer group → InsightIQ ReadOnly role
 ```
-
-Enforce HTTPS redirect: configure the InsightIQ web server to redirect HTTP (port 80) to HTTPS (port 443).
-
-## RBAC
-
-InsightIQ has two access levels:
-
-| Role | Capabilities |
-|---|---|
-| Administrator | Full access: cluster management, configuration, user management, report creation, alert configuration |
-| ReadOnly (Viewer) | View dashboards, run reports, view cluster performance data — no configuration changes |
-
-Assign ReadOnly to all operations staff who need dashboard access but do not manage the appliance. Restrict Administrator to designated InsightIQ administrators.
-
-## Network Access Restriction
-
-InsightIQ management should only be accessible from the operations management subnet.
-
-```bash
-# Example: iptables rule to restrict web UI access
-iptables -A INPUT -p tcp --dport 443 -s <mgmt-subnet>/24 -j ACCEPT
-iptables -A INPUT -p tcp --dport 443 -j DROP
-
-# Restrict SSH access to ops management subnet
-iptables -A INPUT -p tcp --dport 22 -s <mgmt-subnet>/24 -j ACCEPT
-iptables -A INPUT -p tcp --dport 22 -j DROP
+┌──────────────────────────────────────── InsightIQ — Security ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Access Control                │  │               Network Security              │   │
+│   │             Local admin account              │  │              HTTPS only TCP 443             │   │
+│   │               LDAP/AD optional               │  │                Mgmt VLAN only               │   │
+│   │              RBAC: Admin/Viewer              │  │                SSH restricted               │   │
+│   │               Audit log local                │  │                 TLS to PAPI                 │   │
+│   │             Annual access audit              │  │             Firewall inbound 443            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  InsightIQ VM on management cluster · SSH from jump host only · PAPI on TLS                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Local admin = InsightIQ admin user; strong password; not shared                                      │
+│  LDAP integration = Optional AD/LDAP for InsightIQ UI login; centralises auth                         │
+│  RBAC = Admin (full) vs Viewer (read-only) roles in InsightIQ                                         │
+│  PAPI user = Read-only account on PowerScale; InsightIQ credential; rotate annually                   │
+│  TLS to PAPI = HTTPS connection to PAPI TCP 8083; verify or accept self-signed                        │
+│  SSH restriction = Limit SSH to InsightIQ VM to jump host IP only via firewall                        │
+│  Audit log = InsightIQ logs login and config changes locally                                          │
+│  Mgmt VLAN = InsightIQ on management network; no direct access from user VLANs                        │
+│  Firewall inbound 443 = Allow only management hosts to reach InsightIQ UI                             │
+│  Annual review = Yearly audit of InsightIQ users and PAPI credentials                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Ensure these rules are persistent across reboots (via iptables-save or firewalld).

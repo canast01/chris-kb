@@ -15,23 +15,34 @@ Admin > Sites > Add Site
 - Password: stored in secrets manager
 - For NDO (multi-site): add all APIC clusters across all sites
 ```
-
-NDFC communicates with switches via SSH (provisioning) and SNMP (telemetry/faults).
-
-## DCNM Migration Note
-
-NDFC replaces Cisco DCNM (Data Center Network Manager). If your environment still runs DCNM, plan migration to NDFC as DCNM has reached EOS. NDFC is backward-compatible with existing VXLAN BGP-EVPN fabric policies from DCNM.
-
-## SIEM Integration (Syslog)
-
-Nexus Dashboard forwards fabric faults and system events to the enterprise SIEM via syslog.
-
-```text
-Admin > System Settings > Syslog
-- Destination IP: <SIEM-collector-IP>
-- Port: UDP 514 or TCP 514
-- Severity: select minimum severity (Warning or above for production)
-- Format: RFC 5424
+┌───────────────────────────────── Nexus Dashboard — Integration Guide ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               ITSM Integration               │  │             Observability Stack             │   │
+│   │              ServiceNow webhook              │  │                Syslog to SIEM               │   │
+│   │             Auto incident create             │  │              Splunk HEC forward             │   │
+│   │               PagerDuty events               │  │             Prometheus exporter             │   │
+│   │              Webex Teams notify              │  │              Custom REST client             │   │
+│   │              Email SMTP alerts               │  │             Grafana data source             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  ND on-prem · outbound TCP 443 to ITSM SaaS · syslog UDP 514 or TCP 514 to SIEM                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ServiceNow webhook = NDI POST to ServiceNow Event endpoint on alert fire                             │
+│  Auto incident = ServiceNow incident auto-created from NDI alert payload                              │
+│  PagerDuty = NDI sends Events API v2 payload; on-call routing by severity                             │
+│  Webex Teams = Cisco collaboration; NDI posts event summary to room via webhook                       │
+│  Syslog = NDI events forwarded as syslog to SIEM for security correlation                             │
+│  Splunk HEC = HTTP Event Collector; NDI events for log analytics                                      │
+│  Prometheus = NDI /metrics endpoint scraped by Prometheus                                             │
+│  Grafana = ND REST API proxied as Grafana data source for custom panels                               │
+│  REST client = Script polling NDI API and pushing to proprietary monitoring                           │
+│  SMTP = Email notification for NDI events; configured in ND admin settings                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 For ACI fabrics, configure APIC syslog forwarding separately (APIC also generates fabric events):

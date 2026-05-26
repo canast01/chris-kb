@@ -58,28 +58,43 @@ flowchart TD
     style escalateNet fill:#b45309,color:#fff
     style checkDataAuth fill:#be123c,color:#fff
 ```
-
-**Root cause:** Any increase in the WAN RTT adds directly to host write latency for SRDF/S. Every 1ms of additional RTT adds ~2ms to host write response time.
-
-**Immediate action:**
-1. Get the current RTT from the network team — compare to the baseline measured at deployment.
-2. If RTT has spiked, check for WAN link congestion or routing path changes.
-3. Engage the network team if RTT is elevated — do not accept "the link is up" as resolution; RTT matters.
-
----
-
-## Pair Enters Write Disabled State
-
-**Symptom:** `symrdf query` shows pair state as `Write Disabled`; hosts may report I/O errors.
-
-`Write Disabled` indicates the R1 array could not complete writes to R2 within the write timeout threshold (typically due to RTT spike or link loss). The R1 array disables writes on the affected R1 devices to preserve data consistency.
-
-```bash
-# Confirm Write Disabled state
-symrdf -g <dgname> -sid <r1_sid> query | grep "Write Disabled"
-
-# Check for link errors
-symcfg -sid <r1_sid> list -rdfg <group_num> -v
+┌─────────────────────────────────────── SRDF/S — Common Issues ────────────────────────────────────────┐
+│                                                                                                       │
+│   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
+│   │  Write latency   │   RTT > budget   │ symrdf query -per │distance / bandwi │     symstat      │   │
+│   │ Pair Consistent  │transient congest │    symrdf query   │monitor; usually  │    symrdf -v     │   │
+│   │   Link failure   │   RF port down   │ symcfg list -rdfg │failover immediat │  symrdf failove  │   │
+│   │   R2 not ready   │   array fault    │ check R2 Unispher │fix array, re-est │  symrdf establi  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     General Triage Pattern                                    │   │
+│   │          Is the issue new or recurring? New = recent change; Recurring = config problem       │   │
+│   │             Is it isolated to one source or all? Isolated = agent; All = server/repo          │   │
+│   │                                  Check logs first: symrdf query                               │   │
+│   │                    If unresolved in 2h: open vendor case with full log bundle                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (< 200 km) · RF director ports │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
+│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
+│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
+│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
+│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
+│  RTO           = Recovery Time Objective; SRDF/S failover typically < 5 minutes manual, < 1 min       │
+│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
+│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
+│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
+│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
+│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
+│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
+│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
+│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Recovery:**

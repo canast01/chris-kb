@@ -19,35 +19,34 @@ graph LR
     exportCsv --> sendEmail
     processLogic --> logResult
 ```
-
----
-
-## Core
-
-The basics of working in a PowerShell session — checking the version, getting help for any cmdlet, discovering what commands are available, and loading modules. Start here when you're on an unfamiliar system.
-
-```powershell
-# Version and environment
-$PSVersionTable
-Get-Host
-
-# Help — the most important command to know
-Get-Help <cmdlet>
-Get-Help <cmdlet> -Full
-Get-Help <cmdlet> -Examples
-Update-Help              # download latest help files
-
-# Discover commands
-Get-Command
-Get-Command -Noun VM     # find all cmdlets with "VM" in the noun
-Get-Command *Service*    # wildcard search
-
-# Modules
-Get-Module               # loaded modules in current session
-Get-Module -ListAvailable
-Import-Module <module>
-Remove-Module <module>
-Install-Module <module> -Scope CurrentUser
+┌───────────────────────────────────── PowerShell — CLI Reference ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               Essential PowerShell commands for daily infrastructure operations               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Core Commands                 │  │               Utility Commands              │   │
+│   │          Get-Command -Module <name>          │  │             Measure-Object -Sum             │   │
+│   │             Get-Help <cmd> -Full             │  │         Where-Object { $_.X -eq Y }         │   │
+│   │            Get-Member (alias: gm)            │  │           Select-Object -First 10           │   │
+│   │          Get-Module -ListAvailable           │  │          Sort-Object -Property Name         │   │
+│   │             Import-Module <name>             │  │         Group-Object -Property Type         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                File and Data                 │  │               Remote Execution              │   │
+│   │           Get-Content, Set-Content           │  │         Invoke-Command -ScriptBlock         │   │
+│   │            Import-Csv, Export-Csv            │  │            Enter-PSSession <host>           │   │
+│   │       ConvertTo-Json, ConvertFrom-Json       │  │          Copy-Item -ToSession $sess         │   │
+│   │        Invoke-RestMethod (API calls)         │  │             Disconnect-PSSession            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Get-Member     = inspect object properties and methods; essential for pipeline debugging   │   │
+│   │  ForEach-Object = pipeline loop; alias: %; $_  is current object; use for per-item processing │   │
+│   │              Where-Object   = filter pipeline; alias: ?; $_.Property -eq "value"              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

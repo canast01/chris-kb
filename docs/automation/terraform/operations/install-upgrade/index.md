@@ -13,15 +13,28 @@ sudo apt-get update && sudo apt-get install terraform
 # Verify
 terraform version
 ```
-
-## Install Terraform (Windows)
-
-```powershell
-# Using winget
-winget install --id Hashicorp.Terraform
-
-# Or manually: download ZIP from releases.hashicorp.com/terraform/
-# Extract terraform.exe to C:\Tools\terraform\ and add to PATH
+┌──────────────────────────────────── Terraform — Install & Upgrade ────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Install Terraform: tfenv for version management; or direct binary from releases.hashicorp.com │   │
+│   │        Upgrade: tfenv install 1.8.0; tfenv use 1.8.0; test with terraform init -upgrade       │   │
+│   │    Provider upgrade: update required_providers version constraint; terraform init -upgrade    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Terraform Install (tfenv)           │  │               Provider Upgrade              │   │
+│   │              brew install tfenv              │  │        Update versions.tf constraint        │   │
+│   │             tfenv install 1.8.0              │  │           terraform init -upgrade           │   │
+│   │               tfenv use 1.8.0                │  │       Review .terraform.lock.hcl diff       │   │
+│   │      echo "1.8.0" > .terraform-version       │  │       terraform plan (check no issues)      │   │
+│   │          terraform version (verify)          │  │           Commit updated lock file          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ tfenv           = Terraform version manager; .terraform-version file pins version per project │   │
+│   │   -upgrade        = init flag; re-downloads providers to latest matching version constraint   │   │
+│   │     required_version= constraint in versions.tf; prevents running wrong Terraform version     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Version Management with tfenv

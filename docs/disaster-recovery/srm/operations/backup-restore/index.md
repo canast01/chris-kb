@@ -41,45 +41,47 @@ The VAMI backup captures the SRM appliance state, database, and configuration in
 ls -lh /var/lib/applmgmt/backup/
 # Should show recent .tar.gz archive files
 ```
-
-Schedule via SQL Agent job, and ensure the `.bak` files are protected by your enterprise backup solution.
-
----
-
-## Exporting Recovery Plan XML
-
-Recovery Plans can be exported as XML for documentation and restore purposes. Export after every plan modification.
-
-### Via SRM UI
-
-1. Log in to **vSphere Client** → **Site Recovery** plugin.
-2. Navigate to **Recovery Plans**.
-3. Select a plan → **Export** → **Download XML**.
-4. Save to a protected location (Git repository, network share, or backup system).
-
-### Via PowerShell (SRM PowerCLI)
-
-```powershell
-# Connect to vCenter and SRM
-Connect-VIServer -Server vcenter01.example.com -Credential (Get-Credential)
-$srm = Connect-SrmServer -SrmServerAddress srm01.example.com `
-                         -Credential (Get-Credential)
-
-# Get SRM API
-$api = $srm.ExtensionData
-
-# List recovery plans
-$plans = $api.Recovery.ListPlans()
-$plans | Select-Object MoRef, Description
-
-# Export each plan to XML
-foreach ($plan in $plans) {
-    $planInfo = $api.Recovery.GetPlan($plan)
-    $planName = $planInfo.Info.Name -replace '[^\w]', '_'
-    $xml      = $api.Recovery.ExportRecoveryPlan($plan)
-    $xml | Out-File "C:\SRM-Backups\$planName.xml" -Encoding UTF8
-    Write-Host "Exported: $planName.xml"
-}
+┌─────────────────────────────────────── SRM — Backup & Restore ────────────────────────────────────────┐
+│                                                                                                       │
+│    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Backup (Protection)              │  │              Restore (Recovery)             │   │
+│   │               srm-cli vm list                │  │             srm-cli recovery run            │   │
+│   │              Quiesce source I/O              │  │            Select recovery point            │   │
+│   │             Take snapshot / CBT              │  │           Mount or copy to target           │   │
+│   │           Transfer changed blocks            │  │              Validate integrity             │   │
+│   │             Commit to repository             │  │             Restart application             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        Key SRM Commands                                       │   │
+│   │                                Backup trigger  : srm-cli vm list                              │   │
+│   │                              List points     : srm-cli recovery run                           │   │
+│   │                               Health status   : srm-cli plan test                             │   │
+│   │                                Retention mgmt  : srm-cli history                              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Store these XML files in version control. A `git diff` against the previous export immediately shows what changed in a plan.

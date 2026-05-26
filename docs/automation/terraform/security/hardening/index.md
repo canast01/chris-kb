@@ -25,25 +25,28 @@ graph LR
     reviewGate -->|Approved| tfApply
     reviewGate -->|Changes| prOpen
 ```
-
-## Policy Enforcement with Sentinel / OPA
-
-```hcl
-# Example Sentinel policy — enforce required tags on all resources
-import "tfplan/v2" as tfplan
-
-required_tags = ["Owner", "Environment", "CostCenter"]
-
-# Check all resources in the plan
-violations = filter tfplan.resource_changes as _, rc {
-    rc.mode is "managed" and
-    rc.change.actions contains "create" and
-    any required_tags as tag {
-        not (tag in keys(rc.change.after.tags else {}))
-    }
-}
-
-main = rule { length(violations) == 0 }
+┌──────────────────────────────────────── Terraform — Hardening ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Terraform hardening: secure state backend, restrict apply access, scan configs, pin versions │   │
+│   │   S3 bucket hardening: Block Public Access, versioning, SSE-KMS, access logging, MFA delete   │   │
+│   │      CI hardening: plan only on PR, apply only on main, required approval gate, audit log     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           State Backend Hardening            │  │               Config Hardening              │   │
+│   │          S3: Block Public Access on          │  │            Pin: required_version            │   │
+│   │            S3: SSE-KMS encryption            │  │       Pin: required_providers versions      │   │
+│   │            S3: versioning enabled            │  │         checkov: block PR on failure        │   │
+│   │            DynamoDB: IAM restrict            │  │             tfsec / tflint in CI            │   │
+│   │        CloudTrail on S3 state bucket         │  │          No local state file in git         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     MFA delete      = S3 bucket MFA Delete protection; prevents accidental state deletion     │   │
+│   │       tfsec           = open-source IaC security scanner; similar to checkov; check both      │   │
+│   │       CloudTrail on S3= logs every GetObject/PutObject on state bucket; full audit trail      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash

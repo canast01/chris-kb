@@ -28,16 +28,48 @@ Any failed check should be raised in the team channel and tracked in the ops log
 4. Acknowledge all reviewed alerts
 5. Add notes to ServiceNow ticket referencing the alert name and object
 ```
-
-## Remote Collector Connectivity
-
-Check remote collector health from each distributed site:
-
-```text
-Admin > Environment > Remote Collectors
-- Status: Online / Offline
-- Last heartbeat timestamp
-- Assigned adapters
+┌──────────────────────────────────── Aria Operations — Operations ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Aria Operations Day-2 Operations — Health, Maintenance, and Housekeeping Tasks        │   │
+│   │         Daily checks: cluster health · adapter status · alert queue depth · disk usage        │   │
+│   │       Weekly tasks: review capacity forecasts · compliance report · stale alert cleanup       │   │
+│   │       Monthly: log rotation · user audit · MP version check · certificate expiry review       │   │
+│   │         Emergency: vracli restart service · cluster rejoin · support bundle collection        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Log the support bundle path before engaging VMware TAM: /data/support_bundle/                      │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Daily Checks        │  │         Weekly Tasks        │  │        Monthly Tasks        │   │
+│   │      Cluster health OK      │  │      Capacity forecast      │  │         Log rotation        │   │
+│   │      Adapter status OK      │  │      Compliance report      │  │          User audit         │   │
+│   │       Alert queue <500      │  │      Stale alert purge      │  │       MP version check      │   │
+│   │        Disk <80% full       │  │       Dashboard review      │  │       Cert expiry scan      │   │
+│   │     Collector reachable     │  │       Group membership      │  │        Backup verify        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Operations tasks performed via Aria Ops UI (HTTPS/443) or vracli SSH on master node                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vracli            = Aria Ops CLI: vracli cluster status · vracli services restart                    │
+│  Cluster health    = UI indicator aggregating node status, service health, and Cassandra ring         │
+│  Adapter status    = Green/Yellow/Red collector connectivity state in Administration > Adapters       │
+│  Alert queue       = Count of active unacknowledged alerts; >500 requires triage                      │
+│  Support bundle    = Compressed diagnostic archive: vracli support-bundle collect                     │
+│  Log rotation      = Automated log file cycling to prevent disk exhaustion                            │
+│  Stale alert purge = Cancelling alerts whose monitored object no longer exists                        │
+│  Certificate expiry= TLS cert used by adapter or UI; must be renewed before expiry                    │
+│  Compliance report = Scheduled export of policy violation counts per compliance pack                  │
+│  MP version check  = Verifying Management Packs match vendor release notes                            │
+│  User audit        = Review of local and AD-synced users for inactive or excessive roles              │
+│  Cassandra ring    = Distributed DB health; vracli cassandra status shows ring state                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 If a Remote Collector goes Offline, check:

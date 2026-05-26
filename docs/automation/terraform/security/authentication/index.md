@@ -20,13 +20,27 @@ graph LR
     envVars --> tfProvider
     tfProvider --> cloudAPI
 ```
-
-```hcl
-# provider.tf — uses environment variables automatically
-provider "aws" {
-  region = "eu-west-1"
-  # Do not hardcode access_key or secret_key here
-}
+┌───────────────────────────────────── Terraform — Authentication ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Terraform provider authentication: OIDC (CI), IAM instance profile (EC2), CLI profile (local) │   │
+│   │          AWS: aws provider picks up credential chain; for CI use OIDC role assumption         │   │
+│   │      vSphere: vsphere_user + vsphere_password via env vars; or vault-managed credentials      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Cloud Auth (OIDC)               │  │                Local Dev Auth               │   │
+│   │         GitHub OIDC → AWS AssumeRole         │  │        aws configure (named profile)        │   │
+│   │         azure/login OIDC → federated         │  │         export TF_VAR_vsphere_pw=...        │   │
+│   │         GCP: Workload Identity OIDC          │  │         export AWS_PROFILE=myprofile        │   │
+│   │         No stored access keys in CI          │  │       Vault: vault login then TF runs       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Credential chain= Terraform AWS provider uses same chain as boto3/aws CLI for auth      │   │
+│   │TF_VAR_        = environment variable prefix; TF_VAR_vsphere_password maps to var.vsphere_passw│   │
+│   │  Vault agent    = injects secrets into env before terraform runs; no secrets in process args  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Azure

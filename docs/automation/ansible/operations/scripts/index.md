@@ -25,186 +25,27 @@ graph LR
     runPlaybook -->|exit 0| success
     runPlaybook -->|exit 1| rollback
 ```
-
-## Infrastructure Health Check Playbook
-
-A general-purpose health-check playbook targeting Linux server and network device groups. Reports disk usage, load average, failed services, and reboot time per host, with block/rescue error handling and a delegated summary at the end.
-
-~~~yaml
----
-# infra-health-check.yml
-# Usage: ansible-playbook infra-health-check.yml -i inventory/hosts.yml
-
-- name: Linux Server Health Check
-  hosts: linux_servers
-  gather_facts: true
-  become: true
-
-  vars:
-    disk_warn_pct: 85
-    load_warn: 4
-
-  tasks:
-    - name: Check disk usage
-      block:
-        - name: Get disk usage facts
-          command: df -h --output=source,pcent,target
-          register: df_output
-          changed_when: false
-
-        - name: Parse and flag high disk usage
-          set_fact:
-            high_disk_mounts: >-
-              {{
-                df_output.stdout_lines[1:] |
-                map('split') |
-                selectattr(1, 'regex', '^([89][0-9]|100)%$') |
-                list
-              }}
-
-        - name: Warn on high disk usage
-          debug:
-            msg: "WARNING: High disk usage on {{ inventory_hostname }}: {{ high_disk_mounts }}"
-          when: high_disk_mounts | length > 0
-
-      rescue:
-        - name: Record disk check failure
-          set_fact:
-            disk_check_failed: true
-          delegate_to: localhost
-
-    - name: Check load average
-      block:
-        - name: Read load average
-          command: cat /proc/loadavg
-          register: load_raw
-          changed_when: false
-
-        - name: Parse 1-minute load average
-          set_fact:
-            load_1m: "{{ load_raw.stdout.split()[0] | float }}"
-
-        - name: Warn on high load
-          debug:
-            msg: "WARNING: High load on {{ inventory_hostname }}: {{ load_1m }}"
-          when: load_1m | float > load_warn
-
-      rescue:
-        - name: Record load check failure
-          set_fact:
-            load_check_failed: true
-          delegate_to: localhost
-
-    - name: Check for failed systemd services
-      block:
-        - name: List failed services
-          command: systemctl list-units --state=failed --no-legend --no-pager
-          register: failed_services
-          changed_when: false
-          failed_when: false
-
-        - name: Report failed services
-          debug:
-            msg: "FAILED SERVICES on {{ inventory_hostname }}: {{ failed_services.stdout_lines }}"
-          when: failed_services.stdout_lines | length > 0
-
-      rescue:
-        - name: Record service check failure
-          set_fact:
-            service_check_failed: true
-          delegate_to: localhost
-
-    - name: Get last reboot time
-      command: who -b
-      register: last_reboot
-      changed_when: false
-      failed_when: false
-
-    - name: Aggregate host health to controller
-      set_fact:
-        host_health_summary:
-          host: "{{ inventory_hostname }}"
-          load_1m: "{{ load_1m | default('N/A') }}"
-          high_disk: "{{ high_disk_mounts | default([]) | length }}"
-          failed_services: "{{ failed_services.stdout_lines | default([]) | length }}"
-          last_reboot: "{{ last_reboot.stdout | default('unknown') | trim }}"
-      delegate_to: localhost
-      delegate_facts: true
-
-  post_tasks:
-    - name: Print health summary for this host
-      debug:
-        msg:
-          - "Host           : {{ inventory_hostname }}"
-          - "Load (1m)      : {{ load_1m | default('N/A') }}"
-          - "High disk mts  : {{ high_disk_mounts | default([]) | length }}"
-          - "Failed services: {{ failed_services.stdout_lines | default([]) | length }}"
-          - "Last reboot    : {{ last_reboot.stdout | default('unknown') | trim }}"
-
-- name: Network Device Reachability Check
-  hosts: network_devices
-  gather_facts: false
-
-  tasks:
-    - name: Ping network devices from controller
-      command: "ping -c 3 -W 2 {{ ansible_host }}"
-      register: ping_result
-      changed_when: false
-      failed_when: false
-      delegate_to: localhost
-
-    - name: Report unreachable devices
-      debug:
-        msg: "UNREACHABLE: {{ inventory_hostname }} ({{ ansible_host }})"
-      when: ping_result.rc != 0
-
-- name: Health Report Aggregation
-  hosts: localhost
-  gather_facts: false
-
-  tasks:
-    - name: Print overall summary header
-      debug:
-        msg: "=== Infrastructure Health Summary ==="
-
-    - name: Print per-host summaries
-      debug:
-        msg: "{{ hostvars[item].host_health_summary | default({'host': item, 'status': 'no data'}) }}"
-      loop: "{{ groups['linux_servers'] | default([]) }}"
-~~~
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Ansible installed on Linux or WSL — Ansible does not run natively on Windows
-- SSH access to the servers you want to check (your SSH key should be set up)
-- An inventory file listing your servers under the groups `linux_servers` and/or `network_devices`
-
-**Step 1 — Save the file**
-
-1. Open your WSL terminal (Windows key → type `wsl`)
-2. Create the file: `nano infra-health-check.yml`
-3. Paste the code, then press `Ctrl+X`, `Y`, `Enter` to save
-
-**Step 2 — Fill in your details**
-
-Create or edit your inventory file (`inventory/hosts.yml`). The playbook expects two groups:
-
-| Section | What to enter | Where to find it |
-|---|---|---|
-| `linux_servers` | Hostnames or IPs of your Linux servers | Your server list / infrastructure docs |
-| `network_devices` | Hostnames or IPs of network devices to ping | Your network documentation |
-| `disk_warn_pct` | Disk usage percentage to warn at | Default: `85` |
-| `load_warn` | 1-minute load average to warn at | Default: `4` |
-
-A simple inventory file looks like this:
-```text
-[linux_servers]
-server01 ansible_host=192.168.1.10
-server02 ansible_host=192.168.1.11
-
-[network_devices]
-router01 ansible_host=192.168.1.1
+┌────────────────────────────────────────── Ansible — Scripts ──────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Utility scripts for Ansible operations: inventory validation, bulk vault re-key, job report exp│   │
+│   │   Scripts live in scripts/ at repo root; documented with usage header and example invocation  │   │
+│   │     AWX API scripts: list failed jobs, cancel stuck jobs, export all job templates to JSON    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Inventory Scripts               │  │               AWX API Scripts               │   │
+│   │            validate_inventory.py             │  │             list_failed_jobs.py             │   │
+│   │             compare_inventory.py             │  │             cancel_stuck_jobs.py            │   │
+│   │            generate_host_vars.py             │  │           export_job_templates.py           │   │
+│   │             prune_stale_hosts.py             │  │            rotate_credentials.py            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  AWX API     = REST API at /api/v2/; authenticate with bearer token; paginated JSON responses │   │
+│   │        awx CLI     = official AWX CLI; wraps the REST API; install: pip install awxkit        │   │
+│   │      awxkit     = Python library for AWX API; used by the awx CLI; importable in scripts      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Step 3 — Open the right terminal**

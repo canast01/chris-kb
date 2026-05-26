@@ -10,21 +10,28 @@ The `community.vmware` collection automates vSphere, ESXi, vCenter, vSAN, and NS
 ansible-galaxy collection install community.vmware
 pip install PyVmomi vsphere-automation-sdk-python
 ```
-
-| Module | Purpose |
-|---|---|
-| `vmware_guest` | VM lifecycle — create, delete, reconfigure |
-| `vmware_guest_snapshot` | Snapshot management |
-| `vmware_guest_powerstate` | Power operations |
-| `vmware_cluster_ha` | Configure HA settings |
-| `vmware_datastore_info` | Datastore queries |
-| `vmware_tag_manager` | Tag assignment |
-
-## AWS
-
-```bash
-ansible-galaxy collection install amazon.aws community.aws
-pip install boto3 botocore
+┌─────────────────────────────────────── Ansible — Integrations ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Ansible integrates with CI/CD pipelines, secrets managers, ITSM tools, and cloud platforms  │   │
+│   │  AWX REST API is the primary integration point for triggering playbooks from external systems │   │
+│   │   Dynamic inventory plugins connect to AWS, vSphere, Netbox, GCP, Azure for live host lists   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            CI/CD            │  │           Secrets           │  │      Inventory Sources      │   │
+│   │     GitHub Actions → AWX    │  │       HashiCorp Vault       │  │        AWS EC2 plugin       │   │
+│   │     GitLab CI → AWX API     │  │         CyberArk PAM        │  │        VMware vSphere       │   │
+│   │    Jenkins → AWX webhook    │  │     AWX credential types    │  │        Netbox plugin        │   │
+│   │   Webhook triggers in AWX   │  │    Ansible Vault (static)   │  │       OpenStack plugin      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Dynamic inventory = script or plugin that queries an external source for host lists at runtime│   │
+│   │ Webhook trigger   = AWX can receive HTTP webhooks from GitHub/GitLab to auto-run job templates│   │
+│   │Credential type   = AWX pluggable credential; stores SSH keys, API tokens, Vault tokens securel│   │
+│   │   Netbox            = open-source DCIM/IPAM; Ansible inventory plugin pulls live device list  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```yaml

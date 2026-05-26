@@ -40,40 +40,36 @@ def pure1_get(path: str, token: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
-
-## Capacity Report
-
-```python
-import csv
-from datetime import datetime, timezone
-
-def capacity_report(token: str, output_file: str):
-    """Export capacity data for all arrays."""
-    arrays = pure1_get("/arrays", token).get("items", [])
-    metrics = pure1_get("/metrics/history", token, params={
-        "names": "array_total_capacity,array_used_space,array_data_reduction",
-        "resolution": "86400000",   # 1-day resolution (ms)
-        "end_time": int(datetime.now(timezone.utc).timestamp() * 1000)
-    }).get("items", {})
-
-    with open(output_file, "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=[
-            "array_name", "total_tb", "used_tb", "used_pct", "data_reduction"
-        ])
-        writer.writeheader()
-        for a in arrays:
-            m = metrics.get(a["id"], {})
-            total = m.get("array_total_capacity", 0)
-            used  = m.get("array_used_space", 0)
-            dr    = m.get("array_data_reduction", 0)
-            writer.writerow({
-                "array_name": a["name"],
-                "total_tb": round(total / 1e12, 2) if total else "N/A",
-                "used_tb":  round(used  / 1e12, 2) if used  else "N/A",
-                "used_pct": round((used / total * 100), 1) if total else "N/A",
-                "data_reduction": round(dr, 2) if dr else "N/A"
-            })
-    print(f"Capacity report written to {output_file}")
+┌────────────────────────────────────── Pure1 — Scripts Reference ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                      Pure1 REST API scripts using py-pure-client library                      │   │
+│   │                get-fleet.py: list all arrays with health, version, and capacity               │   │
+│   │               get-alerts.py: active alerts across fleet; flag Critical to Slack               │   │
+│   │                capacity-check.py: arrays with < 90 days to full; email to team                │   │
+│   │              phonehome-check.py: arrays not Connected; alert if data age > 5 min              │   │
+│   │                  perf-report.py: pull IOPS/latency for all arrays; CSV export                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Scripts run from any internet-connected host · Python 3 + py-pure-client                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  py-pure-client = pip install py-pure-client; Pure-provided Python library                            │
+│  JWT auth = RSA-signed JWT for Pure1 API; use Pure1Client from py-pure-client                         │
+│  client_id = Pure1 API registration ID from org settings                                              │
+│  private_key = RSA private key path; corresponding public key registered in Pure1                     │
+│  Fleet list = client.get_arrays() returns all arrays with health and metadata                         │
+│  Alert list = client.get_alerts(filter="state='open'") for active alerts                              │
+│  Metrics = client.get_metrics(names=[...], resource_names=[...]) for time-series                      │
+│  Phonehome status = array.status field; Connected or Disconnected                                     │
+│  Data age = time since last phonehome; compute from array.last_updated                                │
+│  CSV export = pandas DataFrame from metric response; df.to_csv()                                      │
+│  Cron = Schedule daily via crontab for capacity and phonehome checks                                  │
+│  Slack webhook = POST alert summary to Slack channel incoming webhook URL                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Active Alert Export

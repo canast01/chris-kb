@@ -22,31 +22,46 @@ graph LR
   class STG_A,STG_B store
   class H_A host
 ```
-
-## Consistency Group Commands
-
-```bash
-# SSH to RPA cluster management IP
-ssh admin@<rpa-cluster-ip>
-
-# All CGs and their current replication state
-groups status
-
-# Detailed CG state including RPO, lag, and journal utilization
-groups status detail
-
-# Create a manual bookmark before a patching window
-group create_bookmark --gname <cg_name> --name "pre-patch-$(date +%Y%m%d)"
-
-# Enable image access at a specific bookmark (DR test)
-group enable-image-access --gname <cg_name> --copy DR --image <bookmark_name>
-
-# Disable image access (return to replication)
-group disable-image-access --gname <cg_name>
-
-# Suspend / resume replication
-group disable-replication --gname <cg_name>
-group enable-replication --gname <cg_name>
+┌───────────────────────────────────── RecoverPoint — How It Works ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Write Flow: VM write → ESXi splitter forks I/O → production path + RPA buffer         │   │
+│   │         RPA bundles writes into delta sets → compresses → sends to remote RPA over IP         │   │
+│   │        Remote RPA applies delta set to journal; journal tracks sequence and timestamps        │   │
+│   │       Recovery: select bookmark or time → RPA rolls journal forward/back → present image      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Step 1: Write  ──► Step 2: Split  ──► Step 3: Journal  ──► Step 4: Replicate  ──► Step 5: Apply    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Source Side                  │  │                 Target Side                 │   │
+│   │             VM disk write issued             │  │          Remote RPA receives delta          │   │
+│   │            Splitter forks to RPA             │  │           Writes to remote journal          │   │
+│   │            RPA buffers in memory             │  │             Updates replica VMDK            │   │
+│   │            Bundles into delta set            │  │           Advances journal pointer          │   │
+│   │            Compresses, sends WAN             │  │           Logs bookmark timestamps          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: journal = dedicated VMDK on datastore; splitter = ESXi kernel module; RPA = VM appliance │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Write splitting     = Non-blocking fork of every VM disk write at hypervisor layer                 │
+│    Delta set           = Batch of compressed write deltas transferred from source to target RPA       │
+│    Journal apply       = Process of writing delta sets to journal VMDK in sequence on target side     │
+│    Journal pointer     = Current position in the journal; marks which deltas have been applied        │
+│    Bookmark            = Named timestamp in journal; enables recovery to a known-good application stat│
+│    Crash-consistent    = All VMs in CG captured at the same write sequence; safe for OS-level recovery│
+│    App-consistent      = Quiesced snapshot of CG (VMware Tools quiesce); safe for DB-level recovery   │
+│    Image access        = Temporary mount of journal image; test without committing; auto rolls back   │
+│    CDP window          = Journal depth in time; configurable; determines how far back recovery reaches│
+│    Replication lag     = Difference between source write time and target journal apply time (=RPO)    │
+│    WAN throttle        = Bandwidth cap on replication link per CG; prevents production WAN saturation │
+│    Compression ratio   = Typical 2:1–4:1 reduction on replication traffic via RPA dedup/compress      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Journal Sizing

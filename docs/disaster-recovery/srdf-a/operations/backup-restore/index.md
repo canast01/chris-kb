@@ -28,44 +28,47 @@ export SYMCLI_SID=000123456789
 # Or use -sid flag on each command
 symrdf -sid 000123456789 query -g <rdf_group>
 ```
-
-**Device states to understand:**
-
-| State | Meaning |
-|---|---|
-| `WD` (Write Disabled) | R2 is synchronized and write-protected |
-| `NR` (Not Ready) | Device offline or not accessible |
-| `RW` (Read/Write) | Device is accessible for reads and writes (post-failover) |
-| `Suspended` | Replication paused |
-| `Failed Over` | Failover has occurred; R1 link broken |
-
----
-
-## SRDF/A Failover Procedure
-
-### Pre-Failover Requirements
-
-- [ ] Confirm R1 (source) site is unavailable or inaccessible.
-- [ ] Identify the latest consistent delta set received at R2.
-- [ ] Coordinate with application owners — failover causes brief I/O disruption on R2.
-- [ ] Confirm R2 storage and compute infrastructure is operational.
-
-### Failover Steps
-
-```bash
-# 1. Verify current SRDF state — confirm it is not in a transient state
-symrdf query -g PROD_RDF_GROUP
-
-# 2. Execute failover — promotes R2 devices to RW, isolates from R1
-symrdf -g PROD_RDF_GROUP failover -force
-
-# 3. Confirm R2 devices are now RW and R1 link shows "Failed Over"
-symrdf query -g PROD_RDF_GROUP
-
-# 4. Present R2 volumes to DR hosts (if not using host-based failover automation)
-# This step is environment-specific — SRM, host scripts, or manual masking
-
-# 5. Start production workloads on DR site
+┌────────────────────────────────────── SRDF/A — Backup & Restore ──────────────────────────────────────┐
+│                                                                                                       │
+│    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Backup (Protection)              │  │              Restore (Recovery)             │   │
+│   │               symrdf establish               │  │          symrdf failover / failback         │   │
+│   │              Quiesce source I/O              │  │            Select recovery point            │   │
+│   │             Take snapshot / CBT              │  │           Mount or copy to target           │   │
+│   │           Transfer changed blocks            │  │              Validate integrity             │   │
+│   │             Commit to repository             │  │             Restart application             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                      Key SRDF/A Commands                                      │   │
+│   │                                Backup trigger  : symrdf establish                             │   │
+│   │                           List points     : symrdf failover / failback                        │   │
+│   │                                  Health status   : symrdf query                               │   │
+│   │                                 Retention mgmt  : symrdf verify                               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
+│  R1            = source SRDF volume on production array; host writes flow here                        │
+│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
+│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
+│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
+│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
+│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
+│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
+│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
+│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
+│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
+│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
+│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
+│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Important:** The `-force` flag is required when R1 is inaccessible and the link cannot confirm synchronization. Without it, `symrdf failover` will refuse to proceed if the link is already down.

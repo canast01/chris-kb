@@ -83,32 +83,28 @@ graph LR
     awxExecutor -->|ansible-playbook| managed
     awxExecutor --> jobHistory
 ```
-
-### Tasks, Handlers, and Notify
-
-Handlers run once at the end of a play, triggered by `notify`. They are deduplicated even if notified multiple times.
-
-```yaml
-tasks:
-  - name: Deploy nginx config
-    ansible.builtin.template:
-      src: nginx.conf.j2
-      dest: /etc/nginx/nginx.conf
-      owner: root
-      mode: '0644'
-    notify: Reload nginx
-
-  - name: Deploy vhost config
-    ansible.builtin.template:
-      src: vhost.conf.j2
-      dest: /etc/nginx/sites-enabled/app.conf
-    notify: Reload nginx      # handler only runs once
-
-handlers:
-  - name: Reload nginx
-    ansible.builtin.service:
-      name: nginx
-      state: reloaded
+┌──────────────────────────────────────── Ansible — Procedures ─────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Common Ansible operational procedures: rolling OS patching, credential rotation, inventory clea│   │
+│   │    Pre-run: verify inventory is current, check mode first, confirm Vault password available   │   │
+│   │Post-run: review job output for warnings, verify application health, update runbook with outcom│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Rolling OS Patch Procedure          │  │             Credential Rotation             │   │
+│   │          1. Run check mode: --check          │  │         1. Generate new SSH key pair        │   │
+│   │           2. Review changed tasks            │  │         2. Add new pub key to hosts         │   │
+│   │         3. Execute serial:1 (canary)         │  │           3. Update AWX credential          │   │
+│   │        4. Verify app health per host         │  │         4. Remove old key from hosts        │   │
+│   │         5. Increase serial, continue         │  │            5. Verify connectivity           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     serial: 1     = run one host at a time; ensures app stays available during rolling ops    │   │
+│   │    max_fail_pct  = max_fail_percentage: 0 → abort if any host fails; safe for prod changes    │   │
+│   │     pre_tasks     = tasks that run before roles in a play; use for health checks and drain    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Loops and Conditionals

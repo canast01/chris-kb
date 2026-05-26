@@ -42,12 +42,62 @@ curl -s -X POST "https://commserve.example.com/webconsole/api/Login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"<password>"}' | jq '.token'
 ```
-
-**Check job status:**
-
-```bash
-curl -s -X GET "https://commserve.example.com/webconsole/api/Job/<jobId>" \
-  -H "Authtoken: <token>" | jq '.jobDetail.statusDescription'
+┌────────────────────────────── Commvault Backup and Restore — Procedures ──────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Backup Job Types               │  │                Restore Types                │   │
+│   │      Full: all data in subclient scope       │  │      In-place: restore to original path     │   │
+│   │       Incremental: changed since last        │  │     Out-of-place: alternate path/client     │   │
+│   │       Differential: changed since Full       │  │     Cross-client: different target host     │   │
+│   │     Synthetic Full: built on MA from inc     │  │    Granular: item-level from VM/Exchange    │   │
+│   │     Snap backup: array snapshot + backup     │  │     Live Browse: mount backup for reads     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Full backup cycle: Full (weekly) → Incrementals (daily) → Synthetic Full (next week)               │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               On-Demand Backup (Command Center)                               │   │
+│   │              1. Navigate: Protect → Virtualization (or File Servers / Databases)              │   │
+│   │            2. Select subclient → right-click → Backup Now → choose Full/Incremental           │   │
+│   │             3. Monitor job in Job Activity pane; check logs if status ≠ Completed             │   │
+│   │                4. Verify protected size and dedup savings in job summary report               │   │
+│   │            5. CLI: qoperation execschedule -clientName HOST -subclientName default            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Restore: right-click subclient → Browse and Restore → select files → Restore                       │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                      Restore Verification                                     │   │
+│   │         After restore: verify file checksums, check application startup, validate data        │   │
+│   │            VM restore: power on, run OS checks, verify application services running           │   │
+│   │            DB restore: validate row counts, run DBCC CHECKDB (SQL) or RMAN validate           │   │
+│   │           Scheduled restore tests: monthly verified restore to isolated environment           │   │
+│   │           SLA reporting: track %backup success; target ≥ 99% weekly completion rate           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Restore target must have iDA agent; network path from MA to target must be open                      │
+│  VM restores: target datastore must have sufficient free space (source VM size + 20%)                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Synthetic Full = Full backup constructed on MA from existing incrementals; no client I/O             │
+│  Snap Backup    = IntelliSnap array-level snapshot followed by backup-from-snap to library            │
+│  Live Browse    = Mount backup copy as NFS/CIFS share for direct file browsing                        │
+│  Granular Recov = Item-level restore (e.g., single email, SQL row, VM disk file)                      │
+│  DBCC CHECKDB   = SQL Server command to verify database consistency after restore                     │
+│  Browse Window  = Time range visible in CommCell browse based on retention settings                   │
+│  Cross-client   = Restore to a different machine than the original backup source                      │
+│  Job Activity   = Real-time view of all running, queued, and recently completed jobs                  │
+│  Protected Size = Total data covered by backup policy on a given client/subclient                     │
+│  qoperation     = CLI to trigger on-demand backup: execschedule or backup subcommand                  │
+│  SLA Report     = Commvault report showing backup success rate vs configured targets                  │
+│  Retention Copy = Backup copy kept for extended period (monthly/yearly) on tape/cloud                 │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

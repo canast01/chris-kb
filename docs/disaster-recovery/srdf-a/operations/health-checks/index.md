@@ -34,34 +34,43 @@ symrdf -g 20 -type A query -detail | grep -E "Lag|Cycle Age"
 LAG=$(symrdf -g 20 -type A query -detail | grep "Lag" | awk '{print $NF}')
 echo "Current lag: ${LAG} seconds"
 ```
-
----
-
-## Health Check (SYMCLI)
-
-```bash
-# List all SRDF/A pairs for a specific RDF group and show their state
-symrdf list -sid <r1_sid> -rdfg <rdf_group_number> -type RDF/A
-
-# Query full SRDF/A pair state including cycle time, delta marks, and link state
-symrdf queryall -sid <r1_sid> -rdfg <rdf_group_number>
-
-# Show SRDF/A link status and bandwidth utilization for the RDF group
-symrdf -sid <r1_sid> -rdfg <rdf_group_number> verify
-
-# Show RDF group configuration (pair count, link ports, cycle time setting)
-symrdf -sid <r1_sid> -rdfg <rdf_group_number> -type RDF/A -i 60 -c 5
-
-# Check for any SRDF/A pairs in degraded states across all RDF groups
-symrdf list -sid <r1_sid> -state Transmit_Idle
-symrdf list -sid <r1_sid> -state Mixed
-symrdf list -sid <r1_sid> -state Split
-
-# Check R2 side (run on DR host connected to R2 array)
-symrdf list -sid <r2_sid> -rdfg <rdf_group_number> -type RDF/A
-
-# Show delta marks for SRDF/A group (growing delta = link keeping up issue)
-symrdf -sid <r1_sid> -rdfg <rdf_group_number> -type RDF/A -delta
+┌─────────────────────────────────────── SRDF/A — Health Checks ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                SRDF/A — Health Check Procedures                               │   │
+│   │                 Run these checks daily/weekly to confirm protection is working                │   │
+│   │                                           symrdf query                                        │   │
+│   │                  Review job completion rate — target 100%; investigate failures               │   │
+│   │                         Check replication/backup lag against RPO target                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Check       │  What to verify  │      Expected     │    Frequency     │  Action if bad   │   │
+│   │    Job status    │All jobs complete │    100% success   │      Daily       │ Triage failures  │   │
+│   │    Lag / RPO     │ Replication lag  │    < RPO target   │      Daily       │  Tune bandwidth  │   │
+│   │     Capacity     │ Repo space used  │     < 80% full    │      Weekly      │ Expand or expire │   │
+│   │   Restore test   │  Random restore  │    Data intact    │     Monthly      │ Fix backup chain │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
+│  R1            = source SRDF volume on production array; host writes flow here                        │
+│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
+│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
+│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
+│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
+│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
+│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
+│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
+│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
+│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
+│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
+│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
+│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

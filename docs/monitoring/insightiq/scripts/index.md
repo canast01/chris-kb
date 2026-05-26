@@ -16,27 +16,36 @@ def iiq_get(path: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
-
-## Cluster Connection Health Check
-
-```python
-def check_cluster_connections() -> list:
-    """Return list of clusters with disconnected status."""
-    clusters = iiq_get("/clusters").get("clusters", [])
-    disconnected = [
-        {"name": c["name"], "status": c["status"], "last_data": c.get("last_data_timestamp")}
-        for c in clusters
-        if c.get("status") != "active"
-    ]
-    return disconnected
-
-if __name__ == "__main__":
-    issues = check_cluster_connections()
-    if issues:
-        for c in issues:
-            print(f"ALERT: cluster {c['name']} status={c['status']}, last_data={c['last_data']}")
-    else:
-        print("All clusters are active.")
+┌──────────────────────────────────── InsightIQ — Scripts Reference ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               InsightIQ admin scripts — run on appliance or via management host               │   │
+│   │             iiq_backup.sh — wrapper triggering iiq_backup with dated archive name             │   │
+│   │                  disk-check.sh — alerts if InsightIQ VM datastore > 80% full                  │   │
+│   │                  collection-check.sh — verifies data age < 5 minutes via API                  │   │
+│   │           export-report.py — uses InsightIQ API to download scheduled report as PDF           │   │
+│   │             top-clients.py — queries InsightIQ for top-IO clients; posts to Slack             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Scripts on InsightIQ VM or management host · Python 3 + requests · SSH for admin                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  iiq_backup = Admin CLI command; wrapper script adds date suffix to archive                           │
+│  Disk check = df -h /data check on appliance; alert at 80% to avoid DB fill                           │
+│  Data age = Time since last collection point; stale > 5 min suggests collection issue                 │
+│  InsightIQ API = Limited REST API at https://<iiq>/api; used for report downloads                     │
+│  Session cookie = InsightIQ API uses session auth; POST login to get cookie                           │
+│  Top clients = List of client IPs ranked by IO; requires clientstats on cluster                       │
+│  Slack webhook = Posting top-client summary to storage team Slack channel                             │
+│  Cron schedule = Running scripts via crontab on management host or InsightIQ VM                       │
+│  SSH key auth = Prefer SSH key over password for script access to InsightIQ                           │
+│  Log check = Tail /var/log/isilon/insightiq/ for collection errors                                    │
+│  PDF download = GET /api/v1/reports/{id}/download with session cookie                                 │
+│  Python requests = pip install requests; standard HTTP library for InsightIQ API                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Threshold Alert Forwarding (SNMP)

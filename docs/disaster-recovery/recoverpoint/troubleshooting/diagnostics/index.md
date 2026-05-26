@@ -20,30 +20,45 @@
 # Via boxmgmt
 boxmgmt support collect_bundle
 ```
-
----
-
-## Common Log Analysis: What to Look For in a Support Bundle
-
-After collecting a support bundle (`boxmgmt support collect_bundle`), extract and review the following:
-
-| Log File (inside bundle) | What to Look For |
-|---|---|
-| `system/messages` | Kernel errors, OOM events, hardware faults |
-| `rp/rpa_log` | RPA process crashes, journal overflow events, CG state transitions |
-| `rp/wcc_log` | WAN connectivity controller errors; look for `LINK_DOWN` or `TIMEOUT` entries |
-| `rp/splitter_log` | Splitter-to-RPA communication failures; `SPLIT_ERROR` indicates data not being captured |
-| `rp/journal_log` | Journal allocation failures, journal full events — indicates RPO at risk |
-| `network/ifconfig` | Verify NIC configuration matches expected topology |
-| `storage/disk_info` | Storage path failures, multipath issues |
-
-**Key patterns to grep for:**
-
-```bash
-# After extracting the bundle tarball
-grep -i "LINK_DOWN\|TIMEOUT\|JOURNAL_FULL\|SPLIT_ERROR\|CG_PAUSED" rp/rpa_log
-grep -i "error\|critical\|fatal" system/messages | grep -v "audit"
-grep -i "INIT\|PAUSE\|FAILOVER" rp/rpa_log | tail -50
+┌───────────────────────────────────── RecoverPoint — Diagnostics ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               RecoverPoint — Diagnostic Commands                              │   │
+│   │                       Collect these before opening a vendor support case                      │   │
+│   │                                   image access enable/disable                                 │   │
+│   │                                        failover / reverse                                     │   │
+│   │                       Check system logs: /var/log/ or Windows Event Viewer                    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Log Collection                │  │               Live Diagnostics              │   │
+│   │            Application log bundle            │  │             Network connectivity            │   │
+│   │            OS syslog (journalctl)            │  │              Storage path check             │   │
+│   │             Core dump if crashed             │  │              Process list check             │   │
+│   │             Config export/backup             │  │              Port reachability              │   │
+│   │         image access enable/disable          │  │              failover / reverse             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  RPA virtual appliances on ESXi · Journal volumes on storage array · WAN link between sites           │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPA           = RecoverPoint Appliance — virtual appliance managing journal and replication          │
+│  Splitter      = intercepts host I/O at hypervisor or array level; sends copy to RPA                  │
+│  Journal       = write-order-consistent storage capturing all writes for point-in-time access         │
+│  Consistency Group= set of volumes protected together; writes are applied in order across all         │
+│  Bookmark      = named marker in journal; enables deterministic recovery to a known state             │
+│  Image Access  = mounting a journal point-in-time image to a host for testing or recovery             │
+│  Failover      = activating the replica at the recovery site; breaks replication relationship         │
+│  Test Copy     = non-disruptive image access for validation without breaking replication              │
+│  RPO           = Recovery Point Objective; how much data loss is acceptable; CDP = near-zero          │
+│  RTO           = Recovery Time Objective; time from failover to service restored                      │
+│  Reverse       = after failover, replicates from recovery site back to re-sync production             │
+│  Splitter Lag  = delay between host write and journal commit; monitor for replication health          │
+│  CDP           = Continuous Data Protection; every write journaled, not just scheduled snaps          │
+│  Distributed CG= consistency group spanning volumes on multiple storage arrays                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

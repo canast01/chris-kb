@@ -20,28 +20,27 @@ graph TD
     tfRole --> auditLog
     humanReview --> auditLog
 ```
-
-```json
-// S3 bucket policy — restrict to the Terraform automation role only
-{
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": { "AWS": "arn:aws:iam::123456789:role/terraform-automation" },
-      "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
-      "Resource": "arn:aws:s3:::myorg-terraform-state/*"
-    },
-    {
-      "Effect": "Deny",
-      "Principal": "*",
-      "Action": "s3:*",
-      "Resource": ["arn:aws:s3:::myorg-terraform-state", "arn:aws:s3:::myorg-terraform-state/*"],
-      "Condition": {
-        "Bool": { "aws:SecureTransport": "false" }
-      }
-    }
-  ]
-}
+┌───────────────────────────────────── Terraform — Access Control ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Terraform access control: who can plan/apply, state file access, provider credential scope  │   │
+│   │   Separate IAM roles: read-only (plan) and read-write (apply); apply requires approval in CI  │   │
+│   │ S3 state bucket: restrict GetObject/PutObject to Terraform IAM role only; block public access │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               IAM Role Design                │  │              CI Access Control              │   │
+│   │        tf-plan-role: read-only to AWS        │  │          Plan: any branch, auto-run         │   │
+│   │       tf-apply-role: write permissions       │  │           Apply: main branch only           │   │
+│   │         S3: GetObject/PutObject/List         │  │       Required reviewers before apply       │   │
+│   │         DynamoDB: PutItem/DeleteItem         │  │        OIDC trust: repo+branch filter       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      OIDC trust  = AWS OIDC provider; trust policy sub: repo:org/repo:ref:refs/heads/main     │   │
+│   │       Plan role   = read-only; cannot modify state or infrastructure; safe for PR checks      │   │
+│   │             Apply role  = write; assumed only after PR approval and merge to main             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Least Privilege IAM for Terraform

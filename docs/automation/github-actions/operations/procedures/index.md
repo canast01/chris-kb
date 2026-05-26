@@ -24,20 +24,28 @@ flowchart TD
     jobB -->|"all matrix legs pass"| jobC
     jobC --> deploy
 ```
-
-### Reusable Workflows
-
-```mermaid
-flowchart LR
-    mainWf["main.yml\nCalling workflow"]
-    reuseWf["reusable-deploy.yml\nworkflow_call trigger"]
-    stagingEnv["environment: staging\nDeploy secrets injected"]
-    prodEnv["environment: production\nRequires reviewer approval"]
-
-    mainWf -->|"jobs.deploy-staging.uses\nwith: environment=staging"| reuseWf
-    mainWf -->|"jobs.deploy-prod.uses\nwith: environment=production"| reuseWf
-    reuseWf --> stagingEnv
-    reuseWf --> prodEnv
+┌───────────────────────────────────── GitHub Actions — Procedures ─────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Common GitHub Actions procedures: secret rotation, runner re-registration, workflow migration │   │
+│   │ Secret rotation: update secret value via gh CLI or UI; workflows pick up new value on next run│   │
+│   │       Runner re-registration: remove stale runner, generate new token, re-run config.sh       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Secret Rotation                │  │            Runner Re-registration           │   │
+│   │          1. Generate new credential          │  │            1. Stop runner service           │   │
+│   │        2. gh secret set NAME -b <val>        │  │               2. ./svc.sh stop              │   │
+│   │             3. Test workflow run             │  │        3. ./config.sh remove --token        │   │
+│   │           4. Revoke old credential           │  │        4. Get new registration token        │   │
+│   │          5. Document rotation date           │  │         5. ./config.sh --url --token        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Registration token = short-lived (1 hour) token from GitHub used to register a new runner   │   │
+│   │      Remove token       = token used to cleanly deregister a runner from GitHub settings      │   │
+│   │    Workflow migration  = copy YAML to new repo; re-inject secrets; test before retiring old   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Reusable workflows reduce duplication by calling one workflow from another.

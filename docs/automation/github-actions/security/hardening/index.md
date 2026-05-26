@@ -21,18 +21,28 @@ flowchart TD
     repo --> secretScan
     repo --> selfHostedIsolate
 ```
-
-## Pinning Action Versions
-
-Third-party actions should be pinned to a specific commit SHA to prevent supply-chain attacks.
-
-```yaml
-# Avoid floating tags like @main or @master
-steps:
-  - uses: actions/checkout@v4           # semver tag (acceptable)
-
-  # Preferred: pin to the exact SHA
-  - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+┌───────────────────────────────────── GitHub Actions — Hardening ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Harden GitHub Actions against supply chain attacks, secret exposure, and privilege abuse   │   │
+│   │Organisation settings: restrict allowed actions, require approval for first-time fork contribut│   │
+│   │    Self-hosted runner: ephemeral mode, isolated network, minimal tools, no persistent state   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Org-Level Hardening              │  │               Runner Hardening              │   │
+│   │        Allowed actions: only verified        │  │         Ephemeral: --ephemeral flag         │   │
+│   │          Fork PR approval required           │  │          Network: egress allowlist          │   │
+│   │       Secrets: no org secrets in forks       │  │           No admin tools on runner          │   │
+│   │         Branch protection on default         │  │       Read-only filesystem where poss       │   │
+│   │         Audit log enabled + exported         │  │       Separate runner per environment       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Ephemeral runner = deregisters after each job; prevents state leakage between runs      │   │
+│   │     Egress allowlist = firewall rules on runner host limiting outbound to known endpoints     │   │
+│   │ Audit log        = org-level log of all Actions events; export to SIEM for long-term retention│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Use Dependabot to keep pinned actions up to date automatically:

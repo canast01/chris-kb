@@ -21,20 +21,36 @@ cat /var/lib/nd/version.txt
 # View logs
 kubectl logs -n nd-base <pod_name>
 ```
-
----
-
-## Fabric Health
-
-```bash
-# List all fabrics (sites) managed by ND
-curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/sites   -H "Authorization: <token>"
-
-# Get health for all sites
-curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/sites/health   -H "Authorization: <token>"
-
-# Get detail for a specific site
-curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/sites/<site_id>   -H "Authorization: <token>"
+┌─────────────────────────────────── Nexus Dashboard — CLI Reference ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                 Nexus Dashboard admin CLI — SSH to any master node, admin user                │   │
+│   │                      acs health — show cluster node health and app status                     │   │
+│   │                        acs backup create — create cluster config backup                       │   │
+│   │                acs logs download — download app logs bundle for troubleshooting               │   │
+│   │                   acs restart — restart cluster services (use with caution)                   │   │
+│   │                   kubectl (on ND) — inspect Kubernetes pods hosting ND apps                   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  SSH to ND management IP · admin user · commands affect entire cluster                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  acs = Admin CLI Suite; Nexus Dashboard command-line interface                                        │
+│  acs health = Returns node status: ACTIVE/STANDBY/FAILURE for each master                             │
+│  acs backup create = Creates config snapshot; stored locally or exported to SCP/NFS                   │
+│  acs logs download = Collects app and system logs bundle for Dell/Cisco support                       │
+│  acs restart = Restarts all ND services; use only during maintenance window                           │
+│  kubectl = Kubernetes CLI available on ND for pod inspection                                          │
+│  Pod = Container instance running an ND app (NDI, NDFC, NDO, or ND service)                           │
+│  acs upgrade = Initiates cluster upgrade from uploaded image                                          │
+│  acs cluster status = Shows cluster quorum state and node roles                                       │
+│  acs app status = Lists installed apps and their running/stopped state                                │
+│  NDI REST API = https://<nd-ip>/sedgeapi/v1; auth via /api/v1/auth/token                              │
+│  APIC Read-Only = Minimum privilege for NDI APIC credentials: Observer role                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -85,32 +85,28 @@ flowchart TD
     success --> finallyBlock
     finallyBlock --> exitCode
 ```
-
-### HTML Reports with ConvertTo-Html
-
-```powershell
-# Basic HTML report
-$header = "<style>body{font-family:Arial} table{border-collapse:collapse} td,th{border:1px solid #ccc;padding:6px}</style>"
-
-Get-Service |
-    Where-Object { $_.Status -eq 'Stopped' } |
-    Select-Object Name, DisplayName, StartType |
-    ConvertTo-Html -Title "Stopped Services" -Head $header |
-    Out-File C:\Reports\stopped-services.html
-
-# Multi-section HTML report
-$htmlBody = ""
-$htmlBody += "<h2>Disk Usage</h2>"
-$htmlBody += Get-PSDrive -PSProvider FileSystem |
-    Select-Object Name, @{N='Used(GB)';E={[math]::Round($_.Used/1GB,2)}}, @{N='Free(GB)';E={[math]::Round($_.Free/1GB,2)}} |
-    ConvertTo-Html -Fragment
-
-$htmlBody += "<h2>Top Processes by CPU</h2>"
-$htmlBody += Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 Name, CPU, WorkingSet |
-    ConvertTo-Html -Fragment
-
-ConvertTo-Html -Title "Server Report" -Head $header -Body $htmlBody |
-    Out-File C:\Reports\server-report.html
+┌─────────────────────────────────────── PowerShell — Procedures ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Common PowerShell operational procedures: bulk host operations, AD queries, module updates  │   │
+│   │     Bulk remoting: Invoke-Command -ComputerName $servers -ScriptBlock {} -ThrottleLimit 20    │   │
+│   │      Pre-flight: test remoting to all targets; use -WhatIf on destructive commands first      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Bulk Remote Operations            │  │           Module Update Procedure           │   │
+│   │     $servers = Get-ADComputer -Filter *      │  │    1. List installed: Get-InstalledModule   │   │
+│   │         Invoke-Command -ComputerName         │  │        2. Check updates: Find-Module        │   │
+│   │         $servers.Name -ScriptBlock {}        │  │        3. Test in dev: Update-Module        │   │
+│   │       -ThrottleLimit 20 (parallel cap)       │  │        4. Run scripts: verify output        │   │
+│   │       $results | Export-Csv output.csv       │  │           5. Deploy to prod hosts           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │-ThrottleLimit = max concurrent remote sessions in Invoke-Command; default 32; reduce for stabi│   │
+│   │    -WhatIf        = simulates what would happen; use before Remove-Item, Stop-Service, etc.   │   │
+│   │     Transcript     = Start-Transcript; logs all input/output to file; use for audit trail     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Send-MailMessage and Email Reports

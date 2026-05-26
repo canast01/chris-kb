@@ -22,31 +22,31 @@ flowchart TD
     checkModule -->|No| installCol["ansible-galaxy collection install\n<namespace.collection>"]
     checkModule -->|Yes| resolved["Examine task output\n& register debug"]
 ```
-
-## Unreachable Hosts
-
-```bash
-# Test SSH connectivity directly
-ssh -i ~/.ssh/id_rsa -p 22 user@host
-
-# Test with Ansible ping module
-ansible -i inventory/ all -m ping
-
-# Check SSH config used by Ansible
-ansible -i inventory/ web01 -m setup -a "filter=ansible_default_ipv4" -vvv
-
-# Common fixes
-# Wrong user — set in inventory or ansible.cfg
-ansible_user=ubuntu
-
-# Wrong SSH key
-ansible_ssh_private_key_file=~/.ssh/deploy_key
-
-# Host key checking causing failures
-export ANSIBLE_HOST_KEY_CHECKING=False
-# or in ansible.cfg:
-# [defaults]
-# host_key_checking = False
+┌─────────────────────────────────────── Ansible — Common Issues ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Most frequent Ansible failures: SSH connectivity, Python errors, Vault decrypt, module not foun│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                    Issue: UNREACHABLE — SSH connection refused or timed out                   │   │
+│   │               Cause A: SSH service stopped on target → fix: start sshd on target              │   │
+│   │           Cause B: firewall blocking port 22 → fix: open port 22 in host/network FW           │   │
+│   │         Cause C: wrong ansible_host or ansible_port → fix: correct inventory variable         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 Issue: Vault decryption failed                                │   │
+│   │           Cause A: wrong password → fix: verify vault password; check vault_id label          │   │
+│   │         Cause B: wrong vault_id → fix: pass --vault-id prod@prompt if using vault IDs         │   │
+│   │      Cause C: AWX vault credential missing → fix: re-add vault credential to job template     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                          Issue: module not found / collection missing                         │   │
+│   │    Fix: ansible-galaxy collection install <namespace.collection> or add to requirements.yml   │   │
+│   │               Fix: rebuild EE image with collection included if running via AWX               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Sudo and Privilege Escalation Failures

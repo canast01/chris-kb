@@ -19,58 +19,60 @@ graph LR
   class HA host
   class HB dr
 ```
-
-## Components
-
-| Component | Role |
-|---|---|
-| R1 device | Source (production) SRDF device; hosts write to R1 |
-| R2 device | Target (DR) SRDF device; read-only during normal operation |
-| SRDF Director Ports | Dedicated RDF ports on each PowerMax carrying replication traffic |
-| SRDF Groups (RDFG) | Logical groupings of device pairs replicating together as a consistency group |
-| Device Pairs | One R1 device mapped to one R2 device of identical size |
-| Solutions Enabler (SE) | Dell management CLI host with gatekeeper LUN access for SYMCLI operations |
-
-## Pair States
-
-| Pair State | Description | Host Write Impact |
-|---|---|---|
-| Synchronized | R1 and R2 are identical; every R1 write goes synchronously to R2 | Full protection, RPO = 0 |
-| SyncInProg | Initial or resync copy in progress | R1 writable; R2 not consistent |
-| Suspended | Replication paused; R1 continues without mirroring | R1 writable; R2 stale |
-| Failed Over | R1 unavailable; R2 is now writable | R2 takes production I/O |
-| Split | Pair manually split; both volumes are independent | Both writable; no replication |
-| Partitioned | RDF link interrupted; pair state indeterminate | Depends on link recovery |
-
-## Key Commands
-
-```bash
-# Summary query for all devices in an RDFG group
-symrdf -g 10 query
-
-# Detailed output including track counts and link state
-symrdf -g 10 query -detail
-
-# Find any device not in Synchronized state
-symrdf -g 10 query | grep -v Synchronized
-
-# Check RDF director and port status
-symcfg list -dir all -rdf
-
-# Suspend replication (planned maintenance)
-symrdf -g 10 -type S suspend -noprompt
-
-# Resume from Suspended back to Synchronized
-symrdf -g 10 -type S resume -noprompt
-
-# Establish (initial sync or re-establish after split)
-symrdf -g 10 -type S establish -noprompt
-
-# Failover (manual, when R1 is unavailable)
-symrdf -g 10 -type S failover -noprompt
-
-# Restore (copy R2 data back to R1 after Failed Over)
-symrdf -g 10 -type S restore -noprompt
+┌──────────────────────────────────────── SRDF/S — How It Works ────────────────────────────────────────┐
+│                                                                                                       │
+│    SRDF/S data flow — from source to target through the protection pipeline:                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 1  Source / Production System                                 │   │
+│   │           R1 Volume (Source)  — production PowerMax; write holds until R2 acknowledges        │   │
+│   │               Host writes are intercepted or snapshotted by the SRDF/S agent/proxy            │   │
+│   │                  Changed blocks tracked via CBT / journal / delta-set mechanism               │   │
+│   │                 Consistency ensured at quiesce point before data transfer begins              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Changed data forwarded to the SRDF/S engine — compression and encryption applied in transit        │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        2  SRDF/S Engine                                       │   │
+│   │          R2 Volume (Target)  — DR PowerMax; must confirm write before host I/O completes      │   │
+│   │                    Data compressed, deduplicated, and encrypted before storage                │   │
+│   │                  Metadata catalog updated; job status reported to control plane               │   │
+│   │                                     symrdf establish -type s                                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     3  Target / Repository                                    │   │
+│   │         SRDF/S Engine       — synchronous write mirroring; adds WAN RTT to write latency      │   │
+│   │                  Recovery point written; retention policy applied automatically               │   │
+│   │                                     Restore: symrdf failover                                  │   │
+│   │                     RTO driven by target storage performance and data volume                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (< 200 km) · RF director ports │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
+│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
+│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
+│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
+│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
+│  RTO           = Recovery Time Objective; SRDF/S failover typically < 5 minutes manual, < 1 min       │
+│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
+│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
+│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
+│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
+│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
+│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
+│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
+│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## RTT Requirements

@@ -28,32 +28,34 @@
 6. Action during approved change window
 7. Post-action: monitor health score for improvement over next 2–4 hours
 ```
-
-## Weekly Tasks
-
-- Review the full recommendation queue — action or defer all High-priority items with documented rationale
-- Confirm all storage systems are reporting (last-seen < 1 hour for all systems)
-- Review capacity trend forecasts — flag systems with < 45 days remaining to capacity threshold
-- Check anomaly frequency by system — identify persistently noisy systems for threshold tuning
-
-## Monthly Tasks
-
-- Generate AIOps Recommendations Summary report and share in the monthly infrastructure review
-- Review anomaly trend analysis — identify recurring anomaly patterns
-- Audit open/deferred recommendations — escalate any that have been deferred more than twice
-- Review and update notification rules for any changes in team structure or on-call rotation
-- Verify SIEM audit log export completed for the month
-
-## Capacity Review Process
-
-```text
-1. CloudIQ > Capacity > [Select platform type: PowerStore / PowerScale / etc.]
-2. Review 90-day capacity forecast for each system
-3. Flag systems with:
-   - Current usage > 70% (Warning) — track
-   - Days to threshold < 45 (Warning) — add to capacity planning queue
-   - Days to threshold < 15 (Critical) — raise immediate action item
-4. Document in the capacity planning register with planned expansion date
+┌─────────────────────────────────────── Dell AIOps — Operations ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Daily            │  │            Weekly           │  │           Monthly           │   │
+│   │     Review alert console    │  │    Action recommendations   │  │       Capacity review       │   │
+│   │       Check anomalies       │  │       Review insights       │  │       Threshold audit       │   │
+│   │      Verify adapters OK     │  │     Update ITSM tickets     │  │        Access review        │   │
+│   │      Triage new alerts      │  │       Check forecasts       │  │        Report to mgmt       │   │
+│   │    Check platform health    │  │      Dismiss false pos      │  │       Procurement plan      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Operations via AIOps web UI and REST API · admin CLI for platform-level checks                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Alert console = AIOps UI showing all active alerts sorted by severity and age                        │
+│  Adapter status = Health check confirming each data source adapter is collecting normally             │
+│  Platform health = AIOps self-monitoring; check /api/v1/health endpoint                               │
+│  Triage = Classifying new alert: actionable, false positive, or informational                         │
+│  Recommendation = AI action item; review weekly and track in ITSM                                     │
+│  Insight review = Weekly check of AI-generated fleet-wide patterns                                    │
+│  Forecast check = Reviewing capacity projections per system for procurement planning                  │
+│  Threshold audit = Monthly validation that alert thresholds match current operational norms           │
+│  Access review = Monthly check of AIOps user list for stale or inappropriate access                   │
+│  Procurement plan = Capacity expansion request based on AIOps forecast data                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Health Score Decline Investigation

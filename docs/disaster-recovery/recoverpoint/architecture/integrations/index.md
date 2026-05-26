@@ -29,13 +29,46 @@ graph TD
     rpaB --> drJournal["DR Journal Volumes"]
     drJournal --> drReplica["DR Replica Volumes"]
 ```
-
-### Verify Replication State
-
-```bash
-# Via RecoverPoint CLI (SSH to RPA)
-get_group_info -g "<CG_name>"    # Full CG status
-monitor_group -g "<CG_name>"     # Live lag monitor
+┌───────────────────────────────────── RecoverPoint — Integrations ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      RP4VM integrates with vCenter, VMware SRM, PowerMax/VMAX array splitters, and VPLEX      │   │
+│   │    SRM integration: RP4VM SRA enables SRM to orchestrate failover via RecoverPoint journals   │   │
+│   │       Array splitter (PowerMax): writes intercepted at array; no ESXi splitter required       │   │
+│   │     VPLEX integration: RP4VM protects VPLEX virtual volumes across geo-stretched clusters     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    vCenter ◄──► RP4VM plugin ◄──► RPA cluster ◄──► SRM SRA ◄──► SRM recovery plans                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          vSphere / SRM Integration           │  │          Array / VPLEX Integration          │   │
+│   │             RP4VM vCenter plugin             │  │           PowerMax array splitter           │   │
+│   │           SRM SRA for RecoverPoint           │  │             VMAX array splitter             │   │
+│   │           Protection group mapping           │  │            VPLEX virtual volumes            │   │
+│   │           Recovery plan execution            │  │           No ESXi splitter needed           │   │
+│   │           Test failover automation           │  │             XtremIO integration             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: SRA plugin installed on SRM server; array splitter licence on PowerMax; VPLEX needs RP li│
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SRA              = Storage Replication Adapter; plugin on SRM server; translates SRM calls to RP AP│
+│    RP4VM plugin     = vCenter plugin; provides CG management, failover, and image access directly in U│
+│    Array splitter   = Intercepts writes inside the storage array firmware; higher performance than ESX│
+│    VPLEX integration= RP journals VPLEX virtual volumes; enables CDP for geo-stretched metro clusters │
+│    Protection group = SRM construct; maps to RP4VM consistency group; defines what SRM protects       │
+│    Recovery plan    = SRM ordered script of steps for failover; calls RP4VM SRA at failover step      │
+│    XtremIO          = All-flash array from Dell; supports RP4VM via array splitter licence            │
+│    PowerMax splitter= Writes forked inside PowerMax engine; RPA receives copy without ESXi module     │
+│    API endpoint     = RP REST API on RPA management IP; used by SRA and automation scripts            │
+│    CG-to-PG mapping = Each SRM protection group maps 1:1 to an RP4VM consistency group                │
+│    Bubble network   = Isolated VLAN created by SRM for test failover; test VMs unreachable from prod  │
+│    VPLEX Metro      = Synchronous stretch cluster; RP adds CDP layer for any-point recovery on top    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

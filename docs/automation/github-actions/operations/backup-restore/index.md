@@ -49,24 +49,29 @@ EOF
 chmod +x /usr/local/bin/github-repo-mirror.sh
 echo "0 2 * * * /usr/local/bin/github-repo-mirror.sh" | crontab -
 ```
-
-## Backup GitHub Actions Self-Hosted Runners
-
-Runner registration tokens are ephemeral — the runner binary and its configuration need to be preserved.
-
-```bash
-# Document runner configuration
-gh api orgs/ORG/actions/runners | jq '.runners[] | {id, name, os, labels}' > runners.json
-gh api repos/ORG/REPO/actions/runners | jq '.runners[]' >> runners.json
-
-# On the runner host — back up runner config
-tar czf /backups/github/runner-config-$(date +%F).tar.gz \
-  /home/github-runner/actions-runner/.credentials \
-  /home/github-runner/actions-runner/.env \
-  /home/github-runner/actions-runner/.runner
-
-# Save runner service config
-systemctl cat github-runner > /backups/github/runner-service.txt
+┌────────────────────────────────── GitHub Actions — Backup & Restore ──────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   GitHub Actions workflow state lives in the git repo — workflow YAML is the source of truth  │   │
+│   │  Secrets cannot be exported via API; document secret names and re-inject after repo migration │   │
+│   │    Self-hosted runner: re-register after host rebuild; runner config stored in .runner file   │   │
+│   │    Environments: document protection rules (reviewers, wait timers) — export via GitHub API   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               What to Back Up                │  │                Restore Steps                │   │
+│   │         Git repo (all workflow YAML)         │  │             1. Restore git repo             │   │
+│   │        Secret names list (not values)        │  │           2. Re-inject all secrets          │   │
+│   │       Environment config (API export)        │  │          3. Re-create environments          │   │
+│   │        Self-hosted runner config docs        │  │            4. Re-register runners           │   │
+│   │           Variable list and values           │  │           5. Trigger test workflow          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    GitHub API      = REST API to export environments, protection rules, and variable names    │   │
+│   │   Variables       = non-sensitive config; visible in logs; exportable via API unlike secrets  │   │
+│   │        OIDC trust      = re-configure cloud OIDC trust relationship if repo moves orgs        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Restore Procedures

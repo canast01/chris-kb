@@ -41,24 +41,47 @@ flowchart TD
     class vadp,cyberark source
     class opscenter,siem ops
 ```
-
-## Pure FlashArray (Snapshot Client)
-
-Use NetBackup Snapshot Client with the Pure Storage plug-in for near-zero RPO application-consistent backups:
-
-1. Install Pure FlashArray Snapshot Client plugin on media server
-2. Configure array credentials: `nbdevconfig -liststs` to verify array visibility
-3. Create policy with snapshot method: `puredisk_instant_recovery`
-
-## AWS S3 Cloud Storage Unit
-
-```bash
-# Create cloud storage server
-nbdevconfig -creatests -stype CloudStorage -storage_server amazon.com -media_server <media_server>
-
-# Provide AWS credentials when prompted
-# Create cloud storage unit
-nbdevconfig -createstu -stype CloudStorage -storage_server amazon.com -stu S3_LongTerm
+┌──────────────────────────────── NetBackup — Architecture Integrations ────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                            NetBackup — External Integration Points                            │   │
+│   │            Auth: NBU CA host-ID certificates; AD/LDAP for web UI login; RBAC roles            │   │
+│   │                       Storage: connected via 443 (Web UI) · 1556 (vnetd)                      │   │
+│   │            Monitoring: SNMP traps / syslog / REST API to ITSM and alerting systems            │   │
+│   │      Encryption: AES-256 backup encryption; KMS key management; TLS 1.2+ on all channels      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                        ▼                        ▼                          │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Identity          │  │           Storage           │  │          Monitoring         │   │
+│   │          AD / LDAP          │  │         443 (Web UI)        │  │        SNMP / syslog        │   │
+│   │           SAML SSO          │  │         1556 (vnetd)        │  │         REST webhook        │   │
+│   │          RBAC roles         │  │       NFS / iSCSI / FC      │  │         Email alerts        │   │
+│   │         MFA optional        │  │       Dedup appliance       │  │          ServiceNow         │   │
+│   │          Cert auth          │  │        Object storage       │  │          Prometheus         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+│  Media Server  = data mover between client and storage; can be co-located with master                 │
+│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Configure lifecycle rules on S3 to transition to Glacier after 90 days for cost reduction.

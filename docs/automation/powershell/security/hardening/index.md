@@ -25,21 +25,28 @@ graph TD
     scriptBlock --> siem
     moduleAllow --> siem
 ```
-
-## Script Signing
-
-Code signing verifies that a script has not been tampered with since it was signed.
-
-```powershell
-# Get available code signing certificates
-Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert
-
-# Sign a script with a certificate
-$cert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Select-Object -First 1
-Set-AuthenticodeSignature -FilePath C:\Scripts\deploy.ps1 -Certificate $cert
-
-# Verify a signature
-Get-AuthenticodeSignature -FilePath C:\Scripts\deploy.ps1
+┌─────────────────────────────────────── PowerShell — Hardening ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   PowerShell hardening: logging, execution control, JEA, AMSI, code signing — deploy via GPO  │   │
+│   │         Enable via Group Policy: ScriptBlockLogging, ModuleLogging, TranscriptLogging         │   │
+│   │   Set ExecutionPolicy AllSigned at machine scope; sign all production scripts with code cert  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         GPO Settings (Apply via GPO)         │  │                Host Hardening               │   │
+│   │         ScriptBlockLogging: Enabled          │  │          ExecutionPolicy: AllSigned         │   │
+│   │            ModuleLogging: Enabled            │  │          Constrained Language Mode          │   │
+│   │        Transcription: Enabled + path         │  │         Disable PS 2.0 (no logging)         │   │
+│   │        ProtectedEventLogging: Enabled        │  │         Remove PS v2 Windows feature        │   │
+│   │             HTTPS WinRM: enforce             │  │             AMSI: do not disable            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   PS v2 removal  = Disable-WindowsOptionalFeature -FeatureName MicrosoftWindowsPowerShellV2   │   │
+│   │  Code signing   = Get-AuthenticodeSignature; sign with: Set-AuthenticodeSignature -Cert $cert │   │
+│   │AMSI bypass    = attackers attempt to disable; monitor for AMSI-related events in security logs│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Transcript Logging

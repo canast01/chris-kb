@@ -15,37 +15,36 @@ export CF_URL="https://confluence.example.com"
 export CF_TOKEN="<your-PAT-here>"
 export CF_AUTH="Authorization: Bearer ${CF_TOKEN}"
 ```
-
-### Spaces
-
-```bash
-# List all spaces (paginated, 25 per page)
-curl -s -H "$CF_AUTH" \
-  "${CF_URL}/rest/api/space?limit=25&start=0" | jq '.results[].key'
-
-# Get a specific space
-curl -s -H "$CF_AUTH" \
-  "${CF_URL}/rest/api/space/OPS" | jq '{key, name, description}'
-
-# Create a new space
-curl -s -X POST -H "$CF_AUTH" -H "Content-Type: application/json" \
-  "${CF_URL}/rest/api/space" \
-  -d '{
-    "key": "NEWSPACE",
-    "name": "New Space",
-    "description": {
-      "plain": { "value": "Created via API", "representation": "plain" }
-    }
-  }' | jq '{key, name, id}'
-
-# List all space keys (loop through pagination)
-next="${CF_URL}/rest/api/space?limit=50&start=0"
-while [ -n "$next" ]; do
-  resp=$(curl -s -H "$CF_AUTH" "$next")
-  echo "$resp" | jq -r '.results[].key'
-  next=$(echo "$resp" | jq -r '._links.next // empty')
-  [ -n "$next" ] && next="${CF_URL}${next}"
-done
+┌───────────────────────────────────── Confluence — CLI Reference ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                   Confluence admin CLI — run on server as confluence OS user                  │   │
+│   │             ./start-confluence.sh / ./stop-confluence.sh — start/stop application             │   │
+│   │                  ./confluence.sh status — show running/stopped state and PID                  │   │
+│   │                   Confluence REST API: GET /rest/api/space — list all spaces                  │   │
+│   │             Confluence REST API: GET /rest/api/content?type=page — search content             │   │
+│   │               pg_dump -U confluence confluence > backup.sql — PostgreSQL backup               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  SSH to Confluence server · commands run as confluence OS user · DB on separate host                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  start-confluence.sh = Script in CONFLUENCE_INSTALL/bin/ to start the app server                      │
+│  stop-confluence.sh = Graceful shutdown; waits for active sessions to complete                        │
+│  REST API = Confluence programmatic interface at /rest/api; auth: Basic or OAuth                      │
+│  Space REST = GET /rest/api/space returns all spaces with key, name, and type                         │
+│  Content REST = GET /rest/api/content; supports CQL query for filtering                               │
+│  CQL = Confluence Query Language; structured search (type=page AND space=TEAM)                        │
+│  pg_dump = PostgreSQL backup utility; creates SQL dump of Confluence DB                               │
+│  CONFLUENCE_INSTALL = Installation directory; contains bin/, conf/, and lib/                          │
+│  CONFLUENCE_HOME = Data directory; contains attachments, indexes, and backups                         │
+│  Log files = CONFLUENCE_HOME/logs/atlassian-confluence.log for app events                             │
+│  catalina.out = Tomcat log; CONFLUENCE_INSTALL/logs/catalina.out                                      │
+│  Heap dump = -XX:+HeapDumpOnOutOfMemoryError in JVM_SUPPORT_RECOMMENDED_ARGS                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Pages

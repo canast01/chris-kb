@@ -46,34 +46,35 @@ curl -sk -X GET "<download_url>" \
   -H "Authorization: Bearer <access_token>" \
   -o aiops-exec-summary.pdf
 ```
-
-Capacity planning export fields:
-
-| Field | Description |
-|---|---|
-| `system_name` | Array or cluster name |
-| `current_used_percent` | Current utilisation |
-| `predicted_30d_percent` | Projected utilisation in 30 days |
-| `predicted_90d_percent` | Projected utilisation in 90 days |
-| `days_until_full` | Projected runway |
-| `confidence` | Model confidence score (0–1) |
-
-## Scheduling AIOps Reports
-
-```bash
-# Schedule a monthly executive summary to management
-curl -sk -X POST \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/report_schedules" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "report_type": "EXECUTIVE_HEALTH_SUMMARY",
-    "frequency": "MONTHLY",
-    "day_of_month": 1,
-    "time_utc": "06:00",
-    "format": "PDF",
-    "recipients": ["cto@example.com", "storage-lead@example.com"]
-  }'
+┌─────────────────────────────────────── Dell AIOps — Reporting ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Built-in Reports               │  │               Export / Custom               │   │
+│   │             Fleet health summary             │  │              CSV metric export              │   │
+│   │                Alert history                 │  │                  PDF report                 │   │
+│   │              Capacity forecast               │  │                API data pull                │   │
+│   │            Recommendation status             │  │               Scheduled email               │   │
+│   │              Performance trends              │  │                Grafana panels               │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Reports generated on AIOps master · CSV/PDF via browser · API for automation                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Fleet health report = Summary of all monitored systems with health score and issue count             │
+│  Alert history = Time-series of alert activity; useful for trend and MTTR analysis                    │
+│  Capacity forecast report = Per-system projected fill dates for procurement planning                  │
+│  Performance trend = Historical IOPS/latency/throughput per system over custom window                 │
+│  Recommendation status = Open/resolved/dismissed counts by category and priority                      │
+│  CSV export = Raw metric data download for spreadsheet or BI tool consumption                         │
+│  PDF report = Formatted document suitable for management or audit review                              │
+│  Scheduled email = AIOps sending report on configured cadence to recipient list                       │
+│  API data pull = REST GET to retrieve report data for custom downstream tooling                       │
+│  Grafana panels = AIOps metrics exposed via REST and visualised in Grafana dashboards                 │
+│  MTTR = Mean Time To Resolve; calculated from alert history open/close timestamps                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Common Reporting Issues

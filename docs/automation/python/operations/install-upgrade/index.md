@@ -43,20 +43,28 @@ pyenv local 3.12.3
 python --version
 which python   # Should point to ~/.pyenv/shims/python
 ```
-
-### System packages (RHEL/Rocky/AlmaLinux)
-
-```bash
-# Enable EPEL + SCL
-sudo dnf install -y epel-release
-
-# Install Python 3.12 (RHEL 9+)
-sudo dnf install -y python3.12 python3.12-pip
-
-# Or build from source via pyenv on RHEL 8
-sudo dnf groupinstall "Development Tools"
-sudo dnf install -y openssl-devel bzip2-devel libffi-devel readline-devel
-pyenv install 3.12.3
+┌───────────────────────────────────── Python — Install & Upgrade ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Install Python: pyenv for version management; system Python for server automation       │   │
+│   │        Upgrade Python version: pyenv install 3.12.3; pyenv local 3.12.3; re-create venv       │   │
+│   │       Upgrade packages: pip install -U <pkg>; or poetry update; test after every upgrade      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Python Version Install            │  │               Package Upgrade               │   │
+│   │             pyenv install 3.12.3             │  │           pip install -U <package>          │   │
+│   │             pyenv global 3.12.3              │  │       pip install -r requirements.txt       │   │
+│   │       pyenv local 3.12.3 (per project)       │  │           poetry update <package>           │   │
+│   │          rm -rf .venv && re-create           │  │            pip-compile --upgrade            │   │
+│   │       pip install -r requirements.txt        │  │           Run pytest after upgrade          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ pyenv        = Python version manager; install multiple versions side-by-side; per-dir version│   │
+│   │       EOL tracking = python.org/downloads; upgrade before EOL date; PS 3.8 EOL Oct 2024       │   │
+│   │      Re-create venv= after Python upgrade; venv is tied to a specific interpreter binary      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Windows

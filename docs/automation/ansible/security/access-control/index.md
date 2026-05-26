@@ -16,31 +16,28 @@ graph TD
     ORG --> JT[Job Templates]
     USER --> ROLE[Role Assignment\nAdmin / Execute / Use / Read]
 ```
-
-### Assign Roles via Playbook
-
-```yaml
-- name: Configure AWX RBAC
-  hosts: localhost
-  gather_facts: false
-  collections:
-    - ansible.controller
-  tasks:
-    - name: Create ops team
-      ansible.controller.team:
-        name: "Linux Operations"
-        organization: "IT Infrastructure"
-        state: present
-
-    - name: Grant team execute on job template
-      ansible.controller.role:
-        user: "{{ item }}"
-        role: execute
-        job_templates:
-          - "Patch Linux Servers"
-      loop:
-        - jsmith
-        - mjones
+┌────────────────────────────────────── Ansible — Access Control ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Ansible access control: who can run which playbooks against which hosts — enforced via AWX  │   │
+│   │AWX RBAC model: organizations → teams → users; permissions per job template, inventory, credent│   │
+│   │     CLI access: limit SSH key distribution; service accounts only; no shared personal keys    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              AWX RBAC Hierarchy              │  │              Permission Levels              │   │
+│   │          Organization → Team → User          │  │               Admin: full CRUD              │   │
+│   │           Credentials: team-scoped           │  │            Execute: run jobs only           │   │
+│   │           Inventories: team-scoped           │  │            Read: view job output            │   │
+│   │          Job templates: team-scoped          │  │           Use: attach to template           │   │
+│   │            LDAP/SAML sync for SSO            │  │           Approval: require review          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        AWX organization = top-level RBAC container; isolate business units or customers       │   │
+│   │   Team             = group of users within an organization; assign permissions at team level  │   │
+│   │ Approval workflow= AWX Workflow Job Template can require human approval step before execution │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Least Privilege on Managed Nodes

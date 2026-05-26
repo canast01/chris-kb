@@ -25,24 +25,28 @@ flowchart TD
     parsePlan --> alertOps
     alertOps --> remediate
 ```
-
----
-
-## Drift Detection
-
-### What is Drift
-
-Drift occurs when the real infrastructure diverges from what Terraform's state describes — caused by manual changes, external automation, or resource failures.
-
-```bash
-# Detect drift: plan with a refresh forces a state update first
-terraform plan -refresh=true
-
-# Explicitly refresh state from real infrastructure before planning
-terraform apply -refresh-only
-
-# Accept the refreshed state without making other changes
-terraform apply -refresh-only -auto-approve
+┌────────────────────────────────────── Terraform — Health Checks ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Terraform health checks: state drift, stale lock, provider version currency, CI pipeline pass │   │
+│   │   Drift detection: terraform plan on schedule; alert if non-empty plan in stable environment  │   │
+│   │       Stale lock: terraform force-unlock <lock-id> after confirming no apply is running       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 State Health                 │  │               Pipeline Health               │   │
+│   │        terraform plan (expect empty)         │  │         fmt -check: no format drift         │   │
+│   │       Check for stale lock in DynamoDB       │  │          validate: no config errors         │   │
+│   │            S3 versioning enabled             │  │            tflint: zero warnings            │   │
+│   │        terraform version (up to date)        │  │            checkov: zero failures           │   │
+│   │       Provider plugin version currency       │  │          Plan approved before apply         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Drift          = when actual infra state diverges from Terraform state; plan shows changes  │   │
+│   │   force-unlock   = removes DynamoDB lock entry; only run if certain no apply is in progress   │   │
+│   │    Scheduled plan = run terraform plan -detailed-exitcode in CI; exit 2 = changes detected    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Using terraform plan for Drift Detection

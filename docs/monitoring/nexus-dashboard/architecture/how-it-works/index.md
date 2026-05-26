@@ -1,5 +1,37 @@
 # Nexus Dashboard — How It Works (Monitoring)
 
+```
+┌─────────────────────────────────── Nexus Dashboard — How It Works ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Step 1: Onboarding — add APIC or NX-OS fabric to Nexus Dashboard with credentials       │   │
+│   │          Step 2: Telemetry — switches stream metrics via MDT/gRPC to NDI continuously         │   │
+│   │       Step 3: Analysis — NDI ML models score health, detect anomalies, and analyse flows      │   │
+│   │          Step 4: Alert — health score drops or anomaly detected triggers event in NDI         │   │
+│   │     Step 5: Notification — email or webhook sent; ServiceNow integration creates incident     │   │
+│   │        Step 6: Remediation — engineer reviews event; NDI shows affected objects and fix       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Switches stream telemetry to ND data network IP · APIC queried via REST · ND cluster processes       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Onboarding = Adding fabric to ND; requires APIC IP/credentials or switch SSH access                  │
+│  MDT = Model-Driven Telemetry; NX-OS sensor push to NDI for real-time data                            │
+│  gRPC = Transport for MDT streaming; port 9339 from switch to ND data IP                              │
+│  Health score = NDI composite score per site/fabric/object from telemetry analysis                    │
+│  Anomaly = NDI ML deviation from learned baseline in fabric metrics                                   │
+│  Flow analysis = NDI tracking actual IP flows for EPG connectivity verification                       │
+│  Event = NDI alert for health drop, anomaly, or assurance violation                                   │
+│  Assurance = NDI verifying actual fabric state matches ACI policy intent                              │
+│  Notification = Email or webhook from ND when event fires                                             │
+│  ServiceNow = NDI integration creating ITSM incidents from fabric events                              │
+│  Affected objects = NDI identifying specific switch, interface, or EPG causing health drop            │
+│  Fabric site = Single ACI fabric or DCNM/NDFC managed NX-OS domain added to ND                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 Cisco Nexus Dashboard (ND) is a centralised operations platform for Cisco ACI and NX-OS data centre fabrics. It provides unified management, health monitoring, policy orchestration, and network insights through a microservices-based architecture. Services including Nexus Dashboard Fabric Controller (NDFC) and Nexus Dashboard Insights (NDI) run on top of the ND platform and are independently licensed and deployed.
 
 ---
@@ -8,20 +40,7 @@ Cisco Nexus Dashboard (ND) is a centralised operations platform for Cisco ACI an
 
 A Nexus Dashboard cluster consists of 3 or 5 nodes. All nodes are peers in a Raft-based cluster consensus model. A virtual IP (VIP) provides a single management entry point.
 
-```mermaid
-graph TB
-  ND["Cisco Nexus Dashboard\n(3-node cluster)"] --> NDFC["NDFC — Fabric Controller"]
-  ND --> NDI["ND Insights\ntelemetry · flow analysis"]
-  ND --> NDO["ND Orchestrator\nmulti-site ACI"]
-  NDFC & NDI & NDO --> FABRICS["Managed Fabrics\nNexus · ACI · MDS"]
-  ADMIN(["Network Admin"]) -->|"browser"| ND
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class ND ctrl
-  class NDFC,NDI,NDO mgmt
-  class ADMIN,FABRICS host
-```
+
 
 ---
 

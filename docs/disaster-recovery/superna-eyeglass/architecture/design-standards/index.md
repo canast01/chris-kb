@@ -7,40 +7,48 @@ SyncIQ policy names must be consistent between primary and DR clusters and follo
 ```text
 <source-cluster>-<target-cluster>-<zone-or-path>
 ```
-
-| Check | Standard |
-|---|---|
-| SMB share mapping | Every primary share must have a corresponding DR share defined in Eyeglass |
-| NFS export mapping | Every primary NFS export mapped for DR |
-| Quota mapping | All quotas (user, group, directory) aligned between primary and DR cluster |
-| ACL verification | Share ACLs reference AD groups (not local users) to survive failover |
-| DNS zone delegation | Pre-configured and validated in DNS preview before any DR test |
-
-Verify via Admin UI: DR → Readiness → expand each category for gap report.
-
-## RPO Targets
-
-Define RPO thresholds per SyncIQ policy in Eyeglass:
-
-| Data Tier | SyncIQ Schedule | RPO Target | Eyeglass Alert Threshold |
-|---|---|---|---|
-| Tier 1 (critical file services) | Continuous | < 15 minutes | Alert at > 10 minutes lag |
-| Tier 2 (departmental shares) | Every 4 hours | < 4 hours | Alert at > 3.5 hours lag |
-| Tier 3 (archival) | Daily | < 24 hours | Alert at > 20 hours lag |
-
-```mermaid
-flowchart LR
-    t1["Tier 1\nCritical file services\nContinuous SyncIQ\nRPO < 15 min"]
-    t2["Tier 2\nDepartmental shares\nEvery 4 hours\nRPO < 4 hours"]
-    t3["Tier 3\nArchival data\nDaily SyncIQ\nRPO < 24 hours"]
-
-    egMonitor["Eyeglass\nRPO Monitor"]
-    snmpAlert["SNMP / Email\nAlert"]
-
-    t1 -->|"lag threshold\n10 min"| egMonitor
-    t2 -->|"lag threshold\n3.5 hours"| egMonitor
-    t3 -->|"lag threshold\n20 hours"| egMonitor
-    egMonitor -->|"breach detected"| snmpAlert
+┌───────────────────────────────── Superna Eyeglass — Design Standards ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Sizing Guidelines               │  │               HA Requirements               │   │
+│   │         Deduplicate where supported          │  │           N+1 component redundancy          │   │
+│   │          Bandwidth: 10 GbE minimum           │  │          Heartbeat / health monitor         │   │
+│   │          Storage: 130% of raw data           │  │          Separate mgmt / data VLANs         │   │
+│   │         Latency: < 10 ms to storage          │  │          Out-of-band access (IPMI)          │   │
+│   │           CPU: 8+ vCPU for engine            │  │          Anti-affinity VM placement         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Ports: 443 (Eyeglass web UI) · 8080 (REST API) · 8116 (Isilon/PowerScale mgmt)                     │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                             Standard Superna Eyeglass Design Rules                            │   │
+│   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
+│   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
+│   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
+│   │Encryption enabled on all channels: HTTPS/TLS for all management; SyncIQ data replication encry│   │
+│   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
+│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
+│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
+│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
+│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
+│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
+│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
+│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
+│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
+│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
+│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
+│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
+│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
+│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## DR Readiness Score

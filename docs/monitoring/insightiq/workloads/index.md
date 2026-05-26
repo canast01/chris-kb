@@ -50,31 +50,36 @@ isi statistics client list \
   --limit=10 \
   --format table
 ```
-
-Workload classification criteria:
-
-| I/O Pattern | Read % | Block Size | Latency Tolerance | Example |
-|---|---|---|---|---|
-| Streaming Read | > 80% | > 256 KB | Moderate | Backup restore, media playout |
-| Streaming Write | < 20% | > 256 KB | Moderate | Video ingest, log aggregation |
-| Random Mixed | 40–60% | < 64 KB | Low | VMware NFS, databases |
-| Metadata Heavy | ~50% | < 8 KB | Very low | HOME dirs, many small files |
-| Batch Analytics | Variable | > 1 MB | High | Hadoop/Spark HDFS jobs |
-
-## Client Node Affinity and SmartConnect
-
-Clients connect to PowerScale via SmartConnect DNS zones, which load-balance connections across nodes. An imbalanced distribution is visible in InsightIQ.
-
-```bash
-# Check current SmartConnect zone configuration
-ssh admin@powerscale.example.com
-isi network pools list
-
-# Check per-node client count
-isi statistics node list --stats=node.clientstats.connected --format table
-
-# Manually check client connection distribution
-isi statistics client list --format csv | awk -F',' '{print $2}' | sort | uniq -c | sort -rn
+┌──────────────────────────────────── InsightIQ — Workload Analysis ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Workload Identification            │  │               Workload Sizing               │   │
+│   │                Top-IO clients                │  │              IOPS per workload              │   │
+│   │                Top-IO shares                 │  │              Latency SLA check              │   │
+│   │              Protocol by client              │  │             Throughput required             │   │
+│   │             Time-of-day pattern              │  │              Capacity per team              │   │
+│   │                Growth per dir                │  │              Chargeback report              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Workload data from InsightIQ client stats · per-share and per-directory tracking                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Workload = IO pattern from a specific client, application, or directory                              │
+│  Top-IO client = Client IP or hostname generating highest IOPS or throughput                          │
+│  Top-IO share = NFS export or SMB share with highest IO activity                                      │
+│  Protocol by client = Which protocol (NFS/SMB/S3) each client uses                                    │
+│  Time-of-day pattern = IO activity profile over 24h; identifies batch window vs real-time             │
+│  Growth per directory = Capacity growth rate for specific directories; useful for chargeback          │
+│  Latency SLA = Target latency for a workload; InsightIQ used to verify compliance                     │
+│  Chargeback = Attributing storage cost to departments using per-client/share IO data                  │
+│  Capacity per team = Space consumption breakdown by team based on directory hierarchy                 │
+│  Client stats = isi_clientstats on PowerScale; must be enabled for per-client data                    │
+│  IOPS per workload = Average and peak IOPS for a specific application or team                         │
+│  Throughput required = Peak bandwidth needed; used for network and controller sizing                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Using Client Data for Capacity Planning

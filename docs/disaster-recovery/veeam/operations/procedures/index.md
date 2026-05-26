@@ -30,46 +30,45 @@ sequenceDiagram
     VBR->>vCenter: Unregister IVR VM
     VBR->>Proxy: Unmount vPower NFS datastore
 ```
-
-### File-Level Restore Test
-
-For Windows VMs, mount the backup and browse files to confirm data integrity:
-
-1. In the console, right-click the backup job and select **Restore guest files > Microsoft Windows**.
-2. Choose the restore point.
-3. Browse to a known file (e.g., a log file with a recent timestamp) and confirm it is accessible.
-4. Optionally restore one file to an alternate location to confirm write path.
-
----
-
-## Backup Job Creation Checklist
-
-Before creating a new backup job, confirm the following are defined:
-
-| Parameter | Decision Required |
-|---|---|
-| VM scope | Individual VMs, container (folder/tag/cluster), or policy-based |
-| Proxy assignment | Automatic or specific proxy (network vs. hot-add vs. direct SAN) |
-| Repository | Target SOBR or standalone repo — confirm sufficient capacity |
-| Retention | Restore points count or GFS (daily/weekly/monthly/yearly) |
-| Schedule | Daily window; allow offset if proxy is shared across jobs |
-| Application-aware | Enable for VMs with SQL, Exchange, Oracle — requires guest credentials |
-| Guest OS credentials | Pre-add credentials to the Veeam Credentials Manager |
-| Exclusions | Exclude swap/temp disks, ISO mount points, VMs in dev/test if appropriate |
-| Notifications | Enable email or Veeam ONE alert for job failures |
-
-```powershell
-# Create a simple VM backup job via PowerShell
-$vm     = Find-VBRViEntity -Name "vm01"
-$repo   = Get-VBRBackupRepository -Name "SOBR-Primary"
-$cred   = Get-VBRCredentials -Name "svc-veeam-guest"
-
-Add-VBRViBackupJob `
-    -Name "vm01-daily" `
-    -Entity $vm `
-    -BackupRepository $repo `
-    -GuestCredentials $cred `
-    -ApplicationAwareProcessing $true
+┌───────────────────────────────────────── Veeam — Procedures ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Routine Procedures              │  │                DR Procedures                │   │
+│   │          Add new protection source           │  │              Initiate failover              │   │
+│   │           Modify retention policy            │  │               Validate replica              │   │
+│   │          Expire old recover points           │  │              Redirect host I/O              │   │
+│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
+│   │           Service account rotation           │  │            Failback to production           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                             Change Control Requirements for Veeam                             │   │
+│   │           All changes to protection policies require change ticket with rollback plan         │   │
+│   │                      Failover tests must be scheduled in maintenance window                   │   │
+│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
+│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
+│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
+│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
+│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
+│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
+│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
+│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
+│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
+│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
+│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
+│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
+│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
+│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
+│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 After creation:

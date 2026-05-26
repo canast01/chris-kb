@@ -23,30 +23,35 @@ graph LR
     VALIDATE -->|"Approved"| REINTRODUCE["Reintroduce to Production"]
     VALIDATE -->|"Issues found"| RESTORE
 ```
-
-## Data Validation Checklist
-
-| Step | Owner | Pass condition |
-|---|---|---|
-| AV scan complete | IR team | 0 detections or all detections reviewed and cleared |
-| File integrity check | IR team | Hash manifest matches backup catalogue |
-| Encrypted file check | IR team | No files in known encrypted extensions (`.locky`, `.ryuk`, etc.) |
-| Application startup test | App team | Application starts and reaches health check endpoint |
-| Database consistency check | DBA | No corruption reported (DBCC CHECKDB / pg_dump test) |
-| Data completeness | Business owner | Critical records present up to the chosen recovery point |
-| Sign-off | DR lead | Written approval before data leaves clean room |
-
-## Database Integrity Checks
-
-```sql
--- SQL Server: check for corruption
-DBCC CHECKDB ('YourDatabase') WITH NO_INFOMSGS, ALL_ERRORMSGS;
-
--- PostgreSQL: test dump (will fail if corrupted)
-pg_dump -h localhost -U postgres -d recovered_db > /dev/null && echo "Dump OK"
-
--- Oracle: check data file integrity
-RMAN> VALIDATE DATABASE;
+┌─────────────────────────────────────────── IRE Clean Room ────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         IRE Clean Room — isolated ESXi + vCenter + workstations for validated recovery        │   │
+│   │                   See product-specific sub-sections for detailed procedures                   │   │
+│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
+│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
+│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Production site · DR site · Replication link · Management network · Vault network                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
+│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
+│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
+│  Failback      = returning operations to production site after DR resolved                            │
+│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
+│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
+│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
+│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
+│  DR Test       = planned failover test; validates RTO without real disaster                           │
+│  Replication   = continuous or periodic data copy to secondary site or vault                          │
+│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
+│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Escalation — If Malware Found

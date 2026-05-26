@@ -34,47 +34,45 @@ flowchart TD
     class assess decision
     class start,pm,fo terminal
 ```
-
----
-
-## Creating Recovery Plans
-
-A recovery plan references one or more protection groups and defines the power-on sequence, IP customisation rules, and pre/post-recovery scripts.
-
-### Recovery Plan Design Rules
-
-| Setting | Standard |
-|---|---|
-| Name convention | `RP-P<priority>-<tier>-<site-pair>` (e.g., `RP-P1-DB-DC1DC2`) |
-| Boot order | Infrastructure (DC/DNS) → DB tier → App tier → Web/presentation tier |
-| Step delay | 120 s after DC/DNS; 60 s after DB tier before app start |
-| IP customisation | Required for all VMs in non-routed test/recovery networks |
-| Max VMs per plan | 500 VMs (VLSR 9.0 supports up to 1500 VMs per protection group) |
-
-### Creating a Recovery Plan
-
-1. Navigate to **Site Recovery** > **Recovery Plans** > **New Recovery Plan**.
-2. Enter plan name using the naming convention above.
-3. Select the protection group(s) to include.
-4. Configure the recovery site.
-5. Set the **Test network** — use the dedicated bubble/test portgroup (e.g., `vPG-SRM-Test-Bubble`) to isolate test VMs from production networks.
-6. Define VM boot sequence — drag VMs into numbered recovery steps; set per-step delays.
-7. Add IP customisation rules for VMs that need different IP configuration at the recovery site.
-8. Optionally attach **pre-power-on scripts** (e.g., DNS record update, load balancer pool drain) and **post-power-on scripts** (e.g., application health check, monitoring alert suppression).
-9. Finish and run a validation before first use.
-
-### Attaching Custom Scripts
-
-SRM supports PowerShell and shell scripts called as recovery steps:
-
-```powershell
-# Example: post-power-on script to verify a Windows service is running
-param([string]$ServerName, [string]$ServiceName)
-$svc = Get-Service -ComputerName $ServerName -Name $ServiceName -ErrorAction Stop
-if ($svc.Status -ne 'Running') {
-    throw "Service $ServiceName on $ServerName is not running after failover"
-}
-Write-Output "Service $ServiceName is running on $ServerName"
+┌────────────────────────────────────────── SRM — Procedures ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Routine Procedures              │  │                DR Procedures                │   │
+│   │          Add new protection source           │  │              Initiate failover              │   │
+│   │           Modify retention policy            │  │               Validate replica              │   │
+│   │          Expire old recover points           │  │              Redirect host I/O              │   │
+│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
+│   │           Service account rotation           │  │            Failback to production           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                              Change Control Requirements for SRM                              │   │
+│   │           All changes to protection policies require change ticket with rollback plan         │   │
+│   │                      Failover tests must be scheduled in maintenance window                   │   │
+│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
+│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Place scripts in a location accessible to the SRM server service account and reference the UNC path in the recovery plan step.

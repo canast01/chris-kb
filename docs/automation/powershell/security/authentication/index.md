@@ -33,21 +33,27 @@ graph TD
     azKeyVault --> psCred
     psCred --> cmdlet
 ```
-
-## Storing Credentials Securely
-
-Use `Export-Clixml` to save credentials encrypted with the current user's Windows Data Protection API (DPAPI) key. Only the same user on the same machine can decrypt the file.
-
-```powershell
-# Save credential to disk (encrypted — current user only)
-$cred = Get-Credential
-$cred | Export-Clixml -Path C:\Secrets\vcenter-cred.xml
-
-# Load credential from disk
-$cred = Import-Clixml -Path C:\Secrets\vcenter-cred.xml
-
-# Use in a script (no interactive prompt)
-Connect-VIServer -Server vcenter.example.com -Credential $cred
+┌───────────────────────────────────── PowerShell — Authentication ─────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ PowerShell authentication: Kerberos (domain), NTLM (fallback), certificate-based for remoting │   │
+│   │     Service principal: use certificate auth for Azure/cloud (no password rotation needed)     │   │
+│   │  Secrets in scripts: use SecretManagement module; back-ends: KeyVault, SecretStore, CyberArk  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Remoting Auth                 │  │              Secret Management              │   │
+│   │       Kerberos: domain joined default        │  │       Install-Module SecretManagement       │   │
+│   │       NTLM: workgroup or cross-domain        │  │        Register-SecretVault -Name AKV       │   │
+│   │        Certificate: mutual TLS WinRM         │  │         Get-Secret -Name MyPassword         │   │
+│   │       CredSSP: avoid (double-hop only)       │  │        No ConvertTo-SecureString -Key       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      SecretManagement = PS module; abstraction layer for secret retrieval; vault-agnostic     │   │
+│   │  CredSSP          = delegates credentials to remote host; security risk; use Kerberos or JEA  │   │
+│   │  Managed Identity = Azure-side auth; PS running in Azure VM can get token without credentials │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## SecretManagement Module

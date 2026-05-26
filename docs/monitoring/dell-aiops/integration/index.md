@@ -12,18 +12,34 @@ Verify collection status:
 CloudIQ portal > Assets > [System] — check "Last Seen" timestamp
 SCG admin UI > Systems > [System] > Connection Status
 ```
-
-For Critical recommendations, target the **incident** table rather than change_request for immediate response.
-
-## Aria Operations Integration
-
-The Dell CloudIQ management pack for Aria Operations pulls AIOps health score and recommendation data into vROps, enabling correlated VMware + Dell storage views.
-
-```text
-Aria Operations > Admin > Solutions > Dell CloudIQ Management Pack
-- API URL: https://api.cloudiq.dell.com
-- Client ID / Secret: (from CloudIQ API client — read-only)
-- Collection interval: 15 minutes
+┌─────────────────────────────────── Dell AIOps — Integration Guide ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               ITSM Integration               │  │             Observability Stack             │   │
+│   │              ServiceNow webhook              │  │             Grafana data source             │   │
+│   │             Auto incident create             │  │              Splunk HEC forward             │   │
+│   │                CMDB CI update                │  │             Elastic integration             │   │
+│   │              PagerDuty routing               │  │              Custom REST client             │   │
+│   │              Jira issue create               │  │             Prometheus exporter             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  AIOps on-prem · outbound TCP 443 to ITSM/SaaS targets · no inbound connections required              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ServiceNow webhook = AIOps POST to ServiceNow event endpoint on alert fire                           │
+│  CMDB CI = Configuration Item in ServiceNow matched to AIOps monitored system                         │
+│  Auto incident = ServiceNow incident created automatically from AIOps alert payload                   │
+│  PagerDuty = On-call routing; AIOps sends Events API v2 payload for escalation                        │
+│  Jira issue = AIOps creates Jira bug/task for recommendation tracking in dev teams                    │
+│  Grafana data source = AIOps REST API configured as Grafana JSON data source                          │
+│  Splunk HEC = HTTP Event Collector; AIOps forwards alerts as events for SIEM correlation              │
+│  Prometheus exporter = AIOps /metrics endpoint scraped by Prometheus                                  │
+│  Elastic integration = AIOps alert forwarded to Elasticsearch for log analytics                       │
+│  REST client = Custom script polling AIOps API and pushing to proprietary system                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 This integration allows correlating VM workload contention in Aria Operations with storage anomalies detected by Dell AIOps, enabling end-to-end root cause analysis across the VMware + Dell stack.

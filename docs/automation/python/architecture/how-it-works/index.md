@@ -22,23 +22,27 @@ flowchart TD
     style B fill:#1565c0,color:#fff
     style C fill:#2e7d32,color:#fff
 ```
-
----
-
-## Package Management
-
-```toml
-[tool.poetry.dependencies]
-python = "^3.11"
-requests = "^2.31"
-boto3 = "^1.34"
-pydantic = "^2.5"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.0"
-black = "^24.0"
-mypy = "^1.8"
-ruff = "^0.3"
+┌──────────────────────────────────────── Python — How It Works ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       CPython: source → bytecode (.pyc) → interpreted by CPython VM; no AOT compilation       │   │
+│   │     Import system: finds modules via sys.path; .pth files extend path; namespace packages     │   │
+│   │    async/await: coroutines on asyncio event loop; use for I/O-bound concurrency (HTTP, SSH)   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Execution          │  │         Concurrency         │  │          Packaging          │   │
+│   │   Source → bytecode (.pyc)  │  │    threading (GIL bound)    │  │        pyproject.toml       │   │
+│   │    CPython VM interprets    │  │   multiprocessing (true //  │  │    pip install -e . (dev)   │   │
+│   │    sys.path import search   │  │     asyncio (I/O bound)     │  │    build + twine publish    │   │
+│   │   PYTHONDONTWRITEBYTECODE   │  │      concurrent.futures     │  │        wheel + sdist        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │GIL         = Global Interpreter Lock; prevents true thread parallelism in CPython; use multipr│   │
+│   │   asyncio     = stdlib event loop; use await with async-native libraries (aiohttp, aioboto3)  │   │
+│   │     concurrent.futures = ThreadPoolExecutor / ProcessPoolExecutor; simpler parallelism API    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

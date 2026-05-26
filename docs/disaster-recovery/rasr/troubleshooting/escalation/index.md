@@ -48,15 +48,45 @@ Copy-Item "$logDir\*.log" $archive
 # Also collect RASR application event log
 Get-EventLog -LogName Application -Source "RASR*" -Newest 50 | Export-Csv "$archive\RASR-AppEvents.csv" -NoTypeInformation
 ```
-
-### iDRAC Logs (for recovery boot failures)
-
-```bash
-# Export Lifecycle Controller logs via racadm
-racadm lclog export -f lclog.xml -t XML
-
-# Export system event log
-racadm getsel > sel.txt
+┌────────────────────────────────────────── RASR — Escalation ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     RASR — Escalation Path                                    │   │
+│   │              L1 Triage: review logs, match to known issues in runbook (0–30 min)              │   │
+│   │         L2 Engineering: deep analysis, config review, lab reproduction (30 min – 4 h)         │   │
+│   │             Vendor Support: open case with log bundle if unresolved at L2 (> 4 h)             │   │
+│   │            Sev1 (data loss / production impact): page on-call + open critical case            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                            Information to Collect Before Escalating                           │   │
+│   │                Product version: RASR version string from About / version command              │   │
+│   │                                 Full log bundle: cybersense scan                              │   │
+│   │                     Symptom timeline: when first occurred; any changes made                   │   │
+│   │                Scope: single job / all jobs / all components — narrows root cause             │   │
+│   │                    Error codes: exact error messages and exit codes from logs                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Or from iDRAC web UI: **Maintenance** → **Lifecycle Log** → **Export**.

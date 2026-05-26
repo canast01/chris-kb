@@ -17,40 +17,56 @@ flowchart TD
 
     exportCfg --> deployOVA --> importCfg --> verifyScore --> validate24h --> decommOld --> done
 ```
-
-### Upgrade Process
-
-1. Download new OVA from [Superna support portal](https://support.superna.net)
-2. Deploy new Eyeglass OVA alongside the existing appliance (do not shut down existing)
-3. Power on new appliance; set static IP (different from existing)
-4. Import configuration backup to new appliance
-5. Re-register PowerScale clusters and DNS servers
-6. Verify DR readiness score returns to 100%
-7. Shut down old appliance after 24-hour validation period
-
-In-place upgrade support varies by version — check release notes before proceeding.
-
-### Post-Upgrade Validation
-
-- [ ] SyncIQ policies detected and showing correct state
-- [ ] DR readiness score = 100%
-- [ ] SMB shares visible and correctly mapped
-- [ ] NFS exports visible and correctly mapped
-- [ ] DNS integration verified (test DNS preview)
-- [ ] SNMP/syslog notifications still reaching monitoring/SIEM
-- [ ] Failover test with test shares (if possible in maintenance window)
-
-## OneFS Upgrade Impact
-
-After any PowerScale OneFS upgrade, re-validate Eyeglass policy detection:
-
-```text
-Post-OneFS upgrade checklist:
-  1. Log in to Eyeglass Admin UI
-  2. DR → Replication Policies → Rescan
-  3. Verify all SyncIQ policies are detected
-  4. DR → Readiness — confirm score returns to 100%
-  5. Check for any new Eyeglass warnings about API changes
+┌──────────────────────────────── Superna Eyeglass — Install & Upgrade ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                         Superna Eyeglass — Installation Prerequisites                         │   │
+│   │             OS: supported Linux or Windows Server (see vendor compatibility matrix)           │   │
+│   │         Network: 443 (Eyeglass web UI) · 8080 (REST API) — ensure firewall allows these       │   │
+│   │  Auth: Eyeglass admin roles; PowerScale admin credentials; AD integration for DFS-N management│   │
+│   │  Storage: ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ re│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        Install Sequence                                       │   │
+│   │                  1  Deploy control plane component and configure network access               │   │
+│   │                          2  Configure storage and network connectivity                        │   │
+│   │                        3  Install agent/proxy/splitter on protected hosts                     │   │
+│   │                      4  Register sources and configure protection policies                    │   │
+│   │                        5  Run first job; verify completion; test restore                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        Upgrade Sequence                                       │   │
+│   │                 1  Review release notes and compatibility matrix before upgrade               │   │
+│   │                   2  Snapshot or backup the control plane VM before upgrading                 │   │
+│   │                  3  Upgrade control plane first, then proxies/agents/appliances               │   │
+│   │                       4  Validate jobs resume automatically after upgrade                     │   │
+│   │                        5  Document version change and update CMDB record                      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
+│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
+│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
+│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
+│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
+│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
+│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
+│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
+│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
+│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
+│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
+│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
+│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
+│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 If Eyeglass shows API errors after OneFS upgrade, check if an Eyeglass update is required to support the new OneFS version.

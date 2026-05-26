@@ -25,26 +25,27 @@ provider "aws" {
   # Never: hardcoded credentials in .tf files
 }
 ```
-
----
-
-## Azure Provider (`azurerm`)
-
-```hcl
-provider "azurerm" {
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = true
-    }
-    key_vault {
-      purge_soft_delete_on_destroy = false
-    }
-  }
-
-  subscription_id = var.azure_subscription_id
-  tenant_id       = var.azure_tenant_id
-  use_oidc        = true   # Preferred for CI — uses AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID
-}
+┌────────────────────────────────────── Terraform — Integrations ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Terraform integrates with CI/CD, secret managers, monitoring, and ITSM via providers and APIs │   │
+│   │          GitHub Actions: terraform plan in PR check; terraform apply on merge to main         │   │
+│   │Secrets: provider auth via env vars or OIDC; Vault provider for secret injection into resources│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            CI/CD            │  │           Secrets           │  │          Platforms          │   │
+│   │    GitHub Actions (OIDC)    │  │        Vault provider       │  │       AWS, Azure, GCP       │   │
+│   │    GitLab CI: plan/apply    │  │      env var: TF_VAR_x      │  │        VMware vSphere       │   │
+│   │   Atlantis (PR automation)  │  │   AWS SSM Parameter Store   │  │      NetApp, Pure, Dell     │   │
+│   │  Terraform Cloud/Enterprise │  │ No secrets in .tfvars in git│  │       Kubernetes, Helm      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Atlantis    = Terraform PR automation; runs plan on PR, apply on merge; self-hosted      │   │
+│   │    TF Cloud    = HashiCorp SaaS; remote execution, Sentinel policies, team RBAC, audit log    │   │
+│   │  Vault provider= reads secrets from Vault at apply time; writes dynamic credentials to state  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash

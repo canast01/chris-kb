@@ -22,33 +22,30 @@ flowchart TD
     errType -->|Script logic\nundefined var| strictMode["Set-StrictMode -Version Latest\nadd breakpoint()"]
     strictMode --> stepDebug["Set-PSBreakpoint\nstep through execution"]
 ```
-
-| Policy | Behaviour |
-|---|---|
-| `Restricted` | No scripts allowed (Windows default) |
-| `AllSigned` | Only scripts signed by a trusted publisher |
-| `RemoteSigned` | Remote scripts need a signature; local scripts run freely |
-| `Unrestricted` | All scripts run; remote scripts prompt for confirmation |
-| `Bypass` | Nothing blocked, no warnings |
-
-## Module Not Found Errors
-
-```powershell
-# Confirm the module is installed
-Get-InstalledModule -Name ActiveDirectory -ErrorAction SilentlyContinue
-
-# Check PSModulePath
-$env:PSModulePath -split ';'
-
-# Add a custom module path permanently (current user)
-$profilePath = [System.Environment]::GetFolderPath('MyDocuments') + '\PowerShell\Modules'
-[Environment]::SetEnvironmentVariable('PSModulePath', "$env:PSModulePath;$profilePath", 'User')
-
-# Diagnose import failure with verbose output
-Import-Module -Name MyModule -Verbose -ErrorAction Stop
-
-# Check for .NET dependency issues
-[System.AppDomain]::CurrentDomain.GetAssemblies() | Where-Object Location -like '*MyModule*'
+┌───────────────────────────────────── PowerShell — Common Issues ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                       Most frequent PowerShell failures and their fixes                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               Issue: Script cannot be loaded because running scripts is disabled              │   │
+│   │                    Fix: Set-ExecutionPolicy RemoteSigned -Scope CurrentUser                   │   │
+│   │         Note: use -Scope Process for temporary bypass without changing machine policy         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 Issue: WinRM Access is denied                                 │   │
+│   │      Cause A: user not in WinRM access DACL → fix: Set-PSSessionConfiguration permissions     │   │
+│   │      Cause B: account locked or password expired → fix: unlock AD account, reset password     │   │
+│   │              Cause C: HTTPS cert invalid → fix: renew cert, update WinRM listener             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                           Issue: Module not found after installation                          │   │
+│   │      Cause A: installed under different user scope → fix: Install-Module -Scope AllUsers      │   │
+│   │      Cause B: PSModulePath does not include install directory → fix: add path to env var      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## PowerShell Remoting Issues

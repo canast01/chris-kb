@@ -16,16 +16,29 @@ On each runner host, check the installed version:
 cd /opt/actions-runner   # or wherever the runner is installed
 ./config.sh --version
 ```
-
-Wait for any in-flight workflow jobs to complete before proceeding. If runners are registered in a runner group, temporarily remove the runner from active job queues via the GitHub UI (Settings > Actions > Runners) rather than hard-stopping the service.
-
-### 3. Download and install the new runner package
-
-```bash
-cd /opt/actions-runner
-curl -O -L https://github.com/actions/runner/releases/download/v<VERSION>/actions-runner-linux-x64-<VERSION>.tar.gz
-tar xzf ./actions-runner-linux-x64-<VERSION>.tar.gz
-./bin/installdependencies.sh
+┌───────────────────────────────── GitHub Actions — Install & Upgrade ──────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  GitHub Actions is a hosted service — no server-side installation; manage self-hosted runners │   │
+│   │    Self-hosted runner install: download from GitHub, configure, register, run as OS service   │   │
+│   │   Runner updates: GitHub-hosted auto-update weekly; self-hosted manual or auto-update policy  │   │
+│   │        ARC (Actions Runner Controller): Kubernetes-based auto-scaling runner deployment       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Self-Hosted Runner Setup           │  │            ARC Setup (Kubernetes)           │   │
+│   │       1. Settings → Actions → Runners        │  │          helm install arc oci://...         │   │
+│   │          2. Download runner package          │  │      kubectl apply -f runnerdeployment      │   │
+│   │         3. ./config.sh --url --token         │  │          Set minRunners/maxRunners          │   │
+│   │           4. sudo ./svc.sh install           │  │           Configure runner labels           │   │
+│   │            5. sudo ./svc.sh start            │  │           Verify runners register           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ARC             = Actions Runner Controller; Kubernetes operator managing ephemeral runner pods│   │
+│   │  Runner version  = must be within 30 days of latest; GitHub stops routing jobs to old runners │   │
+│   │Ephemeral       = --ephemeral flag: runner deregisters after each job; clean environment per ru│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Re-registration is not required for in-place upgrades — the existing `.credentials` and `.runner` files remain valid.
