@@ -1,5 +1,52 @@
 # SANnav — How It Works
 
+```
+┌──────────────────────────────────── Brocade SANnav — How It Works ────────────────────────────────────┐
+│                                                                                                       │
+│  SANnav discovers switches via SNMP/REST, aggregates MAPS events, manages zones centrally.            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Discovery & Polling              │  │           Zone Management Workflow          │   │
+│   │         Add switch IP → SNMP v3 poll         │  │         GUI: browse fabric topology         │   │
+│   │         FOS REST API credential auth         │  │          Zone wizard: alias + zone          │   │
+│   │        Topology built: domain + ports        │  │          Push zone config to fabric         │   │
+│   │         Inventory: SFP/HBA/port data         │  │          cfgsave + cfgenable remote         │   │
+│   │        MAPS alerts: event forwarding         │  │          Zone diff: compare changes         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SANnav polls switches for state; zone changes are staged and pushed via FOS API.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Performance Monitoring            │  │             Firmware Management             │   │
+│   │         Port utilisation: 5-min poll         │  │          Upload FOS image to SANnav         │   │
+│   │           Dashboards: top talkers            │  │          Stage firmware per switch          │   │
+│   │         Historical: 90-day retention         │  │         Schedule: maintenance window        │   │
+│   │         Alerts: email/SNMP on breach         │  │          HA upgrade: non-disruptive         │   │
+│   │         Bottleneck detection report          │  │         Post-upgrade version verify         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SANnav VM · management network · Brocade FC switches · NTP for time sync                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SNMPv3          = polling protocol; SANnav uses for switch discovery and alerting                    │
+│  FOS REST API    = Fabric OS northbound API; SANnav uses for zone/config management                   │
+│  MAPS alert      = switch-side threshold event forwarded to SANnav as notification                    │
+│  Zone wizard     = SANnav GUI workflow for creating aliases and zones step-by-step                    │
+│  cfgsave/cfgenable= zone config save and activation; SANnav triggers on switches                      │
+│  Zone diff       = SANnav shows before/after zone changes before committing                           │
+│  Top talkers     = ports/flows with highest utilisation; identified in performance view               │
+│  HA upgrade      = firmware loaded to standby CP first; switch-over then upgrade active               │
+│  5-min poll      = default SANnav performance data collection interval per port                       │
+│  Stage firmware  = upload FOS image to switch flash without activating; activate later                │
+│  Bottleneck report= SANnav identifies congested ISLs and credit-starved ports                         │
+│  90-day retention= default performance data history in SANnav Elasticsearch store                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Overview
 
 Brocade SANnav is a SAN management platform delivered in two variants:
