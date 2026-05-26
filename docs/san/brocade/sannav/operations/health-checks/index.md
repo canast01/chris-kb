@@ -46,38 +46,51 @@ grep -i "ERROR" /opt/sannav/logs/event-engine.log | tail -20
 timedatectl status
 # Expected: "synchronized: yes"
 ```
-
----
-
-## 2. Fabric Discovery Status
-
-### GUI
-
-Navigate to **Dashboard > Fabric Summary**. For each managed fabric:
-
-- All expected switches should show **Online** status (green)
-- Switch count should match the expected number
-- No switches should be in **Unreachable** or **Unknown** state
-
-If any switch shows **Unreachable**:
-1. Confirm the switch is powered on and accessible by IP
-2. Verify HTTPS credentials: navigate to **Discovery > Switches**, click the switch, and click **Test Connection**
-3. Confirm SNMPv3 credentials match: **Discovery > Switches > SNMP Settings**
-
-### REST API
-
-```bash
-TOKEN=$(curl -sk -X POST https://sannav-dc1.corp.example.com/rest/login \
-  -H "Content-Type: application/json" \
-  -d '{"credentials":{"loginName":"svc-monitor","password":"<pass>"}}' \
-  | python3 -c "import sys,json; print(json.load(sys.stdin)['authToken'])")
-
-# List all switches and their connectivity status
-curl -sk https://sannav-dc1.corp.example.com/rest/resourcegroups/all/switches \
-  -H "Authorization: Bearer $TOKEN" \
-  | python3 -m json.tool | grep -E '"name"|"connectivityState"'
-
-# Expected connectivityState: "REACHABLE" for all switches
+┌─────────────────────────────────── Brocade SANnav — Health Checks ────────────────────────────────────┐
+│                                                                                                       │
+│  SANnav health checks: MAPS dashboards, port error trends, switch status, ISL load.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           SANnav Dashboard Health            │  │             Switch-Level Health             │   │
+│   │       MAPS: active alerts by severity        │  │         switchstatusshow: all green         │   │
+│   │          Fabric topology: no split           │  │         sensorshow: temp < threshold        │   │
+│   │       Port inventory: no offline ports       │  │           Fan + PSU: healthy state          │   │
+│   │       Firmware currency: < 2 versions        │  │         CP status: active + standby         │   │
+│   │         Zone config: saved == active         │  │          Port errors < 10/day limit         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  MAPS and SANnav dashboards are primary health indicators; review daily.                              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             ISL & Fabric Health              │  │            SANnav Platform Health           │   │
+│   │          islshow: utilisation < 70%          │  │         SANnav service: all running         │   │
+│   │        ISL BB credits: no starvation         │  │           DB size: within capacity          │   │
+│   │          fabricshow: single fabric           │  │          HA sync: primary = standby         │   │
+│   │        Bottleneck: no congested ISLs         │  │           Backup: last job success          │   │
+│   │        D_Port: link quality > -3 dBm         │  │          Alerts: SMTP + SNMP active         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Brocade FC switch chassis · SFP optical levels · ISL cables · SANnav VM resources                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  MAPS            = Monitoring and Alerting Policy Suite; tracks thresholds per port                   │
+│  switchstatusshow= overall switch health status; green = all healthy                                  │
+│  sensorshow      = temp/fan/PSU readings; alert if temperature exceeds threshold                      │
+│  BB credits      = Buffer-to-Buffer credits; starvation causes ISL congestion                         │
+│  islshow         = ISL utilisation; > 70% sustained indicates need for more ISLs                      │
+│  D_Port          = diagnostic port; optical signal quality measurement (dBm)                          │
+│  fabricshow      = single fabric confirmation; split fabric = major incident                          │
+│  CP status       = Control Processor; HA pair should have active + standby running                    │
+│  Bottleneck      = SANnav congestion detection; ISL fully utilized under load                         │
+│  HA sync         = primary and standby SANnav databases must be in sync                               │
+│  Zone config     = saved config should match active config; divergence = risk                         │
+│  dBm             = decibels relative to 1 milliwatt; SFP optical power measurement                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
