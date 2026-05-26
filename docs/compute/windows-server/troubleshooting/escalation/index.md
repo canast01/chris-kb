@@ -21,47 +21,52 @@ flowchart TD
     submit --> monitor
     monitor -->|"SLA breach"| escalateTAM
 ```
-
-## Opening a Support Case
-
-Microsoft support portal: [support.microsoft.com](https://support.microsoft.com)
-
-For enterprise customers with Unified/Premier support: [admin.microsoft.com](https://admin.microsoft.com) → Support → New Service Request
-
-1. Select product: Windows Server
-2. Select version and problem type
-3. Provide: hostname, OS version, event log exports, and diagnostic data (see below)
-4. For Sev A (production down): phone support is faster — call number on Unified support portal
-
-## Pre-Collection Diagnostics
-
-Always collect before opening a case — dramatically reduces time to resolution:
-
-```powershell
-# System information snapshot
-msinfo32 /report C:\Temp\msinfo.txt
-
-# System file integrity check
-sfc /scannow
-
-# Component store health
-DISM /Online /Cleanup-Image /ScanHealth
-DISM /Online /Cleanup-Image /CheckHealth
-
-# Export relevant event logs
-wevtutil epl System C:\Temp\System.evtx
-wevtutil epl Application C:\Temp\Application.evtx
-wevtutil epl Security C:\Temp\Security.evtx /q:"*[System[(Level<=3)]]"   # Warning+ only
-
-# Network diagnostics
-netsh trace start capture=yes tracefile=C:\Temp\NetTrace.etl
-# ... reproduce issue ...
-netsh trace stop
-
-# Windows Performance Recorder for performance issues
-wpr -start GeneralProfile -filemode
-# ... reproduce issue (30 seconds) ...
-wpr -stop C:\Temp\trace.etl
+┌───────────────────────────── Windows Server — Troubleshooting Escalation ─────────────────────────────┐
+│                                                                                                       │
+│  Escalation path: internal L2/L3 → Microsoft Premier/TAC → CSS with diagnostic bundle.                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Internal Escalation Path           │  │         Microsoft Support Escalation        │   │
+│   │        L1 → L2: event logs + timeline        │  │         Open MS Support case online         │   │
+│   │        L2 → L3: attach dump + procmon        │  │          Premier: SfMC / DSE assign         │   │
+│   │        L3 → Vendor: full diag bundle         │  │         CSS: case + severity rating         │   │
+│   │         Incident commander for Sev-1         │  │        Share: SDP (Support Diag Pkg)        │   │
+│   │          Bridge call + screen share          │  │          Remote: MSRA or DART tool          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Internal triage first; escalate to Microsoft with a complete diagnostic data package.                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Diagnostic Bundle Contents          │  │             Escalation Criteria             │   │
+│   │        Event logs: evtx all channels         │  │          Sev-A: production down now         │   │
+│   │        memory.dmp (full kernel dump)         │  │          Sev-B: degraded production         │   │
+│   │        Perfmon BLG: 72h before issue         │  │          Sev-C: non-critical impact         │   │
+│   │         netsh trace ETL during issue         │  │           Sev-D: general question           │   │
+│   │          msinfo32 /nfo sysinfo file          │  │            CSAT after case closed           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · OOB console · network path to Microsoft CSS upload endpoint             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SDP            = Support Diagnostic Package; Microsoft data collection script bundle                 │
+│  CSS            = Customer Support Services; Microsoft front-line support organisation                │
+│  Premier        = Microsoft Premier Support; dedicated TAM and faster SLA                             │
+│  DSE            = Delivery Service Engineer; Microsoft Premier on-site or remote engineer             │
+│  SfMC           = Support for Microsoft Cloud; specialist cloud support tier                          │
+│  Severity A/B/C/D= Microsoft case severity; A = production down, D = informational                    │
+│  MSRA           = Microsoft Remote Assistance; remote session for support engineer                    │
+│  DART           = Diagnostics and Recovery Toolset; bootable WinPE recovery kit                       │
+│  msinfo32       = System Information utility; exports full hardware/software snapshot                 │
+│  memory.dmp     = full kernel crash dump; written on BSOD to SystemRoot                               │
+│  procmon        = SysInternals Process Monitor; captures all I/O for escalation bundle                │
+│  BLG            = binary performance log; Perfmon native format for counter data                      │
+│  CSAT           = Customer Satisfaction survey; sent after Microsoft case closure                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Support Tiers

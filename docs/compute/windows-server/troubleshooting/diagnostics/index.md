@@ -29,47 +29,52 @@ flowchart LR
     psLog --> wef
     wef --> siem
 ```
-
-## Key Event Logs
-
-| Log | Path | Content |
-|---|---|---|
-| System | `System` | OS events, driver failures, service stops, hardware |
-| Application | `Application` | App errors, .NET exceptions, SQL, IIS |
-| Security | `Security` | Authentication, account management, privilege use |
-| Setup | `Setup` | Windows Update, component installs |
-| Windows PowerShell | `Windows PowerShell` | PS script execution |
-| Sysmon | `Microsoft-Windows-Sysmon/Operational` | Process creation, network, file events (if deployed) |
-
-## Get-WinEvent — Common Queries
-
-```powershell
-# Errors in System log — last 24 hours
-Get-WinEvent -FilterHashtable @{
-    LogName   = 'System'
-    Level     = 2
-    StartTime = (Get-Date).AddHours(-24)
-} | Select-Object TimeCreated, Id, Message | Format-List
-
-# Application errors — last 6 hours
-Get-WinEvent -FilterHashtable @{
-    LogName   = 'Application'
-    Level     = 2
-    StartTime = (Get-Date).AddHours(-6)
-} | Select-Object -First 20 TimeCreated, Id, Message
-
-# Security log — failed logons (Event ID 4625)
-Get-WinEvent -FilterHashtable @{
-    LogName = 'Security'
-    Id      = 4625
-    StartTime = (Get-Date).AddHours(-24)
-} | Select-Object TimeCreated, Message | Select-Object -First 20
-
-# Successful logons (Event ID 4624)
-Get-WinEvent -FilterHashtable @{
-    LogName = 'Security'
-    Id      = 4624
-} -MaxEvents 20 | Select-Object TimeCreated, Message
+┌──────────────────────────────────── Windows Server — Diagnostics ─────────────────────────────────────┐
+│                                                                                                       │
+│  Diagnostics: event log analysis, performance data collection, network traces, memory dumps.          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Event Log Analysis              │  │         Performance Data Collection         │   │
+│   │         wevtutil qe System /count:50         │  │         Perfmon: data collector sets        │   │
+│   │        Get-WinEvent filter hash table        │  │           typeperf: counter to CSV          │   │
+│   │        Subscriptions: WEF centralise         │  │          PAL: Perf Analysis of Logs         │   │
+│   │         Custom views: by error level         │  │         Resource Monitor: real-time         │   │
+│   │           Export: evtx for offline           │  │        Process Monitor: file+reg+net        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Event logs show what happened; Perfmon and procmon show how the system behaved.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Network Diagnostics              │  │          Memory & Crash Diagnostics         │   │
+│   │          netsh trace start capture           │  │         Task Manager: commit charge         │   │
+│   │           Wireshark: .etl to .pcap           │  │         Poolmon: tag leak detection         │   │
+│   │         netstat -anob: PID per port          │  │          WinDbg: !analyze -v crash          │   │
+│   │          tracert + pathping latency          │  │           procdump -ma <PID> dump           │   │
+│   │          PortQry: remote port scan           │  │          MDSN for WER online search         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · NIC for packet capture · dump storage disk · OOB console                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  wevtutil       = Windows Event Utility; CLI query, export, and clear event logs                      │
+│  Get-WinEvent   = PowerShell cmdlet; powerful filter-hash queries across event logs                   │
+│  WEF            = Windows Event Forwarding; aggregates events to a central collector                  │
+│  Perfmon        = Performance Monitor; records counters to BLG/CSV/SQL data sets                      │
+│  typeperf       = CLI perfmon; writes counter data to CSV for offline analysis                        │
+│  PAL            = Performance Analysis of Logs; analyses BLG files against thresholds                 │
+│  Resource Monitor= real-time view of CPU/RAM/disk/network per process                                 │
+│  procmon        = SysInternals Process Monitor; captures file, registry, network events               │
+│  netsh trace    = built-in packet capture; outputs ETL for Message Analyser / Wireshark               │
+│  poolmon        = kernel pool monitor; detects memory tag leaks in driver pool                        │
+│  WinDbg         = Windows Debugger; analyses crash dumps; !analyze -v auto-diagnoses                  │
+│  procdump       = SysInternals; captures process memory dump for hang/crash analysis                  │
+│  PortQry        = Microsoft port connectivity scanner; tests TCP/UDP port accessibility               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Key Security Event IDs
