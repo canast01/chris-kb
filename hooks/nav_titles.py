@@ -10,92 +10,176 @@ render correctly regardless of how MkDocs derives them from folder names.
 
 from mkdocs.structure.nav import Section
 
-# Word-level substitutions (matched case-insensitively against each word)
+# Word-level substitutions — matched case-insensitively against each individual word.
+# MkDocs derives section titles from folder names via:
+#   folder_name.replace('-', ' ').replace('_', ' ').capitalize()
+# That produces e.g. "Vmware cloud foundation", "Dhcp", "Smb".
+# This map fixes every word that needs special casing.
 WORD_FIXES = {
-    # Acronyms
-    "ai":        "AI",
-    "api":       "API",
-    "aws":       "AWS",
-    "cli":       "CLI",
-    "cpu":       "CPU",
-    "csv":       "CSV",
-    "dcnm":      "DCNM",
-    "dns":       "DNS",
-    "dr":        "DR",
-    "gui":       "GUI",
-    "ha":        "HA",
-    "hci":       "HCI",
-    "http":      "HTTP",
-    "https":     "HTTPS",
-    "iam":       "IAM",
-    "ip":        "IP",
-    "iscsi":     "iSCSI",
-    "json":      "JSON",
-    "lcm":       "LCM",
-    "ldap":      "LDAP",
-    "mds":       "MDS",
-    "mfa":       "MFA",
-    "nfs":       "NFS",
-    "nsx":       "NSX",
-    "ntp":       "NTP",
-    "os":        "OS",
-    "rbac":      "RBAC",
-    "rca":       "RCA",
-    "rpo":       "RPO",
-    "rto":       "RTO",
-    "san":       "SAN",
-    "sdk":       "SDK",
-    "smtp":      "SMTP",
-    "snmp":      "SNMP",
-    "snmpv3":    "SNMPv3",
-    "sql":       "SQL",
-    "srm":       "SRM",
-    "ssh":       "SSH",
-    "ssl":       "SSL",
-    "sso":       "SSO",
-    "syslog":    "Syslog",
-    "tls":       "TLS",
-    "ui":        "UI",
-    "url":       "URL",
-    "vcf":       "VCF",
-    "vdi":       "VDI",
-    "vlan":      "VLAN",
-    "vm":        "VM",
-    "yaml":      "YAML",
-    # Product / brand names
-    "aria":      "Aria",
-    "aws":       "AWS",
-    "azure":     "Azure",
-    "brocade":   "Brocade",
-    "cisco":     "Cisco",
-    "cloudiq":   "CloudIQ",
-    "confluence": "Confluence",
-    "dell":      "Dell",
-    "esxi":      "ESXi",
-    "github":    "GitHub",
-    "git":       "Git",
-    "horizon":   "Horizon",
-    "insightiq": "InsightIQ",
-    "jira":      "Jira",
-    "linux":     "Linux",
-    "netapp":    "NetApp",
-    "nexus":     "Nexus",
-    "pure":      "Pure",
-    "pure1":     "Pure1",
-    "sannav":    "SANnav",
-    "servicenow": "ServiceNow",
-    "tanzu":     "Tanzu",
-    "vcenter":   "vCenter",
-    "vmware":    "VMware",
-    "vsan":      "vSAN",
-    "vsphere":   "vSphere",
-    "vxrail":    "VxRail",
-    "windows":   "Windows",
+    # ── Infrastructure acronyms ──────────────────────────────────────────────
+    "acl":          "ACL",
+    "acls":         "ACLs",
+    "ai":           "AI",
+    "aiops":        "AIOps",
+    "ami":          "AMI",
+    "amis":         "AMIs",
+    "api":          "API",
+    "bgp":          "BGP",
+    "bios":         "BIOS",
+    "cli":          "CLI",
+    "cmdb":         "CMDB",
+    "cod":          "COD",
+    "cpu":          "CPU",
+    "csv":          "CSV",
+    "dcnm":         "DCNM",
+    "dhcp":         "DHCP",
+    "dns":          "DNS",
+    "dr":           "DR",
+    "drs":          "DRS",
+    "ebs":          "EBS",
+    "ec2":          "EC2",
+    "ecs":          "ECS",
+    "efs":          "EFS",
+    "eks":          "EKS",
+    "fod":          "FOD",
+    "fsx":          "FSx",
+    "gpu":          "GPU",
+    "gui":          "GUI",
+    "ha":           "HA",
+    "hci":          "HCI",
+    "http":         "HTTP",
+    "https":        "HTTPS",
+    "iam":          "IAM",
+    "id":           "ID",
+    "idrac":        "iDRAC",
+    "ip":           "IP",
+    "ire":          "IRE",
+    "iscsi":        "iSCSI",
+    "json":         "JSON",
+    "kms":          "KMS",
+    "lcm":          "LCM",
+    "ldap":         "LDAP",
+    "mds":          "MDS",
+    "mfa":          "MFA",
+    "nat":          "NAT",
+    "nfs":          "NFS",
+    "nic":          "NIC",
+    "nsx":          "NSX",
+    "ntfs":         "NTFS",
+    "ntp":          "NTP",
+    "os":           "OS",
+    "pki":          "PKI",
+    "rbac":         "RBAC",
+    "rca":          "RCA",
+    "rds":          "RDS",
+    "rpo":          "RPO",
+    "rto":          "RTO",
+    "s3":           "S3",
+    "saml":         "SAML",
+    "san":          "SAN",
+    "sdk":          "SDK",
+    "smb":          "SMB",
+    "smtp":         "SMTP",
+    "snmp":         "SNMP",
+    "snmpv3":       "SNMPv3",
+    "sql":          "SQL",
+    "srdf":         "SRDF",
+    "srm":          "SRM",
+    "ssh":          "SSH",
+    "ssl":          "SSL",
+    "ssm":          "SSM",
+    "sso":          "SSO",
+    "tls":          "TLS",
+    "ui":           "UI",
+    "url":          "URL",
+    "vcf":          "VCF",
+    "vdi":          "VDI",
+    "vlan":         "VLAN",
+    "vm":           "VM",
+    "vpc":          "VPC",
+    "vpn":          "VPN",
+    "waf":          "WAF",
+    "wwn":          "WWN",
+    "wwns":         "WWNs",
+    "yaml":         "YAML",
+    # ── AWS services ─────────────────────────────────────────────────────────
+    "aws":          "AWS",
+    "cloudformation": "CloudFormation",
+    "cloudtrail":   "CloudTrail",
+    "cloudwatch":   "CloudWatch",
+    "guardduty":    "GuardDuty",
+    "rasr":         "RASR",
+    # ── Azure services ───────────────────────────────────────────────────────
+    "azure":        "Azure",
+    "aks":          "AKS",
+    "entra":        "Entra",
+    "expressroute": "ExpressRoute",
+    # ── VMware products ──────────────────────────────────────────────────────
+    "esxi":         "ESXi",
+    "vcenter":      "vCenter",
+    "vmware":       "VMware",
+    "vsan":         "vSAN",
+    "vsphere":      "vSphere",
+    "vxrail":       "VxRail",
+    # ── Dell / EMC products ──────────────────────────────────────────────────
+    "dell":         "Dell",
+    "idrac":        "iDRAC",
+    "powermax":     "PowerMax",
+    "powerpath":    "PowerPath",
+    "powerscale":   "PowerScale",
+    "powerstore":   "PowerStore",
+    "recoverpoint": "RecoverPoint",
+    "vplex":        "VPlex",
+    # ── NetApp products ──────────────────────────────────────────────────────
+    "netapp":       "NetApp",
+    "netbackup":    "NetBackup",
+    "ontap":        "ONTAP",
+    "snapcenter":   "SnapCenter",
+    "snapmirror":   "SnapMirror",
+    # ── Pure Storage products ────────────────────────────────────────────────
+    "cloudiq":      "CloudIQ",
+    "flasharray":   "FlashArray",
+    "flashblade":   "FlashBlade",
+    "insightiq":    "InsightIQ",
+    "pure":         "Pure",
+    "pure1":        "Pure1",
+    # ── Cisco / Brocade ──────────────────────────────────────────────────────
+    "brocade":      "Brocade",
+    "cisco":        "Cisco",
+    "sannav":       "SANnav",
+    # ── Other vendors & tools ────────────────────────────────────────────────
+    "ansible":      "Ansible",
+    "aria":         "Aria",
+    "commvault":    "Commvault",
+    "confluence":   "Confluence",
+    "cyberark":     "CyberArk",
+    "git":          "Git",
+    "github":       "GitHub",
+    "horizon":      "Horizon",
+    "jira":         "Jira",
+    "keystone":     "Keystone",
+    "linux":        "Linux",
+    "nexus":        "Nexus",
+    "ollama":       "Ollama",
+    "openai":       "OpenAI",
+    "powershell":   "PowerShell",
+    "python":       "Python",
+    "servicenow":   "ServiceNow",
+    "superna":      "Superna",
+    "tanzu":        "Tanzu",
+    "terraform":    "Terraform",
+    "veeam":        "Veeam",
+    "venafi":       "Venafi",
+    "windows":      "Windows",
 }
 
-# Prepositions / conjunctions that stay lowercase unless they open the title
-_LOWERCASE_WORDS = {"a", "an", "and", "at", "by", "for", "in", "of", "on", "or",
-                    "the", "to", "vs", "with"}
+# Prepositions / conjunctions that stay lowercase unless they open the title.
+# Based on Chicago Manual of Style title-case rules.
+_LOWERCASE_WORDS = {
+    "a", "an", "and", "as", "at", "but", "by", "for", "if",
+    "in", "nor", "of", "off", "on", "or", "so", "the", "to",
+    "up", "via", "vs", "with", "yet",
+}
 
 
 def _fix_title(title: str) -> str:
@@ -108,10 +192,12 @@ def _fix_title(title: str) -> str:
         if lower in WORD_FIXES:
             out.append(WORD_FIXES[lower])
         elif i > 0 and lower in _LOWERCASE_WORDS:
+            # Prepositions stay lowercase unless they open the title
             out.append(lower)
         else:
-            # Preserve existing capitalisation; only force first letter up when
-            # the word is all-lowercase (i.e. came straight from a folder name).
+            # If the word came from a folder name it will be all-lowercase
+            # (after MkDocs capitalize()). Force first letter up.
+            # If it already has mixed case (came from a page H1), leave it.
             if word == word.lower():
                 out.append(word.capitalize())
             else:
@@ -131,7 +217,7 @@ def on_nav(nav, **kwargs):
     for item in nav.items:
         _fix(item)
 
-    # ── Step 2: set explicit titles for Home and Site Map ────────────────────
+    # ── Step 2: explicit labels for Home and Site Map ────────────────────────
     for item in nav.items:
         if hasattr(item, "file") and item.file:
             src = item.file.src_path
@@ -141,12 +227,16 @@ def on_nav(nav, **kwargs):
                 item.title = "Site Map"
 
     # ── Step 3: restructure → Home | Platforms | Site Map ───────────────────
-    home    = next((i for i in nav.items
-                    if hasattr(i, "file") and i.file
-                    and i.file.src_path == "index.md"), None)
-    sitemap = next((i for i in nav.items
-                    if hasattr(i, "file") and i.file
-                    and i.file.src_path == "site-map.md"), None)
+    home = next(
+        (i for i in nav.items
+         if hasattr(i, "file") and i.file and i.file.src_path == "index.md"),
+        None,
+    )
+    sitemap = next(
+        (i for i in nav.items
+         if hasattr(i, "file") and i.file and i.file.src_path == "site-map.md"),
+        None,
+    )
 
     middle = [i for i in nav.items if i is not home and i is not sitemap]
 
