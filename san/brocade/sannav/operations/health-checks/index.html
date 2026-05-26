@@ -3438,45 +3438,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-fabric-discovery-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Fabric Discovery Status
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="2. Fabric Discovery Status">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#gui_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GUI
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rest-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        REST API
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#3-port-state-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3489,7 +3450,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#gui_2" class="md-nav__link">
+  <a href="#gui_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         GUI
@@ -3784,7 +3745,7 @@
 - Disk usage is below 80%
 - Database status is <strong>Healthy</strong></p>
 <h3 id="appliance-cli">Appliance CLI<a class="headerlink" href="#appliance-cli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to appliance</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to appliance</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@sannav-dc1.corp.example.com
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check service status</span>
@@ -3808,35 +3769,55 @@
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>timedatectl<span class="w"> </span>status
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># Expected: &quot;synchronized: yes&quot;</span>
 </code></pre></div>
-<hr />
-<h2 id="2-fabric-discovery-status">2. Fabric Discovery Status<a class="headerlink" href="#2-fabric-discovery-status" title="Permanent link">&para;</a></h2>
-<h3 id="gui_1">GUI<a class="headerlink" href="#gui_1" title="Permanent link">&para;</a></h3>
-<p>Navigate to <strong>Dashboard &gt; Fabric Summary</strong>. For each managed fabric:</p>
-<ul>
-<li>All expected switches should show <strong>Online</strong> status (green)</li>
-<li>Switch count should match the expected number</li>
-<li>No switches should be in <strong>Unreachable</strong> or <strong>Unknown</strong> state</li>
-</ul>
-<p>If any switch shows <strong>Unreachable</strong>:
-1. Confirm the switch is powered on and accessible by IP
-2. Verify HTTPS credentials: navigate to <strong>Discovery &gt; Switches</strong>, click the switch, and click <strong>Test Connection</strong>
-3. Confirm SNMPv3 credentials match: <strong>Discovery &gt; Switches &gt; SNMP Settings</strong></p>
-<h3 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://sannav-dc1.corp.example.com/rest/login<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;credentials&quot;:{&quot;loginName&quot;:&quot;svc-monitor&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;authToken&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># List all switches and their connectivity status</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://sannav-dc1.corp.example.com/rest/resourcegroups/all/switches<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;name&quot;|&quot;connectivityState&quot;&#39;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Expected connectivityState: &quot;REACHABLE&quot; for all switches</span>
-</code></pre></div>
+┌─────────────────────────────────── Brocade SANnav — Health Checks ────────────────────────────────────┐
+│                                                                                                       │
+│  SANnav health checks: MAPS dashboards, port error trends, switch status, ISL load.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           SANnav Dashboard Health            │  │             Switch-Level Health             │   │
+│   │       MAPS: active alerts by severity        │  │         switchstatusshow: all green         │   │
+│   │          Fabric topology: no split           │  │         sensorshow: temp &lt; threshold        │   │
+│   │       Port inventory: no offline ports       │  │           Fan + PSU: healthy state          │   │
+│   │       Firmware currency: &lt; 2 versions        │  │         CP status: active + standby         │   │
+│   │         Zone config: saved == active         │  │          Port errors &lt; 10/day limit         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  MAPS and SANnav dashboards are primary health indicators; review daily.                              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             ISL &amp; Fabric Health              │  │            SANnav Platform Health           │   │
+│   │          islshow: utilisation &lt; 70%          │  │         SANnav service: all running         │   │
+│   │        ISL BB credits: no starvation         │  │           DB size: within capacity          │   │
+│   │          fabricshow: single fabric           │  │          HA sync: primary = standby         │   │
+│   │        Bottleneck: no congested ISLs         │  │           Backup: last job success          │   │
+│   │        D_Port: link quality &gt; -3 dBm         │  │          Alerts: SMTP + SNMP active         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Brocade FC switch chassis · SFP optical levels · ISL cables · SANnav VM resources                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  MAPS            = Monitoring and Alerting Policy Suite; tracks thresholds per port                   │
+│  switchstatusshow= overall switch health status; green = all healthy                                  │
+│  sensorshow      = temp/fan/PSU readings; alert if temperature exceeds threshold                      │
+│  BB credits      = Buffer-to-Buffer credits; starvation causes ISL congestion                         │
+│  islshow         = ISL utilisation; &gt; 70% sustained indicates need for more ISLs                      │
+│  D_Port          = diagnostic port; optical signal quality measurement (dBm)                          │
+│  fabricshow      = single fabric confirmation; split fabric = major incident                          │
+│  CP status       = Control Processor; HA pair should have active + standby running                    │
+│  Bottleneck      = SANnav congestion detection; ISL fully utilized under load                         │
+│  HA sync         = primary and standby SANnav databases must be in sync                               │
+│  Zone config     = saved config should match active config; divergence = risk                         │
+│  dBm             = decibels relative to 1 milliwatt; SFP optical power measurement                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <hr />
 <h2 id="3-port-state-checks">3. Port State Checks<a class="headerlink" href="#3-port-state-checks" title="Permanent link">&para;</a></h2>
-<h3 id="gui_2">GUI<a class="headerlink" href="#gui_2" title="Permanent link">&para;</a></h3>
+<h3 id="gui_1">GUI<a class="headerlink" href="#gui_1" title="Permanent link">&para;</a></h3>
 <p>Navigate to <strong>Inventory &gt; Ports</strong>. Filter by:
 - Port State: <strong>Offline</strong> or <strong>Faulty</strong> — investigate any unexpected offline ports
 - Port Type: <strong>E_Port</strong> — check all ISL ports are <strong>Online</strong></p>
