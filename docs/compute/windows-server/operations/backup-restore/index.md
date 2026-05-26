@@ -15,37 +15,49 @@ Start-Process -Wait -FilePath "VeeamAgentWindows.exe" -ArgumentList "/silent /ac
 # Verify service is running
 Get-Service -Name "Veeam Agent for Microsoft Windows"
 ```
-
-### Configure via Veeam Agent Control Panel (GUI)
-
-1. Open **Veeam Agent for Microsoft Windows** from the system tray or Start menu.
-2. Click **Configure Backup** > **Server** (for full machine backup).
-3. Select backup mode: **Entire computer**, **Volume level**, or **File level**.
-4. Select backup repository (local disk, network share, Veeam repository, or cloud).
-5. Set schedule and retention policy.
-6. Click **Apply**.
-
-### Configure via PowerShell
-
-```powershell
-# List available Veeam Agent cmdlets
-Get-Command -Module VeeamPSSnapIn
-
-# Create a backup job
-Add-VBRBackupJob -Name "SERVER01-Daily" `
-  -BackupMode EntireMachine `
-  -RepositoryName "NAS-Backup-Repo"
-
-# Set schedule (daily at 02:00)
-$schedule = New-VBRScheduleOptions -Type Daily -DailyTime "02:00"
-Set-VBRJobSchedule -Job "SERVER01-Daily" -ScheduleOptions $schedule
-
-# Start a job immediately
-Start-VBRJob -Job "SERVER01-Daily"
-
-# Get job status
-Get-VBRBackupSession | Sort-Object CreationTime -Descending | Select-Object -First 10 |
-  Select-Object JobName, CreationTime, Result, State
+┌───────────────────────────────── Windows Server — Backup and Restore ─────────────────────────────────┐
+│                                                                                                       │
+│  Windows Server backup strategies: VSS-based backups, AD backup, and Hyper-V checkpoints.             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Windows Server Backup (WSB)          │  │           Active Directory Backup           │   │
+│   │           wbadmin: CLI backup tool           │  │        ntdsutil: AD snapshot + backup       │   │
+│   │          VSS: consistent snapshots           │  │         System State includes AD DB         │   │
+│   │          Bare metal recovery (BMR)           │  │         Authoritative restore: NTDS         │   │
+│   │          Scheduled: daily + monthly          │  │           AD Recycle Bin: 180-day           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    System State backup captures AD; BMR for full server recovery                                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Hyper-V Backup                │  │           Third-Party / Enterprise          │   │
+│   │           VM checkpoint: snapshot            │  │           Veeam: agent + VM backup          │   │
+│   │         Export VM: offline full copy         │  │          DPM: System Center backup          │   │
+│   │          Application-consistent VSS          │  │        Azure Backup: cloud retention        │   │
+│   │           Replica: standby VM copy           │  │         Test restore: quarterly SLA         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · backup storage (NAS/tape/Azure) · Hyper-V host                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  wbadmin      = command-line tool for Windows Server Backup operations                                │
+│  VSS          = Volume Shadow Copy Service; quiesces app for consistent backup                        │
+│  BMR          = Bare Metal Recovery; restore entire OS without pre-existing install                   │
+│  System State = AD DB + SYSVOL + registry + boot files; AD backup minimum                             │
+│  ntdsutil     = AD utility; used for authoritative restore and metadata cleanup                       │
+│  Authoritative restore= restore marks AD objects with higher USN to replicate                         │
+│  AD Recycle Bin= soft-delete; restore via Get-ADObject + Restore-ADObject                             │
+│  VM checkpoint= point-in-time snapshot of VM state; not a backup replacement                          │
+│  VM Replica   = Hyper-V async replication to another host; DR option                                  │
+│  DPM          = Data Protection Manager; System Center backup product                                 │
+│  Azure Backup = cloud backup service; supports on-prem via MARS agent                                 │
+│  Test restore = periodic recovery drill; validates backup integrity                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Managed by Veeam Backup & Replication (VBR)

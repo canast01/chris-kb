@@ -32,89 +32,47 @@ graph TB
   class AD,DNS_R,FS,IIS,WSUS,SEC mgmt
   class ADMIN host
 ```
-
-## Key Server Roles
-
-| Role | Feature Name | Purpose |
-|---|---|---|
-| Active Directory Domain Services | AD-Domain-Services | Directory services, authentication |
-| DNS Server | DNS | Name resolution |
-| DHCP Server | DHCP | IP address assignment |
-| File Services | FS-FileServer | SMB file sharing |
-| Hyper-V | Hyper-V | Hardware virtualisation |
-| IIS Web Server | Web-Server | HTTP/HTTPS hosting |
-| Remote Desktop Services | RDS-RD-Server | Remote desktop sessions |
-| Certificate Services | ADCS | Enterprise PKI / CA |
-| Failover Clustering | Failover-Clustering | HA for services |
-
-## Critical Services
-
-| Service | Default Start | Purpose |
-|---|---|---|
-| lsass.exe | Auto | Authentication, security policy |
-| WinRM | Auto | PowerShell remoting, WMI |
-| EventLog | Auto | Security/Application/System logs |
-| Dnscache | Auto | DNS caching and resolution |
-| W32tm | Auto | NTP time synchronisation |
-| mpssvc | Auto | Windows Defender Firewall |
-| NTDS | Auto (on DCs) | Active Directory database |
-
-## Common Service Ports
-
-| Service | Protocol | Port |
-|---|---|---|
-| SMB (file sharing) | TCP | 445 |
-| RDP | TCP | 3389 |
-| WinRM (HTTP / HTTPS) | TCP | 5985 / 5986 |
-| DNS | TCP/UDP | 53 |
-| Kerberos | TCP/UDP | 88 |
-| LDAP / LDAPS | TCP | 389 / 636 |
-| Global Catalog | TCP | 3268 / 3269 |
-| RPC Endpoint Mapper | TCP | 135 |
-| RPC Dynamic Ports | TCP | 49152–65535 |
-| NTP | UDP | 123 |
-
-## Event Log Channels
-
-| Log | Common Event IDs | Use |
-|---|---|---|
-| Security | 4624 (logon), 4625 (failed), 4740 (lockout) | Auth and access auditing |
-| System | 7034 (service crash), 6008 (unexpected shutdown) | OS health |
-| Application | Application-specific | App-level diagnostics |
-| PowerShell/Operational | 4104 (script block) | Script audit |
-
-## Key PowerShell Commands
-
-```powershell
-# Roles and features
-Get-WindowsFeature | Where-Object {$_.Installed -eq $true}
-Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
-
-# Service health
-Get-Service | Where-Object {$_.StartType -eq "Automatic" -and $_.Status -ne "Running"}
-
-# Event logs
-Get-WinEvent -FilterHashtable @{LogName='System'; Level=2; StartTime=(Get-Date).AddHours(-24)}
-Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4740} -MaxEvents 20
-
-# Network
-Get-NetAdapter | Select-Object Name, Status, LinkSpeed
-Get-NetIPAddress | Select-Object InterfaceAlias, IPAddress, PrefixLength
-Get-NetTCPConnection -State Listen | Select-Object LocalPort, @{N='Process';E={(Get-Process -Id $_.OwningProcess).Name}}
-
-# Disk and storage
-Get-Volume | Select-Object DriveLetter, FileSystem, Size, SizeRemaining, HealthStatus
-Get-PhysicalDisk | Select-Object FriendlyName, MediaType, HealthStatus
-
-# Active Directory
-repadmin /replsummary
-dcdiag /test:all /q
-netdom query fsmo
-
-# Windows Update
-Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 20
-
-# Firewall
-Get-NetFirewallProfile | Select-Object Name, Enabled, DefaultInboundAction
-Get-NetFirewallRule -Direction Inbound -Enabled True | Select-Object DisplayName, Action, LocalPort
+┌──────────────────────────────────── Windows Server — How It Works ────────────────────────────────────┐
+│                                                                                                       │
+│  Windows Server boot process, service management, and AD authentication flow.                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Boot Sequence                 │  │              Kerberos Auth Flow             │   │
+│   │             UEFI/BIOS → bootmgr              │  │           User → AS request → TGT           │   │
+│   │          winload.exe → kernel load           │  │          TGT → TGS request → ticket         │   │
+│   │         Kernel init → HAL → drivers          │  │          Service ticket → resource          │   │
+│   │          Session 0: services start           │  │          PAC: user groups in ticket         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Boot completes before user logon; Kerberos tickets cached for session                              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Group Policy Processing            │  │            File System Operations           │   │
+│   │            Machine GPO at startup            │  │          NTFS: journalled metadata          │   │
+│   │              User GPO at logon               │  │          Shadow Copy: VSS snapshots         │   │
+│   │           gpupdate /force: reapply           │  │          DFS: distributed namespace         │   │
+│   │        Loopback: machine applies user        │  │          BranchCache: WAN optimise          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical server · Domain Controllers · NTP source · storage                                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  bootmgr      = Windows Boot Manager; reads BCD store to select OS                                    │
+│  winload.exe  = OS loader; loads kernel, HAL, and boot drivers                                        │
+│  Session 0    = isolated service session; no interactive user access                                  │
+│  TGT          = Ticket Granting Ticket; obtained from KDC at logon                                    │
+│  TGS          = Ticket Granting Service; issues service-specific tickets                              │
+│  PAC          = Privilege Attribute Certificate; encodes group memberships                            │
+│  GPO          = Group Policy Object; settings applied at OU/domain level                              │
+│  Loopback     = GPO mode applying machine-linked user policy at logon                                 │
+│  VSS          = Volume Shadow Copy Service; creates consistent snapshots                              │
+│  DFS          = Distributed File System; namespace + replication for shares                           │
+│  BranchCache  = caches remote content at branch office; reduces WAN traffic                           │
+│  gpupdate     = triggers immediate GP refresh; /force reapplies all settings                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

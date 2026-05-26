@@ -20,22 +20,49 @@ flowchart TD
     w32time --> netlogon
     bfe --> winrm
 ```
-
-## Change Readiness Checks
-
-```powershell
-# 1. Confirm system health before any change
-Get-Service | Where-Object { $_.StartType -eq "Automatic" -and $_.Status -ne "Running" }
-Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Used/($_.Used+$_.Free) -gt 0.85 }
-
-# 2. Capture current installed updates (rollback reference)
-Get-HotFix | Sort-Object InstalledOn -Descending |
-    Select-Object HotFixID, Description, InstalledOn |
-    Export-Csv C:\Logs\pre-change-hotfixes-$(Get-Date -Format yyyyMMdd).csv -NoTypeInformation
-
-# 3. Capture OS version and build
-[System.Environment]::OSVersion.Version
-(Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").CurrentBuild
+┌─────────────────────────────── Windows Server — Operations Procedures ────────────────────────────────┐
+│                                                                                                       │
+│  Standard procedures: user provisioning, server decommission, patch process, and AD cleanup.          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              User Provisioning               │  │             Server Decommission             │   │
+│   │       Create AD user + set attributes        │  │          Remove from all AD groups          │   │
+│   │         Add to role-based AD groups          │  │           Disable computer account          │   │
+│   │          Set mailbox: Exchange/365           │  │            Migrate data + shares            │   │
+│   │         MFA: enrol TOTP / smart card         │  │           Delete after 30-day hold          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Provisioning via AD group membership drives access; decom must clear AD object                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Patch Procedure                │  │                  AD Cleanup                 │   │
+│   │         Download from WSUS / catalog         │  │          Inactive computers: 90-day         │   │
+│   │        Test on non-prod server first         │  │       Stale users: disable then delete      │   │
+│   │        Schedule window + notify users        │  │        Empty groups: quarterly review       │   │
+│   │        Apply + verify + reboot check         │  │           SPNs: check for orphans           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Domain Controllers · WSUS server · Exchange/365 · backup system                                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Role-based groups= AD security groups named by role; drive resource access                           │
+│  Smart card     = hardware MFA token; requires certificate enrollment                                 │
+│  Computer account= AD object for server; disable before decommission                                  │
+│  30-day hold    = quarantine period before deleting decommissioned object                             │
+│  WSUS           = Windows Server Update Services; centralised patch repo                              │
+│  Patch window   = agreed maintenance window; communicated to stakeholders                             │
+│  Inactive computers= lastLogonTimestamp > 90 days; candidate for disable                              │
+│  SPN            = Service Principal Name; Kerberos service identifier; orphans cause auth fail        │
+│  Stale user     = account not used in > 90 days; disable before delete                                │
+│  Empty group    = AD group with no members; clean up to reduce audit noise                            │
+│  mailbox        = Exchange/365 mailbox; license must be unassigned on decom                           │
+│  TOTP MFA       = time-based one-time password; enforced via Azure AD CA                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Maintenance Tasks

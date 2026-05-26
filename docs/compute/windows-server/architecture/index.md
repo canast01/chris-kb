@@ -4,6 +4,51 @@
 Windows Server 2019/2022/2025 infrastructure — Active Directory DS, DNS, SMB file services, Hyper-V, WSUS, and PowerShell-based management. Available in Standard and Datacenter editions with Server Core (recommended) or Desktop Experience installation.
 </div>
 
+```
+┌──────────────────────────────────── Windows Server — Architecture ────────────────────────────────────┐
+│                                                                                                       │
+│  Windows Server architecture: kernel, services, Active Directory, and Hyper-V integration.            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               OS Architecture                │  │               Active Directory              │   │
+│   │         NT kernel: HAL + kernel mode         │  │          Forest → Domain → OU tree          │   │
+│   │          Win32 subsystem: user mode          │  │          DC: LDAP + Kerberos + DNS          │   │
+│   │            Services: SCM-managed             │  │       SYSVOL: GPO + script replication      │   │
+│   │            Registry: config store            │  │           Trust: cross-domain auth          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    OS layer provides platform; AD provides identity; Hyper-V provides virtualisation                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Hyper-V Architecture             │  │                  Networking                 │   │
+│   │         Parent partition: management         │  │      Virtual switch: external/int/priv      │   │
+│   │          Child partition: VM guest           │  │           NIC teaming: LBFO / SET           │   │
+│   │           VMBus: hypercall channel           │  │         SMB Direct: RDMA file access        │   │
+│   │             Synthetic NIC / SCSI             │  │         Windows Firewall + GPO rules        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical server · CPU virtualization extensions · NIC · storage SAN/NAS                              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  HAL          = Hardware Abstraction Layer; isolates kernel from hardware                             │
+│  SCM          = Service Control Manager; manages Windows service lifecycle                            │
+│  Registry     = hierarchical configuration database; HKLM and HKCU hives                              │
+│  SYSVOL       = shared folder replicated to all DCs; holds GPOs and scripts                           │
+│  Trust        = cross-domain auth relationship; one-way or two-way                                    │
+│  VMBus        = high-speed communication channel between parent and child partitions                  │
+│  Synthetic NIC= Hyper-V virtual NIC using VMBus; requires integration services                        │
+│  NIC teaming  = LBFO or Switch Embedded Teaming (SET); redundancy + bandwidth                         │
+│  SMB Direct   = SMB over RDMA; high-throughput low-latency file access                                │
+│  Parent partition= Hyper-V management OS; has direct hardware access                                  │
+│  Child partition= VM guest; hardware access via VMBus and VSP/VSC model                               │
+│  RDMA         = Remote Direct Memory Access; bypasses OS for low-latency IO                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ![Windows Server Architecture](../../../assets/windows-server-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
@@ -35,20 +80,4 @@ Windows Server 2019/2022/2025 infrastructure — Active Directory DS, DNS, SMB f
 
 ## Topology
 
-```mermaid
-graph TB
-  WS["Windows Server 2019 / 2022"]
-  WS --> AD["Active Directory DS\n(DC role)"]
-  WS --> DNS_R["DNS Server"]
-  WS --> FS["File Server\nSMB · DFS"]
-  WS --> IIS["IIS / App Roles"]
-  WS --> WSUS["Windows Update\nWSUS / Azure Update Manager"]
-  WS --> SEC["Windows Defender\nFirewall · Audit Policy"]
-  ADMIN(["Windows Admin"]) -->|"RDP / PowerShell"| WS
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class WS ctrl
-  class AD,DNS_R,FS,IIS,WSUS,SEC mgmt
-  class ADMIN host
-```
+
