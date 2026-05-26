@@ -9,24 +9,51 @@ Quick reference for common problems and resolutions.
 ```text
 Symptom: Switch shows "Unreachable" in Fabric → Switches
 ```
-
-| Check | Command |
-|---|---|
-| SNMP credentials correct | Verify SNMPv3 user/auth/priv settings in DCNM |
-| SSH credentials match | Inventory → Switches → Edit → Credentials |
-| Management IP reachable from DCNM server | `ping <switch-mgmt-ip>` from DCNM host |
-| SNMP trap destination set on switch | `show snmp host` |
-| Firewall allows DCNM → switch | TCP 22, UDP 161/162 |
-
-```bash
-# On switch — verify SNMP config
-show snmp user
-show snmp community
-show snmp host
-
-# Re-trigger discovery from DCNM CLI
-dcnm# appmgr update-cert-dcnm
-dcnm# appmgr start all
+┌─────────────────────────────── Cisco DCNM — Common Operational Issues ────────────────────────────────┐
+│                                                                                                       │
+│  Common DCNM issues: switch unreachable, zone push fail, auth error, stale data, UI slow.             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Switch Connectivity Issues          │  │            Zone Management Issues           │   │
+│   │        Switch unreachable: ping test         │  │         Zone push fail: NX-OS creds         │   │
+│   │         SNMP v3 poll timeout: creds          │  │         Conflict: out-of-band change        │   │
+│   │         Discovery timeout: re-add sw         │  │         Zone diff stale: re-discover        │   │
+│   │          NX-OS version unsupported           │  │        Zone lock: active edit session       │   │
+│   │         IP change on switch: update          │  │          VSAN mismatch: verify both         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Switch connectivity verified first; zone failures trace to NX-OS credentials or VSAN.                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Auth & Login Issues              │  │           Performance & DB Issues           │   │
+│   │          ISE TACACS+ timeout check           │  │         UI slow: clear browser cache        │   │
+│   │         LDAP bind fail: service acct         │  │           Elasticsearch disk full           │   │
+│   │           Token expired: re-login            │  │           Run DB prune via appmgr           │   │
+│   │       Local fallback: ISE unreachable        │  │             appmgr restart: DCNM            │   │
+│   │        Audit log: check failed logins        │  │          journalctl for service err         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  DCNM VM · management network · Cisco ISE · Cisco MDS switch management ports                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SNMPv3 poll     = DCNM polls switches every 5 minutes; timeout = switch shows red                    │
+│  NX-OS creds     = DCNM stores per-switch SSH credentials for zone push                               │
+│  Out-of-band     = zone change made directly on MDS bypassing DCNM; causes conflict                   │
+│  Zone lock       = NX-OS zone lock when another session is editing; resolve first                     │
+│  Re-discover     = DCNM re-polls switch to refresh stale topology and zone data                       │
+│  VSAN mismatch   = zone pushed to wrong VSAN; verify VSAN ID on both ends                             │
+│  ISE TACACS+     = Cisco ISE provides DCNM TACACS+ auth; timeout = login failure                      │
+│  LDAP bind       = DCNM AD integration service account; check password expiry                         │
+│  Elasticsearch   = DCNM performance data store; disk full causes UI performance issues                │
+│  appmgr          = DCNM VM CLI; restart/status/prune subcommands                                      │
+│  journalctl      = Linux systemd log; shows DCNM service restart and error events                     │
+│  Zone stale      = DCNM zone database out of sync with switch; re-discover to fix                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### CDP/LLDP Neighbor Discovery Not Populating
