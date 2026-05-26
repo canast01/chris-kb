@@ -3363,74 +3363,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#test-ldap-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test LDAP Authentication
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-tacacs-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. TACACS+ Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-session-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Session Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-audit-trail" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Audit Trail
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-tls-certificate-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. TLS Certificate Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ssh-rootdcnm-dc1corpexamplecom-generate-csr-openssl-req-new-newkey-rsa4096-nodes-keyout-tmpdcnmkey-out-tmpdcnmcsr-subj-cndcnm-dc1corpexamplecomocorpcau-addext-subjectaltnamednsdcnm-dc1corpexamplecom-after-ca-signs-and-returns-dcnmcrt-import-into-dcnm-keystore-openssl-pkcs12-export-in-dcnmcrt-inkey-tmpdcnmkey-certfile-intermediate-cacrt-name-dcnm-out-tmpdcnmp12-passout-passchangeit-keytool-importkeystore-srckeystore-tmpdcnmp12-srcstoretype-pkcs12-srcstorepass-changeit-destkeystore-usrlocalciscodcmdcnmconfdcnmkeystore-deststoretype-jks-deststorepass-keystore-password-alias-dcnm-noprompt-restart-dcnm-to-serve-new-certificate-usrlocalciscodcmdcnmsbindcnm-server-restart-verify-new-certificate-openssl-s_client-connect-dcnm-dc1corpexamplecom443-devnull-2devnull-openssl-x509-noout-subject-dates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ssh root@dcnm-dc1.corp.example.com # Generate CSR openssl req -new -newkey rsa:4096 -nodes \ -keyout /tmp/dcnm.key \ -out /tmp/dcnm.csr \ -subj &quot;/CN=dcnm-dc1.corp.example.com/O=Corp/C=AU&quot; \ -addext &quot;subjectAltName=DNS:dcnm-dc1.corp.example.com&quot; # After CA signs and returns dcnm.crt: # Import into DCNM keystore openssl pkcs12 -export -in dcnm.crt -inkey /tmp/dcnm.key \ -certfile intermediate-ca.crt \ -name &quot;dcnm&quot; -out /tmp/dcnm.p12 -passout pass:changeit keytool -importkeystore \ -srckeystore /tmp/dcnm.p12 -srcstoretype pkcs12 -srcstorepass changeit \ -destkeystore /usr/local/cisco/dcm/dcnm/conf/.dcnmkeystore \ -deststoretype jks -deststorepass &lt;keystore-password&gt; \ -alias dcnm -noprompt # Restart DCNM to serve new certificate /usr/local/cisco/dcm/dcnm/sbin/dcnm-server restart # Verify new certificate openssl s_client -connect dcnm-dc1.corp.example.com:443 &lt;/dev/null 2&gt;/dev/null \ | openssl x509 -noout -subject -dates
-      
-    </span>
-  </a>
   
 </li>
       
@@ -3745,7 +3679,7 @@
 </tbody>
 </table>
 <h3 id="import-ca-certificate-for-ldaps">Import CA Certificate (for LDAPS)<a class="headerlink" href="#import-ca-certificate-for-ldaps" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>root@dcnm-dc1.corp.example.com
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>root@dcnm-dc1.corp.example.com
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Copy CA cert to DCNM</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>scp<span class="w"> </span>corp-ca.crt<span class="w"> </span>root@dcnm-dc1.corp.example.com:/tmp/
@@ -3759,117 +3693,88 @@
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Restart DCNM to apply</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>restart
 </code></pre></div>
-<h3 id="test-ldap-authentication">Test LDAP Authentication<a class="headerlink" href="#test-ldap-authentication" title="Permanent link">&para;</a></h3>
-<p>After saving LDAP settings, click <strong>Test</strong>. Enter a test AD user and password. DCNM will report success (including the groups resolved) or a specific error.</p>
-<hr />
-<h2 id="3-tacacs-integration">3. TACACS+ Integration<a class="headerlink" href="#3-tacacs-integration" title="Permanent link">&para;</a></h2>
-<p>TACACS+ provides per-command accounting and is the preferred AAA method for MDS switches. DCNM itself can also authenticate via TACACS+:</p>
-<p>Configure under <strong>Administration &gt; Security &gt; Authentication &gt; TACACS+</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Server 1</td>
-<td><code>10.10.1.10</code></td>
-</tr>
-<tr>
-<td>Server 2</td>
-<td><code>10.10.1.11</code></td>
-</tr>
-<tr>
-<td>Server port</td>
-<td>49</td>
-</tr>
-<tr>
-<td>Shared key</td>
-<td>Stored in vault</td>
-</tr>
-<tr>
-<td>Authentication type</td>
-<td>PAP or CHAP</td>
-</tr>
-<tr>
-<td>Role from TACACS+</td>
-<td>Enabled (uses AV-pair <code>cisco-av-pair=shell:roles*dcnm-role</code>)</td>
-</tr>
-</tbody>
-</table>
-<p>When TACACS+ is configured:
-- DCNM sends user credentials to the TACACS+ server
-- The TACACS+ server returns a role AV-pair that DCNM maps to a DCNM role
-- If TACACS+ is unreachable, DCNM falls back to local accounts (ensure break-glass account exists)</p>
-<hr />
-<h2 id="4-session-management">4. Session Management<a class="headerlink" href="#4-session-management" title="Permanent link">&para;</a></h2>
-<p>Configure under <strong>Administration &gt; Security &gt; Session Settings</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Recommended Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Session idle timeout</td>
-<td>15 minutes</td>
-</tr>
-<tr>
-<td>Maximum session lifetime</td>
-<td>8 hours</td>
-</tr>
-<tr>
-<td>Concurrent sessions per user</td>
-<td>3</td>
-</tr>
-</tbody>
-</table>
-<p>REST API sessions: use <code>expirationTime</code> in the login call (in seconds). Always call <code>/rest/logout</code> at the end of automation scripts. Long-lived API tokens that are never invalidated accumulate and may cause session exhaustion.</p>
-<hr />
-<h2 id="5-audit-trail">5. Audit Trail<a class="headerlink" href="#5-audit-trail" title="Permanent link">&para;</a></h2>
-<p>All authentication events are logged in DCNM's audit log:
-- View under <strong>Administration &gt; Logs &gt; Audit Logs</strong>
-- Filter by category: <strong>Security</strong>, event type: <strong>Login/Logout</strong>
-- Export to CSV for SIEM ingestion</p>
-<p>Authentication failures also appear in the DCNM server log:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;authentication\|login failed\|unauthorized&quot;</span><span class="w"> </span>/var/log/dcnm/server.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+┌───────────────────────────────────── Cisco DCNM — Authentication ─────────────────────────────────────┐
+│                                                                                                       │
+│  DCNM auth: ISE TACACS+ for GUI, REST JWT, SAML SSO, local accounts as break-glass.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              GUI Authentication              │  │              API Authentication             │   │
+│   │         ISE TACACS+: primary method          │  │            POST /rest/logon → JWT           │   │
+│   │          LDAP: AD group-to-role map          │  │           Token expiry: 8h default          │   │
+│   │         SAML 2.0 SSO: IdP-federated          │  │           HTTPS: TLS 1.2/1.3 only           │   │
+│   │           Local: break-glass only            │  │            Service acct: API key            │   │
+│   │          Lockout: 5 failed attempts          │  │           Rate limit: brute-force           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  ISE TACACS+ for human GUI login; JWT for automation; SAML SSO integrates MFA.                        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Session &amp; Audit Control            │  │           Switch Auth (DCNM-side)           │   │
+│   │         All logins: user + timestamp         │  │         SSH creds stored per switch         │   │
+│   │         Failed logins: alert to SIEM         │  │            NX-OS TACACS+ separate           │   │
+│   │         Concurrent sessions: limited         │  │         Credential vault: HashiCorp         │   │
+│   │          Action audit: all changes           │  │            SNMPv3: auth + privacy           │   │
+│   │          Export audit: syslog / CSV          │  │          Rotation: quarterly creds          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  DCNM VM · Cisco ISE · LDAP/AD · IdP for SAML · Cisco MDS switch management                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ISE TACACS+     = Cisco ISE provides TACACS+ protocol; maps to DCNM role                             │
+│  LDAP            = AD group-to-DCNM role mapping via LDAP bind                                        │
+│  SAML 2.0        = SSO federation; MFA enforced at identity provider level                            │
+│  JWT             = JSON Web Token; bearer token returned on /rest/logon                               │
+│  Service account = dedicated API user; separate credentials for automation                            │
+│  Lockout         = DCNM locks account after 5 failed logins; unlock via admin                         │
+│  Rate limiting   = blocks repeated failed attempts to prevent brute-force                             │
+│  Session timeout = idle GUI/API session terminated after configurable period                          │
+│  Action audit    = all DCNM GUI clicks and API calls logged with user/timestamp                       │
+│  NX-OS TACACS+   = MDS switch CLI authentication via ISE; separate from DCNM                          │
+│  HashiCorp Vault = credential vault; stores DCNM switch passwords for automation                      │
+│  SNMPv3 auth     = SNMP v3 authentication (SHA); privacy (AES) for polling                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## 6. TLS Certificate Management
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Replace the default self-signed DCNM certificate:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ssh root@dcnm-dc1.corp.example.com
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Generate CSR
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>openssl req -new -newkey rsa:4096 -nodes \
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  -keyout /tmp/dcnm.key \
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  -out /tmp/dcnm.csr \
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  -subj &quot;/CN=dcnm-dc1.corp.example.com/O=Corp/C=AU&quot; \
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  -addext &quot;subjectAltName=DNS:dcnm-dc1.corp.example.com&quot;
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># After CA signs and returns dcnm.crt:
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># Import into DCNM keystore
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>openssl pkcs12 -export -in dcnm.crt -inkey /tmp/dcnm.key \
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  -certfile intermediate-ca.crt \
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  -name &quot;dcnm&quot; -out /tmp/dcnm.p12 -passout pass:changeit
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>keytool -importkeystore \
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  -srckeystore /tmp/dcnm.p12 -srcstoretype pkcs12 -srcstorepass changeit \
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  -destkeystore /usr/local/cisco/dcm/dcnm/conf/.dcnmkeystore \
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  -deststoretype jks -deststorepass &lt;keystore-password&gt; \
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  -alias dcnm -noprompt
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a># Restart DCNM to serve new certificate
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server restart
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a># Verify new certificate
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>openssl s_client -connect dcnm-dc1.corp.example.com:443 &lt;/dev/null 2&gt;/dev/null \
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  | openssl x509 -noout -subject -dates
 </code></pre></div></p>
 <hr />
-<h2 id="6-tls-certificate-management">6. TLS Certificate Management<a class="headerlink" href="#6-tls-certificate-management" title="Permanent link">&para;</a></h2>
-<p>Replace the default self-signed DCNM certificate:</p>
-<h2 id="ssh-rootdcnm-dc1corpexamplecom-generate-csr-openssl-req-new-newkey-rsa4096-nodes-keyout-tmpdcnmkey-out-tmpdcnmcsr-subj-cndcnm-dc1corpexamplecomocorpcau-addext-subjectaltnamednsdcnm-dc1corpexamplecom-after-ca-signs-and-returns-dcnmcrt-import-into-dcnm-keystore-openssl-pkcs12-export-in-dcnmcrt-inkey-tmpdcnmkey-certfile-intermediate-cacrt-name-dcnm-out-tmpdcnmp12-passout-passchangeit-keytool-importkeystore-srckeystore-tmpdcnmp12-srcstoretype-pkcs12-srcstorepass-changeit-destkeystore-usrlocalciscodcmdcnmconfdcnmkeystore-deststoretype-jks-deststorepass-keystore-password-alias-dcnm-noprompt-restart-dcnm-to-serve-new-certificate-usrlocalciscodcmdcnmsbindcnm-server-restart-verify-new-certificate-openssl-s_client-connect-dcnm-dc1corpexamplecom443-devnull-2devnull-openssl-x509-noout-subject-dates"><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>root@dcnm-dc1.corp.example.com
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Generate CSR</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-keyout<span class="w"> </span>/tmp/dcnm.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-out<span class="w"> </span>/tmp/dcnm.csr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=dcnm-dc1.corp.example.com/O=Corp/C=AU&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-addext<span class="w"> </span><span class="s2">&quot;subjectAltName=DNS:dcnm-dc1.corp.example.com&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># After CA signs and returns dcnm.crt:</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Import into DCNM keystore</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>openssl<span class="w"> </span>pkcs12<span class="w"> </span>-export<span class="w"> </span>-in<span class="w"> </span>dcnm.crt<span class="w"> </span>-inkey<span class="w"> </span>/tmp/dcnm.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>-certfile<span class="w"> </span>intermediate-ca.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>-name<span class="w"> </span><span class="s2">&quot;dcnm&quot;</span><span class="w"> </span>-out<span class="w"> </span>/tmp/dcnm.p12<span class="w"> </span>-passout<span class="w"> </span>pass:changeit
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>keytool<span class="w"> </span>-importkeystore<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>-srckeystore<span class="w"> </span>/tmp/dcnm.p12<span class="w"> </span>-srcstoretype<span class="w"> </span>pkcs12<span class="w"> </span>-srcstorepass<span class="w"> </span>changeit<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>-destkeystore<span class="w"> </span>/usr/local/cisco/dcm/dcnm/conf/.dcnmkeystore<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>-deststoretype<span class="w"> </span>jks<span class="w"> </span>-deststorepass<span class="w"> </span>&lt;keystore-password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>-alias<span class="w"> </span>dcnm<span class="w"> </span>-noprompt
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># Restart DCNM to serve new certificate</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>restart
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1"># Verify new certificate</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dcnm-dc1.corp.example.com:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
-</code></pre></div><a class="headerlink" href="#ssh-rootdcnm-dc1corpexamplecom-generate-csr-openssl-req-new-newkey-rsa4096-nodes-keyout-tmpdcnmkey-out-tmpdcnmcsr-subj-cndcnm-dc1corpexamplecomocorpcau-addext-subjectaltnamednsdcnm-dc1corpexamplecom-after-ca-signs-and-returns-dcnmcrt-import-into-dcnm-keystore-openssl-pkcs12-export-in-dcnmcrt-inkey-tmpdcnmkey-certfile-intermediate-cacrt-name-dcnm-out-tmpdcnmp12-passout-passchangeit-keytool-importkeystore-srckeystore-tmpdcnmp12-srcstoretype-pkcs12-srcstorepass-changeit-destkeystore-usrlocalciscodcmdcnmconfdcnmkeystore-deststoretype-jks-deststorepass-keystore-password-alias-dcnm-noprompt-restart-dcnm-to-serve-new-certificate-usrlocalciscodcmdcnmsbindcnm-server-restart-verify-new-certificate-openssl-s_client-connect-dcnm-dc1corpexamplecom443-devnull-2devnull-openssl-x509-noout-subject-dates" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../../../../security/ldap-integration/">Standard LDAP Integration</a> — field reference, service account standards, TLS requirements, and connectivity testing</li>
