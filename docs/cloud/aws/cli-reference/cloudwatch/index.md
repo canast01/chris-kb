@@ -35,29 +35,49 @@ CloudWatch CLI: Metrics → Alarms → Logs
   │  logs tail --follow  │
   └──────────────────────┘
 ```
-
-> Part of the AWS CLI Reference.
-
----
-
-```bash
-# Alarms
-aws cloudwatch describe-alarms
-aws cloudwatch describe-alarms --state-value ALARM
-aws cloudwatch set-alarm-state --alarm-name <name> --state-value OK --state-reason "manual reset"
-
-# Metrics
-aws cloudwatch list-metrics --namespace AWS/EC2
-aws cloudwatch get-metric-statistics --namespace AWS/EC2 --metric-name CPUUtilization \
-  --dimensions Name=InstanceId,Value=<id> \
-  --start-time $(date -u -d '1 hour ago' +%FT%TZ) \
-  --end-time $(date -u +%FT%TZ) \
-  --period 300 --statistics Average
-
-# Logs
-aws logs describe-log-groups
-aws logs describe-log-streams --log-group-name <group>
-aws logs get-log-events --log-group-name <group> --log-stream-name <stream>
-aws logs tail <log_group> --follow
-aws logs filter-log-events --log-group-name <group> --filter-pattern "ERROR"
+┌──────────────────────────────────────── AWS CLI — CloudWatch ─────────────────────────────────────────┐
+│                                                                                                       │
+│  CloudWatch CLI commands for metrics, alarms, log groups, dashboards, and insights.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Metrics Commands               │  │                Alarm Commands               │   │
+│   │           list-metrics: available            │  │            describe-alarms: list            │   │
+│   │         get-metric-statistics: query         │  │           put-metric-alarm: create          │   │
+│   │           put-metric-data: publish           │  │            set-alarm-state: test            │   │
+│   │         get-metric-data: bulk query          │  │            delete-alarms: remove            │   │
+│   │          list-dashboards: overview           │  │            describe-alarm-history           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Metrics queried with namespace+dimension; alarms reference metric and threshold                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Logs Commands                 │  │              Insights Commands              │   │
+│   │          describe-log-groups: list           │  │            start-query: run query           │   │
+│   │          describe-log-streams: list          │  │           get-query-results: fetch          │   │
+│   │          get-log-events: raw events          │  │          describe-queries: history          │   │
+│   │          filter-log-events: search           │  │            stop-query: cancel run           │   │
+│   │          put-log-events: write logs          │  │           create-log-group: setup           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  CloudWatch service · S3 (log export) · SNS (alarm action) · Lambda (alarm action)                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Namespace       = Grouping for metrics, e.g. AWS/EC2, AWS/RDS, Custom/App                            │
+│  Dimension       = Key-value pair identifying metric source, e.g. InstanceId=i-xxx                    │
+│  get-metric-data = Bulk metric query with math expressions; preferred over statistics                 │
+│  put-metric-data = Publishes custom application metrics to CloudWatch                                 │
+│  set-alarm-state = Forces alarm state for testing SNS/Lambda alarm actions                            │
+│  filter-log-events= Searches log streams with pattern filter and time range                           │
+│  Insights query  = SQL-like syntax for querying structured log data                                   │
+│  Log group       = Container for log streams; has retention policy                                    │
+│  Log stream      = Sequence of log events from one source (EC2 instance, Lambda)                      │
+│  Retention policy= Days to keep log events before automatic deletion                                  │
+│  describe-alarm-history= Shows state transitions for debugging alarm behavior                         │
+│  put-metric-alarm= Creates/updates alarm; defines threshold, period, evaluation count                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
