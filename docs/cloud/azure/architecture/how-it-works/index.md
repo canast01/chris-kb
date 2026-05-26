@@ -22,97 +22,51 @@ graph TB
   class SUBP,SUBD cloud
   class HUB,SP1,SP2 net
 ```
-
-## Network Architecture
-
-Hub-and-spoke topology with Azure Firewall in the hub controlling east-west and internet-bound traffic:
-
-## Compute
-
-| Service | Use Case |
-|---|---|
-| Azure Virtual Machines | Lift-and-shift, legacy, special OS |
-| Azure Kubernetes Service (AKS) | Container workloads |
-| Azure App Service | Web apps, APIs |
-| Azure Container Apps | Serverless containers |
-| Azure Functions | Event-driven, short-lived tasks |
-| Azure Virtual Machine Scale Sets | Auto-scaling VM groups |
-
-## High Availability
-
-- **VMs**: Availability Zones (spread across 3 zones per region) or Availability Sets
-- **Azure SQL**: Zone-redundant Business Critical tier or geo-redundant
-- **AKS**: System node pool spanning ≥ 2 zones; application node pools zone-spread
-- **Storage**: Zone-Redundant Storage (ZRS) for production; Geo-Redundant (GRS) for DR
-
-## Disaster Recovery Patterns
-
-| Pattern | Services | RPO / RTO |
-|---|---|---|
-| Azure Site Recovery | VM replication to secondary region | < 1 hour RPO, < 2 hours RTO |
-| Geo-redundant storage | Azure Blob, ADLS Gen2 (GRS/GZRS) | Near-zero RPO |
-| Azure SQL Failover Groups | Active geo-replication | < 30 seconds RPO |
-| Azure Backup cross-region restore | Recovery Services Vault | 12–24 hours RTO |
-
-## Networking Components
-
-| Service | Purpose |
-|---|---|
-| Virtual Network (VNet) | Private network isolation |
-| Network Security Groups | Layer 4 traffic filtering |
-| Azure Firewall | Layer 7 hub egress and east-west control |
-| Application Gateway | Layer 7 load balancer with WAF |
-| ExpressRoute | Dedicated private connectivity to on-premises |
-| VPN Gateway | Site-to-site and point-to-site VPN |
-| Private Endpoints | Private connectivity to PaaS services |
-
-## Storage
-
-| Service | Purpose |
-|---|---|
-| Azure Blob Storage | Object storage, large files, backups |
-| Azure Files | SMB/NFS managed file shares |
-| Managed Disks | Block storage for VMs |
-| Azure Data Lake Storage Gen2 | Analytics, hierarchical namespace |
-
-## Identity
-
-| Service | Purpose |
-|---|---|
-| Entra ID (Azure AD) | Cloud identity plane, SSO, MFA |
-| Managed Identities | Credential-free service authentication |
-| Azure RBAC | Role-based access control across resources |
-| Privileged Identity Management | JIT privileged role activation |
-| Conditional Access | Policy-based access control |
-
-## Monitoring and Security
-
-| Service | Purpose |
-|---|---|
-| Azure Monitor | Metrics, logs, alerts, dashboards |
-| Log Analytics | Centralised log query and retention |
-| Microsoft Defender for Cloud | Security posture, threat protection |
-| Azure Key Vault | Secrets, keys, and certificate management |
-| Microsoft Sentinel | Cloud-native SIEM and SOAR |
-
-## Key Vault Secret Access Flow
-
-```mermaid
-sequenceDiagram
-    participant app as Application (VM / Function / AKS pod)
-    participant mi as Managed Identity (IMDS endpoint)
-    participant aad as Azure AD
-    participant kv as Key Vault
-    participant policy as Access Policy / RBAC
-
-    app->>mi: GET token (resource=vault.azure.net)
-    mi->>aad: Token request (MSI credential)
-    aad-->>mi: Bearer token (JWT)
-    mi-->>app: Bearer token
-    app->>kv: GET secret (Authorization: Bearer token)
-    kv->>policy: Evaluate access policy / RBAC
-    policy-->>kv: Allow / Deny
-    kv-->>app: Secret value (200 OK) or 403 Forbidden
+┌────────────────────────────────── Azure Architecture — How It Works ──────────────────────────────────┐
+│                                                                                                       │
+│  Azure organises resources in a hierarchy: Management Groups → Subscriptions → RGs → Resources.       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Resource Hierarchy              │  │            Resource Manager (ARM)           │   │
+│   │       Root Management Group: top level       │  │        ARM: single control plane API        │   │
+│   │       Management Groups: OU equivalent       │  │     Resource Provider: register per svc     │   │
+│   │     Subscriptions: billing + access unit     │  │         ARM template: IaC JSON/Bicep        │   │
+│   │     Resource Groups: lifecycle container     │  │           RBAC: scope at any level          │   │
+│   │      Resources: VMs, storage, databases      │  │        Policy: enforced via ARM layer       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Policies assigned at MG inherit down; RBAC assigned at RG controls resource access.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Authentication Flow              │  │              Service Deployment             │   │
+│   │         Entra ID: identity provider          │  │       Portal: web UI for all resources      │   │
+│   │          Token: OAuth2 / OIDC flow           │  │          CLI: az resource commands          │   │
+│   │      ARM API: accepts token + validates      │  │           SDK: .NET/Python/Java/JS          │   │
+│   │        Policy evaluated at ARM layer         │  │         IaC: Bicep / Terraform / ARM        │   │
+│   │       RBAC: checked before resource op       │  │         DevOps: GitHub Actions / ADO        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Azure regions · Availability Zones · Physical data centres · Global backbone network                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Management Group= Container above subscriptions for policy and RBAC inheritance                      │
+│  Subscription    = Billing and access control boundary; contains resource groups                      │
+│  Resource Group  = Logical container for related resources sharing a lifecycle                        │
+│  ARM             = Azure Resource Manager; unified control plane for all Azure resources              │
+│  Resource Provider= Azure service that supplies resource types, e.g. Microsoft.Compute                │
+│  Bicep           = Domain-specific language that compiles to ARM templates                            │
+│  RBAC            = Role-Based Access Control; assigned to identity at a scope                         │
+│  Azure Policy    = Service enforcing governance rules at ARM layer; deny or audit                     │
+│  Entra ID        = Azure Active Directory; cloud identity provider for all Azure auth                 │
+│  OAuth2 token    = Short-lived bearer token issued by Entra ID for ARM API calls                      │
+│  Root MG         = Top-level management group; all subscriptions under one tenant                     │
+│  IaC             = Infrastructure as Code; define Azure resources in declarative templates            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Identity Architecture
