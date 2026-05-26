@@ -27,34 +27,52 @@ flowchart TD
     authOk -- Yes --> sessionLimit
     sessionLimit --> resolved
 ```
-
-## Triage Order
-
-1. **Is the host reachable?** — ping, RDP, WinRM, iDRAC/iLO console
-2. **Has the server rebooted unexpectedly?** — Event ID 6008, 41 in System log
-3. **What changed recently?** — Windows Update history, software installs, GPO changes
-4. **What is the resource state?** — CPU, memory, disk, network
-5. **Which service or application is affected?** — Event logs, Get-Service
-
-## Unexpected Reboots
-
-```powershell
-# Check for unexpected shutdown (Event ID 6008)
-Get-WinEvent -FilterHashtable @{ LogName='System'; Id=6008 } -MaxEvents 5 |
-    Select-Object TimeCreated, Message
-
-# Kernel power loss (Event ID 41 — crash or power failure)
-Get-WinEvent -FilterHashtable @{ LogName='System'; Id=41 } -MaxEvents 5 |
-    Select-Object TimeCreated, Message | Format-List
-
-# Recent reboots
-Get-WinEvent -FilterHashtable @{ LogName='System'; Id=1074,6006 } -MaxEvents 10 |
-    Select-Object TimeCreated, Message | Format-List
-
-# Check for memory dump (indicates BSOD/crash)
-Test-Path C:\Windows\Minidump
-Get-ChildItem C:\Windows\Minidump -ErrorAction SilentlyContinue |
-    Sort-Object LastWriteTime -Descending | Select-Object -First 5 Name, LastWriteTime
+┌─────────────────────────── Windows Server — Troubleshooting Common Issues ────────────────────────────┐
+│                                                                                                       │
+│  Step-by-step resolution for services, boot failures, high CPU/RAM, and network connectivity.         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Service & Boot Failures            │  │              Performance Issues             │   │
+│   │          sc query → sc start <svc>           │  │          Task Manager → Details tab         │   │
+│   │      Event 7034/7000: crash/start fail       │  │        CPU: top process + call stack        │   │
+│   │        Dependency check: sc qc <svc>         │  │          RAM: pool monitor; poolmon         │   │
+│   │       BSOD: check minidump + !analyze        │  │        Disk: diskperf; latency > 20ms       │   │
+│   │       Boot: bcdedit; recovery console        │  │         Handle/thread leak: procexp         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Service and boot failures resolved via sc tools and event logs; perf via Perfmon/procexp.            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Network & DNS Issues             │  │          AD & Authentication Issues         │   │
+│   │         ipconfig /flushdns + /renew          │  │         klist purge; re-request TGT         │   │
+│   │         nslookup to test DNS records         │  │           nltest /sc_verify:domain          │   │
+│   │         netsh int ip reset + Winsock         │  │            repadmin /syncall /Ade           │   │
+│   │        Test-NetConnection port check         │  │         w32tm /resync for clock skew        │   │
+│   │         netstat -ano: port conflicts         │  │         gpupdate /force; gpresult /h        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · NIC ports · iDRAC/iLO OOB · domain controller network path              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  sc             = Service Control CLI; query, start, stop, configure Windows services                 │
+│  Event 7034     = service terminated unexpectedly; maps to specific service crash                     │
+│  bcdedit        = Boot Configuration Data editor; modify boot entries and flags                       │
+│  !analyze       = WinDbg command; auto-analyses crash dump for root cause                             │
+│  poolmon        = kernel pool monitor; detects pool tag memory leaks                                  │
+│  diskperf       = enables disk performance counters; required for Perfmon disk stats                  │
+│  klist          = Kerberos ticket list; purge clears cached tickets for re-auth                       │
+│  nltest         = network logon test; /sc_verify checks secure channel to DC                          │
+│  w32tm          = Windows Time service tool; /resync forces NTP re-synchronisation                    │
+│  repadmin       = AD replication admin; /syncall forces replication from all partners                 │
+│  gpupdate       = Group Policy update; /force reapplies all policies immediately                      │
+│  Test-NetConnection= PS cmdlet testing TCP port connectivity and route tracing                        │
+│  procexp        = SysInternals Process Explorer; shows handles, threads, DLLs per process             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## High CPU
