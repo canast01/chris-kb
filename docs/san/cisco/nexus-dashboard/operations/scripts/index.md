@@ -43,40 +43,51 @@ cleanup() {
 }
 trap cleanup EXIT
 ```
-
----
-
-## NDFC Switch Inventory Export
-
-Exports all managed switches to CSV including management state and firmware version:
-
-```bash
-#!/usr/bin/env bash
-# nd-switch-inventory.sh
-
-ND_HOST="${ND_HOST:-https://nd-dc1.corp.example.com}"
-NDFC="${ND_HOST}/appcenter/cisco/ndfc/api/v1"
-
-source ./nd-auth.sh
-
-OUTPUT="nd-switches-$(date +%Y%m%d).csv"
-
-curl -sk "${NDFC}/inventory/switches" \
-  -H "Authorization: Bearer ${ND_TOKEN}" \
-  | python3 - <<'PYEOF'
-import sys, json, csv
-
-data = json.load(sys.stdin)
-fields = ["switchName","ipAddress","model","release","managementState",
-          "fabricName","serialNumber","switchRole"]
-
-writer = csv.DictWriter(sys.stdout, fieldnames=fields, extrasaction="ignore")
-writer.writeheader()
-for sw in data:
-    writer.writerow({f: sw.get(f,"") for f in fields})
-PYEOF
-
-echo "Export complete: ${OUTPUT}"
+┌───────────────────────────── Cisco Nexus Dashboard — Operations Scripts ──────────────────────────────┐
+│                                                                                                       │
+│  Automation scripts for ND backup, health reporting, site management, and upgrades.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              REST API Scripting              │  │             Common Script Tasks             │   │
+│   │           Auth: POST /api/v1/auth            │  │          Backup trigger: scheduled          │   │
+│   │          Bearer token: reuse 60 min          │  │          Health report: node + pods         │   │
+│   │            Python requests / curl            │  │          Site status: all connected         │   │
+│   │          Ansible: Cisco ND modules           │  │           Cert expiry: alert < 30d          │   │
+│   │            Terraform: ND provider            │  │           Disk usage: alert > 80%           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  All scripts authenticate via REST API token; Ansible modules wrap the same endpoints                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Ansible Automation              │  │            Script Best Practices            │   │
+│   │             Collection: cisco.nd             │  │          Store creds: Vault/secrets         │   │
+│   │            nd_site: manage sites             │  │         Idempotent: check before set        │   │
+│   │          nd_backup: trigger backup           │  │         Logging: timestamp each run         │   │
+│   │          nd_version: query version           │  │         Error handling: retry logic         │   │
+│   │         nd_policy: deploy templates          │  │        Schedule: cron or Ansible AWX        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ND cluster · automation server (Ansible/AWX) · secrets vault · management network                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  cisco.nd       = Ansible Galaxy collection providing ND-specific modules                             │
+│  Bearer token   = JWT returned by ND auth endpoint; passed in Authorization header                    │
+│  Idempotent     = Script produces same result whether run once or multiple times                      │
+│  AWX            = Ansible Tower open-source; schedules and tracks playbook runs                       │
+│  Terraform ND   = HashiCorp provider allowing IaC management of ND resources                          │
+│  Vault          = HashiCorp secrets manager; stores API credentials securely                          │
+│  nd_site        = Ansible module managing ND site onboarding/removal                                  │
+│  nd_backup      = Ansible module triggering and verifying ND configuration backup                     │
+│  REST endpoint  = /api/v1/* paths; full CRUD for all ND resources                                     │
+│  Token TTL      = ND tokens expire after 60 minutes; scripts must re-authenticate                     │
+│  Retry logic    = Script re-attempts failed API calls with backoff before alerting                    │
+│  Cert expiry check= Script querying ND cert store and alerting when < 30 days remain                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
