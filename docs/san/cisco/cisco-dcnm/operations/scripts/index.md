@@ -45,34 +45,51 @@ cleanup() {
 trap cleanup EXIT
 echo "Authenticated to ${DCNM_HOST}"
 ```
-
----
-
-## Switch Inventory Export
-
-```bash
-#!/usr/bin/env bash
-# dcnm-switch-inventory.sh
-
-source ./dcnm-auth.sh
-
-OUTPUT="dcnm-switches-$(date +%Y%m%d).csv"
-
-curl -sk -b "${COOKIE_FILE}" "${DCNM_HOST}/rest/inventory/switches" \
-  | python3 - <<'EOF'
-import sys, json, csv
-
-data = json.load(sys.stdin)
-fields = ["switchName","ipAddress","model","release","managementState",
-          "fabricName","serialNumber","switchRole"]
-
-writer = csv.DictWriter(sys.stdout, fieldnames=fields, extrasaction="ignore")
-writer.writeheader()
-for sw in data:
-    writer.writerow({f: sw.get(f,"") for f in fields})
-EOF
-
-echo "Export complete: ${OUTPUT}"
+┌─────────────────────────────────── Cisco DCNM — Operations Scripts ───────────────────────────────────┐
+│                                                                                                       │
+│  DCNM scripting: REST API, Ansible cisco.dcnm, zone automation, reporting scripts.                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              REST API Scripting              │  │               Zone Automation               │   │
+│   │           POST /rest/logon → token           │  │        Ansible: cisco.dcnm.dcnm_zone        │   │
+│   │          GET /rest/san/fabric list           │  │         Python: create alias + zone         │   │
+│   │         GET /rest/san/zone/{fabric}          │  │          Batch zone from CSV input          │   │
+│   │          POST /rest/san/zone create          │  │          Validate: show zone active         │   │
+│   │        DELETE /rest/san/zone cleanup         │  │         WWN lookup: show flogi parse        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  cisco.dcnm Ansible collection wraps REST API; Python scripts for batch operations.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Reporting Scripts               │  │             Maintenance Scripts             │   │
+│   │         Port utilisation: weekly CSV         │  │         Config archive: all switches        │   │
+│   │          Zone audit: stale aliases           │  │          Backup trigger: pre-change         │   │
+│   │         SFP inventory: power levels          │  │           NX-OS check: ver compare          │   │
+│   │         Alert summary: email weekly          │  │          Stale zone cleanup script          │   │
+│   │          Fabric topology: inventory          │  │           Port error daily report           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  DCNM VM · REST API port 443 · Cisco MDS switches · automation host                                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  REST API        = DCNM northbound API; JSON/HTTPS; token returned on /rest/logon                     │
+│  cisco.dcnm      = Ansible Galaxy collection; dcnm_zone, dcnm_vsan modules                            │
+│  dcnm_zone       = Ansible module; create, delete, and activate DCNM zones                            │
+│  show zone active= NX-OS command; verifies zone set is active in VSAN                                 │
+│  show flogi database= NX-OS; maps WWPNs to fabric login; used for alias lookup                        │
+│  CSV input       = bulk zone creation from spreadsheet; Python REST API batch                         │
+│  Stale alias     = alias with WWN that has no active fabric login; safe to prune                      │
+│  Config archive  = DCNM-stored switch config; scripted retrieval for CMDB                             │
+│  SFP inventory   = REST API retrieves transceiver power levels for all ports                          │
+│  Alert summary   = weekly email report of DCNM SNMP threshold violations                              │
+│  NX-OS check     = script compares running NX-OS version against approved baseline                    │
+│  Token           = JWT Bearer token; required Authorization header on all API calls                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

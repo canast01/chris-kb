@@ -34,31 +34,51 @@ systemctl start dcnm-server
 systemctl stop dcnm-pm        # performance manager only
 systemctl restart dcnm-events
 ```
-
-### Diagnostics
-
-```bash
-# Show DCNM version
-cat /var/dcnm/version
-
-# Show disk usage
-df -h
-
-# Show database sizes
-psql -U postgres -c "\l+"
-
-# Check DCNM server log
-tail -f /var/log/dcnm/server.log
-grep -i "ERROR\|Exception\|SEVERE" /var/log/dcnm/server.log | tail -100
-
-# Check discovery log
-tail -f /var/log/dcnm/discovery.log
-
-# Check performance manager log
-tail -f /var/log/dcnm/pm.log
-
-# Show all Java processes (confirm DCNM is running)
-ps aux | grep java | grep -v grep
+┌───────────────────────────────────── Cisco DCNM — CLI Reference ──────────────────────────────────────┐
+│                                                                                                       │
+│  DCNM management CLI and key NX-OS MDS commands for fabric operations and troubleshooting.            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                DCNM Admin CLI                │  │            NX-OS MDS SAN Commands           │   │
+│   │         appmgr status: service check         │  │             show flogi database             │   │
+│   │        appmgr backup: trigger backup         │  │             show zoneset active             │   │
+│   │            appmgr stop/start dcnm            │  │            show vsan: VSAN state            │   │
+│   │           dcnm_root passwd change            │  │          show interface fc: errors          │   │
+│   │          tail -f /var/log/dcnm/...           │  │            show port-channel: ISL           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  appmgr manages DCNM services; NX-OS MDS CLI verifies switch-level fabric state.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           REST API Quick Reference           │  │          Common Troubleshooting CLI         │   │
+│   │           POST /rest/logon → token           │  │              curl /rest/health              │   │
+│   │             GET /rest/san/fabric             │  │              appmgr status all              │   │
+│   │         GET /rest/san/zone/{fabric}          │  │              netstat -tlnp 443              │   │
+│   │          POST /rest/san/zone/deploy          │  │              df -h: disk usage              │   │
+│   │          DELETE /rest/san/zone/{id}          │  │            show tech-support: TAC           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  DCNM Linux VM · SSH access · REST API port 443 · Cisco MDS management Ethernet                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  appmgr          = DCNM VM management CLI; controls service lifecycle and backups                     │
+│  show flogi database= NX-OS; shows all FC logins; confirms HBA access to fabric                       │
+│  show zoneset active= NX-OS; shows active zone set members in each VSAN                               │
+│  show vsan        = NX-OS; VSAN state; all should be active                                           │
+│  show interface fc= NX-OS; per-port FC counters: errors, throughput, credits                          │
+│  show port-channel= NX-OS; ISL port-channel (PortChannel) status and members                          │
+│  /rest/logon      = DCNM REST auth endpoint; POST credentials; returns JWT token                      │
+│  /rest/san/fabric = DCNM REST; lists all managed SAN fabrics                                          │
+│  /rest/san/zone/deploy= DCNM REST; triggers zone set activation in VSAN                               │
+│  show tech-support= NX-OS MDS full diagnostic bundle; send to Cisco TAC                               │
+│  df -h            = Linux disk free; check DCNM disk for Elasticsearch fill                           │
+│  netstat -tlnp    = verify DCNM port 443 is listening; basic health check                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Database Access
