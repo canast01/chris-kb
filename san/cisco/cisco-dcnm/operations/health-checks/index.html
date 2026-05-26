@@ -3504,73 +3504,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-fabric-discovery-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Fabric Discovery Status
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="2. Fabric Discovery Status">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#gui_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GUI
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-vsan-health" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. VSAN Health
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3. VSAN Health">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cli-verification-on-switch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CLI Verification on Switch
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-isl-health-and-utilization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. ISL Health and Utilization
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#5-active-alarms" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3828,7 +3761,7 @@
 - Disk usage below 80%
 - Memory usage below 85%</p>
 <h3 id="appliance-cli">Appliance CLI<a class="headerlink" href="#appliance-cli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>root@dcnm-dc1.corp.example.com
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>root@dcnm-dc1.corp.example.com
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># DCNM service status</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>status
@@ -3848,44 +3781,66 @@
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>timedatectl<span class="w"> </span>status
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Expected: synchronized: yes</span>
 </code></pre></div>
-<hr />
-<h2 id="2-fabric-discovery-status">2. Fabric Discovery Status<a class="headerlink" href="#2-fabric-discovery-status" title="Permanent link">&para;</a></h2>
-<h3 id="gui_1">GUI<a class="headerlink" href="#gui_1" title="Permanent link">&para;</a></h3>
-<p>Navigate to <strong>SAN &gt; Fabrics</strong>. For each fabric:
-- All expected switches should be <strong>Manageable</strong> or <strong>Managed</strong> state
-- Switch count should match expected
-- No switches in <strong>Unmanageable</strong> or <strong>Unknown</strong> state</p>
-<p>If a switch shows <strong>Unmanageable</strong>:
-1. Verify SSH connectivity: from DCNM appliance, <code>ssh dcnm_mgmt@&lt;switch-ip&gt;</code>
-2. Verify SNMP: <code>snmpget -v3 -u dcnm_poll -l authPriv -a SHA -A &lt;auth-pass&gt; -x AES -X &lt;priv-pass&gt; &lt;switch-ip&gt; sysDescr.0</code>
-3. Check DCNM discovery log: <code>grep "&lt;switch-ip&gt;" /var/log/dcnm/discovery.log | tail -20</code></p>
-<hr />
-<h2 id="3-vsan-health">3. VSAN Health<a class="headerlink" href="#3-vsan-health" title="Permanent link">&para;</a></h2>
-<p>Navigate to <strong>SAN &gt; VSANs</strong>. For each production VSAN:
-- VSAN should be <strong>Active</strong> on all member switches
-- No VSAN isolation events in the event log</p>
-<h3 id="cli-verification-on-switch">CLI Verification on Switch<a class="headerlink" href="#cli-verification-on-switch" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On MDS switch (NX-OS CLI)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>vsan
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># All production VSANs should be Active</span>
+┌───────────────────────────────────── Cisco DCNM — Health Checks ──────────────────────────────────────┐
+│                                                                                                       │
+│  DCNM health checks: dashboard alerts, switch status, ISL load, zone consistency.                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            DCNM Dashboard Health             │  │             Switch-Level Health             │   │
+│   │       SNMP alerts: active by severity        │  │          show system health: all OK         │   │
+│   │        Fabric topology: no split VSAN        │  │          show environment: temp/PSU         │   │
+│   │          Port inventory: no offline          │  │          show interface: no errors          │   │
+│   │         NX-OS currency: &lt; 2 versions         │  │          show version: verify build         │   │
+│   │          Zone set: saved == active           │  │         show flogi database: logins         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  DCNM dashboard and MDS show commands are first-line health checks; run daily.                        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              ISL &amp; VSAN Health               │  │             DCNM Platform Health            │   │
+│   │        show interface trunk: ISL util        │  │          DCNM services: all running         │   │
+│   │           ISL &gt; 70% util: add more           │  │             DB: disk usage &lt; 80%            │   │
+│   │            show vsan: all active             │  │          HA sync: primary = standby         │   │
+│   │        Credit starvation: pause check        │  │           Backup: last job success          │   │
+│   │           Port error rate &lt; 10/day           │  │          Cert expiry &gt; 60 days left         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Cisco MDS switch chassis · SFP transceivers · ISL FC cables · DCNM VM resources                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  show system health= MDS NX-OS command; reports module and fabric health status                       │
+│  show environment = MDS NX-OS; shows temperature, fan, and PSU sensor readings                        │
+│  show flogi database= FC login database; verifies all HBAs are logged into fabric                     │
+│  show vsan        = VSAN state; confirms all VSANs are active and not suspended                       │
+│  show interface trunk= ISL trunk status and utilisation counters                                      │
+│  Credit starvation= FC flow control issue; BB credits exhausted; causes pause                         │
+│  Zone set saved   = saved zone database should match active; divergence = risk                        │
+│  DCNM HA sync    = primary and standby DCNM databases must be synchronised                            │
+│  Cert expiry      = TLS certificate monitored; alert 60 days before expiry                            │
+│  NX-OS currency   = keep MDS within 2 major versions of latest supported release                      │
+│  Backup status    = nightly DCNM backup job result; alert on failure                                  │
+│  VSAN split       = VSAN partition causing isolation; major incident requiring fix                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## 4. ISL Health and Utilization
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>show<span class="w"> </span>vsan<span class="w"> </span>membership
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Confirm expected ports are in expected VSANs</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>show<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan-id&gt;<span class="w"> </span>membership
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># No unexpected ports</span>
-</code></pre></div>
-<hr />
-<h2 id="4-isl-health-and-utilization">4. ISL Health and Utilization<a class="headerlink" href="#4-isl-health-and-utilization" title="Permanent link">&para;</a></h2>
-<p>Navigate to <strong>SAN &gt; ISLs</strong>. For each fabric:
-- All ISLs should show <strong>Up</strong> state
-- Utilization columns: review for sustained high utilization (&gt; 70%)
-- Error columns: any CRC or signal loss errors require investigation</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On MDS switch for ISL detail</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>topology
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>show<span class="w"> </span>interface<span class="w"> </span>fc&lt;slot/port&gt;<span class="w"> </span>counters<span class="w"> </span>detail
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check: input errors, CRC, output discard</span>
-</code></pre></div>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Navigate to **SAN &gt; ISLs**. For each fabric:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- All ISLs should show **Up** state
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- Utilization columns: review for sustained high utilization (&gt; 70%)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- Error columns: any CRC or signal loss errors require investigation
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>```bash
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># On MDS switch for ISL detail
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>show topology
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>show interface fc&lt;slot/port&gt; counters detail
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Check: input errors, CRC, output discard
+</code></pre></div></p>
 <hr />
 <h2 id="5-active-alarms">5. Active Alarms<a class="headerlink" href="#5-active-alarms" title="Permanent link">&para;</a></h2>
 <p>Navigate to <strong>Monitor &gt; Alarms &gt; Active Alarms</strong>. Triage:</p>
@@ -3921,9 +3876,9 @@
 <p>Navigate to <strong>SAN &gt; Zoning &gt; Active Zone Sets</strong>. Verify:
 - The correct zone set is active in each VSAN
 - Zone member count matches expectations (unexpected changes may indicate unauthorised zone modifications)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On MDS switch to verify zone set consistency</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan-id&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Compare against expected zone set exported from DCNM</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On MDS switch to verify zone set consistency</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan-id&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Compare against expected zone set exported from DCNM</span>
 </code></pre></div>
 <hr />
 <h2 id="7-end-device-inventory">7. End Device Inventory<a class="headerlink" href="#7-end-device-inventory" title="Permanent link">&para;</a></h2>

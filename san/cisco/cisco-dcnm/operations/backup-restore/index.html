@@ -3487,28 +3487,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#individual-database-backups" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Individual Database Backups
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#automated-backup-cron" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Automated Backup (Cron)
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -3826,7 +3804,7 @@
 <hr />
 <h2 id="database-backup">Database Backup<a class="headerlink" href="#database-backup" title="Permanent link">&para;</a></h2>
 <h3 id="manual-backup">Manual Backup<a class="headerlink" href="#manual-backup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>root@dcnm-dc1.corp.example.com
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>root@dcnm-dc1.corp.example.com
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Full database dump (all DCNM databases)</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>pg_dumpall<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-f<span class="w"> </span>/var/backup/dcnm/dcnm-db-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d-%H%M<span class="k">)</span>.sql
@@ -3841,58 +3819,91 @@
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List backups</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/backup/dcnm/
 </code></pre></div>
-<h3 id="individual-database-backups">Individual Database Backups<a class="headerlink" href="#individual-database-backups" title="Permanent link">&para;</a></h3>
-<p>If a full dump is too large or slow, back up individual databases:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List DCNM databases</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-l
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Backup SAN/inventory database (most critical)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pg_dump<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-Fc<span class="w"> </span>sane<span class="w"> </span>&gt;<span class="w"> </span>/var/backup/dcnm/sane-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.dump
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Backup performance management database</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>pg_dump<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-Fc<span class="w"> </span>pmdb<span class="w"> </span>&gt;<span class="w"> </span>/var/backup/dcnm/pmdb-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.dump
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Backup DCNM configuration database</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>pg_dump<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-Fc<span class="w"> </span>dcmdb<span class="w"> </span>&gt;<span class="w"> </span>/var/backup/dcnm/dcmdb-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.dump
-</code></pre></div>
-<h3 id="automated-backup-cron">Automated Backup (Cron)<a class="headerlink" href="#automated-backup-cron" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create backup script</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/opt/scripts/dcnm-backup.sh<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s">#!/bin/bash</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s">BACKUP_DIR=&quot;/var/backup/dcnm&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s">REMOTE=&quot;bkp@backup-server.corp.example.com:/backups/dcnm/db&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s">DATE=$(date +%Y%m%d-%H%M)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s">LOGFILE=&quot;/var/log/dcnm-backup.log&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s">mkdir -p &quot;${BACKUP_DIR}&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s">echo &quot;$(date): Starting DCNM backup&quot; &gt;&gt; &quot;${LOGFILE}&quot;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s">pg_dumpall -U postgres -f &quot;${BACKUP_DIR}/dcnm-db-${DATE}.sql&quot; 2&gt;&gt; &quot;${LOGFILE}&quot;</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s">gzip &quot;${BACKUP_DIR}/dcnm-db-${DATE}.sql&quot; 2&gt;&gt; &quot;${LOGFILE}&quot;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s">scp &quot;${BACKUP_DIR}/dcnm-db-${DATE}.sql.gz&quot; &quot;${REMOTE}/&quot; &gt;&gt; &quot;${LOGFILE}&quot; 2&gt;&amp;1</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s"># Retain only last 7 local backups</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s">find &quot;${BACKUP_DIR}&quot; -name &quot;dcnm-db-*.sql.gz&quot; -mtime +7 -delete</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s">echo &quot;$(date): Backup complete&quot; &gt;&gt; &quot;${LOGFILE}&quot;</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="s">EOF</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>chmod<span class="w"> </span>+x<span class="w"> </span>/opt/scripts/dcnm-backup.sh
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># Schedule nightly backup at 02:00</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;0 2 * * * root /opt/scripts/dcnm-backup.sh&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/cron.d/dcnm-backup
-</code></pre></div>
+┌─────────────────────────────────── Cisco DCNM — Backup and Restore ───────────────────────────────────┐
+│                                                                                                       │
+│  DCNM backup covers the config DB, zone snapshots, NX-OS configs, and topology data.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             DCNM Platform Backup             │  │             Switch Config Backup            │   │
+│   │           Nightly: NFS destination           │  │           copy run startup on MDS           │   │
+│   │         Includes: DB + topology data         │  │         DCNM: archive config per sw         │   │
+│   │        Schedule: DCNM Admin → Backup         │  │           Pre-change zone snapshot          │   │
+│   │            Retention: 30 days min            │  │          Export zone set: text file         │   │
+│   │            Test restore quarterly            │  │         SCP to central backup store         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  DCNM DB backup and switch zone snapshots are both required for full recovery.                        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            DCNM Restore Procedure            │  │            Switch Config Restore            │   │
+│   │           1. Deploy fresh DCNM OVA           │  │          copy tftp: startup-config          │   │
+│   │        2. Restore DB from NFS backup         │  │          Restore zone: import file          │   │
+│   │          3. Verify switch discovery          │  │           zoneset activate in VSAN          │   │
+│   │           4. Re-validate ISE auth            │  │         Verify: show zoneset active         │   │
+│   │           5. Test alert forwarding           │  │         Test: host I/O after restore        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  DCNM VM · NFS backup server · Cisco MDS switch chassis · vSphere host                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  NFS backup      = DCNM configuration and DB exported to NFS mount point                              │
+│  copy run startup= NX-OS command; saves running config to startup-config (NVRAM)                      │
+│  DCNM archive    = per-switch config archive stored in DCNM; viewable in GUI                          │
+│  Zone snapshot   = show zoneset active output saved before any zone change                            │
+│  Zone set export = zone set saved to text file for offline backup and audit                           │
+│  SCP             = Secure Copy; transfer config archives to central backup server                     │
+│  DCNM OVA        = fresh DCNM VM from Cisco-provided OVA; base for restore                            │
+│  copy tftp       = NX-OS; copies startup-config from TFTP server for restore                          │
+│  zoneset activate= NX-OS command; applies restored zone set to VSAN                                   │
+│  show zoneset    = verifies zone set is active and matches expected configuration                     │
+│  Retention 30d   = keep 30 days of DCNM backups; prune older ones to save storage                     │
+│  Restore test    = quarterly test of full DCNM restore to validate backup integrity                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Automated Backup (Cron)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Create backup script
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>cat &gt; /opt/scripts/dcnm-backup.sh &lt;&lt; &#39;EOF&#39;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>#!/bin/bash
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>BACKUP_DIR=&quot;/var/backup/dcnm&quot;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>REMOTE=&quot;bkp@backup-server.corp.example.com:/backups/dcnm/db&quot;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>DATE=$(date +%Y%m%d-%H%M)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>LOGFILE=&quot;/var/log/dcnm-backup.log&quot;
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>mkdir -p &quot;${BACKUP_DIR}&quot;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>echo &quot;$(date): Starting DCNM backup&quot; &gt;&gt; &quot;${LOGFILE}&quot;
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>pg_dumpall -U postgres -f &quot;${BACKUP_DIR}/dcnm-db-${DATE}.sql&quot; 2&gt;&gt; &quot;${LOGFILE}&quot;
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>gzip &quot;${BACKUP_DIR}/dcnm-db-${DATE}.sql&quot; 2&gt;&gt; &quot;${LOGFILE}&quot;
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>scp &quot;${BACKUP_DIR}/dcnm-db-${DATE}.sql.gz&quot; &quot;${REMOTE}/&quot; &gt;&gt; &quot;${LOGFILE}&quot; 2&gt;&amp;1
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># Retain only last 7 local backups
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>find &quot;${BACKUP_DIR}&quot; -name &quot;dcnm-db-*.sql.gz&quot; -mtime +7 -delete
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>echo &quot;$(date): Backup complete&quot; &gt;&gt; &quot;${LOGFILE}&quot;
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>EOF
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>chmod +x /opt/scripts/dcnm-backup.sh
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a># Schedule nightly backup at 02:00
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>echo &quot;0 2 * * * root /opt/scripts/dcnm-backup.sh&quot; &gt;&gt; /etc/cron.d/dcnm-backup
+</code></pre></div></p>
 <hr />
 <h2 id="configuration-file-backup">Configuration File Backup<a class="headerlink" href="#configuration-file-backup" title="Permanent link">&para;</a></h2>
 <p>Back up the DCNM configuration files (these contain server settings not stored in the DB):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Key configuration directories</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>tar<span class="w"> </span>-czf<span class="w"> </span>/var/backup/dcnm/dcnm-config-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>/usr/local/cisco/dcm/dcnm/conf/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>/etc/ssl/dcnm/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>/var/dcnm/
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>scp<span class="w"> </span>/var/backup/dcnm/dcnm-config-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>bkp@backup-server.corp.example.com:/backups/dcnm/config/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Key configuration directories</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>tar<span class="w"> </span>-czf<span class="w"> </span>/var/backup/dcnm/dcnm-config-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>/usr/local/cisco/dcm/dcnm/conf/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>/etc/ssl/dcnm/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>/var/dcnm/
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>scp<span class="w"> </span>/var/backup/dcnm/dcnm-config-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>bkp@backup-server.corp.example.com:/backups/dcnm/config/
 </code></pre></div>
 <hr />
 <h2 id="zone-configuration-export">Zone Configuration Export<a class="headerlink" href="#zone-configuration-export" title="Permanent link">&para;</a></h2>
@@ -3905,43 +3916,43 @@
 <li>Attach to the change management ticket.</li>
 </ol>
 <h3 id="cli-export-via-rest-api">CLI Export via REST API<a class="headerlink" href="#cli-export-via-rest-api" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get auth cookie</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-c<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>https://dcnm-dc1.corp.example.com/rest/logon<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;expirationTime&quot;: 3600}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-u<span class="w"> </span><span class="s2">&quot;svc-automation:&lt;password&gt;&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Export zone configuration for a fabric</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="s2">&quot;https://dcnm-dc1.corp.example.com/rest/san/zoning?fabricName=DC1-FABRIC-A&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>-o<span class="w"> </span>DC1-FABRIC-A-zones-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>https://dcnm-dc1.corp.example.com/rest/logout
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Get auth cookie</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-c<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>https://dcnm-dc1.corp.example.com/rest/logon<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;expirationTime&quot;: 3600}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-u<span class="w"> </span><span class="s2">&quot;svc-automation:&lt;password&gt;&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Export zone configuration for a fabric</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="s2">&quot;https://dcnm-dc1.corp.example.com/rest/san/zoning?fabricName=DC1-FABRIC-A&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>-o<span class="w"> </span>DC1-FABRIC-A-zones-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>https://dcnm-dc1.corp.example.com/rest/logout
 </code></pre></div>
 <hr />
 <h2 id="restore-procedures">Restore Procedures<a class="headerlink" href="#restore-procedures" title="Permanent link">&para;</a></h2>
 <h3 id="restore-database-to-same-appliance">Restore Database to Same Appliance<a class="headerlink" href="#restore-database-to-same-appliance" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ssh<span class="w"> </span>root@dcnm-dc1.corp.example.com
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Stop DCNM services first</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>stop
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Drop and recreate databases</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;DROP DATABASE IF EXISTS sane;&quot;</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;CREATE DATABASE sane;&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;DROP DATABASE IF EXISTS pmdb;&quot;</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;CREATE DATABASE pmdb;&quot;</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Restore from full dump</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>gunzip<span class="w"> </span>-c<span class="w"> </span>/var/backup/dcnm/dcnm-db-20260506-0200.sql.gz<span class="w"> </span><span class="p">|</span><span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Start DCNM services</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>start
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Monitor startup</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/dcnm/server.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>root@dcnm-dc1.corp.example.com
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Stop DCNM services first</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>stop
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Drop and recreate databases</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;DROP DATABASE IF EXISTS sane;&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;CREATE DATABASE sane;&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;DROP DATABASE IF EXISTS pmdb;&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;CREATE DATABASE pmdb;&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Restore from full dump</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>gunzip<span class="w"> </span>-c<span class="w"> </span>/var/backup/dcnm/dcnm-db-20260506-0200.sql.gz<span class="w"> </span><span class="p">|</span><span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Start DCNM services</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>start
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Monitor startup</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/dcnm/server.log
 </code></pre></div>
 <h3 id="restore-to-new-appliance-dr-recovery">Restore to New Appliance (DR Recovery)<a class="headerlink" href="#restore-to-new-appliance-dr-recovery" title="Permanent link">&para;</a></h3>
 <ol>

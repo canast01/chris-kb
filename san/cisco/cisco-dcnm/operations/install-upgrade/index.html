@@ -3565,67 +3565,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#in-place-upgrade" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In-Place Upgrade
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="In-Place Upgrade">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pre-upgrade-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pre-Upgrade Checklist
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#upgrade-via-gui" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade via GUI
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#upgrade-via-cli" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade via CLI
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#post-upgrade-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Upgrade Validation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#decommission" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3923,7 +3862,7 @@
 <li>Both nodes must be in the same subnet (HA uses active/standby with VIP failover)</li>
 </ul>
 <h3 id="ha-configuration">HA Configuration<a class="headerlink" href="#ha-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On the primary (active) DCNM node</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On the primary (active) DCNM node</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>root@dcnm-dc1-active.corp.example.com
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Run HA setup utility</span>
@@ -3946,74 +3885,82 @@
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>/usr/local/cisco/dcm/dcnm/bin/dcnm-ha-status.sh
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Expected: ACTIVE/STANDBY pair, VIP reachable</span>
 </code></pre></div>
-<hr />
-<h2 id="in-place-upgrade">In-Place Upgrade<a class="headerlink" href="#in-place-upgrade" title="Permanent link">&para;</a></h2>
-<h3 id="pre-upgrade-checklist">Pre-Upgrade Checklist<a class="headerlink" href="#pre-upgrade-checklist" title="Permanent link">&para;</a></h3>
-<ul>
-<li>[ ] Review DCNM Release Notes for the target version; confirm upgrade path</li>
-<li>[ ] Take a VM snapshot in vCenter</li>
-<li>[ ] Run a full database backup: <code>pg_dumpall -U postgres &gt; /tmp/dcnm-pre-upgrade.sql</code></li>
-<li>[ ] Export zone sets for all fabrics from the DCNM GUI</li>
-<li>[ ] Confirm no critical alarms are active</li>
-<li>[ ] Schedule a maintenance window (DCNM unavailable for 20-40 minutes)</li>
-<li>[ ] Note the current DCNM version: <strong>Administration &gt; System &gt; About</strong></li>
-</ul>
-<h3 id="upgrade-via-gui">Upgrade via GUI<a class="headerlink" href="#upgrade-via-gui" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Download the DCNM upgrade RPM or patch file from Cisco.</li>
-<li>Navigate to <strong>Administration &gt; System &gt; Software Update</strong>.</li>
-<li>Click <strong>Upload</strong> and select the upgrade file.</li>
-<li>Review the target version displayed.</li>
-<li>Click <strong>Apply</strong>. The upgrade starts immediately.</li>
-<li>The DCNM GUI becomes unavailable for 20–40 minutes.</li>
-<li>After the GUI returns, verify: <strong>Administration &gt; System &gt; About</strong> shows the new version.</li>
-<li>Verify all services are running: <strong>Administration &gt; System Status</strong>.</li>
-</ol>
-<h3 id="upgrade-via-cli">Upgrade via CLI<a class="headerlink" href="#upgrade-via-cli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Transfer upgrade package to DCNM</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>scp<span class="w"> </span>DCNM-x86_64.11.5.4.bin<span class="w"> </span>root@dcnm-dc1.corp.example.com:/tmp/
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># SSH to DCNM and run upgrade</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ssh<span class="w"> </span>root@dcnm-dc1.corp.example.com
+┌────────────────────────────────── Cisco DCNM — Install and Upgrade ───────────────────────────────────┐
+│                                                                                                       │
+│  DCNM deployment: OVA/ISO to vSphere, initial config, switch discovery, upgrade path.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Fresh Install Steps              │  │            Initial Configuration            │   │
+│   │        1. Download DCNM OVA from CCO         │  │          1. Set hostname + IP + DNS         │   │
+│   │           2. Deploy OVA in vSphere           │  │           2. Configure NTP servers          │   │
+│   │       3. Boot + initial config wizard        │  │           3. Set admin credentials          │   │
+│   │        4. 8 vCPU / 32 GB RAM (large)         │  │           4. Configure ISE TACACS+          │   │
+│   │          5. 2 TB datastore for perf          │  │           5. Discover MDS switches          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  OVA deployment is automated; ISE and NTP must be configured before adding switches.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Upgrade Procedure               │  │           Post-Upgrade Validation           │   │
+│   │           1. Backup DCNM DB to NFS           │  │         1. Verify all switches shown        │   │
+│   │           2. Download new DCNM OVA           │  │         2. Check SNMP alert forward         │   │
+│   │        3. Deploy standby; restore DB         │  │         3. Re-test ISE TACACS+ auth         │   │
+│   │         4. Validate standby function         │  │        4. Verify NFS backup schedule        │   │
+│   │          5. Swing DNS; decom old VM          │  │          5. Confirm zone push works         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vSphere host · 2 TB datastore · management network · NFS backup share                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CCO             = Cisco Connection Online; software download portal (software.cisco.com)             │
+│  OVA             = Open Virtual Appliance; DCNM packaged as vSphere-ready VM template                 │
+│  Config wizard   = DCNM first-boot setup; sets IP, NTP, credentials interactively                     │
+│  ISE             = Cisco Identity Services Engine; provides TACACS+ for DCNM auth                     │
+│  NFS backup      = nightly DCNM DB backup; required before any upgrade                                │
+│  Swing DNS       = update DNS A record to new DCNM VM IP after validation                             │
+│  Standby upgrade = deploy new DCNM version as standby first; validate then swing                      │
+│  SNMP forwarding = DCNM forwards switch alerts to NMS; test after every upgrade                       │
+│  Zone push test  = verify DCNM can activate zone set on MDS switch after upgrade                      │
+│  vCPU / RAM      = DCNM large mode: 8 vCPU / 32 GB; medium: 4 vCPU / 16 GB                            │
+│  2 TB datastore  = DCNM storage for 90-day performance data; Elasticsearch store                      │
+│  NTP             = Network Time Protocol; timestamps required for event correlation                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Post-Upgrade Validation
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Verify services
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server status
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>chmod<span class="w"> </span>+x<span class="w"> </span>/tmp/DCNM-x86_64.11.5.4.bin
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>/tmp/DCNM-x86_64.11.5.4.bin<span class="w"> </span>--<span class="w"> </span>--quiet
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Check discovery connectivity
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># GUI: SAN &gt; Fabrics — all switches should reconnect within 5 minutes
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Monitor upgrade</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/dcnm/install.log
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Check performance manager
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># GUI: Monitor &gt; Performance — data should resume within 10 minutes
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># After completion, verify version</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>grep<span class="w"> </span><span class="s2">&quot;dcnm-server&quot;</span><span class="w"> </span>/var/log/dcnm/server.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Starting&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
-</code></pre></div>
-<h3 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify services</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>status
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check discovery connectivity</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># GUI: SAN &gt; Fabrics — all switches should reconnect within 5 minutes</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check performance manager</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># GUI: Monitor &gt; Performance — data should resume within 10 minutes</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Verify event processing</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># GUI: Monitor &gt; Alarms — confirm recent events are being received</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Delete VM snapshot (taken pre-upgrade) after 48-hour validation</span>
-</code></pre></div>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Verify event processing
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># GUI: Monitor &gt; Alarms — confirm recent events are being received
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Delete VM snapshot (taken pre-upgrade) after 48-hour validation
+</code></pre></div></p>
 <hr />
 <h2 id="decommission">Decommission<a class="headerlink" href="#decommission" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Export all zone sets and device alias databases.</li>
 <li>Remove DCNM as SNMP trap receiver on all managed switches:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On each MDS switch</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>no<span class="w"> </span>snmp-server<span class="w"> </span>host<span class="w"> </span>&lt;dcnm-ip&gt;<span class="w"> </span>traps<span class="w"> </span>version<span class="w"> </span><span class="m">3</span><span class="w"> </span>priv<span class="w"> </span>dcnm_poll
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Remove syslog forwarding to DCNM</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>no<span class="w"> </span>logging<span class="w"> </span>server<span class="w"> </span>&lt;dcnm-ip&gt;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Remove DCNM service account</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>no<span class="w"> </span>username<span class="w"> </span>dcnm_mgmt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On each MDS switch</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>no<span class="w"> </span>snmp-server<span class="w"> </span>host<span class="w"> </span>&lt;dcnm-ip&gt;<span class="w"> </span>traps<span class="w"> </span>version<span class="w"> </span><span class="m">3</span><span class="w"> </span>priv<span class="w"> </span>dcnm_poll
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Remove syslog forwarding to DCNM</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>no<span class="w"> </span>logging<span class="w"> </span>server<span class="w"> </span>&lt;dcnm-ip&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Remove DCNM service account</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>no<span class="w"> </span>username<span class="w"> </span>dcnm_mgmt
 </code></pre></div>
 <ol>
 <li>Power off and delete the DCNM VM from vCenter.</li>
