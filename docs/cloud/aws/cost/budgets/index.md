@@ -1,5 +1,52 @@
 # AWS Budgets
 
+```
+┌───────────────────────────────────────── AWS Cost — Budgets ──────────────────────────────────────────┐
+│                                                                                                       │
+│  AWS Budgets sets cost and usage thresholds with alerts and optional auto-actions.                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Budget Types                 │  │             Budget Configuration            │   │
+│   │            Cost: total spend ($)             │  │          Period: monthly/quarterly          │   │
+│   │           Usage: units (GB, hours)           │  │         Filter: account/service/tag         │   │
+│   │          RI utilisation: coverage %          │  │          Forecast: projected spend          │   │
+│   │           Savings Plans coverage %           │  │         Alert: actual or forecasted         │   │
+│   │         Comparison: vs prior period          │  │           SNS: notification target          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Alerts fire when actual or forecasted spend crosses threshold percentage                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Budget Actions                │  │                Best Practices               │   │
+│   │          SCP: restrict service use           │  │              Per account budget             │   │
+│   │            IAM: deny EC2 launches            │  │             Alert at 80% + 100%             │   │
+│   │          Require approval: SSO gate          │  │        Forecast alert: early warning        │   │
+│   │          Trigger: actual threshold           │  │           Tag-based: team budgets           │   │
+│   │            Test: manually trigger            │  │        Review: monthly FinOps meeting       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS Budgets service · SNS · SCP engine · IAM · Cost Explorer data feed                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Budget action   = Automated response when budget threshold is breached                               │
+│  Forecasted alert= Fires when projected end-of-period spend will exceed threshold                     │
+│  Actual alert    = Fires when real spend to date crosses threshold                                    │
+│  RI utilisation  = % of reserved instance hours actually consumed                                     │
+│  Savings Plans coverage= % of eligible spend covered by Savings Plans                                 │
+│  SCP action      = Budget action attaching an SCP to restrict further spending                        │
+│  IAM action      = Budget action attaching IAM policy denying launch of resources                     │
+│  FinOps          = Financial Operations; cloud cost management practice                               │
+│  SNS target      = Budget alert publishes to SNS; subscribers get email/Slack/Lambda                  │
+│  Tag filter       = Budget scoped to resources with specific tag key/value                            │
+│  Period          = Evaluation window: monthly resets on 1st; quarterly on quarter start               │
+│  Cost anomaly    = Separate service; detects unexpected spend spikes via ML                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 AWS Budgets: Alert Flow
 ──────────────────────────────────────────────────────────────
