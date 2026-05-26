@@ -67,44 +67,51 @@ ls -lh /opt/sannav/backups/
 scp /opt/sannav/backups/sannav-backup-20260506.tar.gz \
     bkp-user@backup-server.corp.example.com:/backups/sannav/dc1/
 ```
-
----
-
-## Restore Procedure
-
-### Restore to Same Appliance
-
-Use this procedure when the SANnav appliance is still functional but data needs to be recovered (e.g., after accidental configuration deletion).
-
-1. Navigate to **Administration > Backup > Restore**.
-2. Click **Upload Backup File** and select the backup archive.
-3. Click **Restore**. SANnav services restart during restore.
-4. After restore, verify: switch inventory, alert policies, user accounts, and active zone sets.
-
-### Restore to New Appliance (DR Recovery)
-
-Use this procedure when the original SANnav VM is unrecoverable.
-
-```bash
-# Step 1: Deploy a new SANnav OVA with the same version as the backup
-# (version must match exactly — restore does not support cross-version)
-# Configure the same management IP, hostname, and NTP
-
-# Step 2: Transfer the backup file to the new appliance
-scp sannav-backup-20260506.tar.gz admin@new-sannav-dc1.corp.example.com:/tmp/
-
-# Step 3: SSH to new appliance and run restore
-ssh admin@new-sannav-dc1.corp.example.com
-sannav restore /tmp/sannav-backup-20260506.tar.gz
-
-# Monitor restore
-tail -f /opt/sannav/logs/restore.log
-
-# Step 4: After restore completes, verify services
-sannav status
-
-# Step 5: Update SNMP trap destinations on managed switches if SANnav IP changed
-# (If same IP: no switch-side changes needed)
+┌───────────────────────────────── Brocade SANnav — Backup and Restore ─────────────────────────────────┐
+│                                                                                                       │
+│  SANnav backup covers config DB, performance data, zone snapshots, and switch firmware.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                SANnav Backup                 │  │              Switch Zone Backup             │   │
+│   │        Daily: NFS destination backup         │  │           configupload per switch           │   │
+│   │         Backup includes: DB + config         │  │        Zoning snapshot before change        │   │
+│   │        Schedule: GUI → Admin → Backup        │  │         Store in NFS or version ctrl        │   │
+│   │        Retention: 30 days recommended        │  │        cfgshow: verify active config        │   │
+│   │            Test restore quarterly            │  │         supportsave before firmware         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SANnav config backup and zone backups are independent; both required for full recovery.              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           SANnav Restore Procedure           │  │            Switch Config Restore            │   │
+│   │          1. Deploy fresh SANnav OVA          │  │           configdownload to switch          │   │
+│   │        2. Restore DB from NFS backup         │  │         Zone restore: cfgsave first         │   │
+│   │          3. Verify switch discovery          │  │         cfgenable to activate zones         │   │
+│   │         4. Re-validate TACACS+ auth          │  │         Verify: nsshow + fabricshow         │   │
+│   │           5. Test alert forwarding           │  │         Test: host I/O after restore        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SANnav VM · NFS backup server · Brocade FC switch chassis · vSphere host                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  NFS backup      = SANnav configuration and database exported to NFS mount point                      │
+│  configupload    = Fabric OS CLI; uploads switch config (zones + system) to FTP/SCP                   │
+│  configdownload  = Fabric OS CLI; restores switch config from FTP/SCP file                            │
+│  cfgsave         = saves zone database changes to switch NVRAM flash                                  │
+│  cfgenable       = activates named zone configuration across the fabric                               │
+│  supportsave     = full diagnostic capture; run before any firmware or major change                   │
+│  Zone snapshot   = cfgshow output captured before zone change as rollback reference                   │
+│  SANnav OVA      = fresh SANnav VM deployed from Broadcom-provided OVA template                       │
+│  nsshow          = name server show; verifies devices re-login after restore                          │
+│  fabricshow      = topology show; verifies fabric re-forms after config restore                       │
+│  Retention policy= keep 30 days of SANnav backups; prune older to manage storage                      │
+│  Restore test    = quarterly test of full restore to validate backup integrity                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Post-Restore Validation
