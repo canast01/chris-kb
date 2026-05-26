@@ -30,32 +30,51 @@ clear counters interface fc1/1
 # Check immediately after clearing to confirm problem is active
 show interface fc1/1 counters errors
 ```
-
-**Key error counters and their meaning:**
-
-| Counter | Meaning | Action |
-|---|---|---|
-| `link-failures` | Physical link went down — cable, SFP, or peer restart | Replace SFP/cable; check peer |
-| `loss-of-sync` | Signal not decodable — marginal optical power or noise | Check SFP Rx/Tx levels; replace SFP |
-| `loss-of-signal` | No optical signal received | Check fibre cable; check SFP seating |
-| `input-crc` | Bad FC frames received — physical layer problem | Replace SFP and cable |
-| `output-discards` | Frames dropped due to back-pressure or error | Check BB credit; check ISL bandwidth |
-| `bb-credit-zero` | Buffer-to-buffer credit exhausted | Increase BB credits; review ISL design |
-| `too-long` / `too-short` | Frame size violations | Usually firmware or driver issue on connected device |
-
-### Transceiver (SFP) Diagnostics
-
-```bash
-# Read optical power levels and SFP info
-show interface fc1/1 transceiver
-
-# Example output:
-#   fc1/1
-#     transceiver is present
-#     type is Fabric Channel (short wave laser w/o OFC) (SN)
-#     media is Multimode, 50um (OM3)
-#     Rx power  :  -2.4 dBm   [operating in range: -3.0 to -1.0]
-#     Tx power  :  -2.7 dBm   [operating in range: -6.0 to 0.0]
+┌─────────────────────────────── Cisco MDS — Troubleshooting Diagnostics ───────────────────────────────┐
+│                                                                                                       │
+│  Diagnostic toolset: show commands, SPAN, FC Ping/Traceroute, and tech-support bundles.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Show Command Toolkit             │  │            FC Ping and Traceroute           │   │
+│   │         show flogi database: logins          │  │         fcping: N_Port reachability         │   │
+│   │         show zone active: zone state         │  │           fctrace: path hop-by-hop          │   │
+│   │         show interface fc: counters          │  │         FC loopback: port self-test         │   │
+│   │          show topology: fabric map           │  │             DCNM: topology view             │   │
+│   │         show hardware: module status         │  │          Ethanalyzer: mgmt capture          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Show commands give state snapshots; FC ping/trace verify end-to-end path connectivity                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               SPAN and Capture               │  │                Log Collection               │   │
+│   │          FC SPAN: mirror FC traffic          │  │          Tech-support: full bundle          │   │
+│   │           SPAN dest: analyzer port           │  │         show logging: syslog buffer         │   │
+│   │          RSPAN: remote SPAN over IP          │  │          Event history: per-module          │   │
+│   │        Capture with Wireshark via tap        │  │         Core dump: supervisor crash         │   │
+│   │           SPAN ACL: filter traffic           │  │         TAC upload: encrypted bundle        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS supervisor · FC analyzer port · management Ethernet · syslog/DCNM server                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  FC SPAN        = Fibre Channel Switched Port Analyzer; mirrors selected FC traffic                   │
+│  RSPAN          = Remote SPAN; forwards mirrored frames to remote analyzer over IP                    │
+│  fcping         = FC-layer reachability test using ECHO Extended Link Service                         │
+│  fctrace        = FC-layer traceroute; maps path from source to destination N_Port                    │
+│  Ethanalyzer    = Cisco tool capturing management-plane Ethernet packets on supervisor                │
+│  tech-support   = Comprehensive diagnostic bundle; includes logs, configs, counters                   │
+│  Event history  = Per-process ring buffer of internal events; survives minor faults                   │
+│  Core dump      = Memory snapshot taken when a process crashes; aids TAC analysis                     │
+│  TAC            = Technical Assistance Center; Cisco support team                                     │
+│  SPAN ACL       = Filter applied to SPAN session to capture only matching traffic                     │
+│  show topology  = CLI command displaying fabric-wide switch and ISL map                               │
+│  FC loopback    = Hardware self-test looping frames back at the port for validation                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Rx power below the minimum operating range indicates a marginal or failing optical path — cable or SFP. Tx power below minimum indicates the SFP transmitter is degrading.

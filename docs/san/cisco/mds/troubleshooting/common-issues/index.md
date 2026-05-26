@@ -32,29 +32,51 @@ show port-channel summary
 # 7. Check domain IDs for conflict
 show fcdomain domain-list vsan 10
 ```
-
-Save all outputs to the incident ticket before making changes. They establish a baseline and support root cause analysis.
-
----
-
-## FC Port Down
-
-**Symptom:** A host or storage target has lost connectivity. `show interface brief` shows the port as `down`.
-
-**Primary checks:**
-
-```bash
-# Detailed port status and reason
-show interface fc1/3
-
-# SFP optical power levels
-show interface fc1/3 transceiver
-
-# Error counters since last clear
-show interface fc1/3 counters errors
-
-# Recent log entries for the interface
-show logging last 100 | grep fc1/3
+┌────────────────────────────── Cisco MDS — Troubleshooting Common Issues ──────────────────────────────┐
+│                                                                                                       │
+│  Most frequent MDS fabric issues: FLOGI failures, E_Port isolation, zoning errors.                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Login Failures                │  │             ISL / E_Port Issues             │   │
+│   │      FLOGI rejected: port VSAN mismatch      │  │       E_Port isolated: domain ID clash      │   │
+│   │      PLOGI fail: zoning not configured       │  │        ISL down: SFP incompatibility        │   │
+│   │         HBA offline: SFP link fault          │  │        Trunk mismatch: VSAN list diff       │   │
+│   │          FDISC: NPV mode login fail          │  │         Segmented fabric: FSPF cost         │   │
+│   │        Show flogi database to verify         │  │           Show interface fc state           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Login errors require FLOGI/PLOGI trace; ISL errors need domain/VSAN alignment check                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Zoning Issues                 │  │              Performance Issues             │   │
+│   │       Zone not active: pending commit        │  │           High BB_Credit pressure           │   │
+│   │        WWN not in zone: PLOGI denied         │  │         CRC errors: cable or SFP bad        │   │
+│   │        Zone merge conflict: mismatch         │  │        Congestion: slow-drain device        │   │
+│   │         Default zone deny: block all         │  │          IOCTL timeout: queue depth         │   │
+│   │          Show zone active to verify          │  │           Show interface counters           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS line cards · SFP transceivers · ISL fiber · HBA in server · storage array ports                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  FLOGI          = Fabric Login; N_Port to switch handshake to join the fabric                         │
+│  PLOGI          = Port Login; N_Port to N_Port session establishment through fabric                   │
+│  FDISC          = Fabric Discover; VN_Port login in NPIV/NPV environments                             │
+│  E_Port         = Expansion Port; ISL port mode between two switches                                  │
+│  E_Port isolated= Admin-isolated due to domain ID or parameter conflict                               │
+│  Domain ID      = Unique 1-239 identifier for each switch in a fabric                                 │
+│  BB_Credit      = Buffer-to-Buffer Credit; flow control units for FC link                             │
+│  Slow-drain     = Device accepting frames slowly; causes backpressure upstream                        │
+│  Zone merge     = Process of combining zone databases when two fabrics connect                        │
+│  Default zone   = Policy for devices not in any explicit zone: deny or permit                         │
+│  FSPF           = Fabric Shortest Path First; routing protocol determining ISL paths                  │
+│  CRC error      = Frame checksum failure; indicates physical layer problem                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Resolution by cause:**
