@@ -241,8 +241,55 @@ def on_nav(nav, **kwargs):
     middle = [i for i in nav.items if i is not home and i is not sitemap]
 
     if middle:
-        platforms = Section(title="Platforms", children=middle)
-        for child in middle:
+        # Order sections logically — core platforms first, then supporting areas.
+        # Derived from the folder names MkDocs uses as section keys.
+        SECTION_ORDER = [
+            "virtualization",
+            "cloud",
+            "storage",
+            "san",
+            "compute",
+            "networking",
+            "monitoring",
+            "security",
+            "tools",
+            "automation",
+            "disaster-recovery",
+            "data-protection",
+            "troubleshooting",
+            "runbooks",
+            "change-management",
+            "architecture",
+            "performance",
+            "certifications",
+            "project-management",
+            "protocols",
+            "database",
+            "integration",
+            "inventory",
+            "lifecycle",
+            "ai",
+            "start-here",
+        ]
+
+        def _section_key(item):
+            # Use the item's url path or title to determine sort key.
+            # Sections have a url derived from their folder; pages have file.src_path.
+            url = getattr(item, "url", None) or ""
+            # Strip leading slash and trailing slash, take first segment
+            slug = url.strip("/").split("/")[0] if url else ""
+            if not slug:
+                # Fallback: derive from title
+                slug = item.title.lower().replace(" ", "-") if item.title else ""
+            try:
+                return SECTION_ORDER.index(slug)
+            except ValueError:
+                return len(SECTION_ORDER)  # unknown sections go last
+
+        middle_sorted = sorted(middle, key=_section_key)
+
+        platforms = Section(title="Platforms", children=middle_sorted)
+        for child in middle_sorted:
             child.parent = platforms
 
         new_items = []
