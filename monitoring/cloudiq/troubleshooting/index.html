@@ -4653,28 +4653,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stale-telemetry-old-last-seen-timestamp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stale Telemetry / Old Last-Seen Timestamp
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#api-authentication-failure-http-401" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API Authentication Failure (HTTP 401)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#health-score-calculation-delay" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4883,67 +4861,83 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>3. Incorrect array credentials:
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>   - SCG admin UI &gt; Systems &gt; [System] &gt; Edit &gt; Test Connection
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>   - Ensure the service account has not expired or been locked
-</code></pre></div></p>
-<h3 id="stale-telemetry-old-last-seen-timestamp">Stale Telemetry / Old Last-Seen Timestamp<a class="headerlink" href="#stale-telemetry-old-last-seen-timestamp" title="Permanent link">&para;</a></h3>
-<p><strong>Symptoms</strong>: CloudIQ shows metrics that are hours or days out of date.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. Check SCG service status:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>   - SCG admin UI &gt; System Status — verify all services show Running
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>   - If a service is stopped: restart from the admin UI
+</code></pre></div>
+┌────────────────────────────────────── CloudIQ — Troubleshooting ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Array Not Reporting              │  │              Alert/Score Issues             │   │
+│   │            Check TCP 443 outbound            │  │             Verify telemetry age            │   │
+│   │            Verify DNS resolution             │  │               Check issue list              │   │
+│   │            Re-test from array CLI            │  │            Check threshold config           │   │
+│   │              Re-register array               │  │           Clear false-pos dismiss           │   │
+│   │               Check gateway VM               │  │            Open Dell support case           │   │
+│   │            Review array firmware             │  │             Attach telemetry log            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  All troubleshooting via array CLI/UI and cloudiq.dell.com · Dell support via support portal          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Not reporting = Array shows Disconnected or telemetry age &gt; 15 minutes in CloudIQ                    │
+│  TCP 443 test = Telnet or curl from array management IP to cloudiq.dell.com:443                       │
+│  DNS resolution = Array must resolve cloudiq.dell.com; check DNS server config on array               │
+│  Re-register = Removing array from CloudIQ and re-adding; resets telemetry stream                     │
+│  Gateway VM = Check VM is powered on, has internet access, and service is running                     │
+│  Telemetry age = Minutes since last data received; shown per array in CloudIQ UI                      │
+│  False positive = Alert that does not represent a real issue; dismiss with reason                     │
+│  Threshold = Alert trigger value; adjust if getting too many low-value notifications                  │
+│  Array firmware = Older firmware may have telemetry bugs; update to supported release                 │
+│  Dell support case = Open at support.dell.com with array serial and CloudIQ org name                  │
+│  Telemetry log = Array-side log of CloudIQ push attempts; provided to Dell GSS                        │
+│  Proxy check = If gateway VM uses proxy, verify proxy allows cloudiq.dell.com:443                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### API Authentication Failure (HTTP 401)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>**Symptoms**: Automation scripts return 401 Unauthorized from the CloudIQ API.
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>2. Verify SCG-to-array connectivity:
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   - SCG admin UI &gt; Systems &gt; [System] &gt; Test Connection
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>   - Resolve any network or credential errors reported
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>3. Restart SCG telemetry collection:
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>   - SCG admin UI &gt; System Settings &gt; Restart Collection Service
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>   - Allow 15–30 minutes for data to repopulate in CloudIQ
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>4. If SCG is unreachable (VM-level issue):
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>   - vCenter: power-cycle the SCG VM
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>   - Re-verify services after reboot
-</code></pre></div>
-<h3 id="api-authentication-failure-http-401">API Authentication Failure (HTTP 401)<a class="headerlink" href="#api-authentication-failure-http-401" title="Permanent link">&para;</a></h3>
-<p><strong>Symptoms</strong>: Automation scripts return 401 Unauthorized from the CloudIQ API.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. Confirm client_id and client_secret are correct in the secrets manager
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>2. If the secret was rotated: update the secret in the secrets manager and redeploy scripts
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>3. Verify the token endpoint URL is correct:
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>   POST https://api.cloudiq.dell.com/auth/oauth/v2/token
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>4. Check token expiry — OAuth2 access tokens expire; ensure scripts handle token refresh
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>5. Confirm the API client is not disabled in CloudIQ: Settings &gt; API Clients &gt; [Client]
-</code></pre></div>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```text
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>1. Confirm client_id and client_secret are correct in the secrets manager
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>2. If the secret was rotated: update the secret in the secrets manager and redeploy scripts
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>3. Verify the token endpoint URL is correct:
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>   POST https://api.cloudiq.dell.com/auth/oauth/v2/token
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>4. Check token expiry — OAuth2 access tokens expire; ensure scripts handle token refresh
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>5. Confirm the API client is not disabled in CloudIQ: Settings &gt; API Clients &gt; [Client]
+</code></pre></div></p>
 <h3 id="health-score-calculation-delay">Health Score Calculation Delay<a class="headerlink" href="#health-score-calculation-delay" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: System health score shows as "Unknown" or does not update after a firmware upgrade.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>- This is expected behaviour after a firmware upgrade
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>- Allow 2–4 hours for health score recalculation post-upgrade
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- If still not updated after 4 hours, open a Dell support case with system ID and upgrade timestamp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>- This is expected behaviour after a firmware upgrade
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>- Allow 2–4 hours for health score recalculation post-upgrade
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- If still not updated after 4 hours, open a Dell support case with system ID and upgrade timestamp
 </code></pre></div>
 <h3 id="alert-notifications-not-delivered">Alert Notifications Not Delivered<a class="headerlink" href="#alert-notifications-not-delivered" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: A CRITICAL alert fired in CloudIQ but no notification was received in PagerDuty, email, or Teams.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1. CloudIQ portal &gt; Settings &gt; Notifications &gt; [Rule] — verify the rule is enabled
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2. Confirm the webhook URL or email address is current
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>3. Test the notification rule manually: Actions &gt; Test Notification
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>4. Check CloudIQ audit log for notification delivery errors
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>5. For PagerDuty: verify the integration key has not been rotated on the PagerDuty side
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. CloudIQ portal &gt; Settings &gt; Notifications &gt; [Rule] — verify the rule is enabled
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2. Confirm the webhook URL or email address is current
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>3. Test the notification rule manually: Actions &gt; Test Notification
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>4. Check CloudIQ audit log for notification delivery errors
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>5. For PagerDuty: verify the integration key has not been rotated on the PagerDuty side
 </code></pre></div>
 <h3 id="scg-certificate-errors">SCG Certificate Errors<a class="headerlink" href="#scg-certificate-errors" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: SCG reports TLS/certificate errors when connecting to Dell cloud or array management interfaces.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>1. For SCG-to-cloud TLS errors:
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>   - Verify SCG system clock is synchronised (NTP): System Settings &gt; Date/Time
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>   - Check that the SCG trusts Dell&#39;s root CA (should be pre-configured in OVA)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>2. For SCG-to-array certificate errors:
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>   - Download and trust the array&#39;s self-signed certificate in the SCG trust store:
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>     SCG admin UI &gt; Security &gt; Trusted Certificates &gt; Add
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1. For SCG-to-cloud TLS errors:
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>   - Verify SCG system clock is synchronised (NTP): System Settings &gt; Date/Time
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>   - Check that the SCG trusts Dell&#39;s root CA (should be pre-configured in OVA)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>2. For SCG-to-array certificate errors:
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>   - Download and trust the array&#39;s self-signed certificate in the SCG trust store:
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>     SCG admin UI &gt; Security &gt; Trusted Certificates &gt; Add
 </code></pre></div>
 <h2 id="scg-log-locations">SCG Log Locations<a class="headerlink" href="#scg-log-locations" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From the SCG CLI (SSH as admin user):</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Service logs</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>srs-agent<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>cloudiq-connector<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Application logs</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>/var/log/dell/cloudiq/
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>/var/log/dell/scg/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From the SCG CLI (SSH as admin user):</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Service logs</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>srs-agent<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>cloudiq-connector<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Application logs</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>/var/log/dell/cloudiq/
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>/var/log/dell/scg/
 </code></pre></div>
 <h2 id="dell-support-escalation">Dell Support Escalation<a class="headerlink" href="#dell-support-escalation" title="Permanent link">&para;</a></h2>
 <ul>

@@ -4561,39 +4561,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#insight-types-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Insight Types Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#workload-characterisation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workload Characterisation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#performance-predictions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Performance Predictions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#bottleneck-detection" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4753,7 +4720,7 @@
 
 
 <h1 id="dell-aiops-workload-insights-performance-predictions-and-bottleneck-detection">Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection<a class="headerlink" href="#dell-aiops-workload-insights-performance-predictions-and-bottleneck-detection" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Proactive Insights — Dell AIOps
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Proactive Insights — Dell AIOps
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Correlate events across systems             │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  SYS-A: write latency +60%  (T+0)           │
@@ -4775,98 +4742,57 @@
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  └────────────────────────────────────────┘  │
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>└──────────────────────────────────────────────┘
 </code></pre></div>
-<p>Dell AIOps Insights analyses workload behaviour patterns to surface performance predictions and identify bottlenecks before they cause service degradation. This page covers workload insight types, how to interpret prediction data, and how to act on bottleneck detections.</p>
-<h2 id="insight-types-overview">Insight Types Overview<a class="headerlink" href="#insight-types-overview" title="Permanent link">&para;</a></h2>
-<p>Navigation: <strong>CloudIQ &gt; AIOps &gt; Insights</strong></p>
-<table>
-<thead>
-<tr>
-<th>Insight Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Workload Characterisation</td>
-<td>Classification of I/O pattern (sequential, random, mixed)</td>
-</tr>
-<tr>
-<td>Performance Prediction</td>
-<td>Projected latency/IOPS trend over next 7–30 days</td>
-</tr>
-<tr>
-<td>Bottleneck Detection</td>
-<td>Active constraint on a system (CPU, cache, bandwidth)</td>
-</tr>
-<tr>
-<td>Noisy Neighbour</td>
-<td>Volume or workload consuming disproportionate resources</td>
-</tr>
-<tr>
-<td>Growth Trend</td>
-<td>Projected resource exhaustion based on workload growth</td>
-</tr>
-</tbody>
-</table>
-<h2 id="workload-characterisation">Workload Characterisation<a class="headerlink" href="#workload-characterisation" title="Permanent link">&para;</a></h2>
-<p>AIOps classifies each volume or file system's I/O workload based on observed read/write ratios, block sizes, and sequentiality.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get workload characterisation for all volumes</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/workload_insights?select=volume_name,system_name,io_pattern,read_percent,avg_block_size_kb&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {volume_name, io_pattern, read_percent}&#39;</span>
-</code></pre></div>
-<p>I/O pattern classifications:</p>
-<table>
-<thead>
-<tr>
-<th>Pattern</th>
-<th>Read/Write Split</th>
-<th>Block Size</th>
-<th>Typical Workload</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Sequential Read</td>
-<td>&gt;70% read</td>
-<td>&gt;128 KB</td>
-<td>Backup restore, analytics</td>
-</tr>
-<tr>
-<td>Sequential Write</td>
-<td>&gt;70% write</td>
-<td>&gt;128 KB</td>
-<td>Log streaming, backup</td>
-</tr>
-<tr>
-<td>Random Read</td>
-<td>&gt;70% read</td>
-<td>&lt;32 KB</td>
-<td>Database index scans</td>
-</tr>
-<tr>
-<td>Random Write</td>
-<td>&gt;70% write</td>
-<td>&lt;32 KB</td>
-<td>OLTP databases</td>
-</tr>
-<tr>
-<td>Mixed Random</td>
-<td>~50/50</td>
-<td>&lt;64 KB</td>
-<td>Virtualisation</td>
-</tr>
-</tbody>
-</table>
-<h2 id="performance-predictions">Performance Predictions<a class="headerlink" href="#performance-predictions" title="Permanent link">&para;</a></h2>
-<p>AIOps provides a 7 and 30-day forward projection of key performance metrics based on current trends.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get performance prediction for a specific system</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/performance_predictions?system_id=&lt;systemId&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.predictions[] | {metric, current_value, predicted_7d, predicted_30d, confidence}&#39;</span>
-</code></pre></div>
+┌──────────────────────────────────────── Dell AIOps — Insights ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │             AIOps Insights: AI-generated summaries of infrastructure health trends            │   │
+│   │                 Categories: Efficiency, Risk, Capacity, Performance, Security                 │   │
+│   │         Insight = aggregated pattern observed across multiple objects and time windows        │   │
+│   │                    Includes estimated business impact and priority ranking                    │   │
+│   │                    Updated daily from ML analysis of all ingested telemetry                   │   │
+│   │             Actionable: each insight links to recommendations and affected systems            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Insights computed in AIOps ML engine · stored in AIOps DB · displayed in UI and API                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Insight = Aggregated finding from ML analysis covering multiple systems or time windows              │
+│  Efficiency insight = Identifying over-provisioned or under-utilised resources                        │
+│  Risk insight = Patterns suggesting increased failure probability across a group of systems           │
+│  Capacity insight = Fleet-wide capacity outlook; systems at risk within 90 days                       │
+│  Performance insight = Workload patterns causing latency degradation across multiple arrays           │
+│  Security insight = Configuration gaps or unusual access patterns detected by ML                      │
+│  Business impact = Estimated operational risk or cost of not acting on insight                        │
+│  Priority ranking = Insights ordered by estimated impact and urgency                                  │
+│  Affected systems = List of infrastructure objects contributing to the insight                        │
+│  Linked recommendations = Specific actions to address the identified pattern                          │
+│  Daily refresh = Insight model runs nightly on new telemetry; UI updated each morning                 │
+│  Pattern = Recurring behaviour observed across objects over time; basis for insight generation        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>I/O pattern classifications:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Pattern | Read/Write Split | Block Size | Typical Workload |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|---|---|
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Sequential Read | &gt;70% read | &gt;128 KB | Backup restore, analytics |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Sequential Write | &gt;70% write | &gt;128 KB | Log streaming, backup |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Random Read | &gt;70% read | &lt;32 KB | Database index scans |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Random Write | &gt;70% write | &lt;32 KB | OLTP databases |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Mixed Random | ~50/50 | &lt;64 KB | Virtualisation |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>## Performance Predictions
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>AIOps provides a 7 and 30-day forward projection of key performance metrics based on current trends.
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>```bash
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Get performance prediction for a specific system
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>curl -sk -X GET \
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/performance_predictions?system_id=&lt;systemId&gt;&quot; \
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  -H &quot;Accept: application/json&quot; | jq &#39;.predictions[] | {metric, current_value, predicted_7d, predicted_30d, confidence}&#39;
+</code></pre></div></p>
 <p>Key predicted metrics:</p>
 <table>
 <thead>
@@ -4902,11 +4828,11 @@
 <h2 id="bottleneck-detection">Bottleneck Detection<a class="headerlink" href="#bottleneck-detection" title="Permanent link">&para;</a></h2>
 <p>Bottleneck insights identify the active constraint limiting performance at a given time.</p>
 <p>Navigation: <strong>CloudIQ &gt; AIOps &gt; Insights &gt; Bottlenecks</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List active bottleneck insights</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/bottlenecks?filter=state%20eq%20%27ACTIVE%27&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {system_name, bottleneck_type, severity, recommendation}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List active bottleneck insights</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/bottlenecks?filter=state%20eq%20%27ACTIVE%27&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {system_name, bottleneck_type, severity, recommendation}&#39;</span>
 </code></pre></div>
 <p>Common bottleneck types and remediation:</p>
 <table>
@@ -4942,11 +4868,11 @@
 </table>
 <h2 id="noisy-neighbour-detection">Noisy Neighbour Detection<a class="headerlink" href="#noisy-neighbour-detection" title="Permanent link">&para;</a></h2>
 <p>AIOps can identify when one workload is monopolising shared resources and impacting co-located workloads.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get noisy neighbour insights</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/insights?filter=type%20eq%20%27NOISY_NEIGHBOUR%27&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {noisy_volume, affected_volumes, impact_percent}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Get noisy neighbour insights</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/insights?filter=type%20eq%20%27NOISY_NEIGHBOUR%27&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {noisy_volume, affected_volumes, impact_percent}&#39;</span>
 </code></pre></div>
 <h2 id="common-insight-issues">Common Insight Issues<a class="headerlink" href="#common-insight-issues" title="Permanent link">&para;</a></h2>
 <table>

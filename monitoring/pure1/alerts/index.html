@@ -4619,39 +4619,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#alert-lifecycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alert Lifecycle
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#viewing-alerts-in-pure1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Viewing Alerts in Pure1
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alerts-via-cli" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alerts via CLI
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#alerts-via-pure1-api" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4883,7 +4850,7 @@
 
 
 <h1 id="pure1-alerts">Pure1 — Alerts<a class="headerlink" href="#pure1-alerts" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Alert Pipeline — Pure1
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Alert Pipeline — Pure1
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Array event │  (hardware fault / capacity / replication lag)
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└──────┬───────┘
@@ -4904,36 +4871,61 @@
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   list)    │  │   view)  │  │  (ticketing) │
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└────────────┘  └──────────┘  └──────────────┘
 </code></pre></div>
-<p>Pure1 aggregates alerts from all registered arrays in a single pane. Arrays generate alerts automatically for hardware faults, capacity thresholds, replication lag, and performance anomalies.</p>
-<h2 id="alert-lifecycle">Alert Lifecycle<a class="headerlink" href="#alert-lifecycle" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    A[Event on array] --&gt; B[Alert raised — Open]
-    B --&gt; C{Resolved?}
-    C --&gt;|Auto-resolved| D[Alert Closed]
-    C --&gt;|Manual action| E[Acknowledge → Investigate → Resolve]
-    E --&gt; D
-    D --&gt; F[Audit history retained]</code></pre>
-<h2 id="viewing-alerts-in-pure1">Viewing Alerts in Pure1<a class="headerlink" href="#viewing-alerts-in-pure1" title="Permanent link">&para;</a></h2>
-<p><strong>Pure1 → Alerts</strong> — filtered by:
-- Array / site
-- Severity: Info / Warning / Error / Critical
-- State: Open / Closed
-- Time range</p>
-<h2 id="alerts-via-cli">Alerts via CLI<a class="headerlink" href="#alerts-via-cli" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>pureuser@&lt;flasharray-ip&gt;
+┌─────────────────────────────────────────── Pure1 — Alerts ────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               Alert Categories               │                 Alert Actions                  │   │
+│   │       Pre-failure: component degraded        │             Acknowledge: mark seen             │   │
+│   │           Capacity: fill &lt; 90 days           │                 Open TAC case                  │   │
+│   │         Performance: latency anomaly         │                Webhook to ITSM                 │   │
+│   │            Software: Purity event            │             Dismiss false positive             │   │
+│   │         Connectivity: phonehome gap          │               Email to ops team                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Alerts generated in Pure cloud · delivered via Pure1 UI, email, webhook · TAC auto-case              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Pre-failure alert = Pure1 ML detecting component degradation before failure                          │
+│  Capacity alert = Projected full date within 90 days at current growth rate                           │
+│  Performance alert = Latency or IOPS anomaly detected by Pure1 ML                                     │
+│  Software alert = Purity OS event (firmware error, NVMe error, data reduction issue)                  │
+│  Connectivity alert = Array phonehome not received for &gt; 5 minutes                                    │
+│  TAC auto-case = Pure1 opening case with diagnostic bundle; assigned to engineer                      │
+│  Acknowledge = Marks alert as seen; suppresses re-notification                                        │
+│  Dismiss = Close confirmed false-positive with comment                                                │
+│  Severity = Critical / Warning / Info; Critical triggers auto-case                                    │
+│  Proactive = Alert fires before customer notices impact; target of Pure1 model                        │
+│  Webhook = HTTP POST from Pure1 to configured URL when alert fires                                    │
+│  Phonehome gap = Connectivity loss; array cannot reach pure1.purestorage.com                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Viewing Alerts in Pure1
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># All open alerts</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>purealert<span class="w"> </span>list<span class="w"> </span>--flagged
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># All alerts (including closed)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>purealert<span class="w"> </span>list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>**Pure1 → Alerts** — filtered by:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Array / site
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Severity: Info / Warning / Error / Critical
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- State: Open / Closed
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- Time range
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Filter by severity</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>purealert<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;error\|critical&quot;</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Acknowledge an alert</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>purealert<span class="w"> </span>acknowledge<span class="w"> </span>--id<span class="w"> </span>&lt;alert-id&gt;
-</code></pre></div>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>## Alerts via CLI
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>```bash
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ssh pureuser@&lt;flasharray-ip&gt;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># All open alerts
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>purealert list --flagged
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># All alerts (including closed)
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>purealert list
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># Filter by severity
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>purealert list | grep &quot;error\|critical&quot;
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a># Acknowledge an alert
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>purealert acknowledge --id &lt;alert-id&gt;
+</code></pre></div></p>
 <h2 id="alerts-via-pure1-api">Alerts via Pure1 API<a class="headerlink" href="#alerts-via-pure1-api" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;pure1-token&gt;&quot;</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>

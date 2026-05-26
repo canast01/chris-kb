@@ -4765,39 +4765,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#deployment-modes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Deployment Modes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#services-on-nexus-dashboard" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Services on Nexus Dashboard
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#aci-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ACI Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#node-communication" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4968,7 +4935,7 @@
 <hr />
 <h2 id="cluster-architecture">Cluster Architecture<a class="headerlink" href="#cluster-architecture" title="Permanent link">&para;</a></h2>
 <p>A Nexus Dashboard cluster consists of 3 or 5 nodes. All nodes are peers in a Raft-based cluster consensus model. A virtual IP (VIP) provides a single management entry point.</p>
-<pre class="mermaid"><code>graph TB
+<p><pre class="mermaid"><code>graph TB
   ND["Cisco Nexus Dashboard\n(3-node cluster)"] --&gt; NDFC["NDFC — Fabric Controller"]
   ND --&gt; NDI["ND Insights\ntelemetry · flow analysis"]
   ND --&gt; NDO["ND Orchestrator\nmulti-site ACI"]
@@ -4980,94 +4947,37 @@
   class ND ctrl
   class NDFC,NDI,NDO mgmt
   class ADMIN,FABRICS host</code></pre>
-<table>
-<thead>
-<tr>
-<th>Cluster Size</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>3 nodes</td>
-<td>Standard production deployment</td>
-</tr>
-<tr>
-<td>5 nodes</td>
-<td>High availability / multi-service deployment (NDFC + NDI at scale)</td>
-</tr>
-<tr>
-<td>1 node</td>
-<td>Lab or development only — not supported for production</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="deployment-modes">Deployment Modes<a class="headerlink" href="#deployment-modes" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Mode</th>
-<th>Platform</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Physical (Cisco UCS / Nexus Dashboard appliance)</td>
-<td>Dedicated Cisco hardware</td>
-<td>Highest performance; recommended for large fabrics</td>
-</tr>
-<tr>
-<td>Virtual (VMware ESXi)</td>
-<td>vSphere VM</td>
-<td>Supported for production; check Cisco sizing guide</td>
-</tr>
-<tr>
-<td>On-premises SaaS</td>
-<td>Cisco managed</td>
-<td>Available for some ND services</td>
-</tr>
-<tr>
-<td>Cloud (AWS/Azure)</td>
-<td>Hosted VM</td>
-<td>Supported for hybrid use cases</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="services-on-nexus-dashboard">Services on Nexus Dashboard<a class="headerlink" href="#services-on-nexus-dashboard" title="Permanent link">&para;</a></h2>
-<p>Services are installed on top of the base ND platform as microservice bundles via <strong>Admin &gt; App Store</strong> or a downloaded service image.</p>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Nexus Dashboard Fabric Controller (NDFC)</td>
-<td>Replaces DCNM; manages NX-OS fabric provisioning, VXLAN BGP-EVPN, and IP Fabric for Media</td>
-</tr>
-<tr>
-<td>Nexus Dashboard Insights (NDI)</td>
-<td>Fabric health scoring, anomaly detection, flow telemetry, compliance checking</td>
-</tr>
-<tr>
-<td>Nexus Dashboard Orchestrator (NDO)</td>
-<td>Multi-site ACI policy orchestration</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="aci-integration">ACI Integration<a class="headerlink" href="#aci-integration" title="Permanent link">&para;</a></h2>
-<p>For ACI fabrics, the ACI APIC cluster is added to Nexus Dashboard as a managed site. ND communicates with APIC via its northbound REST API.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Admin &gt; Sites &gt; Add Site
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- Site type: ACI
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- APIC address: &lt;APIC-cluster-VIP&gt;
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Username/password: (read-only for monitoring, admin for NDFC/NDO)
-</code></pre></div>
+┌─────────────────────────────────── Nexus Dashboard — How It Works ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Step 1: Onboarding — add APIC or NX-OS fabric to Nexus Dashboard with credentials       │   │
+│   │          Step 2: Telemetry — switches stream metrics via MDT/gRPC to NDI continuously         │   │
+│   │       Step 3: Analysis — NDI ML models score health, detect anomalies, and analyse flows      │   │
+│   │          Step 4: Alert — health score drops or anomaly detected triggers event in NDI         │   │
+│   │     Step 5: Notification — email or webhook sent; ServiceNow integration creates incident     │   │
+│   │        Step 6: Remediation — engineer reviews event; NDI shows affected objects and fix       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Switches stream telemetry to ND data network IP · APIC queried via REST · ND cluster processes       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Onboarding = Adding fabric to ND; requires APIC IP/credentials or switch SSH access                  │
+│  MDT = Model-Driven Telemetry; NX-OS sensor push to NDI for real-time data                            │
+│  gRPC = Transport for MDT streaming; port 9339 from switch to ND data IP                              │
+│  Health score = NDI composite score per site/fabric/object from telemetry analysis                    │
+│  Anomaly = NDI ML deviation from learned baseline in fabric metrics                                   │
+│  Flow analysis = NDI tracking actual IP flows for EPG connectivity verification                       │
+│  Event = NDI alert for health drop, anomaly, or assurance violation                                   │
+│  Assurance = NDI verifying actual fabric state matches ACI policy intent                              │
+│  Notification = Email or webhook from ND when event fires                                             │
+│  ServiceNow = NDI integration creating ITSM incidents from fabric events                              │
+│  Affected objects = NDI identifying specific switch, interface, or EPG causing health drop            │
+│  Fabric site = Single ACI fabric or DCNM/NDFC managed NX-OS domain added to ND                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <hr />
 <h2 id="node-communication">Node Communication<a class="headerlink" href="#node-communication" title="Permanent link">&para;</a></h2>
 <table>

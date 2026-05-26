@@ -4679,7 +4679,38 @@
 
 
 <h1 id="nexus-dashboard-security">Nexus Dashboard Security<a class="headerlink" href="#nexus-dashboard-security" title="Permanent link">&para;</a></h1>
-<p>Nexus Dashboard RBAC supports Domain Admin, Tenant Admin, and Read-only roles, scoped to specific fabrics or globally. LDAP and TACACS+ integration are supported for centralised authentication and authorisation. All management access to the ND cluster is HTTPS-only; the management IP should be reachable only from the operations management subnet. TLS certificates for the ND cluster should be replaced with organisation-issued certificates (not self-signed) for production environments. The audit log captures all admin actions, policy changes, and login events and should be exported to the SIEM. Fabric isolation is enforced via tenant VRFs in ACI to prevent cross-tenant traffic.</p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── Nexus Dashboard — Security ──────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                Access Control                │  │               Network Security              │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │             Local + LDAP/TACACS              │  │              HTTPS only TCP 443             │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │             RBAC: role per team              │  │                Mgmt VLAN only               │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │             APIC read-only user              │  │                TLS inter-node               │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │               MFA integration                │  │                gRPC auth MDT                │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │             Annual access review             │  │               Audit log in ND               │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  ND cluster on management network · APIC observer account · gRPC on data network                      │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  TACACS+ = AAA protocol for ND admin authentication; integrates with Cisco ISE                        │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  LDAP = Directory authentication for ND UI login via AD/OpenLDAP                                      │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  RBAC = Admin/Operator/Viewer roles; scoped to site or global                                         │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  APIC Observer = Minimum-privilege read-only role for NDI APIC integration                            │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  MFA = Multi-factor auth via SAML/SSO; ND supports external IdP                                       │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  TLS inter-node = All ND cluster internal traffic encrypted                                           │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  gRPC auth = MDT streaming uses TLS with certificate authentication                                   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Audit log = ND records logins, config changes, and user actions                                      │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Mgmt VLAN = ND admin UI on management network; data network for fabric only                          │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Annual review = Yearly audit of ND accounts and APIC service account                                 │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Custom cert = Replace ND self-signed with CA cert in ND admin &gt; Certificate                          │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  SSH restriction = Limit SSH to ND master nodes to jump-host IPs only                                 │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+Nexus Dashboard RBAC supports Domain Admin, Tenant Admin, and Read-only roles, scoped to specific fabrics or globally. LDAP and TACACS+ integration are supported for centralised authentication and authorisation. All management access to the ND cluster is HTTPS-only; the management IP should be reachable only from the operations management subnet. TLS certificates for the ND cluster should be replaced with organisation-issued certificates (not self-signed) for production environments. The audit log captures all admin actions, policy changes, and login events and should be exported to the SIEM. Fabric isolation is enforced via tenant VRFs in ACI to prevent cross-tenant traffic.</p>
 <table>
 <thead>
 <tr>

@@ -4986,21 +4986,40 @@
 
 
 <h1 id="insightiq-how-it-works">InsightIQ — How It Works<a class="headerlink" href="#insightiq-how-it-works" title="Permanent link">&para;</a></h1>
-<p>InsightIQ is Dell EMC's performance analytics platform for NetApp PowerScale (Isilon) clusters, deployed as an on-premises virtual appliance. It collects, stores, and presents historical performance data for capacity planning, protocol analysis, and workload trending. A single InsightIQ instance can monitor multiple PowerScale clusters.</p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── InsightIQ — How It Works ───────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │   Step 1: Cluster Registration — add PowerScale cluster IP and PAPI credentials to InsightIQ  │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │    Step 2: Collection — InsightIQ polls PAPI every 30 seconds for all performance counters    │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │   Step 3: Storage — raw samples stored in PostgreSQL; older data rolled up to 5-min averages  │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │           Step 4: Analysis — UI queries DB to render dashboards and charts on demand          │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │         Step 5: Reporting — user builds or schedules reports; PDF/CSV export available        │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │     Step 6: Alert — threshold breach triggers email notification to configured recipients     │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  InsightIQ VM on management cluster · PAPI from VM to cluster SmartConnect IP                         │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  Cluster registration = Adding cluster access zone IP and PAPI user to InsightIQ                      │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  SmartConnect = PowerScale DNS load-balancing for PAPI connections across nodes                       │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  PAPI credentials = Read-only admin user on PowerScale; InsightIQ uses for all polls                  │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Raw sample = 30-second metric reading stored at full resolution                                      │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Rollup = Aggregation process compressing old raw samples into hourly averages                        │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Dashboard = Pre-built or custom view of metrics over selected time range                             │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Report = Scheduled or on-demand document with metric tables and charts                               │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Threshold alert = Email sent when metric exceeds configured limit                                    │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  SmartConnect zone = PowerScale DNS name resolving to available node IPs                              │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  PostgreSQL = On-appliance DB; grows at ~10 GB/year per cluster at 30-sec interval                    │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  PDF export = Formatted report for management sharing                                                 │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  CSV export = Raw data download for spreadsheet or BI analysis                                        │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+InsightIQ is Dell EMC's performance analytics platform for NetApp PowerScale (Isilon) clusters, deployed as an on-premises virtual appliance. It collects, stores, and presents historical performance data for capacity planning, protocol analysis, and workload trending. A single InsightIQ instance can monitor multiple PowerScale clusters.</p>
 <hr />
 <h2 id="deployment-architecture">Deployment Architecture<a class="headerlink" href="#deployment-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  PS["PowerScale Cluster\n(OneFS API)"] --&gt;|"performance telemetry"| IIQ["InsightIQ Server\n(analytics VM)"]
-  IIQ --&gt; PERF["Performance Dashboards\nIOPS · Throughput · Latency"]
-  IIQ --&gt; CAP["Capacity Trending\n&amp; Protocol Breakdown"]
-  IIQ --&gt; REP["Scheduled Reports\nPDF / CSV export"]
-  ADMIN(["Storage Admin"]) --&gt;|"browser"| IIQ
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class PS ctrl
-  class IIQ,PERF,CAP,REP cloud
-  class ADMIN host</code></pre>
 <hr />
 <h2 id="component-roles">Component Roles<a class="headerlink" href="#component-roles" title="Permanent link">&para;</a></h2>
 <table>

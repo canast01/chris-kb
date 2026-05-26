@@ -4594,39 +4594,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#vcenter-version-compatibility" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vCenter Version Compatibility
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-retention-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Retention Configuration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#management-pack-version-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Management Pack Version Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#backup" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4787,7 +4754,7 @@
 <li>Notify operations team — collection may pause briefly during upgrade window.</li>
 </ol>
 <h2 id="upgrade-procedure-via-lcm">Upgrade Procedure via LCM<a class="headerlink" href="#upgrade-procedure-via-lcm" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>1. Log into Aria Suite Lifecycle Manager
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>1. Log into Aria Suite Lifecycle Manager
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>2. Navigate to Environments &gt; [Your Environment]
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>3. Select Aria Operations product tile
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>4. Click Upgrade — select the downloaded product bundle
@@ -4796,66 +4763,51 @@
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>7. Verify all nodes are Online in Admin &gt; Cluster Management post-upgrade
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>8. Verify all adapters are Collecting in Admin &gt; Solutions
 </code></pre></div>
-<h2 id="vcenter-version-compatibility">vCenter Version Compatibility<a class="headerlink" href="#vcenter-version-compatibility" title="Permanent link">&para;</a></h2>
-<p>Always check the Interoperability Matrix before a vCenter upgrade, as newer vCenter versions may require a corresponding Aria Operations upgrade.</p>
-<table>
-<thead>
-<tr>
-<th>Aria Operations Version</th>
-<th>Minimum vCenter Supported</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>8.16</td>
-<td>vCenter 7.0 U3+</td>
-</tr>
-<tr>
-<td>8.14</td>
-<td>vCenter 7.0 U2+</td>
-</tr>
-<tr>
-<td>8.12</td>
-<td>vCenter 7.0+</td>
-</tr>
-</tbody>
-</table>
-<p>Check the current Broadcom Interoperability Matrix for the latest version pairings.</p>
-<h2 id="data-retention-configuration">Data Retention Configuration<a class="headerlink" href="#data-retention-configuration" title="Permanent link">&para;</a></h2>
-<p>Navigate to <strong>Admin &gt; Global Settings &gt; Retention Policy</strong> to configure retention periods. Changes to retention that reduce the period will trigger a data purge.</p>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Default</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Metrics retention</td>
-<td>6 months</td>
-<td>Increase requires additional data node storage</td>
-</tr>
-<tr>
-<td>Policy data history</td>
-<td>6 months</td>
-<td>Matched to metrics retention</td>
-</tr>
-<tr>
-<td>Events/alerts history</td>
-<td>6 months</td>
-<td>Configurable independently</td>
-</tr>
-</tbody>
-</table>
-<h2 id="management-pack-version-management">Management Pack Version Management<a class="headerlink" href="#management-pack-version-management" title="Permanent link">&para;</a></h2>
-<p>Management packs have their own version lifecycle, independent of the Aria Operations platform version. Steps to update a management pack:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. Admin &gt; Solutions &gt; [Select Solution]
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2. Click Upgrade — upload new management pack PAK file
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>3. Verify adapter instances reconnect successfully after upgrade
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>4. Review adapter logs for errors (Admin &gt; Solutions &gt; [Adapter] &gt; Logs)
-</code></pre></div>
+┌─────────────────────────────── Aria Operations — Lifecycle Management ────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Install / Deploy               │  │                 Upgrade Path                │   │
+│   │            OVA deploy to vCenter             │  │             Check interop matrix            │   │
+│   │             Size per node count              │  │              PAK upgrade first              │   │
+│   │             License via Aria LCM             │  │           Snapshot before upgrade           │   │
+│   │            vCenter adapter setup             │  │             Upgrade via Admin UI            │   │
+│   │            Initial policy config             │  │               Data nodes first              │   │
+│   │                Add data nodes                │  │               Master node last              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Snapshots before upgrade + rollback plan required; Aria LCM preferred for orchestrated upgrades    │
+│                                                                                                       │
+│                                                  ▼                                                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Backup &amp; Restore               │  │                 Decommission                │   │
+│   │              File-based backup               │  │              Export dashboards              │   │
+│   │              NFS or SCP target               │  │              Export alert defs              │   │
+│   │              Scheduled nightly               │  │               Remove adapters               │   │
+│   │             Retention: 7 copies              │  │                Power off VMs                │   │
+│   │             Restore via Admin UI             │  │             Delete from vCenter             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  OVA size S: 4 vCPU/16 GB · M: 8/32 · L: 16/48 · NFS backup target requires TCP 2049                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Aria LCM = Aria Lifecycle Manager; orchestrates upgrade sequencing across Aria product stack         │
+│  OVA = Open Virtual Appliance; VM image format used to deploy Aria Ops nodes                          │
+│  Interop matrix = VMware compatibility matrix; confirms supported vCenter/ESXi versions               │
+│  PAK upgrade = Updating adapter packages before upgrading the core platform                           │
+│  File-based backup = Aria Ops native backup creating encrypted archive of config and data             │
+│  Data node = Worker node that stores metric data and runs analytics jobs                              │
+│  Master node = Primary node hosting the UI, REST API, and cluster coordinator                         │
+│  Rollback = Restoring from snapshot if upgrade fails; requires VM snapshot taken before start         │
+│  License key = Aria Ops license applied via Administration &gt; Licensing; tied to object count          │
+│  SCP target = SSH-based file copy destination for backup archives                                     │
+│  Admin UI = Web-based cluster management at https://<master>:5480                                     │
+│  Upgrade token = Short-lived credential required for cluster join during multi-node upgrade           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h2 id="backup">Backup<a class="headerlink" href="#backup" title="Permanent link">&para;</a></h2>
 <p>Aria Operations does not have a native backup tool. Use the following:</p>
 <table>

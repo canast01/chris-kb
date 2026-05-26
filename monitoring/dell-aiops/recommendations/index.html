@@ -4561,39 +4561,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#recommendation-sources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recommendation Sources
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#viewing-and-prioritising-recommendations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Viewing and Prioritising Recommendations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implementing-recommendations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Implementing Recommendations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#implementation-tracking-dashboard" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4753,7 +4720,7 @@
 
 
 <h1 id="dell-aiops-actionable-recommendations-and-implementation-tracking">Dell AIOps: Actionable Recommendations and Implementation Tracking<a class="headerlink" href="#dell-aiops-actionable-recommendations-and-implementation-tracking" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Recommendations — Dell AIOps
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Recommendations — Dell AIOps
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Analysis engine outputs                 │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌──────────────────────────────────┐    │
@@ -4779,122 +4746,72 @@
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>          │  CloudIQ validates  │
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>          └─────────────────────┘
 </code></pre></div>
-<p>Dell AIOps generates AI-driven recommendations that go beyond static best-practice checks. Recommendations are prioritised by business impact, include step-by-step guidance, and track implementation status. This page covers how to find, evaluate, implement, and close AIOps recommendations.</p>
-<h2 id="recommendation-sources">Recommendation Sources<a class="headerlink" href="#recommendation-sources" title="Permanent link">&para;</a></h2>
-<p>AIOps recommendations originate from multiple analysis engines:</p>
-<table>
-<thead>
-<tr>
-<th>Source</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Bottleneck Analysis</td>
-<td>Configuration changes to relieve active constraints</td>
-</tr>
-<tr>
-<td>Capacity ML Model</td>
-<td>Proactive expansion or tiering changes</td>
-</tr>
-<tr>
-<td>Predictive Failure</td>
-<td>Replace component before predicted failure window</td>
-</tr>
-<tr>
-<td>Configuration Best Practice</td>
-<td>Mismatches against Dell-recommended settings</td>
-</tr>
-<tr>
-<td>Energy Efficiency</td>
-<td>Workload and power optimisation opportunities</td>
-</tr>
-<tr>
-<td>Firmware / Software</td>
-<td>Versions known to fix production-impacting bugs</td>
-</tr>
-</tbody>
-</table>
-<p>Navigation: <strong>CloudIQ &gt; AIOps &gt; Recommendations</strong></p>
-<h2 id="viewing-and-prioritising-recommendations">Viewing and Prioritising Recommendations<a class="headerlink" href="#viewing-and-prioritising-recommendations" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all active AIOps recommendations sorted by priority</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/recommendations?filter=state%20eq%20%27ACTIVE%27&amp;order_by=priority%20desc&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {id, title, priority, effort, system_name}&#39;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Get full recommendation detail including implementation steps</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/recommendations/&lt;recId&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span>
-</code></pre></div>
-<p>Priority and effort matrix:</p>
-<table>
-<thead>
-<tr>
-<th>Priority</th>
-<th>Effort</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>HIGH</td>
-<td>LOW</td>
-<td>Implement immediately — high value, low risk</td>
-</tr>
-<tr>
-<td>HIGH</td>
-<td>HIGH</td>
-<td>Schedule in next change window</td>
-</tr>
-<tr>
-<td>MEDIUM</td>
-<td>LOW</td>
-<td>Batch into routine maintenance</td>
-</tr>
-<tr>
-<td>MEDIUM</td>
-<td>HIGH</td>
-<td>Evaluate carefully; may require planning</td>
-</tr>
-<tr>
-<td>LOW</td>
-<td>LOW</td>
-<td>Implement opportunistically</td>
-</tr>
-<tr>
-<td>LOW</td>
-<td>HIGH</td>
-<td>Defer unless other work requires it</td>
-</tr>
-</tbody>
-</table>
-<h2 id="implementing-recommendations">Implementing Recommendations<a class="headerlink" href="#implementing-recommendations" title="Permanent link">&para;</a></h2>
-<p>Each recommendation includes a <strong>Steps</strong> tab with a numbered implementation procedure. For firmware updates, a link to the Dell EMC support portal download is included.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Mark recommendation as in-progress</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/recommendations/&lt;recId&gt;/start&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;comment&quot;: &quot;Scheduled for change window CR-2026-0512&quot;}&#39;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Mark recommendation as implemented</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/recommendations/&lt;recId&gt;/implement&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;comment&quot;: &quot;Applied firmware 5.3.1 — validated performance improvement&quot;}&#39;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Dismiss recommendation (not applicable)</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/recommendations/&lt;recId&gt;/dismiss&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;reason&quot;: &quot;NOT_APPLICABLE&quot;, &quot;comment&quot;: &quot;System decommissioning in 60 days&quot;}&#39;</span>
-</code></pre></div>
+┌──────────────────────────────────── Dell AIOps — Recommendations ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         AIOps AI generates recommendations from anomalies, insights, and health scores        │   │
+│   │            Categories: Performance, Capacity, Availability, Security, Configuration           │   │
+│   │               Priority: Critical → High → Medium → Low based on estimated impact              │   │
+│   │          Each recommendation: problem, affected systems, steps, and expected outcome          │   │
+│   │                     Status flow: Open → In Progress → Resolved / Dismissed                    │   │
+│   │              Linked to ITSM: recommendation can trigger ServiceNow problem record             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Recommendations computed by AIOps ML engine · tracked in AIOps DB · exported via API                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Recommendation = AI-generated action linking a detected issue to a corrective step                   │
+│  Priority = Urgency classification: Critical (act now)/High (act soon)/Medium/Low                     │
+│  Affected systems = Infrastructure components contributing to the recommendation                      │
+│  Expected outcome = Estimated improvement if recommendation is implemented                            │
+│  In Progress = Status indicating team has started working on the recommendation                       │
+│  Resolved = Recommendation closed; AIOps validates via subsequent telemetry                           │
+│  Dismissed = Closed without action; requires reason comment for audit trail                           │
+│  ServiceNow problem = ITSM record created from recommendation for tracking in change process          │
+│  SLA = Internal target for acting on Critical recs (e.g., within 2 business days)                     │
+│  Configuration rec = Flagging settings that deviate from Dell best practice baseline                  │
+│  Weekly review = Dedicated recurring meeting to action or defer open recommendations                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Priority and effort matrix:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Priority | Effort | Action |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|---|
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| HIGH | LOW | Implement immediately — high value, low risk |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| HIGH | HIGH | Schedule in next change window |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| MEDIUM | LOW | Batch into routine maintenance |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| MEDIUM | HIGH | Evaluate carefully; may require planning |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| LOW | LOW | Implement opportunistically |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| LOW | HIGH | Defer unless other work requires it |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>## Implementing Recommendations
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Each recommendation includes a **Steps** tab with a numbered implementation procedure. For firmware updates, a link to the Dell EMC support portal download is included.
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>```bash
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># Mark recommendation as in-progress
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>curl -sk -X POST \
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/recommendations/&lt;recId&gt;/start&quot; \
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  -H &quot;Content-Type: application/json&quot; \
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  -d &#39;{&quot;comment&quot;: &quot;Scheduled for change window CR-2026-0512&quot;}&#39;
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a># Mark recommendation as implemented
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>curl -sk -X POST \
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/recommendations/&lt;recId&gt;/implement&quot; \
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  -H &quot;Content-Type: application/json&quot; \
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  -d &#39;{&quot;comment&quot;: &quot;Applied firmware 5.3.1 — validated performance improvement&quot;}&#39;
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a># Dismiss recommendation (not applicable)
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>curl -sk -X POST \
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/recommendations/&lt;recId&gt;/dismiss&quot; \
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  -H &quot;Content-Type: application/json&quot; \
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  -d &#39;{&quot;reason&quot;: &quot;NOT_APPLICABLE&quot;, &quot;comment&quot;: &quot;System decommissioning in 60 days&quot;}&#39;
+</code></pre></div></p>
 <h2 id="implementation-tracking-dashboard">Implementation Tracking Dashboard<a class="headerlink" href="#implementation-tracking-dashboard" title="Permanent link">&para;</a></h2>
 <p>Navigation: <strong>CloudIQ &gt; AIOps &gt; Recommendations &gt; Summary</strong></p>
 <table>
@@ -4934,11 +4851,11 @@
 3. Schedule a maintenance window.
 4. Apply using the system's native update tool (e.g., PowerStore Manager, OneFS rolling upgrade).
 5. Return to CloudIQ and mark as implemented.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check current firmware on all PowerStore systems via API</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage_systems?select=name,software_version&amp;filter=type%20eq%20%27POWERSTORE%27&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {name, software_version}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check current firmware on all PowerStore systems via API</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage_systems?select=name,software_version&amp;filter=type%20eq%20%27POWERSTORE%27&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {name, software_version}&#39;</span>
 </code></pre></div>
 <h2 id="common-recommendation-issues">Common Recommendation Issues<a class="headerlink" href="#common-recommendation-issues" title="Permanent link">&para;</a></h2>
 <table>

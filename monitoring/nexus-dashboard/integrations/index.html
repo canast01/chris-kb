@@ -4583,28 +4583,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuring-ndi-fabric-connection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuring NDI Fabric Connection
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuring-ndo-multi-site" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuring NDO Multi-Site
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#nddb-traffic-tapping" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4788,7 +4766,7 @@
 </tbody>
 </table>
 <h2 id="installing-a-service-application">Installing a Service Application<a class="headerlink" href="#installing-a-service-application" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List installed services on Nexus Dashboard</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List installed services on Nexus Dashboard</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;https://nexus-dashboard.example.com/nexus/infra/api/v1/apps&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -4801,77 +4779,55 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: multipart/form-data&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;file=@nd-insights-4.2.1.tar.gz&quot;</span>
 </code></pre></div>
-<p>Service installation requirements:</p>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Minimum ND Cluster Nodes</th>
-<th>Minimum Per-Node Memory</th>
-<th>Minimum Per-Node CPU</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>NDI (small fabric)</td>
-<td>3</td>
-<td>64 GB</td>
-<td>16 vCPU</td>
-</tr>
-<tr>
-<td>NDO</td>
-<td>3</td>
-<td>32 GB</td>
-<td>16 vCPU</td>
-</tr>
-<tr>
-<td>NDDB</td>
-<td>3</td>
-<td>16 GB</td>
-<td>8 vCPU</td>
-</tr>
-<tr>
-<td>NDFC</td>
-<td>3</td>
-<td>64 GB</td>
-<td>16 vCPU</td>
-</tr>
-</tbody>
-</table>
-<h2 id="configuring-ndi-fabric-connection">Configuring NDI Fabric Connection<a class="headerlink" href="#configuring-ndi-fabric-connection" title="Permanent link">&para;</a></h2>
-<p>After installing NDI, register the ACI APIC or NX-OS NDFC fabric:</p>
-<p>Navigation: <strong>NDI &gt; Settings &gt; Fabric Connections &gt; Add</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Add an ACI fabric to NDI via API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://nexus-dashboard.example.com/nexus/infra/api/v3/insights/siteconnectivity&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;fabricName&quot;: &quot;prod-aci&quot;,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">    &quot;siteType&quot;: &quot;ACI&quot;,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    &quot;apicUrl&quot;: &quot;https://apic.example.com&quot;,</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">    &quot;username&quot;: &quot;ndi-readonly&quot;,</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">    &quot;password&quot;: &quot;password&quot;,</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">    &quot;verifySSL&quot;: false</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s1">  }&#39;</span>
-</code></pre></div>
-<h2 id="configuring-ndo-multi-site">Configuring NDO Multi-Site<a class="headerlink" href="#configuring-ndo-multi-site" title="Permanent link">&para;</a></h2>
-<p>NDO manages policy across multiple ACI sites from a single pane.</p>
-<p>Navigation: <strong>NDO &gt; Infrastructure &gt; Sites &gt; Add Site</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Register an APIC site to NDO</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://nexus-dashboard.example.com/mso/api/v1/sites&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;name&quot;: &quot;site-london&quot;,</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">    &quot;type&quot;: &quot;aci&quot;,</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">    &quot;apicUrls&quot;: [&quot;https://apic-lon.example.com&quot;],</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">    &quot;username&quot;: &quot;ndo-admin&quot;,</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">    &quot;password&quot;: &quot;password&quot;,</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s1">    &quot;useProxy&quot;: false</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s1">  }&#39;</span>
-</code></pre></div>
+┌─────────────────────────────────── Nexus Dashboard — Integrations ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                Fabric Sources                │               Management Targets               │   │
+│   │             ACI multi-site APIC              │           Cisco TAC Smart Call Home            │   │
+│   │               NX-OS DCNM/NDFC                │            ServiceNow CMDB + events            │   │
+│   │             HyperFlex Intersight             │           PagerDuty on-call routing            │   │
+│   │                SD-WAN vManage                │             Splunk / Elastic SIEM              │   │
+│   │             Kubernetes (ND Apps)             │              Webex Teams / Slack               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  ND data network to fabrics · ND management to cloud SaaS targets · TCP 443 outbound                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Multi-site APIC = Multiple ACI fabrics each with their own APIC registered in ND                     │
+│  Smart Call Home = Cisco TAC automatic support case from ND critical events                           │
+│  CMDB = ServiceNow Configuration Management DB; ND updates CIs from fabric inventory                  │
+│  HyperFlex = Cisco HCI; managed via Intersight; ND can pull cluster health                            │
+│  SD-WAN vManage = Cisco SD-WAN controller; ND integration for WAN edge visibility                     │
+│  ND Apps = NDI, NDFC, NDO run as Kubernetes apps inside ND cluster                                    │
+│  Webex Teams = Cisco collaboration; NDI posts events to room via webhook                              │
+│  Splunk / Elastic = SIEM platforms receiving ND syslog or HEC event streams                           │
+│  PagerDuty = On-call routing; ND sends events via Events API v2                                       │
+│  Cisco TAC = Technical Assistance Centre; Smart Call Home auto-opens cases                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Configuring NDO Multi-Site
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>NDO manages policy across multiple ACI sites from a single pane.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Navigation: **NDO &gt; Infrastructure &gt; Sites &gt; Add Site**
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Register an APIC site to NDO
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>curl -sk -X POST \
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  &quot;https://nexus-dashboard.example.com/mso/api/v1/sites&quot; \
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  -H &quot;Authorization: Bearer &lt;token&gt;&quot; \
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  -H &quot;Content-Type: application/json&quot; \
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  -d &#39;{
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    &quot;name&quot;: &quot;site-london&quot;,
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    &quot;type&quot;: &quot;aci&quot;,
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    &quot;apicUrls&quot;: [&quot;https://apic-lon.example.com&quot;],
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    &quot;username&quot;: &quot;ndo-admin&quot;,
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    &quot;password&quot;: &quot;password&quot;,
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    &quot;useProxy&quot;: false
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  }&#39;
+</code></pre></div></p>
 <h2 id="nddb-traffic-tapping">NDDB Traffic Tapping<a class="headerlink" href="#nddb-traffic-tapping" title="Permanent link">&para;</a></h2>
 <p>NDDB allows traffic from production ACI ports to be mirrored to monitoring tool ports without dedicated TAPs.</p>
 <p>Configuration steps:
@@ -4879,10 +4835,10 @@
 2. Define monitoring tool ports (where traffic is sent).
 3. Create a filter (match traffic by VLAN, IP prefix, or port).
 4. Create a monitoring session linking production ports to tool ports.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List NDDB monitoring sessions</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://nexus-dashboard.example.com/nddb/api/v1/sessions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.sessions[] | {name, status, filterCount}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List NDDB monitoring sessions</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://nexus-dashboard.example.com/nddb/api/v1/sessions&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.sessions[] | {name, status, filterCount}&#39;</span>
 </code></pre></div>
 <h2 id="common-integration-issues">Common Integration Issues<a class="headerlink" href="#common-integration-issues" title="Permanent link">&para;</a></h2>
 <table>

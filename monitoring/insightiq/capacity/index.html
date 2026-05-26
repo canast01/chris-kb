@@ -4561,39 +4561,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#capacity-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Capacity Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#capacity-trending-reports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Capacity Trending Reports
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#protocol-level-capacity-breakdown" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Protocol-Level Capacity Breakdown
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#quota-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4742,7 +4709,7 @@
 
 
 <h1 id="insightiq-capacity-trending-protocol-breakdown-and-quota-monitoring">InsightIQ: Capacity Trending, Protocol Breakdown, and Quota Monitoring<a class="headerlink" href="#insightiq-capacity-trending-protocol-breakdown-and-quota-monitoring" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Capacity — InsightIQ
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Capacity — InsightIQ
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Used ▲
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>     │                              ╭──── projected full
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>     │                    ╭─────────╯
@@ -4760,97 +4727,61 @@
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  Cluster total      ████████████░  83%  ⚠   │
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>└──────────────────────────────────────────────┘
 </code></pre></div>
-<p>Dell InsightIQ (now part of the OneFS Analytics suite) provides capacity analytics for PowerScale (Isilon) clusters. This page covers how to monitor capacity trends, break down usage by protocol, and manage quota monitoring.</p>
-<h2 id="capacity-overview">Capacity Overview<a class="headerlink" href="#capacity-overview" title="Permanent link">&para;</a></h2>
-<p>InsightIQ collects capacity metrics from all nodes in a PowerScale cluster via the OneFS platform APIs. Data is stored locally on the InsightIQ virtual appliance.</p>
-<p>Navigation: <strong>InsightIQ &gt; Reports &gt; Capacity</strong></p>
-<p>Key capacity metrics:</p>
-<table>
-<thead>
-<tr>
-<th>Metric</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Cluster Used Capacity</td>
-<td>Total bytes written across all nodes</td>
-</tr>
-<tr>
-<td>Cluster Total Capacity</td>
-<td>Raw usable capacity after protection overhead</td>
-</tr>
-<tr>
-<td>Hard Quota Used</td>
-<td>Data written under hard quota limits</td>
-</tr>
-<tr>
-<td>Soft Quota Used</td>
-<td>Data approaching soft quota warning thresholds</td>
-</tr>
-<tr>
-<td>Data Reduction Savings</td>
-<td>Dedupe and compression savings (if enabled)</td>
-</tr>
-</tbody>
-</table>
-<h2 id="capacity-trending-reports">Capacity Trending Reports<a class="headerlink" href="#capacity-trending-reports" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On the InsightIQ appliance (SSH access)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@insightiq.example.com
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List available cluster targets</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi_gather_info<span class="w"> </span>--list-clusters<span class="w">   </span><span class="c1"># Not available directly; use InsightIQ UI</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># On PowerScale OneFS directly - check used vs available capacity</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ssh<span class="w"> </span>admin@powerscale.example.com
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>isi<span class="w"> </span>statistics<span class="w"> </span>query<span class="w"> </span>list<span class="w"> </span>--stats<span class="w"> </span>ifs.bytes.avail,ifs.bytes.total,ifs.bytes.used
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Check capacity in human-readable format</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>list
-</code></pre></div>
-<p>InsightIQ capacity report settings:</p>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Granularity</td>
-<td>5 min, 1 hour, 1 day</td>
-</tr>
-<tr>
-<td>Look-back Period</td>
-<td>Up to 365 days (depends on InsightIQ retention)</td>
-</tr>
-<tr>
-<td>Node Breakdown</td>
-<td>Per-node or cluster aggregate</td>
-</tr>
-<tr>
-<td>Protocol Filter</td>
-<td>NFS, SMB, HDFS, S3</td>
-</tr>
-</tbody>
-</table>
-<h2 id="protocol-level-capacity-breakdown">Protocol-Level Capacity Breakdown<a class="headerlink" href="#protocol-level-capacity-breakdown" title="Permanent link">&para;</a></h2>
-<p>InsightIQ can show which protocol (NFS, SMB, HDFS, S3) is consuming the most capacity growth over time. This is useful for chargeback and planning.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On PowerScale: check per-protocol throughput to correlate with capacity</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@powerscale.example.com
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check NFS exports and their sizes</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check SMB shares</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>list
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check directory sizes for top-level paths</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>isi<span class="w"> </span>get<span class="w"> </span>-d<span class="w"> </span>/ifs/data<span class="w"> </span>--numeric
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>du<span class="w"> </span>-sh<span class="w"> </span>/ifs/data/*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-</code></pre></div>
+┌─────────────────────────────────── InsightIQ — Capacity Management ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Capacity Metrics               │  │                 Forecasting                 │   │
+│   │              Total usable space              │  │              Growth rate trend              │   │
+│   │              Used vs available               │  │             Projected full date             │   │
+│   │              Per-tier breakdown              │  │              Linear regression              │   │
+│   │             Dedup/compress ratio             │  │                Custom horizon               │   │
+│   │              Quota utilisation               │  │             Export for planning             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Capacity data from PAPI · trend analysis in InsightIQ · export for spreadsheet planning              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Usable space = Total cluster capacity after RAID overhead                                            │
+│  Tier = Storage class within PowerScale (SSD, SAS, HDD) each with separate capacity                   │
+│  Dedup ratio = Data deduplication factor; 2.0 means half the physical space used                      │
+│  Compression ratio = Data compression factor; reduces physical footprint of data                      │
+│  Quota = Per-directory or per-user space limit; tracked in InsightIQ for trend                        │
+│  Growth rate = MB/day or GB/week consumption rate; derived from time-series                           │
+│  Linear regression = Statistical method for projecting capacity exhaustion date                       │
+│  Projected full date = Estimated date cluster reaches capacity at current growth rate                 │
+│  Custom horizon = User-defined forecast window (30/60/90/180 days)                                    │
+│  CSV export = Downloading capacity data for external planning tools                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>InsightIQ capacity report settings:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Setting | Description |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Granularity | 5 min, 1 hour, 1 day |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Look-back Period | Up to 365 days (depends on InsightIQ retention) |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Node Breakdown | Per-node or cluster aggregate |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Protocol Filter | NFS, SMB, HDFS, S3 |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>## Protocol-Level Capacity Breakdown
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>InsightIQ can show which protocol (NFS, SMB, HDFS, S3) is consuming the most capacity growth over time. This is useful for chargeback and planning.
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>```bash
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># On PowerScale: check per-protocol throughput to correlate with capacity
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>ssh admin@powerscale.example.com
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Check NFS exports and their sizes
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>isi nfs exports list
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># Check SMB shares
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>isi smb shares list
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a># Check directory sizes for top-level paths
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>isi get -d /ifs/data --numeric
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>du -sh /ifs/data/* 2&gt;/dev/null | sort -rh | head -20
+</code></pre></div></p>
 <p>Protocol utilisation breakdown reference:</p>
 <table>
 <thead>
@@ -4885,16 +4816,16 @@
 </table>
 <h2 id="quota-monitoring">Quota Monitoring<a class="headerlink" href="#quota-monitoring" title="Permanent link">&para;</a></h2>
 <p>PowerScale quotas can be monitored through InsightIQ or directly via the OneFS CLI.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all quotas and their usage on PowerScale</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>admin@powerscale.example.com
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list<span class="w"> </span>--long
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Show quotas approaching threshold (&gt;80% used)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list<span class="w"> </span>--format<span class="w"> </span>csv<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; ($5/$4) &gt; 0.8 {print $1, $3, $4, $5}&#39;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Get quota report</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>isi<span class="w"> </span>quota<span class="w"> </span>reports<span class="w"> </span>list
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>isi<span class="w"> </span>quota<span class="w"> </span>reports<span class="w"> </span>view<span class="w"> </span>--id<span class="w"> </span>&lt;reportId&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all quotas and their usage on PowerScale</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@powerscale.example.com
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list<span class="w"> </span>--long
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Show quotas approaching threshold (&gt;80% used)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list<span class="w"> </span>--format<span class="w"> </span>csv<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; ($5/$4) &gt; 0.8 {print $1, $3, $4, $5}&#39;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Get quota report</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>isi<span class="w"> </span>quota<span class="w"> </span>reports<span class="w"> </span>list
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>isi<span class="w"> </span>quota<span class="w"> </span>reports<span class="w"> </span>view<span class="w"> </span>--id<span class="w"> </span>&lt;reportId&gt;
 </code></pre></div>
 <p>Quota types in OneFS:</p>
 <table>

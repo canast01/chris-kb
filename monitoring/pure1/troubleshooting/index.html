@@ -4653,28 +4653,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stale-data-old-last-seen-timestamp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stale Data / Old Last-Seen Timestamp
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#api-rate-limiting-http-429" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API Rate Limiting (HTTP 429)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#missing-arrays-in-pure1-dashboard" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4859,7 +4837,7 @@
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <h3 id="array-not-reporting-in-pure1">Array Not Reporting in Pure1<a class="headerlink" href="#array-not-reporting-in-pure1" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: Array is missing from Pure1 Assets, or shows as "Disconnected".</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1: Check array connectivity from Purity CLI</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1: Check array connectivity from Purity CLI</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connection
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># If pure1.purestorage.com shows &quot;disconnected&quot;:</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
@@ -4880,75 +4858,94 @@
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Array management IP must have outbound TCP 443 to pure1.purestorage.com</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Verify with network team if connectivity test fails</span>
 </code></pre></div>
-<p>If array was recently onboarded, allow 30–60 minutes for first telemetry to appear.</p>
-<h3 id="stale-data-old-last-seen-timestamp">Stale Data / Old Last-Seen Timestamp<a class="headerlink" href="#stale-data-old-last-seen-timestamp" title="Permanent link">&para;</a></h3>
-<p><strong>Symptoms</strong>: Metrics in Pure1 are hours or days out of date.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check Purity management service health</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token<span class="w">   </span><span class="c1"># verify management services are running</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>puremessage<span class="w"> </span>list<span class="w">             </span><span class="c1"># review recent system messages for errors</span>
+┌─────────────────────────────────────── Pure1 — Troubleshooting ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Phonehome Issues               │  │             Alert / Data Issues             │   │
+│   │            Check TCP 443 outbound            │  │             Verify array status             │   │
+│   │            Verify DNS resolution             │  │                Check data age               │   │
+│   │            purearray setattr show            │  │              Check alert config             │   │
+│   │             Re-enable phonehome              │  │            Test webhook delivery            │   │
+│   │             Check proxy settings             │  │                Open TAC case                │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Troubleshoot from array CLI (purearray) and pure1.purestorage.com UI                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Disconnected = Array shows Disconnected in Pure1; phonehome not received &gt; 5 min                     │
+│  TCP 443 test = From array: curl -s https://pure1.purestorage.com &gt;/dev/null; check rc                │
+│  DNS resolution = Array must resolve pure1.purestorage.com; check array DNS settings                  │
+│  purearray setattr show = View phonehome enabled/disabled state on FlashArray                         │
+│  Re-enable phonehome = purearray setattr --phonehome true on FlashArray CLI                           │
+│  Proxy settings = purearray setattr --proxy http://proxy:port if array uses proxy                     │
+│  Data age = Time since last phonehome; check in Pure1 &gt; array detail                                  │
+│  Alert config = Verify email and webhook targets in Pure1 &gt; Admin &gt; Notifications                     │
+│  Webhook test = Pure1 UI has a test button; verify delivery to endpoint                               │
+│  TAC case = support.purestorage.com; include array serial and phonehome status                        │
+│  FlashBlade phonehome = pureauthapp setattr --phonehome true on FlashBlade CLI                        │
+│  Firewall rule = Allow outbound TCP 443 from array mgmt IP to pure1.purestorage.com                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### API Rate Limiting (HTTP 429)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>**Symptoms**: Automation scripts return `HTTP 429 Too Many Requests`.
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># If Purity management is running but connectivity is intermittent:</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># - Check for network flaps on management interface</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># - Review switch logs for the port connected to array management IP</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```python
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Implement exponential backoff in all scripts
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>import time, requests
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Restart Pure1 telemetry (if Purity running but connectivity was briefly lost):</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Connection recovers automatically — allow 15–30 minutes after connectivity restores</span>
-</code></pre></div>
-<h3 id="api-rate-limiting-http-429">API Rate Limiting (HTTP 429)<a class="headerlink" href="#api-rate-limiting-http-429" title="Permanent link">&para;</a></h3>
-<p><strong>Symptoms</strong>: Automation scripts return <code>HTTP 429 Too Many Requests</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Implement exponential backoff in all scripts</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">time</span><span class="o">,</span><span class="w"> </span><span class="nn">requests</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">api_get_with_retry</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_retries</span><span class="p">):</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>            <span class="n">wait</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">attempt</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rate limited — retrying in </span><span class="si">{</span><span class="n">wait</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">wait</span><span class="p">)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>            <span class="k">continue</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Max retries exceeded due to rate limiting&quot;</span><span class="p">)</span>
-</code></pre></div>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>def api_get_with_retry(url, headers, max_retries=5):
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    for attempt in range(max_retries):
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        resp = requests.get(url, headers=headers)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        if resp.status_code == 429:
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>            wait = (2 ** attempt) + (random.random() * 0.5)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>            print(f&quot;Rate limited — retrying in {wait:.1f}s&quot;)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>            time.sleep(wait)
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>            continue
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        resp.raise_for_status()
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        return resp.json()
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    raise RuntimeError(&quot;Max retries exceeded due to rate limiting&quot;)
+</code></pre></div></p>
 <p>Additional steps:
 - Reduce polling frequency in scripts (increase interval from 5 to 15 minutes)
 - Consolidate multiple scripts into a single scheduled run that caches results
 - Ensure scripts are not running concurrently (use locking or staggered cron schedules)</p>
 <h3 id="missing-arrays-in-pure1-dashboard">Missing Arrays in Pure1 Dashboard<a class="headerlink" href="#missing-arrays-in-pure1-dashboard" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: Arrays are collecting but not visible in a dashboard or report.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. Check if a tag filter is active in the dashboard view:
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>   Pure1 &gt; Fleet &gt; clear any active tag/site filters
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2. Verify the array has the required tags (Site, Environment, Owner)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>3. Confirm your Pure1 user account has access to the site/tag scope
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>   (Admin may have scoped your account to specific tags)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. Check if a tag filter is active in the dashboard view:
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>   Pure1 &gt; Fleet &gt; clear any active tag/site filters
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>2. Verify the array has the required tags (Site, Environment, Owner)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>3. Confirm your Pure1 user account has access to the site/tag scope
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>   (Admin may have scoped your account to specific tags)
 </code></pre></div>
 <h3 id="alert-notifications-not-delivered">Alert Notifications Not Delivered<a class="headerlink" href="#alert-notifications-not-delivered" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: A CRITICAL alert fired in Pure1 but no PagerDuty/email notification was received.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1. Pure1 &gt; Administration &gt; Notifications &gt; [Rule]
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>   - Verify the rule is enabled
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>   - Confirm the webhook URL / email address is current
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>   - Check rule scope: does it cover the affected array&#39;s tags?
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>2. Test the notification rule manually:
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>   Actions &gt; Test Notification
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>3. For PagerDuty: verify the integration routing key has not been rotated/changed
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>4. For email: check spam/junk folders; verify the relay server is operational
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>5. Check Pure1 notification delivery log:
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>   Administration &gt; Notifications &gt; Delivery Log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. Pure1 &gt; Administration &gt; Notifications &gt; [Rule]
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>   - Verify the rule is enabled
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>   - Confirm the webhook URL / email address is current
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   - Check rule scope: does it cover the affected array&#39;s tags?
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>2. Test the notification rule manually:
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>   Actions &gt; Test Notification
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>3. For PagerDuty: verify the integration routing key has not been rotated/changed
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>4. For email: check spam/junk folders; verify the relay server is operational
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>5. Check Pure1 notification delivery log:
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>   Administration &gt; Notifications &gt; Delivery Log
 </code></pre></div>
 <h3 id="authentication-failure-pure1-api-http-401">Authentication Failure (Pure1 API — HTTP 401)<a class="headerlink" href="#authentication-failure-pure1-api-http-401" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: Scripts return HTTP 401 Unauthorized.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>1. Confirm the API token has not been rotated without updating the secrets manager
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>2. Verify the service account is not disabled:
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>   Pure1 &gt; Administration &gt; API Registration &gt; [Account] &gt; Status
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>3. Confirm the private key file is correct and not corrupted
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>4. Re-generate a new API token if needed:
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>   Administration &gt; API Registration &gt; [Account] &gt; Rotate Key
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>5. Update the secrets manager with the new key
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1. Confirm the API token has not been rotated without updating the secrets manager
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2. Verify the service account is not disabled:
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>   Pure1 &gt; Administration &gt; API Registration &gt; [Account] &gt; Status
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>3. Confirm the private key file is correct and not corrupted
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>4. Re-generate a new API token if needed:
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>   Administration &gt; API Registration &gt; [Account] &gt; Rotate Key
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>5. Update the secrets manager with the new key
 </code></pre></div>
 <h2 id="escalation-to-pure-storage-support">Escalation to Pure Storage Support<a class="headerlink" href="#escalation-to-pure-storage-support" title="Permanent link">&para;</a></h2>
 <ul>

@@ -4797,17 +4797,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#integration-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Integration Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -5044,7 +5033,7 @@ Nexus Dashboard integrates with ACI APIC, NX-OS fabrics, and MDS SAN switches vi
 </tbody>
 </table>
 <h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://nd.corp.example.com/login<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;userName&quot;:&quot;admin&quot;,&quot;userPasswd&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:&quot;DefaultAuth&quot;}&#39;</span>
@@ -5057,16 +5046,37 @@ Nexus Dashboard integrates with ACI APIC, NX-OS fabrics, and MDS SAN switches vi
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>curl<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Cookie: AuthCookie=&lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>https://nd.corp.example.com/appcenter/cisco/ndfc/api/v1/san/fabrics
 </code></pre></div>
-<h2 id="integration-architecture">Integration Architecture<a class="headerlink" href="#integration-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  MDS["Cisco MDS\nSAN Fabric"] &amp; NX["NX-OS\nNexus Fabric"] &amp; ACI["ACI APIC"] --&gt; ND["Nexus Dashboard\nCluster"]
-  ND --&gt; SIEM["SIEM\n(syslog)"]
-  ND --&gt; LDAP["Active Directory\n(auth)"]
-  ADMIN(["Network Admin"]) --&gt;|"HTTPS"| ND
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class ND ctrl
-  class MDS,NX,ACI,SIEM,LDAP,ADMIN host</code></pre>
+┌───────────────────────────── Nexus Dashboard — Architecture Integrations ─────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                Fabric Inputs                 │              Notification Outputs              │   │
+│   │              ACI: APIC REST API              │                   Email SMTP                   │   │
+│   │             NX-OS: MDT gRPC/SSH              │               ServiceNow webhook               │   │
+│   │            Cisco Intersight (HX)             │               PagerDuty webhook                │   │
+│   │            Crosswork Network Ctrl            │              Webex Teams webhook               │   │
+│   │             Third-party RESTCONF             │                 Syslog to SIEM                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  ND data network → fabrics · ND management → ITSM/email · gRPC TCP 9339 for MDT                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  APIC REST API = NDI polls APIC at TCP 443 for ACI fabric inventory and events                        │
+│  MDT gRPC = NX-OS switches stream telemetry to ND data IP TCP 9339                                    │
+│  SSH = NDFC uses SSH TCP 22 to NX-OS switches for config and inventory                                │
+│  Intersight = Cisco cloud management; HyperFlex cluster data fed to ND                                │
+│  Crosswork = Cisco network controller; can forward telemetry to ND                                    │
+│  RESTCONF = Standard REST API on NX-OS; used for config and state queries                             │
+│  ServiceNow = NDI events forwarded as incidents via REST webhook                                      │
+│  PagerDuty = On-call routing for critical NDI fabric events                                           │
+│  Webex Teams = Cisco collaboration; NDI events posted to space via webhook                            │
+│  Syslog = NDI events forwarded to SIEM for security correlation                                       │
+│  TCP 9339 = gRPC port for MDT streaming from NX-OS to ND                                              │
+│  SMTP = Email notification for NDI events; configured in ND admin settings                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 
 
 

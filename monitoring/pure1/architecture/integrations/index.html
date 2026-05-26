@@ -4844,28 +4844,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#supportassist-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SupportAssist Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#integration-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Integration Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -5076,7 +5054,7 @@ Pure1 integrates natively with FlashArray and FlashBlade via Purity OS telemetry
 </tbody>
 </table>
 <h2 id="pure1-rest-api">Pure1 REST API<a class="headerlink" href="#pure1-rest-api" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Get API token (OAuth 2.0 with JWT)</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Get API token (OAuth 2.0 with JWT)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://api.pure1.purestorage.com/oauth2/1.0/token<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&amp;assertion=&lt;signed_jwt&gt;&quot;</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
@@ -5088,27 +5066,34 @@ Pure1 integrates natively with FlashArray and FlashBlade via Purity OS telemetry
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/metrics/history?names=array_total_capacity&amp;ids=&lt;array_id&gt;&quot;</span>
 </code></pre></div>
-<p>Authentication uses RSA key pairs — generate a key pair in Pure1 → Profile → API Registration.</p>
-<h2 id="supportassist-integration">SupportAssist Integration<a class="headerlink" href="#supportassist-integration" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Remote Support</strong>: Allows Pure engineers to open a secure tunnel (requires per-session approval)</li>
-<li><strong>Support Tickets</strong>: Auto-opened from Pure1 when an array alert triggers a support case</li>
-<li><strong>Evergreen Subscription</strong>: Pure1 tracks subscription entitlements and flags non-compliance</li>
-</ul>
-<h2 id="integration-architecture">Integration Architecture<a class="headerlink" href="#integration-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  FA["FlashArray\n(Purity OS)"] &amp; FB["FlashBlade\n(Purity OS)"] --&gt;|"HTTPS outbound"| PURE1["Pure1 Cloud"]
-  PURE1 --&gt; PD["PagerDuty"]
-  PURE1 --&gt; SN["ServiceNow"]
-  PURE1 --&gt; API["REST API\n(automation)"]
-  PURE1 --&gt; SUP["Pure Support\n(SupportAssist)"]
-  ADMIN(["Storage Admin"]) --&gt;|"browser / mobile"| PURE1
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class FA,FB host
-  class PURE1,PD,SN,API,SUP cloud
-  class ADMIN host</code></pre>
+┌────────────────────────────────── Pure1 — Architecture Integrations ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                Array Sources                 │              Notification Targets              │   │
+│   │       FlashArray//X (native phonehome)       │              Email: ops-storage@               │   │
+│   │       FlashArray//C (native phonehome)       │           Webhook: ServiceNow/Slack            │   │
+│   │       FlashBlade//S (native phonehome)       │                 Pure1 REST API                 │   │
+│   │       FlashBlade//E (native phonehome)       │             Aria Ops Pure adapter              │   │
+│   │            Pure Cloud Block Store            │             SIEM via syslog proxy              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Purity phonehome built-in · TCP 443 outbound from array · Pure cloud forwards alerts                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Native phonehome = Purity OS built-in; no additional agent or gateway needed                         │
+│  Pure Cloud Block Store = FlashArray in AWS/Azure; also connected to Pure1                            │
+│  REST API = Pure1 API for fleet-wide metric retrieval and management                                  │
+│  Webhook = Pure1 outbound POST to webhook URL on proactive alert                                      │
+│  ServiceNow = Pure1 alert forwarded as incident via webhook                                           │
+│  Slack = Pure1 alert posted to storage team channel via webhook                                       │
+│  Aria Ops adapter = PAK file pulling Pure1/FlashArray metrics into VMware Aria Operations             │
+│  SIEM proxy = Script forwarding Pure1 API alerts to syslog for SIEM ingestion                         │
+│  Pure1 API token = OAuth token for REST API; generated in Pure1 account settings                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 
 
 

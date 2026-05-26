@@ -4823,78 +4823,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#component-roles" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Component Roles
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#telemetry-collection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Telemetry Collection
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Telemetry Collection">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#telemetry-data-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Telemetry Data Types
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pure1-meta" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pure1 Meta
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-retention" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Retention
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Requirements
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#high-availability" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5053,7 +4981,7 @@
 <p>Pure1 is Pure Storage's cloud-based management and analytics platform for FlashArray and FlashBlade systems. It requires no on-premises management infrastructure — each array connects to Pure1 directly via outbound HTTPS. Pure1 provides AI-driven analytics (Pure1 Meta), capacity forecasting, health scoring, and a REST API for programmatic fleet management.</p>
 <hr />
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
+<p><pre class="mermaid"><code>graph TB
   FA["FlashArray / FlashBlade\n(on-premises)"] --&gt;|"telemetry HTTPS"| PURE1["Pure1 Cloud\n(SaaS analytics)"]
   PURE1 --&gt; HEALTH["Health Score &amp; Alerts"]
   PURE1 --&gt; CAP["Capacity Forecasting\n(Evergreen model)"]
@@ -5066,138 +4994,37 @@
   class FA ctrl
   class PURE1,HEALTH,CAP,PERF,SUP cloud
   class ADMIN host</code></pre>
-<hr />
-<h2 id="component-roles">Component Roles<a class="headerlink" href="#component-roles" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Pure1 Cloud</td>
-<td>SaaS platform — health, capacity, performance data, alerts, REST API</td>
-</tr>
-<tr>
-<td>Array Purity OS</td>
-<td>Generates telemetry; uploads to Pure1 via outbound HTTPS automatically</td>
-</tr>
-<tr>
-<td>Pure1 Meta</td>
-<td>AI/ML engine — workload analytics, anomaly detection, capacity forecasting</td>
-</tr>
-<tr>
-<td>Pure1 REST API</td>
-<td>Programmatic access to fleet data: v1 (arrays) and v2 (tags, subscriptions)</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="telemetry-collection">Telemetry Collection<a class="headerlink" href="#telemetry-collection" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Arrays initiate outbound HTTPS connections to Pure1 cloud endpoints</li>
-<li>No inbound firewall rules required</li>
-<li>No on-premises proxy or collector appliance needed</li>
-<li>Collection interval: every 30 seconds for performance metrics; health and capacity data refreshes more frequently</li>
-<li>Data is associated with the array's serial number and tied to the customer's Pure1 tenant</li>
-</ul>
-<h3 id="telemetry-data-types">Telemetry Data Types<a class="headerlink" href="#telemetry-data-types" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Data Type</th>
-<th>Examples</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Performance metrics</td>
-<td>IOPS, throughput (read/write), latency (read/write/mirror)</td>
-</tr>
-<tr>
-<td>Capacity</td>
-<td>Used, provisioned, physical used, data reduction ratio, snapshot capacity</td>
-</tr>
-<tr>
-<td>Health</td>
-<td>Component health (controllers, shelves, drives), Purity version</td>
-</tr>
-<tr>
-<td>Configuration</td>
-<td>Volume names, host connections, protection groups (metadata only)</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="pure1-meta">Pure1 Meta<a class="headerlink" href="#pure1-meta" title="Permanent link">&para;</a></h2>
-<p>Pure1 Meta is the AI/ML analytics layer. Capabilities include:</p>
-<ul>
-<li><strong>Workload fingerprinting</strong>: identifies workload types and patterns per array and per volume</li>
-<li><strong>Anomaly detection</strong>: surfaces performance anomalies against learned baselines</li>
-<li><strong>Capacity forecasting</strong>: predicts days to capacity exhaustion per array</li>
-<li><strong>Recommended actions</strong>: capacity expansion suggestions, configuration optimisations</li>
-</ul>
-<hr />
-<h2 id="data-retention">Data Retention<a class="headerlink" href="#data-retention" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Metric Type</th>
-<th>Retention</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Performance metrics</td>
-<td>90 days rolling (default)</td>
-</tr>
-<tr>
-<td>Capacity trends</td>
-<td>90 days rolling</td>
-</tr>
-<tr>
-<td>Health event history</td>
-<td>Available for the array's lifetime in Pure1</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="network-requirements">Network Requirements<a class="headerlink" href="#network-requirements" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Source</th>
-<th>Destination</th>
-<th>Port</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FlashArray / FlashBlade (management IP)</td>
-<td>pure1.purestorage.com</td>
-<td>TCP 443</td>
-<td>Telemetry upload</td>
-</tr>
-<tr>
-<td>Browser</td>
-<td>pure1.purestorage.com</td>
-<td>TCP 443</td>
-<td>Pure1 web UI</td>
-</tr>
-<tr>
-<td>Automation scripts</td>
-<td>api.pure1.purestorage.com</td>
-<td>TCP 443</td>
-<td>REST API access</td>
-</tr>
-</tbody>
-</table>
-<p>If arrays are behind a proxy:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Purity CLI: purearray set --proxy https://&lt;proxy-host&gt;:&lt;port&gt;
-</code></pre></div>
+┌──────────────────────────────────────── Pure1 — How It Works ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Step 1: Phonehome — Purity OS sends telemetry to pure1.purestorage.com every 30 seconds    │   │
+│   │       Step 2: Ingest — Pure cloud stores metrics in time-series DB with full resolution       │   │
+│   │      Step 3: AI Analysis — ML models score health, identify workloads, forecast capacity      │   │
+│   │        Step 4: Alert — pre-failure condition or threshold breach triggers notification        │   │
+│   │       Step 5: Auto case — Pure1 opens TAC case with diagnostics before customer is aware      │   │
+│   │        Step 6: Resolution — Pure stages hardware, engineer resolves; customer notified        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Arrays push to Pure cloud every 30 sec · Pure TAC resolves proactively · no customer action          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Phonehome interval = 30 seconds; full metric telemetry at high resolution                            │
+│  Pre-failure detection = Pure1 ML identifying component degradation before failure                    │
+│  Auto case = Pure1 opening TAC support case automatically with diagnostic bundle                      │
+│  Proactive swap = Pure staging replacement drive/module before customer impact                        │
+│  Workload ID = Pure1 classifying IO pattern (random/sequential, read/write ratio)                     │
+│  Capacity forecast = ML predicting array full date from consumption trend                             │
+│  Health score = Composite array health from hardware, performance, and software inputs                │
+│  Threshold breach = Alert when metric crosses defined limit (utilisation, latency)                    │
+│  TAC = Pure Storage Technical Assistance Centre; resolves proactive cases                             │
+│  Diagnostic bundle = Phonehome data attached to auto-opened TAC case                                  │
+│  No customer action = Proactive support model aims for zero-touch resolution                          │
+│  Evergreen = Subscription includes proactive support and hardware refresh rights                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <hr />
 <h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
 <p>Pure1 is managed entirely by Pure Storage as a SaaS platform. Availability SLA and disaster recovery are Pure Storage's responsibility. Customer action is not required for Pure1 infrastructure HA.</p>
