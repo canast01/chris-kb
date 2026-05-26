@@ -37,30 +37,48 @@ graph LR
     SNOW <-->|"REST / Webhook"| DT
     SNOW <-->|"REST / Webhook"| SPL
 ```
-
-All MID Server communication originates **outbound from the MID Server** — no inbound firewall rules are required on the corporate network perimeter.
-
----
-
-## REST API
-
-ServiceNow exposes a comprehensive REST API surface. The primary endpoints are documented in [CLI Reference](../../operations/cli-reference/index.md).
-
-### Inbound REST (calls to ServiceNow)
-
-External systems push data to ServiceNow via the Table API, Import Set API, or custom Scripted REST APIs.
-
-```text
-POST https://<instance>.service-now.com/api/now/table/incident
-Authorization: Basic <base64>
-Content-Type: application/json
-
-{
-  "short_description": "Database unreachable",
-  "impact": "1",
-  "urgency": "1",
-  "assignment_group": "Database Operations"
-}
+┌─────────────────────────────── ServiceNow — Architecture Integrations ────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                ServiceNow Integration Landscape                               │   │
+│   │                 Auth: SAML SSO (Okta/ADFS); MFA at IdP; LDAP user provisioning                │   │
+│   │               ITSM integrations: Jira (sync), PagerDuty (alert), Slack (notify)               │   │
+│   │            Monitoring: Zabbix/Prometheus/Datadog → SNOW event via REST or MID probe           │   │
+│   │            REST Table API: create/update incidents from external systems via HTTPS            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    ServiceNow sits at the integration centre of ops tooling ecosystem                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Identity & Auth       │  │       Dev & ITSM Tools      │  │          Monitoring         │   │
+│   │     SAML SSO (Okta/ADFS)    │  │       Jira: issue sync      │  │        Zabbix alerts        │   │
+│   │      LDAP provisioning      │  │     PagerDuty: escalate     │  │      Prometheus events      │   │
+│   │         MFA via IdP         │  │        Slack: notify        │  │        Datadog events       │   │
+│   │      OAuth 2.0 API auth     │  │     Confluence: KB link     │  │          SNMP traps         │   │
+│   │     Basic auth (legacy)     │  │        Bitbucket PRs        │  │        Syslog ingest        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  IdP (Okta/ADFS) · LDAP/AD · MID Server VM · SMTP relay · network connectivity                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SAML SSO     = ServiceNow supports SAML 2.0; configure under System Properties > SSO                 │
+│  LDAP provisioning = ServiceNow LDAP integration creates/updates users from AD                        │
+│  Table API    = REST endpoint for CRUD on any table; used by external integrations                    │
+│  Jira sync    = Jira issues linked to SNOW changes via webhook or REST                                │
+│  PagerDuty    = incident alert routing; SNOW triggers PagerDuty via REST outbound                     │
+│  Slack        = SNOW sends notifications to Slack channels via Integration Hub                        │
+│  OAuth 2.0    = recommended API auth method; create OAuth app under System OAuth                      │
+│  SNMP trap    = network device alert; received by MID Server or event connector                       │
+│  Syslog       = log stream from servers; parsed by SNOW event connector                               │
+│  MID probe    = MID Server sensor that polls target systems for monitoring data                       │
+│  Event connector = SNOW module that receives external events and creates incidents                    │
+│  Integration Hub = pre-built action library for REST, JDBC, LDAP flow steps                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Outbound REST (ServiceNow calls external)

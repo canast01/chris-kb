@@ -21,26 +21,58 @@ graph TB
   class FA,PM store
   class H1,H2 host
 ```
-
-## Platform Reference
-
-| Platform | Type | Max Ports | Notes |
-|---|---|---|---|
-| G620 | Fixed | 64× 32G FC | Mid-range |
-| G720 | Fixed | 64× 64G FC | High-performance fixed |
-| X7-4 | Director | Up to 192 FC | 4-slot director |
-| X7-8 | Director | Up to 384 FC | 8-slot director |
-| 6510 | Fixed | 48× 16G FC | End-of-sale — plan migration |
-
-Directors (X7-4 / X7-8) support non-disruptive firmware upgrades (HA chassis with dual CPs).
-
-## Fabric Design
-
-Standard dual-fabric design:
-
-```text
-Fabric A:  Host HBA Port 0 → G620-SW01 → Storage Target (Fabric A ports)
-Fabric B:  Host HBA Port 1 → G620-SW02 → Storage Target (Fabric B ports)
+┌─────────────────────────── FabricOS — How It Works: Login, Zoning, Routing ───────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Device login: HBA sends FLOGI to switch, switch assigns FCID, NS registers WWN+FCID      │   │
+│   │       Zone lookup: switch checks active zone config in ASIC; denies frames outside zone       │   │
+│   │       FSPF: each switch builds topology from Link State Records; computes shortest path       │   │
+│   │       MAPS: monitors counters every polling interval; fires alert if threshold breached       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Three parallel operational flows on every FabricOS switch:                                         │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Login Flow         │  │         Zone Enforce        │  │         FSPF Routing        │   │
+│   │       HBA sends FLOGI       │  │        Frame arrives        │  │         LSR exchange        │   │
+│   │        FCID assigned        │  │       ASIC zone check       │  │         SPF computed        │   │
+│   │       NS registration       │  │        Allow or deny        │  │       Route table set       │   │
+│   │       PLOGI to target       │  │       Port quarantine       │  │       Frame forwarded       │   │
+│   │         PRLI (SCSI)         │  │        Counter logged       │  │         ISL selected        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    MAPS polls error counters every 60 s by default; alerts via SNMP trap or email                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Flow       │     Trigger      │      Key step     │      Result      │    CLI verify    │   │
+│   │      Login       │   HBA power-on   │   FLOGI to FCID   │  Device online   │      nsshow      │   │
+│   │       Zone       │    Frame sent    │    ASIC lookup    │    Allow/Deny    │     cfgshow      │   │
+│   │       FSPF       │   Topology chg   │     LSR flood     │  SPF recompute   │   topologyshow   │   │
+│   │       MAPS       │   Counter poll   │   Threshold chk   │   Alert fired    │     mapsshow     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: HBA ports · SFP transceivers · fibre patch panels · FC switch line cards                 │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    FLOGI           = Fabric Login; HBA registers itself with the fabric                               │
+│    FCID            = Fibre Channel ID (24-bit address: domain.area.port)                              │
+│    PLOGI           = Port Login; initiator opens session with target after FLOGI                      │
+│    PRLI            = Process Login; SCSI upper-layer protocol negotiation                             │
+│    LSR             = Link State Record; contains port and neighbour information                       │
+│    SPF             = Shortest Path First; algorithm computing optimal fabric routes                   │
+│    ASIC zone check = Hardware-enforced zone lookup on every FC frame at line rate                     │
+│    Port quarantine = Switch isolates offending port; traffic blocked at hardware level                │
+│    nsshow          = Displays Name Server entries: WWN, FCID, port type                               │
+│    mapsshow        = Shows MAPS policy rules, thresholds, and recent alert history                    │
+│    topologyshow    = Displays fabric topology: domains, ISLs, path costs                              │
+│    cfgshow         = Lists zone database: zone sets, zones, members                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Fabric A and Fabric B are completely independent — no cross-fabric cables. ISLs form trunk groups between switches within a fabric only.

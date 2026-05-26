@@ -17,38 +17,49 @@ Example:
   Terraform so that storage costs are automatically optimised without manual
   cleanup scripts.
 ```
-
-Required fields for a story ready for development:
-
-| Field | Description | Example |
-|-------|-------------|---------|
-| Summary | One-line title | Add S3 lifecycle Terraform module |
-| Description | User story + context | As a... / Background / Notes |
-| Acceptance Criteria | Definition of Done | See below |
-| Story Points | Effort estimate | 3 |
-| Epic Link | Parent epic | PLAT-10: Storage Automation |
-| Priority | Relative urgency | Medium |
-| Assignee | Owner | @chris |
-| Sprint | Target sprint | Sprint 24 |
-
-## Acceptance Criteria
-
-Acceptance criteria define when a story is complete. Use the Given/When/Then format or a plain checklist.
-
-```bash
-# Given/When/Then format
-Given an S3 bucket with objects older than 30 days
-When the lifecycle policy runs
-Then objects are transitioned to S3-IA storage class
-And objects older than 90 days are moved to Glacier
-And objects older than 365 days are deleted
-
-# Checklist format (simpler for technical stories)
-- [ ] Terraform module created at modules/s3-lifecycle/
-- [ ] Module accepts bucket_name and lifecycle_rules variables
-- [ ] Applied to dev environment — no state drift
-- [ ] README includes usage example
-- [ ] Cost reduction validated in AWS Cost Explorer
+┌──────────────────────────────────── Jira — Operations Procedures ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               Jira Standard Operating Procedures                              │   │
+│   │            Planned restart: drain LB → stop Jira → maintenance → start → add to LB            │   │
+│   │          Project archival: close all issues → archive project → restrict permissions          │   │
+│   │           User offboard: deactivate LDAP account → remove from project roles → audit          │   │
+│   │            Reindex: Admin > System > Indexing; full reindex during off-peak window            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SOPs standardise Jira operations and reduce human error in routine tasks                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Maintenance SOPs               │  │              Project/User SOPs              │   │
+│   │             Planned restart SOP              │  │             Project archival SOP            │   │
+│   │              Plugin update SOP               │  │              User offboard SOP              │   │
+│   │              DB maintenance SOP              │  │            Permission review SOP            │   │
+│   │                 Upgrade SOP                  │  │             Audit log review SOP            │   │
+│   │              Backup verify SOP               │  │              GDPR deletion SOP              │   │
+│   │                 Reindex SOP                  │  │           Field config review SOP           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Jira app VMs · LB for draining · PostgreSQL DB · NFS · UPM for plugin management                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  LB drain       = remove node from LB before work; prevents requests during maintenance               │
+│  Project archival = mark project archived; issues read-only; frees active board space                 │
+│  Reindex SOP    = Admin > System > Indexing > Full Re-Index; takes 30+ min for large DB               │
+│  User offboard  = deactivate in LDAP; Jira sync deactivates account on next poll                      │
+│  Permission review = quarterly audit of project permission schemes and role members                   │
+│  GDPR deletion  = anonymize user data via Admin > User Management > Anonymize User                    │
+│  Audit log      = Admin > Audit Log; tracks config and permission changes                             │
+│  Field config   = Jira field configuration schemes; review for unused custom fields                   │
+│  DB maintenance = VACUUM ANALYZE public; run in PostgreSQL during low-traffic window                  │
+│  Plugin update  = UPM > Manage Apps > Update; test in staging before production                       │
+│  Upgrade SOP    = snapshot VM → backup DB → run installer → verify → restore if fail                  │
+│  Backup verify  = check pg_dump file exists and is non-zero size after cron run                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Story Points

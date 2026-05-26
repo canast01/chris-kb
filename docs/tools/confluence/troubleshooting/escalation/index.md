@@ -47,42 +47,49 @@ Collect all of the following **before** contacting L3 or Atlassian. Providing th
 [ ] Recent changes: upgrade, plugin install, config change, DB maintenance
 [ ] Whether the issue is intermittent or constant
 ```
-
-### Artifacts to Attach
-
-```bash
-# 1. Generate support zip (see Diagnostics page)
-# Admin > Troubleshooting and Support Tools > Create Support Zip
-
-# 2. Thread dumps (capture before restart if possible)
-CONF_PID=$(pgrep -f confluence | head -1)
-for i in 1 2 3; do
-  jstack -l "$CONF_PID" > "/tmp/threaddump_escalation_${i}.txt"
-  sleep 10
-done
-
-# 3. Heap histogram
-jmap -histo:live "$CONF_PID" > /tmp/heap_histo_escalation.txt
-
-# 4. Full application log (last 24 hours, untruncated)
-cp /var/atlassian/application-data/confluence/logs/atlassian-confluence.log \
-  /tmp/atlassian-confluence-escalation.log
-
-# 5. System info
-curl -s -H "Authorization: Bearer $CF_TOKEN" \
-  "${CF_URL}/rest/api/settings/systemInfo" | jq '.' > /tmp/systeminfo.json
-
-# 6. Plugin list
-curl -s -H "Authorization: Bearer $CF_TOKEN" \
-  "${CF_URL}/rest/api/plugins/1.0/" \
-  | jq '[.plugins[] | {key, version, enabled, userInstalled}]' \
-  > /tmp/plugins.json
-
-# 7. Database stats
-psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
-  -c "SELECT tablename, pg_size_pretty(pg_total_relation_size(tablename::regclass)) AS size
-      FROM pg_tables WHERE schemaname='public' ORDER BY 2 DESC LIMIT 20;" \
-  > /tmp/db_table_sizes.txt
+┌───────────────────────────────── Confluence — Escalation Procedures ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                  Confluence Escalation Tiers                                  │   │
+│   │              Tier 1: Ops team — restart, reindex, check logs, restore from backup             │   │
+│   │           Tier 2: Senior engineer — JVM tuning, DB query analysis, plugin conflicts           │   │
+│   │       Tier 3: Atlassian Support — open ticket with support-zip; attach thread/heap dump       │   │
+│   │          Tier 4: Atlassian escalation — P1 production down; 24x7 critical support SLA         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Escalation criteria: T1 > 30 min no resolution; T2 > 2 hr; T3 > 4 hr production down               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Criteria              │  │             Artifacts to Gather             │   │
+│   │            Service down > 30 min             │  │              support-zip bundle             │   │
+│   │             Data loss suspected              │  │               Thread dumps x3               │   │
+│   │              Security incident               │  │               Heap dump (OOM)               │   │
+│   │              Repeated OOM crash              │  │              catalina.out tail              │   │
+│   │             Corruption suspected             │  │              DB slow query log              │   │
+│   │            Plugin breaks upgrade             │  │             Version + patch info            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Confluence VMs · PostgreSQL DB · monitoring/alerting · Atlassian Support portal                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  support-zip    = Admin > Troubleshooting > Create Support Zip; logs, config, thread dumps            │
+│  Thread dump    = JVM thread snapshot; take 3 dumps 10 seconds apart for deadlock analysis            │
+│  Heap dump      = full JVM memory capture; large file; required for OOM analysis                      │
+│  P1 incident    = production service down; page on-call immediately; escalate within 30 min           │
+│  Atlassian Support = support.atlassian.com; requires valid license; submit with support-zip           │
+│  Atlassian escalation = request via account team; for critical production outages                     │
+│  DB slow query  = pg_stat_statements or log_min_duration_statement=1000ms in postgresql.conf          │
+│  Plugin conflict = disable plugins one-by-one in safe mode to isolate culprit                         │
+│  Safe mode      = Confluence starts without any user-installed plugins for diagnostics                │
+│  Corruption     = DB or index inconsistency; run reindex; compare DB row counts                       │
+│  Data loss      = page versions allow recovery; check DB for deleted content                          │
+│  SLA            = Atlassian support SLA: P1 1hr response, P2 4hr, P3/P4 next business day             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -54,27 +54,49 @@ CONF_PID=$(pgrep -f confluence | head -1)
 jstat -gcutil "$CONF_PID" 5000 5   # 5 samples, 5-second interval
 # "O" column = Old generation %. Alert if > 90% consistently
 ```
-
-**Fix**
-
-```bash
-# 1. Increase heap in setenv.sh
-# Recommended: no more than 50-75% of available system RAM
-sed -i 's/-Xmx[0-9]*[gGmM]/-Xmx8g/' /opt/atlassian/confluence/bin/setenv.sh
-sed -i 's/-Xms[0-9]*[gGmM]/-Xms4g/' /opt/atlassian/confluence/bin/setenv.sh
-
-# 2. Add heap dump options if missing
-echo 'JAVA_OPTS="$JAVA_OPTS -XX:+HeapDumpOnOutOfMemoryError \
-  -XX:HeapDumpPath=/var/atlassian/application-data/confluence/dumps/"' \
-  >> /opt/atlassian/confluence/bin/setenv.sh
-
-# 3. Restart Confluence
-/opt/atlassian/confluence/bin/stop-confluence.sh && \
-/opt/atlassian/confluence/bin/start-confluence.sh
-
-# 4. If OOM is plugin-related: disable suspect plugin
-# Admin > Manage Apps > [Plugin] > Disable
-# Then identify via heap dump analysis with Eclipse MAT
+┌───────────────────────────────────── Confluence — Common Issues ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               Confluence Frequent Issue Patterns                              │   │
+│   │           OOM crash: heap too small; increase -Xmx; check for memory-leaking plugins          │   │
+│   │         Slow pages: DB slow queries or GC pressure; check pg_stat_activity and GC log         │   │
+│   │     Search broken: Lucene index stale; trigger full reindex from Admin > Content Indexing     │   │
+│   │           Auth fails: LDAP sync failure or SAML cert expired; check directory config          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Most Confluence issues fall into four categories: memory, performance, search, auth                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                    Issue                     │  │                  Resolution                 │   │
+│   │                 OOM / crash                  │  │         Increase -Xmx; check plugins        │   │
+│   │               Slow page loads                │  │              DB index; tune GC              │   │
+│   │             Search missing pages             │  │           Full reindex from admin           │   │
+│   │               SAML login fails               │  │            Check IdP cert expiry            │   │
+│   │               Attachments 404                │  │             Remount NFS home dir            │   │
+│   │             DB connection errors             │  │              Increase pool size             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Confluence VMs · PostgreSQL · NFS home · IdP (Okta/ADFS) · load balancer                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  -Xmx         = JVM max heap; set in setenv.sh; increase if OOM crashes occur frequently              │
+│  GC pressure  = garbage collection running too frequently; indicates heap too small                   │
+│  Reindex      = Admin > Content Indexing > Rebuild Index; fixes stale Lucene search                   │
+│  SAML cert    = IdP signing cert; expires on a schedule; update in SAML config                        │
+│  NFS remount  = umount then mount; or systemctl restart nfs-client.target                             │
+│  DB pool      = JDBC connection pool; increase maxPoolSize in dbconfig.xml                            │
+│  GC log       = JVM GC log; enable with -Xlog:gc* in JVM args; shows pause durations                  │
+│  Plugin leak  = some Confluence plugins have memory leaks; disable to test                            │
+│  LDAP sync    = Admin > User Management > User Directories; trigger manual sync                       │
+│  pg_stat_activity = PostgreSQL view; shows running queries; find slow or blocked queries              │
+│  Content index = Lucene index managed by Confluence; stored in CONFLUENCE_HOME/index                  │
+│  Attachment 404 = attachment served from NFS; NFS unavailable = 404 for all attachments               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

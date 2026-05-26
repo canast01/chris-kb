@@ -32,22 +32,49 @@ curl -u user:token -X PUT \
   -H "Content-Type: application/json" \
   -d '{"version":{"number":4},"type":"page","title":"Updated Title","body":{"storage":{"value":"<p>New content</p>","representation":"storage"}}}'
 ```
-
-Page creation tips: always set a parent page to avoid orphaning, use descriptive titles, and add labels immediately.
-
-## Using Macros
-
-Macros extend page functionality with dynamic content. Insert via `/macro-name` in the editor.
-
-```text
-/toc          — Table of contents (auto-generated from headings)
-/children     — List child pages dynamically
-/include      — Embed another page inline
-/status       — Coloured status badge (e.g. IN PROGRESS, DONE)
-/info         — Info / warning / note / tip panel
-/code         — Syntax-highlighted code block
-/jira         — Embed a Jira issue list or single ticket
-/excerpt      — Mark content for reuse with the Include macro
+┌───────────────────────────────── Confluence — Operations Procedures ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                            Confluence Standard Operating Procedures                           │   │
+│   │         Planned restart: drain LB → stop Confluence → maintenance → start → add to LB         │   │
+│   │             Space archival: export as XML → disable space → move to archive space             │   │
+│   │         User offboard: deactivate LDAP account → remove group memberships → audit log         │   │
+│   │           Plugin update: test in staging → UPM update in prod → verify functionality          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SOPs reduce error rates and ensure consistent execution of routine operations                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Maintenance SOPs               │  │                 Content SOPs                │   │
+│   │             Planned restart SOP              │  │              Space archival SOP             │   │
+│   │              Plugin update SOP               │  │              User offboard SOP              │   │
+│   │              DB maintenance SOP              │  │            Content migration SOP            │   │
+│   │                 Upgrade SOP                  │  │             Audit log review SOP            │   │
+│   │              Backup verify SOP               │  │            Permission review SOP            │   │
+│   │                 Reindex SOP                  │  │              GDPR deletion SOP              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Confluence VMs · LB for draining · PostgreSQL · NFS · UPM for plugins                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  LB drain       = remove node from load balancer pool before maintenance; in-flight reqs complete     │
+│  UPM            = Universal Plugin Manager; Admin > Manage Apps for add-on updates                    │
+│  Space archival = export space as XML; disable space; accessible via search but read-only             │
+│  User offboard  = deactivate in LDAP; Confluence sync picks up deactivation within poll interval      │
+│  DB maintenance = VACUUM ANALYZE in PostgreSQL; run during low-traffic windows                        │
+│  GDPR deletion  = remove personal data; Confluence has no native right-to-erasure tool                │
+│  Content migrate = use Confluence space import/export to move content between instances               │
+│  Permission review = quarterly review of space admin list and global permission groups                │
+│  Audit log review = Admin > Audit Log; monthly review of privilege escalation events                  │
+│  Upgrade SOP    = snapshot VMs → backup DB → run installer → verify → cutover                         │
+│  Reindex SOP    = Admin > Content Indexing > Rebuild; during off-peak; takes 30+ min for large        │
+│  VACUUM ANALYZE = PostgreSQL command; reclaims storage and updates query planner statistics           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 | Macro | Purpose | Common Config |

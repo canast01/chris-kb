@@ -16,48 +16,48 @@ flowchart TD
 
     bios --> grub --> kernelInit --> initrd --> systemdInit --> targets --> services
 ```
-
-## OS Support Timelines
-
-| OS | Version | End of Maintenance | Extended (ESM/ELS) |
-|---|---|---|---|
-| RHEL | 8 | May 2029 | May 2031 (ELS) |
-| RHEL | 9 | May 2032 | May 2034 (ELS) |
-| Ubuntu LTS | 22.04 | Apr 2027 | Apr 2032 (Ubuntu Pro) |
-| Ubuntu LTS | 24.04 | Apr 2029 | Apr 2034 (Ubuntu Pro) |
-
-EOL tracking is maintained in the CMDB. Alerts are raised 12 months before support expiry to allow planned migration.
-
-## Server Provisioning Checklist
-
-After a new RHEL/Ubuntu server is deployed from template:
-
-- [ ] Set hostname: `hostnamectl set-hostname <fqdn>`
-- [ ] Verify DNS forward and reverse resolution: `dig <fqdn>` and `dig -x <ip>`
-- [ ] Configure NTP: `chronyc sources -v` — confirm active sync
-- [ ] Join Active Directory: `realm join <domain>` (see [Integration](../../architecture/integrations/index.md))
-- [ ] Apply all available patches before production use
-- [ ] Install backup agent and register to backup server
-- [ ] Install monitoring agent (node_exporter, Aria agent)
-- [ ] Configure `/etc/sudoers.d/` entries for admin AD groups
-- [ ] Confirm firewalld rules allow required traffic only
-- [ ] Update CMDB with hardware, OS version, owner, and backup policy
-
-## Kernel Management
-
-```bash
-# List installed kernels (RHEL)
-rpm -q kernel | sort -V
-
-# Set default kernel (RHEL/GRUB2)
-grub2-set-default 0    # 0 = latest; run grubby --info=ALL to list entries
-grub2-mkconfig -o /boot/grub2/grub.cfg
-
-# List installed kernels (Ubuntu)
-dpkg --list | grep linux-image
-
-# Remove old kernels (Ubuntu — keeps current + 1 previous)
-apt autoremove --purge
+┌────────────────────────────────────── Linux — Install & Upgrade ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                    OS Installation Methods                                    │   │
+│   │        Manual: boot ISO → Anaconda/text installer → partition → packages → GRUB install       │   │
+│   │       Kickstart (RHEL/Rocky): ks.cfg defines locale, packages, disk, users, post-scripts      │   │
+│   │            Preseed (Debian/Ubuntu): auto-installs from netboot DHCP + TFTP PXE boot           │   │
+│   │        Cloud-init: first-boot configuration for cloud/VM images via user-data metadata        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Automated installs ensure repeatable, drift-free builds across the fleet                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Package Upgrades               │  │              In-Place Upgrades              │   │
+│   │           dnf update: all packages           │  │           RHEL 8→9: leapp upgrade           │   │
+│   │          dnf update kernel: kernel           │  │          Ubuntu: do-release-upgrade         │   │
+│   │           dnf history: audit trail           │  │         leapp preupgrade: pre-check         │   │
+│   │          apt upgrade / dist-upgrade          │  │            ELevate: CentOS 7→8→9            │   │
+│   │          unattended-upgrades: auto           │  │           Snapshot before upgrade           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86-64 servers · PXE/TFTP network · SSD/NVMe · iDRAC virtual media · Power & Cooling                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Kickstart   = RHEL/Rocky automated install file; defines all install parameters                      │
+│  Preseed     = Debian/Ubuntu automated install; answers installer questions via DHCP                  │
+│  Anaconda    = Red Hat graphical/TUI installer; interprets kickstart files                            │
+│  PXE         = Preboot Execution Environment; boots host over network from TFTP server                │
+│  cloud-init  = First-boot tool for cloud VMs; applies user-data from metadata service                 │
+│  leapp       = Red Hat in-place upgrade tool; RHEL 7→8 and RHEL 8→9 migration                         │
+│  ELevate     = AlmaLinux project tool; migrates CentOS 7/8 to RHEL-compatible distros                 │
+│  do-release-upgrade= Ubuntu official in-place major version upgrade command                           │
+│  unattended-upgrades= Debian/Ubuntu daemon for automatic security patch application                   │
+│  GRUB2       = Boot loader installed to MBR/EFI; presents kernel selection menu                       │
+│  dnf history = Audit log of all dnf transactions; allows undo of package changes                      │
+│  leapp preupgrade= Pre-flight check for RHEL upgrades; reports inhibitors before proceeding           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## RHEL Subscription Management

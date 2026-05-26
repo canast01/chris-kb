@@ -30,49 +30,58 @@ sequenceDiagram
     Storage-->>HBA: ACC — FCP ready
     Note over HBA,Storage: LUN discovery and I/O can begin
 ```
-
-## SANnav Management Portal
-
-SANnav provides fabric-wide monitoring, zoning management, and firmware orchestration across all Brocade switches, replacing the older DCFM/Network Advisor tools.
-
-**Key capabilities:**
-
-- Fabric topology with real-time port state and ISL utilisation
-- Zone management across all fabrics from a single UI
-- Per-port performance graphs (IOPS, MB/s, error rates)
-- Firmware upgrade scheduling and execution
-- Event and alert management with SMTP notification
-
-**Setup:**
-
-1. Deploy SANnav virtual appliance (OVA).
-2. Discover switches: SANnav → Discover → enter switch management IPs.
-3. SANnav connects via SSH and SNMP — configure SNMP v3 on each switch first.
-
----
-
-## VMware FC Connectivity
-
-ESXi host HBA ports log into the Brocade fabric and are zoned to storage target ports.
-
-**Zone a new ESXi host:**
-
-```bash
-# Step 1 — Find the host HBA WWPN after FLOGI
-nsshow | grep <domain-or-recent-entry>
-# Or collect HBA WWPNs from the ESXi host:
-# esxcli storage san fc list
-
-# Step 2 — Create aliases for each host HBA port
-alicreate "esxi-host01_hba0", "21:00:00:xx:xx:xx:xx:xx"
-alicreate "esxi-host01_hba1", "21:00:00:xx:xx:xx:xx:xx"
-
-# Step 3 — Create zones (single-initiator / single-target)
-zonecreate "esxi-host01_hba0-powermax01_fa0", "esxi-host01_hba0;powermax01_fa0"
-
-# Step 4 — Add to the active zone configuration and activate
-cfgadd "prod-cfg", "esxi-host01_hba0-powermax01_fa0"
-cfgenable "prod-cfg"
+┌────────────────────────────────── FabricOS — External Integrations ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       FabricOS integrates with management platforms via SSH, REST API, SNMP, and Syslog       │   │
+│   │         SANnav connects via SSH/REST to discover topology, zones, and port health data        │   │
+│   │        SNMP v3 sends traps to NMS (SolarWinds, Nagios); MIB: FCMGMT-MIB + Brocade MIBs        │   │
+│   │          REST API (FOS 8.2+): HTTPS JSON; auth via session token; used for automation         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Integration categories for FabricOS management:                                                    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Mgmt Platforms       │  │           Alerting          │  │          Automation         │   │
+│   │      SANnav (SSH/REST)      │  │        SNMP v3 traps        │  │           REST API          │   │
+│   │     Brocade Network Adv     │  │        Syslog to SIEM       │  │       Ansible modules       │   │
+│   │        vCenter plugin       │  │         Email (MAPS)        │  │        Python scripts       │   │
+│   │        DCFM (legacy)        │  │        Pager/webhook        │  │          Terraform          │   │
+│   │         LDAP/AD auth        │  │       Threshold alerts      │  │        CI/CD pipeline       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    REST API base URL: https://<switch-ip>/rest/v1; requires FOS 8.2 or later                          │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Integration    │     Protocol     │    Auth method    │     Use case     │      Notes       │   │
+│   │      SANnav      │    SSH + REST    │    Password/key   │    Full mgmt     │    Pull model    │   │
+│   │     SNMP v3      │   UDP 161/162    │      AuthPriv     │    NMS alerts    │   Brocade MIBs   │   │
+│   │      Syslog      │   UDP/TCP 514    │      None/TLS     │    SIEM logs     │ Facility local7  │   │
+│   │     REST API     │    HTTPS 443     │   Session token   │    Automation    │  JSON payloads   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: out-of-band Ethernet mgmt port · in-band FC connectivity · SFPs · cabling                │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    REST API        = FabricOS HTTP interface for programmatic switch management (FOS 8.2+)            │
+│    SNMP v3         = Secure SNMP with auth (SHA) and privacy (AES) encryption                         │
+│    FCMGMT-MIB      = IETF MIB for FC management; defines standard FC OIDs                             │
+│    SANnav          = Brocade GUI platform; connects via SSH+REST to all managed switches              │
+│    Syslog          = Switch event log forwarded to external SIEM (Splunk, QRadar)                     │
+│    LDAP auth       = Switch authenticates admin users against Active Directory via LDAP               │
+│    Ansible module  = brocade_fibrechannel community modules for zone/port automation                  │
+│    vCenter plugin  = Brocade plugin shows FC path from VM HBA to storage LUN                          │
+│    Session token   = REST API login returns a token; included in subsequent API headers               │
+│    DCFM            = Data Center Fabric Manager; legacy predecessor to SANnav                         │
+│    AuthPriv        = SNMP v3 mode with both authentication and payload encryption                     │
+│    Webhook         = MAPS can POST JSON alert payload to an HTTP endpoint                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Verify the host sees the storage after zoning:**

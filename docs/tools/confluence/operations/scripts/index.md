@@ -18,70 +18,35 @@ export PGPASSWORD="<db-password>"
 export SHARED_HOME="/mnt/confluence-shared"
 export BACKUP_DIR="/backup/confluence"
 ```
-
----
-
-## 1. Space Export Automation
-
-Exports all spaces to XML format and uploads to S3. Safe to run while Confluence is live.
-
-```bash
-#!/bin/bash
-# space-export-all.sh
-# Exports every space to XML and stores in $BACKUP_DIR/spaces/
-
-set -euo pipefail
-
-TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-EXPORT_DIR="${BACKUP_DIR}/spaces/${TIMESTAMP}"
-mkdir -p "$EXPORT_DIR"
-LOG="${EXPORT_DIR}/export.log"
-
-echo "[$(date)] Starting space export" | tee -a "$LOG"
-
-# Fetch all space keys
-spaces=$(curl -sf \
-  -H "Authorization: Bearer $CF_TOKEN" \
-  "${CF_URL}/rest/api/space?limit=500" \
-  | jq -r '.results[].key')
-
-TOTAL=$(echo "$spaces" | wc -l)
-COUNT=0
-
-for space in $spaces; do
-  COUNT=$((COUNT + 1))
-  echo "[$(date)] [$COUNT/$TOTAL] Exporting space: $space" | tee -a "$LOG"
-
-  # Trigger export
-  resp=$(curl -sf -X POST \
-    -H "Authorization: Bearer $CF_TOKEN" \
-    -H "Content-Type: application/json" \
-    "${CF_URL}/rest/api/space/${space}/export" \
-    -d '{"type": "xml"}')
-
-  download_url=$(echo "$resp" | jq -r '.url // empty')
-  if [ -z "$download_url" ]; then
-    echo "[$(date)] WARN: No download URL for $space — skipping" | tee -a "$LOG"
-    continue
-  fi
-
-  # Download the ZIP
-  curl -sf -H "Authorization: Bearer $CF_TOKEN" \
-    "${CF_URL}${download_url}" \
-    --output "${EXPORT_DIR}/${space}.zip"
-
-  echo "[$(date)] Saved: ${EXPORT_DIR}/${space}.zip" | tee -a "$LOG"
-done
-
-# Upload to S3
-if command -v aws &>/dev/null; then
-  aws s3 sync "$EXPORT_DIR" "s3://company-confluence-backups/spaces/${TIMESTAMP}/" \
-    --sse aws:kms \
-    --kms-key-id alias/confluence-backup-key
-  echo "[$(date)] Uploaded to S3" | tee -a "$LOG"
-fi
-
-echo "[$(date)] Space export complete. $COUNT spaces processed." | tee -a "$LOG"
+┌─────────────────────────────────── Confluence — Operations Scripts ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                            Confluence Operational Script Reference                            │   │
+│   │        backup.sh: pg_dump → tar CONFLUENCE_HOME/attachments → gpg encrypt → push to S3        │   │
+│   │               reindex.sh: curl REST API to trigger reindex; poll until complete               │   │
+│   │             health-check.sh: curl /status; check disk, heap via JMX, DB conn test             │   │
+│   │             space-export.sh: REST API POST to /export-space; download exported ZIP            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Confluence app VMs · PostgreSQL DB · NFS home · S3 or NFS backup target                              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  backup.sh      = shell script: pg_dump + tar home + gpg + s3 copy; run via cron                      │
+│  reindex.sh     = REST call to trigger reindex: POST /rest/api/index/reindexAll                       │
+│  health-check.sh = curl /status + df + JMX heap query + psql connection check                         │
+│  space-export.sh = Confluence REST space export; useful for archival or migration                     │
+│  pg_dump        = PostgreSQL utility; creates database backup file                                    │
+│  gpg encrypt    = GPG symmetric or asymmetric encryption of backup archives                           │
+│  s3 copy        = aws s3 cp to push backup to S3 bucket with lifecycle policy                         │
+│  JMX            = Java Management Extensions; expose heap/thread metrics for scripts                  │
+│  cron           = schedule backup.sh and health-check.sh at required intervals                        │
+│  REST auth      = scripts use PAT in Authorization: Bearer header for API calls                       │
+│  Space export   = produces a ZIP archive; importable to another Confluence instance                   │
+│  Poll loop      = reindex.sh polls /rest/api/index/reindexAll until status=DONE                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

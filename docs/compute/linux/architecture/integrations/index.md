@@ -21,35 +21,48 @@ sequenceDiagram
     sssd-->>pam: Authentication success
     pam-->>user: Shell granted
 ```
-
-## Active Directory Integration (SSSD / realmd)
-
-Linux servers join Active Directory using `realmd` and `sssd`, allowing AD users to authenticate with Kerberos credentials without local account provisioning.
-
-**Join a RHEL/Ubuntu server to AD:**
-
-```bash
-# Install required packages (RHEL)
-dnf install sssd realmd adcli krb5-workstation oddjob oddjob-mkhomedir
-
-# Install required packages (Ubuntu)
-apt install sssd realmd adcli krb5-user packagekit
-
-# Discover the domain
-realm discover <ad-domain.fqdn>
-
-# Join the domain (uses a privileged AD account)
-realm join --user=<admin-account> <ad-domain.fqdn>
-
-# Verify join status
-realm list
-id <ad-user>@<domain>
-
-# Allow AD users to log in (default: all domain users)
-realm permit --all
-
-# Restrict to specific AD groups
-realm permit -g "Linux Admins" -g "Linux Users"
+┌────────────────────────────────── Linux Architecture — Integrations ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Integration Points                                      │   │
+│   │        Identity: SSSD + realmd joins Linux hosts to Active Directory via Kerberos/LDAP        │   │
+│   │            Storage: NFS/CIFS mounts, iSCSI initiator, multipath-tools for SAN LUNs            │   │
+│   │       Monitoring: node_exporter → Prometheus → Grafana; rsyslog/journald → Elasticsearch      │   │
+│   │       Config mgmt: Ansible (agentless SSH) · Puppet (agent) · Chef · SaltStack (minion)       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Linux integrates with enterprise identity, storage, and observability stacks                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Identity & Auth                │  │              Storage & Network              │   │
+│   │           SSSD: caches AD queries            │  │          NFS v4.1: Kerberos mounts          │   │
+│   │           realmd: domain join tool           │  │         iSCSI: open-iscsi initiator         │   │
+│   │           Kerberos: kinit / klist            │  │         multipath: dm-multipath I/O         │   │
+│   │           PAM: sssd module for AD            │  │         autofs: automount on demand         │   │
+│   │           sudo rules: LDAP-sourced           │  │         CIFS/SMB: mount.cifs shares         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86-64 servers · HBAs/NICs · SAN switches · NAS appliances · iDRAC · Power & Cooling                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SSSD        = System Security Services Daemon; caches LDAP/Kerberos identity lookups                 │
+│  realmd      = Realm Discovery daemon; simplifies domain join with a single command                   │
+│  Kerberos    = Ticket-based auth protocol; kinit obtains TGT from AD KDC                              │
+│  NFS v4.1    = Network File System v4.1; adds pNFS parallel I/O and session trunking                  │
+│  iSCSI       = IP-based SCSI protocol; carries SCSI commands over TCP/IP networks                     │
+│  dm-multipath= Device Mapper multipath; aggregates multiple HBA paths to one block device             │
+│  autofs      = Kernel automounter; mounts NFS/CIFS shares on access and unmounts on idle              │
+│  node_exporter= Prometheus agent; exposes host metrics (CPU, mem, disk, net) on port 9100             │
+│  Ansible     = Agentless automation over SSH; uses YAML playbooks for idempotent config               │
+│  Puppet      = Agent-based config mgmt; enforces declared resource state on each run                  │
+│  rsyslog     = Reliable syslog daemon; forwards structured log messages over UDP/TCP                  │
+│  Elasticsearch= Distributed search and analytics engine for log aggregation at scale                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **SSSD configuration is written to `/etc/sssd/sssd.conf` automatically by realm.** Key settings to verify:

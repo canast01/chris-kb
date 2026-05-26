@@ -11,90 +11,35 @@ export JIRA_DB_NAME="jiradb"
 export JIRA_DB_USER="jira"
 export PGPASSWORD="${JIRA_DB_PASSWORD}"
 ```
-
----
-
-## 1. Issue Export to CSV
-
-Exports any JQL query result to a CSV file with configurable fields.
-
-```bash
-#!/bin/bash
-# jira-export-csv.sh — Export JQL results to CSV
-# Usage: ./jira-export-csv.sh "project = PROJ AND status != Done" /tmp/issues.csv
-
-JQL="${1:-project = PROJ AND status != Done}"
-OUTPUT="${2:-/tmp/jira-export-$(date +%Y%m%d-%H%M%S).csv}"
-FIELDS="key,summary,issuetype,status,priority,assignee,reporter,created,updated,duedate,labels,components"
-MAX_RESULTS=1000
-START_AT=0
-
-echo "Exporting: ${JQL}"
-echo "Output: ${OUTPUT}"
-
-# Write CSV header
-echo "Key,Summary,Issue Type,Status,Priority,Assignee,Reporter,Created,Updated,Due Date,Labels,Components" > "${OUTPUT}"
-
-while true; do
-  RESPONSE=$(curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
-    -G "${JIRA_URL}/rest/api/2/search" \
-    --data-urlencode "jql=${JQL}" \
-    --data-urlencode "fields=${FIELDS}" \
-    --data-urlencode "maxResults=${MAX_RESULTS}" \
-    --data-urlencode "startAt=${START_AT}")
-
-  TOTAL=$(echo "${RESPONSE}" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['total'])")
-  COUNT=$(echo "${RESPONSE}" | python3 -c "import sys,json; d=json.load(sys.stdin); print(len(d['issues']))")
-
-  if [ "${COUNT}" -eq 0 ]; then
-    break
-  fi
-
-  echo "${RESPONSE}" | python3 - << 'PYEOF'
-import sys, json, csv
-
-data = json.load(sys.stdin)
-writer = csv.writer(sys.stdout)
-
-for issue in data['issues']:
-    f = issue['fields']
-    def safe(v, attr=None):
-        if v is None:
-            return ''
-        if attr:
-            return v.get(attr, '') if isinstance(v, dict) else ''
-        return str(v)
-    def list_field(v, attr='name'):
-        if not v:
-            return ''
-        return '; '.join(i.get(attr, '') for i in v if i)
-
-    writer.writerow([
-        issue['key'],
-        safe(f.get('summary')),
-        safe(f.get('issuetype'), 'name'),
-        safe(f.get('status'), 'name'),
-        safe(f.get('priority'), 'name'),
-        safe(f.get('assignee'), 'displayName'),
-        safe(f.get('reporter'), 'displayName'),
-        safe(f.get('created', ''))[:10],
-        safe(f.get('updated', ''))[:10],
-        safe(f.get('duedate', '')),
-        list_field(f.get('labels', []), '__str__').replace("'", ""),
-        list_field(f.get('components', [])),
-    ])
-PYEOF
-  >> "${OUTPUT}"
-
-  START_AT=$((START_AT + COUNT))
-  echo "  Fetched ${START_AT} / ${TOTAL}"
-  if [ "${START_AT}" -ge "${TOTAL}" ]; then
-    break
-  fi
-done
-
-LINE_COUNT=$(wc -l < "${OUTPUT}")
-echo "Export complete: ${OUTPUT} (${LINE_COUNT} rows)"
+┌────────────────────────────────────── Jira — Operations Scripts ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               Jira Operational Script Reference                               │   │
+│   │             backup.sh: pg_dump jira → tar JIRA_HOME/data/attachments → push to S3             │   │
+│   │         reindex.sh: POST /rest/api/2/reindex → poll /rest/api/2/reindex until COMPLETE        │   │
+│   │                health-check.sh: curl /status, heap via JMX, DB conn, disk check               │   │
+│   │            user-deactivate.sh: REST PUT /rest/api/2/user?username=X → active: false           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Jira app VMs · PostgreSQL DB · NFS for JIRA_HOME · S3 backup target                                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  backup.sh      = nightly cron: pg_dump + tar attachments + s3 cp off-site                            │
+│  reindex.sh     = triggers Jira REST reindex; polls until COMPLETE state                              │
+│  health-check.sh = checks Jira status endpoint, JVM heap, DB, disk, and NFS                           │
+│  user-deactivate = REST API to deactivate user; used in offboarding automation                        │
+│  pg_dump        = PostgreSQL utility; custom format dump for parallel restore                         │
+│  s3 cp          = AWS CLI upload to S3; add --sse for server-side encryption                          │
+│  JMX            = Java Management Extensions; Jira exposes heap via JMX beans                         │
+│  REST auth      = scripts use PAT in Authorization: Bearer header                                     │
+│  cron           = schedule backup.sh and health-check.sh via crontab                                  │
+│  /rest/api/2    = Jira REST API v2; still widely used; v3 for cloud                                   │
+│  Reindex poll   = GET /rest/api/2/reindex → check currentProgress and type                            │
+│  Attachment tar = tar -czf; compress JIRA_HOME/data/attachments/                                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

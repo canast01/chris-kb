@@ -31,139 +31,49 @@ flowchart TD
     style DONE fill:#2d8a4e,color:#fff
     style VENDOR fill:#c0392b,color:#fff
 ```
-
----
-
-## L1 / L2 / L3 Role Definitions
-
-| Level | Role | Responsibilities | Skills Required |
-|---|---|---|---|
-| **L1** | Operations / Service Desk | First response, incident triage, user-facing issues, known-issue workarounds, access requests | Jira UI navigation, basic JQL, user administration |
-| **L2** | Jira Administrator | Configuration changes, plugin management, workflow editing, log analysis, LDAP/SSO issues, performance diagnosis | Jira admin, REST API, log analysis, DB queries |
-| **L3** | Senior Platform Engineer | DB-level investigation, JVM analysis, cluster issues, data corruption, architectural changes, Atlassian case management | PostgreSQL DBA, Java/JVM, Atlassian internals, Data Center architecture |
-| **Vendor** | Atlassian Support | Product bugs, licensing, undocumented behaviour, Data Center cluster defects | N/A — Atlassian responsibility |
-
----
-
-## SLA Table
-
-| Priority | Description | L1 Response | L1 Resolution | L2 Response | L2 Resolution | L3 Response |
-|---|---|---|---|---|---|---|
-| **P1 — Critical** | Jira down for all users | 15 min | 1 hour | 30 min | 4 hours | 1 hour |
-| **P2 — High** | Core functionality broken (create, transition, search) for majority of users | 30 min | 4 hours | 1 hour | 8 hours | 2 hours |
-| **P3 — Medium** | Functionality degraded, workaround available | 2 hours | 1 business day | 4 hours | 2 business days | Next business day |
-| **P4 — Low** | Minor issue, cosmetic, single-user problem | 4 hours | 3 business days | Next BD | 5 business days | Scheduled |
-
-!!! note "Business Days"
-    Business days are Monday–Friday, 08:00–18:00 local time, excluding public holidays. Out-of-hours P1 coverage must be arranged through the on-call rota.
-
----
-
-## Pre-Escalation Information Checklist
-
-Collect the following before escalating to the next level. Incomplete escalations delay resolution.
-
-### L1 → L2 Escalation Checklist
-
-- [ ] Issue summary: what is broken, what is the user impact
-- [ ] First occurrence time and date
-- [ ] Number of affected users (all / subset / single user)
-- [ ] Steps to reproduce
-- [ ] Error message or screenshot (exact text)
-- [ ] Jira URL of affected issue/project (if applicable)
-- [ ] User(s) affected: username(s) and roles
-- [ ] Recent changes: any config changes, upgrades, or deployments in last 48h
-- [ ] Temporary workaround in place (yes / no / what)
-
-### L2 → L3 Escalation Checklist
-
-All L1→L2 items, plus:
-
-- [ ] Jira version and Data Center node count
-- [ ] Relevant log excerpts (from `atlassian-jira.log`, `catalina.out`) with timestamps
-- [ ] Database version and PostgreSQL version
-- [ ] Cluster node status (`SELECT * FROM clusternodeinfo`)
-- [ ] JVM heap configuration (`JVM_MAXIMUM_MEMORY` from `setenv.sh`)
-- [ ] Installed plugins (output of plugin list script or admin UI screenshot)
-- [ ] DB query performance: any slow queries identified
-- [ ] Recent backup status (date of last successful backup)
-- [ ] Timeline of events leading to issue
-- [ ] Actions already taken and their results
-
-### L3 → Atlassian Support Checklist
-
-All L2→L3 items, plus:
-
-- [ ] Atlassian support.zip generated and attached
-- [ ] Thread dumps (minimum 3, 10s apart)
-- [ ] Heap dump (if OOM or memory-related)
-- [ ] Full DB schema version (`SELECT attribute_value FROM propertyentry WHERE property_key = 'jira.version'`)
-- [ ] Exact reproduction steps tested in isolation
-- [ ] Licence details (Server ID, SEN)
-- [ ] AWS/infrastructure topology diagram (if relevant)
-
----
-
-## Atlassian Support Ticket Template
-
-Use this template when opening a ticket at [support.atlassian.com](https://support.atlassian.com):
-
-```yaml
-Subject: [JIRA DC] <Brief description> — P<1/2/3/4>
-
-## Environment
-- Product: Jira Software Data Center
-- Version: 9.12.3
-- Nodes: 3
-- Database: PostgreSQL 15.4
-- Java: OpenJDK 17.0.9
-- OS: RHEL 9.3
-- Atlassian Server ID: BXXXXXXXXXXXXX
-- SEN: SEN-LXXXXXXXXX
-
-## Priority Justification
-[P1 — All users unable to log in since 09:00 UTC]
-
-## Summary
-[Concise one-paragraph description of the problem]
-
-## Steps to Reproduce
-1. 
-2. 
-3. 
-
-## Expected Behaviour
-[What should happen]
-
-## Actual Behaviour
-[What actually happens — include exact error message]
-
-## Impact
-- Users affected: [All / X users / Single user]
-- Business impact: [Project delivery blocked / No workaround / Workaround available]
-- Since: [Date and time]
-
-## Timeline
-- HH:MM — First report received
-- HH:MM — L1 investigated, escalated to L2
-- HH:MM — L2 investigated [describe steps]
-- HH:MM — Escalated to L3/Atlassian
-
-## Actions Taken
-1. [Action 1 — result]
-2. [Action 2 — result]
-
-## Attachments
-- [ ] support.zip
-- [ ] atlassian-jira.log (relevant section)
-- [ ] catalina.out (relevant section)
-- [ ] Thread dumps (x3)
-- [ ] Heap dump (if applicable)
-- [ ] Screenshots
-
-## Contact
-Primary:  Name, email, phone
-Secondary: Name, email, phone
+┌──────────────────────────────────── Jira — Escalation Procedures ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     Jira Escalation Tiers                                     │   │
+│   │                Tier 1: Ops — restart, reindex, check logs, restore from backup                │   │
+│   │           Tier 2: Senior engineer — JVM tuning, DB query analysis, plugin isolation           │   │
+│   │            Tier 3: Atlassian Support — ticket with support-zip; thread + heap dumps           │   │
+│   │              Tier 4: Atlassian escalation — P1 production down; 24x7 critical SLA             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Escalate: T1 > 30 min no resolution; T2 > 2 hr; T3 > 4 hr production down                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Criteria              │  │             Artifacts to Gather             │   │
+│   │             Service down >30 min             │  │              support-zip bundle             │   │
+│   │             Data loss suspected              │  │               Thread dumps x3               │   │
+│   │              Security incident               │  │               Heap dump (OOM)               │   │
+│   │              Repeated OOM crash              │  │              catalina.out tail              │   │
+│   │             Corruption suspected             │  │              DB slow query log              │   │
+│   │            Plugin breaks upgrade             │  │             Version + patch info            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Jira VMs · PostgreSQL DB · monitoring/alerting · Atlassian Support portal                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  support-zip    = Admin > System > Troubleshooting > Create Support Zip                               │
+│  Thread dump    = 3 dumps 10 seconds apart; detect deadlocks in worker threads                        │
+│  Heap dump      = full JVM memory; jmap -dump:format=b,file=jira.hprof <pid>                          │
+│  P1 incident    = production down; page on-call; escalate within 30 minutes                           │
+│  Atlassian Support = support.atlassian.com; valid license required                                    │
+│  Safe mode      = start without plugins; -Djira.startup.options=safe-mode                             │
+│  Plugin isolate = disable plugins one by one until issue resolves                                     │
+│  DB slow query  = set log_min_duration_statement=1000 in postgresql.conf                              │
+│  Corruption     = DB row count vs index count mismatch; reindex if different                          │
+│  Data loss      = check jiraissue table; deleted issues have DELETED status                           │
+│  SLA            = P1 1hr response, P2 4hr, P3/P4 next business day                                    │
+│  Critical escalation = request via Atlassian account team for P1 outages                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

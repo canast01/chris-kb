@@ -26,33 +26,48 @@ graph TB
   class NIC,NET net
   class ADMIN host
 ```
-
-## Server Roles
-
-| Role | Typical OS | vCPU | RAM | Notes |
-|---|---|---|---|---|
-| Application server | RHEL 8/9, Ubuntu 22.04 | 4–16 | 8–64 GB | Primary workload host |
-| Automation node (Ansible) | RHEL 9 | 4 | 8 GB | Ansible control plane; no inbound access |
-| Monitoring server | Ubuntu 22.04 | 8 | 16 GB | Prometheus, Grafana, exporters |
-| NFS/SMB file host | RHEL 9 | 4 | 16 GB | Shared storage; LVM on SAN-backed LUNs |
-| Container host | RHEL 9 | 8–32 | 16–128 GB | Podman/Docker workloads |
-| Backup proxy | RHEL 9 | 8 | 16 GB | Veeam proxy or NetBackup media server |
-
-## Disk Layout
-
-Standard LVM partition layout — applied at provisioning via Kickstart or cloud-init:
-
-```text
-/boot          512 MB      xfs     (separate /boot partition — not in LVM)
-VG: vg_system
-  lv_root     20 GB       xfs     /
-  lv_var      20 GB       xfs     /var
-  lv_tmp       5 GB       xfs     /tmp (noexec,nosuid mount options)
-  lv_home      5 GB       xfs     /home
-  lv_swap      8 GB       swap    (= RAM, up to 16 GB max)
-
-VG: vg_data (application data — sized per role)
-  lv_app      100+ GB     xfs     /opt/<app>
+┌──────────────────────────────────────── Linux — How It Works ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                         Boot Sequence                                         │   │
+│   │      UEFI/BIOS → GRUB2 bootloader → kernel decompresses into RAM → initramfs mounts root      │   │
+│   │       kernel init: detects hardware, loads drivers, mounts real rootfs, exec /sbin/init       │   │
+│   │        systemd: reads default.target, activates units in dependency order, starts getty       │   │
+│   │      Login: PAM stack authenticates user; bash/zsh shell launched as child of sshd/getty      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Every process originates from PID 1 through fork(); exec() loads new program images                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Syscall & I/O Path              │  │             Scheduling & Memory             │   │
+│   │          app calls read() via glibc          │  │       CFS picks next task by vruntime       │   │
+│   │         SYSCALL instruction → ring 0         │  │        context switch saves registers       │   │
+│   │        VFS dispatches to block layer         │  │       page fault → alloc physical page      │   │
+│   │         I/O scheduler (mq-deadline)          │  │        mmap: maps file into VA space        │   │
+│   │          NVMe/SCSI driver sends cmd          │  │        OOM: score + kill on pressure        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86-64 CPUs (rings 0/3) · RAM · NVMe/SAS · PCIe bus · iDRAC BMC · Power & Cooling                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  GRUB2       = GRand Unified Bootloader v2; presents boot menu and loads kernel + initramfs           │
+│  initramfs   = Temporary RAM root used during boot to mount the real root filesystem                  │
+│  fork        = Syscall that clones the calling process; child inherits FDs and memory                 │
+│  exec        = Syscall family that replaces process image with a new program binary                   │
+│  vruntime    = Virtual runtime; CFS metric tracking how much CPU time a task has used                 │
+│  context switch= CPU saves registers of running task and loads state of next scheduled task           │
+│  page fault  = MMU exception when a virtual address has no mapped physical page yet                   │
+│  mmap        = Memory-map syscall; maps files or anonymous memory into a process VAS                  │
+│  mq-deadline = Multi-queue deadline I/O scheduler; prioritises read latency over throughput           │
+│  ring 0      = CPU privilege level for kernel code; ring 3 is unprivileged userspace                  │
+│  PAM         = Pluggable Authentication Modules; configures how login and sudo authenticate           │
+│  getty       = Terminal program that presents the login prompt on a virtual console                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## LVM Stack

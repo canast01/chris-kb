@@ -17,35 +17,48 @@ flowchart LR
 
     gitRepo --> ansible --> copy --> cron --> output --> siem
 ```
-
-## system-health-check.sh
-
-Checks disk, memory, load, failed services, and recent auth failures:
-
-```bash
-#!/bin/bash
-THRESHOLD=80
-echo "=== System Health Check: $(hostname) at $(date) ==="
-
-# Disk usage
-echo "--- Disk Usage ---"
-df -h | awk -v t=$THRESHOLD 'NR>1 && int($5) > t {print "WARNING: "$6" is "$5" full"}'
-
-# Memory
-echo "--- Memory ---"
-free -m | awk '/Mem/ {printf "Used: %dMB / Total: %dMB (%.0f%%)\n", $3, $2, $3/$2*100}'
-
-# Load average
-echo "--- Load Average ---"
-uptime | awk -F'load average:' '{print "Load:" $2}'
-
-# Failed services
-echo "--- Failed Services ---"
-systemctl --failed --no-legend | awk '{print "FAILED: "$1}'
-
-# Recent auth failures
-echo "--- Auth Failures (last hour) ---"
-journalctl -u sshd --since "1 hour ago" | grep "Failed password" | wc -l | xargs echo "SSH failed logins:"
+┌──────────────────────────────────── Linux — Scripts & Automation ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                      Scripting Standards                                      │   │
+│   │         Bash: shebang #!/bin/bash; set -euo pipefail; trap ERR for safe error handling        │   │
+│   │          Python: use venv / pipenv; type hints; logging module; argparse for CLI args         │   │
+│   │        Idempotency: scripts must be safely re-runnable without double-applying changes        │   │
+│   │        Storage: version-controlled in Git; tested in staging before production rollout        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Well-structured scripts reduce human error and enable reliable automation at scale                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Bash Patterns                 │  │               Python Patterns               │   │
+│   │          set -euo pipefail: strict           │  │          subprocess.run: exec cmds          │   │
+│   │            trap cleanup EXIT ERR             │  │           paramiko: SSH automation          │   │
+│   │         getopts / getopt: arg parse          │  │           fabric: remote execution          │   │
+│   │          logger: syslog from script          │  │             click: CLI framework            │   │
+│   │          lockfile: prevent parallel          │  │          jinja2: config templating          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86-64 servers · Git repo server · cron/systemd timers · NIC · Power & Cooling                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  set -e      = Exit immediately if any command returns non-zero exit code                             │
+│  set -u      = Treat unset variables as errors; prevents typo variable bugs                           │
+│  set -o pipefail= Propagate pipeline failures; catches errors in piped commands                       │
+│  trap        = Register signal/event handler; useful for cleanup on EXIT or ERR                       │
+│  idempotency = Property of an operation that produces same result on repeated runs                    │
+│  getopts     = Bash built-in for short option parsing (-v, -f); POSIX compliant                       │
+│  logger      = Shell command that writes messages to syslog / systemd journal                         │
+│  paramiko    = Python SSH library; programmatic remote command execution                              │
+│  fabric      = Python SSH automation; high-level remote task execution over SSH                       │
+│  click       = Python CLI framework; decorators for commands, options, arguments                      │
+│  jinja2      = Python template engine; used by Ansible for config file rendering                      │
+│  shebang     = First line of script (#!/bin/bash); tells kernel which interpreter to use              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## log-archival.sh

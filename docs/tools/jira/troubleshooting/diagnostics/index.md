@@ -44,33 +44,49 @@ flowchart TD
     style DONE fill:#2d8a4e,color:#fff
     style ESCALATE fill:#c0392b,color:#fff
 ```
-
----
-
-## Log Locations and Parsing
-
-### Log File Reference
-
-| Log File | Path | Content |
-|---|---|---|
-| Application | `/opt/atlassian/jira/logs/atlassian-jira.log` | Main Jira events, errors, warnings |
-| Catalina (stdout) | `/opt/atlassian/jira/logs/catalina.out` | JVM stdout, GC messages, OOM |
-| GC Log | `/opt/atlassian/jira/logs/gc.log.*` | Garbage collection detail |
-| Access Log | `/opt/atlassian/jira/logs/localhost_access_log.*.txt` | HTTP request log (Tomcat) |
-| Upgrade Log | `/opt/atlassian/jira/logs/atlassian-jira-software-upgrade-*.log` | Upgrade events |
-| Audit Log | Jira Admin → Audit Log (or DB table `AUDIT_LOG`) | Admin action audit trail |
-| Plugin Log | Inside `atlassian-jira.log` (prefixed with plugin key) | App-specific log output |
-
-### Log Format
-
-```bash
-# atlassian-jira.log format:
-# TIMESTAMP  LEVEL  [THREAD] CLASS - MESSAGE
-2026-05-08 09:14:22,483 ERROR [http-nio-8080-exec-42 jira.action.IssueAction] - Unexpected error
-
-# catalina.out format:
-# TIMESTAMP LEVEL MESSAGE
-08-May-2026 09:14:22.483 INFO  [main] org.apache.catalina.startup.Catalina.start Server startup in [45,123] milliseconds
+┌───────────────────────────────────────── Jira — Diagnostics ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                    Jira Diagnostic Runbook                                    │   │
+│   │            Step 1: curl -s http://localhost:8080/status — confirm state is RUNNING            │   │
+│   │                 Step 2: grep -i "ERROR|OOM|Exception" catalina.out | tail -100                │   │
+│   │              Step 3: psql -U jira -c "SELECT count(*) FROM jiraissue;" — DB alive             │   │
+│   │             Step 4: df -h $JIRA_HOME — check disk; ls $JIRA_HOME/data/attachments             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Stop at first anomaly and remediate before continuing to next diagnostic step                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Application Diagnostics            │  │             Infrastructure Diag             │   │
+│   │            curl /status endpoint             │  │               df -h JIRA_HOME               │   │
+│   │              grep catalina.out               │  │               mount | grep nfs              │   │
+│   │             Thread dump: kill -3             │  │               pg_stat_activity              │   │
+│   │              Heap: jmap -histo               │  │              netstat open ports             │   │
+│   │             Admin > System Info              │  │                top / free -h                │   │
+│   │              support-zip export              │  │              journalctl -u jira             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SSH to Jira VMs · PostgreSQL admin access · NFS mount visibility                                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  kill -3 PID    = sends SIGQUIT to JVM; thread dump printed to catalina.out                           │
+│  jmap -histo    = histogram of JVM heap; lists top objects by class name                              │
+│  pg_stat_activity = PostgreSQL running queries; find blocking and long-running SQL                    │
+│  catalina.out   = Tomcat stdout log; JIRA_INSTALL/logs/catalina.out                                   │
+│  atlassian-jira.log = Jira application log; JIRA_HOME/log/atlassian-jira.log                          │
+│  support-zip    = Admin > System > Troubleshooting; bundles logs and thread dumps                     │
+│  top            = real-time process monitor; watch java process CPU and memory                        │
+│  netstat        = open port check; confirm 8080 (Jira) and 5432 (PG) listening                        │
+│  mount          = list mounted filesystems; verify NFS home mount present                             │
+│  journalctl     = systemd log reader; use if Jira runs as systemd service                             │
+│  free -h        = system memory; check if OS is swapping under memory pressure                        │
+│  df -h          = disk usage; alert if JIRA_HOME volume exceeds 80% full                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Log Parsing Commands

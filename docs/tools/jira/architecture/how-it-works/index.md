@@ -71,40 +71,49 @@ graph TB
     N2 --> NFS
     N3 --> NFS
 ```
-
----
-
-## Component Descriptions
-
-### Load Balancer
-
-The load balancer is the single ingress point for all Jira traffic. **Sticky sessions (session affinity)** are mandatory for Jira Data Center — a user session must remain on the same node throughout its lifetime.
-
-| Setting | Value |
-|---|---|
-| Session persistence | Cookie-based (`JSESSIONID`) |
-| Health check endpoint | `GET /status` → HTTP 200 |
-| Protocol | HTTPS (TLS termination at LB or pass-through) |
-| Timeout | 60 s connection, 300 s request |
-
-### Application Nodes
-
-Each Jira node runs an identical instance of the Jira application within a Java servlet container (Tomcat). Nodes share no in-process state — all shared state is managed through the database and shared home.
-
-| Resource | Minimum | Recommended (production) |
-|---|---|---|
-| vCPU | 8 | 16 |
-| RAM | 16 GB | 32 GB |
-| OS disk | 50 GB SSD | 100 GB SSD |
-| JVM heap | 4 GB | 8–16 GB |
-| JVM metaspace | 512 MB | 1 GB |
-
-```bash
-# /opt/atlassian/jira/bin/setenv.sh
-JVM_MINIMUM_MEMORY="4096m"
-JVM_MAXIMUM_MEMORY="16384m"
-JVM_SUPPORT_RECOMMENDED_ARGS="-XX:+UseG1GC -XX:MaxGCPauseMillis=200 \
-  -XX:+ExplicitGCInvokesConcurrent -XX:+ParallelRefProcEnabled"
+┌───────────────────────────────────────── Jira — How It Works ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                   Jira Request and Data Flow                                  │   │
+│   │             Browser → LB → Tomcat (Jira app) → DB read/write; attachments via NFS             │   │
+│   │          Issue create: HTTP POST → workflow engine → DB insert → Lucene index update          │   │
+│   │          JQL search: parse query → Lucene search → fetch issue data from DB → render          │   │
+│   │            Notifications: issue event → notification scheme → email via SMTP relay            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Jira processes issue events synchronously; indexing and notifications are async                    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          HTTP Flow          │  │       Workflow Engine       │  │         Search Flow         │   │
+│   │         Browser → LB        │  │      Transition trigger     │  │          JQL parse          │   │
+│   │         LB → Tomcat         │  │       Condition check       │  │         Lucene query        │   │
+│   │          Auth check         │  │        Validator run        │  │        Fetch from DB        │   │
+│   │        DB query/write       │  │        Post function        │  │      Permission filter      │   │
+│   │         Lucene index        │  │        Status update        │  │       Response render       │   │
+│   │       Notify via SMTP       │  │       Assign / comment      │  │          Pagination         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Tomcat JVM VMs · PostgreSQL VM · NFS home · SMTP relay for notifications                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Workflow engine = Jira state machine; processes transitions, conditions, validators, post functions  │
+│  Transition      = workflow step moving issue from one status to another                              │
+│  Condition       = rule checked before transition is allowed (e.g. user must be assignee)             │
+│  Validator       = checks field values before transition executes                                     │
+│  Post function   = action executed after transition (e.g. assign to role, fire webhook)               │
+│  JQL             = Jira Query Language; parsed to Lucene query for issue search                       │
+│  Lucene index    = inverted index of issue fields; stored on NFS shared home                          │
+│  Permission filter = search results filtered by current user project/issue permissions                │
+│  Notification scheme = defines which events trigger email and to which recipients                     │
+│  SMTP relay      = outgoing mail server; Jira sends notifications via configured relay                │
+│  Ehcache         = distributed cache; stores resolved permissions and issue data                      │
+│  Attachment      = file stored on NFS under JIRA_HOME/data/attachments                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Database

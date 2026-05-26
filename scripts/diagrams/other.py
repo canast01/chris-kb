@@ -877,3 +877,573 @@ def brocade_san_stack():
 
     lines.append('└' + '─' * W2 + '┘')
     return lines
+
+
+@kb_diagram('linux-arch', 'docs/compute/linux/architecture/index.md',
+            'Linux Architecture — kernel, init, VFS, namespaces, cgroups, memory')
+def linux_arch():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    L, RR = 3, 99
+    L1, R1, L2, R2 = 3, 50, 53, 99
+    lines = []
+    lines.append(title_border(W2, 'Linux Architecture'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(L, RR)))
+    lines.append(R(bMid(L, RR, 'Linux Kernel (monolithic + loadable modules)')))
+    lines.append(R(bMid(L, RR, 'Process scheduler: CFS — Completely Fair Scheduler; time-slices CPU per cgroup weight')))
+    lines.append(R(bMid(L, RR, 'Memory manager: virtual address spaces, page tables, TLB, OOM killer, hugepages')))
+    lines.append(R(bMid(L, RR, 'VFS: Virtual File System layer — unified API over ext4, XFS, Btrfs, tmpfs, procfs')))
+    lines.append(R(bMid(L, RR, 'Syscall interface: glibc wraps int 0x80 / SYSCALL into POSIX functions for userspace')))
+    lines.append(R(bBot(L, RR)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Kernel subsystems provide isolation, scheduling, and I/O to all userspace processes'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'Namespaces & cgroups'), bMid(L2, R2, 'systemd & init'))))
+    lines.append(R(merge(bMid(L1, R1, 'pid: process tree isolation'), bMid(L2, R2, 'PID 1: systemd is init'))))
+    lines.append(R(merge(bMid(L1, R1, 'net: network stack isolation'), bMid(L2, R2, 'Units: service/timer/mount'))))
+    lines.append(R(merge(bMid(L1, R1, 'mnt: mount point isolation'), bMid(L2, R2, 'Targets: multi-user/graphical'))))
+    lines.append(R(merge(bMid(L1, R1, 'cgroup v2: CPU/mem/IO limits'), bMid(L2, R2, 'journald: structured logging'))))
+    lines.append(R(merge(bMid(L1, R1, 'user: UID mapping isolation'), bMid(L2, R2, 'socket activation: on-demand'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86-64 CPUs · RAM DIMMs · NVMe/SAS disks · NIC · iDRAC/iLO BMC · Power & Cooling'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('CFS         = Completely Fair Scheduler; distributes CPU time using a red-black tree'))
+    lines.append(txt_row('VFS         = Virtual File System; kernel abstraction layer over concrete filesystems'))
+    lines.append(txt_row('cgroups     = Control Groups; enforce per-process CPU, memory, and I/O resource limits'))
+    lines.append(txt_row('namespace   = Kernel isolation primitive; wraps PIDs, network, mounts, UIDs independently'))
+    lines.append(txt_row('systemd     = PID 1 init; manages units (services, timers, mounts) and the boot sequence'))
+    lines.append(txt_row('journald    = systemd journal daemon; stores structured binary logs with metadata fields'))
+    lines.append(txt_row('OOM killer  = Out-of-Memory killer; terminates processes when the kernel exhausts RAM'))
+    lines.append(txt_row('hugepages   = 2 MB / 1 GB pages; reduce TLB misses for memory-intensive workloads'))
+    lines.append(txt_row('tmpfs       = RAM-backed filesystem; used for /tmp, /dev/shm, and systemd runtime dirs'))
+    lines.append(txt_row('procfs      = /proc virtual filesystem; exposes kernel and process state as readable files'))
+    lines.append(txt_row('syscall     = Kernel entry point; userspace requests OS services via a defined ABI'))
+    lines.append(txt_row('loadable module= .ko kernel object loaded/unloaded at runtime via modprobe/rmmod'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('linux-arch-how', 'docs/compute/linux/architecture/how-it-works/index.md',
+            'Linux Architecture — How It Works: boot, syscall flow, scheduling, I/O path')
+def linux_arch_how():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    L, RR = 3, 99
+    L1, R1, L2, R2 = 3, 50, 53, 99
+    lines = []
+    lines.append(title_border(W2, 'Linux — How It Works'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(L, RR)))
+    lines.append(R(bMid(L, RR, 'Boot Sequence')))
+    lines.append(R(bMid(L, RR, 'UEFI/BIOS → GRUB2 bootloader → kernel decompresses into RAM → initramfs mounts root')))
+    lines.append(R(bMid(L, RR, 'kernel init: detects hardware, loads drivers, mounts real rootfs, exec /sbin/init')))
+    lines.append(R(bMid(L, RR, 'systemd: reads default.target, activates units in dependency order, starts getty')))
+    lines.append(R(bMid(L, RR, 'Login: PAM stack authenticates user; bash/zsh shell launched as child of sshd/getty')))
+    lines.append(R(bBot(L, RR)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Every process originates from PID 1 through fork(); exec() loads new program images'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'Syscall & I/O Path'), bMid(L2, R2, 'Scheduling & Memory'))))
+    lines.append(R(merge(bMid(L1, R1, 'app calls read() via glibc'), bMid(L2, R2, 'CFS picks next task by vruntime'))))
+    lines.append(R(merge(bMid(L1, R1, 'SYSCALL instruction → ring 0'), bMid(L2, R2, 'context switch saves registers'))))
+    lines.append(R(merge(bMid(L1, R1, 'VFS dispatches to block layer'), bMid(L2, R2, 'page fault → alloc physical page'))))
+    lines.append(R(merge(bMid(L1, R1, 'I/O scheduler (mq-deadline)'), bMid(L2, R2, 'mmap: maps file into VA space'))))
+    lines.append(R(merge(bMid(L1, R1, 'NVMe/SCSI driver sends cmd'), bMid(L2, R2, 'OOM: score + kill on pressure'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86-64 CPUs (rings 0/3) · RAM · NVMe/SAS · PCIe bus · iDRAC BMC · Power & Cooling'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('GRUB2       = GRand Unified Bootloader v2; presents boot menu and loads kernel + initramfs'))
+    lines.append(txt_row('initramfs   = Temporary RAM root used during boot to mount the real root filesystem'))
+    lines.append(txt_row('fork        = Syscall that clones the calling process; child inherits FDs and memory'))
+    lines.append(txt_row('exec        = Syscall family that replaces process image with a new program binary'))
+    lines.append(txt_row('vruntime    = Virtual runtime; CFS metric tracking how much CPU time a task has used'))
+    lines.append(txt_row('context switch= CPU saves registers of running task and loads state of next scheduled task'))
+    lines.append(txt_row('page fault  = MMU exception when a virtual address has no mapped physical page yet'))
+    lines.append(txt_row('mmap        = Memory-map syscall; maps files or anonymous memory into a process VAS'))
+    lines.append(txt_row('mq-deadline = Multi-queue deadline I/O scheduler; prioritises read latency over throughput'))
+    lines.append(txt_row('ring 0      = CPU privilege level for kernel code; ring 3 is unprivileged userspace'))
+    lines.append(txt_row('PAM         = Pluggable Authentication Modules; configures how login and sudo authenticate'))
+    lines.append(txt_row('getty       = Terminal program that presents the login prompt on a virtual console'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('linux-arch-integrations', 'docs/compute/linux/architecture/integrations/index.md',
+            'Linux Architecture — Integrations: AD/LDAP, NFS, monitoring, config mgmt')
+def linux_arch_integrations():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    L, RR = 3, 99
+    L1, R1, L2, R2 = 3, 50, 53, 99
+    lines = []
+    lines.append(title_border(W2, 'Linux Architecture — Integrations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(L, RR)))
+    lines.append(R(bMid(L, RR, 'Integration Points')))
+    lines.append(R(bMid(L, RR, 'Identity: SSSD + realmd joins Linux hosts to Active Directory via Kerberos/LDAP')))
+    lines.append(R(bMid(L, RR, 'Storage: NFS/CIFS mounts, iSCSI initiator, multipath-tools for SAN LUNs')))
+    lines.append(R(bMid(L, RR, 'Monitoring: node_exporter → Prometheus → Grafana; rsyslog/journald → Elasticsearch')))
+    lines.append(R(bMid(L, RR, 'Config mgmt: Ansible (agentless SSH) · Puppet (agent) · Chef · SaltStack (minion)')))
+    lines.append(R(bBot(L, RR)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Linux integrates with enterprise identity, storage, and observability stacks'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'Identity & Auth'), bMid(L2, R2, 'Storage & Network'))))
+    lines.append(R(merge(bMid(L1, R1, 'SSSD: caches AD queries'), bMid(L2, R2, 'NFS v4.1: Kerberos mounts'))))
+    lines.append(R(merge(bMid(L1, R1, 'realmd: domain join tool'), bMid(L2, R2, 'iSCSI: open-iscsi initiator'))))
+    lines.append(R(merge(bMid(L1, R1, 'Kerberos: kinit / klist'), bMid(L2, R2, 'multipath: dm-multipath I/O'))))
+    lines.append(R(merge(bMid(L1, R1, 'PAM: sssd module for AD'), bMid(L2, R2, 'autofs: automount on demand'))))
+    lines.append(R(merge(bMid(L1, R1, 'sudo rules: LDAP-sourced'), bMid(L2, R2, 'CIFS/SMB: mount.cifs shares'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86-64 servers · HBAs/NICs · SAN switches · NAS appliances · iDRAC · Power & Cooling'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('SSSD        = System Security Services Daemon; caches LDAP/Kerberos identity lookups'))
+    lines.append(txt_row('realmd      = Realm Discovery daemon; simplifies domain join with a single command'))
+    lines.append(txt_row('Kerberos    = Ticket-based auth protocol; kinit obtains TGT from AD KDC'))
+    lines.append(txt_row('NFS v4.1    = Network File System v4.1; adds pNFS parallel I/O and session trunking'))
+    lines.append(txt_row('iSCSI       = IP-based SCSI protocol; carries SCSI commands over TCP/IP networks'))
+    lines.append(txt_row('dm-multipath= Device Mapper multipath; aggregates multiple HBA paths to one block device'))
+    lines.append(txt_row('autofs      = Kernel automounter; mounts NFS/CIFS shares on access and unmounts on idle'))
+    lines.append(txt_row('node_exporter= Prometheus agent; exposes host metrics (CPU, mem, disk, net) on port 9100'))
+    lines.append(txt_row('Ansible     = Agentless automation over SSH; uses YAML playbooks for idempotent config'))
+    lines.append(txt_row('Puppet      = Agent-based config mgmt; enforces declared resource state on each run'))
+    lines.append(txt_row('rsyslog     = Reliable syslog daemon; forwards structured log messages over UDP/TCP'))
+    lines.append(txt_row('Elasticsearch= Distributed search and analytics engine for log aggregation at scale'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('linux-arch-design', 'docs/compute/linux/architecture/design-standards/index.md',
+            'Linux Architecture — Design Standards: naming, partitioning, hardening baseline')
+def linux_arch_design():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    L, RR = 3, 99
+    L1, R1, L2, R2 = 3, 50, 53, 99
+    lines = []
+    lines.append(title_border(W2, 'Linux — Design Standards'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(L, RR)))
+    lines.append(R(bMid(L, RR, 'Build & Naming Standards')))
+    lines.append(R(bMid(L, RR, 'Hostname convention: role-dc-seq (e.g. web-lon-001); FQDN in /etc/hosts + DNS')))
+    lines.append(R(bMid(L, RR, 'Approved distros: RHEL 8/9 · Rocky 8/9 · Ubuntu 22.04 LTS · Debian 12')))
+    lines.append(R(bMid(L, RR, 'Kernel: maintain vendor-supported; custom kernels require CAB approval')))
+    lines.append(R(bMid(L, RR, 'Time: chronyd synced to internal NTP; timezone UTC for all server builds')))
+    lines.append(R(bBot(L, RR)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Consistent build standards reduce configuration drift and simplify troubleshooting'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'Partition Layout'), bMid(L2, R2, 'Hardening Baseline'))))
+    lines.append(R(merge(bMid(L1, R1, '/boot: 1 GB xfs (separate)'), bMid(L2, R2, 'SSH: PasswordAuth no; root no'))))
+    lines.append(R(merge(bMid(L1, R1, '/: 20 GB xfs on LVM'), bMid(L2, R2, 'SELinux: enforcing mode'))))
+    lines.append(R(merge(bMid(L1, R1, '/var: 20 GB (log growth)'), bMid(L2, R2, 'firewalld: default-deny zones'))))
+    lines.append(R(merge(bMid(L1, R1, '/var/log: separate 10 GB'), bMid(L2, R2, 'auditd: CIS rule set enabled'))))
+    lines.append(R(merge(bMid(L1, R1, '/home: separate 10 GB'), bMid(L2, R2, 'AIDE: file integrity baseline'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86-64 servers · SSD/NVMe boot · LVM volumes · iDRAC BMC · NIC · Power & Cooling'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('LVM         = Logical Volume Manager; enables flexible resizing of volumes without repartition'))
+    lines.append(txt_row('SELinux     = Security-Enhanced Linux; MAC enforcement with targeted/enforcing policy'))
+    lines.append(txt_row('firewalld   = Dynamic firewall daemon using zones and nftables rules under the hood'))
+    lines.append(txt_row('auditd      = Linux audit daemon; records syscall events for CIS/STIG compliance'))
+    lines.append(txt_row('AIDE        = Advanced Intrusion Detection Environment; detects file system changes'))
+    lines.append(txt_row('chronyd     = NTP client/server daemon; preferred over ntpd on RHEL/Rocky/Ubuntu'))
+    lines.append(txt_row('FQDN        = Fully Qualified Domain Name; hostname + domain (host.example.com)'))
+    lines.append(txt_row('CIS         = Center for Internet Security; publishes hardening benchmarks for Linux'))
+    lines.append(txt_row('STIG        = Security Technical Implementation Guide; DoD hardening specification'))
+    lines.append(txt_row('CAB         = Change Advisory Board; reviews and approves infrastructure changes'))
+    lines.append(txt_row('UTC         = Coordinated Universal Time; used on servers to avoid DST ambiguity'))
+    lines.append(txt_row('XFS         = High-performance journaling filesystem; default on RHEL/Rocky Linux'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('linux-ops', 'docs/compute/linux/operations/index.md',
+            'Linux Operations — patching, backup, monitoring, automation, health')
+def linux_ops():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    L, RR = 3, 99
+    L1, R1, L2, R2 = 3, 50, 53, 99
+    lines = []
+    lines.append(title_border(W2, 'Linux Operations'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(L, RR)))
+    lines.append(R(bMid(L, RR, 'Day-to-Day Linux Operations')))
+    lines.append(R(bMid(L, RR, 'Patching: dnf update / apt upgrade → test → prod ring; kernel updates need reboot')))
+    lines.append(R(bMid(L, RR, 'Monitoring: node_exporter metrics · journalctl · top/htop/sar · iostat · vmstat')))
+    lines.append(R(bMid(L, RR, 'Automation: Ansible playbooks, Bash cron jobs, systemd timers for recurring tasks')))
+    lines.append(R(bMid(L, RR, 'Access: SSH key auth; sudo with NOPASSWD for automation; MFA for privileged users')))
+    lines.append(R(bBot(L, RR)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Operations tasks span patching, monitoring, automation, and user/service management'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'Service Management'), bMid(L2, R2, 'Package & Updates'))))
+    lines.append(R(merge(bMid(L1, R1, 'systemctl start/stop/restart'), bMid(L2, R2, 'dnf update --security'))))
+    lines.append(R(merge(bMid(L1, R1, 'systemctl enable/disable'), bMid(L2, R2, 'apt-get dist-upgrade'))))
+    lines.append(R(merge(bMid(L1, R1, 'journalctl -u svc --since'), bMid(L2, R2, 'rpm -qa / dpkg -l: audit'))))
+    lines.append(R(merge(bMid(L1, R1, 'systemctl daemon-reload'), bMid(L2, R2, 'dnf history / apt log'))))
+    lines.append(R(merge(bMid(L1, R1, 'systemd-analyze blame: slow'), bMid(L2, R2, 'needs-restarting check'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86-64 servers · SSD/NVMe · NIC · iDRAC/iLO BMC · UPS · Power & Cooling'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('dnf         = Dandified YUM; package manager for RHEL/Rocky/Fedora; supports modules'))
+    lines.append(txt_row('apt         = Advanced Package Tool; package manager for Debian/Ubuntu systems'))
+    lines.append(txt_row('systemctl   = CLI for systemd; start/stop/enable/disable/status service units'))
+    lines.append(txt_row('journalctl  = Query systemd journal; filter by unit, time, priority, or boot'))
+    lines.append(txt_row('node_exporter= Prometheus exporter; exposes Linux host metrics on TCP port 9100'))
+    lines.append(txt_row('sar         = System Activity Reporter; collects CPU, memory, I/O stats over time'))
+    lines.append(txt_row('iostat      = I/O statistics; shows disk utilisation, throughput, and await times'))
+    lines.append(txt_row('vmstat      = Virtual memory stats; reports procs, memory, swap, I/O, CPU'))
+    lines.append(txt_row('needs-restarting= dnf plugin that identifies services needing restart after update'))
+    lines.append(txt_row('Ansible     = Agentless SSH automation; idempotent YAML playbooks for Linux config'))
+    lines.append(txt_row('cron        = Classic job scheduler; reads /etc/crontab and user crontabs'))
+    lines.append(txt_row('systemd timer= Modern cron replacement; accurate scheduling with dependency support'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('linux-ops-procedures', 'docs/compute/linux/operations/procedures/index.md',
+            'Linux Operations — Procedures: standard runbooks for common admin tasks')
+def linux_ops_procedures():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    L, RR = 3, 99
+    L1, R1, L2, R2 = 3, 50, 53, 99
+    lines = []
+    lines.append(title_border(W2, 'Linux Operations — Procedures'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(L, RR)))
+    lines.append(R(bMid(L, RR, 'Standard Operating Procedures')))
+    lines.append(R(bMid(L, RR, 'User provisioning: adduser → set password → add to groups → configure sudo')))
+    lines.append(R(bMid(L, RR, 'Disk expansion: pvcreate → vgextend → lvextend → xfs_growfs / resize2fs')))
+    lines.append(R(bMid(L, RR, 'Service deployment: create unit file → systemctl enable → start → validate')))
+    lines.append(R(bMid(L, RR, 'Kernel update: dnf update kernel → grub2-set-default → reboot → verify uname -r')))
+    lines.append(R(bBot(L, RR)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Documented procedures reduce errors and ensure consistent repeatable outcomes'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'Network & Firewall'), bMid(L2, R2, 'Certificate & SSH'))))
+    lines.append(R(merge(bMid(L1, R1, 'ip addr add: add IP address'), bMid(L2, R2, 'ssh-keygen -t ed25519'))))
+    lines.append(R(merge(bMid(L1, R1, 'nmcli: NetworkManager config'), bMid(L2, R2, 'ssh-copy-id to target host'))))
+    lines.append(R(merge(bMid(L1, R1, 'firewall-cmd --permanent add'), bMid(L2, R2, 'openssl req: generate CSR'))))
+    lines.append(R(merge(bMid(L1, R1, 'ss -tlnp: verify open ports'), bMid(L2, R2, 'certbot: ACME cert renewal'))))
+    lines.append(R(merge(bMid(L1, R1, 'ip route: add/del routes'), bMid(L2, R2, 'known_hosts maintenance'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86-64 servers · LVM volumes · NIC · iDRAC/iLO BMC · NTP · Power & Cooling'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('pvcreate    = Initialise a block device as an LVM Physical Volume'))
+    lines.append(txt_row('vgextend    = Add a new Physical Volume to an existing Volume Group'))
+    lines.append(txt_row('lvextend    = Grow a Logical Volume; must be followed by filesystem resize'))
+    lines.append(txt_row('xfs_growfs  = Online-resize an XFS filesystem to fill available LV space'))
+    lines.append(txt_row('resize2fs   = Online or offline-resize an ext4 filesystem after lvextend'))
+    lines.append(txt_row('grub2-set-default= Select which kernel entry GRUB2 boots by default'))
+    lines.append(txt_row('nmcli       = NetworkManager CLI; manages connections, devices, and profiles'))
+    lines.append(txt_row('firewall-cmd= CLI for firewalld; adds/removes services, ports, and rich rules'))
+    lines.append(txt_row('ss          = Socket statistics; replaces netstat for viewing open ports/connections'))
+    lines.append(txt_row('ssh-keygen  = Generates RSA/Ed25519 key pairs for SSH public-key authentication'))
+    lines.append(txt_row('openssl req = Generates a Certificate Signing Request from a private key'))
+    lines.append(txt_row("certbot     = ACME client for Let's Encrypt; automates TLS cert issuance and renewal"))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('linux-ops-backup', 'docs/compute/linux/operations/backup-restore/index.md',
+            'Linux Operations — Backup & Restore: rsync, tar, snapshot, Bacula/Veeam')
+def linux_ops_backup():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    L, RR = 3, 99
+    L1, R1, L2, R2 = 3, 50, 53, 99
+    lines = []
+    lines.append(title_border(W2, 'Linux — Backup & Restore'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(L, RR)))
+    lines.append(R(bMid(L, RR, 'Backup Strategy')))
+    lines.append(R(bMid(L, RR, '3-2-1 rule: 3 copies · 2 different media · 1 offsite / cloud (S3/Glacier)')))
+    lines.append(R(bMid(L, RR, 'Full weekly + incremental daily; retention: 30 days local, 1 year tape/object')))
+    lines.append(R(bMid(L, RR, 'LVM snapshots: instant consistent point-in-time for live volumes before changes')))
+    lines.append(R(bMid(L, RR, 'Test restores: monthly drill to verify backup integrity and RTO compliance')))
+    lines.append(R(bBot(L, RR)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Backup strategy must balance recovery time objective with storage cost'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'File-Level Tools'), bMid(L2, R2, 'Enterprise Backup'))))
+    lines.append(R(merge(bMid(L1, R1, 'rsync -avz: incremental sync'), bMid(L2, R2, 'Bacula: client/director/SD'))))
+    lines.append(R(merge(bMid(L1, R1, 'tar czf: archive + compress'), bMid(L2, R2, 'Veeam Agent for Linux'))))
+    lines.append(R(merge(bMid(L1, R1, 'dd if=/dev/sda: disk image'), bMid(L2, R2, 'Amanda: open-source backup'))))
+    lines.append(R(merge(bMid(L1, R1, 'duplicati: encrypted backup'), bMid(L2, R2, 'Commvault: enterprise CBM'))))
+    lines.append(R(merge(bMid(L1, R1, 'restic: dedup + encryption'), bMid(L2, R2, 'NBU: NetBackup agent mode'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86-64 servers · NAS/SAN storage · tape library · S3 object store · Power & Cooling'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('3-2-1 rule  = 3 copies of data on 2 different media with 1 copy offsite'))
+    lines.append(txt_row('RTO         = Recovery Time Objective; max acceptable time to restore a service'))
+    lines.append(txt_row('RPO         = Recovery Point Objective; max acceptable data loss measured in time'))
+    lines.append(txt_row('LVM snapshot= CoW point-in-time copy of an LV; consistent backup without stopping service'))
+    lines.append(txt_row('rsync       = Remote sync tool; copies only changed blocks; supports SSH transport'))
+    lines.append(txt_row('tar         = Tape ARchive; bundles files into a single stream; combined with gzip/bzip2'))
+    lines.append(txt_row('dd          = Data Duplicator; copies raw blocks; used for disk imaging and cloning'))
+    lines.append(txt_row('restic      = Modern backup tool; content-addressable dedup with AES-256 encryption'))
+    lines.append(txt_row('Bacula      = Open-source network backup; director/storage daemon/file daemon model'))
+    lines.append(txt_row('Veeam Agent = Physical Linux backup agent; image-level backup to Veeam repository'))
+    lines.append(txt_row('CBM         = Changed Block Monitoring; Commvault incremental-forever backup method'))
+    lines.append(txt_row('NBU         = NetBackup; Veritas enterprise backup platform with agent and catalog'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('linux-ops-health', 'docs/compute/linux/operations/health-checks/index.md',
+            'Linux Operations — Health Checks: CPU, memory, disk, network, services')
+def linux_ops_health():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    L, RR = 3, 99
+    L1, R1, L2, R2 = 3, 50, 53, 99
+    lines = []
+    lines.append(title_border(W2, 'Linux — Health Checks'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(L, RR)))
+    lines.append(R(bMid(L, RR, 'Health Check Framework')))
+    lines.append(R(bMid(L, RR, 'Daily: check failed services · disk usage · load average · OOM log entries')))
+    lines.append(R(bMid(L, RR, 'Weekly: review auditd logs · zombie processes · swap usage · NIC error counters')))
+    lines.append(R(bMid(L, RR, 'Monthly: kernel errata check · LVM free extents · certificate expiry · cron jobs')))
+    lines.append(R(bMid(L, RR, 'Alerting: Prometheus rules → Alertmanager → PagerDuty / Slack / email')))
+    lines.append(R(bBot(L, RR)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Proactive health checks prevent incidents; alerts surface issues before users notice'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'Resource Checks'), bMid(L2, R2, 'Service & Log Checks'))))
+    lines.append(R(merge(bMid(L1, R1, 'top/htop: CPU + mem live'), bMid(L2, R2, 'systemctl --failed: list'))))
+    lines.append(R(merge(bMid(L1, R1, 'df -h: filesystem usage'), bMid(L2, R2, 'journalctl -p err: errors'))))
+    lines.append(R(merge(bMid(L1, R1, 'free -h: RAM + swap view'), bMid(L2, R2, 'dmesg -T: kernel messages'))))
+    lines.append(R(merge(bMid(L1, R1, 'iostat -x: disk await/util'), bMid(L2, R2, 'ss -s: socket summary'))))
+    lines.append(R(merge(bMid(L1, R1, 'uptime: load avg 1/5/15'), bMid(L2, R2, 'ip -s link: NIC error ctrs'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86-64 servers · RAM DIMMs · NVMe/SSD · NIC · iDRAC/iLO IPMI · Power & Cooling'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('load average= 1/5/15-min exponential moving avg of runnable + uninterruptible tasks'))
+    lines.append(txt_row('OOM         = Out-of-Memory; kernel kills processes when physical + swap RAM exhausted'))
+    lines.append(txt_row('zombie      = Process in Z state; exited but parent has not called wait(); check ppid'))
+    lines.append(txt_row('df          = Disk Free; reports filesystem usage by mount point; -h for human-readable'))
+    lines.append(txt_row('iostat      = I/O Stat; reports device utilisation, IOPS, await (ms), and throughput'))
+    lines.append(txt_row('dmesg       = Kernel ring buffer; shows hardware errors, driver messages, and panics'))
+    lines.append(txt_row('Prometheus  = Time-series metrics database; scrapes exporters on configured intervals'))
+    lines.append(txt_row('Alertmanager= Prometheus companion; routes alerts to receivers (PagerDuty, email, Slack)'))
+    lines.append(txt_row('ss          = Socket Statistics; replacement for netstat; faster via kernel netlink'))
+    lines.append(txt_row('journalctl  = Query systemd journal; use -p err for errors, -b for current boot'))
+    lines.append(txt_row('LVM extents = Free PE (Physical Extents) in a VG; available for LV growth'))
+    lines.append(txt_row('NIC error counters= rx_errors/tx_errors on interface; indicate cabling or driver issues'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('linux-ops-install', 'docs/compute/linux/operations/install-upgrade/index.md',
+            'Linux Operations — Install & Upgrade: OS build, kickstart, dnf, kernel')
+def linux_ops_install():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    L, RR = 3, 99
+    L1, R1, L2, R2 = 3, 50, 53, 99
+    lines = []
+    lines.append(title_border(W2, 'Linux — Install & Upgrade'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(L, RR)))
+    lines.append(R(bMid(L, RR, 'OS Installation Methods')))
+    lines.append(R(bMid(L, RR, 'Manual: boot ISO → Anaconda/text installer → partition → packages → GRUB install')))
+    lines.append(R(bMid(L, RR, 'Kickstart (RHEL/Rocky): ks.cfg defines locale, packages, disk, users, post-scripts')))
+    lines.append(R(bMid(L, RR, 'Preseed (Debian/Ubuntu): auto-installs from netboot DHCP + TFTP PXE boot')))
+    lines.append(R(bMid(L, RR, 'Cloud-init: first-boot configuration for cloud/VM images via user-data metadata')))
+    lines.append(R(bBot(L, RR)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Automated installs ensure repeatable, drift-free builds across the fleet'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'Package Upgrades'), bMid(L2, R2, 'In-Place Upgrades'))))
+    lines.append(R(merge(bMid(L1, R1, 'dnf update: all packages'), bMid(L2, R2, 'RHEL 8→9: leapp upgrade'))))
+    lines.append(R(merge(bMid(L1, R1, 'dnf update kernel: kernel'), bMid(L2, R2, 'Ubuntu: do-release-upgrade'))))
+    lines.append(R(merge(bMid(L1, R1, 'dnf history: audit trail'), bMid(L2, R2, 'leapp preupgrade: pre-check'))))
+    lines.append(R(merge(bMid(L1, R1, 'apt upgrade / dist-upgrade'), bMid(L2, R2, 'ELevate: CentOS 7→8→9'))))
+    lines.append(R(merge(bMid(L1, R1, 'unattended-upgrades: auto'), bMid(L2, R2, 'Snapshot before upgrade'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86-64 servers · PXE/TFTP network · SSD/NVMe · iDRAC virtual media · Power & Cooling'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Kickstart   = RHEL/Rocky automated install file; defines all install parameters'))
+    lines.append(txt_row('Preseed     = Debian/Ubuntu automated install; answers installer questions via DHCP'))
+    lines.append(txt_row('Anaconda    = Red Hat graphical/TUI installer; interprets kickstart files'))
+    lines.append(txt_row('PXE         = Preboot Execution Environment; boots host over network from TFTP server'))
+    lines.append(txt_row('cloud-init  = First-boot tool for cloud VMs; applies user-data from metadata service'))
+    lines.append(txt_row('leapp       = Red Hat in-place upgrade tool; RHEL 7→8 and RHEL 8→9 migration'))
+    lines.append(txt_row('ELevate     = AlmaLinux project tool; migrates CentOS 7/8 to RHEL-compatible distros'))
+    lines.append(txt_row('do-release-upgrade= Ubuntu official in-place major version upgrade command'))
+    lines.append(txt_row('unattended-upgrades= Debian/Ubuntu daemon for automatic security patch application'))
+    lines.append(txt_row('GRUB2       = Boot loader installed to MBR/EFI; presents kernel selection menu'))
+    lines.append(txt_row('dnf history = Audit log of all dnf transactions; allows undo of package changes'))
+    lines.append(txt_row('leapp preupgrade= Pre-flight check for RHEL upgrades; reports inhibitors before proceeding'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram('linux-ops-scripts', 'docs/compute/linux/operations/scripts/index.md',
+            'Linux Operations — Scripts: Bash/Python automation patterns and examples')
+def linux_ops_scripts():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    L, RR = 3, 99
+    L1, R1, L2, R2 = 3, 50, 53, 99
+    lines = []
+    lines.append(title_border(W2, 'Linux — Scripts & Automation'))
+    lines.append(txt_row())
+
+    lines.append(R(bTop(L, RR)))
+    lines.append(R(bMid(L, RR, 'Scripting Standards')))
+    lines.append(R(bMid(L, RR, 'Bash: shebang #!/bin/bash; set -euo pipefail; trap ERR for safe error handling')))
+    lines.append(R(bMid(L, RR, 'Python: use venv / pipenv; type hints; logging module; argparse for CLI args')))
+    lines.append(R(bMid(L, RR, 'Idempotency: scripts must be safely re-runnable without double-applying changes')))
+    lines.append(R(bMid(L, RR, 'Storage: version-controlled in Git; tested in staging before production rollout')))
+    lines.append(R(bBot(L, RR)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Well-structured scripts reduce human error and enable reliable automation at scale'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'Bash Patterns'), bMid(L2, R2, 'Python Patterns'))))
+    lines.append(R(merge(bMid(L1, R1, 'set -euo pipefail: strict'), bMid(L2, R2, 'subprocess.run: exec cmds'))))
+    lines.append(R(merge(bMid(L1, R1, 'trap cleanup EXIT ERR'), bMid(L2, R2, 'paramiko: SSH automation'))))
+    lines.append(R(merge(bMid(L1, R1, 'getopts / getopt: arg parse'), bMid(L2, R2, 'fabric: remote execution'))))
+    lines.append(R(merge(bMid(L1, R1, 'logger: syslog from script'), bMid(L2, R2, 'click: CLI framework'))))
+    lines.append(R(merge(bMid(L1, R1, 'lockfile: prevent parallel'), bMid(L2, R2, 'jinja2: config templating'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('x86-64 servers · Git repo server · cron/systemd timers · NIC · Power & Cooling'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('set -e      = Exit immediately if any command returns non-zero exit code'))
+    lines.append(txt_row('set -u      = Treat unset variables as errors; prevents typo variable bugs'))
+    lines.append(txt_row('set -o pipefail= Propagate pipeline failures; catches errors in piped commands'))
+    lines.append(txt_row('trap        = Register signal/event handler; useful for cleanup on EXIT or ERR'))
+    lines.append(txt_row('idempotency = Property of an operation that produces same result on repeated runs'))
+    lines.append(txt_row('getopts     = Bash built-in for short option parsing (-v, -f); POSIX compliant'))
+    lines.append(txt_row('logger      = Shell command that writes messages to syslog / systemd journal'))
+    lines.append(txt_row('paramiko    = Python SSH library; programmatic remote command execution'))
+    lines.append(txt_row('fabric      = Python SSH automation; high-level remote task execution over SSH'))
+    lines.append(txt_row('click       = Python CLI framework; decorators for commands, options, arguments'))
+    lines.append(txt_row('jinja2      = Python template engine; used by Ansible for config file rendering'))
+    lines.append(txt_row('shebang     = First line of script (#!/bin/bash); tells kernel which interpreter to use'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines

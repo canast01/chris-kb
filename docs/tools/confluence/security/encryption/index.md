@@ -45,15 +45,49 @@ server {
     }
 }
 ```
-
-```bash
-# Verify TLS configuration
-openssl s_client -connect confluence.example.local:443 -tls1_3 </dev/null 2>/dev/null | \
-  openssl x509 -noout -subject -dates
-
-# Check for weak protocol support (should fail)
-openssl s_client -connect confluence.example.local:443 -tls1 </dev/null 2>&1 | grep "handshake failure"
-openssl s_client -connect confluence.example.local:443 -tls1_1 </dev/null 2>&1 | grep "handshake failure"
+┌─────────────────────────────────────── Confluence — Encryption ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                         Confluence Encryption — In Transit and At Rest                        │   │
+│   │   In transit: TLS 1.2+ via reverse proxy (nginx/Apache/F5); Tomcat on plain HTTP internally   │   │
+│   │        At rest: DB encryption via PostgreSQL TDE or OS-level dm-crypt/LUKS on DB volume       │   │
+│   │        NFS: encrypt NFS datastore at hypervisor or storage array level for attachments        │   │
+│   │          Secrets: DB password in confluence.cfg.xml; use vault or encrypted env vars          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Encryption must cover every data path: browser, app-to-DB, and storage volumes                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  In Transit                  │  │                   At Rest                   │   │
+│   │             TLS 1.2+ at LB/proxy             │  │              DB: dm-crypt/LUKS              │   │
+│   │             HTTP internally only             │  │             NFS: storage encrypt            │   │
+│   │             LDAP: LDAPS/StartTLS             │  │              Backup files: GPG              │   │
+│   │              DB: SSL JDBC param              │  │           VM disk: vSphere encrypt          │   │
+│   │             Cert: 2048-bit RSA+              │  │              Vault: secret mgmt             │   │
+│   │             HSTS header: enabled             │  │             Key rotation: annual            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Reverse proxy VM · Confluence app VMs · PostgreSQL VM with encrypted disk · NFS datastore            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  TLS 1.2+     = Transport Layer Security; minimum version 1.2; prefer 1.3 for new deployments         │
+│  HSTS         = HTTP Strict Transport Security; forces HTTPS for all subsequent browser requests      │
+│  LDAPS        = LDAP over SSL (port 636); encrypts directory sync traffic                             │
+│  SSL JDBC     = sslmode=require in JDBC URL; encrypts app-to-DB connection                            │
+│  dm-crypt     = Linux kernel disk encryption; LUKS format; transparent to application                 │
+│  LUKS         = Linux Unified Key Setup; standard for Linux full-disk encryption                      │
+│  GPG          = GNU Privacy Guard; used to encrypt backup tar archives                                │
+│  vSphere encrypt = VM encryption at hypervisor level using vSphere Native Key Provider                │
+│  Vault        = HashiCorp Vault or equivalent; stores DB passwords and API keys securely              │
+│  TDE          = Transparent Data Encryption; PostgreSQL enterprise extension or pgcrypto              │
+│  Key rotation = replacing encryption keys annually; requires planned maintenance window               │
+│  cert         = X.509 certificate; signed by internal CA or public CA (Let's Encrypt)                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### TLS at Tomcat (Direct Confluence)

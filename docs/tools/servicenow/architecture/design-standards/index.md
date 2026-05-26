@@ -115,43 +115,49 @@ flowchart TD
     G -- Rejected --> I
     H --> K --> L
 ```
-
-### CAB Meeting Standards
-
-- **Frequency:** Weekly, every Wednesday at 14:00 local time
-- **Submission deadline:** Changes must be in **Scheduled** state by Monday 17:00 to appear on Wednesday's agenda
-- **Attendees:** Change Manager, Service Owners, Infrastructure leads, Business representatives
-- **Quorum:** Minimum 3 service owners + Change Manager
-- **Minutes:** Auto-generated from CAB workbench; stored in Knowledge Base
-
----
-
-## Change Window Standards
-
-| Window | Schedule | Duration | Permitted Risk Levels |
-|---|---|---|---|
-| Standard Business Hours | Mon–Fri, 08:00–17:00 | Any | Low only |
-| Extended Hours | Mon–Fri, 17:00–22:00 | Up to 4h | Low, Medium |
-| Primary Maintenance | Saturday, 00:00–06:00 | Up to 6h | All (excluding Critical\*) |
-| Emergency Maintenance | Any time | As needed | Emergency changes only |
-
-\* Critical-risk changes require explicit ECAB approval and a dedicated 8-hour window with a 2-hour rollback buffer.
-
-**Blackout periods** (no changes permitted without ECAB exception):
-- Financial quarter-end (last 3 business days of quarter)
-- Year-end close (Dec 26 – Jan 2)
-- Major business events (announced via Change Freeze notices)
-
----
-
-## CMDB CI Naming Conventions
-
-Consistent CI names enable reliable service mapping and automation. Apply these standards to all CIs created manually or via Discovery.
-
-### General Format
-
-```text
-<site>-<type>-<function>-<sequence>
+┌──────────────────────────────────── ServiceNow — Design Standards ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                         ServiceNow Design and Configuration Standards                         │   │
+│   │                MID Server: min 4 vCPU / 8 GB RAM; Windows or Linux; n+1 for HA                │   │
+│   │           Instance: prod/test/dev; clone prod to test monthly for regression testing          │   │
+│   │             Script standards: always use GlideRecord; avoid cross-scope scripting             │   │
+│   │          Change management: all SNOW config changes via Update Set; tracked in source         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SNOW design standards govern MID sizing, scripting, and config management                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             MID Server Standards             │  │              Platform Standards             │   │
+│   │               Min 4 vCPU/8 GB                │  │           Update Sets for changes           │   │
+│   │              n+1 MID redundancy              │  │            Scripting: GlideRecord           │   │
+│   │              Outbound 443 only               │  │            No cross-scope scripts           │   │
+│   │            Dedicated MID per env             │  │            Test in sub-prod first           │   │
+│   │              JVM: 4 GB heap min              │  │             CMDB: CI naming std             │   │
+│   │             OS patching schedule             │  │            SLA definition review            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MID Server VMs (prod/test/dev) · firewall allowing outbound 443 only                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Update Set    = container for SNOW config changes; migrate via XML export/import                     │
+│  GlideRecord   = SNOW server-side API; always preferred over raw SQL or direct DB                     │
+│  Cross-scope   = accessing data from different application scope; use public APIs                     │
+│  MID HA        = n+1 MID Servers; SNOW auto-fails over to available MID                               │
+│  Clone         = copy prod data to test/dev; Admin > System Clone > Clone Instance                    │
+│  CI naming     = consistent CMDB naming: hostname in lowercase, FQDN preferred                        │
+│  SLA definition = Agreement + SLA Definition + Workflow; reviewed quarterly                           │
+│  Dedicated MID = separate MID Server per environment (prod/test) to avoid confusion                   │
+│  JVM heap      = set in JAVA_OPTS in MID Server wrapper.conf; min 4 GB for prod                       │
+│  Script scope  = ServiceNow app scope isolation; prevents cross-app data access                       │
+│  Sub-prod test = always test Update Sets in test before applying to prod                              │
+│  Outbound 443  = MID Server only needs outbound HTTPS to *.service-now.com                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 | Token | Values | Example |

@@ -17,32 +17,48 @@ Global Permissions
         └── Issue Security Scheme (per project)
               └── Issue Security Level (per issue)
 ```
-
-Understanding this hierarchy prevents common misconfigurations where global permissions inadvertently grant access intended to be project-scoped.
-
----
-
-## Global Permissions
-
-Administration → System → Global Permissions
-
-| Permission | Default Grantees | Recommended Grantees |
-|---|---|---|
-| Jira System Administrators | jira-administrators | Named admin group only |
-| Jira Administrators | jira-administrators | Named admin group only |
-| Browse Users and Groups | Any logged-in user | Jira Users group |
-| Create Shared Objects | Any logged-in user | Jira Users group |
-| Manage Group Filter Subscriptions | Any logged-in user | jira-administrators |
-| Bulk Change | Any logged-in user | Project managers group |
-
-```bash
-# Audit global permissions via REST API
-curl -u "admin:TOKEN" \
-  "https://jira.corp.example.com/rest/api/2/permissions/global" | jq .
-
-# Cloud equivalent
-curl -u "user@corp.example.com:API_TOKEN" \
-  "https://your-org.atlassian.net/rest/api/3/permissions" | jq .
+┌──────────────────────────────────────── Jira — Access Control ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 Jira Access Control Hierarchy                                 │   │
+│   │         Global perms → Permission scheme → Issue security scheme (most specific wins)         │   │
+│   │        Groups from LDAP/AD; assign groups to project roles; roles to permission schemes       │   │
+│   │       Issue security: hides individual issues from users without assigned security level      │   │
+│   │         Jira Admins group: limit to 2-3 named accounts; never use for day-to-day work         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Layers: global → project scheme → issue security; LDAP groups feed project roles                   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Global Perms        │  │        Project Perms        │  │        Issue Security       │   │
+│   │       Administer Jira       │  │        Browse project       │  │       Security levels       │   │
+│   │       Create projects       │  │        Create issues        │  │       Assign to issue       │   │
+│   │         Browse users        │  │         Edit issues         │  │        Default level        │   │
+│   │        Manage groups        │  │        Admin project        │  │       Restricted level      │   │
+│   │       LDAP group sync       │  │         Role members        │  │       Inherited child       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LDAP/AD for group source · Jira DB stores permission ACLs · IdP for auth                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Global permission = instance-wide; Administer Jira, Create Projects, Browse Users                    │
+│  Permission scheme = project permission template; assign to one or many projects                      │
+│  Issue security    = fine-grained visibility; can hide issues even within same project                │
+│  Project role      = named membership group per project (e.g. Developers, Reporters)                  │
+│  Role member       = user or group assigned to a role in a specific project                           │
+│  LDAP group sync   = groups imported from AD; assign to project roles                                 │
+│  Security level    = named tier within issue security scheme; assigned per issue                      │
+│  Browse project    = minimum permission to see a project and its issues                               │
+│  Admin project     = can manage project settings, components, versions                                │
+│  Administer Jira   = full admin rights; can create schemes, users, and projects                       │
+│  Issue inherit     = issue security can be inherited from parent issue                                │
+│  Audit log         = Admin > Audit Log; records permission and scheme changes                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Critical control:** Remove `jira-software-users` from global Browse Users permission if the user directory is large — it can expose all usernames to every authenticated user.

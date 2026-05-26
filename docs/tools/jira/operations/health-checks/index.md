@@ -44,23 +44,36 @@ flowchart TD
     style ALERT_CLUSTER fill:#c0392b,color:#fff
     style ALERT_PERF fill:#e67e22,color:#fff
 ```
-
----
-
-## 1. Service Status
-
-### Check Jira Process (All Nodes)
-
-```bash
-# systemd
-systemctl status jira
-
-# Process check
-ps aux | grep -E '[j]ira' | awk '{print $1, $2, $3, $4, $11}'
-
-# Jira health endpoint
-curl -s https://jira.example.com/status | python3 -m json.tool
-# Expected: {"state":"RUNNING"}
+┌──────────────────────────────────────── Jira — Health Checks ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Application Health              │  │            Infrastructure Health            │   │
+│   │            GET /status → RUNNING             │  │               DB connectivity               │   │
+│   │               Heap usage < 80%               │  │                  Disk < 80%                 │   │
+│   │                No OOM in logs                │  │               NFS mount active              │   │
+│   │               Lucene index OK                │  │               Backup completed              │   │
+│   │              Background jobs OK              │  │                SMTP reachable               │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Jira app VMs · PostgreSQL DB · NFS shared home · SMTP relay                                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  GET /status    = curl http://localhost:8080/status; returns RUNNING or error                         │
+│  Heap check     = Admin > System Info > JVM Memory Usage; alert if >80%                               │
+│  Lucene index   = Admin > System > Indexing; shows index size and last update time                    │
+│  Background jobs = Admin > Scheduled Jobs; verify last-run time and error count                       │
+│  DB check       = psql -U jira -c "SELECT 1;" to confirm connectivity                                 │
+│  Disk check     = df -h JIRA_HOME; alert at 80%; attachments fill disk gradually                      │
+│  NFS check      = mount | grep nfs; ls JIRA_HOME/data/attachments                                     │
+│  SMTP check     = Admin > Outgoing Mail > Send Test Email                                             │
+│  Backup check   = verify pg_dump file timestamp and non-zero size                                     │
+│  OOM check      = grep OutOfMemoryError catalina.out; OOM indicates heap too small                    │
+│  Scheduled jobs = Jira runs DB clean-up, indexing, and mail jobs on schedule                          │
+│  JMX            = expose JVM metrics; scrape with Prometheus JMX exporter                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Check Load Balancer Pool
