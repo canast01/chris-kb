@@ -103,49 +103,51 @@ ssh root@dcnm-dc1-standby.corp.example.com
 /usr/local/cisco/dcm/dcnm/bin/dcnm-ha-status.sh
 # Expected: ACTIVE/STANDBY pair, VIP reachable
 ```
-
----
-
-## In-Place Upgrade
-
-### Pre-Upgrade Checklist
-
-- [ ] Review DCNM Release Notes for the target version; confirm upgrade path
-- [ ] Take a VM snapshot in vCenter
-- [ ] Run a full database backup: `pg_dumpall -U postgres > /tmp/dcnm-pre-upgrade.sql`
-- [ ] Export zone sets for all fabrics from the DCNM GUI
-- [ ] Confirm no critical alarms are active
-- [ ] Schedule a maintenance window (DCNM unavailable for 20-40 minutes)
-- [ ] Note the current DCNM version: **Administration > System > About**
-
-### Upgrade via GUI
-
-1. Download the DCNM upgrade RPM or patch file from Cisco.
-2. Navigate to **Administration > System > Software Update**.
-3. Click **Upload** and select the upgrade file.
-4. Review the target version displayed.
-5. Click **Apply**. The upgrade starts immediately.
-6. The DCNM GUI becomes unavailable for 20–40 minutes.
-7. After the GUI returns, verify: **Administration > System > About** shows the new version.
-8. Verify all services are running: **Administration > System Status**.
-
-### Upgrade via CLI
-
-```bash
-# Transfer upgrade package to DCNM
-scp DCNM-x86_64.11.5.4.bin root@dcnm-dc1.corp.example.com:/tmp/
-
-# SSH to DCNM and run upgrade
-ssh root@dcnm-dc1.corp.example.com
-
-chmod +x /tmp/DCNM-x86_64.11.5.4.bin
-/tmp/DCNM-x86_64.11.5.4.bin -- --quiet
-
-# Monitor upgrade
-tail -f /var/log/dcnm/install.log
-
-# After completion, verify version
-grep "dcnm-server" /var/log/dcnm/server.log | grep "Starting" | tail -1
+┌────────────────────────────────── Cisco DCNM — Install and Upgrade ───────────────────────────────────┐
+│                                                                                                       │
+│  DCNM deployment: OVA/ISO to vSphere, initial config, switch discovery, upgrade path.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Fresh Install Steps              │  │            Initial Configuration            │   │
+│   │        1. Download DCNM OVA from CCO         │  │          1. Set hostname + IP + DNS         │   │
+│   │           2. Deploy OVA in vSphere           │  │           2. Configure NTP servers          │   │
+│   │       3. Boot + initial config wizard        │  │           3. Set admin credentials          │   │
+│   │        4. 8 vCPU / 32 GB RAM (large)         │  │           4. Configure ISE TACACS+          │   │
+│   │          5. 2 TB datastore for perf          │  │           5. Discover MDS switches          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  OVA deployment is automated; ISE and NTP must be configured before adding switches.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Upgrade Procedure               │  │           Post-Upgrade Validation           │   │
+│   │           1. Backup DCNM DB to NFS           │  │         1. Verify all switches shown        │   │
+│   │           2. Download new DCNM OVA           │  │         2. Check SNMP alert forward         │   │
+│   │        3. Deploy standby; restore DB         │  │         3. Re-test ISE TACACS+ auth         │   │
+│   │         4. Validate standby function         │  │        4. Verify NFS backup schedule        │   │
+│   │          5. Swing DNS; decom old VM          │  │          5. Confirm zone push works         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vSphere host · 2 TB datastore · management network · NFS backup share                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CCO             = Cisco Connection Online; software download portal (software.cisco.com)             │
+│  OVA             = Open Virtual Appliance; DCNM packaged as vSphere-ready VM template                 │
+│  Config wizard   = DCNM first-boot setup; sets IP, NTP, credentials interactively                     │
+│  ISE             = Cisco Identity Services Engine; provides TACACS+ for DCNM auth                     │
+│  NFS backup      = nightly DCNM DB backup; required before any upgrade                                │
+│  Swing DNS       = update DNS A record to new DCNM VM IP after validation                             │
+│  Standby upgrade = deploy new DCNM version as standby first; validate then swing                      │
+│  SNMP forwarding = DCNM forwards switch alerts to NMS; test after every upgrade                       │
+│  Zone push test  = verify DCNM can activate zone set on MDS switch after upgrade                      │
+│  vCPU / RAM      = DCNM large mode: 8 vCPU / 32 GB; medium: 4 vCPU / 16 GB                            │
+│  2 TB datastore  = DCNM storage for 90-day performance data; Elasticsearch store                      │
+│  NTP             = Network Time Protocol; timestamps required for event correlation                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Post-Upgrade Validation
