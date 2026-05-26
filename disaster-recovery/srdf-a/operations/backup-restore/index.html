@@ -4635,47 +4635,6 @@
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Or use -sid flag on each command</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;rdf_group&gt;
 </code></pre></div>
-┌────────────────────────────────────── SRDF/A — Backup &amp; Restore ──────────────────────────────────────┐
-│                                                                                                       │
-│    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Backup (Protection)              │  │              Restore (Recovery)             │   │
-│   │               symrdf establish               │  │          symrdf failover / failback         │   │
-│   │              Quiesce source I/O              │  │            Select recovery point            │   │
-│   │             Take snapshot / CBT              │  │           Mount or copy to target           │   │
-│   │           Transfer changed blocks            │  │              Validate integrity             │   │
-│   │             Commit to repository             │  │             Restart application             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                      Key SRDF/A Commands                                      │   │
-│   │                                Backup trigger  : symrdf establish                             │   │
-│   │                           List points     : symrdf failover / failback                        │   │
-│   │                                  Health status   : symrdf query                               │   │
-│   │                                 Retention mgmt  : symrdf verify                               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
-│  R1            = source SRDF volume on production array; host writes flow here                        │
-│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
-│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
-│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
-│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
-│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
-│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
-│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
-│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
-│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
-│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
-│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
-│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Device states to understand:**
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| State | Meaning |

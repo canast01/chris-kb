@@ -3886,27 +3886,6 @@
     iamRole --&gt; envVars
     envVars --&gt; tfProvider
     tfProvider --&gt; cloudAPI</code></pre>
-┌───────────────────────────────────── Terraform — Authentication ──────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ Terraform provider authentication: OIDC (CI), IAM instance profile (EC2), CLI profile (local) │   │
-│   │          AWS: aws provider picks up credential chain; for CI use OIDC role assumption         │   │
-│   │      vSphere: vsphere_user + vsphere_password via env vars; or vault-managed credentials      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Cloud Auth (OIDC)               │  │                Local Dev Auth               │   │
-│   │         GitHub OIDC → AWS AssumeRole         │  │        aws configure (named profile)        │   │
-│   │         azure/login OIDC → federated         │  │         export TF_VAR_vsphere_pw=...        │   │
-│   │         GCP: Workload Identity OIDC          │  │         export AWS_PROFILE=myprofile        │   │
-│   │         No stored access keys in CI          │  │       Vault: vault login then TF runs       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Credential chain= Terraform AWS provider uses same chain as boto3/aws CLI for auth      │   │
-│   │TF_VAR_        = environment variable prefix; TF_VAR_vsphere_password maps to var.vsphere_passw│   │
-│   │  Vault agent    = injects secrets into env before terraform runs; no secrets in process args  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```hcl
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a># provider.tf — uses environment variables automatically
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>provider &quot;aws&quot; {

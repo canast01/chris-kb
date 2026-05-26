@@ -3849,28 +3849,6 @@
     S3 --&gt; A[Upload Artifact]
     S5 --&gt; A
     A --&gt; NOTIFY[Notification / Downstream Jobs]</code></pre>
-┌──────────────────────────────────── GitHub Actions — How It Works ────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ Event fires → GitHub evaluates on: triggers → matching workflows queued → runner picks up job │   │
-│   │     Runner clones repo, restores cache, executes steps, uploads artifacts, reports status     │   │
-│   │          Secrets injected as env vars at runtime; masked in log output automatically          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Trigger Phase        │  │       Execution Phase       │  │         Result Phase        │   │
-│   │   Event: push/PR/schedule   │  │      Runner accepts job     │  │     Status check posted     │   │
-│   │    on: filter evaluation    │  │        Repo checkout        │  │     Artifacts available     │   │
-│   │     Workflow file parsed    │  │        Cache restore        │  │      Logs retained 90d      │   │
-│   │     Jobs queued parallel    │  │      Steps run in order     │  │      Notify: PR, Slack      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     GITHUB_TOKEN    = auto-generated per-job token; scoped to repo; expires when job ends     │   │
-│   │      permissions:    = restrict GITHUB_TOKEN scopes per job; principle of least privilege     │   │
-│   │    needs:          = declare job dependency; forces sequential execution and output passing   │   │
-│   │        if: condition   = conditional step/job execution; uses expression syntax ${{ }}        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>| Property | Purpose |
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|---|---|
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| `runs-on` | Specifies the runner label or group |

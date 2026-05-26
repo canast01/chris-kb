@@ -3921,27 +3921,6 @@
     user --&gt; adGroup
     adGroup --&gt;|Member| svcAccount
     svcAccount --&gt; transcript</code></pre>
-┌───────────────────────────────────── PowerShell — Access Control ─────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   PowerShell access control: who can run scripts, remoting access, JEA capability delegation  │   │
-│   │          WinRM access: WS-Management ACL; restrict to security groups, not all users          │   │
-│   │  JEA: define role capabilities (.psrc); register session config (.pssc); assign via AD groups │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             WinRM Access Control             │  │              JEA Configuration              │   │
-│   │       Set-PSSessionConfiguration DACL        │  │           New-PSRoleCapabilityFile          │   │
-│   │            Grant to AD group only            │  │        New-PSSessionConfigurationFile       │   │
-│   │        Deny interactive logon to SVC         │  │       Register-PSSessionConfiguration       │   │
-│   │         HTTPS WinRM: port 5986 only          │  │       Test-PSSessionConfigurationFile       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  DACL         = Discretionary ACL on PS session config; controls which identities can connect │   │
-│   │.psrc file   = Role Capability file; defines VisibleCmdlets, VisibleFunctions, VisibleProviders│   │
-│   │       .pssc file   = Session Configuration file; maps AD groups to role capability files      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>| Policy | Behaviour |
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|---|---|
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| `Restricted` | No scripts allowed (Windows default) |

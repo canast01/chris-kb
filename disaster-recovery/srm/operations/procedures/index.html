@@ -4664,45 +4664,6 @@
     class reprotect,reprotect2,failback action
     class assess decision
     class start,pm,fo terminal</code></pre>
-┌────────────────────────────────────────── SRM — Procedures ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Routine Procedures              │  │                DR Procedures                │   │
-│   │          Add new protection source           │  │              Initiate failover              │   │
-│   │           Modify retention policy            │  │               Validate replica              │   │
-│   │          Expire old recover points           │  │              Redirect host I/O              │   │
-│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
-│   │           Service account rotation           │  │            Failback to production           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                              Change Control Requirements for SRM                              │   │
-│   │           All changes to protection policies require change ticket with rollback plan         │   │
-│   │                      Failover tests must be scheduled in maintenance window                   │   │
-│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
-│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
-│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
-│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
-│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
-│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
-│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
-│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
-│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
-│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
-│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
-│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
-│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
-│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
-│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Creating Recovery Plans

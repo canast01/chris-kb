@@ -3929,27 +3929,6 @@
     secretMgmt --&gt; psCred
     azKeyVault --&gt; psCred
     psCred --&gt; cmdlet</code></pre>
-┌───────────────────────────────────── PowerShell — Authentication ─────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ PowerShell authentication: Kerberos (domain), NTLM (fallback), certificate-based for remoting │   │
-│   │     Service principal: use certificate auth for Azure/cloud (no password rotation needed)     │   │
-│   │  Secrets in scripts: use SecretManagement module; back-ends: KeyVault, SecretStore, CyberArk  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Remoting Auth                 │  │              Secret Management              │   │
-│   │       Kerberos: domain joined default        │  │       Install-Module SecretManagement       │   │
-│   │       NTLM: workgroup or cross-domain        │  │        Register-SecretVault -Name AKV       │   │
-│   │        Certificate: mutual TLS WinRM         │  │         Get-Secret -Name MyPassword         │   │
-│   │       CredSSP: avoid (double-hop only)       │  │        No ConvertTo-SecureString -Key       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      SecretManagement = PS module; abstraction layer for secret retrieval; vault-agnostic     │   │
-│   │  CredSSP          = delegates credentials to remote host; security risk; use Kerberos or JEA  │   │
-│   │  Managed Identity = Azure-side auth; PS running in Azure VM can get token without credentials │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Storing Credentials Securely
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Use `Export-Clixml` to save credentials encrypted with the current user&#39;s Windows Data Protection API (DPAPI) key. Only the same user on the same machine can decrypt the file.

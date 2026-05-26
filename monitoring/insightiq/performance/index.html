@@ -4720,55 +4720,56 @@
 
 
 <h1 id="insightiq-throughput-latency-iops-and-protocol-performance-dashboards">InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards<a class="headerlink" href="#insightiq-throughput-latency-iops-and-protocol-performance-dashboards" title="Permanent link">&para;</a></h1>
-<p>┌────────────────────────────────── InsightIQ — Performance Analysis ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        IOPS Analysis        │  │       Latency Analysis      │  │          Throughput         │   │
-│   │        Per-node IOPS        │  │       Per-protocol lat      │  │        MB/s per node        │   │
-│   │      Per-protocol IOPS      │  │         p50/p95/p99         │  │       Network vs disk       │   │
-│   │        Read vs write        │  │       Backend vs front      │  │         Peak vs avg         │   │
-│   │       Peak vs average       │  │        Trend baseline       │  │       Saturation point      │   │
-│   │       Client breakdown      │  │         Cache impact        │  │         Protocol mix        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Metrics from PowerScale nodes · InsightIQ aggregates to cluster and node level                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  p50 latency = Median latency; 50% of operations complete faster than this value                      │
-│  p95 latency = 95th percentile latency; 5% of operations are slower; good SLA metric                  │
-│  p99 latency = 99th percentile; shows tail latency impacting worst-case user experience               │
-│  Frontend latency = Client-to-cluster latency including network and protocol overhead                 │
-│  Backend latency = Cluster-to-disk latency; excludes network; shows storage device health             │
-│  Cache impact = Reduction in backend IOPS due to read cache (L1 RAM, L2 SSD hits)                     │
-│  Saturation point = Throughput level at which latency begins degrading non-linearly                   │
-│  Protocol mix = Ratio of NFS/SMB/S3/HDFS IO; different protocols have different overheads             │
-│  Trend baseline = Historical average used to identify current deviations                              │
-│  Network vs disk = Comparing frontend and backend throughput to find bottleneck tier                  │
-│  Read vs write = IO breakdown critical for cache effectiveness and drive wear planning                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Protocol Performance Breakdown
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>InsightIQ separates performance by protocol, allowing identification of which protocol is driving load.
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| Protocol | Key Metrics to Watch | Normal Latency |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>|---|---|---|
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| NFS v3/v4 | ops/s, avg latency, errors | &lt; 5 ms |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| SMB2/3 | read/write MB/s, latency | &lt; 10 ms |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| HDFS | throughput MB/s, job duration | Highly variable |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| S3 | request rate, latency, error rate | &lt; 50 ms for object ops |
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>```bash
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Check NFS client latency in real time
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>isi statistics client list --protocol=nfs --sort=latency --limit=20
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Check SMB active sessions
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>isi smb sessions list
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a># Per-client throughput — who is consuming the most bandwidth
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>isi statistics client list --sort=bytes_in --limit=10 --human-readable
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── InsightIQ — Performance Analysis ───────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │        IOPS Analysis        │  │       Latency Analysis      │  │          Throughput         │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │        Per-node IOPS        │  │       Per-protocol lat      │  │        MB/s per node        │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │      Per-protocol IOPS      │  │         p50/p95/p99         │  │       Network vs disk       │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │        Read vs write        │  │       Backend vs front      │  │         Peak vs avg         │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │       Peak vs average       │  │        Trend baseline       │  │       Saturation point      │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │       Client breakdown      │  │         Cache impact        │  │         Protocol mix        │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Metrics from PowerScale nodes · InsightIQ aggregates to cluster and node level                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  p50 latency = Median latency; 50% of operations complete faster than this value                      │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  p95 latency = 95th percentile latency; 5% of operations are slower; good SLA metric                  │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  p99 latency = 99th percentile; shows tail latency impacting worst-case user experience               │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Frontend latency = Client-to-cluster latency including network and protocol overhead                 │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Backend latency = Cluster-to-disk latency; excludes network; shows storage device health             │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Cache impact = Reduction in backend IOPS due to read cache (L1 RAM, L2 SSD hits)                     │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Saturation point = Throughput level at which latency begins degrading non-linearly                   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Protocol mix = Ratio of NFS/SMB/S3/HDFS IO; different protocols have different overheads             │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Trend baseline = Historical average used to identify current deviations                              │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Network vs disk = Comparing frontend and backend throughput to find bottleneck tier                  │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Read vs write = IO breakdown critical for cache effectiveness and drive wear planning                │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Protocol Performance Breakdown
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>InsightIQ separates performance by protocol, allowing identification of which protocol is driving load.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Protocol | Key Metrics to Watch | Normal Latency |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|---|---|---|
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| NFS v3/v4 | ops/s, avg latency, errors | &lt; 5 ms |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| SMB2/3 | read/write MB/s, latency | &lt; 10 ms |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| HDFS | throughput MB/s, job duration | Highly variable |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| S3 | request rate, latency, error rate | &lt; 50 ms for object ops |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>```bash
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Check NFS client latency in real time
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>isi statistics client list --protocol=nfs --sort=latency --limit=20
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Check SMB active sessions
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>isi smb sessions list
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># Per-client throughput — who is consuming the most bandwidth
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>isi statistics client list --sort=bytes_in --limit=10 --human-readable
 </code></pre></div></p>
 <h2 id="identifying-performance-bottlenecks-via-insightiq">Identifying Performance Bottlenecks via InsightIQ<a class="headerlink" href="#identifying-performance-bottlenecks-via-insightiq" title="Permanent link">&para;</a></h2>
 <p>InsightIQ can generate a <strong>Breakout Report</strong> that overlays multiple metrics for the same time range to help identify correlation.</p>
@@ -4800,16 +4801,16 @@
 </tbody>
 </table>
 <h2 id="collecting-a-onefs-performance-support-bundle">Collecting a OneFS Performance Support Bundle<a class="headerlink" href="#collecting-a-onefs-performance-support-bundle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Gather a stats snapshot for a support case</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@powerscale.example.com
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Run the gather script (sends to Dell support or saves locally)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi_gather_info
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># For a targeted performance capture (5 minutes of 30s samples)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>isi<span class="w"> </span>statistics<span class="w"> </span>query<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--stats<span class="w"> </span>cpu.user.avg,disk.xfer.bytes.rate,net.iface.bytes.in.rate,ifs.ops.read.avg,ifs.ops.write.avg<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--interval<span class="w"> </span><span class="m">30</span><span class="w"> </span>--duration<span class="w"> </span><span class="m">300</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Gather a stats snapshot for a support case</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@powerscale.example.com
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Run the gather script (sends to Dell support or saves locally)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi_gather_info
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># For a targeted performance capture (5 minutes of 30s samples)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>isi<span class="w"> </span>statistics<span class="w"> </span>query<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--stats<span class="w"> </span>cpu.user.avg,disk.xfer.bytes.rate,net.iface.bytes.in.rate,ifs.ops.read.avg,ifs.ops.write.avg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--interval<span class="w"> </span><span class="m">30</span><span class="w"> </span>--duration<span class="w"> </span><span class="m">300</span>
 </code></pre></div>
 <h2 id="common-performance-issues">Common Performance Issues<a class="headerlink" href="#common-performance-issues" title="Permanent link">&para;</a></h2>
 <table>

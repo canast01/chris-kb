@@ -4778,66 +4778,67 @@
 
 
 <h1 id="cloudiq-proactive-recommendations-and-implementation-tracking">CloudIQ: Proactive Recommendations and Implementation Tracking<a class="headerlink" href="#cloudiq-proactive-recommendations-and-implementation-tracking" title="Permanent link">&para;</a></h1>
-<p>┌──────────────────────────────────── CloudIQ — AI Recommendations ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           CloudIQ AI generates recommendations based on health issues and anomalies           │   │
-│   │            Categories: Performance, Capacity, Availability, Security, Best Practice           │   │
-│   │          Priority: Critical (act now), High (act soon), Medium (plan), Low (optional)         │   │
-│   │          Each recommendation: problem description, impact, suggested action, KB link          │   │
-│   │                    Track status: Open → In Progress → Resolved → Dismissed                    │   │
-│   │         Resolution improves health score once Dell cloud receives confirming telemetry        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Recommendations computed in Dell cloud from fleet-wide ML · no on-prem component                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Recommendation = AI action item linking a detected issue to a corrective step                        │
-│  Priority = Urgency classification: Critical/High/Medium/Low                                          │
-│  KB link = Dell Knowledge Base article linked from recommendation for detailed steps                  │
-│  Impact = Estimated health score improvement if recommendation is implemented                         │
-│  In Progress = Status indicating team has started working on the recommendation                       │
-│  Resolved = Recommendation marked done; CloudIQ validates via subsequent telemetry                    │
-│  Dismissed = Recommendation closed without action; should include a reason comment                    │
-│  Fleet-wide ML = Models trained on all registered Dell arrays globally for pattern matching           │
-│  Best practice = Recommendation to align configuration with Dell recommended settings                 │
-│  Security recommendation = Flagging insecure configuration (weak auth, unencrypted replication)       │
-│  Confirming telemetry = Subsequent metric push showing issue condition no longer present              │
-│  SLA = Internal target for acting on Critical/High recommendations (e.g., within 3 business days)     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Recommendation priority fields:
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Field | Values | Meaning |
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|---|---|---|
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| `priority` | HIGH, MEDIUM, LOW | Business impact if unaddressed |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| `effort` | LOW, MEDIUM, HIGH | Implementation complexity |
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| `impact` | Description string | Expected outcome after implementation |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| `state` | ACTIVE, DISMISSED, IMPLEMENTED | Current status |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>## Implementing a Recommendation
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>1. Navigate to the recommendation detail page.
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>2. Review the **Steps** tab for guided implementation instructions.
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>3. Click **Mark as Implemented** once the change is applied.
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>4. CloudIQ will validate the change in the next telemetry cycle and confirm effectiveness.
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>```bash
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Mark a recommendation as implemented via API
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>curl -sk -X POST \
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations/&lt;recId&gt;/implement&quot; \
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  -d &#39;{&quot;comment&quot;: &quot;Completed by ops team, INC0054321&quot;}&#39;
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a># Dismiss a recommendation (accepted risk or not applicable)
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>curl -sk -X POST \
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations/&lt;recId&gt;/dismiss&quot; \
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>  -d &#39;{&quot;comment&quot;: &quot;Not applicable — system is scheduled for decommission&quot;}&#39;
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── CloudIQ — AI Recommendations ─────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │           CloudIQ AI generates recommendations based on health issues and anomalies           │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │            Categories: Performance, Capacity, Availability, Security, Best Practice           │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │          Priority: Critical (act now), High (act soon), Medium (plan), Low (optional)         │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │          Each recommendation: problem description, impact, suggested action, KB link          │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │                    Track status: Open → In Progress → Resolved → Dismissed                    │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │         Resolution improves health score once Dell cloud receives confirming telemetry        │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Recommendations computed in Dell cloud from fleet-wide ML · no on-prem component                     │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  Recommendation = AI action item linking a detected issue to a corrective step                        │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Priority = Urgency classification: Critical/High/Medium/Low                                          │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  KB link = Dell Knowledge Base article linked from recommendation for detailed steps                  │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Impact = Estimated health score improvement if recommendation is implemented                         │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  In Progress = Status indicating team has started working on the recommendation                       │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Resolved = Recommendation marked done; CloudIQ validates via subsequent telemetry                    │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Dismissed = Recommendation closed without action; should include a reason comment                    │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Fleet-wide ML = Models trained on all registered Dell arrays globally for pattern matching           │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Best practice = Recommendation to align configuration with Dell recommended settings                 │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Security recommendation = Flagging insecure configuration (weak auth, unencrypted replication)       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Confirming telemetry = Subsequent metric push showing issue condition no longer present              │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  SLA = Internal target for acting on Critical/High recommendations (e.g., within 3 business days)     │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Recommendation priority fields:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Field | Values | Meaning |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|---|
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| `priority` | HIGH, MEDIUM, LOW | Business impact if unaddressed |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| `effort` | LOW, MEDIUM, HIGH | Implementation complexity |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| `impact` | Description string | Expected outcome after implementation |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| `state` | ACTIVE, DISMISSED, IMPLEMENTED | Current status |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>## Implementing a Recommendation
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>1. Navigate to the recommendation detail page.
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>2. Review the **Steps** tab for guided implementation instructions.
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>3. Click **Mark as Implemented** once the change is applied.
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>4. CloudIQ will validate the change in the next telemetry cycle and confirm effectiveness.
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>```bash
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Mark a recommendation as implemented via API
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>curl -sk -X POST \
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations/&lt;recId&gt;/implement&quot; \
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  -H &quot;Content-Type: application/json&quot; \
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  -d &#39;{&quot;comment&quot;: &quot;Completed by ops team, INC0054321&quot;}&#39;
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a># Dismiss a recommendation (accepted risk or not applicable)
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>curl -sk -X POST \
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations/&lt;recId&gt;/dismiss&quot; \
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  -H &quot;Content-Type: application/json&quot; \
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  -d &#39;{&quot;comment&quot;: &quot;Not applicable — system is scheduled for decommission&quot;}&#39;
 </code></pre></div></p>
 <h2 id="energy-savings-recommendations">Energy Savings Recommendations<a class="headerlink" href="#energy-savings-recommendations" title="Permanent link">&para;</a></h2>
 <p>CloudIQ calculates estimated annual kWh savings for drive power-down and MAID recommendations.</p>
@@ -4870,11 +4871,11 @@
 <h2 id="tracking-recommendation-history">Tracking Recommendation History<a class="headerlink" href="#tracking-recommendation-history" title="Permanent link">&para;</a></h2>
 <p>Implemented and dismissed recommendations are retained in history for auditing.</p>
 <p>Navigation: <strong>CloudIQ &gt; Recommendations &gt; History tab</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># View recommendation history (all states)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations?filter=state%20ne%20%27ACTIVE%27&amp;select=id,title,state,updated_at&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View recommendation history (all states)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations?filter=state%20ne%20%27ACTIVE%27&amp;select=id,title,state,updated_at&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span>
 </code></pre></div>
 <h2 id="common-recommendation-issues">Common Recommendation Issues<a class="headerlink" href="#common-recommendation-issues" title="Permanent link">&para;</a></h2>
 <table>

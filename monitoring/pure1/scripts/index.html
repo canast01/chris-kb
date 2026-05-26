@@ -4838,36 +4838,6 @@
 <a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
 <a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 </code></pre></div>
-┌────────────────────────────────────── Pure1 — Scripts Reference ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                      Pure1 REST API scripts using py-pure-client library                      │   │
-│   │                get-fleet.py: list all arrays with health, version, and capacity               │   │
-│   │               get-alerts.py: active alerts across fleet; flag Critical to Slack               │   │
-│   │                capacity-check.py: arrays with &lt; 90 days to full; email to team                │   │
-│   │              phonehome-check.py: arrays not Connected; alert if data age &gt; 5 min              │   │
-│   │                  perf-report.py: pull IOPS/latency for all arrays; CSV export                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Scripts run from any internet-connected host · Python 3 + py-pure-client                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  py-pure-client = pip install py-pure-client; Pure-provided Python library                            │
-│  JWT auth = RSA-signed JWT for Pure1 API; use Pure1Client from py-pure-client                         │
-│  client_id = Pure1 API registration ID from org settings                                              │
-│  private_key = RSA private key path; corresponding public key registered in Pure1                     │
-│  Fleet list = client.get_arrays() returns all arrays with health and metadata                         │
-│  Alert list = client.get_alerts(filter="state='open'") for active alerts                              │
-│  Metrics = client.get_metrics(names=[...], resource_names=[...]) for time-series                      │
-│  Phonehome status = array.status field; Connected or Disconnected                                     │
-│  Data age = time since last phonehome; compute from array.last_updated                                │
-│  CSV export = pandas DataFrame from metric response; df.to_csv()                                      │
-│  Cron = Schedule daily via crontab for capacity and phonehome checks                                  │
-│  Slack webhook = POST alert summary to Slack channel incoming webhook URL                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Capacity Report
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```python

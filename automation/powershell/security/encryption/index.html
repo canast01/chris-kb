@@ -3921,27 +3921,6 @@
     clixml --&gt;|Import-Clixml| secureString
     secureString --&gt;|New-PSSession -UseSSL| winrmHTTPS
     winrmHTTPS --&gt; remoteSession</code></pre>
-┌─────────────────────────────────────── PowerShell — Encryption ───────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │PowerShell encryption: SecureString for in-memory, DPAPI for user-scope, SecretManagement for v│   │
-│   │ Transport: WinRM HTTPS (TLS 1.2+); enforce: winrm set winrm/config/listener @{Transport=HTTPS}│   │
-│   │   Avoid: ConvertTo-SecureString with -Key flag stores key alongside data — use vault instead  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Secret Handling                │  │              Transport Security             │   │
-│   │         SecureString: in-memory only         │  │            WinRM HTTPS: port 5986           │   │
-│   │          DPAPI: current user scope           │  │              TLS 1.2+ enforced              │   │
-│   │       SecretManagement: AKV / KeePass        │  │         Certificate required on host        │   │
-│   │       No plain-text passwords in .ps1        │  │        Disable HTTP WinRM (port 5985)       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    DPAPI           = Windows Data Protection API; encrypts to current user or machine scope   │   │
-│   │  SecureString    = in-memory encrypted string; cannot be stored safely to disk without DPAPI  │   │
-│   │    Azure Key Vault = recommended back-end for SecretManagement in cloud/hybrid environments   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Encrypting Strings with DPAPI
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>`ConvertTo-SecureString` and `ConvertFrom-SecureString` use Windows DPAPI to encrypt values that only the current user on the current machine can decrypt.

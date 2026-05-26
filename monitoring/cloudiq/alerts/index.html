@@ -4756,74 +4756,75 @@
 
 
 <h1 id="cloudiq-alert-types-severity-and-notification-configuration">CloudIQ: Alert Types, Severity, and Notification Configuration<a class="headerlink" href="#cloudiq-alert-types-severity-and-notification-configuration" title="Permanent link">&para;</a></h1>
-<p>┌────────────────────────────────────────── CloudIQ — Alerts ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │               Alert Categories               │                 Alert Actions                  │   │
-│   │          Health: score &lt; threshold           │           Acknowledge: mark as seen            │   │
-│   │          Capacity: fill date &lt; 90d           │            Snooze: mute for N hours            │   │
-│   │          Performance: latency spike          │          Dismiss: remove if false-pos          │   │
-│   │          Hardware: component fault           │             Create service request             │   │
-│   │            Anomaly: ML deviation             │             Link to recommendation             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Alerts generated in Dell cloud · delivered via email/webhook · viewed at cloudiq.dell.com            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Alert = CloudIQ notification for a condition requiring attention on an array                         │
-│  Health alert = Fired when array health score drops below configured threshold                        │
-│  Capacity alert = Fired when projected full date is within defined horizon (default 90 days)          │
-│  Performance alert = Fired when latency or IOPS deviates significantly from baseline                  │
-│  Hardware alert = Firmware-detected component fault forwarded via telemetry                           │
-│  Anomaly alert = ML-detected statistical deviation not matching known fault pattern                   │
-│  Acknowledge = Confirms alert reviewed; suppresses repeat notification                                │
-│  Snooze = Temporary suppression for a defined window; re-fires after window expires                   │
-│  Dismiss = Permanent closure of alert; used for confirmed false-positives                             │
-│  Service request = Dell support case created from CloudIQ alert with pre-populated diagnostics        │
-│  Recommendation = AI-generated fix linked to alert; addresses root cause                              │
-│  Severity = Alert priority: Critical, Warning, Informational                                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Notification Configuration
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>CloudIQ sends alert notifications via email. Configure recipients at the tenant level.
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Navigation: **CloudIQ &gt; Settings &gt; Notifications**
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Steps to configure email alerts:
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>1. Go to **Settings &gt; Notifications &gt; Alert Notifications**.
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>2. Click **+ Add Recipient**.
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>3. Enter email address and select severity threshold.
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>4. Choose specific systems or **All Systems**.
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>5. Save and send a test notification.
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>| Option | Description |
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>|---|---|
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>| Severity Threshold | Minimum severity that triggers an email |
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| System Scope | All systems, or specific registered systems |
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| Digest vs Immediate | Send each alert individually or in a daily digest |
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| Test Notification | Sends a synthetic alert to verify delivery |
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>## Dismissing and Acknowledging Alerts
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>Alerts can be dismissed when the issue is known and accepted, or acknowledged to indicate someone is investigating.
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>```bash
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a># Acknowledge an alert via API
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>curl -sk -X POST \
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/alerts/&lt;alertId&gt;/acknowledge&quot; \
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>  -d &#39;{&quot;comment&quot;: &quot;Investigating - ticket INC0012345&quot;}&#39;
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a># Dismiss an alert
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>curl -sk -X POST \
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/alerts/&lt;alertId&gt;/dismiss&quot; \
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>  -d &#39;{&quot;comment&quot;: &quot;Accepted risk - hardware replacement scheduled&quot;}&#39;
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────── CloudIQ — Alerts ───────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │               Alert Categories               │                 Alert Actions                  │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │          Health: score &lt; threshold           │           Acknowledge: mark as seen            │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │          Capacity: fill date &lt; 90d           │            Snooze: mute for N hours            │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │          Performance: latency spike          │          Dismiss: remove if false-pos          │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │          Hardware: component fault           │             Create service request             │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │            Anomaly: ML deviation             │             Link to recommendation             │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Alerts generated in Dell cloud · delivered via email/webhook · viewed at cloudiq.dell.com            │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  Alert = CloudIQ notification for a condition requiring attention on an array                         │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Health alert = Fired when array health score drops below configured threshold                        │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  Capacity alert = Fired when projected full date is within defined horizon (default 90 days)          │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Performance alert = Fired when latency or IOPS deviates significantly from baseline                  │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Hardware alert = Firmware-detected component fault forwarded via telemetry                           │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Anomaly alert = ML-detected statistical deviation not matching known fault pattern                   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Acknowledge = Confirms alert reviewed; suppresses repeat notification                                │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Snooze = Temporary suppression for a defined window; re-fires after window expires                   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Dismiss = Permanent closure of alert; used for confirmed false-positives                             │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Service request = Dell support case created from CloudIQ alert with pre-populated diagnostics        │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Recommendation = AI-generated fix linked to alert; addresses root cause                              │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Severity = Alert priority: Critical, Warning, Informational                                          │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Notification Configuration
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>CloudIQ sends alert notifications via email. Configure recipients at the tenant level.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Navigation: **CloudIQ &gt; Settings &gt; Notifications**
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Steps to configure email alerts:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>1. Go to **Settings &gt; Notifications &gt; Alert Notifications**.
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>2. Click **+ Add Recipient**.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>3. Enter email address and select severity threshold.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>4. Choose specific systems or **All Systems**.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>5. Save and send a test notification.
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| Option | Description |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>|---|---|
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| Severity Threshold | Minimum severity that triggers an email |
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| System Scope | All systems, or specific registered systems |
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>| Digest vs Immediate | Send each alert individually or in a daily digest |
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| Test Notification | Sends a synthetic alert to verify delivery |
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>## Dismissing and Acknowledging Alerts
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Alerts can be dismissed when the issue is known and accepted, or acknowledged to indicate someone is investigating.
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>```bash
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a># Acknowledge an alert via API
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>curl -sk -X POST \
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/alerts/&lt;alertId&gt;/acknowledge&quot; \
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  -H &quot;Content-Type: application/json&quot; \
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  -d &#39;{&quot;comment&quot;: &quot;Investigating - ticket INC0012345&quot;}&#39;
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a># Dismiss an alert
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>curl -sk -X POST \
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/alerts/&lt;alertId&gt;/dismiss&quot; \
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>  -H &quot;Content-Type: application/json&quot; \
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>  -d &#39;{&quot;comment&quot;: &quot;Accepted risk - hardware replacement scheduled&quot;}&#39;
 </code></pre></div></p>
 <h2 id="common-alert-issues">Common Alert Issues<a class="headerlink" href="#common-alert-issues" title="Permanent link">&para;</a></h2>
 <table>

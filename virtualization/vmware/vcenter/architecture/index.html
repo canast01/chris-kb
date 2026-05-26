@@ -4803,61 +4803,62 @@
 vCenter Server is the management plane for VMware vSphere, deployed as the VCSA appliance. It supports standard single-node, vCenter HA (3-node active/passive/witness), and Enhanced Linked Mode topologies.
 </div>
 
-<p>┌─────────────────────────────────────── vCenter — Architecture ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ VCSA — virtual appliance (Linux-based); PSC embedded since vCenter 7.0; no external PSC needed│   │
-│   │SSO domain provides identity federation; AD/LDAP identity sources for enterprise authentication│   │
-│   │   Inventory hierarchy: Datacenter &gt; Cluster &gt; Host &gt; VM; permissions inherited down the tree  │   │
-│   │   vCenter HA: 3-node active/passive/witness; protects VCSA from host failure; same-site only  │   │
-│   │     VAMI (port 5480) manages appliance: network, time, backup, update, and service control    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    How-it-works defines VCSA internals · integrations connect identity and tools                      │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         How It Works        │  │         Integrations        │  │       Design Standards      │   │
-│   │      VCSA appliance VM      │  │       AD/LDAP identity      │  │       VCSA sizing L/XL      │   │
-│   │       SSO domain: IdP       │  │        NSX-T: plugin        │  │        HA 3-node prod       │   │
-│   │      Inventory: DC&gt;Clst     │  │      Aria Ops: adapter      │  │        Backup: daily        │   │
-│   │      vCenter HA: 3-node     │  │        LCM: built-in        │  │        NTP: 2 sources       │   │
-│   │         PSC embedded        │  │       Backup: SFTP/NFS      │  │      Cert: VMCA/custom      │   │
-│   │        VAMI: web mgmt       │  │       Aria Auto: cloud      │  │      SSO single domain      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    How-it-works defines VCSA and SSO · integrations connect identity and tools                        │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   How It Works   │   Integrations   │    Design Stds    │    Deployment    │     Key Stds     │   │
-│   │  VCSA appliance  │   AD/LDAP IdP    │   VCSA L sizing   │  Single vCenter  │  NTP 2 sources   │   │
-│   │    SSO domain    │   NSX-T plugin   │     HA 3-node     │   Linked mode    │   Cert policy    │   │
-│   │  Inventory hier  │ Aria Ops adapter │    Daily backup   │    Multi-site    │     RBAC std     │   │
-│   │    vCenter HA    │   Backup SFTP    │    VMCA/custom    │  Multi-vCenter   │  SSO domain std  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86 server (VCSA VM target) · RAM DIMMs · Network NICs · Shared datastore · OOB management           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VCSA          = vCenter Server Appliance; Linux-based OVA deployed as a VM; single management plane  │
-│  SSO domain    = Single Sign-On domain (vsphere.local by default); identity hub for vSphere auth      │
-│  PSC           = Platform Services Controller; embedded in VCSA 7.0+; manages SSO, certs, licensing   │
-│  VMCA          = VMware Certificate Authority; built-in CA signing VCSA and host certificates         │
-│  vCenter HA    = 3-node VCSA cluster: active, passive, witness; automatic failover on host failure    │
-│  VAMI          = vCenter Appliance Management Interface; web UI on port 5480 for appliance operations │
-│  Linked Mode   = Multiple vCenters sharing SSO domain; unified inventory view across instances        │
-│  RBAC          = Role-Based Access Control; permissions set at inventory objects and inherited down   │
-│  Inventory hierarchy = DC &gt; Cluster &gt; Host &gt; VM; permissions and policies propagate downward          │
-│  AD/LDAP       = Active Directory or LDAP identity source added to SSO for enterprise user auth       │
-│  File-based backup = VCSA periodic backup to SFTP or NFS; restores full appliance configuration       │
-│  Update Planner = vCenter tool that checks interoperability and schedules upgrade order               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────── vCenter — Architecture ────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │ VCSA — virtual appliance (Linux-based); PSC embedded since vCenter 7.0; no external PSC needed│   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │SSO domain provides identity federation; AD/LDAP identity sources for enterprise authentication│   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │   Inventory hierarchy: Datacenter &gt; Cluster &gt; Host &gt; VM; permissions inherited down the tree  │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │   vCenter HA: 3-node active/passive/witness; protects VCSA from host failure; same-site only  │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │     VAMI (port 5480) manages appliance: network, time, backup, update, and service control    │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    How-it-works defines VCSA internals · integrations connect identity and tools                      │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │         How It Works        │  │         Integrations        │  │       Design Standards      │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │      VCSA appliance VM      │  │       AD/LDAP identity      │  │       VCSA sizing L/XL      │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │       SSO domain: IdP       │  │        NSX-T: plugin        │  │        HA 3-node prod       │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │      Inventory: DC&gt;Clst     │  │      Aria Ops: adapter      │  │        Backup: daily        │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │      vCenter HA: 3-node     │  │        LCM: built-in        │  │        NTP: 2 sources       │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │         PSC embedded        │  │       Backup: SFTP/NFS      │  │      Cert: VMCA/custom      │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │        VAMI: web mgmt       │  │       Aria Auto: cloud      │  │      SSO single domain      │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│    How-it-works defines VCSA and SSO · integrations connect identity and tools                        │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │   How It Works   │   Integrations   │    Design Stds    │    Deployment    │     Key Stds     │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │  VCSA appliance  │   AD/LDAP IdP    │   VCSA L sizing   │  Single vCenter  │  NTP 2 sources   │   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   │    SSO domain    │   NSX-T plugin   │     HA 3-node     │   Linked mode    │   Cert policy    │   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   │  Inventory hier  │ Aria Ops adapter │    Daily backup   │    Multi-site    │     RBAC std     │   │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│   │    vCenter HA    │   Backup SFTP    │    VMCA/custom    │  Multi-vCenter   │  SSO domain std  │   │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  x86 server (VCSA VM target) · RAM DIMMs · Network NICs · Shared datastore · OOB management           │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│                                                                                                       │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│                                                                                                       │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  VCSA          = vCenter Server Appliance; Linux-based OVA deployed as a VM; single management plane  │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  SSO domain    = Single Sign-On domain (vsphere.local by default); identity hub for vSphere auth      │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│  PSC           = Platform Services Controller; embedded in VCSA 7.0+; manages SSO, certs, licensing   │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│  VMCA          = VMware Certificate Authority; built-in CA signing VCSA and host certificates         │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│  vCenter HA    = 3-node VCSA cluster: active, passive, witness; automatic failover on host failure    │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│  VAMI          = vCenter Appliance Management Interface; web UI on port 5480 for appliance operations │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│  Linked Mode   = Multiple vCenters sharing SSO domain; unified inventory view across instances        │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│  RBAC          = Role-Based Access Control; permissions set at inventory objects and inherited down   │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│  Inventory hierarchy = DC &gt; Cluster &gt; Host &gt; VM; permissions and policies propagate downward          │
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│  AD/LDAP       = Active Directory or LDAP identity source added to SSO for enterprise user auth       │
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│  File-based backup = VCSA periodic backup to SFTP or NFS; restores full appliance configuration       │
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│  Update Planner = vCenter tool that checks interoperability and schedules upgrade order               │
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│                                                                                                       │
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 ```</p>
 
 

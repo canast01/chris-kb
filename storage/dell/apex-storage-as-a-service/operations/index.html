@@ -4663,58 +4663,6 @@
 
 
 <h1 id="apex-storage-as-a-service-operations">APEX Storage as a Service — Operations<a class="headerlink" href="#apex-storage-as-a-service-operations" title="Permanent link">&para;</a></h1>
-<p>┌──────────────────────────────────── Dell Apex STaaS — Operations ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Apex day-2 operations: volume provisioning, capacity management, snapshots, alerts      │   │
-│   │         Provisioning: Apex Console or REST API; create volumes, exports, map to hosts         │   │
-│   │       Capacity: monitor committed vs used in CloudIQ; raise SR to expand committed tier       │   │
-│   │           Snapshots: schedule via Apex Console; crash-consistent; clone for dev/test          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Provision → map to host → monitor CloudIQ → snapshot → capacity review → expand                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Provisioning        │  │          Monitoring         │  │        Data Services        │   │
-│   │        Create volume        │  │        CloudIQ health       │  │       Snapshot sched.       │   │
-│   │         Map to host         │  │        Capacity usage       │  │         Clone volume        │   │
-│   │       Create NFS exp.       │  │        Performance IO       │  │         Replication         │   │
-│   │        Expand volume        │  │         Alert review        │  │         Thin reclaim        │   │
-│   │         Delete/unmap        │  │        Billing report       │  │         Compression         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    All hardware ops (firmware, replacement) are Dell responsibility; open SR via Apex Console         │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Task       │   Apex Console   │     Key field     │      Verify      │      Notes       │   │
-│   │    Create vol    │ Storage&gt;Volumes  │     Size/tier     │  Host sees vol   │    Thin prov.    │   │
-│   │     Map host     │  Storage&gt;Hosts   │      IQN/WWN      │     Host LUN     │   Multipath on   │   │
-│   │     Snapshot     │  Data Svc&gt;Snap   │      Schedule     │    Snap count    │  Retention set   │   │
-│   │   Capacity SR    │    Support&gt;SR    │   Current/target  │    SR created    │  Dell responds   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: array controllers · host HBA/NIC · multipath driver on each host                         │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Thin provisioning = Volume allocated to host at requested size; storage used only on write         │
-│    Host mapping     = Associate host IQN (iSCSI) or WWN (FC) to a volume or export                    │
-│    NFS export       = File storage share; mount on Linux/VMware via NFS protocol                      │
-│    Snapshot sched.  = Automated recurring snapshot policy; retain N snapshots                         │
-│    Clone            = Writable copy of a volume or snapshot; used for dev/test                        │
-│    Thin reclaim     = Return unused thin-provisioned blocks to pool (UNMAP/TRIM)                      │
-│    CloudIQ health   = AI-driven health score; monitors controller, drives, fans, thermals             │
-│    Performance IO   = IOPS and throughput graphs per volume in CloudIQ                                │
-│    Billing report   = Apex Console monthly view of committed + burst usage by tier                    │
-│    SR (Service Req) = Support request to Dell; used for hardware issues and capacity expands          │
-│    Compression      = Inline data compression reducing physical footprint on array                    │
-│    Replication      = Async or sync copy of volumes to secondary Apex or PowerStore                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Dell Apex STaaS — Operations ─────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -4767,7 +4715,7 @@
 <a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│    Replication      = Async or sync copy of volumes to secondary Apex or PowerStore                   │
 <a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
+</code></pre></div>
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

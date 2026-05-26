@@ -3868,28 +3868,6 @@
     dev --&gt; ghSettings --&gt; ghEncrypted
     ghEncrypted --&gt;|"injected at runtime\nnot stored on disk"| wfRun
     wfRun --&gt; step --&gt; logs</code></pre>
-┌───────────────────────────────────── GitHub Actions — Encryption ─────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    GitHub Actions encrypts secrets at rest and in transit; secrets masked in all log output   │   │
-│   │       Secrets: stored encrypted in GitHub; decrypted only during job execution on runner      │   │
-│   │                Transport: all API calls and runner communication over TLS 1.2+                │   │
-│   │     Avoid: do not base64-encode secrets to work around masking — GitHub masks decoded too     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Secret Handling                │  │          Encryption Best Practices          │   │
-│   │         AES-256-GCM at rest (GitHub)         │  │        OIDC eliminates stored secrets       │   │
-│   │           Masked in all log output           │  │           Rotate secrets quarterly          │   │
-│   │          ${{ secrets.X }} injection          │  │           Env scope: job not step           │   │
-│   │         Never printed: echo $SECRET          │  │         Audit secret access in logs         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Secret masking  = GitHub scans all log output and replaces secret values with ***       │   │
-│   │    add-mask        = ::add-mask::<value> step command; register dynamic values for masking    │   │
-│   │    Env scope       = set secret as env var at job level; available to all steps in that job   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Managing secrets via `gh` CLI:
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash

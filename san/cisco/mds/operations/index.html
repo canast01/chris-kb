@@ -3973,58 +3973,59 @@
 
 
 <h1 id="mds-operations">MDS — Operations<a class="headerlink" href="#mds-operations" title="Permanent link">&para;</a></h1>
-<p>┌───────────────────────────────────── Cisco MDS 9000 — Operations ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          MDS 9000 day-2 operations: VSAN management, zoning, ISL, port channels, ISSU         │   │
-│   │        VSAN: create VSAN, assign ports, verify VSAN membership; VSAN 1 default — avoid        │   │
-│   │                 Zoning: device aliases → zones → zone sets → activate per VSAN                │   │
-│   │         ISSU: In-Service Software Upgrade; minimises disruption on dual-supervisor MDS        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    VSAN create → port assign → zone build → zone activate → health verify                             │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        VSAN / ISL Ops       │  │          Zoning Ops         │  │        Health Checks        │   │
-│   │         Create VSAN         │  │         Create alias        │  │        show interface       │   │
-│   │       Assign VSAN port      │  │         Create zone         │  │          show vsan          │   │
-│   │       Trunk ISL ports       │  │       Add to zone set       │  │         show zoneset        │   │
-│   │       Port channel ISL      │  │        Activate zone        │  │        show flogi db        │   │
-│   │        ISSU firmware        │  │        Verify members       │  │        show port-ch.        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Always backup config before zone changes: copy running-config startup-config                       │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Task       │  NX-OS command   │     Key output    │      Verify      │      Notes       │   │
-│   │   Create VSAN    │  vsan database   │       vsan N      │   show vsan N    │     Name it      │   │
-│   │   Zone create    │  zone name Z vN  │    member pwwn    │    show zone     │   Alias better   │   │
-│   │     Activate     │ zoneset activate │      Changes#     │ show zoneset act │  No disruption   │   │
-│   │       ISSU       │   install all    │    Superv check   │   show version   │  Dual-sup req.   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: MDS 9000 line cards · FC SFP transceivers (SW/LW/CWDM) · ISL fibre paths                 │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    VSAN          = Virtual SAN; logical fabric partition on MDS; isolates devices and zones           │
-│    Device alias  = Named alias for a port WWN; recommended over raw WWN in zone membership            │
-│    Zone set      = Container for zones in a VSAN; activate to enforce; only one active                │
-│    Activate      = Deploy zone set to all switches in VSAN; non-disruptive if correctly done          │
-│    FLOGI         = Fabric Login; device procedure to join FC fabric and receive FC address            │
-│    FCNS          = FC Name Server; VSAN-scoped directory of all logged-in devices                     │
-│    ISSU          = In-Service Software Upgrade; upgrades NX-OS without disrupting traffic             │
-│    Trunk ISL     = ISL configured to carry multiple VSANs; uses E_port/TE_port mode                   │
-│    Port channel  = Bundle of ISL ports for higher bandwidth and link redundancy                       │
-│    show flogi db = Displays all devices that have logged into the fabric on this switch               │
-│    show zoneset  = Shows active zone set for a VSAN; use active keyword for enforced config           │
-│    copy run start = Saves running configuration to startup; always run after changes                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── Cisco MDS 9000 — Operations ─────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │          MDS 9000 day-2 operations: VSAN management, zoning, ISL, port channels, ISSU         │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │        VSAN: create VSAN, assign ports, verify VSAN membership; VSAN 1 default — avoid        │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │                 Zoning: device aliases → zones → zone sets → activate per VSAN                │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │         ISSU: In-Service Software Upgrade; minimises disruption on dual-supervisor MDS        │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    VSAN create → port assign → zone build → zone activate → health verify                             │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │        VSAN / ISL Ops       │  │          Zoning Ops         │  │        Health Checks        │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │         Create VSAN         │  │         Create alias        │  │        show interface       │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │       Assign VSAN port      │  │         Create zone         │  │          show vsan          │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │       Trunk ISL ports       │  │       Add to zone set       │  │         show zoneset        │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │       Port channel ISL      │  │        Activate zone        │  │        show flogi db        │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │        ISSU firmware        │  │        Verify members       │  │        show port-ch.        │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│    Always backup config before zone changes: copy running-config startup-config                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │       Task       │  NX-OS command   │     Key output    │      Verify      │      Notes       │   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │   Create VSAN    │  vsan database   │       vsan N      │   show vsan N    │     Name it      │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │   Zone create    │  zone name Z vN  │    member pwwn    │    show zone     │   Alias better   │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │     Activate     │ zoneset activate │      Changes#     │ show zoneset act │  No disruption   │   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   │       ISSU       │   install all    │    Superv check   │   show version   │  Dual-sup req.   │   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Physical: MDS 9000 line cards · FC SFP transceivers (SW/LW/CWDM) · ISL fibre paths                 │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    VSAN          = Virtual SAN; logical fabric partition on MDS; isolates devices and zones           │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    Device alias  = Named alias for a port WWN; recommended over raw WWN in zone membership            │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    Zone set      = Container for zones in a VSAN; activate to enforce; only one active                │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    Activate      = Deploy zone set to all switches in VSAN; non-disruptive if correctly done          │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    FLOGI         = Fabric Login; device procedure to join FC fabric and receive FC address            │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    FCNS          = FC Name Server; VSAN-scoped directory of all logged-in devices                     │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    ISSU          = In-Service Software Upgrade; upgrades NX-OS without disrupting traffic             │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    Trunk ISL     = ISL configured to carry multiple VSANs; uses E_port/TE_port mode                   │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    Port channel  = Bundle of ISL ports for higher bandwidth and link redundancy                       │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    show flogi db = Displays all devices that have logged into the fabric on this switch               │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│    show zoneset  = Shows active zone set for a VSAN; use active keyword for enforced config           │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│    copy run start = Saves running configuration to startup; always run after changes                  │
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 ```</p>
 
 

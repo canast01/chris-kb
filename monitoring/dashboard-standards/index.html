@@ -3854,68 +3854,69 @@
 
 
 <h1 id="monitoring-dashboard-standards">Monitoring Dashboard Standards<a class="headerlink" href="#monitoring-dashboard-standards" title="Permanent link">&para;</a></h1>
-<p>┌────────────────────────────────── Monitoring — Dashboard Standards ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           Dashboard Standards — Naming, Layout, Widget, and Data Source Conventions           │   │
-│   │               Naming: <PRODUCT>-<DOMAIN>-<SCOPE> e.g. ARIA-VSPHERE-CLUSTER-PERF               │   │
-│   │            Layout: header summary row · detail grid · trend charts · capacity strip           │   │
-│   │       Widgets: scoreboard (current state) · time-series (trend) · heatmap (distribution)      │   │
-│   │       Colour: green &lt;70% · amber 70-85% · red &gt;85% for capacity and CPU/mem utilisation       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Consistent dashboards reduce MTTR by ensuring operators know exactly where to look                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Naming Standard       │  │         Widget Types        │  │          Governance         │   │
-│   │        Product prefix       │  │       Scoreboard: KPIs      │  │     Owner per dashboard     │   │
-│   │        Domain segment       │  │      Time-series: trend     │  │       Review cycle: Q1      │   │
-│   │        Scope segment        │  │       Heatmap: distrib      │  │       Version in title      │   │
-│   │      No spaces/special      │  │      List: top-N items      │  │     Archived not deleted    │   │
-│   │        Version suffix       │  │     Alert widget: count     │  │     RBAC: read-only pub     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Dashboards reside in Aria Operations UI · Nexus Dashboard NDI · Pure1 portal · CloudIQ SaaS          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Scoreboard widget = Single-value tile showing current state with colour threshold band               │
-│  Time-series widget= Line/area chart plotting metric values over a configurable time window           │
-│  Heatmap widget    = Grid colouring cells by metric value; useful for per-VM or per-host views        │
-│  KPI               = Key Performance Indicator; top-level metric surfaced in the header row           │
-│  Capacity strip    = Bottom row of a dashboard showing remaining headroom per resource type           │
-│  RBAC              = Role-Based Access Control; governs who can edit vs. view a dashboard             │
-│  Threshold band    = Numeric ranges mapped to green/amber/red colour codings                          │
-│  Dashboard owner   = Team member accountable for accuracy and maintenance of the dashboard            │
-│  Archived          = Dashboard removed from active view but retained for audit/history                │
-│  MTTR              = Mean Time To Resolve; reduced when dashboards are consistent and clear           │
-│  Top-N list        = Widget ranking objects by metric value; identifies worst offenders quickly       │
-│  Version suffix    = e.g. v2; indicates updated dashboard replacing a prior published version         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Grafana — Dashboard as Code
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```json
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>// Store dashboards in Git — provision via Grafana provisioning
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>// grafana/provisioning/dashboards/infra-overview.json
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>{
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  &quot;title&quot;: &quot;Infrastructure Overview&quot;,
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  &quot;uid&quot;: &quot;infra-overview-v1&quot;,
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  &quot;refresh&quot;: &quot;5m&quot;,
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  &quot;panels&quot;: [...]
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>}
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Monitoring — Dashboard Standards ───────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │           Dashboard Standards — Naming, Layout, Widget, and Data Source Conventions           │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │               Naming: &lt;PRODUCT&gt;-&lt;DOMAIN&gt;-&lt;SCOPE&gt; e.g. ARIA-VSPHERE-CLUSTER-PERF               │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │            Layout: header summary row · detail grid · trend charts · capacity strip           │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       Widgets: scoreboard (current state) · time-series (trend) · heatmap (distribution)      │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │       Colour: green &lt;70% · amber 70-85% · red &gt;85% for capacity and CPU/mem utilisation       │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    Consistent dashboards reduce MTTR by ensuring operators know exactly where to look                 │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │       Naming Standard       │  │         Widget Types        │  │          Governance         │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │        Product prefix       │  │       Scoreboard: KPIs      │  │     Owner per dashboard     │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │        Domain segment       │  │      Time-series: trend     │  │       Review cycle: Q1      │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │        Scope segment        │  │       Heatmap: distrib      │  │       Version in title      │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │      No spaces/special      │  │      List: top-N items      │  │     Archived not deleted    │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │        Version suffix       │  │     Alert widget: count     │  │     RBAC: read-only pub     │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Dashboards reside in Aria Operations UI · Nexus Dashboard NDI · Pure1 portal · CloudIQ SaaS          │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Scoreboard widget = Single-value tile showing current state with colour threshold band               │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Time-series widget= Line/area chart plotting metric values over a configurable time window           │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Heatmap widget    = Grid colouring cells by metric value; useful for per-VM or per-host views        │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  KPI               = Key Performance Indicator; top-level metric surfaced in the header row           │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Capacity strip    = Bottom row of a dashboard showing remaining headroom per resource type           │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  RBAC              = Role-Based Access Control; governs who can edit vs. view a dashboard             │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Threshold band    = Numeric ranges mapped to green/amber/red colour codings                          │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Dashboard owner   = Team member accountable for accuracy and maintenance of the dashboard            │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Archived          = Dashboard removed from active view but retained for audit/history                │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  MTTR              = Mean Time To Resolve; reduced when dashboards are consistent and clear           │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Top-N list        = Widget ranking objects by metric value; identifies worst offenders quickly       │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Version suffix    = e.g. v2; indicates updated dashboard replacing a prior published version         │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│                                                                                                       │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Grafana — Dashboard as Code
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```json
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>// Store dashboards in Git — provision via Grafana provisioning
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>// grafana/provisioning/dashboards/infra-overview.json
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>{
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  &quot;title&quot;: &quot;Infrastructure Overview&quot;,
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  &quot;uid&quot;: &quot;infra-overview-v1&quot;,
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  &quot;refresh&quot;: &quot;5m&quot;,
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  &quot;panels&quot;: [...]
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>}
 </code></pre></div></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># grafana/provisioning/dashboards/dashboards.yaml</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">providers</span><span class="p">:</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Infra</span><span class="nv"> </span><span class="s">Dashboards&#39;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">folder</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Infrastructure&#39;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">options</span><span class="p">:</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/grafana/dashboards</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># grafana/provisioning/dashboards/dashboards.yaml</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">providers</span><span class="p">:</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Infra</span><span class="nv"> </span><span class="s">Dashboards&#39;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">folder</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Infrastructure&#39;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">options</span><span class="p">:</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/grafana/dashboards</span>
 </code></pre></div>
 <h2 id="validation-checklist">Validation Checklist<a class="headerlink" href="#validation-checklist" title="Permanent link">&para;</a></h2>
 <ul>

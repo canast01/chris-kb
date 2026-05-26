@@ -4156,29 +4156,6 @@
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>backup<span class="w"> </span>git@backup-gitlab.example.com:ansible/infrastructure.git
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>git<span class="w"> </span>push<span class="w"> </span>backup<span class="w"> </span>--mirror
 </code></pre></div>
-┌───────────────────────────────────── Ansible — Backup &amp; Restore ──────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ Ansible backup: the source of truth is the git repository — playbooks, roles, inventory, vars │   │
-│   │   AWX state: export via awx CLI or AWX API; includes job templates, credentials, inventories  │   │
-│   │  Restore: re-deploy AWX (Kubernetes operator or RPM), re-import exported objects, reconfigure │   │
-│   │    Critical: Vault password must be stored out-of-band (password manager, HSM) — not in git   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               What to Back Up                │  │                Restore Steps                │   │
-│   │        Git repo (all automation code)        │  │           1. Redeploy AWX instance          │   │
-│   │         AWX export: awx export --all         │  │      2. Import AWX objects from export      │   │
-│   │        Vault password (offline safe)         │  │          3. Restore Vault password          │   │
-│   │          AWX PostgreSQL DB snapshot          │  │        4. Verify job template runs OK       │   │
-│   │       Execution environment OCI images       │  │       5. Test connectivity to targets       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   awx CLI     = command-line client for AWX API; awx export --all dumps all objects to JSON   │   │
-│   │     AWX DB      = PostgreSQL database; stores job history, credentials (encrypted), config    │   │
-│   │Vault PW    = Ansible Vault encryption password; if lost, all vault-encrypted vars are unreadab│   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>echo &quot;0 2 * * * ansible /usr/local/bin/ansible-git-backup.sh&quot; | crontab -
 </code></pre></div></p>

@@ -4014,28 +4014,6 @@
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># RSA 4096 — for legacy systems that don&#39;t support Ed25519</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>rsa<span class="w"> </span>-b<span class="w"> </span><span class="m">4096</span><span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;ansible-control@prod&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/ansible_rsa<span class="w"> </span>-N<span class="w"> </span><span class="s2">&quot;&quot;</span>
 </code></pre></div>
-┌────────────────────────────────────── Ansible — Authentication ───────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Ansible uses SSH key authentication for Linux targets and WinRM/Kerberos for Windows targets │   │
-│   │  Service account per environment: ansible-prod, ansible-dev — no shared personal credentials  │   │
-│   │AWX stores credentials encrypted (AES-256); injected at runtime — never written to disk on host│   │
-│   │         AWX login: LDAP/AD or SAML SSO; local accounts only for break-glass scenarios         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Linux (SSH)                  │  │               Windows (WinRM)               │   │
-│   │         SSH private key in AWX cred          │  │        Kerberos (domain-joined hosts)       │   │
-│   │         Service account on each host         │  │         NTLM fallback for workgroup         │   │
-│   │         Strict host key checking on          │  │           WinRM HTTPS (port 5986)           │   │
-│   │      Rotate annually or on staff change      │  │      ansible_winrm_transport: kerberos      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ WinRM          = Windows Remote Management; Microsoft implementation of WS-Management protocol│   │
-│   │Kerberos       = network auth protocol; used for Windows domain auth; requires domain membershi│   │
-│   │   SSH agent      = key agent; AWX injects private key into SSH agent process at job runtime   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### ansible.cfg SSH Settings
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```ini

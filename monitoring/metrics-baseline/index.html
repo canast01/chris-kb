@@ -3865,83 +3865,84 @@
 
 
 <h1 id="performance-metrics-baseline">Performance Metrics Baseline<a class="headerlink" href="#performance-metrics-baseline" title="Permanent link">&para;</a></h1>
-<p>┌──────────────────────────────────── Monitoring — Metrics Baseline ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Metrics Baseline — Documenting Normal Ranges to Drive Accurate Alert Thresholds        │   │
-│   │        Key metrics: CPU util · memory util · storage IOPS/latency · network throughput        │   │
-│   │           Baseline period: 4-week rolling window captures daily and weekly patterns           │   │
-│   │       Methods: percentile banding (p50/p95/p99) · seasonal adjustment · learned anomaly       │   │
-│   │        Output: documented threshold table per object type used in all monitoring tools        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    A stale baseline creates false positives or misses real anomalies — review quarterly               │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Compute Metrics       │  │       Storage Metrics       │  │       Network Metrics       │   │
-│   │      CPU util: warn 80%     │  │      IOPS: warn 70% max     │  │       Throughput: 70%       │   │
-│   │      Mem util: warn 85%     │  │      Latency: warn 2ms      │  │      Error rate: &lt;0.01%     │   │
-│   │      CPU ready: warn 5%     │  │      Cap: warn 75% full     │  │      Drops: warn &gt;10/s      │   │
-│   │       Co-stop: warn 3%      │  │      Queue depth: warn      │  │        RTT: warn &gt;5ms       │   │
-│   │      Swap: crit &gt;0 MB/s     │  │      Rebuild time: 4hr      │  │        CRC errors: 0        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Baseline data sourced from: Aria Operations · CloudIQ · Pure1 · NDI — reviewed quarterly             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Baseline          = Statistical representation of normal operating behaviour over a time window      │
-│  p50               = 50th percentile (median); typical operating value                                │
-│  p95               = 95th percentile; near-peak value; used for warn threshold                        │
-│  p99               = 99th percentile; extreme peak; used for critical threshold                       │
-│  CPU ready         = Time a VM waits for a physical CPU; &gt;5% indicates contention                     │
-│  Co-stop           = SMP VM waiting for all vCPUs; &gt;3% indicates over-provisioned vCPUs               │
-│  Memory balloon    = VMware reclamation driver; active ballooning indicates memory pressure           │
-│  Seasonal adjust   = Accounting for day-of-week or time-of-day patterns in thresholds                 │
-│  Queue depth       = Number of outstanding I/O requests; elevated = storage saturation                │
-│  Learned anomaly   = ML-derived deviation from historical pattern rather than static threshold        │
-│  Threshold table   = Reference document listing warn/crit values per metric per object type           │
-│  False positive    = Alert firing when conditions are actually normal; caused by stale baseline       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>**Linux — disk latency:**
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>```bash
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>iostat -xz 5 6   # extended stats, 5 sec interval, 6 samples
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># key fields: await (avg I/O wait ms), r_await, w_await, util%
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Monitoring — Metrics Baseline ────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │        Metrics Baseline — Documenting Normal Ranges to Drive Accurate Alert Thresholds        │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │        Key metrics: CPU util · memory util · storage IOPS/latency · network throughput        │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │           Baseline period: 4-week rolling window captures daily and weekly patterns           │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       Methods: percentile banding (p50/p95/p99) · seasonal adjustment · learned anomaly       │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │        Output: documented threshold table per object type used in all monitoring tools        │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    A stale baseline creates false positives or misses real anomalies — review quarterly               │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │       Compute Metrics       │  │       Storage Metrics       │  │       Network Metrics       │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │      CPU util: warn 80%     │  │      IOPS: warn 70% max     │  │       Throughput: 70%       │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │      Mem util: warn 85%     │  │      Latency: warn 2ms      │  │      Error rate: &lt;0.01%     │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │      CPU ready: warn 5%     │  │      Cap: warn 75% full     │  │      Drops: warn &gt;10/s      │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │       Co-stop: warn 3%      │  │      Queue depth: warn      │  │        RTT: warn &gt;5ms       │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │      Swap: crit &gt;0 MB/s     │  │      Rebuild time: 4hr      │  │        CRC errors: 0        │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Baseline data sourced from: Aria Operations · CloudIQ · Pure1 · NDI — reviewed quarterly             │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Baseline          = Statistical representation of normal operating behaviour over a time window      │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  p50               = 50th percentile (median); typical operating value                                │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  p95               = 95th percentile; near-peak value; used for warn threshold                        │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  p99               = 99th percentile; extreme peak; used for critical threshold                       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  CPU ready         = Time a VM waits for a physical CPU; &gt;5% indicates contention                     │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Co-stop           = SMP VM waiting for all vCPUs; &gt;3% indicates over-provisioned vCPUs               │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Memory balloon    = VMware reclamation driver; active ballooning indicates memory pressure           │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Seasonal adjust   = Accounting for day-of-week or time-of-day patterns in thresholds                 │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Queue depth       = Number of outstanding I/O requests; elevated = storage saturation                │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Learned anomaly   = ML-derived deviation from historical pattern rather than static threshold        │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Threshold table   = Reference document listing warn/crit values per metric per object type           │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  False positive    = Alert firing when conditions are actually normal; caused by stale baseline       │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│                                                                                                       │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Linux — disk latency:**
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>```bash
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>iostat -xz 5 6   # extended stats, 5 sec interval, 6 samples
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># key fields: await (avg I/O wait ms), r_await, w_await, util%
 </code></pre></div></p>
 <p><strong>Windows — performance counters:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># CPU</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\Processor(_Total)\% Processor Time&#39;</span> <span class="n">-SampleInterval</span> <span class="n">5</span> <span class="n">-MaxSamples</span> <span class="n">12</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Memory available</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\Memory\Available MBytes&#39;</span> <span class="n">-SampleInterval</span> <span class="n">5</span> <span class="n">-MaxSamples</span> <span class="n">12</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Disk latency</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\PhysicalDisk(*)\Avg. Disk sec/Read&#39;</span><span class="p">,</span><span class="s1">&#39;\PhysicalDisk(*)\Avg. Disk sec/Write&#39;</span> <span class="n">-SampleInterval</span> <span class="n">5</span> <span class="n">-MaxSamples</span> <span class="n">12</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># CPU</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\Processor(_Total)\% Processor Time&#39;</span> <span class="n">-SampleInterval</span> <span class="n">5</span> <span class="n">-MaxSamples</span> <span class="n">12</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Memory available</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\Memory\Available MBytes&#39;</span> <span class="n">-SampleInterval</span> <span class="n">5</span> <span class="n">-MaxSamples</span> <span class="n">12</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Disk latency</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\PhysicalDisk(*)\Avg. Disk sec/Read&#39;</span><span class="p">,</span><span class="s1">&#39;\PhysicalDisk(*)\Avg. Disk sec/Write&#39;</span> <span class="n">-SampleInterval</span> <span class="n">5</span> <span class="n">-MaxSamples</span> <span class="n">12</span>
 </code></pre></div></p>
 <p><strong>NetApp ONTAP — workload stats:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>qos<span class="w"> </span>statistics<span class="w"> </span>workload<span class="w"> </span>latency<span class="w"> </span>show<span class="w"> </span>-iterations<span class="w"> </span><span class="m">5</span><span class="w"> </span>-interval<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>system<span class="w"> </span>-counter<span class="w"> </span>total_ops,read_ops,write_ops,latency
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>qos<span class="w"> </span>statistics<span class="w"> </span>workload<span class="w"> </span>latency<span class="w"> </span>show<span class="w"> </span>-iterations<span class="w"> </span><span class="m">5</span><span class="w"> </span>-interval<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>system<span class="w"> </span>-counter<span class="w"> </span>total_ops,read_ops,write_ops,latency
 </code></pre></div></p>
 <p><strong>Pure FlashArray:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>purecli<span class="w"> </span>array<span class="w"> </span>get<span class="w"> </span>--mirrored
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purecli<span class="w"> </span>volume<span class="w"> </span>list<span class="w"> </span>--performance<span class="w">    </span><span class="c1"># per-volume latency, IOPS, BW</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purecli<span class="w"> </span>array<span class="w"> </span>get<span class="w"> </span>--mirrored
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purecli<span class="w"> </span>volume<span class="w"> </span>list<span class="w"> </span>--performance<span class="w">    </span><span class="c1"># per-volume latency, IOPS, BW</span>
 </code></pre></div></p>
 <h2 id="documenting-the-baseline">Documenting the Baseline<a class="headerlink" href="#documenting-the-baseline" title="Permanent link">&para;</a></h2>
 <p>Record for each system / service:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>System:          app-db01
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Date captured:   YYYY-MM-DD
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Period:          Mon–Fri business hours, 4 weeks
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>CPU avg:         22%   | peak: 68% (month-end batch)
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Memory avg:      71%   | peak: 84%
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Disk read lat:   0.8ms | peak: 3ms
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Disk write lat:  1.2ms | peak: 5ms
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>IOPS avg:        3,200 | peak: 12,000
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>Network (eth0):  120 Mbps avg | 450 Mbps peak
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>System:          app-db01
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Date captured:   YYYY-MM-DD
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Period:          Mon–Fri business hours, 4 weeks
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>CPU avg:         22%   | peak: 68% (month-end batch)
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Memory avg:      71%   | peak: 84%
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Disk read lat:   0.8ms | peak: 3ms
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Disk write lat:  1.2ms | peak: 5ms
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>IOPS avg:        3,200 | peak: 12,000
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Network (eth0):  120 Mbps avg | 450 Mbps peak
 </code></pre></div>
 <h2 id="setting-thresholds-from-baseline">Setting Thresholds from Baseline<a class="headerlink" href="#setting-thresholds-from-baseline" title="Permanent link">&para;</a></h2>
 <p>Recommended starting point:

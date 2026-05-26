@@ -4767,59 +4767,60 @@
 
 
 <h1 id="cloudiq-health-score-component-status-and-connectivity">CloudIQ: Health Score, Component Status, and Connectivity<a class="headerlink" href="#cloudiq-health-score-component-status-and-connectivity" title="Permanent link">&para;</a></h1>
-<p>┌───────────────────────────────────── CloudIQ — Health Monitoring ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                         Health Score Model: 0-100 composite per array                         │   │
-│   │           Component inputs: hardware faults, performance, capacity, software events           │   │
-│   │         Score 90-100: Green — healthy · 70-89: Yellow — warning · 0-69: Red — critical        │   │
-│   │               Trend indicator: improving / steady / degrading over last 24 hours              │   │
-│   │         Issue list: individual problems contributing to score reduction with weighting        │   │
-│   │              Fleet view: all arrays ranked by health score; outliers highlighted              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Health score computed in Dell cloud from telemetry · updated approximately every 5 minutes           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Health score = Weighted composite of hardware, performance, capacity, and software inputs            │
-│  Issue = Individual contributing problem; each has a weight and recommended fix                       │
-│  Trend = Direction of health score movement over trailing 24-hour window                              │
-│  Fleet view = Dashboard showing all registered arrays ordered by health score                         │
-│  Red array = Health score below 70; requires immediate investigation                                  │
-│  Yellow array = Health score 70-89; monitor closely and plan remediation                              │
-│  Hardware fault = Physical component issue (drive, fan, power supply) reducing score                  │
-│  Performance issue = Sustained latency or IOPS anomaly contributing to score reduction                │
-│  Software event = Firmware error or software exception recorded by array                              │
-│  Weight = Relative contribution of an issue to total score reduction                                  │
-│  Resolved issue = Problem that cleared; score increases when issue count decreases                    │
-│  Score history = 30-day time-series of health score; viewable in CloudIQ UI per array                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Component-Level Health
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Clicking into a system shows component-level status. Components vary by system type but typically include:
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| Component | System Types | Common Issues |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>|---|---|---|
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| Drives / SSDs | PowerStore, PowerMax, PowerScale | Predictive failure, read errors |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| Controllers / Engines | PowerStore, PowerMax | Controller offline, firmware mismatch |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Nodes | PowerScale | Node offline, network partition |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| Enclosures | All | Fans, power supplies, temperature |
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| Replication Links | PowerStore, PowerMax | SRDF link degraded, replication lag |
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>| Battery Backup Units | PowerStore | BBU charge &lt; threshold |
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>## Connectivity Checks
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>CloudIQ relies on the system&#39;s phone-home channel (SRS or ESRS) to receive telemetry. If a system goes grey or shows stale data, check connectivity first.
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>```bash
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a># Check last contact time for all systems
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>curl -sk -X GET \
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage_systems?select=name,last_contact_timestamp,connectivity_status&quot; \
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  -H &quot;Accept: application/json&quot; | jq &#39;.results[] | {name, last_contact: .last_contact_timestamp, status: .connectivity_status}&#39;
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── CloudIQ — Health Monitoring ─────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                         Health Score Model: 0-100 composite per array                         │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │           Component inputs: hardware faults, performance, capacity, software events           │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │         Score 90-100: Green — healthy · 70-89: Yellow — warning · 0-69: Red — critical        │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │               Trend indicator: improving / steady / degrading over last 24 hours              │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │         Issue list: individual problems contributing to score reduction with weighting        │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │              Fleet view: all arrays ranked by health score; outliers highlighted              │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Health score computed in Dell cloud from telemetry · updated approximately every 5 minutes           │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  Health score = Weighted composite of hardware, performance, capacity, and software inputs            │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Issue = Individual contributing problem; each has a weight and recommended fix                       │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  Trend = Direction of health score movement over trailing 24-hour window                              │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Fleet view = Dashboard showing all registered arrays ordered by health score                         │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Red array = Health score below 70; requires immediate investigation                                  │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Yellow array = Health score 70-89; monitor closely and plan remediation                              │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Hardware fault = Physical component issue (drive, fan, power supply) reducing score                  │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Performance issue = Sustained latency or IOPS anomaly contributing to score reduction                │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Software event = Firmware error or software exception recorded by array                              │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Weight = Relative contribution of an issue to total score reduction                                  │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Resolved issue = Problem that cleared; score increases when issue count decreases                    │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Score history = 30-day time-series of health score; viewable in CloudIQ UI per array                 │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Component-Level Health
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Clicking into a system shows component-level status. Components vary by system type but typically include:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Component | System Types | Common Issues |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|---|---|---|
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Drives / SSDs | PowerStore, PowerMax, PowerScale | Predictive failure, read errors |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Controllers / Engines | PowerStore, PowerMax | Controller offline, firmware mismatch |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Nodes | PowerScale | Node offline, network partition |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Enclosures | All | Fans, power supplies, temperature |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Replication Links | PowerStore, PowerMax | SRDF link degraded, replication lag |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Battery Backup Units | PowerStore | BBU charge &lt; threshold |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>## Connectivity Checks
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>CloudIQ relies on the system&#39;s phone-home channel (SRS or ESRS) to receive telemetry. If a system goes grey or shows stale data, check connectivity first.
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>```bash
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># Check last contact time for all systems
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>curl -sk -X GET \
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage_systems?select=name,last_contact_timestamp,connectivity_status&quot; \
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  -H &quot;Accept: application/json&quot; | jq &#39;.results[] | {name, last_contact: .last_contact_timestamp, status: .connectivity_status}&#39;
 </code></pre></div></p>
 <p>Connectivity status values:</p>
 <table>
@@ -4876,17 +4877,17 @@
 </tbody>
 </table>
 <h2 id="verifying-srs-connectivity-on-powerscale">Verifying SRS Connectivity on PowerScale<a class="headerlink" href="#verifying-srs-connectivity-on-powerscale" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On PowerScale OneFS CLI</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@powerscale.example.com
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check SRS (SmartConnect Remote Support) status</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>remotesupport<span class="w"> </span>connectemc<span class="w"> </span>status
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Trigger a manual connectivity test</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>isi<span class="w"> </span>remotesupport<span class="w"> </span>connectemc<span class="w"> </span>start
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># View SRS daemon logs</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;connectemc&quot;</span><span class="w"> </span>/var/log/messages<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On PowerScale OneFS CLI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@powerscale.example.com
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check SRS (SmartConnect Remote Support) status</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>remotesupport<span class="w"> </span>connectemc<span class="w"> </span>status
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Trigger a manual connectivity test</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>isi<span class="w"> </span>remotesupport<span class="w"> </span>connectemc<span class="w"> </span>start
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># View SRS daemon logs</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;connectemc&quot;</span><span class="w"> </span>/var/log/messages<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
 <h2 id="common-health-issues">Common Health Issues<a class="headerlink" href="#common-health-issues" title="Permanent link">&para;</a></h2>
 <table>

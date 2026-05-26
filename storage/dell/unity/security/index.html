@@ -4547,58 +4547,6 @@
 
 
 <h1 id="unity-security">Unity — Security<a class="headerlink" href="#unity-security" title="Permanent link">&para;</a></h1>
-<p>┌───────────────────────────────────────── Dell Unity Security ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Unity security: DARE (SED drives), LDAP/AD for admin and NAS auth, RBAC, audit log      │   │
-│   │        Admin auth: LDAP/AD group mapped to Unity roles; local accounts for break-glass        │   │
-│   │      NAS auth: each NAS Server has own AD/LDAP provider; Kerberos for SMB authentication      │   │
-│   │           Audit: all Unisphere and uemcli actions logged; export via syslog to SIEM           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    DARE at rest → TLS REST API → LDAP role check → NAS Kerberos → file ACL → audit log                │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Encryption         │  │          Admin Auth         │  │         NAS / Audit         │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │          DARE (SED)         │  │          LDAP / AD          │  │       NAS AD/Kerberos       │   │
-│   │       KMIP key server       │  │          RBAC roles         │  │         Syslog SIEM         │   │
-│   │         Key rotation        │  │      Local break-glass      │  │       Admin audit log       │   │
-│   │         Crypto erase        │  │         TLS REST API        │  │        NAS file audit       │   │
-│   │        In-transit TLS       │  │       Session timeout       │  │          CEE export         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    DARE + KMIP → LDAP role assignment → NAS Kerberos → file ACL → syslog audit review                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   │     Control      │    Mechanism     │      Standard     │    Exception     │      Audit       │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │    Encryption    │   DARE + KMIP    │    All volumes    │   KMIP outage    │ Key audit trail  │   │
-│   │    Admin auth    │    LDAP / AD     │   Named accounts  │    Local only    │   Login events   │   │
-│   │  NAS file auth   │   AD Kerberos    │   Per NAS Server  │  NTLM fallback   │   Auth events    │   │
-│   │     Logging      │   Syslog + CEE   │    SIEM ingest    │        —         │  Weekly review   │   │
-│                                                                                                       │
-│    Physical: KMIP on isolated VLAN; Unity management IP on OOB network; no shared mgmt                │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    DARE           = Data At Rest Encryption; SED drives; key managed by external KMIP server          │
-│    RBAC roles     = Unity roles: Administrator, Storage Admin, VM Admin, Operator, Auditor            │
-│    NAS Server AD  = Each NAS Server joined to its own AD domain for SMB Kerberos auth                 │
-│    Kerberos       = Mutual auth for SMB clients and Unity NAS Server via AD tickets                   │
-│    NTLM fallback  = Legacy SMB auth when Kerberos unavailable; weaker; disable if possible            │
-│    CEE            = Common Event Enabler; NAS file audit export to SIEM                               │
-│    File audit     = NAS Server logs file access events (open, delete, rename) via CEE                 │
-│    Syslog         = Admin action log (Unisphere / uemcli changes) forwarded to SIEM                   │
-│    Session timeout= Configurable idle timeout for Unisphere and uemcli sessions                       │
-│    Crypto erase   = Destroy SED encryption key on drive decommission; data unrecoverable              │
-│    KMIP outage    = Unity caches keys temporarily; fix KMIP before cache expires                      │
-│    Break-glass    = Local Unity admin account; use only when LDAP unavailable; log all use            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── Dell Unity Security ─────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -4651,7 +4599,7 @@
 <a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│    Break-glass    = Local Unity admin account; use only when LDAP unavailable; log all use            │
 <a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
+</code></pre></div>
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="authentication/">

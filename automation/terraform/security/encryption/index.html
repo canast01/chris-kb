@@ -3871,27 +3871,6 @@
     dataSource --&gt; tfApply
     tfApply --&gt; stateFile
     stateFile --&gt; s3Encrypted</code></pre>
-┌─────────────────────────────────────── Terraform — Encryption ────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Terraform encryption: state file encryption at rest (S3 SSE-KMS), transit TLS, sensitive output│   │
-│   │   State encryption: server-side via S3 SSE-KMS; TF 1.7+ client-side: terraform encryption{}   │   │
-│   │      Sensitive outputs: never stored as plaintext in state; mark outputs sensitive = true     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               State Encryption               │  │             Sensitive Variables             │   │
-│   │          S3 SSE-KMS on state bucket          │  │      variable "x" { sensitive = true }      │   │
-│   │         Terraform 1.7+ encryption{}          │  │       output "x" { sensitive = true }       │   │
-│   │        AES-GCM key from KMS or Vault         │  │        Redacted in plan and apply log       │   │
-│   │          All TF API calls: TLS 1.2+          │  │      Still stored in state (encrypted)      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    encryption block= TF 1.7+: encrypt state at Terraform level before S3; defence-in-depth    │   │
-│   │ SSE-KMS        = S3 server-side encryption with AWS KMS managed key; transparent to Terraform │   │
-│   │  sensitive = true= prevents value from appearing in output; value still exists in state file  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```bash
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a># Verify S3 bucket has default encryption enabled
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>aws s3api get-bucket-encryption --bucket myorg-terraform-state

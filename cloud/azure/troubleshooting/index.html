@@ -4296,132 +4296,133 @@
 
 
 <h1 id="azure-troubleshooting">Azure — Troubleshooting<a class="headerlink" href="#azure-troubleshooting" title="Permanent link">&para;</a></h1>
-<p>┌─────────────────────────────────── Azure Troubleshooting Overview ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │               Azure Troubleshooting — Common Issues, Diagnostics, and Escalation              │   │
-│   │     Common issues: VM unreachable · NSG blocking · RBAC access denied · Storage auth error    │   │
-│   │   Diagnostics: Boot diagnostics · Serial Console · Network Watcher · Activity Log · Monitor   │   │
-│   │ Tools: az CLI describe · Azure portal diagnostics · Connection Troubleshoot · Resource Health │   │
-│   │   Escalation: Azure Support cases; collect sub ID, region, resource ID, error, and timeframe  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Common issues guide investigation · Diagnostics locate root cause                                  │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Common Issues        │  │         Diagnostics         │  │          Escalation         │   │
-│   │      VM: RDP/SSH fails      │  │    Boot diagnostics: log    │  │     Sub ID + resource ID    │   │
-│   │      NSG: port blocked      │  │     Serial Console: OOB     │  │      Error + timestamp      │   │
-│   │     RBAC: access denied     │  │    Network Watcher: path    │  │     Severity: Crit/High     │   │
-│   │      Storage: 403 auth      │  │    Activity Log: who/when   │  │    Sev A: production down   │   │
-│   │     DNS: resolution fail    │  │    Resource Health: state   │  │     Premium support: TAM    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Identify symptom → collect diagnostics (logs, Network Watcher, health) → resolve or escalate       │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Common Issues   │   Diagnostics    │     Escalation    │    CLI Tools     │   Portal Tools   │   │
-│   │    VM: no RDP    │  Boot diag log   │    Sev A: call    │    az vm list    │ Resource Health  │   │
-│   │  NSG: miss rule  │  Serial console  │   Sub ID + error  │  az network nsg  │   Net Watcher    │   │
-│   │   RBAC: denied   │   Activity Log   │    Premium: TAM   │  az role assign  │    Boot Diag     │   │
-│   │   Storage: 403   │   Net Watcher    │    Collect: all   │  az storage ls   │  Diagn settings  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Azure VM host fabric · Azure networking SDN · Microsoft Support infrastructure                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Boot Diagnostics  = Captures VM serial console log and screenshot; diagnoses non-starting VMs        │
-│  Serial Console    = Out-of-band terminal access to VM; works when RDP/SSH unreachable                │
-│  Network Watcher   = Diagnoses connectivity; Connection Troubleshoot traces hop-by-hop path           │
-│  Connection Troubleshoot= Network Watcher tool; tests TCP reachability from source VM to destination  │
-│  Resource Health   = Per-resource health history; shows Azure platform events affecting the resource  │
-│  Activity Log      = Control-plane audit; search for who made a change and when in the last 90 days   │
-│  NSG flow logs     = Accepted/denied traffic metadata; route to Log Analytics for KQL queries         │
-│  Severity A case   = Production down; 24/7 response; phone callback + online case together            │
-│  Severity B case   = Degraded function; business-hours response; online case sufficient               │
-│  TAM               = Technical Account Manager; named Microsoft contact for Premier/Unified support   │
-│  RBAC denied       = Check Activity Log for the 403; look for missing role or wrong scope             │
-│  Storage 403       = Check access key vs SAS vs RBAC; check firewall rules and private endpoint config│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Common causes:
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- NSG deny rule at NIC level (NIC NSG takes precedence over Subnet NSG)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- User-defined route sending traffic to wrong next hop
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Azure Firewall blocking traffic between hub and spoke
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- Service endpoint not configured on subnet (for PaaS services)
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>## NSG Troubleshooting
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>```bash
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Check if traffic is allowed by NSG
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>az network watcher check-nsg-flow --direction Inbound \
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    --protocol TCP --local 10.0.0.4 --local-port 443 \
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    --remote 10.1.0.10 --remote-port 52000 \
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    --nsg &lt;nsg-id&gt;
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a># Output: access = Allow or Deny, with matching rule name
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># View NSG flow logs (query Log Analytics)
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Workspace → Logs:
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>AzureNetworkAnalytics_CL
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| where SubType_s == &quot;FlowLog&quot;
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>| where FlowStatus_s == &quot;D&quot;   // Denied flows
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>| where DestIP_s == &quot;&lt;target-ip&gt;&quot;
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>| project TimeGenerated, SrcIP_s, DestIP_s, DestPort_d, NSGName_s, NSGRule_s
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── Azure Troubleshooting Overview ────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │               Azure Troubleshooting — Common Issues, Diagnostics, and Escalation              │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │     Common issues: VM unreachable · NSG blocking · RBAC access denied · Storage auth error    │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │   Diagnostics: Boot diagnostics · Serial Console · Network Watcher · Activity Log · Monitor   │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │ Tools: az CLI describe · Azure portal diagnostics · Connection Troubleshoot · Resource Health │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │   Escalation: Azure Support cases; collect sub ID, region, resource ID, error, and timeframe  │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    Common issues guide investigation · Diagnostics locate root cause                                  │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │        Common Issues        │  │         Diagnostics         │  │          Escalation         │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │      VM: RDP/SSH fails      │  │    Boot diagnostics: log    │  │     Sub ID + resource ID    │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │      NSG: port blocked      │  │     Serial Console: OOB     │  │      Error + timestamp      │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │     RBAC: access denied     │  │    Network Watcher: path    │  │     Severity: Crit/High     │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │      Storage: 403 auth      │  │    Activity Log: who/when   │  │    Sev A: production down   │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │     DNS: resolution fail    │  │    Resource Health: state   │  │     Premium support: TAM    │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│    Identify symptom → collect diagnostics (logs, Network Watcher, health) → resolve or escalate       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │  Common Issues   │   Diagnostics    │     Escalation    │    CLI Tools     │   Portal Tools   │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │    VM: no RDP    │  Boot diag log   │    Sev A: call    │    az vm list    │ Resource Health  │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │  NSG: miss rule  │  Serial console  │   Sub ID + error  │  az network nsg  │   Net Watcher    │   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   │   RBAC: denied   │   Activity Log   │    Premium: TAM   │  az role assign  │    Boot Diag     │   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   │   Storage: 403   │   Net Watcher    │    Collect: all   │  az storage ls   │  Diagn settings  │   │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│                                                                                                       │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Azure VM host fabric · Azure networking SDN · Microsoft Support infrastructure                       │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│                                                                                                       │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Boot Diagnostics  = Captures VM serial console log and screenshot; diagnoses non-starting VMs        │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  Serial Console    = Out-of-band terminal access to VM; works when RDP/SSH unreachable                │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  Network Watcher   = Diagnoses connectivity; Connection Troubleshoot traces hop-by-hop path           │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│  Connection Troubleshoot= Network Watcher tool; tests TCP reachability from source VM to destination  │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│  Resource Health   = Per-resource health history; shows Azure platform events affecting the resource  │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│  Activity Log      = Control-plane audit; search for who made a change and when in the last 90 days   │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│  NSG flow logs     = Accepted/denied traffic metadata; route to Log Analytics for KQL queries         │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│  Severity A case   = Production down; 24/7 response; phone callback + online case together            │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│  Severity B case   = Degraded function; business-hours response; online case sufficient               │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│  TAM               = Technical Account Manager; named Microsoft contact for Premier/Unified support   │
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│  RBAC denied       = Check Activity Log for the 403; look for missing role or wrong scope             │
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│  Storage 403       = Check access key vs SAS vs RBAC; check firewall rules and private endpoint config│
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│                                                                                                       │
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Common causes:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- NSG deny rule at NIC level (NIC NSG takes precedence over Subnet NSG)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- User-defined route sending traffic to wrong next hop
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Azure Firewall blocking traffic between hub and spoke
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Service endpoint not configured on subnet (for PaaS services)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>## NSG Troubleshooting
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>```bash
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Check if traffic is allowed by NSG
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>az network watcher check-nsg-flow --direction Inbound \
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    --protocol TCP --local 10.0.0.4 --local-port 443 \
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    --remote 10.1.0.10 --remote-port 52000 \
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    --nsg &lt;nsg-id&gt;
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Output: access = Allow or Deny, with matching rule name
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># View NSG flow logs (query Log Analytics)
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Workspace → Logs:
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>AzureNetworkAnalytics_CL
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| where SubType_s == &quot;FlowLog&quot;
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>| where FlowStatus_s == &quot;D&quot;   // Denied flows
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>| where DestIP_s == &quot;&lt;target-ip&gt;&quot;
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>| project TimeGenerated, SrcIP_s, DestIP_s, DestPort_d, NSGName_s, NSGRule_s
 </code></pre></div></p>
 <h2 id="azure-ad-authentication-errors">Azure AD Authentication Errors<a class="headerlink" href="#azure-ad-authentication-errors" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check token issuance via Entra ID sign-in logs</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span>--correlation-id<span class="w"> </span>&lt;correlation-id&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Via Entra ID portal: Monitor → Sign-in logs → filter by app/user</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Look for: failure reason, conditional access policy that blocked sign-in</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check service principal credential expiry</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>az<span class="w"> </span>ad<span class="w"> </span>sp<span class="w"> </span>credential<span class="w"> </span>list<span class="w"> </span>--id<span class="w"> </span>&lt;sp-object-id&gt;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># If federated credential issue (OIDC):</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>federated-credential<span class="w"> </span>list<span class="w"> </span>--id<span class="w"> </span>&lt;app-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check token issuance via Entra ID sign-in logs</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span>--correlation-id<span class="w"> </span>&lt;correlation-id&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Via Entra ID portal: Monitor → Sign-in logs → filter by app/user</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Look for: failure reason, conditional access policy that blocked sign-in</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check service principal credential expiry</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>ad<span class="w"> </span>sp<span class="w"> </span>credential<span class="w"> </span>list<span class="w"> </span>--id<span class="w"> </span>&lt;sp-object-id&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># If federated credential issue (OIDC):</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>federated-credential<span class="w"> </span>list<span class="w"> </span>--id<span class="w"> </span>&lt;app-id&gt;
 </code></pre></div>
 <p>Common causes:
 - Conditional Access policy blocking (no MFA, non-compliant device, suspicious location)
 - Service principal client secret expired
 - Missing API permission or admin consent not granted</p>
 <h2 id="azure-storage-access-denied">Azure Storage Access Denied<a class="headerlink" href="#azure-storage-access-denied" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check storage firewall rules</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>-n<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;networkRuleSet&#39;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check role assignments on storage account</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span>--scope<span class="w"> </span>&lt;storage-account-resource-id&gt;
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Test access via SAS token</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>storage<span class="w"> </span>blob<span class="w"> </span>download<span class="w"> </span>--account-name<span class="w"> </span>&lt;sa&gt;<span class="w"> </span>--container-name<span class="w"> </span>&lt;container&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>--name<span class="w"> </span>&lt;blob&gt;<span class="w"> </span>--file<span class="w"> </span>/tmp/test<span class="w"> </span>--sas-token<span class="w"> </span><span class="s2">&quot;&lt;sas&gt;&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check if data plane access uses Entra ID or key-based auth</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Key-based access can be disabled in Shared Key authorization:</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>-n<span class="w"> </span>&lt;sa&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;allowSharedKeyAccess&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check storage firewall rules</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>-n<span class="w"> </span>&lt;storage-account&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;networkRuleSet&#39;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check role assignments on storage account</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span>--scope<span class="w"> </span>&lt;storage-account-resource-id&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Test access via SAS token</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>az<span class="w"> </span>storage<span class="w"> </span>blob<span class="w"> </span>download<span class="w"> </span>--account-name<span class="w"> </span>&lt;sa&gt;<span class="w"> </span>--container-name<span class="w"> </span>&lt;container&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>--name<span class="w"> </span>&lt;blob&gt;<span class="w"> </span>--file<span class="w"> </span>/tmp/test<span class="w"> </span>--sas-token<span class="w"> </span><span class="s2">&quot;&lt;sas&gt;&quot;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Check if data plane access uses Entra ID or key-based auth</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Key-based access can be disabled in Shared Key authorization:</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>-n<span class="w"> </span>&lt;sa&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;allowSharedKeyAccess&#39;</span>
 </code></pre></div>
 <h2 id="aks-pod-not-starting">AKS Pod Not Starting<a class="headerlink" href="#aks-pod-not-starting" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Get pod description and events</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check node resource pressure</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Conditions:&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>kubectl<span class="w"> </span>top<span class="w"> </span>nodes
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Image pull error</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed to pull&quot;</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Check Azure Container Registry firewall if using private ACR:</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>az<span class="w"> </span>acr<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;acr-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;networkRuleSet&#39;</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># DNS resolution in pod (network policy blocking?)</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>kubectl<span class="w"> </span>run<span class="w"> </span>test-pod<span class="w"> </span>--rm<span class="w"> </span>-i<span class="w"> </span>--image<span class="o">=</span>busybox<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>kubernetes.default
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get pod description and events</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check node resource pressure</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Conditions:&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>kubectl<span class="w"> </span>top<span class="w"> </span>nodes
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Image pull error</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed to pull&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Check Azure Container Registry firewall if using private ACR:</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>az<span class="w"> </span>acr<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;acr-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;networkRuleSet&#39;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># DNS resolution in pod (network policy blocking?)</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>kubectl<span class="w"> </span>run<span class="w"> </span>test-pod<span class="w"> </span>--rm<span class="w"> </span>-i<span class="w"> </span>--image<span class="o">=</span>busybox<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>kubernetes.default
 </code></pre></div>
 <h2 id="app-service-502503">App Service 502/503<a class="headerlink" href="#app-service-502503" title="Permanent link">&para;</a></h2>
 <ol>
@@ -4430,12 +4431,12 @@
 <li>Review application logs: App Service → App Service Logs → enable File System logging</li>
 <li>Check health probe configuration: App Service → Health Check — confirm probe returning 200</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check App Service Plan scale out status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>appservice<span class="w"> </span>plan<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;plan-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;properties.numberOfWorkers&#39;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Manual scale up (if throttled)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>az<span class="w"> </span>appservice<span class="w"> </span>plan<span class="w"> </span>update<span class="w"> </span>--name<span class="w"> </span>&lt;plan-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--sku<span class="w"> </span>P2V3
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check App Service Plan scale out status</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>appservice<span class="w"> </span>plan<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;plan-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;properties.numberOfWorkers&#39;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Manual scale up (if throttled)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>az<span class="w"> </span>appservice<span class="w"> </span>plan<span class="w"> </span>update<span class="w"> </span>--name<span class="w"> </span>&lt;plan-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--sku<span class="w"> </span>P2V3
 </code></pre></div>
 
 

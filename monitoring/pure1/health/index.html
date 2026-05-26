@@ -4789,80 +4789,81 @@
 
 
 <h1 id="pure1-array-health">Pure1 — Array Health<a class="headerlink" href="#pure1-array-health" title="Permanent link">&para;</a></h1>
-<p>┌────────────────────────────────────── Pure1 — Health Monitoring ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Pure1 Health: continuous monitoring of array hardware, software, and performance       │   │
-│   │      Component inputs: drives, controllers, power supplies, fans, network, Purity events      │   │
-│   │           Health score: OK / Degraded / Unhealthy per array based on component state          │   │
-│   │           Fleet view: all arrays ranked by health; filter by tag, model, or location          │   │
-│   │            Drill-down: click array to see component-level detail and active alerts            │   │
-│   │               30-day history: health trend; identify recurring degraded periods               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Health from Purity OS via phonehome · Pure cloud ML processes · UI updated every 2 min               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Health score = OK (all green) / Degraded (non-critical fault) / Unhealthy (critical)                 │
-│  Fleet view = Pure1 UI showing all arrays ordered by health state                                     │
-│  Drill-down = Clicking array opens component view: drives, controllers, shelves                       │
-│  Unhealthy = Critical component failure; TAC case auto-opened if enabled                              │
-│  Degraded = Non-critical fault (e.g., single drive pre-failure); warning state                        │
-│  OK = All components healthy; no active alerts                                                        │
-│  30-day history = Pure1 stores health state over time; shows trend per array                          │
-│  Component = Physical part: drive, DIMM, NIC, controller, power supply, fan                           │
-│  Purity event = Software-level error logged by array OS; contributes to health                        │
-│  Pre-failure = Pure1 ML detecting imminent component failure before it occurs                         │
-│  Phonehome = Array sending hardware sensor data to Pure cloud every 30 seconds                        │
-│  Proactive swap = Pure staging replacement and dispatching before customer impact                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## FlashBlade Health
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ssh pureuser@&lt;flashblade-ip&gt;
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Blade and chassis health
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>purehw list
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># Network interfaces
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>purenetwork list
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># Active alerts
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>purealert list --flagged
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a># NFS/SMB service state
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>pureservice list
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── Pure1 — Health Monitoring ──────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │        Pure1 Health: continuous monitoring of array hardware, software, and performance       │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │      Component inputs: drives, controllers, power supplies, fans, network, Purity events      │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │           Health score: OK / Degraded / Unhealthy per array based on component state          │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │           Fleet view: all arrays ranked by health; filter by tag, model, or location          │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │            Drill-down: click array to see component-level detail and active alerts            │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │               30-day history: health trend; identify recurring degraded periods               │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Health from Purity OS via phonehome · Pure cloud ML processes · UI updated every 2 min               │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  Health score = OK (all green) / Degraded (non-critical fault) / Unhealthy (critical)                 │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Fleet view = Pure1 UI showing all arrays ordered by health state                                     │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  Drill-down = Clicking array opens component view: drives, controllers, shelves                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Unhealthy = Critical component failure; TAC case auto-opened if enabled                              │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Degraded = Non-critical fault (e.g., single drive pre-failure); warning state                        │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  OK = All components healthy; no active alerts                                                        │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  30-day history = Pure1 stores health state over time; shows trend per array                          │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Component = Physical part: drive, DIMM, NIC, controller, power supply, fan                           │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Purity event = Software-level error logged by array OS; contributes to health                        │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Pre-failure = Pure1 ML detecting imminent component failure before it occurs                         │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Phonehome = Array sending hardware sensor data to Pure cloud every 30 seconds                        │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Proactive swap = Pure staging replacement and dispatching before customer impact                     │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## FlashBlade Health
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>ssh pureuser@&lt;flashblade-ip&gt;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Blade and chassis health
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>purehw list
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Network interfaces
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>purenetwork list
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Active alerts
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>purealert list --flagged
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># NFS/SMB service state
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>pureservice list
 </code></pre></div></p>
 <h2 id="health-via-pure1-rest-api">Health via Pure1 REST API<a class="headerlink" href="#health-via-pure1-rest-api" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Authenticate</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/oauth2/1.0/token&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;grant_type=urn:ietf:params:oauth:grant-type:token-exchange&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;subject_token=&lt;api-key-id&gt;:&lt;private-key-jwt&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;access_token&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Array health overview</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Arrays with active alerts</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/alerts?filter=state=&#39;open&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/oauth2/1.0/token&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;grant_type=urn:ietf:params:oauth:grant-type:token-exchange&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;subject_token=&lt;api-key-id&gt;:&lt;private-key-jwt&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;access_token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Array health overview</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Arrays with active alerts</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/alerts?filter=state=&#39;open&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <h2 id="connectivity-health-phone-home">Connectivity Health — Phone Home<a class="headerlink" href="#connectivity-health-phone-home" title="Permanent link">&para;</a></h2>
 <p>Pure1 requires outbound HTTPS connectivity (TCP 443) from the array to Pure Storage cloud. If Phone Home is failing:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test outbound connectivity from array</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purentp<span class="w"> </span>list<span class="w">           </span><span class="c1"># NTP also tests DNS/network</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check Phone Home status</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--csv<span class="w">   </span><span class="c1"># includes phone_home_enabled, phone_home_last_contact</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Proxy configuration (if internet access is via proxy)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>puresupport<span class="w"> </span>proxy<span class="w"> </span>list
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>puresupport<span class="w"> </span>proxy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--host<span class="w"> </span>&lt;proxy-ip&gt;<span class="w"> </span>--port<span class="w"> </span><span class="m">8080</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test outbound connectivity from array</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purentp<span class="w"> </span>list<span class="w">           </span><span class="c1"># NTP also tests DNS/network</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check Phone Home status</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--csv<span class="w">   </span><span class="c1"># includes phone_home_enabled, phone_home_last_contact</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Proxy configuration (if internet access is via proxy)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>puresupport<span class="w"> </span>proxy<span class="w"> </span>list
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>puresupport<span class="w"> </span>proxy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--host<span class="w"> </span>&lt;proxy-ip&gt;<span class="w"> </span>--port<span class="w"> </span><span class="m">8080</span>
 </code></pre></div>
 <h2 id="health-monitoring-integration">Health Monitoring Integration<a class="headerlink" href="#health-monitoring-integration" title="Permanent link">&para;</a></h2>
 <p>Pure1 can send health events to external systems:</p>
