@@ -3233,28 +3233,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#vsan-allocation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VSAN Allocation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#zone-and-alias-naming" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Zone and Alias Naming
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#isl-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3503,116 +3481,100 @@
 </blockquote>
 <hr />
 <h2 id="switch-naming">Switch Naming<a class="headerlink" href="#switch-naming" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;site&gt;-mds-sw&lt;nn&gt;
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;site&gt;-mds-sw&lt;nn&gt;
 </code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Site</th>
-<th>Fabric A</th>
-<th>Fabric B</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DC1</td>
-<td><code>dc1-mds-sw01</code>, <code>dc1-mds-sw03</code></td>
-<td><code>dc1-mds-sw02</code>, <code>dc1-mds-sw04</code></td>
-</tr>
-<tr>
-<td>DC2</td>
-<td><code>dc2-mds-sw01</code>, <code>dc2-mds-sw03</code></td>
-<td><code>dc2-mds-sw02</code>, <code>dc2-mds-sw04</code></td>
-</tr>
-</tbody>
-</table>
-<p>Fabric A = odd switch numbers, Fabric B = even.</p>
-<h2 id="vsan-allocation">VSAN Allocation<a class="headerlink" href="#vsan-allocation" title="Permanent link">&para;</a></h2>
-<p>VSANs isolate traffic types within the same physical fabric:</p>
-<table>
-<thead>
-<tr>
-<th>VSAN ID</th>
-<th>Fabric</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>10</td>
-<td>Fabric A</td>
-<td>Production</td>
-</tr>
-<tr>
-<td>11</td>
-<td>Fabric B</td>
-<td>Production</td>
-</tr>
-<tr>
-<td>20</td>
-<td>Fabric A</td>
-<td>Replication (SRDF/A, RecoverPoint)</td>
-</tr>
-<tr>
-<td>21</td>
-<td>Fabric B</td>
-<td>Replication</td>
-</tr>
-<tr>
-<td>99</td>
-<td>Both</td>
-<td>Management / out-of-band testing</td>
-</tr>
-</tbody>
-</table>
-<p>Document VSAN assignments in CMDB. Never reuse a VSAN ID after decommission.</p>
-<h2 id="zone-and-alias-naming">Zone and Alias Naming<a class="headerlink" href="#zone-and-alias-naming" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Zone:   &lt;hostname&gt;_&lt;hba_port&gt;-&lt;arrayname&gt;_&lt;port&gt;
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Alias:  &lt;hostname&gt;_&lt;hba_port&gt;   or   &lt;arrayname&gt;_&lt;port&gt;
-</code></pre></div>
-<p>Examples:
-- Zone: <code>db01_0a-powermax01_0a</code>
-- Alias: <code>db01_0a</code> (WWPN alias for host HBA port), <code>powermax01_0a</code> (WWPN alias for target)</p>
-<p>Rules:
-- Enhanced zoning (enhanced zone mode) must be enabled on all VSANs: <code>zone mode enhanced vsan &lt;id&gt;</code>
-- One initiator per zone (single-initiator zoning)
-- Zone members always referenced by alias — never hard-coded WWPNs directly in zone definitions</p>
-<pre class="mermaid"><code>graph TD
-  subgraph "Fabric A — DC1"
-    SW1["dc1-mds-sw01\n(odd — Fabric A)"]
-    SW3["dc1-mds-sw03\n(odd — Fabric A)"]
-    subgraph "VSAN 10 — Production A"
-      ZS10["Zone Set: dc1-fabA-prod"]
-      Z1["Zone: db01_0a-powermax01_0a"]
-      Z2["Zone: esxi01_0a-fa01_ct0_p0"]
-    end
-    subgraph "VSAN 20 — Replication A"
-      ZS20["Zone Set: dc1-fabA-repl"]
-    end
-  end
-
-  subgraph "Fabric B — DC1"
-    SW2["dc1-mds-sw02\n(even — Fabric B)"]
-    SW4["dc1-mds-sw04\n(even — Fabric B)"]
-    subgraph "VSAN 11 — Production B"
-      ZS11["Zone Set: dc1-fabB-prod"]
-    end
-    subgraph "VSAN 21 — Replication B"
-      ZS21["Zone Set: dc1-fabB-repl"]
-    end
-  end
-
-  ZS10 --&gt; Z1 &amp; Z2
-  SW1 --- SW3
-  SW2 --- SW4
-  SW1 &lt;--&gt;|"ISL"| SW2
-
-  classDef sw fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef zs fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef z fill:#b45309,stroke:#92400e,color:#fff
-  class SW1,SW2,SW3,SW4 sw
-  class ZS10,ZS11,ZS20,ZS21 zs
-  class Z1,Z2 z</code></pre>
+┌────────────────────────────────── Cisco MDS 9000 — Design Standards ──────────────────────────────────┐
+│                                                                                                       │
+│  MDS design principles: dual-fabric A/B, VSAN per workload, PortChannel ISLs, ISSU.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Fabric Design                 │  │                 VSAN Design                 │   │
+│   │          Dual fabric A and B always          │  │          One VSAN per workload type         │   │
+│   │       No single switch failure impact        │  │         VSAN 1 never used: reserved         │   │
+│   │         ISL PortChannel: min 2 ports         │  │         Prod/dev/test separate VSAN         │   │
+│   │          Over-subscription: 7:1 max          │  │         VSAN QoS: priority per VSAN         │   │
+│   │          Directors: 9706/9710/9718           │  │             FCoE: separate VSAN             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Dual fabric is non-negotiable; VSAN per workload prevents blast-radius cross-talk.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Zone Design                  │  │            Operational Standards            │   │
+│   │         WWN zoning: not port zoning          │  │          ISSU upgrade: all upgrades         │   │
+│   │          Single initiator per zone           │  │          TACACS+ via ISE: mandatory         │   │
+│   │          Alias: device name not WWN          │  │           NX-OS: &lt; 2 versions lag           │   │
+│   │         Default deny: no open zones          │  │          SNMPv3 only: disable v1/v2         │   │
+│   │            Zone set: one per VSAN            │  │         Backup: config + zone daily         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS director pair (A+B) · dual supervisor per director · SFP transceivers · FC cables                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Dual fabric     = two independent FC fabrics; every host and array dual-homed                        │
+│  VSAN            = Virtual SAN; one VSAN per workload (prod/dev/test separate)                        │
+│  VSAN 1          = default VSAN; avoid using it; reserved for management                              │
+│  PortChannel ISL = bundled ISLs; PortChannel1 is recommended minimum 2 links                          │
+│  7:1             = recommended over-subscription ratio for FC storage traffic                         │
+│  WWN zoning      = zone by HBA World Wide Name; survives port changes                                 │
+│  Single initiator= one HBA per zone; prevents initiator-to-initiator traffic                          │
+│  Device alias    = human-readable name for WWN; managed via CFS distribution                          │
+│  Default deny    = no zone = no communication; strict zone policy                                     │
+│  ISSU            = In-Service Software Upgrade; required for all NX-OS upgrades                       │
+│  TACACS+ via ISE = Cisco ISE provides TACACS+ for all MDS admin auth                                  │
+│  Zone set        = one active zone set per VSAN at a time; backup sets inactive                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Examples:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- Zone: `db01_0a-powermax01_0a`
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Alias: `db01_0a` (WWPN alias for host HBA port), `powermax01_0a` (WWPN alias for target)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Rules:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- Enhanced zoning (enhanced zone mode) must be enabled on all VSANs: `zone mode enhanced vsan &lt;id&gt;`
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- One initiator per zone (single-initiator zoning)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- Zone members always referenced by alias — never hard-coded WWPNs directly in zone definitions
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>```mermaid
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>graph TD
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  subgraph &quot;Fabric A — DC1&quot;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    SW1[&quot;dc1-mds-sw01\n(odd — Fabric A)&quot;]
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    SW3[&quot;dc1-mds-sw03\n(odd — Fabric A)&quot;]
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    subgraph &quot;VSAN 10 — Production A&quot;
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>      ZS10[&quot;Zone Set: dc1-fabA-prod&quot;]
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>      Z1[&quot;Zone: db01_0a-powermax01_0a&quot;]
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>      Z2[&quot;Zone: esxi01_0a-fa01_ct0_p0&quot;]
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    end
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    subgraph &quot;VSAN 20 — Replication A&quot;
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>      ZS20[&quot;Zone Set: dc1-fabA-repl&quot;]
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    end
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  end
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  subgraph &quot;Fabric B — DC1&quot;
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    SW2[&quot;dc1-mds-sw02\n(even — Fabric B)&quot;]
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    SW4[&quot;dc1-mds-sw04\n(even — Fabric B)&quot;]
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    subgraph &quot;VSAN 11 — Production B&quot;
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>      ZS11[&quot;Zone Set: dc1-fabB-prod&quot;]
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    end
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    subgraph &quot;VSAN 21 — Replication B&quot;
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>      ZS21[&quot;Zone Set: dc1-fabB-repl&quot;]
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    end
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  end
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  ZS10 --&gt; Z1 &amp; Z2
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>  SW1 --- SW3
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>  SW2 --- SW4
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>  SW1 &lt;--&gt;|&quot;ISL&quot;| SW2
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>  classDef sw fill:#2563eb,stroke:#1d4ed8,color:#fff
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>  classDef zs fill:#7c3aed,stroke:#6d28d9,color:#fff
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>  classDef z fill:#b45309,stroke:#92400e,color:#fff
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>  class SW1,SW2,SW3,SW4 sw
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>  class ZS10,ZS11,ZS20,ZS21 zs
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>  class Z1,Z2 z
+</code></pre></div></p>
 <h2 id="isl-standards">ISL Standards<a class="headerlink" href="#isl-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

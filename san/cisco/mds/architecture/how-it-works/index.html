@@ -3243,61 +3243,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#platform-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Platform Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vsan-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VSAN Design
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#fc-services" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        FC Services
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#fabric-login-sequence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fabric Login Sequence
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -3490,7 +3435,7 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Cisco MDS 9000 series switches run NX-OS and provide scalable SAN fabric services supporting Fibre Channel (FC). The core isolation mechanism is the <strong>VSAN (Virtual SAN)</strong> — multiple logical fabrics share physical infrastructure while maintaining separate name servers, zoning databases, and fabric login tables. Each VSAN operates as an independent fabric.</p>
 <h2 id="san-fabric-topology">SAN Fabric Topology<a class="headerlink" href="#san-fabric-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
+<p><pre class="mermaid"><code>graph TB
   H1A(["esxi-01 HBA0"]) --&gt; MDSA["MDS-9710 Director A\n2× 48p 32Gb FC"]
   H2A(["esxi-02 HBA0"]) --&gt; MDSA
   H1B(["esxi-01 HBA1"]) --&gt; MDSB["MDS-9710 Director B\n2× 48p 32Gb FC"]
@@ -3506,123 +3451,52 @@
   class MDSA,MDSB switch
   class H1A,H2A,H1B,H2B host
   class FA_CT0,PM_A,FA_CT1,PM_B storage</code></pre>
-<h2 id="platform-reference">Platform Reference<a class="headerlink" href="#platform-reference" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Model</th>
-<th>Type</th>
-<th>Max FC Ports</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>MDS 9132T</td>
-<td>Fixed</td>
-<td>32× 32G FC</td>
-<td>Entry/mid-range</td>
-</tr>
-<tr>
-<td>MDS 9148T</td>
-<td>Fixed</td>
-<td>48× 32G FC</td>
-<td>Mid-range</td>
-</tr>
-<tr>
-<td>MDS 9396T</td>
-<td>Fixed</td>
-<td>96× 32G FC</td>
-<td>High-density fixed</td>
-</tr>
-<tr>
-<td>MDS 9706</td>
-<td>Director</td>
-<td>Up to 384 FC</td>
-<td>Modular director</td>
-</tr>
-<tr>
-<td>MDS 9710</td>
-<td>Director</td>
-<td>Up to 576 FC</td>
-<td>Large-scale director</td>
-</tr>
-</tbody>
-</table>
-<p>Directors (9706/9710) support ISSU (In-Service Software Upgrade) — preferred for zero-downtime maintenance.</p>
-<h2 id="vsan-design">VSAN Design<a class="headerlink" href="#vsan-design" title="Permanent link">&para;</a></h2>
-<p>VSANs segment the fabric logically. Each VSAN has its own FC Name Server, domain ID space, zone database, and FLOGI/PLOGI table.</p>
-<table>
-<thead>
-<tr>
-<th>VSAN</th>
-<th>Purpose</th>
-<th>Fabric A</th>
-<th>Fabric B</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Production</td>
-<td>ESXi hosts → storage</td>
-<td>10</td>
-<td>11</td>
-</tr>
-<tr>
-<td>Replication</td>
-<td>SRDF/A or SnapMirror</td>
-<td>20</td>
-<td>21</td>
-</tr>
-<tr>
-<td>Management</td>
-<td>Out-of-band fabric management</td>
-<td>99</td>
-<td>99</td>
-</tr>
-</tbody>
-</table>
-<p>VSAN 1 is the default — do not use VSAN 1 for production; all production traffic must use dedicated VSANs.</p>
-<h2 id="fc-services">FC Services<a class="headerlink" href="#fc-services" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Function</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FCNS (Name Server)</td>
-<td>Registers all devices (hosts and storage) that FLOGI into the fabric</td>
-</tr>
-<tr>
-<td>FSPF</td>
-<td>Fabric Shortest Path First — routing protocol for FC fabrics</td>
-</tr>
-<tr>
-<td>FLOGI DB</td>
-<td>Records all fabric login events (WWN, FCID, port)</td>
-</tr>
-<tr>
-<td>Zoning</td>
-<td>Controls which initiators can communicate with which targets</td>
-</tr>
-</tbody>
-</table>
-<h2 id="fabric-login-sequence">Fabric Login Sequence<a class="headerlink" href="#fabric-login-sequence" title="Permanent link">&para;</a></h2>
-<p>When a host HBA connects:
-1. HBA sends <strong>FLOGI</strong> → switch assigns FCID (3-byte address)
-2. HBA sends <strong>PLOGI</strong> to Name Server (0xFFFFFC) → registers WWPN and FCID
-3. HBA queries <strong>GNN_FT / GID_FT</strong> → Name Server returns list of target FCIDs
-4. HBA sends <strong>PLOGI</strong> to each target → establishes session
-5. HBA sends <strong>PRLI</strong> → negotiates SCSI/NVMe service — I/O ready</p>
-<h2 id="key-commands">Key Commands<a class="headerlink" href="#key-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w">    </span><span class="c1"># all devices logged into VSAN 10</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w">           </span><span class="c1"># all FLOGI entries</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>show<span class="w"> </span>fspf<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w">    </span><span class="c1"># fabric shortest path</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1<span class="w">          </span><span class="c1"># port status</span>
-</code></pre></div>
+┌──────────────────────────────────── Cisco MDS 9000 — How It Works ────────────────────────────────────┐
+│                                                                                                       │
+│  MDS operation: HBA FLOGI → Name Server → zoning lookup → PLOGI → I/O flow.                           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             FC Fabric Login Flow             │  │           VSAN &amp; Zone Enforcement           │   │
+│   │         1. HBA powers on: FLOGI send         │  │             Zone lookup on PLOGI            │   │
+│   │         2. MDS assigns FCID (24-bit)         │  │           Deny if not in same zone          │   │
+│   │         3. Registered in Name Server         │  │          Hard zoning: hardware ACL          │   │
+│   │         4. Query GPN_ID for targets          │  │          VSAN segmentation: no leak         │   │
+│   │           5. PLOGI to target FCID            │  │          CFS propagates zone across         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  FLOGI registers HBA; zone is enforced at PLOGI; CFS keeps zones consistent.                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              ISL &amp; FSPF Routing              │  │           SAN Analytics (MDS 9700)          │   │
+│   │           ISL E_Port forms on boot           │  │            Per-flow telemetry: FC           │   │
+│   │          FSPF: link state LSR flood          │  │          Initiator/target pair IOPS         │   │
+│   │          Shortest path: hop + cost           │  │          Latency histogram per ITL          │   │
+│   │         PortChannel: LACP-like hash          │  │       Export to Kafka / Elasticsearch       │   │
+│   │         BB credits: per-port control         │  │           Bottleneck ITL detection          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS director chassis · supervisor module · line card blades · SFP transceivers                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  FLOGI           = Fabric Login; HBA sends FLOGI to get assigned an FCID                              │
+│  FCID            = Fibre Channel ID; 24-bit address assigned by fabric to each port                   │
+│  Name Server     = MDS Name Server; database of all device logins (FCID → WWN)                        │
+│  GPN_ID          = Get Port Name by ID; query Name Server for target WWN list                         │
+│  PLOGI           = Port Login; initiator to target; MDS enforces zone at this step                    │
+│  Hard zoning     = zone enforcement in hardware ASIC; cannot be bypassed by software                  │
+│  CFS             = Cisco Fabric Services; zones propagated to all switches in fabric                  │
+│  FSPF            = link-state routing; each switch floods LSR with link costs                         │
+│  PortChannel     = ISL aggregation; frames hashed by source/dest FCID pair                            │
+│  BB credits      = Buffer-to-Buffer; receiver grants credits; no credit = pause                       │
+│  SAN analytics   = MDS 9700 ASIC feature; captures per-ITL IOPS and latency                           │
+│  ITL             = Initiator-Target-LUN; FC I/O flow identifier for analytics                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 
 
 
