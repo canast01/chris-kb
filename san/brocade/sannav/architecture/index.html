@@ -3338,7 +3338,53 @@
 Brocade SANnav is a SAN management platform in two variants: Management Portal (per-fabric operations) and Global View (multi-portal aggregation). Deployed as Linux virtual appliances; communicates with switches via HTTPS and SNMP v3.
 </div>
 
-<p><img alt="SANnav Architecture" src="../../../../assets/sannav-architecture-overview.svg" /></p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Brocade SANnav — Architecture ────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  SANnav: centralised SAN management platform for Brocade FC fabrics, zoning, and analytics.           │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │         How It Works        │  │         Integrations        │  │       Design Standards      │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │   SANnav OVA: VM appliance  │  │      DCNM / NDFC import     │  │    HA: primary + standby    │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │ Discovers via SNMP/REST API │  │    syslog forward to SIEM   │  │      Separate mgmt VLAN     │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │  Zone management GUI + API  │  │       TACACS+ for auth      │  │      Role-based access      │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │    MAPS alert aggregation   │  │   REST API for automation   │  │      Backup to NFS/SCP      │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │     Firmware management     │  │     Email/SNMP alerting     │  │       TLS 1.2/1.3 only      │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  SANnav aggregates all Brocade fabric management into one GUI and REST API endpoint.                  │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │      Managed Resources      │  │          Data Layer         │  │       Management Layer      │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │     Brocade FC switches     │  │    PostgreSQL DB: config    │  │        Web GUI: HTTPS       │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │      Brocade Directors      │  │   Elasticsearch: analytics  │  │     REST API: token auth    │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │     Virtual Fabrics (VF)    │  │    Time-series perf data    │  │      CLI: sannav-admin      │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │      FC zone databases      │  │     Configuration backup    │  │      LDAP/TACACS+ auth      │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │    SFP inventory per port   │  │      Audit trail events     │  │      SNMP trap receiver     │   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Linux VM (OVA) on vSphere · management Ethernet · Brocade FC switch management ports                 │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│                                                                                                       │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  SANnav          = Broadcom SAN Navigator; management platform for Brocade FC fabrics                 │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  OVA             = Open Virtual Appliance; pre-built VM image for vSphere deployment                  │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  MAPS            = Monitoring and Alerting Policy Suite; threshold alerts from switches               │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Virtual Fabric  = logical switch partitioning on Brocade directors; managed per-VF                   │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  REST API        = SANnav northbound API; JSON over HTTPS for automation integration                  │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Elasticsearch   = search and analytics engine; stores SANnav performance time-series                 │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  PostgreSQL      = relational database storing SANnav configuration and inventory                     │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  SFP             = Small Form-factor Pluggable transceiver; FC port optical module                    │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Zone database   = set of zones and aliases defining which devices can communicate                    │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  TACACS+         = Terminal Access Controller Auth; centralised SANnav user auth                      │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  HA pair         = SANnav primary + standby; standby takes over if primary fails                      │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  Audit trail     = log of all user actions in SANnav; retained for compliance                         │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<img alt="SANnav Architecture" src="../../../../assets/sannav-architecture-overview.svg" /></p>
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with Brocade FC switches, vCenter, LDAP, and SIEM.</span></a>
@@ -3393,17 +3439,6 @@ Brocade SANnav is a SAN management platform in two variants: Management Portal (
 </tbody>
 </table>
 <h2 id="management-topology">Management Topology<a class="headerlink" href="#management-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  GV["SANnav Global View\n(multi-portal aggregation)"] --&gt; PA["SANnav Portal A\n(Fabric A — DC1)"]
-  GV --&gt; PB["SANnav Portal B\n(Fabric B — DC2)"]
-  PA --&gt;|"HTTPS + SNMP v3"| SW["Managed Brocade FC Switches\n(Gen 6 / Gen 7 directors and edge)"]
-  PB --&gt;|"HTTPS + SNMP v3"| SW
-  ADMIN(["SAN Admin"]) --&gt;|"browser"| GV
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class GV,PA,PB ctrl
-  class SW ctrl
-  class ADMIN host</code></pre>
 
 
 

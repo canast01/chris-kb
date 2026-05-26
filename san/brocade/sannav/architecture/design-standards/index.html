@@ -3211,17 +3211,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#switch-discovery-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Switch Discovery Standards
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#backup-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3577,7 +3566,7 @@
 <hr />
 <h2 id="snmp-configuration-baseline">SNMP Configuration Baseline<a class="headerlink" href="#snmp-configuration-baseline" title="Permanent link">&para;</a></h2>
 <p>All switches managed by SANnav must have SNMPv3 configured with credentials that match what SANnav has stored. Minimum configuration on each switch (FOS CLI):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Add SNMPv3 user matching SANnav credentials</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Add SNMPv3 user matching SANnav credentials</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snmpconfig<span class="w"> </span>--set<span class="w"> </span>snmpv3<span class="w"> </span>-index<span class="w"> </span><span class="m">1</span><span class="w"> </span>-username<span class="w"> </span>sannav_mgmt<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-authtype<span class="w"> </span>MD5<span class="w"> </span>-authpasswd<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-privtype<span class="w"> </span>AES128<span class="w"> </span>-privpasswd<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span><span class="se">\</span>
@@ -3593,18 +3582,52 @@
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>snmpconfig<span class="w"> </span>--show<span class="w"> </span>snmpv3
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>snmpconfig<span class="w"> </span>--show<span class="w"> </span>trapdest
 </code></pre></div>
-<p>In SANnav, enter these credentials under <strong>Discovery &gt; Add Switch &gt; SNMP Credentials</strong>.</p>
-<hr />
-<h2 id="switch-discovery-standards">Switch Discovery Standards<a class="headerlink" href="#switch-discovery-standards" title="Permanent link">&para;</a></h2>
-<ul>
-<li>All switches must be discovered with <strong>HTTPS credentials</strong> (FOS REST API, not legacy SNMP-only management).</li>
-<li>Use dedicated SANnav service account on each switch rather than the <code>admin</code> account:</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On each managed switch (FOS CLI)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>userconfig<span class="w"> </span>--add<span class="w"> </span>sannav_svc<span class="w"> </span>-r<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Role &quot;admin&quot; is required for zoning and firmware operations.</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Use &quot;user&quot; role for read-only SANnav deployments.</span>
-</code></pre></div>
+┌────────────────────────────────── Brocade SANnav — Design Standards ──────────────────────────────────┐
+│                                                                                                       │
+│  Design principles: HA deployment, dedicated management VLAN, RBAC, TLS, backups.                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Deployment Standards             │  │              Security Standards             │   │
+│   │        HA pair: primary + standby VM         │  │         TLS 1.2+ for all web traffic        │   │
+│   │           Separate management VLAN           │  │         TACACS+ mandatory; no local         │   │
+│   │          4 vCPU / 16 GB RAM minimum          │  │        RBAC: read-only for operators        │   │
+│   │            NTP for all timestamps            │  │         SNMPv3 only; disable v1/v2c         │   │
+│   │          Dedicated mgmt DNS entries          │  │         IP whitelist for API access         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  HA ensures continuity; dedicated VLAN isolates management traffic from data plane.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Operational Standards             │  │            Scalability Guidelines           │   │
+│   │        Backup: daily NFS; 30-day ret.        │  │         Max 1,000 switches per node         │   │
+│   │        Alert review: daily MAPS check        │  │          Max 100,000 ports per node         │   │
+│   │         Zone changes: change ticket          │  │        Separate instances per fabric        │   │
+│   │        Firmware mgmt via SANnav only         │  │           Scale-out: additional VM          │   │
+│   │           Quarterly SANnav upgrade           │  │        Storage: 2 TB for 90-day perf        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vSphere host · shared datastore (2 TB+) · management Ethernet switch · NFS backup                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  HA pair         = SANnav primary+standby VMs; standby syncs config and takes over                    │
+│  Management VLAN = isolated VLAN for switch OOB and SANnav traffic; no user VLAN                      │
+│  RBAC            = Role-Based Access Control; admin/operator/read-only roles in SANnav                │
+│  NTP             = Network Time Protocol; all events timestamped; required for SIEM                   │
+│  SNMPv3          = SNMP version 3; auth + privacy mode; disable v1/v2c in SANnav                      │
+│  IP whitelist     = restrict REST API and management access to known source IPs                       │
+│  TLS 1.2+        = minimum TLS version for SANnav HTTPS management GUI                                │
+│  NFS backup      = daily SANnav configuration and database backup to NFS share                        │
+│  MAPS check      = daily review of Monitoring and Alerting Policy Suite events                        │
+│  Change ticket   = ITSM requirement; all zone changes need approved change record                     │
+│  90-day perf     = SANnav default performance data retention; requires ~2 TB storage                  │
+│  Scale-out       = deploy additional SANnav instances when port count exceeds limit                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <ul>
 <li>Assign switches to the correct resource group immediately after discovery. Switches left in the default group are invisible to role-scoped SANnav operators.</li>
 </ul>
