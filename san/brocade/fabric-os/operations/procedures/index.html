@@ -3396,85 +3396,8 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#zoning" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Zoning
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Zoning">
+    <nav class="md-nav" aria-label="Zoning Workflow">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#zone-membership-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Zone Membership Model
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#zoning-rules" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Zoning Rules
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#naming-convention" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Naming Convention
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#view-current-state" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        View Current State
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#create-aliases" class="md-nav__link">
@@ -3741,7 +3664,7 @@
 </blockquote>
 <hr />
 <h2 id="zoning-workflow">Zoning Workflow<a class="headerlink" href="#zoning-workflow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     start([New host to zone]) --&gt; getWWPN["Collect host HBA WWPNs\nnsshow after FLOGI\nor esxcli storage san fc list"]
     getWWPN --&gt; createAlias["alicreate host alias\nalicreate array alias"]
     createAlias --&gt; createZone["zonecreate\n(one zone per HBA port)"]
@@ -3754,186 +3677,142 @@
 
     style done fill:#15803d,color:#fff
     style start fill:#2563eb,color:#fff</code></pre>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Zone configuration backup taken: run <code>cfgsave</code> and export offline copy via <code>configupload</code></li>
-<li>[ ] Both Fabric A and Fabric B are healthy before touching either</li>
-<li>[ ] ISL utilization has headroom — no ISL above 70% sustained load</li>
-<li>[ ] NPIV usage documented: note which ports have NPIV-enabled devices logged in</li>
-<li>[ ] <code>porterrshow</code> counters clear or baselined before change</li>
-<li>[ ] Maintenance window approved and communicated to affected teams</li>
-<li>[ ] Rollback plan documented: zone config restore procedure confirmed</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Zone config backup</td>
-<td></td>
-<td><code>configupload</code> to jump host</td>
-</tr>
-<tr>
-<td>Both fabrics healthy</td>
-<td></td>
-<td><code>switchshow</code> on both</td>
-</tr>
-<tr>
-<td>ISL headroom confirmed</td>
-<td></td>
-<td><code>islshow</code> bandwidth check</td>
-</tr>
-<tr>
-<td>NPIV inventory current</td>
-<td></td>
-<td>Port-to-host mapping</td>
-</tr>
-<tr>
-<td>Change window approved</td>
-<td></td>
-<td>Ticket reference</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm both fabrics are healthy via <code>switchshow</code> and <code>fabricshow</code> on all switches</li>
-<li>Take a configuration backup: <code>configupload</code> to a secure jump host</li>
-<li>Notify storage and compute teams that Fabric A (or B) will be affected</li>
-<li>Perform the change on one fabric only — leave the other fabric carrying full host I/O</li>
-<li>After change, run <code>switchshow</code>, <code>fabricshow</code>, and <code>islshow</code> to confirm fabric is stable</li>
-<li>Validate host multipath paths via host-side <code>esxcli storage nmp device list</code> or <code>multipath -ll</code></li>
-<li>Confirm zone configuration is correct: <code>cfgshow</code> and compare to pre-change backup</li>
-<li>Repeat procedure on second fabric only after first fabric is fully validated</li>
-</ol>
-<hr />
-<h2 id="zoning">Zoning<a class="headerlink" href="#zoning" title="Permanent link">&para;</a></h2>
-<h3 id="zone-membership-model">Zone Membership Model<a class="headerlink" href="#zone-membership-model" title="Permanent link">&para;</a></h3>
-<h3 id="zoning-rules">Zoning Rules<a class="headerlink" href="#zoning-rules" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Rule</th>
-<th>Reason</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Single-initiator zoning — one HBA per zone</td>
-<td>Prevents cross-talk between hosts; limits fault blast radius</td>
-</tr>
-<tr>
-<td>Zone by WWN (alias-based) — not port ID</td>
-<td>Port-based zones break on cable moves or switch port changes</td>
-</tr>
-<tr>
-<td>Use aliases for all WWNs</td>
-<td>Aliases make zones readable and portable across fabrics</td>
-</tr>
-<tr>
-<td>One zone per initiator per target array</td>
-<td>LUN masking is handled on the array — zones control path visibility only</td>
-</tr>
-<tr>
-<td>Name: <code>&lt;host&gt;_&lt;hbaN&gt;__&lt;array&gt;_&lt;ctrl&gt;_&lt;portN&gt;</code></td>
-<td>Consistent naming makes audit and troubleshooting fast</td>
-</tr>
-</tbody>
-</table>
-<h3 id="naming-convention">Naming Convention<a class="headerlink" href="#naming-convention" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="w">  </span><span class="nt">Alias</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">&lt;hostname&gt;_&lt;hbaN&gt;               e.g.  esxi01_hba0</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">Alias</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">&lt;array&gt;_&lt;controller&gt;_&lt;portN&gt;    e.g.  fa01_ct0_p0</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">Zone</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">&lt;host-alias&gt;__&lt;array-alias&gt;     e.g.  esxi01_hba0__fa01_ct0_p0</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">Zone set</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;sitecode&gt;-&lt;fabric&gt;-prod        e.g.  dc1-fabA-prod</span>
-</code></pre></div>
-<h3 id="view-current-state">View Current State<a class="headerlink" href="#view-current-state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Show active zone set and all member zones</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cfgshow
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show all defined aliases</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>alishow
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Show all defined zones</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>zoneshow
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Show zones for a specific alias</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>zoneshow<span class="w"> </span><span class="s2">&quot;esxi01_hba0&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Show name server — all logged-in devices in fabric</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>nsshow
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>nsallshow
-</code></pre></div>
+┌────────────────────────────── Brocade Fabric OS — Operations Procedures ──────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │             Standard FOS operational procedures for day-to-day SAN administration             │   │
+│   │            Zone change: create alias -&gt; create zone -&gt; add to zone set -&gt; cfgenable           │   │
+│   │      Port management: portdisable/portenable; portcfgpersistentdisable for permanent off      │   │
+│   │          Firmware upgrade: firmwaredownload -s; verify with firmwareshow after reboot         │   │
+│   │              Config backup: configupload to save switch config to SCP/FTP server              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Pre-checks -&gt; change procedure -&gt; post-checks -&gt; documentation and rollback plan                   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Zone Mgmt          │  │          Port Mgmt          │  │          Lifecycle          │   │
+│   │          alicreate          │  │         portdisable         │  │       firmwaredownload      │   │
+│   │          zonecreate         │  │          portenable         │  │         configupload        │   │
+│   │            cfgadd           │  │         portcfgspeed        │  │        configdownload       │   │
+│   │          cfgenable          │  │         portcfgmode         │  │         supportshow         │   │
+│   │           cfgsave           │  │           portshow          │  │         firmwareshow        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Always cfgsave after cfgenable; changes without cfgsave lost on switch reboot                      │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Procedure     │   CLI command    │       Impact      │     Rollback     │      Notes       │   │
+│   │     Zone add     │    cfgenable     │    Fabric-wide    │  cfgenable old   │   CAB required   │   │
+│   │   Port disable   │   portdisable    │     Port only     │    portenable    │    Log first     │   │
+│   │    FW upgrade    │ firmwaredownload │   Switch reboot   │  Prior version   │    NDU for HA    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: SSH to switch mgmt IP · SCP server for config/firmware files                             │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    alicreate      = FOS CLI command to create a WWN alias for a host or storage port                  │
+│    zonecreate     = Creates a new zone with specified member aliases or WWNs                          │
+│    cfgadd         = Adds a zone to an existing zone configuration                                     │
+│    cfgenable      = Activates the named zone configuration across the entire fabric                   │
+│    cfgsave        = Saves the zone database to non-volatile memory on all switches                    │
+│    portdisable    = Administratively disables an FC port (state: No_Light or D_Port)                  │
+│    portcfgspeed   = Sets port speed (auto, 8G, 16G, 32G, 64G)                                         │
+│    firmwaredownload = Downloads FOS image from SCP/FTP and reboots switch to activate                 │
+│    configupload   = Uploads running switch config to SCP/FTP for backup                               │
+│    configdownload = Restores switch config from previously uploaded backup file                       │
+│    supportshow    = Collects full diagnostic data bundle for TAC support                              │
+│    NDU            = Non-Disruptive Upgrade; HA chassis upgrades one blade at a time                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### View Current State
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Show active zone set and all member zones
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>cfgshow
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Show all defined aliases
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>alishow
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Show all defined zones
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>zoneshow
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Show zones for a specific alias
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>zoneshow &quot;esxi01_hba0&quot;
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Show name server — all logged-in devices in fabric
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>nsshow
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>nsallshow
+</code></pre></div></p>
 <h3 id="create-aliases">Create Aliases<a class="headerlink" href="#create-aliases" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Host HBA</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;esxi01_hba0&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:00:c9:ab:cd:ef&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Array port</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>alicreate<span class="w"> </span><span class="s2">&quot;fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:93:7c:00:00:00:01&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>alicreate<span class="w"> </span><span class="s2">&quot;fa01_ct0_p1&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:93:7c:00:00:00:02&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Host HBA</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;esxi01_hba0&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:00:c9:ab:cd:ef&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Array port</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>alicreate<span class="w"> </span><span class="s2">&quot;fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:93:7c:00:00:00:01&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>alicreate<span class="w"> </span><span class="s2">&quot;fa01_ct0_p1&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:93:7c:00:00:00:02&quot;</span>
 </code></pre></div>
 <h3 id="create-and-manage-zones">Create and Manage Zones<a class="headerlink" href="#create-and-manage-zones" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create zone</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi01_hba0; fa01_ct0_p0; fa01_ct0_p1&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Add member to existing zone</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>zoneadd<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;fa01_ct0_p2&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Remove member from zone</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>zoneremove<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;fa01_ct0_p2&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Delete a zone (remove from zone set first)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>zonedelete<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create zone</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi01_hba0; fa01_ct0_p0; fa01_ct0_p1&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Add member to existing zone</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>zoneadd<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;fa01_ct0_p2&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Remove member from zone</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>zoneremove<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;fa01_ct0_p2&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Delete a zone (remove from zone set first)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>zonedelete<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>
 </code></pre></div>
 <h3 id="zone-set-management">Zone Set Management<a class="headerlink" href="#zone-set-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create zone set and add initial members</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cfgcreate<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0; esxi01_hba1__fa01_ct1_p0&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Add zone to existing zone set</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>cfgadd<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi02_hba0__fa01_ct0_p0&quot;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Remove zone from zone set</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>cfgremove<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi02_hba0__fa01_ct0_p0&quot;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Activate zone set (live immediately in fabric)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>cfgenable<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Save to flash (persists across reboot)</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>cfgsave
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create zone set and add initial members</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cfgcreate<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0; esxi01_hba1__fa01_ct1_p0&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Add zone to existing zone set</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>cfgadd<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi02_hba0__fa01_ct0_p0&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Remove zone from zone set</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>cfgremove<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi02_hba0__fa01_ct0_p0&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Activate zone set (live immediately in fabric)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>cfgenable<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Save to flash (persists across reboot)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>cfgsave
 </code></pre></div>
 <h3 id="example-zone-a-new-host-to-flasharray">Example: Zone a New Host to FlashArray<a class="headerlink" href="#example-zone-a-new-host-to-flasharray" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Create host HBA aliases</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;web01_hba0&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:90:fa:12:34:56&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>alicreate<span class="w"> </span><span class="s2">&quot;web01_hba1&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:90:fa:12:34:57&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># 2. Create zones (Fabric A — HBA0 to CT0 ports)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>zonecreate<span class="w"> </span><span class="s2">&quot;web01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;web01_hba0; fa01_ct0_p0; fa01_ct0_p1&quot;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># 3. Create zones (Fabric B switch — HBA1 to CT1 ports)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>zonecreate<span class="w"> </span><span class="s2">&quot;web01_hba1__fa01_ct1_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;web01_hba1; fa01_ct1_p0; fa01_ct1_p1&quot;</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># 4. Add to zone set</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>cfgadd<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;web01_hba0__fa01_ct0_p0&quot;</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># 5. Activate and save</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>cfgenable<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>cfgsave
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Create host HBA aliases</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;web01_hba0&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:90:fa:12:34:56&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>alicreate<span class="w"> </span><span class="s2">&quot;web01_hba1&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:90:fa:12:34:57&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># 2. Create zones (Fabric A — HBA0 to CT0 ports)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>zonecreate<span class="w"> </span><span class="s2">&quot;web01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;web01_hba0; fa01_ct0_p0; fa01_ct0_p1&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># 3. Create zones (Fabric B switch — HBA1 to CT1 ports)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>zonecreate<span class="w"> </span><span class="s2">&quot;web01_hba1__fa01_ct1_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;web01_hba1; fa01_ct1_p0; fa01_ct1_p1&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># 4. Add to zone set</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>cfgadd<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;web01_hba0__fa01_ct0_p0&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># 5. Activate and save</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>cfgenable<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>cfgsave
 </code></pre></div>
 <h3 id="zone-audit">Zone Audit<a class="headerlink" href="#zone-audit" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Show all zones and member count — find zones with &gt; 1 initiator</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>zoneshow
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Cross-check alias WWNs against physical HBA WWNs</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>alishow
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Compare with: host: cat /sys/class/fc_host/host*/port_name</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Show what a WWN can talk to</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>nszonemember<span class="w"> </span><span class="s2">&quot;&lt;alias_or_wwn&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Show all zones and member count — find zones with &gt; 1 initiator</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>zoneshow
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Cross-check alias WWNs against physical HBA WWNs</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>alishow
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Compare with: host: cat /sys/class/fc_host/host*/port_name</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Show what a WWN can talk to</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>nszonemember<span class="w"> </span><span class="s2">&quot;&lt;alias_or_wwn&gt;&quot;</span>
 </code></pre></div>
 <h3 id="zoning-troubleshooting">Zoning Troubleshooting<a class="headerlink" href="#zoning-troubleshooting" title="Permanent link">&para;</a></h3>
 <table>

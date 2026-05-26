@@ -3167,50 +3167,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#domain-id-allocation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Domain ID Allocation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#zone-and-alias-naming" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Zone and Alias Naming
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vsan-fabric-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VSAN / Fabric Design
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#isl-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ISL Standards
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#security-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3426,114 +3382,93 @@
 </blockquote>
 <hr />
 <h2 id="switch-naming">Switch Naming<a class="headerlink" href="#switch-naming" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;site&gt;-san-sw&lt;nn&gt;
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;site&gt;-san-sw&lt;nn&gt;
 </code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Site</th>
-<th>Fabric A</th>
-<th>Fabric B</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DC1</td>
-<td><code>dc1-san-sw01</code>, <code>dc1-san-sw03</code></td>
-<td><code>dc1-san-sw02</code>, <code>dc1-san-sw04</code></td>
-</tr>
-<tr>
-<td>DC2</td>
-<td><code>dc2-san-sw01</code>, <code>dc2-san-sw03</code></td>
-<td><code>dc2-san-sw02</code>, <code>dc2-san-sw04</code></td>
-</tr>
-</tbody>
-</table>
-<p>Convention: Fabric A = odd switch numbers, Fabric B = even. This makes fabric membership immediately identifiable from the hostname.</p>
-<hr />
-<h2 id="domain-id-allocation">Domain ID Allocation<a class="headerlink" href="#domain-id-allocation" title="Permanent link">&para;</a></h2>
-<p>Domain IDs must be unique within a fabric and allocated from a predefined range:</p>
-<table>
-<thead>
-<tr>
-<th>Range</th>
-<th>Fabric</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1–20</td>
-<td>Production Fabric A</td>
-<td>Allocated from SAN design register</td>
-</tr>
-<tr>
-<td>21–40</td>
-<td>Production Fabric B</td>
-<td>Separate range prevents conflicts</td>
-</tr>
-<tr>
-<td>41–60</td>
-<td>Replication Fabric</td>
-<td>SRDF or RecoverPoint fabrics</td>
-</tr>
-<tr>
-<td>61–80</td>
-<td>DR Site Fabric A/B</td>
-<td>Keep separate from production</td>
-</tr>
-</tbody>
-</table>
-<p>Document domain ID assignments in the SAN design register in CMDB.</p>
-<hr />
-<h2 id="zone-and-alias-naming">Zone and Alias Naming<a class="headerlink" href="#zone-and-alias-naming" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Zone:   &lt;hostname&gt;_&lt;hba_port&gt;-&lt;arrayname&gt;_&lt;target_port&gt;
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Alias:  &lt;hostname&gt;_&lt;hba_port&gt;   or   &lt;arrayname&gt;_&lt;target_port&gt;
-</code></pre></div>
-<p>Examples:
-- Zone: <code>db01_0a-powermax01_0a</code> — host DB01 HBA0 port A to PowerMax array port 0A
-- Alias: <code>db01_0a</code> (alias for the initiator WWPN), <code>powermax01_0a</code> (alias for target port)</p>
-<p>Rules:
-- One initiator per zone — never put two host WWPNs in the same zone
-- Zones should contain: one host HBA port + required array target ports
-- No single-target zones without a matching initiator (orphan cleanup)</p>
-<hr />
-<h2 id="vsan-fabric-design">VSAN / Fabric Design<a class="headerlink" href="#vsan-fabric-design" title="Permanent link">&para;</a></h2>
-<p>For Brocade, a single physical fabric spans all switches (unlike Cisco which uses VSANs):
-- Production Fabric A: all switches in fabric A connected via ISLs
-- Production Fabric B: all switches in fabric B — completely separate cable plant
-- Switches must never be cabled between Fabric A and Fabric B</p>
-<hr />
-<h2 id="isl-standards">ISL Standards<a class="headerlink" href="#isl-standards" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Standard</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Minimum ISLs per switch pair</td>
-<td>2 (trunk group)</td>
-</tr>
-<tr>
-<td>ISL speed</td>
-<td>Equal to or greater than connected host/array port speed</td>
-</tr>
-<tr>
-<td>Trunk group configuration</td>
-<td><code>porttrunkarea</code> configured on ISL ports</td>
-</tr>
-<tr>
-<td>FSPF cost</td>
-<td>Default (auto) unless explicit traffic engineering is required</td>
-</tr>
-</tbody>
-</table>
-<p>Verify trunk status:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>trunkshow<span class="w">   </span><span class="c1"># All ISL trunks and member ports</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>islshow<span class="w">     </span><span class="c1"># ISL utilisation</span>
+┌──────────────────────────────── Brocade Fabric OS — Design Standards ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      FOS design standards for production SAN: topology, naming, ISL sizing, HA, security      │   │
+│   │        Topology: dual-fabric A/B design; no single-fabric dependency for storage access       │   │
+│   │         Domain IDs: statically assigned; Fabric A starts at 1, Fabric B starts at 100         │   │
+│   │         ISL sizing: minimum 2 ISLs per switch pair; trunk for bandwidth and redundancy        │   │
+│   │       Zone naming: host_alias_storage_alias format; no generic zone names in production       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Topology standards -&gt; naming conventions -&gt; ISL design -&gt; HA and redundancy rules                  │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Topology          │  │         Naming / IDs        │  │           HA / ISL          │   │
+│   │       Dual fabric A/B       │  │      Static domain IDs      │  │          Min 2 ISLs         │   │
+│   │       Core-edge design      │  │       Zone naming std       │  │         ISL trunking        │   │
+│   │       No single fabric      │  │        Alias per HBA        │  │        Director core        │   │
+│   │        Separate VSANs       │  │        Config naming        │  │        Redundant PSU        │   │
+│   │       Buffer planning       │  │       FW rev tracking       │  │        OOB mgmt path        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Core switches (directors) connect to all edge switches; no edge-to-edge ISLs                       │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Standard     │       Rule       │     Rationale     │       Tool       │      Notes       │   │
+│   │   Dual fabric    │    A+B always    │    HA for hosts   │  Multi-pathing   │  MPIO required   │   │
+│   │    Domain ID     │  Static assign   │   Predictability  │     portcfg      │  A=1-99, B=100+  │   │
+│   │    ISL trunk     │  Min 2 per pair  │     Redundancy    │    SANnav/CLI    │ Same speed ISLs  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: dual directors at core · edge switches per row · redundant ISL paths                     │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Dual fabric    = Two independent FC fabrics (A and B); each host has one HBA in each               │
+│    Core-edge      = Directors at core; fixed-port switches at edge; no edge-to-edge ISLs              │
+│    Domain ID      = Statically assigned switch identifier; dynamic assignment risks reconfiguring     │
+│    ISL trunk      = Bundled ISLs between same switch pair for bandwidth and redundancy                │
+│    Zone naming    = Standard: srvname_hba0_arrayname_sp0; enables instant identification              │
+│    Alias          = WWN alias per HBA port; one alias per physical port, not per LUN                  │
+│    Buffer credit  = Must be planned for long-distance ISLs; insufficient credits cause congestion     │
+│    MPIO           = Multi-path I/O on host; uses both fabric A and B paths for redundancy             │
+│    OOB mgmt       = Out-of-band Ethernet management must be redundant and always accessible           │
+│    PSU redundancy = Each switch/director must have redundant power supplies from separate PDUs        │
+│    FW tracking    = Firmware version matrix maintained; all switches in fabric same minor version     │
+│    Config naming  = Zone config names include date/ticket reference for auditability                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Examples:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- Zone: `db01_0a-powermax01_0a` — host DB01 HBA0 port A to PowerMax array port 0A
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Alias: `db01_0a` (alias for the initiator WWPN), `powermax01_0a` (alias for target port)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Rules:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- One initiator per zone — never put two host WWPNs in the same zone
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- Zones should contain: one host HBA port + required array target ports
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- No single-target zones without a matching initiator (orphan cleanup)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>---
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>## VSAN / Fabric Design
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>For Brocade, a single physical fabric spans all switches (unlike Cisco which uses VSANs):
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>- Production Fabric A: all switches in fabric A connected via ISLs
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>- Production Fabric B: all switches in fabric B — completely separate cable plant
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>- Switches must never be cabled between Fabric A and Fabric B
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>---
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>## ISL Standards
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>| Parameter | Standard |
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>|---|---|
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>| Minimum ISLs per switch pair | 2 (trunk group) |
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>| ISL speed | Equal to or greater than connected host/array port speed |
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>| Trunk group configuration | `porttrunkarea` configured on ISL ports |
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>| FSPF cost | Default (auto) unless explicit traffic engineering is required |
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>Verify trunk status:
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>```bash
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>trunkshow   # All ISL trunks and member ports
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>islshow     # ISL utilisation
 </code></pre></div></p>
 <hr />
 <h2 id="security-standards">Security Standards<a class="headerlink" href="#security-standards" title="Permanent link">&para;</a></h2>

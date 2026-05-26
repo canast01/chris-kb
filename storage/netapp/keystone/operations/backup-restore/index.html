@@ -4166,28 +4166,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ontap-snapshot-policy-backup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ONTAP Snapshot Policy Backup
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#snapmirror-relationship-export" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SnapMirror Relationship Export
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#restore-keystone-collector-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4405,7 +4383,7 @@
 - Keystone portal subscription configuration export</p>
 <h2 id="keystone-collector-configuration-backup">Keystone Collector Configuration Backup<a class="headerlink" href="#keystone-collector-configuration-backup" title="Permanent link">&para;</a></h2>
 <p>The Keystone Collector is a VM deployed on-premises that harvests usage data. Back up its configuration before any upgrade.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH into Keystone Collector VM</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH into Keystone Collector VM</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@&lt;keystone-collector-ip&gt;
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Export current configuration</span>
@@ -4415,34 +4393,77 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Verify configuration is parseable</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>tar<span class="w"> </span>-tzf<span class="w"> </span>ks-config-&lt;date&gt;.tar.gz
 </code></pre></div>
-<h2 id="ontap-snapshot-policy-backup">ONTAP Snapshot Policy Backup<a class="headerlink" href="#ontap-snapshot-policy-backup" title="Permanent link">&para;</a></h2>
-<p>Underlying Keystone storage runs on ONTAP. Back up snapshot policy configurations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Via ONTAP CLI — list snapshot policies</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snapshots<span class="w"> </span>policy<span class="w"> </span>show
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Export volume snapshot configuration for all Keystone volumes</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;<span class="w"> </span>-fields<span class="w"> </span>snapshot-policy,space-guarantee
+┌─────────────────────────── NetApp Keystone — Operations: Backup &amp; Restore ────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           Backup: ONTAP Snapshots, SnapVault disk-to-disk, SnapCenter app-consistent          │   │
+│   │           Snapshot: instantaneous, space-efficient; RPO minutes; stored in same SVM           │   │
+│   │          SnapVault: replicates snapshots to secondary ONTAP; RPO hours; diff cluster          │   │
+│   │          Restore: snap restore (volume), snap restore -item (file), SnapCenter clone          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Schedule snapshots -&gt; SnapVault to secondary -&gt; SnapCenter for DB -&gt; restore on demand             │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Snapshot          │  │          SnapVault          │  │          SnapCenter         │   │
+│   │       Instant capture       │  │         Vault policy        │  │          App plugin         │   │
+│   │       Space-efficient       │  │        Secondary vol        │  │        SQL/Oracle/SAP       │   │
+│   │          Per-volume         │  │          RPO hours          │  │        App-consistent       │   │
+│   │          RPO &lt;5 min         │  │        Long retention       │  │        Clone workflow       │   │
+│   │         Max 255/vol         │  │        Throttle xfer        │  │         Report audit        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Test restores quarterly; document RTO targets; validate clone integrity before prod                │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Method      │       RPO        │        RTO        │    Retention     │      Notes       │   │
+│   │     Snapshot     │      &lt;5 min      │       &lt;1 min      │    30-90 days    │    Local only    │   │
+│   │    SnapVault     │      Hours       │     15-30 min     │    1-7 years     │    Secondary     │   │
+│   │    SnapCenter    │      &lt;1 min      │       &lt;5 min      │   Policy-based   │   App consist.   │   │
+│   │      Object      │      Hours       │     30-60 min     │      Years       │     S3/Grid      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: primary AFF cluster + secondary FAS/AFF cluster different rack or site                   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    ONTAP Snapshot  = Read-only point-in-time copy; shares blocks with active volume                   │
+│    SnapVault       = Disk-to-disk backup replication; vault policy retains snapshots                  │
+│    SnapCenter      = NetApp backup server; quiesces apps before snapshot                              │
+│    Vault policy    = SnapVault label schedule: hourly/daily/weekly/monthly retention                  │
+│    snap restore    = ONTAP CLI: volume snapshot restore; overwrites active volume                     │
+│    snap restore -item = Single-file restore from snapshot without rollback                            │
+│    Clone           = Writable FlexClone of snapshot; instant; space-efficient                         │
+│    RPO             = Recovery Point Objective; max acceptable data loss in time                       │
+│    RTO             = Recovery Time Objective; max acceptable downtime for restore                     │
+│    App-consistent  = Backup taken with app quiesced (SQL VSS/Oracle RMAN)                             │
+│    StorageGRID     = NetApp on-prem S3 object store; long-term vault target                           │
+│    FlexClone       = Instant writable clone of volume/snapshot; shares blocks                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## SnapMirror Relationship Export
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># List all SnapMirror relationships
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snapmirror show -vserver &lt;svm&gt;
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List scheduled snapshot jobs</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>job<span class="w"> </span>schedule<span class="w"> </span>show
-</code></pre></div>
-<h2 id="snapmirror-relationship-export">SnapMirror Relationship Export<a class="headerlink" href="#snapmirror-relationship-export" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all SnapMirror relationships</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Export to file (run from ONTAP SSH session)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/snapmirror-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-</code></pre></div>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Export to file (run from ONTAP SSH session)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>snapmirror show -vserver &lt;svm&gt; &gt; /tmp/snapmirror-$(date +%Y%m%d).txt
+</code></pre></div></p>
 <h2 id="restore-keystone-collector-configuration">Restore Keystone Collector Configuration<a class="headerlink" href="#restore-keystone-collector-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On new or rebuilt Collector VM:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>scp<span class="w"> </span>ks-config-&lt;date&gt;.tar.gz<span class="w"> </span>admin@&lt;new-collector-ip&gt;:/tmp/
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>ssh<span class="w"> </span>admin@&lt;new-collector-ip&gt;
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>keystone-config<span class="w"> </span>import<span class="w"> </span>--input<span class="w"> </span>/tmp/ks-config-&lt;date&gt;.tar.gz
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify after import</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>keystone-config<span class="w"> </span>validate
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>keystone-collector<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On new or rebuilt Collector VM:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>scp<span class="w"> </span>ks-config-&lt;date&gt;.tar.gz<span class="w"> </span>admin@&lt;new-collector-ip&gt;:/tmp/
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ssh<span class="w"> </span>admin@&lt;new-collector-ip&gt;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>keystone-config<span class="w"> </span>import<span class="w"> </span>--input<span class="w"> </span>/tmp/ks-config-&lt;date&gt;.tar.gz
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify after import</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>keystone-config<span class="w"> </span>validate
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>keystone-collector<span class="w"> </span>status
 </code></pre></div>
 <h2 id="pre-upgrade-checklist">Pre-Upgrade Checklist<a class="headerlink" href="#pre-upgrade-checklist" title="Permanent link">&para;</a></h2>
 <ul>

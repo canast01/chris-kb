@@ -3758,45 +3758,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration-baseline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration Baseline
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Configuration Baseline">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#qos-adaptive-policy-group-build" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        QoS Adaptive Policy-Group Build
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#volume-provisioning-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Volume Provisioning Checklist
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#capacity-management-thresholds" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4105,7 +4066,7 @@
 </tbody>
 </table>
 <h3 id="volume-tagging-via-comments">Volume Tagging via Comments<a class="headerlink" href="#volume-tagging-via-comments" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Set a volume comment to identify application owner and Keystone tier</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Set a volume comment to identify application owner and Keystone tier</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>volume<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span>-volume<span class="w"> </span>vol_oradb01_data<span class="w"> </span><span class="se">\</span>
@@ -4114,55 +4075,86 @@
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List volumes with their comments to verify tagging</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,volume,comment<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>keystone
 </code></pre></div>
-<hr />
-<h2 id="configuration-baseline">Configuration Baseline<a class="headerlink" href="#configuration-baseline" title="Permanent link">&para;</a></h2>
-<h3 id="qos-adaptive-policy-group-build">QoS Adaptive Policy-Group Build<a class="headerlink" href="#qos-adaptive-policy-group-build" title="Permanent link">&para;</a></h3>
-<p>Keystone service levels must be represented by ONTAP QoS adaptive policy-groups. NetApp creates these during onboarding, but they should be verified and documented.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify Keystone QoS adaptive policy-groups exist on the ONTAP cluster</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>qos<span class="w"> </span>adaptive-policy-group<span class="w"> </span>show
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Expected output — one policy-group per Keystone tier:</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Name            Absolute Min-IOPS   Peak-IOPS   Expected-IOPS</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># extreme-ks      1000 IOPS/TB        12000 IOPS/TB  6000 IOPS/TB</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># premium-ks      500 IOPS/TB         4000 IOPS/TB   2000 IOPS/TB</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># performance-ks  128 IOPS/TB         2000 IOPS/TB   1000 IOPS/TB</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># value-ks        64 IOPS/TB          64 IOPS/TB     64 IOPS/TB</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Assign the correct QoS policy-group to a volume</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>volume<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span>-volume<span class="w"> </span>vol_oradb01_data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span>-qos-adaptive-policy-group<span class="w"> </span>extreme-ks
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Verify the assignment</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oradb01_data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span>-fields<span class="w"> </span>qos-policy-group,qos-adaptive-policy-group
-</code></pre></div>
-<h3 id="volume-provisioning-checklist">Volume Provisioning Checklist<a class="headerlink" href="#volume-provisioning-checklist" title="Permanent link">&para;</a></h3>
-<p>Before provisioning a new volume on a Keystone-managed cluster:</p>
-<ul>
-<li>[ ] Service level (tier) confirmed for the workload based on IOPS and latency requirements</li>
-<li>[ ] Available committed capacity verified for the target tier in BlueXP — not triggering burst</li>
-<li>[ ] QoS adaptive policy-group selected and will be applied at volume creation time</li>
-<li>[ ] Volume size accounts for snapshot reserve (add 20% for snapshots if frequent snapshots are expected)</li>
-<li>[ ] Volume comment tagged with application owner, team, and Keystone tier</li>
-<li>[ ] Space guarantee set appropriately: <code>none</code> (thin) for most workloads; <code>volume</code> (thick) only if required by the application</li>
-<li>[ ] Keystone Collector confirmed running before provisioning — new capacity must be reported accurately</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a volume with Keystone tier QoS applied from the start</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>volume<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>-volume<span class="w"> </span>vol_newapp_data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>-aggregate<span class="w"> </span>aggr_flash_01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>-size<span class="w"> </span>2TB<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-space-guarantee<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>-snapshot-policy<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>-qos-adaptive-policy-group<span class="w"> </span>premium-ks<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>-comment<span class="w"> </span><span class="s2">&quot;app=newapp owner=it-ops tier=premium keystone=true&quot;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Confirm the volume has the correct QoS policy</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_newapp_data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span>-fields<span class="w"> </span>qos-adaptive-policy-group,size,space-guarantee
-</code></pre></div>
+┌───────────────────────────────── NetApp Keystone — Design Standards ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Design standards: capacity planning, QoS adaptive policies, FabricPool tiering        │   │
+│   │             QoS adaptive: auto-assign IOPS/TB ceiling per service level per volume            │   │
+│   │             FabricPool: automatic cold-data tiering to S3/StorageGRID object store            │   │
+│   │             Capacity: size committed at 70-80% peak; monitor via Active IQ alerts             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Workload profile -&gt; service level -&gt; QoS adaptive policy -&gt; volume + tiering policy                │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Capacity Design       │  │          QoS Design         │  │        Tiering Design       │   │
+│   │       Committed 70-80%      │  │         Adaptive QoS        │  │          FabricPool         │   │
+│   │      Burst headroom 20%     │  │         Min IOPS/TB         │  │        S3 cloud tier        │   │
+│   │        Thin provision       │  │         Max IOPS/TB         │  │         StorageGRID         │   │
+│   │        Dedup+compress       │  │       Burst allowance       │  │        Cold threshold       │   │
+│   │        Quota policies       │  │          QoS group          │  │       Retrieve policy       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Enable dedup+compression on all volumes; typical 2-3x reduction on structured data                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Standard     │      Value       │     Apply When    │      Check       │      Notes       │   │
+│   │      Dedup       │    Enable all    │    All volumes    │     sis show     │   2-3x saving    │   │
+│   │     Compress     │   Inline+post    │     Block data    │     sis show     │     CPU cost     │   │
+│   │     Tiering      │  Cold &gt;31 days   │    Capacity vol   │     FP show      │      To S3       │   │
+│   │   QoS adaptive   │   Per SL tier    │      All vols     │     qos show     │    Auto-apply    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: AFF local tier + object store bucket (S3/StorageGRID) for FabricPool                     │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Adaptive QoS     = ONTAP policy that auto-scales IOPS ceiling with volume size                     │
+│    FabricPool       = ONTAP feature; automatically moves cold blocks to object tier                   │
+│    Tiering policy   = Per-volume: none / snapshot-only / auto / all                                   │
+│    StorageGRID      = NetApp on-prem S3 object storage; common FabricPool target                      │
+│    Dedup            = Inline deduplication; removes duplicate 4KB blocks on write                     │
+│    Compression      = Inline or post-process; reduces physical block footprint                        │
+│    Thin provisioning= Volume logical size &gt; physical allocation; grows on write                       │
+│    Quota policy     = User/group/qtree disk and file count limits in ONTAP                            │
+│    sis show         = Storage Inline Storage cmd; shows dedup/compress status                         │
+│    qos show         = ONTAP command; lists QoS policies and current IOPS utilisation                  │
+│    Cold threshold   = Days of inactivity before FabricPool moves block to object                      │
+│    Retrieve policy  = Controls if tiered data read back to SSD (on-demand vs never)                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Volume Provisioning Checklist
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Before provisioning a new volume on a Keystone-managed cluster:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- [ ] Service level (tier) confirmed for the workload based on IOPS and latency requirements
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- [ ] Available committed capacity verified for the target tier in BlueXP — not triggering burst
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- [ ] QoS adaptive policy-group selected and will be applied at volume creation time
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- [ ] Volume size accounts for snapshot reserve (add 20% for snapshots if frequent snapshots are expected)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- [ ] Volume comment tagged with application owner, team, and Keystone tier
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- [ ] Space guarantee set appropriately: `none` (thin) for most workloads; `volume` (thick) only if required by the application
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- [ ] Keystone Collector confirmed running before provisioning — new capacity must be reported accurately
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>```bash
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Create a volume with Keystone tier QoS applied from the start
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>volume create \
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    -vserver svm_prod \
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    -volume vol_newapp_data \
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    -aggregate aggr_flash_01 \
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    -size 2TB \
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    -space-guarantee none \
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    -snapshot-policy default \
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    -qos-adaptive-policy-group premium-ks \
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    -comment &quot;app=newapp owner=it-ops tier=premium keystone=true&quot;
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a># Confirm the volume has the correct QoS policy
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>volume show -vserver svm_prod -volume vol_newapp_data \
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    -fields qos-adaptive-policy-group,size,space-guarantee
+</code></pre></div></p>
 <hr />
 <h2 id="capacity-management-thresholds">Capacity Management Thresholds<a class="headerlink" href="#capacity-management-thresholds" title="Permanent link">&para;</a></h2>
 <table>
@@ -4208,23 +4200,23 @@
 </tbody>
 </table>
 <h3 id="ontap-ems-threshold-alerts">ONTAP EMS Threshold Alerts<a class="headerlink" href="#ontap-ems-threshold-alerts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Set a volume-level space threshold alert at 80% utilisation</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># (Keystone billing is based on logical used, but physical capacity matters for planning)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>event<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-threshold-alerts-enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Configure a volume nearly-full threshold event for Keystone volumes</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># ONTAP generates wafl.vol.full.threshold events when volumes reach configured thresholds</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">set</span><span class="w"> </span>advanced
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>volume<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>-volume<span class="w"> </span>vol_oradb01_data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span>-space-nearly-full-threshold-percent<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span>-space-full-threshold-percent<span class="w"> </span><span class="m">95</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nb">set</span><span class="w"> </span>admin
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Verify threshold settings</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oradb01_data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span>-fields<span class="w"> </span>space-nearly-full-threshold-percent,space-full-threshold-percent
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Set a volume-level space threshold alert at 80% utilisation</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># (Keystone billing is based on logical used, but physical capacity matters for planning)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>event<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-threshold-alerts-enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Configure a volume nearly-full threshold event for Keystone volumes</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># ONTAP generates wafl.vol.full.threshold events when volumes reach configured thresholds</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">set</span><span class="w"> </span>advanced
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>volume<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>-volume<span class="w"> </span>vol_oradb01_data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>-space-nearly-full-threshold-percent<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>-space-full-threshold-percent<span class="w"> </span><span class="m">95</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">set</span><span class="w"> </span>admin
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Verify threshold settings</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oradb01_data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span>-fields<span class="w"> </span>space-nearly-full-threshold-percent,space-full-threshold-percent
 </code></pre></div>
 <hr />
 <h2 id="monthly-operational-standards">Monthly Operational Standards<a class="headerlink" href="#monthly-operational-standards" title="Permanent link">&para;</a></h2>
@@ -4285,27 +4277,27 @@
 <hr />
 <h2 id="decommission-standards">Decommission Standards<a class="headerlink" href="#decommission-standards" title="Permanent link">&para;</a></h2>
 <p>When decommissioning volumes on Keystone-managed clusters, capacity is freed from the billing tier as soon as the volume is deleted and the Collector reports the next collection cycle. Ensure the following before decommissioning:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1: Confirm the volume is no longer in use (no active client mounts)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vol_oldapp
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Verify no NFS exports; check CIFS share list</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Step 2: Delete all snapshots to release capacity immediately</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>snapshot<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp<span class="w"> </span>-snapshot<span class="w"> </span>*<span class="w"> </span>-force
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Step 3: Unmount and offline the volume</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>volume<span class="w"> </span>unmount<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Step 4: Delete the volume</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>volume<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp<span class="w"> </span>-force
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Step 5: Verify the volume no longer appears</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Expected: no matching volumes</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># Step 6: Confirm the capacity is reflected in the next BlueXP reporting cycle</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># (capacity reduction visible in BlueXP within the next Collector collection interval)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Step 1: Confirm the volume is no longer in use (no active client mounts)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vol_oldapp
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Verify no NFS exports; check CIFS share list</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Step 2: Delete all snapshots to release capacity immediately</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>snapshot<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp<span class="w"> </span>-snapshot<span class="w"> </span>*<span class="w"> </span>-force
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Step 3: Unmount and offline the volume</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>volume<span class="w"> </span>unmount<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Step 4: Delete the volume</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>volume<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp<span class="w"> </span>-force
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Step 5: Verify the volume no longer appears</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_prod<span class="w"> </span>-volume<span class="w"> </span>vol_oldapp
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Expected: no matching volumes</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># Step 6: Confirm the capacity is reflected in the next BlueXP reporting cycle</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="c1"># (capacity reduction visible in BlueXP within the next Collector collection interval)</span>
 </code></pre></div>
 <p>Note: if decommissioning occurs after the monthly billing close, the capacity is still billed for that period. Time decommissions before the billing close date to capture the reduction in the current invoice period.</p>
 

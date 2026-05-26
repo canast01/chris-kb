@@ -3399,39 +3399,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#version-tracking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Version Tracking
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#firmware-upgrade-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Firmware Upgrade Procedure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adding-a-new-switch-to-the-fabric" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adding a New Switch to the Fabric
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#switch-replacement" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3675,7 +3642,7 @@
 </blockquote>
 <hr />
 <h2 id="firmware-upgrade-sequence-ha-director">Firmware Upgrade Sequence (HA Director)<a class="headerlink" href="#firmware-upgrade-sequence-ha-director" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
+<p><pre class="mermaid"><code>sequenceDiagram
     participant Admin
     participant StandbyCp as Standby CP
     participant ActiveCp as Active CP
@@ -3692,95 +3659,82 @@
     StandbyCp--&gt;&gt;Admin: firmwaredownloadstatus — complete
     Admin-&gt;&gt;Admin: version — confirm both CPs on new FOS
     Admin-&gt;&gt;Fabric: switchshow, fabricshow — verify fabric intact</code></pre>
-<h2 id="version-tracking">Version Tracking<a class="headerlink" href="#version-tracking" title="Permanent link">&para;</a></h2>
-<p>Fabric OS versions are tracked against the Broadcom end-of-support schedule. Version selection is driven by:</p>
-<ul>
-<li>HCL requirements of connected host HBA drivers</li>
-<li>HCL requirements of connected storage arrays (PowerMax, Pure, NetApp)</li>
-<li>Broadcom recommended release for each platform</li>
-<li>End-of-sale / end-of-support dates</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Platform</th>
-<th>FOS Track</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>G620 / G720</td>
-<td>FOS 9.x</td>
-<td>Current generation</td>
-</tr>
-<tr>
-<td>X7-4 / X7-8</td>
-<td>FOS 9.x</td>
-<td>Director-class, extended support</td>
-</tr>
-<tr>
-<td>6505 / 6510</td>
-<td>FOS 8.x</td>
-<td>End-of-sale — plan migration to G-series</td>
-</tr>
-</tbody>
-</table>
-<p>End-of-support dates are tracked in the CMDB. Alerts are triggered 18 months before end-of-support.</p>
-<hr />
-<h2 id="firmware-upgrade-procedure">Firmware Upgrade Procedure<a class="headerlink" href="#firmware-upgrade-procedure" title="Permanent link">&para;</a></h2>
-<p>Brocade firmware upgrades use the <code>firmwaredownload</code> command. For HA directors (X7 series), the upgrade is non-disruptive — the standby CP is upgraded first, then a failover occurs, and the other CP is upgraded.</p>
-<p><strong>Pre-upgrade checklist:</strong></p>
-<ul>
-<li>[ ] Current FOS version noted: <code>version</code></li>
-<li>[ ] Running config saved: <code>configupload</code> (backs up to FTP/SCP)</li>
-<li>[ ] HCL compatibility confirmed for target FOS version</li>
-<li>[ ] Fabric health confirmed: <code>fabricshow</code>, <code>porterrshow</code> clean</li>
-<li>[ ] ISLs are trunked and redundant — a reload on one switch should not impact fabric connectivity</li>
-<li>[ ] Change window scheduled and approved</li>
-</ul>
-<p><strong>Upgrade steps:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1 — Upload the firmware image to an FTP/SCP server reachable from the switch</span>
+┌─────────────────────────────── Brocade Fabric OS — Install and Upgrade ───────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │              FOS firmware upgrade: firmwaredownload command; NDU for HA directors             │   │
+│   │          Pre-checks: switchshow all Online, no MAPS critical alerts, config backed up         │   │
+│   │        Download: firmwaredownload -s <scp-server> <path>; switch reboots automatically        │   │
+│   │          Director NDU: upgrades standby CP first, then failover; no fabric disruption         │   │
+│   │            Post-checks: firmwareshow, switchshow, porterrshow; verify no new errors           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Pre-checks -&gt; firmware stage -&gt; upgrade trigger -&gt; reboot -&gt; post-verify -&gt; sign-off               │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Pre-Checks         │  │           Upgrade           │  │         Post-Checks         │   │
+│   │        switchshow OK        │  │       firmwaredownload      │  │         firmwareshow        │   │
+│   │        No MAPS alerts       │  │        Stage firmware       │  │          switchshow         │   │
+│   │       Config backed up      │  │       CP failover NDU       │  │         porterrshow         │   │
+│   │        Change ticket        │  │         Auto-reboot         │  │          fabricshow         │   │
+│   │        Peer fabric OK       │  │       Rollback option       │  │          MAPS check         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Always upgrade one fabric at a time; never both A and B fabrics simultaneously                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Step       │      Action      │      Command      │     Expected     │      Notes       │   │
+│   │       Pre        │   Health check   │     switchshow    │    All Online    │    Per switch    │   │
+│   │     Upgrade      │   Download FW    │  firmwaredownload │    Rebooting     │   NDU director   │   │
+│   │       Post       │  Verify version  │    firmwareshow   │   New version    │   Check errors   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: SCP server with FOS image · switch mgmt Ethernet · console for recovery                  │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    firmwaredownload = Downloads FOS image and reboots switch to activate new version                  │
+│    NDU            = Non-Disruptive Upgrade; director upgrades without disrupting FC traffic           │
+│    firmwareshow   = Displays current and committed FOS version on each blade                          │
+│    Stage firmware = Download to flash before activating; allows verification before commit            │
+│    CP failover    = Standby CP takes over; data plane continues; new standby then upgrades            │
+│    Rollback       = firmwaredownload to prior version if new version has critical defects             │
+│    Pre-checks     = Confirm fabric is healthy before maintenance; document baseline state             │
+│    Change ticket  = All firmware upgrades require approved change management ticket                   │
+│    Peer fabric    = Verify peer fabric (B while upgrading A) is fully healthy first                   │
+│    Post-verify    = Check firmwareshow, switchshow, porterrshow, MAPS after upgrade                   │
+│    SCP image      = FOS firmware .zip downloaded from Broadcom support portal                         │
+│    One fabric     = Upgrade one fabric completely before touching the peer fabric                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Step 2 — Start firmwaredownload (non-disruptive on directors; disruptive on fixed switches)</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>firmwaredownload<span class="w"> </span>-s<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span>&lt;ftp-server&gt;<span class="w"> </span>&lt;path-to-image&gt;<span class="w"> </span>&lt;username&gt;<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># -s = activate after download</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># -b = non-disruptive (HA chassis only)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># -n = no auto-reboot (for manual activation control)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Step 3 — Monitor the upgrade progress</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>firmwaredownloadstatus
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Step 4 — On fixed switches (non-disruptive upgrade not available), the switch reboots</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Monitor from SANnav or reconnect after ~3-5 minutes</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Step 5 — Verify after upgrade</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>version
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>switchshow<span class="w">    </span><span class="c1"># all ports up</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>fabricshow<span class="w">    </span><span class="c1"># fabric intact</span>
-</code></pre></div>
-<hr />
-<h2 id="adding-a-new-switch-to-the-fabric">Adding a New Switch to the Fabric<a class="headerlink" href="#adding-a-new-switch-to-the-fabric" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Pre-configure the new switch: hostname, domain ID, NTP, AAA, SNMP, syslog.</li>
-<li>Set the domain ID statically before connecting ISLs to avoid domain ID conflict:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>configure
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Set Fabric Parameters → insistDomainId = 1</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Set Domain ID to the assigned value from the SAN design register</span>
-</code></pre></div>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Adding a New Switch to the Fabric
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1. Pre-configure the new switch: hostname, domain ID, NTP, AAA, SNMP, syslog.
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2. Set the domain ID statically before connecting ISLs to avoid domain ID conflict:
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>```bash
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>configure
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Set Fabric Parameters → insistDomainId = 1
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Set Domain ID to the assigned value from the SAN design register
+</code></pre></div></p>
 <ol>
 <li>Connect ISL cables to the edge ports of the core switch.</li>
 <li>Verify the new switch joins the fabric:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>fabricshow<span class="w">     </span><span class="c1"># New switch should appear</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>topologyshow<span class="w">   </span><span class="c1"># ISL path visible</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>fabricshow<span class="w">     </span><span class="c1"># New switch should appear</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>topologyshow<span class="w">   </span><span class="c1"># ISL path visible</span>
 </code></pre></div>
 <ol>
 <li>
 <p>Configure trunk groups on the ISL ports:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify trunking formed automatically (requires same speed on both ends)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>trunkshow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify trunking formed automatically (requires same speed on both ends)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>trunkshow
 </code></pre></div></p>
 </li>
 <li>
@@ -3796,28 +3750,28 @@
 <li>Restore configuration: <code>configdownload</code></li>
 <li>Connect to the fabric and verify all devices re-login:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>nsshow<span class="w">    </span><span class="c1"># All devices logged in</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cfgshow<span class="w">   </span><span class="c1"># Zone database present and correct</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>nsshow<span class="w">    </span><span class="c1"># All devices logged in</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cfgshow<span class="w">   </span><span class="c1"># Zone database present and correct</span>
 </code></pre></div>
 <ol>
 <li>Activate the zone set if it was not restored automatically:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cfgenable<span class="w"> </span>&lt;zoneset-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cfgenable<span class="w"> </span>&lt;zoneset-name&gt;
 </code></pre></div></li>
 </ol>
 <hr />
 <h2 id="firmware">Firmware<a class="headerlink" href="#firmware" title="Permanent link">&para;</a></h2>
 <h3 id="firmware-commands">Firmware Commands<a class="headerlink" href="#firmware-commands" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Current firmware</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>version
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>firmwareShow
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Firmware upgrade</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>firmwareDownload<span class="w"> </span>-s<span class="w"> </span>&lt;server_ip&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;path/firmware.bin&gt;
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>firmwareDownloadStatus
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Boot check</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>haShow<span class="w">          </span><span class="c1"># Check HA / CP status</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>haFailover<span class="w">      </span><span class="c1"># Force CP failover</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Current firmware</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>version
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>firmwareShow
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Firmware upgrade</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>firmwareDownload<span class="w"> </span>-s<span class="w"> </span>&lt;server_ip&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;path/firmware.bin&gt;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>firmwareDownloadStatus
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Boot check</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>haShow<span class="w">          </span><span class="c1"># Check HA / CP status</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>haFailover<span class="w">      </span><span class="c1"># Force CP failover</span>
 </code></pre></div>
 <h3 id="firmware-standards">Firmware Standards<a class="headerlink" href="#firmware-standards" title="Permanent link">&para;</a></h3>
 <ul>

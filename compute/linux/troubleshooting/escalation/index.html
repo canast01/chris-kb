@@ -3019,41 +3019,8 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#red-hat-rhel" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Red Hat (RHEL)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Red Hat (RHEL)">
+    <nav class="md-nav" aria-label="Escalation Decision Flow">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#opening-a-support-case" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Opening a Support Case
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#collecting-the-sosreport" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Collecting the sosreport
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#checking-subscription-status" class="md-nav__link">
@@ -3095,7 +3062,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#opening-a-support-case_1" class="md-nav__link">
+  <a href="#opening-a-support-case" class="md-nav__link">
     <span class="md-ellipsis">
       
         Opening a Support Case
@@ -3327,7 +3294,7 @@
 <h1 id="linux-escalation">Linux — Escalation<a class="headerlink" href="#linux-escalation" title="Permanent link">&para;</a></h1>
 <p>Vendor escalation procedures and support contacts.</p>
 <h2 id="escalation-decision-flow">Escalation Decision Flow<a class="headerlink" href="#escalation-decision-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     issue["Issue identified\ncannot resolve internally"]
     severity{"Severity?"}
     sev1["Sev 1\nKernel panic / data loss"]
@@ -3344,30 +3311,57 @@
     severity -- Minor --&gt; sev3 --&gt; openSR
     openSR --&gt; monitor
     monitor --&gt;|"No progress 24h"| escalateAccount</code></pre>
-<h2 id="red-hat-rhel">Red Hat (RHEL)<a class="headerlink" href="#red-hat-rhel" title="Permanent link">&para;</a></h2>
-<h3 id="opening-a-support-case">Opening a Support Case<a class="headerlink" href="#opening-a-support-case" title="Permanent link">&para;</a></h3>
-<p>Support portal: <a href="https://access.redhat.com">access.redhat.com</a></p>
-<ol>
-<li>Log in with the team's Red Hat account</li>
-<li>Support → Open a Support Case</li>
-<li>Select: Product = Red Hat Enterprise Linux, Version = deployed RHEL version</li>
-<li>Describe the issue with: hostname, RHEL version, kernel version, and sosreport</li>
-</ol>
-<h3 id="collecting-the-sosreport">Collecting the sosreport<a class="headerlink" href="#collecting-the-sosreport" title="Permanent link">&para;</a></h3>
-<p>Always collect a sosreport before opening an SR:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Generate sosreport</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>sosreport
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Output: /var/tmp/sosreport-&lt;hostname&gt;-&lt;timestamp&gt;.tar.xz</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Attach to the Red Hat support case via the portal</span>
-</code></pre></div>
-<p>If the system is non-interactive (no TTY), use:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sosreport<span class="w"> </span>--batch<span class="w"> </span>--all-logs
+┌───────────────────────────────────────── Linux — Escalation ──────────────────────────────────────────┐
+│                                                                                                       │
+│  Linux escalation paths: kernel panics, hardware failures, data corruption, security incidents.       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Kernel Panic / Crash             │  │               Hardware Failure              │   │
+│   │          1. Capture dmesg / vmcore           │  │          1. Check dmesg for errors          │   │
+│   │          2. Analyse with crash tool          │  │           2. Run smartctl on disks          │   │
+│   │      3. Report kernel BZ if kernel bug       │  │         3. Replace failed component         │   │
+│   │            4. Patch or workaround            │  │        4. Restore from backup if data       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Kernel issues → vendor support; hardware → ops team + replacement parts                            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Data Corruption                │  │              Security Incident              │   │
+│   │          1. Stop writes immediately          │  │         1. Isolate host from network        │   │
+│   │          2. Snapshot / backup image          │  │          2. Preserve logs + memory          │   │
+│   │           3. fsck on unmounted FS            │  │         3. Escalate to security team        │   │
+│   │       4. Restore from last good backup       │  │         4. Forensic image + analysis        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · backup storage · IPMI/iDRAC · SIEM                                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vmcore       = kernel crash dump; saved to /var/crash by kdump service                               │
+│  kdump        = kernel crash dump mechanism; second kernel captures vmcore                            │
+│  crash tool   = analyses vmcore with debug symbols; bt command shows stack                            │
+│  kernel BZ    = kernel bug report to bugzilla.kernel.org or vendor tracker                            │
+│  smartctl     = SMART disk health; Reallocated_Sector_Ct indicates bad blocks                         │
+│  fsck         = filesystem check/repair; must run on unmounted filesystem                             │
+│  Forensic image= dd or dcfldd to preserve disk state; chain of custody                                │
+│  Isolate      = remove network access; preserve state without shutdown                                │
+│  Preserve logs= copy /var/log before shutdown; volatile data lost on reboot                           │
+│  IPMI/iDRAC   = out-of-band management; access console without network                                │
+│  fsck -n      = dry-run check only; -y auto-fixes; use interactively                                  │
+│  Snapshot     = VM snapshot or LVM snapshot before repair attempts                                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>If the system is non-interactive (no TTY), use:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>```bash
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>sosreport --batch --all-logs
 </code></pre></div></p>
 <h3 id="checking-subscription-status">Checking Subscription Status<a class="headerlink" href="#checking-subscription-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>subscription-manager<span class="w"> </span>status
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>subscription-manager<span class="w"> </span>list<span class="w"> </span>--installed<span class="w">   </span><span class="c1"># Verify products are registered</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>subscription-manager<span class="w"> </span>list<span class="w"> </span>--consumed<span class="w">    </span><span class="c1"># Verify entitlements consumed</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>subscription-manager<span class="w"> </span>status
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>subscription-manager<span class="w"> </span>list<span class="w"> </span>--installed<span class="w">   </span><span class="c1"># Verify products are registered</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>subscription-manager<span class="w"> </span>list<span class="w"> </span>--consumed<span class="w">    </span><span class="c1"># Verify entitlements consumed</span>
 </code></pre></div>
 <p>If entitlement shows <code>Invalid</code>: run <code>subscription-manager refresh</code> and check the RH portal.</p>
 <h3 id="rhel-lifecycle-dates">RHEL Lifecycle Dates<a class="headerlink" href="#rhel-lifecycle-dates" title="Permanent link">&para;</a></h3>
@@ -3403,17 +3397,17 @@
 </table>
 <p>Track lifecycle in CMDB — alert 90 days before Full Support EOL to initiate leapp upgrade.</p>
 <h2 id="canonical-ubuntu">Canonical (Ubuntu)<a class="headerlink" href="#canonical-ubuntu" title="Permanent link">&para;</a></h2>
-<h3 id="opening-a-support-case_1">Opening a Support Case<a class="headerlink" href="#opening-a-support-case_1" title="Permanent link">&para;</a></h3>
+<h3 id="opening-a-support-case">Opening a Support Case<a class="headerlink" href="#opening-a-support-case" title="Permanent link">&para;</a></h3>
 <p>Support portal: <a href="https://ubuntu.com/advantage">ubuntu.com/advantage</a> (Ubuntu Pro)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check Ubuntu Pro status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pro<span class="w"> </span>status
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>pro<span class="w"> </span>attach<span class="w"> </span>&lt;token&gt;<span class="w">   </span><span class="c1"># If not yet attached</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check Ubuntu Pro status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pro<span class="w"> </span>status
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>pro<span class="w"> </span>attach<span class="w"> </span>&lt;token&gt;<span class="w">   </span><span class="c1"># If not yet attached</span>
 </code></pre></div>
 <h3 id="collecting-diagnostics">Collecting Diagnostics<a class="headerlink" href="#collecting-diagnostics" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Ubuntu Pro apport-collect for kernel/package issues</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ubuntu-bug<span class="w"> </span>linux<span class="w">   </span><span class="c1"># Interactive — opens Launchpad by default</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># For non-interactive collection:</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>apport-collect<span class="w"> </span>--output<span class="w"> </span>/tmp/ubuntu-diag.tgz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Ubuntu Pro apport-collect for kernel/package issues</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ubuntu-bug<span class="w"> </span>linux<span class="w">   </span><span class="c1"># Interactive — opens Launchpad by default</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># For non-interactive collection:</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>apport-collect<span class="w"> </span>--output<span class="w"> </span>/tmp/ubuntu-diag.tgz
 </code></pre></div>
 <h3 id="ubuntu-lts-support-timeline">Ubuntu LTS Support Timeline<a class="headerlink" href="#ubuntu-lts-support-timeline" title="Permanent link">&para;</a></h3>
 <table>
@@ -3474,12 +3468,12 @@
 </tbody>
 </table>
 <h2 id="crash-dump-configuration">Crash Dump Configuration<a class="headerlink" href="#crash-dump-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># RHEL — verify kdump is configured</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>kdump
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>cat<span class="w"> </span>/etc/kdump.conf<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>path<span class="w">   </span><span class="c1"># Default: /var/crash</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Test kdump is enabled</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>cat<span class="w"> </span>/proc/cmdline<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>crashkernel<span class="w">   </span><span class="c1"># Should include crashkernel=auto or explicit value</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># RHEL — verify kdump is configured</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>kdump
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>cat<span class="w"> </span>/etc/kdump.conf<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>path<span class="w">   </span><span class="c1"># Default: /var/crash</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Test kdump is enabled</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>cat<span class="w"> </span>/proc/cmdline<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>crashkernel<span class="w">   </span><span class="c1"># Should include crashkernel=auto or explicit value</span>
 </code></pre></div>
 <p>Crash dumps must be available before opening a kernel-related SR.</p>
 

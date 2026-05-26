@@ -3467,69 +3467,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#naming-conventions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Naming Conventions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sizing-guidelines" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sizing Guidelines
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#build-baseline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Build Baseline
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#multipath-configuration-vmware-psp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Multipath Configuration (VMware PSP)
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -3717,7 +3654,7 @@
 
 
 <h1 id="flasharray-design-standards">FlashArray — Design Standards<a class="headerlink" href="#flasharray-design-standards" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>FlashArray Design Checklist — Key Areas
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>FlashArray Design Checklist — Key Areas
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Naming         │  array / volume / host / pg conventions│
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>├──────────────────────────────────────────────────────────┤
@@ -3732,154 +3669,62 @@
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Security       │  RBAC, SafeMode, SAML/LDAP, TLS syslog │
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>└──────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Object</th>
-<th>Pattern</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Volume</td>
-<td><code>&lt;env&gt;-&lt;app&gt;-&lt;function&gt;-&lt;seq&gt;</code></td>
-<td><code>prod-oracle-data-01</code></td>
-</tr>
-<tr>
-<td>Volume (boot)</td>
-<td><code>&lt;env&gt;-&lt;hostname&gt;-boot</code></td>
-<td><code>prod-esxi01-boot</code></td>
-</tr>
-<tr>
-<td>Host</td>
-<td><code>&lt;hostname&gt;</code> (match server hostname exactly)</td>
-<td><code>prod-esxi-01</code></td>
-</tr>
-<tr>
-<td>Host group</td>
-<td><code>&lt;env&gt;-&lt;cluster&gt;</code></td>
-<td><code>prod-vcenter-cluster01</code></td>
-</tr>
-<tr>
-<td>Protection group (local)</td>
-<td><code>&lt;env&gt;-&lt;app&gt;-pg</code></td>
-<td><code>prod-oracle-pg</code></td>
-</tr>
-<tr>
-<td>Protection group (remote)</td>
-<td><code>&lt;env&gt;-&lt;app&gt;-pg-to-&lt;remote&gt;</code></td>
-<td><code>prod-oracle-pg-to-dr</code></td>
-</tr>
-<tr>
-<td>Pod (ActiveCluster)</td>
-<td><code>&lt;app&gt;-pod</code></td>
-<td><code>oracle-pod</code></td>
-</tr>
-<tr>
-<td>Snapshot (on-demand)</td>
-<td><code>&lt;volname&gt;.&lt;purpose&gt;.&lt;date&gt;</code></td>
-<td><code>prod-oracle-data-01.premigration.20260501</code></td>
-</tr>
-<tr>
-<td>Array name</td>
-<td><code>&lt;site&gt;-fa-&lt;seq&gt;</code></td>
-<td><code>lon-fa-01</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Dimension</th>
-<th>Guidance</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Usable capacity</td>
-<td>Account for effective capacity after deduplication and compression — Pure1 provides workload-specific data reduction estimates; typical all-flash workloads achieve 3:1 to 5:1 effective</td>
-</tr>
-<tr>
-<td>Raw drive capacity</td>
-<td>Size so that after a single drive failure and rebuild, usable headroom remains above 70%</td>
-</tr>
-<tr>
-<td>IOPS</td>
-<td>FlashArray //X: up to 2M+ IOPS per array depending on model; verify per-model datasheet for your workload block size</td>
-</tr>
-<tr>
-<td>Latency</td>
-<td>Sub-millisecond (typically 100–300 µs) for random 4K reads at normal utilisation; NVMe//X achieves sub-100 µs</td>
-</tr>
-<tr>
-<td>Maximum volumes</td>
-<td>Up to 500,000 volumes per array depending on model</td>
-</tr>
-<tr>
-<td>Maximum hosts</td>
-<td>Up to 10,000 host entries per array</td>
-</tr>
-<tr>
-<td>ActiveCluster RTT</td>
-<td>Maximum 5 ms round-trip time between arrays for synchronous replication</td>
-</tr>
-<tr>
-<td>Controller upgrade</td>
-<td>Evergreen controller upgrades do not require capacity changes — data stays in place</td>
-</tr>
-</tbody>
-</table>
-<h2 id="build-baseline">Build Baseline<a class="headerlink" href="#build-baseline" title="Permanent link">&para;</a></h2>
-<p>Required settings to configure on every new FlashArray before production:</p>
-<ul>
-<li>[ ] Set array name to match naming convention (<code>purearray setattr --name &lt;name&gt;</code>)</li>
-<li>[ ] Configure DNS servers (<code>puredns setattr --domain &lt;domain&gt; --nameservers &lt;ip1&gt;,&lt;ip2&gt;</code>)</li>
-<li>[ ] Configure NTP servers (<code>purentpserver add &lt;server&gt;</code>) — at least two</li>
-<li>[ ] Set timezone (<code>purearray setattr --timezone &lt;tz&gt;</code>)</li>
-<li>[ ] Configure syslog forwarding to central log aggregator</li>
-<li>[ ] Configure SMTP alert relay and array-wide email alert recipients</li>
-<li>[ ] Join Active Directory or configure LDAP for admin authentication</li>
-<li>[ ] Create local break-glass admin account with strong password stored in PAM vault</li>
-<li>[ ] Disable default <code>pureuser</code> account after AD/LDAP is validated</li>
-<li>[ ] Configure SNMP v3 community or trap destination if SNMP monitoring is required</li>
-<li>[ ] Enable Pure1 phone-home and verify connectivity</li>
-<li>[ ] Configure management interface on dedicated management VLAN</li>
-<li>[ ] Configure replication interfaces on dedicated replication VLAN</li>
-<li>[ ] Enable SafeMode (immutable snapshots) — engage Pure Support to enable</li>
-<li>[ ] Apply SSL certificate from internal CA on management interface</li>
-<li>[ ] Document array serial number, management IP, Purity version, and FC/iSCSI port WWNs/IQNs in CMDB</li>
-</ul>
-<h2 id="configuration-checklist">Configuration Checklist<a class="headerlink" href="#configuration-checklist" title="Permanent link">&para;</a></h2>
-<p>Ordered steps for initial FlashArray setup:</p>
-<ol>
-<li><strong>Rack and cable</strong> — install chassis, connect power (dual PSU to separate PDUs), connect management Ethernet, connect data fabric (FC or iSCSI), connect replication Ethernet</li>
-<li><strong>Initial CLI access</strong> — connect serial console or management Ethernet; complete Purity setup wizard at first boot</li>
-<li><strong>Set array name and network</strong> — assign management IP, gateway, DNS; set array name and timezone</li>
-<li><strong>Activate licensing</strong> — register in Pure1 using the array serial number to activate the licence and enable monitoring</li>
-<li><strong>Configure NTP</strong> — add at least two NTP servers; verify time sync before proceeding</li>
-<li><strong>Configure alert notifications</strong> — set SMTP relay and admin email addresses</li>
-<li><strong>Configure syslog</strong> — forward to central SIEM or log aggregator</li>
-<li><strong>Configure authentication</strong> — join AD or configure LDAP; create role-mapped admin groups; disable default <code>pureuser</code> once validated</li>
-<li><strong>Apply security hardening</strong> — see <a href="../../security/">Security</a></li>
-<li><strong>Zone FC fabric</strong> — create single-initiator, single-target zones for each host HBA to array target ports; or configure iSCSI discovery portals</li>
-<li><strong>Register hosts</strong> — <code>purehost create &lt;hostname&gt;</code>, <code>purehost setifs --wwn &lt;wwn&gt; &lt;hostname&gt;</code></li>
-<li><strong>Create host groups</strong> — <code>purehgroup create &lt;hgroupname&gt;</code>, <code>purehgroup addhosts --hostlist &lt;hosts&gt; &lt;hgroupname&gt;</code></li>
-<li><strong>Provision volumes</strong> — <code>purevol create --size &lt;size&gt; &lt;volname&gt;</code></li>
-<li><strong>Connect volumes</strong> — <code>purehgroup addvol --vollist &lt;volname&gt; &lt;hgroupname&gt;</code></li>
-<li><strong>Verify host connectivity</strong> — rescan HBA bus on each host; confirm volumes visible via multipath driver</li>
-<li><strong>Configure protection groups</strong> — create protection group, add volumes, set snapshot schedule and replication targets</li>
-<li><strong>Enable replication</strong> — configure connection to remote array; add replication target to protection group</li>
-<li><strong>Configure ActiveCluster</strong> — create pod, stretch to remote array, move volumes into pod (if required)</li>
-<li><strong>Validate and document</strong> — <code>purearray list</code>, <code>puredrive list</code>, <code>purealert list</code>; document build in CMDB</li>
-</ol>
-<h2 id="multipath-configuration-vmware-psp">Multipath Configuration (VMware PSP)<a class="headerlink" href="#multipath-configuration-vmware-psp" title="Permanent link">&para;</a></h2>
-<p>For VMware hosts connected to FlashArray, set the Path Selection Policy to Round Robin with IOPS limit of 1:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-d<span class="w"> </span>&lt;naa_id&gt;<span class="w"> </span>-P<span class="w"> </span>VMW_PSP_RR
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>psp<span class="w"> </span>roundrobin<span class="w"> </span>deviceconfig<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-d<span class="w"> </span>&lt;naa_id&gt;<span class="w"> </span>--type<span class="w"> </span>iops<span class="w"> </span>--iops<span class="w"> </span><span class="m">1</span>
-</code></pre></div>
+┌────────────────────────────────── Pure FlashArray Design Standards ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          FlashArray Design Standards — Naming, Zoning, Host Config, Capacity Planning         │   │
+│   │    Naming: array-name, volume, host, hgroup follow site-consistent lowercase-hyphen scheme    │   │
+│   │       FC zoning: single-initiator / single-target; each HBA port zoned to one array port      │   │
+│   │        Host connect: create host, add WWN/IQN, add to hgroup, connect volume to hgroup        │   │
+│   │     Capacity: provision at 2x data-reduction estimate; alert threshold 80% array capacity     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Standards ensure consistent deployments across sites and reduce operational errors                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Naming and Zoning Standards          │  │       Capacity and Performance Design       │   │
+│   │        Volume: appname-function-lun01        │  │         Target data reduction: 4:1+         │   │
+│   │          Host: hostname matches DNS          │  │          Provision: 2x DR estimate          │   │
+│   │         hgroup: cluster or app group         │  │        Alert: 80% capacity threshold        │   │
+│   │         FC zone: SI-ST per HBA port          │  │         QoS: bandwidth + IOPS limits        │   │
+│   │        iSCSI: CHAP + portal per port         │  │         Snap retention: 24h/7d/4w/1y        │   │
+│   │           PG: one PG per app tier            │  │        Volume size: multiples of 1 TB       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Consistent naming and single-initiator zoning are the two most impactful design decisions          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Volume Design   │   Host Design    │     FC Zoning     │    PG Design     │    Monitoring    │   │
+│   │ 512-byte aligned │One host one hgrou│  SI-ST mandatory  │   1 PG per app   │ Pure1 DR metric  │   │
+│   │ Thin: no reserve │WWNs per HBA port │  Zone activation  │ Hourly schedule  │ Capacity alerts  │   │
+│   │ Limit QoS shared │iSCSI: 2+ portals │ Alias hostname_p1 │ Retain: 24 snaps │  Latency &lt; 1 ms  │   │
+│   │LUN ID consistent │  MPIO multipath  │    Verify login   │Target: remote PG │purearray monitor │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  FlashArray pair · FC director switches · iSCSI ToR switches · ESXi/bare-metal hosts · Pure1 portal   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SI-ST zoning  = Single-Initiator/Single-Target; best practice FC zoning reduces blast radius         │
+│  hgroup        = Host group; collection of hosts sharing access to the same volumes                   │
+│  Protection Group= PG; volumes/hosts replicated together on schedule; one PG per application          │
+│  Data reduction= Ratio of written logical data to physical flash used; 4:1 typical on VMs             │
+│  QoS limits    = Per-volume IOPS/bandwidth cap; set with purevolume setattr --iops-limit              │
+│  CHAP          = Challenge Handshake Auth Protocol; iSCSI authentication between host and array       │
+│  MPIO          = Multipath I/O; host multipath driver balances I/O across multiple array ports        │
+│  Thin provision= Volume allocated on demand; no physical flash reserved until data is written         │
+│  Snap retention= Schedule of snapshots kept: hourly, daily, weekly, monthly, yearly counts            │
+│  Portal        = iSCSI target endpoint; IP:port on array for iSCSI initiator discovery                │
+│  WWN           = World Wide Name; 64-bit FC identifier for initiator HBA port and target port         │
+│  Pure1 DR      = Pure1 shows data-reduction ratio per array; used to validate design targets          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <p>For Linux DM-Multipath, use the Pure Storage recommended <code>multipath.conf</code> settings (available from Pure Support): <code>path_grouping_policy multibus</code>, <code>path_checker tur</code>, <code>failback immediate</code>, <code>no_path_retry 18</code>.</p>
 
 
