@@ -35,28 +35,6 @@ git ls-files --others --exclude-standard
 git tag -a v1.4.2 -m "Pre-maintenance snapshot $(date -I)"
 git push origin v1.4.2
 ```
-┌────────────────────────────────────── Python — Backup & Restore ──────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Python script backup: git is the source of truth; include lock file for reproducibility    │   │
-│   │  requirements.txt or poetry.lock pins exact dep versions; re-create venv from lock on restore │   │
-│   │     Restore: git clone → python3 -m venv .venv → pip install -r requirements.txt → verify     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               What to Back Up                │  │                Restore Steps                │   │
-│   │         Git repo (all .py + config)          │  │             1. git clone <repo>             │   │
-│   │       requirements.txt or poetry.lock        │  │           2. python3 -m venv .venv          │   │
-│   │         pyproject.toml configuration         │  │      3. pip install -r requirements.txt     │   │
-│   │          Environment variable names          │  │       4. Re-inject secrets (env vars)       │   │
-│   │      Secrets: external vault (not git)       │  │             5. pytest to verify             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          Never commit   = .venv/, __pycache__/, *.pyc, .env files — add to .gitignore         │   │
-│   │      Lock file      = commit requirements.txt (pip-compile) or poetry.lock to git always      │   │
-│   │     Python version = document in .python-version (pyenv) or pyproject.toml requires-python    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -172,7 +150,6 @@ Non-secret configuration is committed to Git alongside code.
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
@@ -181,7 +158,6 @@ class Settings(BaseSettings):
     log_level: str = Field(default="INFO")
     output_dir: str = Field(default="/opt/automation/output")
     max_retries: int = Field(default=3)
-
 
 settings = Settings()
 ```

@@ -24,60 +24,6 @@ Recovery Media (USB / iDRAC virtual ISO)
 └── WinPE boot environment
       └── RASR Recovery Engine + Dell hardware drivers
 ```
-┌───────────────────────────────────────── RASR — How It Works ─────────────────────────────────────────┐
-│                                                                                                       │
-│    RASR data flow — from source to target through the protection pipeline:                            │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                 1  Source / Production System                                 │   │
-│   │            Vault Appliance      — air-gapped PowerStore/DD in isolated network segment        │   │
-│   │                Host writes are intercepted or snapshotted by the RASR agent/proxy             │   │
-│   │                  Changed blocks tracked via CBT / journal / delta-set mechanism               │   │
-│   │                 Consistency ensured at quiesce point before data transfer begins              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Changed data forwarded to the RASR engine — compression and encryption applied in transit          │
-│                                                                                                       │
-│                                                   ▼                                                   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                         2  RASR Engine                                        │   │
-│   │          CyberSense Engine    — ML-based malware and corruption detection on vault data       │   │
-│   │                    Data compressed, deduplicated, and encrypted before storage                │   │
-│   │                  Metadata catalog updated; job status reported to control plane               │   │
-│   │                                         cr_vault_cli sync                                     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                                                   ▼                                                   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                     3  Target / Repository                                    │   │
-│   │           PowerProtect Manager — orchestrates replication jobs, retention, and recovery       │   │
-│   │                  Recovery point written; retention policy applied automatically               │   │
-│   │                                   Restore: cr_vault_cli status                                │   │
-│   │                     RTO driven by target storage performance and data volume                  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
-│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
-│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
-│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
-│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
-│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
-│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
-│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
-│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
-│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
-│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
-│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
-│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
-│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Dell Hardware Integration

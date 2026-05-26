@@ -1,5 +1,6 @@
 # Aria Operations: Scheduled Reports and PDF Export
 
+```
 ┌────────────────────────────────────── Aria Operations — Reports ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
@@ -30,6 +31,7 @@
 │  Recipient list = Named list of email addresses for scheduled report delivery                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Scheduling Reports

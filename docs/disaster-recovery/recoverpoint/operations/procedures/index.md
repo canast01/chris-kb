@@ -129,44 +129,6 @@ flowchart TD
     style disableImageAccess fill:#b45309,color:#fff
     style confirmActive fill:#15803d,color:#fff
 ```
-┌────────────────────────────────────── RecoverPoint — Procedures ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Standard procedures: failover, failback, test copy, image access, bookmark creation      │   │
-│   │   Always set a bookmark before any maintenance or planned failover for clean recovery point   │   │
-│   │      Failover pre-check: confirm lag, journal %, network readiness, VM power state at DR      │   │
-│   │   Failback pre-check: production site healthy, reverse replication established, data synced   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │           Failover          │  │           Failback          │  │          Test Copy          │   │
-│   │       1. Set bookmark       │  │      1. Verify prod OK      │  │     1. Create bubble net    │   │
-│   │     2. Disable prod VMs     │  │     2. Reverse replicate    │  │      2. Select bookmark     │   │
-│   │        3. Failover CG       │  │       3. Wait for sync      │  │      3. Start test copy     │   │
-│   │      4. Power on DR VMs     │  │        4. Failback CG       │  │     4. Power on test VMs    │   │
-│   │     5. Redirect traffic     │  │       5. Re-enable CG       │  │    5. Validate & end test   │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: test copy VMs on bubble portgroup (no uplinks); failover requires DR network pre-configur│
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Failover         = Commit journal image; power on VMs at DR site; production traffic moves         │
-│    Failback         = Reverse replication; sync DR changes back to prod; cut over to prod             │
-│    Reverse replicate= After failover; replication runs DR→prod direction; syncs delta writes          │
-│    Test copy        = Non-disruptive; replica boots on bubble VLAN; no prod impact                    │
-│    Image access     = Read-only or r/w mount; source continues; no VM power-on at DR                  │
-│    Bookmark         = Set before maintenance; provides clean point for any recovery type              │
-│    Pre-check        = Verify lag, journal fill, DR network config, and ESXi connectivity              │
-│    Bubble network   = Isolated portgroup created for test; removed after test ends                    │
-│    Traffic redirect = DNS/load balancer update to point to DR site IP addresses                       │
-│    Resync           = After failback; establishes forward replication again (prod → DR)               │
-│    CG disable       = Pause replication before planned failover; prevents writes during cutover       │
-│    Post-failover    = Confirm all VMs running; validate application; set new bookmark                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### DR Test — Image Access (Non-Disruptive)

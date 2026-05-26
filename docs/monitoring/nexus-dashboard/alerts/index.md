@@ -1,5 +1,6 @@
 # Nexus Dashboard: Fabric Alerts, Severity, Acknowledgement, and Notification Policies
 
+```
 ┌────────────────────────────────────── Nexus Dashboard — Alerts ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -30,6 +31,7 @@
 │  Root cause = NDI correlation linking symptom to underlying network event                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Acknowledging Alerts

@@ -35,43 +35,6 @@ flowchart TD
     result -->|Yes| ok([DR Ready - Score 100%])
     result -->|No| investigate([Investigate and remediate])
 ```
-┌────────────────────────────────── Superna Eyeglass — Health Checks ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                           Superna Eyeglass — Health Check Procedures                          │   │
-│   │                 Run these checks daily/weekly to confirm protection is working                │   │
-│   │                                         igls sync status                                      │   │
-│   │                  Review job completion rate — target 100%; investigate failures               │   │
-│   │                         Check replication/backup lag against RPO target                       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │      Check       │  What to verify  │      Expected     │    Frequency     │  Action if bad   │   │
-│   │    Job status    │All jobs complete │    100% success   │      Daily       │ Triage failures  │   │
-│   │    Lag / RPO     │ Replication lag  │    < RPO target   │      Daily       │  Tune bandwidth  │   │
-│   │     Capacity     │ Repo space used  │     < 80% full    │      Weekly      │ Expand or expire │   │
-│   │   Restore test   │  Random restore  │    Data intact    │     Monthly      │ Fix backup chain │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
-│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
-│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
-│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
-│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
-│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
-│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
-│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
-│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
-│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
-│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
-│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
-│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
-│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -22,28 +22,6 @@ graph LR
     apply --> postPlan
     apply --> stateBackup
 ```
-┌─────────────────────────────────────── Terraform — Procedures ────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Terraform procedures: new module creation, import existing infra, state migration, workspace se│   │
-│   │  New module: write main.tf, variables.tf, outputs.tf, versions.tf; add examples/; add tests/  │   │
-│   │    Import: terraform import resource.type.name <resource-id>; then terraform plan to verify   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Import Existing Resource           │  │               State Migration               │   │
-│   │        1. Write resource block in .tf        │  │    1. terraform state pull > old.tfstate    │   │
-│   │         2. terraform import addr id          │  │        2. Modify state JSON if needed       │   │
-│   │       3. terraform plan (expect empty)       │  │     3. terraform state push new.tfstate     │   │
-│   │       4. Adjust config to match state        │  │          4. terraform plan (verify)         │   │
-│   │               5. Commit to git               │  │          5. Run apply to reconcile          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │terraform import  = adds existing resource to state; does not generate .tf code (use config gen│   │
-│   │         Config generation = terraform plan -generate-config-out=generated.tf (TF 1.5+)        │   │
-│   │        state migration   = moving state between backends; terraform init -migrate-state       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Saving and Applying Plan Files

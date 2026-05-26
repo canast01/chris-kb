@@ -34,12 +34,10 @@ SESSION.auth    = (RP_USER, RP_PASS)
 SESSION.verify  = False
 SESSION.headers.update({"Content-Type": "application/json", "Accept": "application/json"})
 
-
 def api_get(path: str) -> dict:
     r = SESSION.get(f"{BASE_URL}{path}")
     r.raise_for_status()
     return r.json()
-
 
 def ms_to_human(ms: int) -> str:
     if ms is None:
@@ -51,7 +49,6 @@ def ms_to_human(ms: int) -> str:
     if total_sec < 3600:
         return f"{total_sec // 60}m {total_sec % 60}s"
     return f"{total_sec // 3600}h {(total_sec % 3600) // 60}m"
-
 
 print()
 print("=== RecoverPoint Consistency Group Health Monitor ===")
@@ -154,46 +151,6 @@ Set these as environment variables before running:
 ```text
 RP_HOST=192.168.1.100 RP_USER=admin RP_PASS=MyPassword python3 rp-cg-health.py
 ```
-┌─────────────────────────────────────── RecoverPoint — Scripts ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     RP automation: REST API (HTTPS/443) or CLI scripting via SSH; Python/PowerShell common    │   │
-│   │   Common scripts: CG health report, journal fill monitor, lag alert, bulk bookmark creation   │   │
-│   │             API base: https://<RPA-IP>/fapi/rest/5_1; auth: Basic or session token            │   │
-│   │            SDK: Dell RecoverPoint PowerShell module (unofficial); wraps REST calls            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Script triggers: cron/Task Scheduler ──► REST/SSH ──► RPA API ──► parse response ──► alert         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Monitoring Scripts              │  │              Automation Scripts             │   │
-│   │                get_cg_lag.py                 │  │              create_bookmark.py             │   │
-│   │            journal_fill_alert.py             │  │              bulk_enable_cgs.sh             │   │
-│   │             rpa_health_check.py              │  │                failover_cg.py               │   │
-│   │           rpo_compliance_report.py           │  │           test_copy_automation.ps1          │   │
-│   │             link_status_check.sh             │  │               config_backup.py              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: scripts run from jump host on management VLAN with HTTPS/SSH access to RPA management IPs│
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    REST API base    = https://<RPA-IP>/fapi/rest/5_1; GET /clusters, /groups, /links endpoints        │
-│    Session token    = POST to /sessions; returns token; use X-RP-Auth header in subsequent calls      │
-│    CG lag script    = Poll GET /groups; parse transferTimeLag; alert if > threshold seconds           │
-│    Journal fill     = GET /groups/<id>/copies; check journalUsagePercent; alert if > 70%              │
-│    Bulk bookmark    = POST /groups/<id>/bookmarks; run for all CGs before maintenance window          │
-│    RPO report       = Pull lag history; calculate % time within RPO; export to CSV/email              │
-│    Config backup    = GET /system/config; export XML; store in version-controlled repo                │
-│    SSH scripting    = Paramiko or subprocess SSH to RPA; run get all cgs; parse text output           │
-│    PowerShell module= Import-Module RecoverPoint; wraps REST; Windows automation environments         │
-│    Cron schedule    = Health checks every 5 min; journal fill every 15 min; RPO report daily          │
-│    Alert routing    = Scripts send email or post to Slack/Teams webhook on threshold breach           │
-│    Error handling   = Catch HTTP 4xx/5xx; retry with backoff; log to syslog on persistent failure     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Step 5 — Run the DR test (enables image access)**
@@ -244,16 +201,13 @@ SESSION.auth    = (RP_USER, RP_PASS)
 SESSION.verify  = False
 SESSION.headers.update({"Content-Type": "application/json", "Accept": "application/json"})
 
-
 def api_get(path: str) -> dict:
     r = SESSION.get(f"{BASE_URL}{path}")
     r.raise_for_status()
     return r.json()
 
-
 def micros_to_sec(us: int) -> float:
     return us / 1_000_000 if us else 0.0
-
 
 def fmt_sec(sec: float) -> str:
     if sec is None:
@@ -264,7 +218,6 @@ def fmt_sec(sec: float) -> str:
     if s < 3600:
         return f"{s // 60}m {s % 60}s"
     return f"{s // 3600}h {(s % 3600) // 60}m"
-
 
 print()
 print("=== RecoverPoint RPO Compliance Report ===")

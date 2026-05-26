@@ -47,46 +47,6 @@ flowchart TD
     style enableAccess fill:#b45309,color:#fff
     style disableAccess fill:#b45309,color:#fff
 ```
-┌──────────────────────────────────── RecoverPoint — CLI Reference ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   RecoverPoint CLI: SSH to RPA management IP; login as admin; CLI mode (boxmgmt is hardware)  │   │
-│   │      Main commands: get all cgs, set group, set bookmark, failover, enable/disable group      │   │
-│   │       boxmgmt: low-level RPA appliance management; hardware status, NTP, network config       │   │
-│   │           Scripting: RP REST API (port 443); JSON responses; auth via basic or token          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    SSH admin@<RPA-IP> ──► CLI prompt ──► get all cgs / set group <n> / failover group <n>             │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Monitoring Commands              │  │               Control Commands              │   │
-│   │                 get all cgs                  │  │            failover group <name>            │   │
-│   │               get group <name>               │  │             enable group <name>             │   │
-│   │                  get system                  │  │             disable group <name>            │   │
-│   │                  get links                   │  │             set bookmark <name>             │   │
-│   │                get rpa status                │  │              start image access             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: SSH to RPA management IP on mgmt VLAN; boxmgmt for hardware; admin CLI for CG ops        │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    boxmgmt          = Hardware-level CLI; configure NTP, network, passwords, and factory reset        │
-│    get all cgs      = List all consistency groups with state, lag, and journal fill                   │
-│    get group        = Detailed view of single CG; copies, VMs, lag, policy, bookmarks                 │
-│    get system       = RPA cluster health; node states, link status, and replication summary           │
-│    failover group   = Initiate failover for named CG; confirms before executing                       │
-│    enable/disable   = Start or pause replication for a CG; disable before maintenance                 │
-│    set bookmark     = Create named timestamp in journal; specify CG and bookmark name                 │
-│    start image access = Mount journal image at selected time; choose read-only or read-write          │
-│    get links        = Show replication links; bandwidth utilisation, latency, packet loss             │
-│    REST API         = RP REST endpoint; same operations as CLI; used by SRA and automation            │
-│    admin CLI        = SSH-accessible CLI; differs from boxmgmt; all CG and replication commands       │
-│    failback         = CLI command to reverse replication after failover; requires resync first        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 The `boxmgmt` interface is menu-driven. Navigate by number. Common menu paths:

@@ -21,28 +21,6 @@ flowchart TD
     S5 --> A
     A --> NOTIFY[Notification / Downstream Jobs]
 ```
-┌──────────────────────────────────── GitHub Actions — How It Works ────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ Event fires → GitHub evaluates on: triggers → matching workflows queued → runner picks up job │   │
-│   │     Runner clones repo, restores cache, executes steps, uploads artifacts, reports status     │   │
-│   │          Secrets injected as env vars at runtime; masked in log output automatically          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Trigger Phase        │  │       Execution Phase       │  │         Result Phase        │   │
-│   │   Event: push/PR/schedule   │  │      Runner accepts job     │  │     Status check posted     │   │
-│   │    on: filter evaluation    │  │        Repo checkout        │  │     Artifacts available     │   │
-│   │     Workflow file parsed    │  │        Cache restore        │  │      Logs retained 90d      │   │
-│   │     Jobs queued parallel    │  │      Steps run in order     │  │      Notify: PR, Slack      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     GITHUB_TOKEN    = auto-generated per-job token; scoped to repo; expires when job ends     │   │
-│   │      permissions:    = restrict GITHUB_TOKEN scopes per job; principle of least privilege     │   │
-│   │    needs:          = declare job dependency; forces sequential execution and output passing   │   │
-│   │        if: condition   = conditional step/job execution; uses expression syntax ${{ }}        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 | Property | Purpose |

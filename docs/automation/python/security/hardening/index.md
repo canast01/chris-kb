@@ -25,28 +25,6 @@ flowchart TD
     filePerms --> noLogs
     noLogs --> ready
 ```
-┌───────────────────────────────────────── Python — Hardening ──────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Harden Python automation: input validation, subprocess safety, dep pinning, pre-commit hooks │   │
-│   │       subprocess: always use list args; never shell=True with user input; capture stderr      │   │
-│   │     YAML: use yaml.safe_load() not yaml.load(); prevents arbitrary Python object execution    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Code Hardening                │  │              Pipeline Hardening             │   │
-│   │       subprocess list args (no shell)        │  │      bandit + ruff in CI (block merge)      │   │
-│   │       yaml.safe_load() not yaml.load()       │  │         pre-commit: bandit, gitleaks        │   │
-│   │        Validate + type-cast all input        │  │        Dependabot or Renovate weekly        │   │
-│   │        Use pathlib, not os.path.join         │  │       SBOM: pip-licenses --format=json      │   │
-│   │         No pickle for untrusted data         │  │           pip-audit in CI for CVEs          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │pickle        = Python serialisation; NEVER deserialise untrusted pickle data (code execution r│   │
-│   │       gitleaks      = pre-commit hook scanning for secrets in staged code before commit       │   │
-│   │   SBOM          = Software Bill of Materials; list all deps + versions for compliance audit   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```python

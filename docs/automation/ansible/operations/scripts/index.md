@@ -25,27 +25,6 @@ graph LR
     runPlaybook -->|exit 0| success
     runPlaybook -->|exit 1| rollback
 ```
-┌────────────────────────────────────────── Ansible — Scripts ──────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Utility scripts for Ansible operations: inventory validation, bulk vault re-key, job report exp│   │
-│   │   Scripts live in scripts/ at repo root; documented with usage header and example invocation  │   │
-│   │     AWX API scripts: list failed jobs, cancel stuck jobs, export all job templates to JSON    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Inventory Scripts               │  │               AWX API Scripts               │   │
-│   │            validate_inventory.py             │  │             list_failed_jobs.py             │   │
-│   │             compare_inventory.py             │  │             cancel_stuck_jobs.py            │   │
-│   │            generate_host_vars.py             │  │           export_job_templates.py           │   │
-│   │             prune_stale_hosts.py             │  │            rotate_credentials.py            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  AWX API     = REST API at /api/v2/; authenticate with bearer token; paginated JSON responses │   │
-│   │        awx CLI     = official AWX CLI; wraps the REST API; install: pip install awxkit        │   │
-│   │      awxkit     = Python library for AWX API; used by the awx CLI; importable in scripts      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Infrastructure Health Check Playbook
@@ -163,7 +142,6 @@ A general-purpose health-check playbook targeting Linux server and network devic
           - "Failed services: {{ failed_services.stdout_lines | default([]) | length }}"
           - "Last reboot    : {{ last_reboot.stdout | default('unknown') | trim }}"
 
-
 - name: Network Device Reachability Check
   hosts: network_devices
   gather_facts: false
@@ -180,7 +158,6 @@ A general-purpose health-check playbook targeting Linux server and network devic
       debug:
         msg: "UNREACHABLE: {{ inventory_hostname }} ({{ ansible_host }})"
       when: ping_result.rc != 0
-
 
 - name: Health Report Aggregation
   hosts: localhost
@@ -497,7 +474,6 @@ Verify that every inventory host meets baseline configuration requirements: SSH 
         validation_result: "{{ validation_result }}"
       delegate_to: localhost
       delegate_facts: true
-
 
 - name: Validation Summary
   hosts: localhost

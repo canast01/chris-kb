@@ -1,5 +1,6 @@
 # Aria Operations: Dashboards — Creating, Editing, and Sharing
 
+```
 ┌──────────────────────────────────── Aria Operations — Dashboards ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -42,6 +43,7 @@
 │  Clone dashboard    = Copying an existing dashboard as starting point for customisation               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Common widget types and their use cases:

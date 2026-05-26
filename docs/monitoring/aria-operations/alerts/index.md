@@ -1,5 +1,6 @@
 # Aria Operations: Alert Definitions and Policies
 
+```
 ┌────────────────────────────────────── Aria Operations — Alerts ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -42,6 +43,7 @@
 │  Outbound action   = Configured connector sending alert payload to external system                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Common threshold types:

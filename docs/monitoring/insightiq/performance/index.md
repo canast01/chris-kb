@@ -1,5 +1,6 @@
 # InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards
 
+```
 ┌────────────────────────────────── InsightIQ — Performance Analysis ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
@@ -29,6 +30,7 @@
 │  Read vs write = IO breakdown critical for cache effectiveness and drive wear planning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Protocol Performance Breakdown

@@ -44,25 +44,6 @@ graph LR
     applyProd -->|OK| done
     applyProd -->|Fail| abort
 ```
-┌───────────────────────────────────────── Terraform — Scripts ─────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Terraform utility scripts: drift report, stale lock check, state backup, plan summary     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Operations Scripts              │  │                CI/CD Scripts                │   │
-│   │        drift_check.sh (plan + alert)         │  │            tf_plan_pr_comment.py            │   │
-│   │          backup_state.sh (S3 copy)           │  │               tf_apply_gate.sh              │   │
-│   │        unlock_stale.sh (force-unlock)        │  │               tf_fmt_check.sh               │   │
-│   │       list_drift.py (parse plan JSON)        │  │              checkov_report.sh              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Plan JSON     = terraform plan -out=tfplan; terraform show -json tfplan > plan.json      │   │
-│   │    PR comment    = use GitHub API or atlantis to post plan output as PR comment for review    │   │
-│   │         -detailed-exitcode= exit 0: no changes, exit 1: error, exit 2: changes present        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **What you should see**

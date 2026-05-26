@@ -4,6 +4,7 @@
 Security reference for VxRail in the VMware product context. Covers iDRAC LDAP authentication, ESXi lockdown mode, vSAN encryption, Secure Boot, and audit logging.
 </div>
 
+```
 ┌────────────────────────────────────────── VxRail — Security ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -59,6 +60,7 @@ Security reference for VxRail in the VMware product context. Covers iDRAC LDAP a
 │  2FA on iDRAC      = Two-factor authentication on iDRAC console; reduces OOB access risk              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Store the new password in the organisation's secrets vault. The `mystic` account is the equivalent of an admin account — losing it requires Dell support-assisted recovery.

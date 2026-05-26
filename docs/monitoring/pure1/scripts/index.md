@@ -40,36 +40,6 @@ def pure1_get(path: str, token: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
-┌────────────────────────────────────── Pure1 — Scripts Reference ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                      Pure1 REST API scripts using py-pure-client library                      │   │
-│   │                get-fleet.py: list all arrays with health, version, and capacity               │   │
-│   │               get-alerts.py: active alerts across fleet; flag Critical to Slack               │   │
-│   │                capacity-check.py: arrays with < 90 days to full; email to team                │   │
-│   │              phonehome-check.py: arrays not Connected; alert if data age > 5 min              │   │
-│   │                  perf-report.py: pull IOPS/latency for all arrays; CSV export                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Scripts run from any internet-connected host · Python 3 + py-pure-client                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  py-pure-client = pip install py-pure-client; Pure-provided Python library                            │
-│  JWT auth = RSA-signed JWT for Pure1 API; use Pure1Client from py-pure-client                         │
-│  client_id = Pure1 API registration ID from org settings                                              │
-│  private_key = RSA private key path; corresponding public key registered in Pure1                     │
-│  Fleet list = client.get_arrays() returns all arrays with health and metadata                         │
-│  Alert list = client.get_alerts(filter="state='open'") for active alerts                              │
-│  Metrics = client.get_metrics(names=[...], resource_names=[...]) for time-series                      │
-│  Phonehome status = array.status field; Connected or Disconnected                                     │
-│  Data age = time since last phonehome; compute from array.last_updated                                │
-│  CSV export = pandas DataFrame from metric response; df.to_csv()                                      │
-│  Cron = Schedule daily via crontab for capacity and phonehome checks                                  │
-│  Slack webhook = POST alert summary to Slack channel incoming webhook URL                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Capacity Report

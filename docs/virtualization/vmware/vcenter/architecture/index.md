@@ -4,6 +4,7 @@
 vCenter Server is the management plane for VMware vSphere, deployed as the VCSA appliance. It supports standard single-node, vCenter HA (3-node active/passive/witness), and Enhanced Linked Mode topologies.
 </div>
 
+```
 ┌─────────────────────────────────────── vCenter — Architecture ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -59,4 +60,5 @@ vCenter Server is the management plane for VMware vSphere, deployed as the VCSA 
 │  Update Planner = vCenter tool that checks interoperability and schedules upgrade order               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```

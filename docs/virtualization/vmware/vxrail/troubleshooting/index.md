@@ -4,6 +4,7 @@
 Troubleshooting guide for VxRail in the VMware product context. Covers VxRail plugin unavailability, LCM pre-check failures, vSAN degraded states, and node rejoin procedures.
 </div>
 
+```
 ┌────────────────────────────────────── VxRail — Troubleshooting ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -59,6 +60,7 @@ Troubleshooting guide for VxRail in the VMware product context. Covers VxRail pl
 │  GSS escalation    = Global Support Services; Dell/VMware support organisation for P1/P2 incidents    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ---

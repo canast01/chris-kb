@@ -35,27 +35,6 @@ flowchart TD
     style STATE fill:#1565c0,color:#fff
     style LOCK fill:#c62828,color:#fff
 ```
-┌────────────────────────────────────── Terraform — How It Works ───────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           terraform init → plan → apply is the core workflow; destroy reverses apply          │   │
-│   │    init: downloads providers; plan: computes diff vs state; apply: calls provider CRUD APIs   │   │
-│   │          State locking: DynamoDB or backend-specific lock prevents concurrent applies         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        terraform init       │  │        terraform plan       │  │       terraform apply       │   │
-│   │      Download providers     │  │      Read current state     │  │   Confirm or -auto-approve  │   │
-│   │      Configure backend      │  │   Call provider read APIs   │  │     Provider CRUD calls     │   │
-│   │      Initialise modules     │  │    Compute resource diff    │  │      Update state file      │   │
-│   │     .terraform.lock.hcl     │  │       Output plan file      │  │      Release state lock     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │.terraform.lock.hcl = provider version lock file; commit to git for reproducible initialisation│   │
-│   │  plan file           = terraform plan -out=tfplan; apply: terraform apply tfplan (no re-diff) │   │
-│   │State lock          = prevents concurrent terraform apply; acquired on apply, released on finis│   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

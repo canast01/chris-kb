@@ -37,48 +37,6 @@ graph LR
     linkLabel -->|"ack to R1"| r1
     linkLabel --> r2
 ```
-┌────────────────────────────────────── SRDF/S — Design Standards ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Sizing Guidelines               │  │               HA Requirements               │   │
-│   │         Deduplicate where supported          │  │           N+1 component redundancy          │   │
-│   │          Bandwidth: 10 GbE minimum           │  │          Heartbeat / health monitor         │   │
-│   │          Storage: 130% of raw data           │  │          Separate mgmt / data VLANs         │   │
-│   │         Latency: < 10 ms to storage          │  │          Out-of-band access (IPMI)          │   │
-│   │           CPU: 8+ vCPU for engine            │  │          Anti-affinity VM placement         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Ports: Dark fiber FC (< 5 ms RTT) · DWDM long-haul FC · 9443 (Unisphere)                           │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                  Standard SRDF/S Design Rules                                 │   │
-│   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
-│   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
-│   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
-│   │Encryption enabled on all channels: Data identical to R1 at R2; FA port encryption optional; Un│   │
-│   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (< 200 km) · RF director ports │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
-│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
-│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
-│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
-│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
-│  RTO           = Recovery Time Objective; SRDF/S failover typically < 5 minutes manual, < 1 min       │
-│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
-│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
-│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
-│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
-│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
-│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
-│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
-│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

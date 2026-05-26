@@ -1,5 +1,6 @@
 # Dell AIOps: Actionable Recommendations and Implementation Tracking
 
+```
 ┌──────────────────────────────────── Dell AIOps — Recommendations ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -29,6 +30,7 @@
 │  Weekly review = Dedicated recurring meeting to action or defer open recommendations                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Priority and effort matrix:

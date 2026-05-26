@@ -1,5 +1,6 @@
 # CloudIQ: Health Score, Component Status, and Connectivity
 
+```
 ┌───────────────────────────────────── CloudIQ — Health Monitoring ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -30,6 +31,7 @@
 │  Score history = 30-day time-series of health score; viewable in CloudIQ UI per array                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Component-Level Health

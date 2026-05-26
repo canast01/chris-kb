@@ -23,27 +23,6 @@ graph LR
     checkRetry -->|No| raiseAlert
     checkStatus -->|ConnectionError\nTimeout| checkRetry
 ```
-┌──────────────────────────────────────── Python — Integrations ────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Python integrates with cloud, storage, monitoring, and ITSM platforms via vendor SDKs     │   │
-│   │ AWS: boto3; VMware: pyVmomi; NetApp: netapp-ontap; Pure: purestorage SDK; Dell: requests+REST │   │
-│   │  CI/CD: scripts run in GitHub Actions, GitLab CI, Jenkins; pass results via exit codes + JSON │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Cloud SDKs         │  │          Infra SDKs         │  │      Monitoring / ITSM      │   │
-│   │         boto3 (AWS)         │  │      pyVmomi (vSphere)      │  │    requests → Grafana API   │   │
-│   │     azure-sdk-for-python    │  │         netapp-ontap        │  │         PyServiceNow        │   │
-│   │     google-cloud-* libs     │  │       purestorage SDK       │  │      Jira python client     │   │
-│   │        paramiko (SSH)       │  │      netmiko (network)      │  │     Slack SDK (webhooks)    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   pyVmomi     = VMware vSphere Python SDK; SmartConnect to vCenter; traverse managed objects  │   │
-│   │  netmiko     = multi-vendor network device SSH library; supports Cisco, Arista, Juniper, etc. │   │
-│   │       Exit codes  = scripts should exit 0 on success, 1+ on failure; CI checks exit code      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```python

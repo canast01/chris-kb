@@ -45,35 +45,6 @@ curl -sk -X GET \
   -H "Authorization: Bearer <access_token>" \
   -o cloudiq-health-report.pdf
 ```
-┌───────────────────────────────────────── CloudIQ — Reporting ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Built-in Reports               │  │               Custom / Export               │   │
-│   │             Fleet health summary             │  │             CSV capacity export             │   │
-│   │              Capacity forecast               │  │              PDF health report              │   │
-│   │                Alert history                 │  │                API data pull                │   │
-│   │              Performance trends              │  │                Schedule email               │   │
-│   │            Recommendation status             │  │              Custom time range              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Reports generated in Dell cloud · PDF/CSV download via browser · API for automation                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Fleet health summary = Report showing all arrays with current health score and issue count           │
-│  Capacity forecast report = Per-array projected full dates for planning horizon                       │
-│  Alert history = Time-series of alerts over selected period; useful for trend analysis                │
-│  Performance trend = Historical IOPS/latency/bandwidth per array over custom window                   │
-│  Recommendation status = Open/resolved/dismissed counts per category and priority                     │
-│  CSV export = Comma-separated raw data download; import into Excel or BI tool                         │
-│  PDF report = Formatted document suitable for management review or audit                              │
-│  Scheduled email = CloudIQ sending report on defined cadence to recipient list                        │
-│  API data pull = REST GET calls to retrieve report data programmatically                              │
-│  Custom time range = Selecting arbitrary start/end dates for historical report generation             │
-│  BI tool = Business intelligence platform (Tableau, Power BI) consuming CloudIQ CSV exports           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Exporting Data for External Analysis

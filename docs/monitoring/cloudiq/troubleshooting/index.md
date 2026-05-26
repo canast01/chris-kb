@@ -28,37 +28,6 @@ Before escalating to Dell support, work through the standard diagnostic steps:
    - SCG admin UI > Systems > [System] > Edit > Test Connection
    - Ensure the service account has not expired or been locked
 ```
-┌────────────────────────────────────── CloudIQ — Troubleshooting ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Array Not Reporting              │  │              Alert/Score Issues             │   │
-│   │            Check TCP 443 outbound            │  │             Verify telemetry age            │   │
-│   │            Verify DNS resolution             │  │               Check issue list              │   │
-│   │            Re-test from array CLI            │  │            Check threshold config           │   │
-│   │              Re-register array               │  │           Clear false-pos dismiss           │   │
-│   │               Check gateway VM               │  │            Open Dell support case           │   │
-│   │            Review array firmware             │  │             Attach telemetry log            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  All troubleshooting via array CLI/UI and cloudiq.dell.com · Dell support via support portal          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Not reporting = Array shows Disconnected or telemetry age > 15 minutes in CloudIQ                    │
-│  TCP 443 test = Telnet or curl from array management IP to cloudiq.dell.com:443                       │
-│  DNS resolution = Array must resolve cloudiq.dell.com; check DNS server config on array               │
-│  Re-register = Removing array from CloudIQ and re-adding; resets telemetry stream                     │
-│  Gateway VM = Check VM is powered on, has internet access, and service is running                     │
-│  Telemetry age = Minutes since last data received; shown per array in CloudIQ UI                      │
-│  False positive = Alert that does not represent a real issue; dismiss with reason                     │
-│  Threshold = Alert trigger value; adjust if getting too many low-value notifications                  │
-│  Array firmware = Older firmware may have telemetry bugs; update to supported release                 │
-│  Dell support case = Open at support.dell.com with array serial and CloudIQ org name                  │
-│  Telemetry log = Array-side log of CloudIQ push attempts; provided to Dell GSS                        │
-│  Proxy check = If gateway VM uses proxy, verify proxy allows cloudiq.dell.com:443                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### API Authentication Failure (HTTP 401)

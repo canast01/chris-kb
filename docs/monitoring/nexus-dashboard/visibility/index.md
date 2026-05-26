@@ -1,5 +1,6 @@
 # Nexus Dashboard: Endpoint Tracking, Flow Visibility, and Topology View
 
+```
 ┌──────────────────────────────────── Nexus Dashboard — Visibility ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -30,6 +31,7 @@
 │  Delta analysis = NDI showing configuration changes between two epochs                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Endpoint detail fields:

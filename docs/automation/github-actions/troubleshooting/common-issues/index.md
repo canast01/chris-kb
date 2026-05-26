@@ -27,31 +27,6 @@ flowchart TD
     stepFail --> secretErr
     stepFail --> wdErr
 ```
-┌─────────────────────────────────── GitHub Actions — Common Issues ────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                     Most frequent GitHub Actions failures and their fixes                     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                             Issue: Job queued but never picked up                             │   │
-│   │     Cause A: no runner with matching labels → fix: add label to runner or change runs-on:     │   │
-│   │    Cause B: all runners busy → fix: scale runner pool or add GitHub-hosted runner fallback    │   │
-│   │               Cause C: runner offline → fix: sudo ./svc.sh start on runner host               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                Issue: OIDC token request fails                                │   │
-│   │       Cause A: permissions: id-token: write missing → fix: add to workflow permissions:       │   │
-│   │      Cause B: cloud trust policy wrong → fix: verify sub claim matches workflow ref/repo      │   │
-│   │       Cause C: wrong region/audience → fix: check aws-actions configure-creds parameters      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                             Issue: Workflow not triggering on push                            │   │
-│   │        Cause A: on: branches filter does not match current branch → fix: adjust filter        │   │
-│   │       Cause B: workflow file not on default branch → fix: merge to default branch first       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash

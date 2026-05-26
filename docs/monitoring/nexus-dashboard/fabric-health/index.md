@@ -1,5 +1,6 @@
 # Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry
 
+```
 ┌─────────────────────────────────── Nexus Dashboard — Fabric Health ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -30,6 +31,7 @@
 │  Drill-down = NDI UI allows clicking from site score to node to interface level                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Health score components:

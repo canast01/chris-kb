@@ -24,50 +24,6 @@ All Aria Operations upgrades in multi-node deployments must be orchestrated via 
 7. Verify all nodes are Online in Admin > Cluster Management post-upgrade
 8. Verify all adapters are Collecting in Admin > Solutions
 ```
-┌─────────────────────────────── Aria Operations — Lifecycle Management ────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Install / Deploy               │  │                 Upgrade Path                │   │
-│   │            OVA deploy to vCenter             │  │             Check interop matrix            │   │
-│   │             Size per node count              │  │              PAK upgrade first              │   │
-│   │             License via Aria LCM             │  │           Snapshot before upgrade           │   │
-│   │            vCenter adapter setup             │  │             Upgrade via Admin UI            │   │
-│   │            Initial policy config             │  │               Data nodes first              │   │
-│   │                Add data nodes                │  │               Master node last              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Snapshots before upgrade + rollback plan required; Aria LCM preferred for orchestrated upgrades    │
-│                                                                                                       │
-│                                                  ▼                                                    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Backup & Restore               │  │                 Decommission                │   │
-│   │              File-based backup               │  │              Export dashboards              │   │
-│   │              NFS or SCP target               │  │              Export alert defs              │   │
-│   │              Scheduled nightly               │  │               Remove adapters               │   │
-│   │             Retention: 7 copies              │  │                Power off VMs                │   │
-│   │             Restore via Admin UI             │  │             Delete from vCenter             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  OVA size S: 4 vCPU/16 GB · M: 8/32 · L: 16/48 · NFS backup target requires TCP 2049                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Aria LCM = Aria Lifecycle Manager; orchestrates upgrade sequencing across Aria product stack         │
-│  OVA = Open Virtual Appliance; VM image format used to deploy Aria Ops nodes                          │
-│  Interop matrix = VMware compatibility matrix; confirms supported vCenter/ESXi versions               │
-│  PAK upgrade = Updating adapter packages before upgrading the core platform                           │
-│  File-based backup = Aria Ops native backup creating encrypted archive of config and data             │
-│  Data node = Worker node that stores metric data and runs analytics jobs                              │
-│  Master node = Primary node hosting the UI, REST API, and cluster coordinator                         │
-│  Rollback = Restoring from snapshot if upgrade fails; requires VM snapshot taken before start         │
-│  License key = Aria Ops license applied via Administration > Licensing; tied to object count          │
-│  SCP target = SSH-based file copy destination for backup archives                                     │
-│  Admin UI = Web-based cluster management at https://<master>:5480                                     │
-│  Upgrade token = Short-lived credential required for cluster join during multi-node upgrade           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Backup

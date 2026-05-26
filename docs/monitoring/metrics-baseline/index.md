@@ -1,5 +1,6 @@
 # Performance Metrics Baseline
 
+```
 ┌──────────────────────────────────── Monitoring — Metrics Baseline ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -42,6 +43,7 @@
 │  False positive    = Alert firing when conditions are actually normal; caused by stale baseline       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 **Linux — disk latency:**

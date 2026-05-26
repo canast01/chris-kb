@@ -1,5 +1,6 @@
 # Log Retention Policy
 
+```
 ┌───────────────────────────────────── Monitoring — Log Retention ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -42,6 +43,7 @@
 │  Auto-move policy  = Lifecycle rule automatically migrating logs between tiers on schedule            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 **Example custom rule (`/etc/logrotate.d/myapp`):**

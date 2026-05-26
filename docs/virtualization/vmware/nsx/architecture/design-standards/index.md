@@ -1,5 +1,6 @@
 # NSX — Design Standards
 
+```
 ┌───────────────────────────────── NSX Architecture — Design Standards ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -52,6 +53,7 @@
 │    Seg naming    = Consistent segment naming prevents confusion in large environments                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 The three-node NSX Manager cluster uses sequential numbering. Site codes should match vCenter and ESXi naming (`lon` for London, `ams` for Amsterdam, etc.).

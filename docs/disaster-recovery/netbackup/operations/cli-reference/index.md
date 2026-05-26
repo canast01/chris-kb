@@ -51,49 +51,6 @@ flowchart TD
     class vmHost,dbHost,nasHost client
     class dd,msdp,s3 storage
 ```
-┌────────────────────────────────────── NetBackup — CLI Reference ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                 NetBackup — Command Reference                                 │   │
-│   │           Use these commands for routine operations, scripting, and troubleshooting           │   │
-│   │                                       bpbackup / bprestore                                    │   │
-│   │                                        bplist / bpdbjobs                                      │   │
-│   │                                         nbpemreq / bpps                                       │   │
-│   │                                       tpconfig / nbstlutil                                    │   │
-│   │                                     bpexpdate / bpimmediate                                   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Ports: 443 (Web UI) · 1556 (vnetd) · 13724 (bprd)                                                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                       Command Categories                                      │   │
-│   │                  Status / Query  — check current state, list jobs, show config                │   │
-│   │                  Operations      — start, stop, failover, restore, sync, expire               │   │
-│   │                Configuration   — add/modify policies, schedules, storage targets              │   │
-│   │               Diagnostics     — collect logs, run health checks, test connectivity            │   │
-│   │                  Scripting       — REST API or CLI for automation and reporting               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
-│  Media Server  = data mover between client and storage; can be co-located with master                 │
-│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
-│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
-│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
-│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
-│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
-│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
-│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
-│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
-│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
-│  bplist        = CLI to list available backup images for a client, policy, or date range              │
-│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
-│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

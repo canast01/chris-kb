@@ -1,5 +1,6 @@
 # Monitoring Dashboard Standards
 
+```
 ┌────────────────────────────────── Monitoring — Dashboard Standards ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -42,6 +43,7 @@
 │  Version suffix    = e.g. v2; indicates updated dashboard replacing a prior published version         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Grafana — Dashboard as Code

@@ -23,25 +23,6 @@ graph LR
     installPkgs --> runScript
     runScript --> deactivate
 ```
-┌────────────────────────────────────────── Python — Scripts ───────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Python utility scripts for infrastructure automation: AWS reporting, storage health, AD queries│   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         AWS Scripts         │  │       Storage Scripts       │  │       Network Scripts       │   │
-│   │       ec2_inventory.py      │  │       unity_health.py       │  │     bgp_prefix_check.py     │   │
-│   │         sg_audit.py         │  │      netapp_capacity.py     │  │     interface_errors.py     │   │
-│   │        cost_report.py       │  │     snapshot_cleanup.py     │  │         dns_check.py        │   │
-│   │       s3_lifecycle.py       │  │      replication_lag.py     │  │        cert_expiry.py       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Script structure = argparse for CLI args; logging module for output; sys.exit() return codes │   │
-│   │           boto3 pattern    = boto3.Session(profile_name=args.profile).client("ec2")           │   │
-│   │ Output format    = JSON for machine parsing; tabulate/rich for human-readable terminal output │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Or simply double-click the `run-py-script.bat` file in File Explorer.

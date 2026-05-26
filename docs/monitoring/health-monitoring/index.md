@@ -1,5 +1,6 @@
 # Infrastructure Health Monitoring
 
+```
 ┌─────────────────────────────────── Monitoring — Health Monitoring ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -42,6 +43,7 @@
 │  Historical baseline= Learned normal behaviour used to calibrate anomaly detection                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Server Health (Windows)

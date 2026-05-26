@@ -34,13 +34,11 @@ from typing import Any
 
 import requests
 
-
 def fetch_widget(name: str, timeout: int = 30) -> dict[str, Any]:
     """Fetch a widget by name from the API."""
     resp = requests.get(f"https://api.example.com/widgets/{name}", timeout=timeout)
     resp.raise_for_status()
     return resp.json()
-
 
 def process_widgets(
     widget_names: list[str],
@@ -59,28 +57,6 @@ def process_widgets(
 
     return len(results)
 ```
-┌────────────────────────────────────── Python — Design Standards ──────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ Python design standards: PEP 8 style, type hints, docstrings, testing, and dependency pinning │   │
-│   │        Use ruff for linting and formatting (replaces flake8 + black + isort); run in CI       │   │
-│   │      All secrets via environment variables or secret manager — never hardcoded in source      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  Code Style                  │  │              Project Standards              │   │
-│   │         PEP 8 / ruff enforced in CI          │  │         pyproject.toml at repo root         │   │
-│   │        Type hints on all public funcs        │  │    Lock file: poetry.lock or pip compile    │   │
-│   │           Google-style docstrings            │  │            pytest coverage >= 80%           │   │
-│   │     Max line length: 88 (black default)      │  │             bandit -r src/ in CI            │   │
-│   │          if __name__ == "__main__":          │  │          CHANGELOG.md for releases          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    ruff         = Rust-based linter; ruff check . --fix; ruff format .; replaces many tools   │   │
-│   │       mypy         = type checker; mypy src/ --strict; catches bugs without running code      │   │
-│   │   pip compile  = pip-tools; pip-compile requirements.in → requirements.txt with pinned deps   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash
@@ -105,7 +81,6 @@ import sys
 
 # Module-level logger — use __name__ for automatic hierarchy
 log = logging.getLogger(__name__)
-
 
 def configure_logging(level: str = "INFO", json_output: bool = False) -> None:
     """Configure root logger. Call once at application entry point."""
@@ -134,7 +109,6 @@ Use `structlog` for any automation that feeds logs into an aggregator (Elastic, 
 import structlog
 
 log = structlog.get_logger()
-
 
 def deploy_widget(name: str, env: str) -> None:
     log = structlog.get_logger().bind(widget=name, env=env)
@@ -172,14 +146,11 @@ Sample JSON output:
 import requests
 from requests.exceptions import HTTPError, ConnectionError, Timeout
 
-
 class WidgetNotFoundError(Exception):
     """Raised when the requested widget does not exist."""
 
-
 class WidgetAPIError(Exception):
     """Raised when the widget API returns an unexpected error."""
-
 
 def fetch_widget(name: str) -> dict:
     try:
@@ -334,7 +305,6 @@ import responses  # pip install responses
 def widget_api_url() -> str:
     return "https://api.example.com"
 
-
 @pytest.fixture
 def mock_widget_response() -> dict:
     return {"name": "widget-01", "state": "Active", "priority": 5}
@@ -347,7 +317,6 @@ import responses as rsps
 
 from widget_automation.api import fetch_widget, WidgetNotFoundError, WidgetAPIError
 
-
 @rsps.activate
 def test_fetch_widget_success(mock_widget_response):
     rsps.add(rsps.GET, "https://api.example.com/widgets/widget-01",
@@ -358,7 +327,6 @@ def test_fetch_widget_success(mock_widget_response):
     assert result["name"] == "widget-01"
     assert result["state"] == "Active"
 
-
 @rsps.activate
 def test_fetch_widget_not_found():
     rsps.add(rsps.GET, "https://api.example.com/widgets/missing",
@@ -366,7 +334,6 @@ def test_fetch_widget_not_found():
 
     with pytest.raises(WidgetNotFoundError, match="missing"):
         fetch_widget("missing")
-
 
 @rsps.activate
 def test_fetch_widget_api_error():

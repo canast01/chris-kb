@@ -25,55 +25,6 @@ sequenceDiagram
     JM-->>Sched: Job status: Completed
     note over MA,Storage: Auxiliary copy job (separate schedule)\ncopies from primary to secondary (offsite/tape/cloud)
 ```
-┌──────────────────────── Commvault CLI Reference — qoperation, qlist, qmodify ─────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           qoperation — Job Control           │  │              qlist — Read/Query             │   │
-│   │         execschedule: run backup now         │  │       qlist jobs: show all active jobs      │   │
-│   │        restore: initiate restore job         │  │        qlist client: list all clients       │   │
-│   │        auxcopy: trigger aux copy job         │  │       qlist subclient: list subclients      │   │
-│   │         release: release held media          │  │      qlist storage: disk/tape libraries     │   │
-│   │          kill: abort a running job           │  │      qlist jobdetails: verbose job info     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    qoperation and qlist run on CommServe; add -cs <host> for remote CommServe target                  │
-│                                                                                                       │
-│                                                   ▼                                                   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │       qmodify — Configuration Changes        │  │                REST API (v4)                │   │
-│   │       subclient: update content paths        │  │     Base URL: https://CS/webconsole/api     │   │
-│   │        schedule: change backup window        │  │        Auth: POST /Login → authtoken        │   │
-│   │        storagepolicy: edit retention         │  │        GET /Client: list all clients        │   │
-│   │        client: enable/disable backup         │  │       POST /CreateTask: trigger backup      │   │
-│   │        mediaagent: enable/disable MA         │  │        GET /Job/{id}: poll job status       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Common qoperation examples:                                                                        │
-│      qoperation execschedule -clientName myhost -subclientName default -backuptype full               │
-│      qoperation restore -clientName myhost -subclientName default -fromtime "01/01/2026"              │
-│      qlist jobs -jobtype backup -status running                                                       │
-│      qmodify subclient -clientName myhost -subclientName default -content /data/new                   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  CLI runs on CommServe host; PATH must include CV installation bin directory                          │
-│  REST API accessible from any host with HTTPS 443 reach to CommServe                                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  qoperation     = Command-line tool for submitting Commvault operations from shell/scripts            │
-│  qlist          = Read-only query tool for listing CommCell objects and job status                    │
-│  qmodify        = Configuration change tool for subclients, schedules, and policies                   │
-│  execschedule   = qoperation subcommand to immediately run a scheduled backup                         │
-│  authtoken      = Session token returned by REST /Login; included in all API headers                  │
-│  CreateTask     = REST API endpoint for submitting backup, restore, and aux copy jobs                 │
-│  -cs flag       = Specifies remote CommServe hostname for cross-CS CLI operations                     │
-│  backuptype     = full | incremental | differential | synthetic_full                                  │
-│  Job ID         = Integer assigned to each job; used for status polling and log lookups               │
-│  auxcopy        = qoperation subcommand to immediately trigger a secondary copy job                   │
-│  jobdetails     = qlist subcommand returning verbose per-phase timing and error codes                 │
-│  CV Python SDK  = Commvault.sdk Python package wrapping REST API with OOP interface                   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

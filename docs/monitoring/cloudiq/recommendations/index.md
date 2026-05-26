@@ -1,5 +1,6 @@
 # CloudIQ: Proactive Recommendations and Implementation Tracking
 
+```
 ┌──────────────────────────────────── CloudIQ — AI Recommendations ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -30,6 +31,7 @@
 │  SLA = Internal target for acting on Critical/High recommendations (e.g., within 3 business days)     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Recommendation priority fields:

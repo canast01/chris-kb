@@ -1,5 +1,6 @@
 # Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation
 
+```
 ┌───────────────────────────────────────── Dell AIOps — Alerts ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -30,6 +31,7 @@
 │  Noise reduction = Correlation grouping related alerts into single actionable incident                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Anomaly alert fields:

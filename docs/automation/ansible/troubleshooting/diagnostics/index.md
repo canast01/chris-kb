@@ -17,28 +17,6 @@ flowchart TD
     H --> J[Resolved]
     I --> J
 ```
-┌──────────────────────────────────────── Ansible — Diagnostics ────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Ansible diagnostic sequence: verify connectivity → check variables → inspect module output  │   │
-│   │   Increase verbosity progressively: -v (task results), -vv (input), -vvv (SSH debug), -vvvv   │   │
-│   │       AWX diagnostics: job event log, activity stream, kubectl logs for pod-level errors      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               CLI Diagnostics                │  │               AWX Diagnostics               │   │
-│   │          ansible host -m ping -vvv           │  │             Job → Event log tab             │   │
-│   │       ansible-playbook --syntax-check        │  │          Settings → Activity stream         │   │
-│   │         ansible -m debug -a "var=x"          │  │           kubectl logs -n awx task          │   │
-│   │       ANSIBLE_DEBUG=1 ansible-play...        │  │             awx jobs stdout <id>            │   │
-│   │       ansible-inventory --list --yaml        │  │           AWX: Support bundle zip           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ Activity stream    = AWX audit log; records every API call with user, timestamp, change detail│   │
-│   │         ANSIBLE_DEBUG=1    = env var enabling maximum debug output from Ansible itself        │   │
-│   │     --syntax-check     = parse playbook YAML without executing; catches syntax errors fast    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Verbosity Levels

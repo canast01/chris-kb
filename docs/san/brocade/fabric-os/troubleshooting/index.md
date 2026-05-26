@@ -1,5 +1,6 @@
 # FabricOS — Troubleshooting
 
+```
 ┌───────────────────────────────────── FabricOS — Troubleshooting ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -51,5 +52,6 @@
 │    configupload  = Back up switch config before any change or TAC-guided recovery                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 > Part of the [Brocade Fabric OS](../index.md) reference.

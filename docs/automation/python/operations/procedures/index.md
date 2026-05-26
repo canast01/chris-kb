@@ -78,28 +78,6 @@ graph TD
     logFile --> siem
     syslogHandler --> siem
 ```
-┌───────────────────────────────────────── Python — Procedures ─────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Common Python operational procedures: new project setup, dependency audit, release packaging │   │
-│   │    New project: git init → pyproject.toml → venv → install deps → first test → CI pipeline    │   │
-│   │    Release: bump version → update CHANGELOG → tag → build wheel → publish to internal PyPI    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              New Project Setup               │  │              Release Procedure              │   │
-│   │           1. git init + .gitignore           │  │      1. Bump version in pyproject.toml      │   │
-│   │       2. pyproject.toml (poetry init)        │  │            2. Update CHANGELOG.md           │   │
-│   │           3. python3 -m venv .venv           │  │           3. git tag v1.2.3 + push          │   │
-│   │         4. poetry install (dev deps)         │  │              4. python -m build             │   │
-│   │          5. Add CI workflow (.yml)           │  │            5. twine upload dist/*           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    twine        = package upload tool; uploads wheel/sdist to PyPI or internal Artifactory    │   │
-│   │              build        = python -m build; creates dist/*.whl and dist/*.tar.gz             │   │
-│   │    internal PyPI= host with Nexus, Artifactory, or devpi; configure with pip.conf index-url   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash

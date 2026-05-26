@@ -1,5 +1,6 @@
 # Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection
 
+```
 ┌──────────────────────────────────────── Dell AIOps — Insights ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -30,6 +31,7 @@
 │  Pattern = Recurring behaviour observed across objects over time; basis for insight generation        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 I/O pattern classifications:

@@ -10,28 +10,6 @@ The `community.vmware` collection automates vSphere, ESXi, vCenter, vSAN, and NS
 ansible-galaxy collection install community.vmware
 pip install PyVmomi vsphere-automation-sdk-python
 ```
-┌─────────────────────────────────────── Ansible — Integrations ────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Ansible integrates with CI/CD pipelines, secrets managers, ITSM tools, and cloud platforms  │   │
-│   │  AWX REST API is the primary integration point for triggering playbooks from external systems │   │
-│   │   Dynamic inventory plugins connect to AWS, vSphere, Netbox, GCP, Azure for live host lists   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            CI/CD            │  │           Secrets           │  │      Inventory Sources      │   │
-│   │     GitHub Actions → AWX    │  │       HashiCorp Vault       │  │        AWS EC2 plugin       │   │
-│   │     GitLab CI → AWX API     │  │         CyberArk PAM        │  │        VMware vSphere       │   │
-│   │    Jenkins → AWX webhook    │  │     AWX credential types    │  │        Netbox plugin        │   │
-│   │   Webhook triggers in AWX   │  │    Ansible Vault (static)   │  │       OpenStack plugin      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ Dynamic inventory = script or plugin that queries an external source for host lists at runtime│   │
-│   │ Webhook trigger   = AWX can receive HTTP webhooks from GitHub/GitLab to auto-run job templates│   │
-│   │Credential type   = AWX pluggable credential; stores SSH keys, API tokens, Vault tokens securel│   │
-│   │   Netbox            = open-source DCIM/IPAM; Ansible inventory plugin pulls live device list  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 | Module | Purpose |

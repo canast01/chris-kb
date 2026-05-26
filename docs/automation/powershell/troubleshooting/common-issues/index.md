@@ -22,30 +22,6 @@ flowchart TD
     errType -->|Script logic\nundefined var| strictMode["Set-StrictMode -Version Latest\nadd breakpoint()"]
     strictMode --> stepDebug["Set-PSBreakpoint\nstep through execution"]
 ```
-┌───────────────────────────────────── PowerShell — Common Issues ──────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                       Most frequent PowerShell failures and their fixes                       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │               Issue: Script cannot be loaded because running scripts is disabled              │   │
-│   │                    Fix: Set-ExecutionPolicy RemoteSigned -Scope CurrentUser                   │   │
-│   │         Note: use -Scope Process for temporary bypass without changing machine policy         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                 Issue: WinRM Access is denied                                 │   │
-│   │      Cause A: user not in WinRM access DACL → fix: Set-PSSessionConfiguration permissions     │   │
-│   │      Cause B: account locked or password expired → fix: unlock AD account, reset password     │   │
-│   │              Cause C: HTTPS cert invalid → fix: renew cert, update WinRM listener             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                           Issue: Module not found after installation                          │   │
-│   │      Cause A: installed under different user scope → fix: Install-Module -Scope AllUsers      │   │
-│   │      Cause B: PSModulePath does not include install directory → fix: add path to env var      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 | Policy | Behaviour |

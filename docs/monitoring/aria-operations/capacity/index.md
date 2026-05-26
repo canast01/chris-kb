@@ -1,5 +1,6 @@
 # Aria Operations: Capacity Analytics and Rightsizing
 
+```
 ┌───────────────────────────────────── Aria Operations — Capacity ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -42,6 +43,7 @@
 │  Headroom          = Remaining available capacity before the configured utilisation limit             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Key capacity metrics to monitor:

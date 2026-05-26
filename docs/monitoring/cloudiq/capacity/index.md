@@ -1,5 +1,6 @@
 # CloudIQ: Capacity Forecasting and Pool Utilisation
 
+```
 ┌──────────────────────────────────── CloudIQ — Capacity Management ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -29,6 +30,7 @@
 │  Seasonal adjustment = ML model accounting for cyclical usage spikes in forecast                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Key capacity metrics available via API:

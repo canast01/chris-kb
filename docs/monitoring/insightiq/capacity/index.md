@@ -1,5 +1,6 @@
 # InsightIQ: Capacity Trending, Protocol Breakdown, and Quota Monitoring
 
+```
 ┌─────────────────────────────────── InsightIQ — Capacity Management ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -28,6 +29,7 @@
 │  CSV export = Downloading capacity data for external planning tools                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 InsightIQ capacity report settings:

@@ -1,5 +1,6 @@
 # NSX — Integrations
 
+```
 ┌─────────────────────────────────── NSX Architecture — Integrations ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -52,6 +53,7 @@
 │    Panorama/FMC    = Palo Alto/Cisco FMC; integrates with NSX for micro-seg enforcement               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Once registered, vCenter clusters appear under **System → Fabric → Hosts**. Use them to apply transport node profiles at cluster scope.

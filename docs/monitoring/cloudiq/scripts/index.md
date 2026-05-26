@@ -24,36 +24,6 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
-┌───────────────────────────────────── CloudIQ — Scripts Reference ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                           CloudIQ REST API scripts — Python examples                          │   │
-│   │                   auth.py: obtain Bearer token via POST /rest/v1/auth/token                   │   │
-│   │                 get-health.py: fetch all arrays health scores; flag red arrays                │   │
-│   │                get-alerts.py: list active unacknowledged alerts; export to CSV                │   │
-│   │              capacity-forecast.py: get forecast data; alert if < 90 days to full              │   │
-│   │                recommendations.py: list open high/critical recs; post to Slack                │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Scripts run from any host with internet access · Python 3.8+ with requests library                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Bearer token = Auth credential; hardcode client_id/secret or use env vars                            │
-│  client_id = OAuth application ID from CloudIQ account > API access settings                          │
-│  Requests library = Python HTTP library (pip install requests) for REST calls                         │
-│  Flag red = Script logic to alert when health score < 70 or issue count > threshold                   │
-│  CSV export = Writing API response to CSV for spreadsheet consumption                                 │
-│  Slack webhook = POST to Slack incoming webhook URL with formatted alert summary                      │
-│  Forecast horizon = Number of days until projected capacity exhaustion                                │
-│  Rate limit = CloudIQ API enforces limits; script should retry with exponential backoff               │
-│  Environment variables = Storing client_id/secret in env vars rather than hardcoding                  │
-│  Cron = Scheduling script to run automatically (e.g., daily capacity check)                           │
-│  OData filter = Query string for filtering API results (status eq active)                             │
-│  Pagination = Handling limit/offset for large result sets in API responses                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Export Active Alerts
