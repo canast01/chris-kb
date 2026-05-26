@@ -4663,60 +4663,7 @@
 
 
 <h1 id="powermax-operations">PowerMax — Operations<a class="headerlink" href="#powermax-operations" title="Permanent link">&para;</a></h1>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── Dell PowerMax Operations ───────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │     Day-2 operations: SRDF state management, TimeFinder copies, SLO rebalancing, capacity     │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │      SRDF suspend/resume, failover/failback, and swap-personality for planned maintenance     │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │        TimeFinder: create/restore snaps; snap schedules; VP Snap and Clone for test/dev       │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │      Health: Unisphere alerts, SYMAPI event logs, CloudIQ analytics, SCG-based reporting      │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Monitor alerts → run health checks → execute SRDF or TimeFinder action → verify and close          │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │       SRDF Operations       │  │        TimeFinder Ops       │  │      Capacity / Health      │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │       Suspend / Resume      │  │        Snap establish       │  │       SRP utilization       │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │      Failover / Failbk      │  │         Snap restore        │  │        CloudIQ health       │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │       Swap personality      │  │         Clone split         │  │       Unisphere alerts      │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │      Group consistency      │  │        VP Snap mount        │  │        FE port stats        │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │       RDF link monitor      │  │        Snap schedule        │  │       Capacity trends       │   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│    SRDF state check → TimeFinder snap/clone → SRP capacity review → alert remediation loop            │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │       Task       │       Tool       │    CLI command    │    Frequency     │      Notes       │   │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │    SRDF check    │      symrdf      │  symrdf -g query  │      Daily       │ Check link state │   │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │   Snap create    │     symsnap      │  symsnap -sg est  │   Per schedule   │ Verify gen count │   │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   │    SRP usage     │    Unisphere     │  symcfg list -srp │      Weekly      │    Alert &gt;80%    │   │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   │  Health alerts   │     CloudIQ      │   REST API poll   │    Continuous    │   SCG required   │   │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Physical: Unisphere on embedded mgmt network; SCG phone-home for CloudIQ telemetry relay           │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    symrdf         = SYMAPI CLI tool for SRDF state management (query, suspend, failover, swap)        │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    symsnap        = SYMAPI CLI tool for TimeFinder/Snap operations (establish, restore, term)         │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    symdg          = SYMAPI device group tool; groups volumes for consistent SRDF/snap ops             │
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    symsg          = SYMAPI storage group tool; list, modify, and provision storage groups             │
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    Swap personality = SRDF planned failover; R1 becomes R2 and vice versa at recovery site            │
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    VP Snap        = Virtual Provisioning Snap; pointer-based thin snap mounted on a host              │
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    RDF link       = Physical or virtual ISL between PowerMax arrays for SRDF traffic                  │
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    SCG            = Secure Connect Gateway; phone-home proxy for CloudIQ telemetry                    │
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    SRP utilization= Percentage of thin pool capacity consumed; alert threshold typically 80%          │
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    FE port stats  = Front-End director port I/O stats; check for hotspot or imbalance                 │
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│    Snap schedule  = Automated TimeFinder snap generation policy (hourly/daily/weekly)                 │
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│    Clone split    = Full physical copy created from Clone; independent of source after split          │
-<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
-<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-┌────────────────────────────────────── Dell PowerMax Operations ───────────────────────────────────────┐
+<p>┌────────────────────────────────────── Dell PowerMax Operations ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     Day-2 operations: SRDF state management, TimeFinder copies, SLO rebalancing, capacity     │   │
@@ -4768,58 +4715,58 @@
 │    Clone split    = Full physical copy created from Clone; independent of source after split          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────── Dell PowerMax Operations ───────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │     Day-2 operations: SRDF state management, TimeFinder copies, SLO rebalancing, capacity     │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │      SRDF suspend/resume, failover/failback, and swap-personality for planned maintenance     │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │        TimeFinder: create/restore snaps; snap schedules; VP Snap and Clone for test/dev       │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │      Health: Unisphere alerts, SYMAPI event logs, CloudIQ analytics, SCG-based reporting      │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│    Monitor alerts → run health checks → execute SRDF or TimeFinder action → verify and close          │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │       SRDF Operations       │  │        TimeFinder Ops       │  │      Capacity / Health      │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │       Suspend / Resume      │  │        Snap establish       │  │       SRP utilization       │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │      Failover / Failbk      │  │         Snap restore        │  │        CloudIQ health       │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │       Swap personality      │  │         Clone split         │  │       Unisphere alerts      │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │      Group consistency      │  │        VP Snap mount        │  │        FE port stats        │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │       RDF link monitor      │  │        Snap schedule        │  │       Capacity trends       │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                                                                       │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│    SRDF state check → TimeFinder snap/clone → SRP capacity review → alert remediation loop            │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│   │       Task       │       Tool       │    CLI command    │    Frequency     │      Notes       │   │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │    SRDF check    │      symrdf      │  symrdf -g query  │      Daily       │ Check link state │   │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │   Snap create    │     symsnap      │  symsnap -sg est  │   Per schedule   │ Verify gen count │   │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │    SRP usage     │    Unisphere     │  symcfg list -srp │      Weekly      │    Alert &gt;80%    │   │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   │  Health alerts   │     CloudIQ      │   REST API poll   │    Continuous    │   SCG required   │   │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                                                                                       │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    Physical: Unisphere on embedded mgmt network; SCG phone-home for CloudIQ telemetry relay           │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│                                                                                                       │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│    symrdf         = SYMAPI CLI tool for SRDF state management (query, suspend, failover, swap)        │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│    symsnap        = SYMAPI CLI tool for TimeFinder/Snap operations (establish, restore, term)         │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│    symdg          = SYMAPI device group tool; groups volumes for consistent SRDF/snap ops             │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│    symsg          = SYMAPI storage group tool; list, modify, and provision storage groups             │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│    Swap personality = SRDF planned failover; R1 becomes R2 and vice versa at recovery site            │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│    VP Snap        = Virtual Provisioning Snap; pointer-based thin snap mounted on a host              │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│    RDF link       = Physical or virtual ISL between PowerMax arrays for SRDF traffic                  │
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│    SCG            = Secure Connect Gateway; phone-home proxy for CloudIQ telemetry                    │
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│    SRP utilization= Percentage of thin pool capacity consumed; alert threshold typically 80%          │
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│    FE port stats  = Front-End director port I/O stats; check for hotspot or imbalance                 │
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│    Snap schedule  = Automated TimeFinder snap generation policy (hourly/daily/weekly)                 │
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│    Clone split    = Full physical copy created from Clone; independent of source after split          │
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                                                                                       │
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── Dell PowerMax Operations ───────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │     Day-2 operations: SRDF state management, TimeFinder copies, SLO rebalancing, capacity     │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │      SRDF suspend/resume, failover/failback, and swap-personality for planned maintenance     │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │        TimeFinder: create/restore snaps; snap schedules; VP Snap and Clone for test/dev       │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │      Health: Unisphere alerts, SYMAPI event logs, CloudIQ analytics, SCG-based reporting      │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Monitor alerts → run health checks → execute SRDF or TimeFinder action → verify and close          │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │       SRDF Operations       │  │        TimeFinder Ops       │  │      Capacity / Health      │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │       Suspend / Resume      │  │        Snap establish       │  │       SRP utilization       │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │      Failover / Failbk      │  │         Snap restore        │  │        CloudIQ health       │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │       Swap personality      │  │         Clone split         │  │       Unisphere alerts      │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │      Group consistency      │  │        VP Snap mount        │  │        FE port stats        │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │       RDF link monitor      │  │        Snap schedule        │  │       Capacity trends       │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│    SRDF state check → TimeFinder snap/clone → SRP capacity review → alert remediation loop            │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │       Task       │       Tool       │    CLI command    │    Frequency     │      Notes       │   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │    SRDF check    │      symrdf      │  symrdf -g query  │      Daily       │ Check link state │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │   Snap create    │     symsnap      │  symsnap -sg est  │   Per schedule   │ Verify gen count │   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   │    SRP usage     │    Unisphere     │  symcfg list -srp │      Weekly      │    Alert &gt;80%    │   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   │  Health alerts   │     CloudIQ      │   REST API poll   │    Continuous    │   SCG required   │   │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Physical: Unisphere on embedded mgmt network; SCG phone-home for CloudIQ telemetry relay           │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    symrdf         = SYMAPI CLI tool for SRDF state management (query, suspend, failover, swap)        │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    symsnap        = SYMAPI CLI tool for TimeFinder/Snap operations (establish, restore, term)         │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    symdg          = SYMAPI device group tool; groups volumes for consistent SRDF/snap ops             │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    symsg          = SYMAPI storage group tool; list, modify, and provision storage groups             │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    Swap personality = SRDF planned failover; R1 becomes R2 and vice versa at recovery site            │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    VP Snap        = Virtual Provisioning Snap; pointer-based thin snap mounted on a host              │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    RDF link       = Physical or virtual ISL between PowerMax arrays for SRDF traffic                  │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    SCG            = Secure Connect Gateway; phone-home proxy for CloudIQ telemetry                    │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    SRP utilization= Percentage of thin pool capacity consumed; alert threshold typically 80%          │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    FE port stats  = Front-End director port I/O stats; check for hotspot or imbalance                 │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│    Snap schedule  = Automated TimeFinder snap generation policy (hourly/daily/weekly)                 │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│    Clone split    = Full physical copy created from Clone; independent of source after split          │
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <div class="kb-grid kb-grid-3">
 

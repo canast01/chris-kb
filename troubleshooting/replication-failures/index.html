@@ -3569,34 +3569,6 @@
 
 
 <h1 id="replication-failures-troubleshooting">Replication Failures Troubleshooting<a class="headerlink" href="#replication-failures-troubleshooting" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                  Replication Triage Flowchart                        │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                                      │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Replication lag alert / job failed                                  │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│        │                                                             │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  Check network path to DR site                                 │  │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  ping · traceroute · check replication VLAN/circuit bandwidth  │  │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  Network issue ──► escalate to network team                   │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  └─────┬──────────────────────────────────────────────────────────┘  │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│        │ network OK                                                  │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │  Check credentials / service account                          │   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │  SRDF: symrdf query · SnapMirror: snapmirror show             │   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  Auth fail ──► rotate service account · re-initialize pair    │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  └─────┬──────────────────────────────────────────────────────────┘  │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│        │ credentials OK                                              │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  │  Check destination space                                       │  │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  │  df -h on target · check array capacity · thin pool utilisation│  │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  │  Space issue ──► free capacity or expand target volume        │   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  └─────┬──────────────────────────────────────────────────────────┘  │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│        │                                                             │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  ┌─────▼──────────────────────────────────────────────────────────┐  │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  │  Re-sync / re-baseline if link was down  ·  Assess RPO breach  │  │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  └────────────────────────────────────────────────────────────────┘  │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>└──────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Replication failures degrade DR readiness and can result in RPO breaches. Each replication technology has distinct failure modes and tooling. This guide covers SRDF (Dell EMC PowerMax/VMAX), ONTAP SnapMirror, EMC RecoverPoint, vSphere Replication, and Veeam replication jobs. RPO breach assessment must happen immediately — sustained lag may trigger DR invocation.</p>
 <hr />
@@ -3688,44 +3660,44 @@
 <hr />
 <h2 id="srdf-troubleshooting">SRDF Troubleshooting<a class="headerlink" href="#srdf-troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="query-srdf-group-state">Query SRDF Group State<a class="headerlink" href="#query-srdf-group-state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Query all devices in an RDF group</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>RDF_GRP_01<span class="w"> </span>query
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Example output:</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Source (R1)      Target (R2)      MODES              States</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># ---------        ---------        -----              ------</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 000123:00A0      000456:00A0      Synchronous        RW&lt;=&gt;RW  Synchronized</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># 000123:00A1      000456:00A1      Synchronous        RW&lt;=&gt;RW  Synchronized</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># 000123:00A2      000456:00A2      Synchronous        RW&lt;=&gt;NR  SyncInProg   ← problem</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># State meanings:</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Synchronized    — R1 and R2 are in sync (synchronous)</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># SyncInProg      — initial sync or resync in progress</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Suspended       — link suspended (planned or due to error)</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Split           — volumes are separated (DR failover or test)</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Partitioned     — communication lost between R1 and R2 array</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Query all devices in an RDF group</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>RDF_GRP_01<span class="w"> </span>query
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Example output:</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Source (R1)      Target (R2)      MODES              States</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># ---------        ---------        -----              ------</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 000123:00A0      000456:00A0      Synchronous        RW&lt;=&gt;RW  Synchronized</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># 000123:00A1      000456:00A1      Synchronous        RW&lt;=&gt;RW  Synchronized</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># 000123:00A2      000456:00A2      Synchronous        RW&lt;=&gt;NR  SyncInProg   ← problem</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># State meanings:</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Synchronized    — R1 and R2 are in sync (synchronous)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># SyncInProg      — initial sync or resync in progress</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Suspended       — link suspended (planned or due to error)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Split           — volumes are separated (DR failover or test)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Partitioned     — communication lost between R1 and R2 array</span>
 </code></pre></div>
 <h3 id="verify-srdf-link-health">Verify SRDF Link Health<a class="headerlink" href="#verify-srdf-link-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check SRDF link status and error counters</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>RDF_GRP_01<span class="w"> </span>verify
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check SRDF/A cycle information (async groups)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>RDF_GRP_01<span class="w"> </span>-type<span class="w"> </span>rdfa<span class="w"> </span>list
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Example async output:</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># RDF Group (R1) : RDF_GRP_01</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># SRDF/A State   : Transmitting</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Domino         : Enabled</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># DSE State      : Enabled</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Cycle Num      : 4521</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Cycle Time     : 00:00:03  ← cycle time; increase = lag growing</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Get RDF port statistics (check error counters)</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123</span><span class="w"> </span>-rdfg<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>port<span class="w"> </span>list
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Resume a suspended SRDF group (after resolving the root cause)</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># -nop = no prompt; ensure R1/R2 consistency is understood before running</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>RDF_GRP_01<span class="w"> </span>resume<span class="w"> </span>-nop
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check SRDF link status and error counters</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>RDF_GRP_01<span class="w"> </span>verify
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check SRDF/A cycle information (async groups)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>RDF_GRP_01<span class="w"> </span>-type<span class="w"> </span>rdfa<span class="w"> </span>list
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Example async output:</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># RDF Group (R1) : RDF_GRP_01</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># SRDF/A State   : Transmitting</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Domino         : Enabled</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># DSE State      : Enabled</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Cycle Num      : 4521</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Cycle Time     : 00:00:03  ← cycle time; increase = lag growing</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Get RDF port statistics (check error counters)</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123</span><span class="w"> </span>-rdfg<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>port<span class="w"> </span>list
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Resume a suspended SRDF group (after resolving the root cause)</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># -nop = no prompt; ensure R1/R2 consistency is understood before running</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>RDF_GRP_01<span class="w"> </span>resume<span class="w"> </span>-nop
 </code></pre></div>
 <h3 id="srdf-error-codes">SRDF Error Codes<a class="headerlink" href="#srdf-error-codes" title="Permanent link">&para;</a></h3>
 <table>
@@ -3772,47 +3744,47 @@
 <hr />
 <h2 id="ontap-snapmirror-troubleshooting">ONTAP SnapMirror Troubleshooting<a class="headerlink" href="#ontap-snapmirror-troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="check-relationship-status">Check Relationship Status<a class="headerlink" href="#check-relationship-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Summary view of all SnapMirror relationships</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>snapmirror<span class="w"> </span>show
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Example output:</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Source Path    Dest Path           MirrorState   LagTime   Healthy</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># ------------   --------            -----------   -------   -------</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># svm1:vol_db    svm2:vol_db_dp      Snapmirrored  0:05:32   true</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># svm1:vol_app   svm2:vol_app_dp     Snapmirrored  2:34:11   false  ← problem</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Detailed view of a specific relationship</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-source-path<span class="w"> </span>svm1:vol_app<span class="w"> </span>-destination-path<span class="w"> </span>svm2:vol_app_dp<span class="w"> </span>-instance
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Key fields to check:</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Last Transfer Type: scheduled (good) or update (manual resync triggered)</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Last Transfer Error: reason for last failure</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Transfer Snapshot:  name of snapshot being transferred (progress indicator)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Summary view of all SnapMirror relationships</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Example output:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Source Path    Dest Path           MirrorState   LagTime   Healthy</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># ------------   --------            -----------   -------   -------</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># svm1:vol_db    svm2:vol_db_dp      Snapmirrored  0:05:32   true</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># svm1:vol_app   svm2:vol_app_dp     Snapmirrored  2:34:11   false  ← problem</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Detailed view of a specific relationship</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-source-path<span class="w"> </span>svm1:vol_app<span class="w"> </span>-destination-path<span class="w"> </span>svm2:vol_app_dp<span class="w"> </span>-instance
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Key fields to check:</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Last Transfer Type: scheduled (good) or update (manual resync triggered)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Last Transfer Error: reason for last failure</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Transfer Snapshot:  name of snapshot being transferred (progress indicator)</span>
 </code></pre></div>
 <h3 id="diagnose-and-resync">Diagnose and Resync<a class="headerlink" href="#diagnose-and-resync" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check what error caused failure</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>last-transfer-error
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Typical errors:</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># &quot;Transfer aborted: failed to get snapshot lock&quot; → snapshot conflict</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># &quot;Destination volume is full&quot;                    → space issue on destination</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># &quot;Connection refused&quot;                            → network/intercluster LIF issue</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Abort stuck transfer</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>snapmirror<span class="w"> </span>abort<span class="w"> </span>-source-path<span class="w"> </span>svm1:vol_app<span class="w"> </span>-destination-path<span class="w"> </span>svm2:vol_app_dp<span class="w"> </span>-foreground<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Resync (re-establishes relationship from common snapshot baseline)</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>svm1:vol_app<span class="w"> </span>-destination-path<span class="w"> </span>svm2:vol_app_dp
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Monitor transfer progress</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>transfer-progress,<span class="w"> </span>lag-time
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Check intercluster LIF connectivity</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>intercluster
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>ping<span class="w"> </span>-lif<span class="w"> </span>intercluster_lif_svm1<span class="w"> </span>-destination<span class="w"> </span><span class="m">192</span>.168.10.20
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># Check intercluster route</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>network<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check what error caused failure</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>last-transfer-error
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Typical errors:</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># &quot;Transfer aborted: failed to get snapshot lock&quot; → snapshot conflict</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># &quot;Destination volume is full&quot;                    → space issue on destination</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># &quot;Connection refused&quot;                            → network/intercluster LIF issue</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Abort stuck transfer</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>snapmirror<span class="w"> </span>abort<span class="w"> </span>-source-path<span class="w"> </span>svm1:vol_app<span class="w"> </span>-destination-path<span class="w"> </span>svm2:vol_app_dp<span class="w"> </span>-foreground<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Resync (re-establishes relationship from common snapshot baseline)</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>svm1:vol_app<span class="w"> </span>-destination-path<span class="w"> </span>svm2:vol_app_dp
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Monitor transfer progress</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>transfer-progress,<span class="w"> </span>lag-time
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Check intercluster LIF connectivity</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>intercluster
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>ping<span class="w"> </span>-lif<span class="w"> </span>intercluster_lif_svm1<span class="w"> </span>-destination<span class="w"> </span><span class="m">192</span>.168.10.20
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># Check intercluster route</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>network<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm1
 </code></pre></div>
 <h3 id="snapmirror-lag-threshold-table">SnapMirror Lag Threshold Table<a class="headerlink" href="#snapmirror-lag-threshold-table" title="Permanent link">&para;</a></h3>
 <table>
@@ -3853,28 +3825,28 @@
 </table>
 <hr />
 <h2 id="recoverpoint-troubleshooting">RecoverPoint Troubleshooting<a class="headerlink" href="#recoverpoint-troubleshooting" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Connect to RecoverPoint Management CLI (via SSH to RPA)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ssh<span class="w"> </span>admin@rpa01.corp.example.com
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check consistency group status</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>get_group_status
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Example output:</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Group Name       State          Link Status    Journal    Lag</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># PROD-CG-01      Active         Active         12% Full   2s</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># PROD-CG-02      Paused         Active         87% Full   N/A   ← journal full</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># PROD-CG-03      Active         Disconnected   45% Full   N/A   ← link issue</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Check RPA system status</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>get_system_status
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Check journal volume fullness (journal full = replication pauses)</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>get_group_statistics<span class="w"> </span>-g<span class="w"> </span>PROD-CG-02
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># To address journal full:</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="c1"># 1. Check for access policy blocking journal recycling</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># 2. Check if journal volume expansion is possible</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># 3. If acceptable, reduce retention period on the consistency group</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Connect to RecoverPoint Management CLI (via SSH to RPA)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>admin@rpa01.corp.example.com
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check consistency group status</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>get_group_status
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Example output:</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Group Name       State          Link Status    Journal    Lag</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># PROD-CG-01      Active         Active         12% Full   2s</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># PROD-CG-02      Paused         Active         87% Full   N/A   ← journal full</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># PROD-CG-03      Active         Disconnected   45% Full   N/A   ← link issue</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Check RPA system status</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>get_system_status
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Check journal volume fullness (journal full = replication pauses)</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>get_group_statistics<span class="w"> </span>-g<span class="w"> </span>PROD-CG-02
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># To address journal full:</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># 1. Check for access policy blocking journal recycling</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># 2. Check if journal volume expansion is possible</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># 3. If acceptable, reduce retention period on the consistency group</span>
 </code></pre></div>
 <hr />
 <h2 id="replication-lag-threshold-and-rpo-breach-criteria">Replication Lag Threshold and RPO Breach Criteria<a class="headerlink" href="#replication-lag-threshold-and-rpo-breach-criteria" title="Permanent link">&para;</a></h2>
@@ -3921,64 +3893,64 @@
 </table>
 <hr />
 <h2 id="network-bandwidth-and-latency-impact">Network Bandwidth and Latency Impact<a class="headerlink" href="#network-bandwidth-and-latency-impact" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Measure available bandwidth between sites (install iperf3 on both sides)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># On destination site server:</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>iperf3<span class="w"> </span>-s
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># On source site:</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>iperf3<span class="w"> </span>-c<span class="w"> </span>replication-dst-site-ip<span class="w"> </span>-t<span class="w"> </span><span class="m">60</span><span class="w"> </span>-P<span class="w"> </span><span class="m">4</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># SRDF/S (synchronous) latency budget:</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Round-trip latency between arrays should be &lt;2ms for SRDF/S</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># &gt;2ms RTT → consider switching to SRDF/A</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Check current WAN utilisation (Cisco)</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># show interface serial0/0 | include rate</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1">#   5 minute input rate 850000000 bits/sec  ← close to 1Gbps link capacity</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Check if SRDF/A is throttling due to bandwidth</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>RDF_GRP_01<span class="w"> </span>-type<span class="w"> </span>rdfa<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;transmit\|delay\|bandwidth&quot;</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># SnapMirror bandwidth throttling</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>throttle
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># Set a throttle (KB/s) to protect production workload</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-source-path<span class="w"> </span>svm1:vol_app<span class="w"> </span>-destination-path<span class="w"> </span>svm2:vol_app_dp<span class="w"> </span>-throttle<span class="w"> </span><span class="m">51200</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Measure available bandwidth between sites (install iperf3 on both sides)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># On destination site server:</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>iperf3<span class="w"> </span>-s
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># On source site:</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>iperf3<span class="w"> </span>-c<span class="w"> </span>replication-dst-site-ip<span class="w"> </span>-t<span class="w"> </span><span class="m">60</span><span class="w"> </span>-P<span class="w"> </span><span class="m">4</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># SRDF/S (synchronous) latency budget:</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Round-trip latency between arrays should be &lt;2ms for SRDF/S</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># &gt;2ms RTT → consider switching to SRDF/A</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Check current WAN utilisation (Cisco)</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># show interface serial0/0 | include rate</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1">#   5 minute input rate 850000000 bits/sec  ← close to 1Gbps link capacity</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Check if SRDF/A is throttling due to bandwidth</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>RDF_GRP_01<span class="w"> </span>-type<span class="w"> </span>rdfa<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;transmit\|delay\|bandwidth&quot;</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># SnapMirror bandwidth throttling</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>throttle
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># Set a throttle (KB/s) to protect production workload</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-source-path<span class="w"> </span>svm1:vol_app<span class="w"> </span>-destination-path<span class="w"> </span>svm2:vol_app_dp<span class="w"> </span>-throttle<span class="w"> </span><span class="m">51200</span>
 </code></pre></div>
 <hr />
 <h2 id="vsphere-replication-troubleshooting">vSphere Replication Troubleshooting<a class="headerlink" href="#vsphere-replication-troubleshooting" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># PowerCLI: check replication state for all VMs</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-VIObjectByVIView</span> <span class="n">-MORef</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Datastore</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="nb">Get-HciReplicationState</span>  <span class="c"># requires Site Recovery Manager PowerCLI module</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c"># Alternative: check via vCenter Web UI</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c"># Monitor → Site Recovery → vSphere Replication → Virtual Machines</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c"># Reconfigure replication if VR appliance loses connection</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c"># vCenter → Host and Clusters → VR Appliance → Manage → VR Configuration</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c"># Check VR appliance health via SSH</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="n">ssh</span> <span class="n">admin</span><span class="nv">@vr</span><span class="n">-appliance</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="n">hbr-cfg</span> <span class="n">status</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># PowerCLI: check replication state for all VMs</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-VIObjectByVIView</span> <span class="n">-MORef</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Datastore</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">Get-HciReplicationState</span>  <span class="c"># requires Site Recovery Manager PowerCLI module</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># Alternative: check via vCenter Web UI</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># Monitor → Site Recovery → vSphere Replication → Virtual Machines</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c"># Reconfigure replication if VR appliance loses connection</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c"># vCenter → Host and Clusters → VR Appliance → Manage → VR Configuration</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c"># Check VR appliance health via SSH</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="n">ssh</span> <span class="n">admin</span><span class="nv">@vr</span><span class="n">-appliance</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="n">hbr-cfg</span> <span class="n">status</span>
 </code></pre></div>
 <hr />
 <h2 id="veeam-replication-job-troubleshooting">Veeam Replication Job Troubleshooting<a class="headerlink" href="#veeam-replication-job-troubleshooting" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Add-PSSnapin</span> <span class="n">VeeamPSSnapIn</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c"># List replication jobs and last status</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nb">Get-VBRJob</span> <span class="n">-Type</span> <span class="n">Replica</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;LastResult&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetLastResult</span><span class="p">()}},</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;LastRun&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ScheduleOptions</span><span class="p">.</span><span class="n">LatestRunLocal</span><span class="p">}}</span> <span class="p">|</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c"># Get failed session details</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="nv">$job</span> <span class="p">=</span> <span class="nb">Get-VBRJob</span> <span class="n">-Name</span> <span class="s2">&quot;Replica-PROD-SQL&quot;</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">Get-VBRReplicaSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">JobName</span> <span class="o">-eq</span> <span class="nv">$job</span><span class="p">.</span><span class="n">Name</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="nb">Sort-Object</span> <span class="n">EndTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="nv">$session</span><span class="p">.</span><span class="n">GetTaskSessions</span><span class="p">()</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">Info</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c"># Check replica VM state at target site</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="nb">Get-VBRRestorePoint</span> <span class="n">-Name</span> <span class="s2">&quot;vm-prod-sql01-replica&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">CreationTime</span><span class="p">,</span> <span class="n">IsConsistent</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Add-PSSnapin</span> <span class="n">VeeamPSSnapIn</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c"># List replication jobs and last status</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">Get-VBRJob</span> <span class="n">-Type</span> <span class="n">Replica</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;LastResult&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetLastResult</span><span class="p">()}},</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;LastRun&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ScheduleOptions</span><span class="p">.</span><span class="n">LatestRunLocal</span><span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c"># Get failed session details</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="nv">$job</span> <span class="p">=</span> <span class="nb">Get-VBRJob</span> <span class="n">-Name</span> <span class="s2">&quot;Replica-PROD-SQL&quot;</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">Get-VBRReplicaSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">JobName</span> <span class="o">-eq</span> <span class="nv">$job</span><span class="p">.</span><span class="n">Name</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    <span class="nb">Sort-Object</span> <span class="n">EndTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="nv">$session</span><span class="p">.</span><span class="n">GetTaskSessions</span><span class="p">()</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">Info</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c"># Check replica VM state at target site</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="nb">Get-VBRRestorePoint</span> <span class="n">-Name</span> <span class="s2">&quot;vm-prod-sql01-replica&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">CreationTime</span><span class="p">,</span> <span class="n">IsConsistent</span>
 </code></pre></div>
 <hr />
 <h2 id="escalation-criteria-when-to-invoke-dr">Escalation Criteria — When to Invoke DR<a class="headerlink" href="#escalation-criteria-when-to-invoke-dr" title="Permanent link">&para;</a></h2>

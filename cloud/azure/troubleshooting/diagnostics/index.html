@@ -4328,93 +4328,70 @@
 
 
 <h1 id="azure-diagnostics">Azure — Diagnostics<a class="headerlink" href="#azure-diagnostics" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│               Azure Diagnostics — Data Sources                 │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>└──────────────────────────────────────────────────────────────┘
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  Resource Under Investigation
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>            │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  ┌─────────┴──────────────────────────────────────────────┐
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │                                                         │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  ▼                     ▼                    ▼             ▼
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>┌──────────────┐  ┌───────────────┐  ┌─────────────┐  ┌──────────┐
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│ Activity Log │  │Resource Health│  │  Network    │  │  Log     │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│ (control     │  │(is the        │  │  Watcher    │  │Analytics │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  plane ops)  │  │ resource up?) │  │ (NSG/routes │  │(Insights,│
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│              │  │               │  │  + capture) │  │ KQL)     │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>└──────┬───────┘  └───────┬───────┘  └──────┬──────┘  └────┬─────┘
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>       └──────────────────┴─────────────────┴──────────────┘
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>                                    │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>                                    ▼
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>                         ┌──────────────────────┐
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>                         │  Correlate findings  │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                         │  → root cause        │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                         └──────────────────────┘
-</code></pre></div>
 <blockquote>
 <p>Diagnostic commands, log locations, and data collection procedures.</p>
 </blockquote>
 <hr />
 <h2 id="vm-diagnostics">VM Diagnostics<a class="headerlink" href="#vm-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Boot diagnostics (serial console log)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>vm<span class="w"> </span>boot-diagnostics<span class="w"> </span>get-boot-log<span class="w"> </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Instance view — power state, extensions, disks</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>az<span class="w"> </span>vm<span class="w"> </span>get-instance-view<span class="w"> </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--output<span class="w"> </span>json
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Effective NSG rules on a NIC</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>az<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>show-effective-nsg<span class="w"> </span>--name<span class="w"> </span>&lt;nic-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Effective routes on a NIC</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>az<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>show-effective-route-table<span class="w"> </span>--name<span class="w"> </span>&lt;nic-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Network Watcher — test connectivity</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>az<span class="w"> </span>network<span class="w"> </span>watcher<span class="w"> </span>test-connectivity<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--source-resource<span class="w"> </span>&lt;source-vm-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--dest-address<span class="w"> </span>&lt;destination-ip&gt;<span class="w"> </span>--dest-port<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Packet capture</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>az<span class="w"> </span>network<span class="w"> </span>watcher<span class="w"> </span>packet-capture<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span>--vm<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--name<span class="w"> </span>my-capture<span class="w"> </span>--storage-account<span class="w"> </span>&lt;sa&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Boot diagnostics (serial console log)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>vm<span class="w"> </span>boot-diagnostics<span class="w"> </span>get-boot-log<span class="w"> </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Instance view — power state, extensions, disks</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>az<span class="w"> </span>vm<span class="w"> </span>get-instance-view<span class="w"> </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--output<span class="w"> </span>json
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Effective NSG rules on a NIC</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>az<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>show-effective-nsg<span class="w"> </span>--name<span class="w"> </span>&lt;nic-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Effective routes on a NIC</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>az<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>show-effective-route-table<span class="w"> </span>--name<span class="w"> </span>&lt;nic-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Network Watcher — test connectivity</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>az<span class="w"> </span>network<span class="w"> </span>watcher<span class="w"> </span>test-connectivity<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--source-resource<span class="w"> </span>&lt;source-vm-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>--dest-address<span class="w"> </span>&lt;destination-ip&gt;<span class="w"> </span>--dest-port<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Packet capture</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>az<span class="w"> </span>network<span class="w"> </span>watcher<span class="w"> </span>packet-capture<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>--vm<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--name<span class="w"> </span>my-capture<span class="w"> </span>--storage-account<span class="w"> </span>&lt;sa&gt;
 </code></pre></div>
 <h2 id="activity-log">Activity Log<a class="headerlink" href="#activity-log" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Last 50 events</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span>--max-events<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].[eventTimestamp,level,operationName.localizedValue,status.localizedValue]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-o<span class="w"> </span>table
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Filter by resource group and time window</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--start-time<span class="w"> </span>&lt;start-utc&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--end-time<span class="w"> </span>&lt;end-utc&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--output<span class="w"> </span>json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Last 50 events</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span>--max-events<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].[eventTimestamp,level,operationName.localizedValue,status.localizedValue]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Filter by resource group and time window</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--start-time<span class="w"> </span>&lt;start-utc&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--end-time<span class="w"> </span>&lt;end-utc&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--output<span class="w"> </span>json
 </code></pre></div>
 <h2 id="log-analytics-queries">Log Analytics Queries<a class="headerlink" href="#log-analytics-queries" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">--</span><span class="w"> </span><span class="n">VM</span><span class="w"> </span><span class="n">heartbeat</span><span class="w"> </span><span class="p">(</span><span class="n">last</span><span class="w"> </span><span class="n">seen</span><span class="p">)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">Heartbeat</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">|</span><span class="w"> </span><span class="k">summarize</span><span class="w"> </span><span class="n">LastSeen</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">TimeGenerated</span><span class="p">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">Computer</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">LastSeen</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">5</span><span class="n">m</span><span class="p">)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">--</span><span class="w"> </span><span class="n">Failed</span><span class="w"> </span><span class="n">logins</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">SecurityEvent</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">EventID</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="mi">4625</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">|</span><span class="w"> </span><span class="k">summarize</span><span class="w"> </span><span class="k">count</span><span class="p">()</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">Account</span><span class="p">,</span><span class="w"> </span><span class="n">IpAddress</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p">--</span><span class="w"> </span><span class="n">NSG</span><span class="w"> </span><span class="n">denied</span><span class="w"> </span><span class="n">flows</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="n">AzureNetworkAnalytics_CL</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">SubType_s</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s">&quot;FlowLog&quot;</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">FlowStatus_s</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s">&quot;D&quot;</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">|</span><span class="w"> </span><span class="k">project</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="p">,</span><span class="w"> </span><span class="n">SrcIP_s</span><span class="p">,</span><span class="w"> </span><span class="n">DestIP_s</span><span class="p">,</span><span class="w"> </span><span class="n">DestPort_d</span><span class="p">,</span><span class="w"> </span><span class="n">NSGName_s</span><span class="p">,</span><span class="w"> </span><span class="n">NSGRule_s</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">--</span><span class="w"> </span><span class="n">VM</span><span class="w"> </span><span class="n">heartbeat</span><span class="w"> </span><span class="p">(</span><span class="n">last</span><span class="w"> </span><span class="n">seen</span><span class="p">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">Heartbeat</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">|</span><span class="w"> </span><span class="k">summarize</span><span class="w"> </span><span class="n">LastSeen</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">TimeGenerated</span><span class="p">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">Computer</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">LastSeen</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">5</span><span class="n">m</span><span class="p">)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">--</span><span class="w"> </span><span class="n">Failed</span><span class="w"> </span><span class="n">logins</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">SecurityEvent</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">EventID</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="mi">4625</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">|</span><span class="w"> </span><span class="k">summarize</span><span class="w"> </span><span class="k">count</span><span class="p">()</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">Account</span><span class="p">,</span><span class="w"> </span><span class="n">IpAddress</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">--</span><span class="w"> </span><span class="n">NSG</span><span class="w"> </span><span class="n">denied</span><span class="w"> </span><span class="n">flows</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="n">AzureNetworkAnalytics_CL</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">SubType_s</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s">&quot;FlowLog&quot;</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">FlowStatus_s</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s">&quot;D&quot;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="p">|</span><span class="w"> </span><span class="k">project</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="p">,</span><span class="w"> </span><span class="n">SrcIP_s</span><span class="p">,</span><span class="w"> </span><span class="n">DestIP_s</span><span class="p">,</span><span class="w"> </span><span class="n">DestPort_d</span><span class="p">,</span><span class="w"> </span><span class="n">NSGName_s</span><span class="p">,</span><span class="w"> </span><span class="n">NSGRule_s</span>
 </code></pre></div>
 <h2 id="key-vault-diagnostics">Key Vault Diagnostics<a class="headerlink" href="#key-vault-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check Key Vault accessibility</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>keyvault<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;properties.provisioningState&#39;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># List access policies</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>az<span class="w"> </span>keyvault<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;properties.accessPolicies&#39;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check firewall rules</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>az<span class="w"> </span>keyvault<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;properties.networkAcls&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check Key Vault accessibility</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>keyvault<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;properties.provisioningState&#39;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List access policies</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>az<span class="w"> </span>keyvault<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;properties.accessPolicies&#39;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check firewall rules</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>az<span class="w"> </span>keyvault<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;kv-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;properties.networkAcls&#39;</span>
 </code></pre></div>
 
 

@@ -4642,24 +4642,6 @@
 
 
 <h1 id="vsan-quick-reference">vSAN Quick Reference<a class="headerlink" href="#vsan-quick-reference" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                       vSAN Health Flow                                  │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                                         │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Physical Disks ──► Disk Group ──► vSAN Datastore ──► VM Objects        │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  (cache + cap)      (per host)     (cluster-wide)      (FTT policy)     │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                         │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>├───────────────────────────────────────────────────────────────────────── │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  Check Sequence                │  Key Commands                          │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>├────────────────────────────────┼───────────────────────────────────────┤
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│ 1. Skyline Health (all green?) │ esxcli vsan health cluster list        │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│ 2. Resync active?              │ esxcli vsan debug resync summary get   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│ 3. Object compliance?          │ vCenter → Cluster → vSAN → Objects     │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│ 4. Disk group up?              │ esxcli vsan storage list               │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│ 5. Network OK between hosts?   │ vmkping -I vmk2 &lt;peer-vsan-vmk-ip&gt;     │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>├────────────────────────────────┴───────────────────────────────────────┤
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  Policy: RAID-1 FTT=1 minimum  │  Throttle resync: -p 25 during maint   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>└─────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
 <h2 id="fast-health-checks">Fast Health Checks<a class="headerlink" href="#fast-health-checks" title="Permanent link">&para;</a></h2>
 <ul>
 <li>vSAN Skyline Health → vCenter → Cluster → vSAN → Skyline Health</li>
@@ -4667,24 +4649,24 @@
 <li>Resync Status → vCenter → Cluster → vSAN → Resyncing Components</li>
 </ul>
 <h2 id="common-commands">Common Commands<a class="headerlink" href="#common-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check vSAN cluster info</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check vSAN network configuration</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check vSAN disks</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check vSAN resync summary</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check vSAN cluster info</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check vSAN network configuration</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check vSAN disks</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check vSAN resync summary</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
 </code></pre></div>
 <h2 id="ping-vsan-vmkernel-between-hosts">Ping vSAN VMkernel Between Hosts<a class="headerlink" href="#ping-vsan-vmkernel-between-hosts" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From ESXi host, ping another host&#39;s vSAN VMkernel</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;target-vsan-vmk-ip&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Test jumbo frames if MTU is 9000</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>-d<span class="w"> </span>&lt;target-vsan-vmk-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From ESXi host, ping another host&#39;s vSAN VMkernel</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;target-vsan-vmk-ip&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Test jumbo frames if MTU is 9000</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>-d<span class="w"> </span>&lt;target-vsan-vmk-ip&gt;
 </code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>

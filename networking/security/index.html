@@ -3413,32 +3413,6 @@
 Network security knowledge base covering firewalls, VPN, rule validation, and network access control.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                      Network Security Zones                          │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                                      │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌────────────┐                                                      │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  Internet  │  (untrusted)                                         │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  └─────┬──────┘                                                      │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│        │  Allow: HTTPS/443, SMTP/25 inbound only                     │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  ┌─────▼──────────────────────────────────────┐                      │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  DMZ Zone (VLAN 10-99)                     │  ◄── WAF / IDS       │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │  Reverse proxies · Public APIs · Bastion   │                      │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  └─────┬──────────────────────────────────────┘                      │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│        │  Allow: specific app ports only                             │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  ┌─────▼──────────────────────────────────────┐                      │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │  Production Zone (VLAN 100-199)            │  ◄── ACLs            │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  App servers · Databases · Services        │                      │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  └─────┬──────────────────────┬───────────────┘                      │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│        │ iSCSI/NFS            │ Veeam agent                          │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  ┌─────▼──────────┐   ┌───────▼──────────┐                           │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  │ Storage Zone   │   │  Backup Zone     │                           │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  │ (VLAN 300-310) │   │  (VLAN 500-510)  │                           │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  └────────────────┘   └──────────────────┘                           │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  ┌─────────────────────────────────────────────────────────────┐     │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  │  NSX-T DFW: micro-segmentation within each zone             │     │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  └─────────────────────────────────────────────────────────────┘     │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>└──────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
 <h2 id="firewall-rule-validation">Firewall Rule Validation<a class="headerlink" href="#firewall-rule-validation" title="Permanent link">&para;</a></h2>
 <h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
 <p>This runbook verifies firewall rules allow required traffic.</p>
@@ -3449,9 +3423,9 @@ Network security knowledge base covering firewalls, VPN, rule validation, and ne
 <li>Identify firewall device</li>
 </ul>
 <h3 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nc<span class="w"> </span>-zv<span class="w"> </span>destination-host<span class="w"> </span>port
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>telnet<span class="w"> </span>destination-host<span class="w"> </span>port
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ss<span class="w"> </span>-tulnp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>nc<span class="w"> </span>-zv<span class="w"> </span>destination-host<span class="w"> </span>port
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>telnet<span class="w"> </span>destination-host<span class="w"> </span>port
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ss<span class="w"> </span>-tulnp
 </code></pre></div>
 <h3 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h3>
 <ol>
@@ -3467,42 +3441,42 @@ Network security knowledge base covering firewalls, VPN, rule validation, and ne
 - Internet egress
 - Storage replication paths across sites</p>
 <h3 id="check-traffic-sessions">Check Traffic Sessions<a class="headerlink" href="#check-traffic-sessions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Active sessions (Palo Alto / PAN-OS)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>session<span class="w"> </span>all
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>show<span class="w"> </span>session<span class="w"> </span>id<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Traffic logs</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>show<span class="w"> </span>log<span class="w"> </span>traffic
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Active sessions (Palo Alto / PAN-OS)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>session<span class="w"> </span>all
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>show<span class="w"> </span>session<span class="w"> </span>id<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Traffic logs</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>show<span class="w"> </span>log<span class="w"> </span>traffic
 </code></pre></div>
 <h3 id="view-security-policy">View Security Policy<a class="headerlink" href="#view-security-policy" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>show<span class="w"> </span>running<span class="w"> </span>security-policy<span class="w">    </span><span class="c1"># PAN-OS</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>show<span class="w"> </span>security<span class="w"> </span>policies<span class="w">          </span><span class="c1"># Juniper SRX</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>show<span class="w"> </span>access-list<span class="w">                </span><span class="c1"># Cisco ASA</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>show<span class="w"> </span>running<span class="w"> </span>security-policy<span class="w">    </span><span class="c1"># PAN-OS</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>security<span class="w"> </span>policies<span class="w">          </span><span class="c1"># Juniper SRX</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>show<span class="w"> </span>access-list<span class="w">                </span><span class="c1"># Cisco ASA</span>
 </code></pre></div>
 <h3 id="test-connectivity-through-a-firewall">Test Connectivity Through a Firewall<a class="headerlink" href="#test-connectivity-through-a-firewall" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From a host behind the firewall</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ping<span class="w"> </span>&lt;destination&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>traceroute<span class="w"> </span>&lt;destination&gt;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>curl<span class="w"> </span>-v<span class="w"> </span>telnet://&lt;dest&gt;:&lt;port&gt;<span class="w">    </span><span class="c1"># test specific TCP port</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># From Linux — test TCP port</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From a host behind the firewall</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ping<span class="w"> </span>&lt;destination&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>traceroute<span class="w"> </span>&lt;destination&gt;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>curl<span class="w"> </span>-v<span class="w"> </span>telnet://&lt;dest&gt;:&lt;port&gt;<span class="w">    </span><span class="c1"># test specific TCP port</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># From Linux — test TCP port</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
 </code></pre></div>
 <h3 id="review-deny-logs">Review Deny Logs<a class="headerlink" href="#review-deny-logs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># PAN-OS</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>show<span class="w"> </span>log<span class="w"> </span>traffic<span class="w"> </span><span class="nv">action</span><span class="o">=</span>deny<span class="w"> </span><span class="p">|</span><span class="w"> </span>last<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Linux iptables</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-v<span class="w"> </span>-n<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>DROP
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>journalctl<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;DPT=&lt;port&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># PAN-OS</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>show<span class="w"> </span>log<span class="w"> </span>traffic<span class="w"> </span><span class="nv">action</span><span class="o">=</span>deny<span class="w"> </span><span class="p">|</span><span class="w"> </span>last<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Linux iptables</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-v<span class="w"> </span>-n<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>DROP
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>journalctl<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;DPT=&lt;port&gt;&quot;</span>
 </code></pre></div>
 <h3 id="common-rule-troubleshooting">Common Rule Troubleshooting<a class="headerlink" href="#common-rule-troubleshooting" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Identify which policy matched a session (PAN-OS)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>session<span class="w"> </span>all<span class="w"> </span>filter<span class="w"> </span>destination<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>destination-port<span class="w"> </span>&lt;port&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Identify which policy matched a session (PAN-OS)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>show<span class="w"> </span>session<span class="w"> </span>all<span class="w"> </span>filter<span class="w"> </span>destination<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>destination-port<span class="w"> </span>&lt;port&gt;
 </code></pre></div>
 <h3 id="nat-verification">NAT Verification<a class="headerlink" href="#nat-verification" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>show<span class="w"> </span>running<span class="w"> </span>nat-policy<span class="w">           </span><span class="c1"># PAN-OS</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>show<span class="w"> </span>ip<span class="w"> </span>nat<span class="w"> </span>translations<span class="w">          </span><span class="c1"># Cisco IOS</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>show<span class="w"> </span>running<span class="w"> </span>nat-policy<span class="w">           </span><span class="c1"># PAN-OS</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>ip<span class="w"> </span>nat<span class="w"> </span>translations<span class="w">          </span><span class="c1"># Cisco IOS</span>
 </code></pre></div>
 <h3 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h3>
 <ul>
@@ -3548,16 +3522,16 @@ Network security knowledge base covering firewalls, VPN, rule validation, and ne
 <p>VPNs provide encrypted connectivity between sites, cloud environments, remote users, and partner networks.</p>
 <h3 id="tunnel-status">Tunnel Status<a class="headerlink" href="#tunnel-status" title="Permanent link">&para;</a></h3>
 <p><strong>Cisco ASA / IOS:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>show<span class="w"> </span>vpn-sessiondb<span class="w">                  </span><span class="c1"># all active VPN sessions</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>show<span class="w"> </span>crypto<span class="w"> </span>ikev2<span class="w"> </span>sa<span class="w">                </span><span class="c1"># IKEv2 Phase 1 status</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>show<span class="w"> </span>crypto<span class="w"> </span>ipsec<span class="w"> </span>sa<span class="w">                </span><span class="c1"># IPsec Phase 2 status</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>show<span class="w"> </span>crypto<span class="w"> </span>ikev1<span class="w"> </span>sa<span class="w">                </span><span class="c1"># IKEv1 Phase 1</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>show<span class="w"> </span>crypto<span class="w"> </span>isakmp<span class="w"> </span>sa<span class="w">               </span><span class="c1"># IKEv1 ISAKMP</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>show<span class="w"> </span>vpn-sessiondb<span class="w">                  </span><span class="c1"># all active VPN sessions</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>show<span class="w"> </span>crypto<span class="w"> </span>ikev2<span class="w"> </span>sa<span class="w">                </span><span class="c1"># IKEv2 Phase 1 status</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>show<span class="w"> </span>crypto<span class="w"> </span>ipsec<span class="w"> </span>sa<span class="w">                </span><span class="c1"># IPsec Phase 2 status</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>show<span class="w"> </span>crypto<span class="w"> </span>ikev1<span class="w"> </span>sa<span class="w">                </span><span class="c1"># IKEv1 Phase 1</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>show<span class="w"> </span>crypto<span class="w"> </span>isakmp<span class="w"> </span>sa<span class="w">               </span><span class="c1"># IKEv1 ISAKMP</span>
 </code></pre></div></p>
 <p><strong>Palo Alto:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>show<span class="w"> </span>vpn<span class="w"> </span>ike-sa
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>show<span class="w"> </span>vpn<span class="w"> </span>ipsec-sa
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>show<span class="w"> </span>vpn<span class="w"> </span>tunnel
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>show<span class="w"> </span>vpn<span class="w"> </span>ike-sa
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>show<span class="w"> </span>vpn<span class="w"> </span>ipsec-sa
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>show<span class="w"> </span>vpn<span class="w"> </span>tunnel
 </code></pre></div></p>
 <h3 id="ike-ipsec-phases">IKE / IPsec Phases<a class="headerlink" href="#ike-ipsec-phases" title="Permanent link">&para;</a></h3>
 <table>
@@ -3583,8 +3557,8 @@ Network security knowledge base covering firewalls, VPN, rule validation, and ne
 </table>
 <p>Both phases must complete for a functional tunnel.</p>
 <h3 id="test-connectivity-through-tunnel">Test Connectivity Through Tunnel<a class="headerlink" href="#test-connectivity-through-tunnel" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ping<span class="w"> </span>&lt;remote_subnet_ip&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span>&lt;local_subnet_ip&gt;
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>traceroute<span class="w"> </span>&lt;remote_ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ping<span class="w"> </span>&lt;remote_subnet_ip&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span>&lt;local_subnet_ip&gt;
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>traceroute<span class="w"> </span>&lt;remote_ip&gt;
 </code></pre></div>
 <h3 id="common-phase-1-issues">Common Phase 1 Issues<a class="headerlink" href="#common-phase-1-issues" title="Permanent link">&para;</a></h3>
 <table>
@@ -3641,17 +3615,17 @@ Network security knowledge base covering firewalls, VPN, rule validation, and ne
 </tbody>
 </table>
 <h3 id="certificate-based-vpn">Certificate-Based VPN<a class="headerlink" href="#certificate-based-vpn" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check certificate validity</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>&lt;cert_file&gt;<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Check PKI enrollment status (Cisco IOS)</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>show<span class="w"> </span>crypto<span class="w"> </span>pki<span class="w"> </span>certificate
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check certificate validity</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>&lt;cert_file&gt;<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check PKI enrollment status (Cisco IOS)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>show<span class="w"> </span>crypto<span class="w"> </span>pki<span class="w"> </span>certificate
 </code></pre></div>
 <h3 id="route-based-vpn">Route-Based VPN<a class="headerlink" href="#route-based-vpn" title="Permanent link">&para;</a></h3>
 <p>Route-based VPNs use virtual tunnel interfaces (VTI) — routing directs traffic into the tunnel rather than ACLs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Cisco IOS — view VTI state</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>show<span class="w"> </span>interface<span class="w"> </span>tunnel<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>show<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>tunnel
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Cisco IOS — view VTI state</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>show<span class="w"> </span>interface<span class="w"> </span>tunnel<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>show<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>tunnel
 </code></pre></div>
 
 

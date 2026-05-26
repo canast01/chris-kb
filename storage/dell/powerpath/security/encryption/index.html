@@ -4611,7 +4611,7 @@
 
 
 <h1 id="powerpath-encryption">PowerPath — Encryption<a class="headerlink" href="#powerpath-encryption" title="Permanent link">&para;</a></h1>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────── Dell PowerPath Security — Encryption ─────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────── Dell PowerPath Security — Encryption ─────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │    PowerPath is transparent to data encryption; DARE operates at array drive layer below it   │   │
@@ -4664,59 +4664,6 @@
 <a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────── Dell PowerPath Security — Encryption ─────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │    PowerPath is transparent to data encryption; DARE operates at array drive layer below it   │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │   FC transport: no native data encryption; rely on FC-SP or fabric-level encryption SAN ISL   │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │     iSCSI transport: CHAP for authentication; IPSec for data-in-flight encryption per hop     │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │     PowerPath does not inspect or modify data; encryption/decryption at host HBA or array     │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│    Host I/O → PowerPath load-balances path → FC/iSCSI transport → array decrypts at DARE layer        │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │         FC Transport        │  │       iSCSI Transport       │  │       Array Encryption      │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │       FC-SP (optional)      │  │          CHAP auth          │  │        DARE at drives       │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │        ISL encryption       │  │         IPSec tunnel        │  │       KMIP key server       │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │        VSAN isolation       │  │           TLS iSNS          │  │       Transparent pass      │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │       Zoning boundary       │  │         Mutual CHAP         │  │         Key rotation        │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │        No PP inspect        │  │        No PP inspect        │  │         Crypto erase        │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                                                                       │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│    Enable iSCSI CHAP or IPSec at transport layer; DARE configured at array; PowerPath unaffected      │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│   │      Layer       │    Transport     │     Mechanism     │ Config location  │      Notes       │   │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │   Data at rest   │    FC / iSCSI    │    DARE (array)   │    Array GUI     │ Below PowerPath  │   │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │       Auth       │      iSCSI       │    CHAP secret    │ iSCSI initiator  │   Mutual CHAP    │   │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │    In-flight     │      iSCSI       │     IPSec ESP     │   OS / network   │  Per-hop config  │   │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   │     FC link      │        FC        │  FC-SP / ISL enc  │    SAN switch    │     Optional     │   │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                                                                                       │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    Physical: FC-SP on HBA and switch; IPSec on iSCSI NIC/NIC driver; DARE on array drive bays         │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│                                                                                                       │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│    DARE           = Data At Rest Encryption; array-side SED encryption; transparent to PowerPath      │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│    FC-SP          = Fibre Channel Security Protocol; DH-CHAP authentication on FC links               │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│    ISL encryption = In-flight encryption between fabric switches; configured at SAN switch level      │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│    CHAP           = Challenge Handshake Authentication Protocol; iSCSI initiator/target auth          │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│    Mutual CHAP    = Both initiator and target authenticate each other; stronger than one-way          │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│    IPSec ESP      = Encapsulating Security Payload; encrypts iSCSI packets in-flight                  │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│    iSNS TLS       = iSCSI Name Service secured with TLS; optional discovery plane protection          │
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│    Transparent pass= PowerPath passes I/O bytes unchanged; does not encrypt or decrypt data           │
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│    KMIP key server= External key manager for DARE; unreachable KMIP can lock array volumes            │
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│    Crypto erase   = Destroy DARE encryption key on decommission; all data permanently unreadable      │
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│    VSAN isolation = FC VSAN separates storage traffic; limits blast radius of any breach              │
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│    Zoning boundary= FC zone restricts which HWWNs can communicate; primary FC security control        │
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                                                                                       │
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>PowerPath operates at the block I/O layer and does not encrypt data in transit between the host and array. Encryption at this layer is handled by:</p>
 <ul>

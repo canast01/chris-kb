@@ -4117,20 +4117,6 @@
 </ul>
 <h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
 <p>ONTAP HA pairs are active-active: both nodes serve I/O simultaneously and each holds a full copy of the partner's NVRAM write log. In the event of a node failure, the surviving node performs an automatic storage failover (takeover) within ~45 seconds.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                        Cluster                           │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                          │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │   ┌─────────────┐  Cluster IC  ┌─────────────┐          │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │   │   Node 01   │◄────────────►│   Node 02   │  HA Pair │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │   │  (AFF A400) │              │  (AFF A400) │          │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │   └──────┬──────┘              └──────┬──────┘          │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │          │                            │                  │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │          └────────────┬───────────────┘                  │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │                       │                                  │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │              Shared Disk Shelves                         │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │              (NS224 NVMe or SAS)                         │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  └──────────────────────────────────────────────────────────┘
-</code></pre></div>
 <pre class="mermaid"><code>sequenceDiagram
     participant Node1 as Node 1 (failed)
     participant Node2 as Node 2 (surviving)
@@ -4146,9 +4132,9 @@
     Node1-&gt;&gt;Node1: Reclaim own aggregates
     Node1--&gt;&gt;Clients: Resume serving own LIFs
     Note over Node1,Node2: Both nodes: Connected, Not in takeover</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>storage<span class="w"> </span>failover<span class="w"> </span>takeover<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node-to-take-over&gt;<span class="w">   </span><span class="c1"># planned takeover</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>storage<span class="w"> </span>failover<span class="w"> </span>show<span class="w">                                    </span><span class="c1"># monitor takeover / giveback</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>storage<span class="w"> </span>failover<span class="w"> </span>giveback<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node-name&gt;<span class="w">            </span><span class="c1"># return ownership</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>storage<span class="w"> </span>failover<span class="w"> </span>takeover<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node-to-take-over&gt;<span class="w">   </span><span class="c1"># planned takeover</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>storage<span class="w"> </span>failover<span class="w"> </span>show<span class="w">                                    </span><span class="c1"># monitor takeover / giveback</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>storage<span class="w"> </span>failover<span class="w"> </span>giveback<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node-name&gt;<span class="w">            </span><span class="c1"># return ownership</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4220,19 +4206,19 @@
 </tbody>
 </table>
 <p><strong>LIF management:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lif,vserver,address,home-node,home-port,curr-node,curr-port,status-oper
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-is-home<span class="w"> </span><span class="nb">false</span><span class="w">   </span><span class="c1"># LIFs not on home port (migrated due to failover)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>network<span class="w"> </span>interface<span class="w"> </span>revert<span class="w"> </span>*<span class="w">              </span><span class="c1"># revert all LIFs to home after maintenance</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lif,vserver,address,home-node,home-port,curr-node,curr-port,status-oper
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-is-home<span class="w"> </span><span class="nb">false</span><span class="w">   </span><span class="c1"># LIFs not on home port (migrated due to failover)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>network<span class="w"> </span>interface<span class="w"> </span>revert<span class="w"> </span>*<span class="w">              </span><span class="c1"># revert all LIFs to home after maintenance</span>
 </code></pre></div>
 <h2 id="storage-hierarchy">Storage Hierarchy<a class="headerlink" href="#storage-hierarchy" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Cluster
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  └── Node(s)
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        └── Aggregate(s)     ← physical RAID groups; owned by a node
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>              └── Volume(s)  ← logical containers; thin or thick provisioned
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>                    ├── Snapshots      ← point-in-time, read-only copies within the volume
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>                    ├── LUNs           ← block devices for iSCSI/FC (inside a volume)
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>                    ├── Qtrees/Shares  ← NFS exports and SMB shares
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>                    └── Files          ← NAS files served via NFS or SMB
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Cluster
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  └── Node(s)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        └── Aggregate(s)     ← physical RAID groups; owned by a node
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>              └── Volume(s)  ← logical containers; thin or thick provisioned
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>                    ├── Snapshots      ← point-in-time, read-only copies within the volume
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>                    ├── LUNs           ← block devices for iSCSI/FC (inside a volume)
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>                    ├── Qtrees/Shares  ← NFS exports and SMB shares
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>                    └── Files          ← NAS files served via NFS or SMB
 </code></pre></div>
 <p><strong>WAFL (Write Anywhere File Layout)</strong> is ONTAP's internal filesystem engine. Key characteristics:</p>
 <ul>
@@ -4264,9 +4250,9 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,raidtype
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-raidtree<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-raid-state<span class="w"> </span>reconstructing
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,raidtype
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-raidtree<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-raid-state<span class="w"> </span>reconstructing
 </code></pre></div>
 <h2 id="svm-storage-vm-architecture">SVM (Storage VM) Architecture<a class="headerlink" href="#svm-storage-vm-architecture" title="Permanent link">&para;</a></h2>
 <p>SVMs are the data access layer — analogous to virtual storage appliances within the cluster. Each SVM has its own namespace, network interfaces (data LIFs), protocol configuration, security domain (export policies, CIFS ACLs, RBAC), and name services (DNS, LDAP, NIS). SVMs enable multi-tenancy on a shared cluster.</p>
@@ -4296,9 +4282,9 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vserver<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,type,state,allowed-protocols
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>volume,junction-path<span class="w">   </span><span class="c1"># SVM namespace</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vserver<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,type,state,allowed-protocols
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>volume,junction-path<span class="w">   </span><span class="c1"># SVM namespace</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
 <h2 id="protocol-stack">Protocol Stack<a class="headerlink" href="#protocol-stack" title="Permanent link">&para;</a></h2>
 <table>
@@ -4414,10 +4400,10 @@
 </tbody>
 </table>
 <h2 id="aggregate-health">Aggregate Health<a class="headerlink" href="#aggregate-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used<span class="w">   </span><span class="c1"># capacity per aggregate</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online<span class="w">                              </span><span class="c1"># aggregates not online</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken<span class="w">                                          </span><span class="c1"># failed or broken disks</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w">              </span><span class="c1"># RAID status</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used<span class="w">   </span><span class="c1"># capacity per aggregate</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online<span class="w">                              </span><span class="c1"># aggregates not online</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken<span class="w">                                          </span><span class="c1"># failed or broken disks</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w">              </span><span class="c1"># RAID status</span>
 </code></pre></div>
 
 

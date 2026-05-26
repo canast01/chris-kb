@@ -4320,37 +4320,6 @@
 
 
 <h1 id="vcenter-outage-runbook">vCenter Outage Runbook<a class="headerlink" href="#vcenter-outage-runbook" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                   VCENTER OUTAGE TRIAGE FLOW                    │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>└──────────────────────────┬──────────────────────────────────────┘
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                           │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>   ┌───────────────────────▼───────────────────────────────┐
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>   │  VCSA Services Check (port 5480 / SSH)                │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>   │  service-control --status  ◄── any stopped?           │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>   └───────────────────────┬───────────────────────────────┘
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                           │ services failed
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>           ┌───────────────┼────────────────────┐
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>           ▼               ▼                    ▼
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>   ┌───────────────┐ ┌───────────┐    ┌──────────────────┐
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>   │ Disk Full?    │ │  VCHA     │    │  Restore Backup  │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>   │ /storage/log  │ │ Failover  │    │  VAMI ► Backup   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>   │ /storage/db   │ │ available?│    │  ► Restore       │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>   └───────┬───────┘ └─────┬─────┘    └─────────┬────────┘
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>           │               │                    │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>           └───────────────┴──────────┬─────────┘
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>                                      ▼
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>                    ┌─────────────────────────────┐
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                    │  Hosts in Standalone Mode?  │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                    │  VMs still running ─ note   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>                    │  management plane only down │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>                    └──────────────┬──────────────┘
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>                                   ▼
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>                    ┌──────────────────────────────┐
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>                    │  Validate: services up,       │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>                    │  client accessible, hosts     │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>                    │  reconnected, integrations OK │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>                    └──────────────────────────────┘
-</code></pre></div>
 <h2 id="confirm-outage-scope">Confirm Outage Scope<a class="headerlink" href="#confirm-outage-scope" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Can you access the vSphere Client?</li>
@@ -4368,15 +4337,15 @@
 <li>Review service health, disk partitions, and CPU/memory</li>
 </ul>
 <h2 id="check-dns-and-network-reachability">Check DNS and Network Reachability<a class="headerlink" href="#check-dns-and-network-reachability" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ping<span class="w"> </span>&lt;vcenter-ip&gt;
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nslookup<span class="w"> </span>&lt;vcenter-fqdn&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ping<span class="w"> </span>&lt;vcenter-ip&gt;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nslookup<span class="w"> </span>&lt;vcenter-fqdn&gt;
 </code></pre></div>
 <h2 id="check-service-status">Check Service Status<a class="headerlink" href="#check-service-status" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to vCenter appliance</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>service-control<span class="w"> </span>--status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to vCenter appliance</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>service-control<span class="w"> </span>--status
 </code></pre></div>
 <h2 id="check-disk-partitions">Check Disk Partitions<a class="headerlink" href="#check-disk-partitions" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>df<span class="w"> </span>-h
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>df<span class="w"> </span>-h
 </code></pre></div>
 <p>Partitions that commonly cause failures when full:
 - <code>/storage/log</code>

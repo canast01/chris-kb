@@ -4861,7 +4861,7 @@
 Security reference for VMware vCenter Server. Covers SSO authentication, identity sources, role-based access control, certificate management, and hardening aligned to VMware security guidance and DISA STIGs.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── vCenter — Security ──────────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── vCenter — Security ──────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │     SSO domain with AD/LDAP identity provider; enterprise users map to vCenter RBAC roles     │   │
@@ -4917,62 +4917,6 @@ Security reference for VMware vCenter Server. Covers SSO authentication, identit
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│                                                                                                       │
 <a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────────── vCenter — Security ──────────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │     SSO domain with AD/LDAP identity provider; enterprise users map to vCenter RBAC roles     │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │  RBAC: built-in roles (Admin, Read-only, No-access) and custom roles with granular privileges │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │  Certificate management: VMCA issues machine certs; custom CA for enterprise PKI integration  │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │  Audit event export to SIEM via syslog; vCenter events capture all inventory and auth actions │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │    2FA via SSO plugin (RSA SecurID or RADIUS); API over TLS; VCSA disk encryption optional    │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    Authentication gates vCenter access · RBAC scopes permissions                                      │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │        Authentication       │  │        Access Control       │  │          Encryption         │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │      SSO domain config      │  │        RBAC: built-in       │  │         API over TLS        │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │       AD/LDAP provider      │  │         Custom roles        │  │        VMCA cert mgmt       │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │         2FA via SSO         │  │      Object-level perm      │  │        Custom CA intg       │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │      Admin acct policy      │  │       Tag-based access      │  │        Cert lifecycle       │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │       Service accounts      │  │       Least privilege       │  │       Audit syslog TLS      │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │        IdP federation       │  │         Audit export        │  │        VCSA disk encr       │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    Auth gates vCenter login · RBAC scopes object access · TLS and certs protect management traffic    │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │       Auth       │   Access Ctrl    │     Encryption    │    Hardening     │      Audit       │   │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │    SSO domain    │    RBAC roles    │      TLS API      │  Cert rotation   │  vCenter events  │   │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │   AD/LDAP IdP    │   Custom roles   │    VMCA/custom    │   2FA enforce    │  Syslog export   │   │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   │   2FA via SSO    │   Object perms   │     TLS syslog    │   Min password   │ Audit log review │   │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│   │  Service accts   │ Least privilege  │  Cert auto-renew  │    STIG align    │   Role review    │   │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  x86 server (VCSA VM) · RAM DIMMs · Network NICs · Shared datastore · Trusted CA infrastructure       │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│                                                                                                       │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                                                                                       │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  SSO domain    = vSphere identity hub; authenticates all UI and API logins to vCenter                 │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  VMCA          = VMware Certificate Authority; built-in CA; issues certs to VCSA and ESXi hosts       │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  Custom CA     = Enterprise PKI CA replacing VMCA; certs signed by corporate root for compliance      │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  RBAC          = Role-Based Access Control; grants privileges on inventory objects; inherited down    │
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  Object-level permission = Permission set at specific VM, cluster, or folder; overrides parent        │
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  2FA           = Two-Factor Authentication via SSO plugin: RSA SecurID or RADIUS integration          │
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  vCenter audit = All inventory and auth events logged in vCenter; export via syslog to SIEM           │
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  Service account = Non-interactive account for automation; scope to minimum required privileges       │
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│  Identity source = AD, LDAP, or OpenLDAP added to SSO; maps enterprise users to vCenter roles         │
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│  Certificate lifecycle = Monitor cert expiry in VAMI; renew before 60-day warning threshold           │
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│  Least privilege = RBAC principle: grant only the permissions needed for a specific role or task      │
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│  Tag-based access = vCenter tags used to scope RBAC; assign roles on tag categories for flexibility   │
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│                                                                                                       │
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="authentication/">

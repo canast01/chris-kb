@@ -4496,77 +4496,39 @@
 <blockquote>
 <p>Part of the <a href="../">Operations</a> section.</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│            AWS Patch Manager — Patching Flow             │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>└──────────────────────────────────────────────────────────┘
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  ┌──────────────────────┐
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  Patch Baseline      │  (OS family, severity, auto-approve rules)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  └──────────┬───────────┘
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>             │ assigned to
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>             ▼
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  ┌──────────────────────┐
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  Patch Group         │  (tag: Patch Group = prod / staging / dev)
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  └──────────┬───────────┘
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>             │ triggered by
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>             ▼
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  ┌──────────────────────┐
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │  Maintenance Window  │  (schedule: 2nd week, rolling waves)
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  └──────────┬───────────┘
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>             │ runs
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>             ▼
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  ┌──────────────────────┐
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  │  AWS-RunPatchBaseline│  (SSM Document — Operation=Install)
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  └──────────┬───────────┘
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>             │ executes on
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>     ┌───────┴──────────┐
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>     ▼                  ▼
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>┌─────────┐       ┌──────────────────┐
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  EC2    │       │  ASG — Instance                        │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│ Targets │       │  Refresh (blue/                        │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│ (SSM)   │       │  green replace)                        │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└────┬────┘       └────────┬─────────┘
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>     │                     │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>     └──────────┬──────────┘
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>                ▼
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>  ┌──────────────────────┐
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>  │  Patch Compliance    │  (describe-instance-patch-states)
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>  │  Report              │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>  └──────────────────────┘
-</code></pre></div>
 <hr />
 <h2 id="ec2-patching">EC2 Patching<a class="headerlink" href="#ec2-patching" title="Permanent link">&para;</a></h2>
 <p>EC2 instances patched monthly via AWS Systems Manager Patch Manager:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># View patch compliance status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>ssm<span class="w"> </span>describe-instance-patch-states<span class="w"> </span>--instance-ids<span class="w"> </span>&lt;i-xxxx&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Run patching on a specific instance now (ad-hoc)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>aws<span class="w"> </span>ssm<span class="w"> </span>send-command<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>--document-name<span class="w"> </span><span class="s2">&quot;AWS-RunPatchBaseline&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>--instance-ids<span class="w"> </span>&lt;i-xxxx&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>--parameters<span class="w"> </span><span class="s2">&quot;Operation=Install&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>--comment<span class="w"> </span><span class="s2">&quot;Manual patch run </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># List instances with missing patches</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>aws<span class="w"> </span>ssm<span class="w"> </span>describe-instance-patches<span class="w"> </span>--instance-id<span class="w"> </span>&lt;i-xxxx&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span>--filters<span class="w"> </span><span class="s2">&quot;Key=State,Values=Missing&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># View patch compliance status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>ssm<span class="w"> </span>describe-instance-patch-states<span class="w"> </span>--instance-ids<span class="w"> </span>&lt;i-xxxx&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Run patching on a specific instance now (ad-hoc)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>aws<span class="w"> </span>ssm<span class="w"> </span>send-command<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span>--document-name<span class="w"> </span><span class="s2">&quot;AWS-RunPatchBaseline&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span>--instance-ids<span class="w"> </span>&lt;i-xxxx&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span>--parameters<span class="w"> </span><span class="s2">&quot;Operation=Install&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span>--comment<span class="w"> </span><span class="s2">&quot;Manual patch run </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># List instances with missing patches</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>aws<span class="w"> </span>ssm<span class="w"> </span>describe-instance-patches<span class="w"> </span>--instance-id<span class="w"> </span>&lt;i-xxxx&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span>--filters<span class="w"> </span><span class="s2">&quot;Key=State,Values=Missing&quot;</span>
 </code></pre></div>
 <p>Patching schedule:
 - Second week of each month (aligned to Patch Tuesday + 1 week)
 - Dev → Staging → Production in rolling waves separated by 3 days
 - Auto Scaling Groups: replace instances with updated launch template (blue/green via Instance Refresh)</p>
 <h2 id="rds-version-management">RDS Version Management<a class="headerlink" href="#rds-version-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check current RDS engine version</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;db-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;DBInstances[*].[DBInstanceIdentifier,EngineVersion,PendingModifiedValues]&#39;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># List available upgrade targets</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-engine-versions<span class="w"> </span>--engine<span class="w"> </span>postgres<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--query<span class="w"> </span><span class="s2">&quot;DBEngineVersions[?ValidUpgradeTarget != null].[EngineVersion]&quot;</span><span class="w"> </span>--output<span class="w"> </span>text
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Apply minor version upgrade immediately</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>aws<span class="w"> </span>rds<span class="w"> </span>modify-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;db-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>--engine-version<span class="w"> </span>&lt;new-version&gt;<span class="w"> </span>--apply-immediately
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check current RDS engine version</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;db-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;DBInstances[*].[DBInstanceIdentifier,EngineVersion,PendingModifiedValues]&#39;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># List available upgrade targets</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-engine-versions<span class="w"> </span>--engine<span class="w"> </span>postgres<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>--query<span class="w"> </span><span class="s2">&quot;DBEngineVersions[?ValidUpgradeTarget != null].[EngineVersion]&quot;</span><span class="w"> </span>--output<span class="w"> </span>text
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Apply minor version upgrade immediately</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>aws<span class="w"> </span>rds<span class="w"> </span>modify-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;db-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>--engine-version<span class="w"> </span>&lt;new-version&gt;<span class="w"> </span>--apply-immediately
 </code></pre></div>
 <p>Major version upgrades require:
 1. Test in staging environment first
@@ -4574,37 +4536,37 @@
 3. Schedule change record with agreed rollback window
 4. Run application validation suite post-upgrade</p>
 <h2 id="ami-lifecycle">AMI Lifecycle<a class="headerlink" href="#ami-lifecycle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create AMI from running instance</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-image<span class="w"> </span>--instance-id<span class="w"> </span>&lt;i-xxxx&gt;<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;prod-app-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>--no-reboot
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List old AMIs (older than 90 days)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-images<span class="w"> </span>--owners<span class="w"> </span>self<span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;Images[?CreationDate&lt;=&#39;</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;90 days ago&#39;</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%S<span class="k">)</span><span class="s2">&#39;].[ImageId,Name,CreationDate]&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Deregister old AMI (after confirming no launch templates reference it)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>deregister-image<span class="w"> </span>--image-id<span class="w"> </span>&lt;ami-xxxx&gt;
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>aws<span class="w"> </span>ec2<span class="w"> </span>delete-snapshot<span class="w"> </span>--snapshot-id<span class="w"> </span>&lt;snap-xxxx&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create AMI from running instance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-image<span class="w"> </span>--instance-id<span class="w"> </span>&lt;i-xxxx&gt;<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;prod-app-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>--no-reboot
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List old AMIs (older than 90 days)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-images<span class="w"> </span>--owners<span class="w"> </span>self<span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;Images[?CreationDate&lt;=&#39;</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;90 days ago&#39;</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%S<span class="k">)</span><span class="s2">&#39;].[ImageId,Name,CreationDate]&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Deregister old AMI (after confirming no launch templates reference it)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>deregister-image<span class="w"> </span>--image-id<span class="w"> </span>&lt;ami-xxxx&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>aws<span class="w"> </span>ec2<span class="w"> </span>delete-snapshot<span class="w"> </span>--snapshot-id<span class="w"> </span>&lt;snap-xxxx&gt;
 </code></pre></div>
 <h2 id="lambda-runtime-deprecation">Lambda Runtime Deprecation<a class="headerlink" href="#lambda-runtime-deprecation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List Lambda functions by runtime</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>lambda<span class="w"> </span>list-functions<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;Functions[*].[FunctionName,Runtime]&#39;</span><span class="w"> </span>--output<span class="w"> </span>table<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Update runtime (requires testing)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>aws<span class="w"> </span>lambda<span class="w"> </span>update-function-configuration<span class="w"> </span>--function-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--runtime<span class="w"> </span>python3.12
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List Lambda functions by runtime</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>lambda<span class="w"> </span>list-functions<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;Functions[*].[FunctionName,Runtime]&#39;</span><span class="w"> </span>--output<span class="w"> </span>table<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Update runtime (requires testing)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>aws<span class="w"> </span>lambda<span class="w"> </span>update-function-configuration<span class="w"> </span>--function-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--runtime<span class="w"> </span>python3.12
 </code></pre></div>
 <p>Check deprecation dates: <a href="https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html">AWS Lambda runtimes</a> — review quarterly.</p>
 <h2 id="eks-upgrade">EKS Upgrade<a class="headerlink" href="#eks-upgrade" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check current EKS version</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-cluster<span class="w"> </span>--name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;cluster.version&#39;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># List available upgrade versions</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-addon-versions<span class="w"> </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.30
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Upgrade cluster control plane</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>aws<span class="w"> </span>eks<span class="w"> </span>update-cluster-version<span class="w"> </span>--name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.30
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Upgrade node groups after control plane</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>aws<span class="w"> </span>eks<span class="w"> </span>update-nodegroup-version<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span>--nodegroup-name<span class="w"> </span>&lt;nodegroup-name&gt;<span class="w"> </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check current EKS version</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-cluster<span class="w"> </span>--name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;cluster.version&#39;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># List available upgrade versions</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-addon-versions<span class="w"> </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.30
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Upgrade cluster control plane</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>aws<span class="w"> </span>eks<span class="w"> </span>update-cluster-version<span class="w"> </span>--name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.30
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Upgrade node groups after control plane</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>aws<span class="w"> </span>eks<span class="w"> </span>update-nodegroup-version<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span>--nodegroup-name<span class="w"> </span>&lt;nodegroup-name&gt;<span class="w"> </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.30
 </code></pre></div>
 <p>EKS support policy: N-2 minor versions. Cluster running unsupported version → no patches or support.</p>
 <h2 id="account-decommissioning">Account Decommissioning<a class="headerlink" href="#account-decommissioning" title="Permanent link">&para;</a></h2>
@@ -4617,12 +4579,12 @@
 <li>Update CMDB; remove from monitoring inventory</li>
 </ol>
 <h2 id="reserved-instance-management">Reserved Instance Management<a class="headerlink" href="#reserved-instance-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check RI utilisation</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>ce<span class="w"> </span>get-reservation-utilization<span class="w"> </span>--time-period<span class="w"> </span><span class="nv">Start</span><span class="o">=</span><span class="m">2026</span>-01-01,End<span class="o">=</span><span class="m">2026</span>-01-31
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># List expiring RIs</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-reserved-instances<span class="w"> </span>--filters<span class="w"> </span><span class="s2">&quot;Name=state,Values=active&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>--query<span class="w"> </span><span class="s2">&quot;ReservedInstances[?End&lt;=&#39;</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;+90 days&#39;</span><span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">T23:59:59&#39;].[ReservedInstancesId,InstanceType,End]&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check RI utilisation</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>aws<span class="w"> </span>ce<span class="w"> </span>get-reservation-utilization<span class="w"> </span>--time-period<span class="w"> </span><span class="nv">Start</span><span class="o">=</span><span class="m">2026</span>-01-01,End<span class="o">=</span><span class="m">2026</span>-01-31
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># List expiring RIs</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-reserved-instances<span class="w"> </span>--filters<span class="w"> </span><span class="s2">&quot;Name=state,Values=active&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>--query<span class="w"> </span><span class="s2">&quot;ReservedInstances[?End&lt;=&#39;</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;+90 days&#39;</span><span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">T23:59:59&#39;].[ReservedInstancesId,InstanceType,End]&quot;</span>
 </code></pre></div>
 <p>Alert 90 days before RI expiry — initiate renewal or Savings Plan conversion.</p>
 

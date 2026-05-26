@@ -5151,30 +5151,6 @@
 
 
 <h1 id="maintenance-risk-validation">Maintenance Risk Validation<a class="headerlink" href="#maintenance-risk-validation" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────── Pre-Maintenance Risk Validation: Gate Checks ──────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                 │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Gate 1: vSAN health                                                            │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ├── esxcli vsan health cluster get ── all green?                              │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ├── esxcli vsan debug resync list  ── empty (0 bytes resyncing)?              │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  └── Get-VsanSpaceUsage            ── free capacity &gt; 30%?                     │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│       │ PASS                                                                    │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│       ▼                                                                         │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  Gate 2: Cluster and host state                                                 │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  ├── All hosts Connected + PoweredOn?                                           │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  ├── No critical active alarms on cluster/hosts?                                │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  └── All disk groups healthy (no degraded vSAN disks)?                          │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│       │ PASS                                                                    │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│       ▼                                                                         │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Gate 3: Operations readiness                                                   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  ├── DRS mode = FullyAutomated (VMs must migrate during MM)?                    │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  ├── HA admission control enabled?                                              │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  ├── All network uplinks Up (esxcli network nic list)?                          │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  └── VMs backed up within RPO window?                                           │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│       │ ALL PASS                                                                │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│       ▼                                                                         │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Set-VMHost -VMHost &lt;hostname&gt; -State Maintenance   ──► proceed safely          │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>└────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
 <p>Validate cluster health before any maintenance window. All checks must pass before placing a host into maintenance mode or performing upgrades. Use the tables below as a structured pre-flight checklist.</p>
 <hr />
 <h2 id="pre-maintenance-validation">Pre-Maintenance Validation<a class="headerlink" href="#pre-maintenance-validation" title="Permanent link">&para;</a></h2>
@@ -5385,8 +5361,8 @@
 </table>
 <p>Once all items are verified, proceed with: <code>Set-VMHost -VMHost &lt;hostname&gt; -State Maintenance</code></p>
 <p>After the host enters maintenance mode, confirm with:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">PowerState</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># Expected: ConnectionState: Maintenance</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">PowerState</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># Expected: ConnectionState: Maintenance</span>
 </code></pre></div>
 
 

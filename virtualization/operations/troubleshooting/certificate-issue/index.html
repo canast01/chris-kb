@@ -4000,58 +4000,25 @@
 <blockquote>
 <p>Part of the <a href="../">Troubleshooting</a> hub.</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                  CERTIFICATE ISSUE TRIAGE FLOW                  │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>└──────────────────────────┬──────────────────────────────────────┘
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                           │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>              ┌────────────▼────────────┐
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>              │  Symptom: Browser warn  │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>              │  Login fail / API error │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>              │  Integration broken     │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>              └────────────┬────────────┘
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                           │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>              ┌────────────▼────────────┐
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>              │  Identify Component     │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>              │  VCSA Machine SSL       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>              │  STS / VMCA / ESXi host │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>              │  NSX / Aria cert        │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>              └────────────┬────────────┘
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>                           │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>           ┌───────────────┼───────────────┐
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>           ▼               ▼               ▼
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    ┌──────────┐    ┌──────────┐    ┌──────────────┐
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    │ Expired? │    │ Thumbprt │    │  CA Untrusted│
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    │ Renew via│    │ Mismatch?│    │  Push root   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    │ VAMI/CLI │    │ Re-register│  │  to clients  │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    └────┬─────┘    └────┬─────┘    └──────┬───────┘
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>         └───────────────┴──────────────────┘
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>                          │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>              ┌───────────▼───────────┐
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>              │  Validate             │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>              │  Browser clean        │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>              │  Integrations OK      │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>              │  Update cert inventory│
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>              └───────────────────────┘
-</code></pre></div>
 <hr />
 <h2 id="quick-diagnosis">Quick Diagnosis<a class="headerlink" href="#quick-diagnosis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check vCenter certificate expiry (run from VCSA shell)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">for</span><span class="w"> </span>store<span class="w"> </span><span class="k">in</span><span class="w"> </span>MACHINE_SSL_CERT<span class="w"> </span>VMCA_ROOT<span class="w"> </span>data-encipherment<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="nv">$store</span><span class="s2"> ===&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span><span class="nv">$store</span><span class="w"> </span>--text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Not After&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">done</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check current Machine SSL cert expiry via OpenSSL</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check vCenter certificate expiry (run from VCSA shell)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">for</span><span class="w"> </span>store<span class="w"> </span><span class="k">in</span><span class="w"> </span>MACHINE_SSL_CERT<span class="w"> </span>VMCA_ROOT<span class="w"> </span>data-encipherment<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="nv">$store</span><span class="s2"> ===&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span><span class="nv">$store</span><span class="w"> </span>--text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Not After&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">done</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check current Machine SSL cert expiry via OpenSSL</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
 </code></pre></div>
 <hr />
 <h2 id="browser-certificate-warning-on-vcenter-login">Browser Certificate Warning on vCenter Login<a class="headerlink" href="#browser-certificate-warning-on-vcenter-login" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Browser shows <code>NET::ERR_CERT_AUTHORITY_INVALID</code> or an untrusted certificate warning when opening the vCenter FQDN.</p>
 <p><strong>Likely cause:</strong> Machine SSL certificate is self-signed, expired, or the CA is not trusted by the browser.</p>
 <p><strong>Step 1 — Check expiry:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
 </code></pre></div>
 <p><strong>Step 2 — Renew via VAMI if expired:</strong></p>
 <ol>
@@ -4063,11 +4030,11 @@
 <hr />
 <h2 id="login-failure-after-certificate-renewal">Login Failure After Certificate Renewal<a class="headerlink" href="#login-failure-after-certificate-renewal" title="Permanent link">&para;</a></h2>
 <p>Renewing the Machine SSL cert can break SSO if the STS (Security Token Service) certificate is also expired or not updated.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check STS signing certificate expiry</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>TRUSTED_ROOTS<span class="w"> </span>--text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Not After&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Restart all vCenter services after cert changes</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>service-control<span class="w"> </span>--start<span class="w"> </span>--all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check STS signing certificate expiry</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>TRUSTED_ROOTS<span class="w"> </span>--text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Not After&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Restart all vCenter services after cert changes</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>service-control<span class="w"> </span>--start<span class="w"> </span>--all
 </code></pre></div>
 <p><strong>If STS cert is expired</strong> — this requires special remediation:</p>
 <ol>
@@ -4081,8 +4048,8 @@
 <p><strong>Affected integrations:</strong> Aria Operations, Aria Ops for Logs, Veeam, SRM, NSX, Horizon.</p>
 <p>When the Machine SSL cert is replaced, products registered against the old thumbprint will fail.</p>
 <p><strong>Step 1 — Get current cert thumbprint:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-fingerprint<span class="w"> </span>-sha256<span class="w"> </span>-noout
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-fingerprint<span class="w"> </span>-sha256<span class="w"> </span>-noout
 </code></pre></div>
 <p><strong>Step 2 — Re-register or accept the new certificate in each product:</strong></p>
 <table>
@@ -4113,9 +4080,9 @@
 </table>
 <hr />
 <h2 id="nsx-certificate-thumbprint-mismatch">NSX Certificate Thumbprint Mismatch<a class="headerlink" href="#nsx-certificate-thumbprint-mismatch" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check compute manager status via NSX API</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>GET<span class="w"> </span>/api/v1/fabric/compute-managers
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Look for connection_status — should be &quot;UP&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check compute manager status via NSX API</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>GET<span class="w"> </span>/api/v1/fabric/compute-managers
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Look for connection_status — should be &quot;UP&quot;</span>
 </code></pre></div>
 <p>If the thumbprint mismatch persists after resync:
 1. Remove the compute manager from NSX Manager (Infrastructure → vCenter Server → Delete).
@@ -4124,17 +4091,17 @@
 <hr />
 <h2 id="esxi-host-certificate-issues">ESXi Host Certificate Issues<a class="headerlink" href="#esxi-host-certificate-issues" title="Permanent link">&para;</a></h2>
 <p>ESXi host certificates can expire independently. An expired host cert causes vCenter warnings, breaks vSAN encryption, and can disrupt HA heartbeats.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check ESXi host cert expiry from the host CLI</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;esxi-fqdn&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check ESXi host cert expiry from the host CLI</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;esxi-fqdn&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
 </code></pre></div>
 <p><strong>Renew from vCenter UI:</strong>
 - Select host → Configure → Certificate → Renew</p>
 <p><strong>Bulk renewal via VCSA certificate-manager:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On VCSA — renew all host certificates (re-issues via VMCA)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>/usr/lib/vmware-vmca/bin/certificate-manager
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Choose option 3 — Replace Machine SSL certificate with VMCA Certificate</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Or option 8 — Reset all certificates (use only in break-glass scenarios)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On VCSA — renew all host certificates (re-issues via VMCA)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Choose option 3 — Replace Machine SSL certificate with VMCA Certificate</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Or option 8 — Reset all certificates (use only in break-glass scenarios)</span>
 </code></pre></div>
 <hr />
 <h2 id="certificate-expiry-monitoring">Certificate Expiry Monitoring<a class="headerlink" href="#certificate-expiry-monitoring" title="Permanent link">&para;</a></h2>
@@ -4165,10 +4132,10 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># PowerCLI — quick check on vCenter Machine SSL expiry</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">$certBytes</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">vcenter-fqdn</span><span class="p">&gt;).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Certificate</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="no">[System.Security.Cryptography.X509Certificates.X509Certificate2]</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="no">[byte[]]</span><span class="nv">$certBytes</span><span class="p">)</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nv">$cert</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Subject</span><span class="p">,</span> <span class="n">NotBefore</span><span class="p">,</span> <span class="n">NotAfter</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># PowerCLI — quick check on vCenter Machine SSL expiry</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$certBytes</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">vcenter-fqdn</span><span class="p">&gt;).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Certificate</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="no">[System.Security.Cryptography.X509Certificates.X509Certificate2]</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="no">[byte[]]</span><span class="nv">$certBytes</span><span class="p">)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nv">$cert</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Subject</span><span class="p">,</span> <span class="n">NotBefore</span><span class="p">,</span> <span class="n">NotAfter</span>
 </code></pre></div>
 
 

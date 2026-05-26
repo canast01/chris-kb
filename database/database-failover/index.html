@@ -3435,23 +3435,6 @@
 
 <h1 id="database-failover-procedure">Database Failover Procedure<a class="headerlink" href="#database-failover-procedure" title="Permanent link">&para;</a></h1>
 <p>Promote a standby/replica database to primary when the primary becomes unavailable. Follow the appropriate section for each platform.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│ Primary Fails    │   │ Replica Promoted │   │  DNS Updated     │   │ App Reconnects  │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                  │   │                  │   │                  │   │                 │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│ Confirm failure  │   │ pg_ctl promote   │   │ CNAME / VIP /    │   │ Connection pool │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│ from multiple    │──►│ RESET SLAVE ALL  │──►│ ProxySQL backend │──►│ flush / bounce  │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│ paths; check lag │   │ AG FAILOVER      │   │ updated to new   │   │ App health chk  │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                  │   │ Patroni failover │   │ primary host     │   │ returns 200     │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>└──────────────────┘   └──────────────────┘   └──────────────────┘   └─────────────────┘
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                                                                               │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                                                                      ┌────────┘
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                                                                      ▼
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                                                             ┌────────────────┐
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                                                             │ Rebuild old    │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                                                             │ primary as new │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>                                                             │ replica        │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>                                                             └────────────────┘
-</code></pre></div>
 <h2 id="pre-failover-checklist">Pre-Failover Checklist<a class="headerlink" href="#pre-failover-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Primary failure confirmed (not a network partition — verify from multiple paths)</li>
@@ -3461,88 +3444,88 @@
 <li>[ ] Rollback path documented (if primary recovers)</li>
 </ul>
 <h2 id="postgresql-streaming-replication-failover">PostgreSQL — Streaming Replication Failover<a class="headerlink" href="#postgresql-streaming-replication-failover" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On STANDBY — check replication lag before promoting</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag;&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Promote standby to primary</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pg_ctl<span class="w"> </span>promote<span class="w"> </span>-D<span class="w"> </span>/var/lib/postgresql/data
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># or PostgreSQL 12+:</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>touch<span class="w"> </span>/var/lib/postgresql/data/promote_standby
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Verify promotion</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_is_in_recovery();&quot;</span><span class="w">  </span><span class="c1"># should return &#39;f&#39; (false)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT now() AS current_time;&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Update application connection string / DNS to point at new primary</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On STANDBY — check replication lag before promoting</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag;&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Promote standby to primary</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pg_ctl<span class="w"> </span>promote<span class="w"> </span>-D<span class="w"> </span>/var/lib/postgresql/data
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># or PostgreSQL 12+:</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>touch<span class="w"> </span>/var/lib/postgresql/data/promote_standby
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Verify promotion</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_is_in_recovery();&quot;</span><span class="w">  </span><span class="c1"># should return &#39;f&#39; (false)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT now() AS current_time;&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Update application connection string / DNS to point at new primary</span>
 </code></pre></div>
 <h3 id="postgresql-patroni-ha-cluster">PostgreSQL — Patroni (HA cluster)<a class="headerlink" href="#postgresql-patroni-ha-cluster" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View cluster state</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>patronictl<span class="w"> </span>-c<span class="w"> </span>/etc/patroni/config.yml<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Manual failover to specific member</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>patronictl<span class="w"> </span>-c<span class="w"> </span>/etc/patroni/config.yml<span class="w"> </span>failover<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>--master<span class="w"> </span>&lt;old-primary&gt;<span class="w"> </span>--candidate<span class="w"> </span>&lt;new-primary&gt;
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Switchover (graceful — zero data loss)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>patronictl<span class="w"> </span>-c<span class="w"> </span>/etc/patroni/config.yml<span class="w"> </span>switchover<span class="w"> </span>&lt;cluster-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># View cluster state</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>patronictl<span class="w"> </span>-c<span class="w"> </span>/etc/patroni/config.yml<span class="w"> </span>list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Manual failover to specific member</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>patronictl<span class="w"> </span>-c<span class="w"> </span>/etc/patroni/config.yml<span class="w"> </span>failover<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>--master<span class="w"> </span>&lt;old-primary&gt;<span class="w"> </span>--candidate<span class="w"> </span>&lt;new-primary&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Switchover (graceful — zero data loss)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>patronictl<span class="w"> </span>-c<span class="w"> </span>/etc/patroni/config.yml<span class="w"> </span>switchover<span class="w"> </span>&lt;cluster-name&gt;
 </code></pre></div>
 <h2 id="mysql-mariadb-replica-promotion">MySQL / MariaDB — Replica Promotion<a class="headerlink" href="#mysql-mariadb-replica-promotion" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On REPLICA — stop replication and capture position</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;STOP SLAVE;&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW SLAVE STATUS\G&quot;</span><span class="w">  </span><span class="c1"># note Exec_Master_Log_Pos</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Reset replica to become new primary</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;RESET SLAVE ALL;&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;RESET MASTER;&quot;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Enable writes (if read_only was set)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SET GLOBAL read_only = OFF;&quot;</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SET GLOBAL super_read_only = OFF;&quot;</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Re-point application connection (update DNS / HAProxy / ProxySQL backend)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On REPLICA — stop replication and capture position</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;STOP SLAVE;&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW SLAVE STATUS\G&quot;</span><span class="w">  </span><span class="c1"># note Exec_Master_Log_Pos</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Reset replica to become new primary</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;RESET SLAVE ALL;&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;RESET MASTER;&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Enable writes (if read_only was set)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SET GLOBAL read_only = OFF;&quot;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SET GLOBAL super_read_only = OFF;&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Re-point application connection (update DNS / HAProxy / ProxySQL backend)</span>
 </code></pre></div>
 <h3 id="mysql-mha-master-high-availability">MySQL — MHA (Master High Availability)<a class="headerlink" href="#mysql-mha-master-high-availability" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Automatic failover — check MHA status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>masterha_check_repl<span class="w"> </span>--conf<span class="o">=</span>/etc/mha/app.conf
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Manual failover</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>masterha_master_switch<span class="w"> </span>--conf<span class="o">=</span>/etc/mha/app.conf<span class="w"> </span>--master_state<span class="o">=</span>dead<span class="w"> </span>--new_master_host<span class="o">=</span>&lt;replica-host&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Automatic failover — check MHA status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>masterha_check_repl<span class="w"> </span>--conf<span class="o">=</span>/etc/mha/app.conf
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Manual failover</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>masterha_master_switch<span class="w"> </span>--conf<span class="o">=</span>/etc/mha/app.conf<span class="w"> </span>--master_state<span class="o">=</span>dead<span class="w"> </span>--new_master_host<span class="o">=</span>&lt;replica-host&gt;
 </code></pre></div>
 <h2 id="sql-server-always-on-availability-group">SQL Server — Always On Availability Group<a class="headerlink" href="#sql-server-always-on-availability-group" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- Check AG health before failover</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">replica_server_name</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">role_desc</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">synchronization_health_desc</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_hadr_availability_replica_states</span><span class="w"> </span><span class="n">rs</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_replicas</span><span class="w"> </span><span class="n">ar</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">replica_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">replica_id</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_groups</span><span class="w"> </span><span class="n">ag</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">group_id</span><span class="p">;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1">-- Manual failover to synchronous replica (no data loss)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">AVAILABILITY</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="p">[</span><span class="n">AG_Name</span><span class="p">]</span><span class="w"> </span><span class="n">FAILOVER</span><span class="p">;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1">-- Forced failover (async replica — possible data loss; only if synchronous unavailable)</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">AVAILABILITY</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="p">[</span><span class="n">AG_Name</span><span class="p">]</span><span class="w"> </span><span class="n">FORCE_FAILOVER_ALLOW_DATA_LOSS</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- Check AG health before failover</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">replica_server_name</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">role_desc</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">synchronization_health_desc</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_hadr_availability_replica_states</span><span class="w"> </span><span class="n">rs</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_replicas</span><span class="w"> </span><span class="n">ar</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">replica_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">replica_id</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_groups</span><span class="w"> </span><span class="n">ag</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">group_id</span><span class="p">;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">-- Manual failover to synchronous replica (no data loss)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">AVAILABILITY</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="p">[</span><span class="n">AG_Name</span><span class="p">]</span><span class="w"> </span><span class="n">FAILOVER</span><span class="p">;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1">-- Forced failover (async replica — possible data loss; only if synchronous unavailable)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">AVAILABILITY</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="p">[</span><span class="n">AG_Name</span><span class="p">]</span><span class="w"> </span><span class="n">FORCE_FAILOVER_ALLOW_DATA_LOSS</span><span class="p">;</span>
 </code></pre></div>
 <h2 id="sql-server-failover-cluster-instance-fci">SQL Server — Failover Cluster Instance (FCI)<a class="headerlink" href="#sql-server-failover-cluster-instance-fci" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Check cluster node status</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-ClusterNode</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Move SQL Server resource group to another node</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Move-ClusterGroup</span> <span class="n">-Name</span> <span class="s2">&quot;SQL Server (MSSQLSERVER)&quot;</span> <span class="n">-Node</span> <span class="p">&lt;</span><span class="n">target-node</span><span class="p">&gt;</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># Verify</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">Get-ClusterGroup</span> <span class="n">-Name</span> <span class="s2">&quot;SQL Server (MSSQLSERVER)&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">OwnerNode</span><span class="p">,</span> <span class="n">State</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check cluster node status</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-ClusterNode</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Move SQL Server resource group to another node</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Move-ClusterGroup</span> <span class="n">-Name</span> <span class="s2">&quot;SQL Server (MSSQLSERVER)&quot;</span> <span class="n">-Node</span> <span class="p">&lt;</span><span class="n">target-node</span><span class="p">&gt;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Verify</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Get-ClusterGroup</span> <span class="n">-Name</span> <span class="s2">&quot;SQL Server (MSSQLSERVER)&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">OwnerNode</span><span class="p">,</span> <span class="n">State</span>
 </code></pre></div>
 <h2 id="post-failover-validation">Post-Failover Validation<a class="headerlink" href="#post-failover-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Verify new primary accepting writes</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>&lt;new-primary&gt;<span class="w"> </span>-U<span class="w"> </span>appuser<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;INSERT INTO health_check(ts) VALUES (now());&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>mysql<span class="w"> </span>-h<span class="w"> </span>&lt;new-primary&gt;<span class="w"> </span>-u<span class="w"> </span>appuser<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;INSERT INTO health_check(ts) VALUES(now());&quot;</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Application connectivity</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>curl<span class="w"> </span>-sf<span class="w"> </span>https://&lt;app-endpoint&gt;/health<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Check for open transactions / locks</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># PostgreSQL</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pid, state, wait_event_type, query FROM pg_stat_activity WHERE state != &#39;idle&#39;;&quot;</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># SQL Server</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>SELECT<span class="w"> </span>session_id,<span class="w"> </span>blocking_session_id,<span class="w"> </span>wait_type,<span class="w"> </span>wait_time<span class="w"> </span>FROM<span class="w"> </span>sys.dm_exec_requests<span class="w"> </span>WHERE<span class="w"> </span>blocking_session_id<span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify new primary accepting writes</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>&lt;new-primary&gt;<span class="w"> </span>-U<span class="w"> </span>appuser<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;INSERT INTO health_check(ts) VALUES (now());&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>mysql<span class="w"> </span>-h<span class="w"> </span>&lt;new-primary&gt;<span class="w"> </span>-u<span class="w"> </span>appuser<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;INSERT INTO health_check(ts) VALUES(now());&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Application connectivity</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>curl<span class="w"> </span>-sf<span class="w"> </span>https://&lt;app-endpoint&gt;/health<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Check for open transactions / locks</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># PostgreSQL</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pid, state, wait_event_type, query FROM pg_stat_activity WHERE state != &#39;idle&#39;;&quot;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># SQL Server</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>SELECT<span class="w"> </span>session_id,<span class="w"> </span>blocking_session_id,<span class="w"> </span>wait_type,<span class="w"> </span>wait_time<span class="w"> </span>FROM<span class="w"> </span>sys.dm_exec_requests<span class="w"> </span>WHERE<span class="w"> </span>blocking_session_id<span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
 </code></pre></div>
 <h2 id="post-failover-actions">Post-Failover Actions<a class="headerlink" href="#post-failover-actions" title="Permanent link">&para;</a></h2>
 <ol>

@@ -5184,31 +5184,6 @@
 
 
 <h1 id="network-packet-loss-validation">Network Packet Loss Validation<a class="headerlink" href="#network-packet-loss-validation" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────── Network Packet Loss Triage Path ───────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                 │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Symptom: packet drops / slow vMotion / vSAN network errors                     │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│       │                                                                         │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│       ▼                                                                         │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  NIC level (physical)                                                           │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  ├── esxcli network nic stats get -n vmnicX ── RX/TX dropped/errors/CRC?       │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  └── CRC errors ──► replace cable or SFP                                        │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│       │ no NIC errors                                                            │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│       ▼                                                                         │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  vSwitch / portgroup                                                            │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  ├── VMkernel tagging correct (mgmt/vSAN/vMotion on right VLAN)?                │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  ├── VLAN ID mismatch? ── Get-VirtualPortGroup ── check VLanId                  │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  └── Uplink saturation? ── esxtop &#39;n&#39; view ── TX/RX util &gt; 80%?                │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│       │ no switch issues                                                         │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│       ▼                                                                         │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  MTU                                                                            │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  ├── vmkping -I vmk2 -d -s 8972 &lt;peer&gt;  ── jumbo frames work end-to-end?       │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  └── Failure ──► align MTU on vSwitch + physical switch ports                  │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│       │ MTU OK                                                                   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│       ▼                                                                         │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  CDP/LLDP &amp; spanning tree                                                       │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  └── PortFast on host-facing switch ports? ── STP topology change = loss        │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
 <h2 id="symptoms">Symptoms<a class="headerlink" href="#symptoms" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -5241,47 +5216,47 @@
 </tbody>
 </table>
 <h2 id="nic-statistics">NIC Statistics<a class="headerlink" href="#nic-statistics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Per-NIC stats including drops, errors, and CRC errors</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic0
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic1
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Key counters to check</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># RX/TX dropped   — driver ring buffer overflow</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># RX/TX errors    — physical layer (cable, SFP, switch)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># RX/TX CRC       — physical layer corruption</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># List all NICs and link state</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Per-NIC stats including drops, errors, and CRC errors</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic0
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic1
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Key counters to check</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># RX/TX dropped   — driver ring buffer overflow</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># RX/TX errors    — physical layer (cable, SFP, switch)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># RX/TX CRC       — physical layer corruption</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List all NICs and link state</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list
 </code></pre></div>
 <h2 id="vmkping-reachability-and-mtu-testing">vmkping — Reachability and MTU Testing<a class="headerlink" href="#vmkping-reachability-and-mtu-testing" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Basic ping from a VMkernel adapter</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk0<span class="w"> </span>&lt;destination_ip&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Large packet test (MTU validation — 8972 bytes = 9000 MTU minus headers)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk0<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;destination_ip&gt;
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># vSAN VMkernel MTU test</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;peer_vsan_vmk_ip&gt;
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># vMotion VMkernel latency test</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>-c<span class="w"> </span><span class="m">100</span><span class="w"> </span>&lt;target_host_vmk1_ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Basic ping from a VMkernel adapter</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk0<span class="w"> </span>&lt;destination_ip&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Large packet test (MTU validation — 8972 bytes = 9000 MTU minus headers)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk0<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;destination_ip&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># vSAN VMkernel MTU test</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;peer_vsan_vmk_ip&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># vMotion VMkernel latency test</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>-c<span class="w"> </span><span class="m">100</span><span class="w"> </span>&lt;target_host_vmk1_ip&gt;
 </code></pre></div>
 <p>Packet loss should always be <strong>zero</strong>. Any loss requires investigation before proceeding with maintenance.</p>
 <h2 id="powercli-network-checks">PowerCLI Network Checks<a class="headerlink" href="#powercli-network-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Physical NIC link state for all hosts in a cluster</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;&lt;cluster&gt;&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nv">$h</span> <span class="p">=</span> <span class="nv">$_</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nb">Get-VMHostNetworkAdapter</span> <span class="n">-VMHost</span> <span class="nv">$h</span> <span class="n">-Physical</span> <span class="p">|</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Host&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$h</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="n">Name</span><span class="p">,</span> <span class="n">BitRatePerSec</span><span class="p">,</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;LinkUp&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">LinkSpeed</span> <span class="o">-ne</span> <span class="nv">$null</span><span class="p">}}</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">}</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># VMkernel adapters and their tagging</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">Get-VMHostNetworkAdapter</span> <span class="n">-VMHost</span> <span class="s2">&quot;&lt;host&gt;&quot;</span> <span class="n">-VMKernel</span> <span class="p">|</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">IP</span><span class="p">,</span> <span class="n">VMotionEnabled</span><span class="p">,</span> <span class="n">ManagementTrafficEnabled</span><span class="p">,</span> <span class="n">VsanTrafficEnabled</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c"># Portgroup VLAN assignments</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nb">Get-VirtualPortGroup</span> <span class="n">-VMHost</span> <span class="s2">&quot;&lt;host&gt;&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VLanId</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Physical NIC link state for all hosts in a cluster</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;&lt;cluster&gt;&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nv">$h</span> <span class="p">=</span> <span class="nv">$_</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nb">Get-VMHostNetworkAdapter</span> <span class="n">-VMHost</span> <span class="nv">$h</span> <span class="n">-Physical</span> <span class="p">|</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Host&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$h</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="n">Name</span><span class="p">,</span> <span class="n">BitRatePerSec</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;LinkUp&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">LinkSpeed</span> <span class="o">-ne</span> <span class="nv">$null</span><span class="p">}}</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">}</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># VMkernel adapters and their tagging</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Get-VMHostNetworkAdapter</span> <span class="n">-VMHost</span> <span class="s2">&quot;&lt;host&gt;&quot;</span> <span class="n">-VMKernel</span> <span class="p">|</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">IP</span><span class="p">,</span> <span class="n">VMotionEnabled</span><span class="p">,</span> <span class="n">ManagementTrafficEnabled</span><span class="p">,</span> <span class="n">VsanTrafficEnabled</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># Portgroup VLAN assignments</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nb">Get-VirtualPortGroup</span> <span class="n">-VMHost</span> <span class="s2">&quot;&lt;host&gt;&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VLanId</span>
 </code></pre></div>
 <h2 id="common-causes-and-fixes">Common Causes and Fixes<a class="headerlink" href="#common-causes-and-fixes" title="Permanent link">&para;</a></h2>
 <table>
@@ -5326,11 +5301,11 @@
 </tbody>
 </table>
 <h2 id="ongoing-monitoring">Ongoing Monitoring<a class="headerlink" href="#ongoing-monitoring" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Watch NIC stats (refresh every 2s)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="s2">&quot;esxcli network nic stats get -n vmnic0 | grep -E &#39;Dropped|Error|CRC&#39;&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Or use esxtop for real-time network metrics</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxtop<span class="w">   </span><span class="c1"># press &#39;n&#39; to switch to network view</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Watch NIC stats (refresh every 2s)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="s2">&quot;esxcli network nic stats get -n vmnic0 | grep -E &#39;Dropped|Error|CRC&#39;&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Or use esxtop for real-time network metrics</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxtop<span class="w">   </span><span class="c1"># press &#39;n&#39; to switch to network view</span>
 </code></pre></div>
 
 

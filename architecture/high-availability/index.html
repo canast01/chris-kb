@@ -3493,31 +3493,6 @@
 
 
 <h1 id="high-availability-design">High Availability Design<a class="headerlink" href="#high-availability-design" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                    HA Layers — Defence in Depth                    │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                                    │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Layer 1: Compute HA                                               │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐                 │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  ESXi Host  │  │  ESXi Host  │  │  ESXi Host  │  vSphere HA     │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │   (active)  │  │   (active)  │  │  (+1 spare) │  Admission      │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  └──────┬──────┘  └──────┬──────┘  └─────────────┘  Control        │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│         │                │                                         │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  Layer 2: Storage HA                                               │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  ┌──────▼──────────────────────────────────────┐                   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │  vSAN / RAID (FTT=1/2)  ·  Dual Fabric HBA  │  Array MPIO       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  └──────────────────────────────────────────────┘                  │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                    │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Layer 3: Network HA                                               │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  ┌──────────────────────────────────────────────┐                  │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  │  NIC Teaming (LACP)  ·  Dual ToR  ·  vPC     │  No STP block    │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  └──────────────────────────────────────────────┘                  │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                    │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Layer 4: Site HA (DR)                                             │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  ┌──────────────┐        ┌──────────────┐                          │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  │  Primary DC  │◄──────►│   DR Site    │  SRM / SRDF / RP         │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  └──────────────┘  repl  └──────────────┘                          │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
 <p><img alt="High Availability Design Overview" src="../../assets/high-availability-design-overview.svg" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>High availability (HA) is the discipline of engineering systems so that service disruptions — whether caused by hardware failure, software faults, planned maintenance, or network events — are either invisible to end users or resolved within a predetermined recovery window. Enterprise HA design is not a single technique; it is a layered strategy that must be applied consistently across compute, storage, networking, and application tiers.</p>
@@ -3673,7 +3648,7 @@
 <h3 id="vsphere-ha-key-design-decisions">vSphere HA Key Design Decisions<a class="headerlink" href="#vsphere-ha-key-design-decisions" title="Permanent link">&para;</a></h3>
 <p><strong>Admission Control Policy</strong>
 Set admission control to reserve capacity for N host failures. For a 6-host cluster tolerating 1 failure, reserve 1/6 of total cluster resources (CPU + memory).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Reserved capacity = (1 / total_hosts) × cluster_resources
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Reserved capacity = (1 / total_hosts) × cluster_resources
 </code></pre></div>
 <p>For variable host sizes, use the "percentage of cluster resources" policy rather than "host failures cluster tolerates" to get accurate reservations.</p>
 <p><strong>Heartbeat Datastores</strong>

@@ -3418,62 +3418,47 @@
 
 <h1 id="capacity-forecasting">Capacity Forecasting<a class="headerlink" href="#capacity-forecasting" title="Permanent link">&para;</a></h1>
 <p>Capacity forecasting predicts when a resource will be exhausted based on historical trend data, enabling proactive expansion before impact occurs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  Collect Trend  │   │  Forecast Model  │   │ Threshold Alert  │   │   Plan Action   │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                 │   │                  │   │                  │   │                 │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│ CPU / Mem /     │──►│ Growth rate ×    │──►│ &gt;75% used OR     │──►│ Raise hardware  │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│ Disk snapshots  │   │ days to exhaust  │   │ &lt;60d to full     │   │ request / order │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│ (weekly/daily)  │   │                  │   │                  │   │ extra capacity  │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└─────────────────┘   └──────────────────┘   └──────────────────┘   └─────────────────┘
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>         │                     │                      │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>         │            ┌────────┴────────┐             │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>         │            │  Trend Store    │             ▼
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>         └───────────►│  (metrics DB /  │   ┌─────────────────┐
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                      │   log files)    │   │ Capacity Report │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                      └─────────────────┘   │ + Review Cycle  │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                                            └─────────────────┘
-</code></pre></div>
 <h2 id="forecasting-model">Forecasting Model<a class="headerlink" href="#forecasting-model" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Days to exhaustion = (Current capacity - Current usage) / Growth rate per day
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Days to exhaustion = (Current capacity - Current usage) / Growth rate per day
 </code></pre></div>
 <p>Use a 30–90 day trailing average for growth rate — avoid using peak outliers to inflate the rate.</p>
 <h2 id="data-collection">Data Collection<a class="headerlink" href="#data-collection" title="Permanent link">&para;</a></h2>
 <p><strong>Linux — capture weekly snapshots:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># CPU average (last 7 days via sar)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sar<span class="w"> </span>-u<span class="w"> </span>-f<span class="w"> </span>/var/log/sa/sa<span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;7 days ago&#39;</span><span class="w"> </span>+%d<span class="k">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-3
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Disk usage over time (append to trend file)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print strftime(&quot;%Y-%m-%d&quot;), $0}&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/capacity/disk-<span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span>.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># CPU average (last 7 days via sar)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sar<span class="w"> </span>-u<span class="w"> </span>-f<span class="w"> </span>/var/log/sa/sa<span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;7 days ago&#39;</span><span class="w"> </span>+%d<span class="k">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-3
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Disk usage over time (append to trend file)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print strftime(&quot;%Y-%m-%d&quot;), $0}&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/capacity/disk-<span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span>.log
 </code></pre></div></p>
 <p><strong>ONTAP — volume capacity trend:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Track weekly: write to external metrics store or pull via REST API</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Track weekly: write to external metrics store or pull via REST API</span>
 </code></pre></div></p>
 <p><strong>Pure FlashArray:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purecli<span class="w"> </span>volume<span class="w"> </span>list<span class="w"> </span>--space<span class="w">   </span><span class="c1"># per-volume capacity</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purecli<span class="w"> </span>array<span class="w"> </span>get<span class="w">             </span><span class="c1"># array-wide reduction ratio and used capacity</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>purecli<span class="w"> </span>volume<span class="w"> </span>list<span class="w"> </span>--space<span class="w">   </span><span class="c1"># per-volume capacity</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purecli<span class="w"> </span>array<span class="w"> </span>get<span class="w">             </span><span class="c1"># array-wide reduction ratio and used capacity</span>
 </code></pre></div></p>
 <h2 id="forecasting-by-resource-type">Forecasting by Resource Type<a class="headerlink" href="#forecasting-by-resource-type" title="Permanent link">&para;</a></h2>
 <h3 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Current usage and growth estimate</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/data
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Compare with last month&#39;s snapshot</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># If usage grows 50 GB/month and 200 GB free → 4 months to full</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># ONTAP aggregate capacity</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used,availsize
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Current usage and growth estimate</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/data
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Compare with last month&#39;s snapshot</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># If usage grows 50 GB/month and 200 GB free → 4 months to full</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># ONTAP aggregate capacity</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used,availsize
 </code></pre></div>
 <h3 id="compute-cpumemory">Compute (CPU/Memory)<a class="headerlink" href="#compute-cpumemory" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Average CPU over last 30 days from sar</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">for</span><span class="w"> </span>day<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>seq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">30</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>sar<span class="w"> </span>-u<span class="w"> </span>-f<span class="w"> </span>/var/log/sa/sa<span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$day</span><span class="s2"> days ago&quot;</span><span class="w"> </span>+%d<span class="k">)</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>awk<span class="w"> </span><span class="s1">&#39;/Average/ {print $3}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">done</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{sum+=$1; count++} END {print &quot;30d avg CPU:&quot;, sum/count &quot;%&quot;}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Average CPU over last 30 days from sar</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">for</span><span class="w"> </span>day<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>seq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">30</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>sar<span class="w"> </span>-u<span class="w"> </span>-f<span class="w"> </span>/var/log/sa/sa<span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$day</span><span class="s2"> days ago&quot;</span><span class="w"> </span>+%d<span class="k">)</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>awk<span class="w"> </span><span class="s1">&#39;/Average/ {print $3}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">done</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{sum+=$1; count++} END {print &quot;30d avg CPU:&quot;, sum/count &quot;%&quot;}&#39;</span>
 </code></pre></div>
 <h3 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Interface utilisation trend (sar)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sar<span class="w"> </span>-n<span class="w"> </span>DEV<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>eth0
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Historical: sar -n DEV -f /var/log/sa/saDD</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Interface utilisation trend (sar)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sar<span class="w"> </span>-n<span class="w"> </span>DEV<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>eth0
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Historical: sar -n DEV -f /var/log/sa/saDD</span>
 </code></pre></div>
 <h2 id="forecasting-thresholds">Forecasting Thresholds<a class="headerlink" href="#forecasting-thresholds" title="Permanent link">&para;</a></h2>
 <table>
@@ -3513,24 +3498,24 @@
 </tbody>
 </table>
 <h2 id="capacity-report-template">Capacity Report Template<a class="headerlink" href="#capacity-report-template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Date:          2026-05-06
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>System:        prod-storage-01 (ONTAP)
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Current Usage: 68% (34 TB / 50 TB)
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Growth rate:   ~400 GB/month (3-month avg)
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Days to 85%:   ~105 days (est. mid-August)
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Days to 100%:  ~180 days (est. November)
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Recommendation:
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  Order 20 TB additional capacity by July.
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  Submit hardware request by 2026-06-01 (6-week lead time).
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Date:          2026-05-06
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>System:        prod-storage-01 (ONTAP)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Current Usage: 68% (34 TB / 50 TB)
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Growth rate:   ~400 GB/month (3-month avg)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Days to 85%:   ~105 days (est. mid-August)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Days to 100%:  ~180 days (est. November)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Recommendation:
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  Order 20 TB additional capacity by July.
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  Submit hardware request by 2026-06-01 (6-week lead time).
 </code></pre></div>
 <h2 id="automation-monthly-report-script">Automation — Monthly Report Script<a class="headerlink" href="#automation-monthly-report-script" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="ch">#!/bin/bash</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Capacity Forecast </span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2"> ===&quot;</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; $5+0 &gt; 70 {print &quot;WARNING:&quot;, $6, &quot;at&quot;, $5}&#39;</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Storage volumes near capacity:&quot;</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Add ONTAP/Pure/array CLI calls here for production use</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Capacity Forecast </span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2"> ===&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; $5+0 &gt; 70 {print &quot;WARNING:&quot;, $6, &quot;at&quot;, $5}&#39;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Storage volumes near capacity:&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Add ONTAP/Pure/array CLI calls here for production use</span>
 </code></pre></div>
 
 

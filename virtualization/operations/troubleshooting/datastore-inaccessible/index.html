@@ -3978,50 +3978,18 @@
 <blockquote>
 <p>Part of the <a href="../">Troubleshooting</a> hub.</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│               DATASTORE INACCESSIBLE TRIAGE FLOW                │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>└──────────────────────────┬──────────────────────────────────────┘
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                           │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>              ┌────────────▼────────────┐
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>              │  Storage Path Check     │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>              │  esxcli storage nmp     │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>              │  path list -d &lt;naa.&gt;    │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>              └─────┬───────────┬───────┘
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                    │           │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>             APD ◄──┘           └──► PDL
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>             (recoverable)          (permanent)
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                    │                   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>     ┌──────────────▼──────┐   ┌────────▼──────────┐
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>     │  HBA / Fabric Check │   │  DO NOT rescan     │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>     │  SAN switch zoning  │   │  Escalate to       │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>     │  ISL / port errors  │   │  storage team      │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>     └──────────────┬──────┘   └────────────────────┘
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>                    │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>     ┌──────────────▼──────────────┐
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>     │  Array LUN Check            │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>     │  Controller state, masking  │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>     │  Port errors, LUN health    │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>     └──────────────┬──────────────┘
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>                    │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>     ┌──────────────▼──────────────┐
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>     │  Rescan &amp; Verify            │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>     │  esxcli storage core        │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>     │  adapter rescan -A all      │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>     │  Confirm datastores mounted │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>     └─────────────────────────────┘
-</code></pre></div>
 <hr />
 <h2 id="datastore-inaccessible-apd-vs-pdl">Datastore Inaccessible — APD vs PDL<a class="headerlink" href="#datastore-inaccessible-apd-vs-pdl" title="Permanent link">&para;</a></h2>
 <p>An inaccessible datastore is either <strong>APD (All Paths Down)</strong> — temporary, paths may recover — or <strong>PDL (Permanent Device Loss)</strong> — the storage array has returned SCSI sense codes indicating the LUN is gone.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From ESXi host — check path state for a specific device</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;naa.xxxx&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check for APD/PDL events in vmkernel log</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;APD\|PDL\|permanently&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Check datastore status from vCenter (PowerCLI)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Get-Datastore<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.State<span class="w"> </span>-ne<span class="w"> </span><span class="s2">&quot;Available&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>State
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From ESXi host — check path state for a specific device</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;naa.xxxx&gt;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Check for APD/PDL events in vmkernel log</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;APD\|PDL\|permanently&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Check datastore status from vCenter (PowerCLI)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Get-Datastore<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.State<span class="w"> </span>-ne<span class="w"> </span><span class="s2">&quot;Available&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>State
 </code></pre></div>
 <p><strong>APD resolution:</strong></p>
 <ol>
@@ -4030,10 +3998,10 @@
 <li>Check storage array for controller failover, LUN masking, or port errors.</li>
 <li>Rescan storage adapters from all affected hosts:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Rescan from ESXi CLI</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>-A<span class="w"> </span>all
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Or from vCenter — right-click cluster → Storage → Rescan Storage</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Rescan from ESXi CLI</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>-A<span class="w"> </span>all
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Or from vCenter — right-click cluster → Storage → Rescan Storage</span>
 </code></pre></div>
 <ol>
 <li>If paths recover, verify VMs resume I/O and check for filesystem consistency warnings.</li>
@@ -4048,9 +4016,9 @@
 <h2 id="datastore-full">Datastore Full<a class="headerlink" href="#datastore-full" title="Permanent link">&para;</a></h2>
 <p><strong>Step 1 — Identify top consumers from vCenter:</strong></p>
 <p>Right-click datastore → Browse → sort by file size. Or use PowerCLI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Find all snapshots across all VMs consuming space on a datastore</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Files</span><span class="p">.</span><span class="n">SnapshotDirectory</span> <span class="o">-like</span> <span class="s2">&quot;*DatastoreName*&quot;</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="nb">Select </span><span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeGB</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">SizeGB</span> <span class="n">-Descending</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Find all snapshots across all VMs consuming space on a datastore</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Files</span><span class="p">.</span><span class="n">SnapshotDirectory</span> <span class="o">-like</span> <span class="s2">&quot;*DatastoreName*&quot;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="nb">Select </span><span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeGB</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">SizeGB</span> <span class="n">-Descending</span>
 </code></pre></div>
 <p><strong>Common culprits:</strong></p>
 <table>
@@ -4090,25 +4058,25 @@
 </tbody>
 </table>
 <p><strong>Step 2 — Snapshot cleanup:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Find all snapshots older than 3 days</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">3</span><span class="p">)}</span> <span class="p">|</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="nb">Select </span><span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeGB</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">SizeGB</span> <span class="n">-Descending</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Remove a specific snapshot (verify with VM owner first)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Get-VM</span> <span class="s2">&quot;VMName&quot;</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="n">-Name</span> <span class="s2">&quot;SnapshotName&quot;</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-RunAsync</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Find all snapshots older than 3 days</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">3</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="nb">Select </span><span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeGB</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">SizeGB</span> <span class="n">-Descending</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Remove a specific snapshot (verify with VM owner first)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">Get-VM</span> <span class="s2">&quot;VMName&quot;</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="n">-Name</span> <span class="s2">&quot;SnapshotName&quot;</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-RunAsync</span>
 </code></pre></div>
 <p><strong>Step 3 — Check for delta VMDKs not visible in Snapshot Manager:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From ESXi — look for delta VMDKs that should have been committed</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>find<span class="w"> </span>/vmfs/volumes/&lt;datastore-uuid&gt;/&lt;vmname&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-delta.vmdk&quot;</span><span class="w"> </span>-o<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-000*.vmdk&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># If delta files exist but no snapshot shows in vCenter, run VM → Consolidate</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From ESXi — look for delta VMDKs that should have been committed</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>find<span class="w"> </span>/vmfs/volumes/&lt;datastore-uuid&gt;/&lt;vmname&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-delta.vmdk&quot;</span><span class="w"> </span>-o<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-000*.vmdk&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># If delta files exist but no snapshot shows in vCenter, run VM → Consolidate</span>
 </code></pre></div>
 <hr />
 <h2 id="high-datastore-latency">High Datastore Latency<a class="headerlink" href="#high-datastore-latency" title="Permanent link">&para;</a></h2>
 <p>Latency over 20ms for VMFS/SAN or 30ms for NFS is a concern. Over 50ms will impact most workloads.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check per-device latency from ESXi using esxtop</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxtop
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Press &#39;u&#39; for storage device view — look at GAVG (guest average latency in ms)</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># KAVG = kernel latency, DAVG = device latency; GAVG = KAVG + DAVG</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check per-device latency from ESXi using esxtop</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxtop
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Press &#39;u&#39; for storage device view — look at GAVG (guest average latency in ms)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># KAVG = kernel latency, DAVG = device latency; GAVG = KAVG + DAVG</span>
 </code></pre></div>
 <p><strong>Triage path:</strong></p>
 <ol>
@@ -4116,8 +4084,8 @@
 <li>Check array-side performance counters (PowerMax Unisphere Performance, Pure1 Analytics, ONTAP Performance Manager).</li>
 <li>Check queue depth — if <code>QAVG</code> in esxtop is consistently high, the array is saturated:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check queue depth for a device</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;naa.xxxx&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>queue
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check queue depth for a device</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;naa.xxxx&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>queue
 </code></pre></div>
 <ol>
 <li>Check for path imbalance — one path handling all I/O while others are idle.</li>
@@ -4125,26 +4093,26 @@
 <hr />
 <h2 id="vmfs-lock-failed-to-lock-the-file">VMFS Lock — Failed to Lock the File<a class="headerlink" href="#vmfs-lock-failed-to-lock-the-file" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> VM fails to power on with "Failed to lock the file" or "Unable to access a file since it is locked."</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Identify which host holds the lock</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vmkfstools<span class="w"> </span>-D<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/&lt;vm&gt;/&lt;vmdk&gt;.vmdk
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Output shows the MAC address of the locking host</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Match MAC address to a hostname</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;mac-address&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Identify which host holds the lock</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vmkfstools<span class="w"> </span>-D<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/&lt;vm&gt;/&lt;vmdk&gt;.vmdk
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Output shows the MAC address of the locking host</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Match MAC address to a hostname</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;mac-address&gt;
 </code></pre></div>
 <p>Once you identify the locking host:
 - If that host is not running the VM, restart its management agents (<code>/etc/init.d/hostd restart</code>)
 - If the locking host crashed, the lock is stale — power off the VM completely in vCenter, then power it back on</p>
 <hr />
 <h2 id="vsan-object-non-compliant-or-degraded">vSAN Object Non-Compliant or Degraded<a class="headerlink" href="#vsan-object-non-compliant-or-degraded" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check vSAN health from ESXi</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check object compliance</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;non-compliant\|absent\|degraded&quot;</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Check active resync</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check vSAN health from ESXi</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check object compliance</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;non-compliant\|absent\|degraded&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Check active resync</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
 </code></pre></div>
 <table>
 <thead>
