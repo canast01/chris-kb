@@ -123,163 +123,51 @@ Edit these lines near the top of the script:
 chmod +x mds_fabric_health.sh
 MDS_HOST=192.168.1.20 MDS_USER=admin ./mds_fabric_health.sh
 ```
-
-Enter the SSH password when prompted.
-
-**What you should see**
-
-Six check results, each labelled PASS, WARNING, or CRITICAL: FC interfaces down, FLOGI device count, topology isolation, zoning errors, log entries with critical keywords, and environmental status. The final line shows the overall result.
-
----
-
-## FLOGI Database Report (Python)
-
-SSH to MDS using Paramiko, parse the FLOGI database per VSAN, and flag duplicate FCIDs, unexpected VSAN logins, and unzoned devices.
-
-~~~python
-#!/usr/bin/env python3
-"""
-mds_flogi_report.py
-Usage: python3 mds_flogi_report.py
-"""
-
-import os, re, sys
-import paramiko
-
-MDS_HOST = os.environ.get("MDS_HOST", "192.168.1.20")
-MDS_USER = os.environ.get("MDS_USER", "admin")
-SSH_KEY  = os.environ.get("SSH_KEY",  os.path.expanduser("~/.ssh/id_rsa"))
-
-# Expected VSAN IDs — devices logged in elsewhere are flagged
-EXPECTED_VSANS = set(map(int, os.environ.get("EXPECTED_VSANS", "10,20").split(",")))
-
-
-def ssh_run(host, cmd):
-    client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    client.connect(host, username=MDS_USER, key_filename=SSH_KEY, timeout=15)
-    _, stdout, _ = client.exec_command(cmd)
-    out = stdout.read().decode()
-    client.close()
-    return out
-
-
-def parse_flogi(flogi_out):
-    """
-    Parse 'show flogi database' output.
-    Columns: INTERFACE  VSAN  FCID  PORT WWN  NODE WWN
-    Returns list of dicts.
-    """
-    entries = []
-    for line in flogi_out.splitlines():
-        # fc1/1     10    0x010200  20:00:00:... 20:00:00:...
-        m = re.match(
-            r'^(fc\S+)\s+(\d+)\s+(0x[0-9a-fA-F]+)\s+([0-9a-fA-F:]{23})\s+([0-9a-fA-F:]{23})',
-            line.strip()
-        )
-        if m:
-            entries.append({
-                "interface": m.group(1),
-                "vsan":      int(m.group(2)),
-                "fcid":      m.group(3),
-                "pwwn":      m.group(4),
-                "nwwn":      m.group(5),
-            })
-    return entries
-
-
-def parse_active_zones(zoneset_out):
-    """Return set of all PWWNs referenced in any active zone."""
-    return set(re.findall(r'[0-9a-fA-F]{2}(?::[0-9a-fA-F]{2}){7}', zoneset_out))
-
-
-flogi_raw    = ssh_run(MDS_HOST, "show flogi database")
-zoneset_raw  = ssh_run(MDS_HOST, "show zoneset active vsan all")
-
-entries      = parse_flogi(flogi_raw)
-zoned_wwns   = parse_active_zones(zoneset_raw)
-
-# Group by VSAN
-vsans = {}
-for e in entries:
-    vsans.setdefault(e["vsan"], []).append(e)
-
-issues = []
-
-for vsan_id in sorted(vsans):
-    vsan_entries = vsans[vsan_id]
-    print(f"\n--- VSAN {vsan_id} ({len(vsan_entries)} devices) ---")
-    print(f"  {'Interface':<12} {'FCID':<10} {'Port WWN':<26} {'Status'}")
-    print("  " + "-" * 70)
-
-    seen_fcids = {}
-    for e in sorted(vsan_entries, key=lambda x: x["interface"]):
-        flags = []
-
-        # Duplicate FCID detection
-        if e["fcid"] in seen_fcids:
-            flags.append(f"DUPLICATE_FCID (also on {seen_fcids[e['fcid']]})")
-            issues.append(f"VSAN {vsan_id}: Duplicate FCID {e['fcid']} on {e['interface']} and {seen_fcids[e['fcid']]}")
-        else:
-            seen_fcids[e["fcid"]] = e["interface"]
-
-        # Unexpected VSAN login
-        if EXPECTED_VSANS and vsan_id not in EXPECTED_VSANS:
-            flags.append(f"UNEXPECTED_VSAN")
-            issues.append(f"VSAN {vsan_id}: Device {e['pwwn']} logged into unexpected VSAN")
-
-        # Unzoned device
-        if e["pwwn"] not in zoned_wwns:
-            flags.append("UNZONED")
-            issues.append(f"VSAN {vsan_id}: Device {e['pwwn']} on {e['interface']} is not in any active zone")
-
-        status = ", ".join(flags) if flags else "OK"
-        print(f"  {e['interface']:<12} {e['fcid']:<10} {e['pwwn']:<26} {status}")
-
-print(f"\n\n{'='*50}")
-if issues:
-    print(f"ISSUES FOUND ({len(issues)}):")
-    for i in issues:
-        print(f"  {i}")
-    sys.exit(1)
-else:
-    print("No issues found.")
-    sys.exit(0)
-~~~
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Python 3.7 or later installed
-- The `paramiko` SSH library: `pip install paramiko`
-- An SSH key set up for the MDS switch, or modify the script to use password auth
-- Network access to the MDS switch management IP
-
-**Step 1 — Save the file**
-
-1. Open a text editor
-2. Copy the entire code block above
-3. Save it as `mds_flogi_report.py`
-
-**Step 2 — Fill in your details**
-
-Set these as environment variables, or edit the defaults at the top of the script:
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `MDS_HOST` | IP address of the MDS switch | Switch management IP |
-| `MDS_USER` | SSH username | Usually `admin` |
-| `SSH_KEY` | Path to your SSH private key | Typically `~/.ssh/id_rsa` |
-| `EXPECTED_VSANS` | Comma-separated list of valid VSAN IDs | Ask your SAN admin which VSANs should have devices |
-
-**Step 3 — Open a terminal**
-
-- **For .py:** Open Terminal (Linux/Mac) or Command Prompt / Git Bash (Windows). Install Python from python.org. Install packages: `pip install paramiko`
-
-**Step 4 — Run the script**
-
-```text
-MDS_HOST=192.168.1.20 MDS_USER=admin EXPECTED_VSANS=10,20 python3 mds_flogi_report.py
+┌───────────────────────────────── Cisco MDS 9000 — Operations Scripts ─────────────────────────────────┐
+│                                                                                                       │
+│  MDS scripting: NX-API, Ansible cisco.nxos, Python NETCONF, zone automation, reports.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               NX-API Scripting               │  │               Zone Automation               │   │
+│   │           POST /ins json CLI exec            │  │        Ansible: cisco.nxos.nxos_vsan        │   │
+│   │           Auth: admin:pass base64            │  │           Python: NETCONF ncclient          │   │
+│   │            show commands via REST            │  │             Batch zone from CSV             │   │
+│   │          Exec zone config commands           │  │          Validate: show zone active         │   │
+│   │          Config push via JSON body           │  │           Device alias bulk create          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  NX-API and Ansible cisco.nxos automate MDS zones; NETCONF for config as code.                        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Reporting Scripts               │  │             Maintenance Scripts             │   │
+│   │         Port utilisation: weekly CSV         │  │          Config backup: SCP nightly         │   │
+│   │          Zone audit: stale aliases           │  │           Zone snapshot pre-change          │   │
+│   │         SFP power: inventory script          │  │            NX-OS ver check script           │   │
+│   │          FLOGI count: device report          │  │             Stale alias cleanup             │   │
+│   │            VSAN member inventory             │  │           Port error daily report           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS switch · NX-API port 443 · management Ethernet · automation Linux host                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  NX-API          = NX-OS REST-like API; JSON over HTTP/HTTPS; /ins endpoint                           │
+│  cisco.nxos      = Ansible Galaxy collection for MDS/Nexus NX-OS automation                           │
+│  nxos_vsan       = Ansible module; create, modify, and delete VSANs on MDS                            │
+│  ncclient        = Python NETCONF library; send XML RPC to NX-OS NETCONF server                       │
+│  show zone active= NX-OS CLI; post-change validation of zone set members                              │
+│  Device alias    = human-readable WWN label; managed via CFS distribution                             │
+│  CSV batch       = bulk zone creation from spreadsheet; script loops per row                          │
+│  SFP power script= parse show interface transceiver; export to monitoring                             │
+│  FLOGI count     = number of devices logged into fabric; trending report                              │
+│  Config backup   = copy run scp:// nightly; store in version control                                  │
+│  Stale alias     = alias with no active FLOGI; identify and remove quarterly                          │
+│  Port error daily= parse show interface fc counters; alert on CRC increase                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **What you should see**
