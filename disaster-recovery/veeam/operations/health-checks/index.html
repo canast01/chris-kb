@@ -4296,6 +4296,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#failed-and-warning-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failed and Warning Jobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#sobr-capacity-check" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4531,7 +4542,7 @@
 <p>The primary review surface is the <strong>Home</strong> view in the VBR console, which shows job counts grouped by status (Running, Success, Warning, Failed). Work through this list top-to-bottom every morning.</p>
 <h2 id="surebackup-verification-sequence">SureBackup Verification Sequence<a class="headerlink" href="#surebackup-verification-sequence" title="Permanent link">&para;</a></h2>
 <p>SureBackup starts VMs in an isolated virtual lab and runs application-level tests — it is the only way to confirm a backup is truly restorable.</p>
-<p><pre class="mermaid"><code>sequenceDiagram
+<pre class="mermaid"><code>sequenceDiagram
     participant VBR as VBR Server
     participant VLab as Virtual Lab
     participant IsolatedProxy as Isolated Proxy VM
@@ -4551,16 +4562,15 @@
     VBR-&gt;&gt;VLab: Tear down virtual lab
     VBR--&gt;&gt;VBR: Record verification result in job session
     note over VBR: Failure = backup not confirmed restorable\nEscalate immediately</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Failed and Warning Jobs
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- **Failed** — investigate before the next scheduled run. Do not allow a job to accumulate two consecutive failures without a documented root cause.
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- **Warning** — commonly caused by a VM snapshot commit delay, VSS writer timeout, or guest processing credential issue. Document the cause. Repeated warnings on the same job indicate a structural problem.
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>```powershell
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># List jobs with a non-success last result
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Get-VBRJob | Where-Object { $_.LastResult -ne &quot;Success&quot; -and $_.LastResult -ne &quot;None&quot; } |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    Select-Object Name, LastResult, LastRun
-</code></pre></div></p>
+<h3 id="failed-and-warning-jobs">Failed and Warning Jobs<a class="headerlink" href="#failed-and-warning-jobs" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Failed</strong> — investigate before the next scheduled run. Do not allow a job to accumulate two consecutive failures without a documented root cause.</li>
+<li><strong>Warning</strong> — commonly caused by a VM snapshot commit delay, VSS writer timeout, or guest processing credential issue. Document the cause. Repeated warnings on the same job indicate a structural problem.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List jobs with a non-success last result</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VBRJob</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LastResult</span> <span class="o">-ne</span> <span class="s2">&quot;Success&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LastResult</span> <span class="o">-ne</span> <span class="s2">&quot;None&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LastResult</span><span class="p">,</span> <span class="n">LastRun</span>
+</code></pre></div>
 <h3 id="sobr-capacity-check">SOBR Capacity Check<a class="headerlink" href="#sobr-capacity-check" title="Permanent link">&para;</a></h3>
 <p>In <strong>Backup Infrastructure &gt; Scale-Out Repositories</strong>, verify that no extent shows <strong>Sealed</strong> or <strong>Unavailable</strong> status. Check the free space on each performance tier extent.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Repository free space — all repos including SOBR extents</span>

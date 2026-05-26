@@ -4292,6 +4292,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Instant VM Recovery Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#file-level-restore-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File-Level Restore Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-job-creation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Job Creation Checklist
+      
+    </span>
+  </a>
+  
 </li>
       
         <li class="md-nav__item">
@@ -4509,7 +4537,7 @@
 <p>Operational procedures covering backup job creation, copy job setup, SOBR management, and restore testing.</p>
 <h2 id="instant-vm-recovery-flow">Instant VM Recovery Flow<a class="headerlink" href="#instant-vm-recovery-flow" title="Permanent link">&para;</a></h2>
 <p>The Instant VM Recovery (IVR) sequence mounts the backup file directly as an NFS datastore — the VM starts from the backup without waiting for a full restore.</p>
-<p><pre class="mermaid"><code>sequenceDiagram
+<pre class="mermaid"><code>sequenceDiagram
     participant Admin
     participant VBR as VBR Server
     participant Proxy as Backup Proxy
@@ -4531,46 +4559,75 @@
     Admin-&gt;&gt;VBR: Undo Instant Recovery
     VBR-&gt;&gt;vCenter: Unregister IVR VM
     VBR-&gt;&gt;Proxy: Unmount vPower NFS datastore</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### File-Level Restore Test
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>For Windows VMs, mount the backup and browse files to confirm data integrity:
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1. In the console, right-click the backup job and select **Restore guest files &gt; Microsoft Windows**.
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2. Choose the restore point.
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>3. Browse to a known file (e.g., a log file with a recent timestamp) and confirm it is accessible.
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>4. Optionally restore one file to an alternate location to confirm write path.
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>---
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>## Backup Job Creation Checklist
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Before creating a new backup job, confirm the following are defined:
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>| Parameter | Decision Required |
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>|---|---|
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| VM scope | Individual VMs, container (folder/tag/cluster), or policy-based |
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| Proxy assignment | Automatic or specific proxy (network vs. hot-add vs. direct SAN) |
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| Repository | Target SOBR or standalone repo — confirm sufficient capacity |
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>| Retention | Restore points count or GFS (daily/weekly/monthly/yearly) |
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>| Schedule | Daily window; allow offset if proxy is shared across jobs |
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>| Application-aware | Enable for VMs with SQL, Exchange, Oracle — requires guest credentials |
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>| Guest OS credentials | Pre-add credentials to the Veeam Credentials Manager |
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>| Exclusions | Exclude swap/temp disks, ISO mount points, VMs in dev/test if appropriate |
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>| Notifications | Enable email or Veeam ONE alert for job failures |
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>```powershell
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a># Create a simple VM backup job via PowerShell
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>$vm     = Find-VBRViEntity -Name &quot;vm01&quot;
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>$repo   = Get-VBRBackupRepository -Name &quot;SOBR-Primary&quot;
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>$cred   = Get-VBRCredentials -Name &quot;svc-veeam-guest&quot;
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>Add-VBRViBackupJob `
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    -Name &quot;vm01-daily&quot; `
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    -Entity $vm `
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    -BackupRepository $repo `
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    -GuestCredentials $cred `
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>    -ApplicationAwareProcessing $true
-</code></pre></div></p>
+<h3 id="file-level-restore-test">File-Level Restore Test<a class="headerlink" href="#file-level-restore-test" title="Permanent link">&para;</a></h3>
+<p>For Windows VMs, mount the backup and browse files to confirm data integrity:</p>
+<ol>
+<li>In the console, right-click the backup job and select <strong>Restore guest files &gt; Microsoft Windows</strong>.</li>
+<li>Choose the restore point.</li>
+<li>Browse to a known file (e.g., a log file with a recent timestamp) and confirm it is accessible.</li>
+<li>Optionally restore one file to an alternate location to confirm write path.</li>
+</ol>
+<hr />
+<h2 id="backup-job-creation-checklist">Backup Job Creation Checklist<a class="headerlink" href="#backup-job-creation-checklist" title="Permanent link">&para;</a></h2>
+<p>Before creating a new backup job, confirm the following are defined:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Decision Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM scope</td>
+<td>Individual VMs, container (folder/tag/cluster), or policy-based</td>
+</tr>
+<tr>
+<td>Proxy assignment</td>
+<td>Automatic or specific proxy (network vs. hot-add vs. direct SAN)</td>
+</tr>
+<tr>
+<td>Repository</td>
+<td>Target SOBR or standalone repo — confirm sufficient capacity</td>
+</tr>
+<tr>
+<td>Retention</td>
+<td>Restore points count or GFS (daily/weekly/monthly/yearly)</td>
+</tr>
+<tr>
+<td>Schedule</td>
+<td>Daily window; allow offset if proxy is shared across jobs</td>
+</tr>
+<tr>
+<td>Application-aware</td>
+<td>Enable for VMs with SQL, Exchange, Oracle — requires guest credentials</td>
+</tr>
+<tr>
+<td>Guest OS credentials</td>
+<td>Pre-add credentials to the Veeam Credentials Manager</td>
+</tr>
+<tr>
+<td>Exclusions</td>
+<td>Exclude swap/temp disks, ISO mount points, VMs in dev/test if appropriate</td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td>Enable email or Veeam ONE alert for job failures</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Create a simple VM backup job via PowerShell</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$vm</span>     <span class="p">=</span> <span class="nb">Find-VBRViEntity</span> <span class="n">-Name</span> <span class="s2">&quot;vm01&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">$repo</span>   <span class="p">=</span> <span class="nb">Get-VBRBackupRepository</span> <span class="n">-Name</span> <span class="s2">&quot;SOBR-Primary&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">$cred</span>   <span class="p">=</span> <span class="nb">Get-VBRCredentials</span> <span class="n">-Name</span> <span class="s2">&quot;svc-veeam-guest&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Add-VBRViBackupJob</span> <span class="p">`</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">-Name</span> <span class="s2">&quot;vm01-daily&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">-Entity</span> <span class="nv">$vm</span> <span class="p">`</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">-BackupRepository</span> <span class="nv">$repo</span> <span class="p">`</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">-GuestCredentials</span> <span class="nv">$cred</span> <span class="p">`</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">-ApplicationAwareProcessing</span> <span class="nv">$true</span>
+</code></pre></div>
 <p>After creation:
 - [ ] Run the job once manually and verify success before relying on the schedule.
 - [ ] Confirm the restore point appears under <strong>Home &gt; Backups</strong>.

@@ -4126,6 +4126,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#nsg-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSG Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#azure-ad-authentication-errors" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4296,7 +4307,7 @@
 
 
 <h1 id="azure-troubleshooting">Azure — Troubleshooting<a class="headerlink" href="#azure-troubleshooting" title="Permanent link">&para;</a></h1>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── Azure Troubleshooting Overview ────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── Azure Troubleshooting Overview ────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │               Azure Troubleshooting — Common Issues, Diagnostics, and Escalation              │   │
@@ -4351,30 +4362,27 @@
 <a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│                                                                                                       │
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Common causes:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- NSG deny rule at NIC level (NIC NSG takes precedence over Subnet NSG)
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- User-defined route sending traffic to wrong next hop
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Azure Firewall blocking traffic between hub and spoke
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Service endpoint not configured on subnet (for PaaS services)
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>## NSG Troubleshooting
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>```bash
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Check if traffic is allowed by NSG
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>az network watcher check-nsg-flow --direction Inbound \
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    --protocol TCP --local 10.0.0.4 --local-port 443 \
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    --remote 10.1.0.10 --remote-port 52000 \
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    --nsg &lt;nsg-id&gt;
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Output: access = Allow or Deny, with matching rule name
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># View NSG flow logs (query Log Analytics)
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Workspace → Logs:
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>AzureNetworkAnalytics_CL
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| where SubType_s == &quot;FlowLog&quot;
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>| where FlowStatus_s == &quot;D&quot;   // Denied flows
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>| where DestIP_s == &quot;&lt;target-ip&gt;&quot;
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>| project TimeGenerated, SrcIP_s, DestIP_s, DestPort_d, NSGName_s, NSGRule_s
-</code></pre></div></p>
+<p>Common causes:
+- NSG deny rule at NIC level (NIC NSG takes precedence over Subnet NSG)
+- User-defined route sending traffic to wrong next hop
+- Azure Firewall blocking traffic between hub and spoke
+- Service endpoint not configured on subnet (for PaaS services)</p>
+<h2 id="nsg-troubleshooting">NSG Troubleshooting<a class="headerlink" href="#nsg-troubleshooting" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check if traffic is allowed by NSG</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>network<span class="w"> </span>watcher<span class="w"> </span>check-nsg-flow<span class="w"> </span>--direction<span class="w"> </span>Inbound<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--protocol<span class="w"> </span>TCP<span class="w"> </span>--local<span class="w"> </span><span class="m">10</span>.0.0.4<span class="w"> </span>--local-port<span class="w"> </span><span class="m">443</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>--remote<span class="w"> </span><span class="m">10</span>.1.0.10<span class="w"> </span>--remote-port<span class="w"> </span><span class="m">52000</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>--nsg<span class="w"> </span>&lt;nsg-id&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Output: access = Allow or Deny, with matching rule name</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># View NSG flow logs (query Log Analytics)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Workspace → Logs:</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>AzureNetworkAnalytics_CL
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">|</span><span class="w"> </span>where<span class="w"> </span><span class="nv">SubType_s</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;FlowLog&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="p">|</span><span class="w"> </span>where<span class="w"> </span><span class="nv">FlowStatus_s</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;D&quot;</span><span class="w">   </span>//<span class="w"> </span>Denied<span class="w"> </span>flows
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="p">|</span><span class="w"> </span>where<span class="w"> </span><span class="nv">DestIP_s</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;&lt;target-ip&gt;&quot;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">|</span><span class="w"> </span>project<span class="w"> </span>TimeGenerated,<span class="w"> </span>SrcIP_s,<span class="w"> </span>DestIP_s,<span class="w"> </span>DestPort_d,<span class="w"> </span>NSGName_s,<span class="w"> </span>NSGRule_s
+</code></pre></div>
 <h2 id="azure-ad-authentication-errors">Azure AD Authentication Errors<a class="headerlink" href="#azure-ad-authentication-errors" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check token issuance via Entra ID sign-in logs</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span>--correlation-id<span class="w"> </span>&lt;correlation-id&gt;

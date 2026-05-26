@@ -4207,6 +4207,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#idrac-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iDRAC Access Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#recovery-media-access-control" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4567,7 +4578,7 @@
 </tr>
 </tbody>
 </table>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># uemcli — list users and roles</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># uemcli — list users and roles</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>/user<span class="w"> </span>show<span class="w"> </span>-detail
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Create a user with Recovery Manager role</span>
@@ -4579,31 +4590,52 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># View LDAP group role assignments</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>uemcli<span class="w"> </span>/sys/auth/ldapgroup<span class="w"> </span>show
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## iDRAC Access Control
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>iDRAC roles control who can manage hardware and trigger out-of-band operations, including RASR boot sequences.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| iDRAC Role | Permissions | Use Case |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|---|---|---|
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Administrator | Full iDRAC control, power, virtual media | DR team for recovery operations |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Operator | Power management, virtual media access | DR operators initiating recovery boot |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Read Only | View-only | Monitoring, NOC |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| None | No access | Revoke access |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>```bash
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Assign an AD group to iDRAC Operator role
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>racadm set iDRAC.Users.4.Enable 1
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>racadm set iDRAC.Users.4.UserName &quot;DR-Operators&quot;
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>racadm set iDRAC.Users.4.Privilege 0x1F3   # Operator privilege bitmask
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Or via LDAP group mapping (preferred for AD integration)
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>racadm set iDRAC.LDAPRoleGroup.1.DN &quot;CN=DR-Operators,OU=Groups,DC=corp,DC=local&quot;
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>racadm set iDRAC.LDAPRoleGroup.1.Privilege 0x1F3
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># View current privilege assignments
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>racadm get iDRAC.Users
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>racadm get iDRAC.LDAPRoleGroup
-</code></pre></div></p>
+<h2 id="idrac-access-control">iDRAC Access Control<a class="headerlink" href="#idrac-access-control" title="Permanent link">&para;</a></h2>
+<p>iDRAC roles control who can manage hardware and trigger out-of-band operations, including RASR boot sequences.</p>
+<table>
+<thead>
+<tr>
+<th>iDRAC Role</th>
+<th>Permissions</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrator</td>
+<td>Full iDRAC control, power, virtual media</td>
+<td>DR team for recovery operations</td>
+</tr>
+<tr>
+<td>Operator</td>
+<td>Power management, virtual media access</td>
+<td>DR operators initiating recovery boot</td>
+</tr>
+<tr>
+<td>Read Only</td>
+<td>View-only</td>
+<td>Monitoring, NOC</td>
+</tr>
+<tr>
+<td>None</td>
+<td>No access</td>
+<td>Revoke access</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Assign an AD group to iDRAC Operator role</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Users.4.Enable<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Users.4.UserName<span class="w"> </span><span class="s2">&quot;DR-Operators&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Users.4.Privilege<span class="w"> </span>0x1F3<span class="w">   </span><span class="c1"># Operator privilege bitmask</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Or via LDAP group mapping (preferred for AD integration)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAPRoleGroup.1.DN<span class="w"> </span><span class="s2">&quot;CN=DR-Operators,OU=Groups,DC=corp,DC=local&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAPRoleGroup.1.Privilege<span class="w"> </span>0x1F3
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># View current privilege assignments</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.Users
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.LDAPRoleGroup
+</code></pre></div>
 <h2 id="recovery-media-access-control">Recovery Media Access Control<a class="headerlink" href="#recovery-media-access-control" title="Permanent link">&para;</a></h2>
 <h3 id="physical-access-procedure">Physical Access Procedure<a class="headerlink" href="#physical-access-procedure" title="Permanent link">&para;</a></h3>
 <p>Recovery USBs and ISOs must follow a strict custody chain to prevent unauthorised use.</p>

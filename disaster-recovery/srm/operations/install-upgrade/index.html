@@ -4322,6 +4322,50 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#license-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eol-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EOL Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migrating-from-array-replication-to-vsphere-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migrating from Array Replication to vSphere Replication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srm-appliance-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Appliance Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4507,7 +4551,7 @@
 </table>
 <h2 id="upgrade-sequence">Upgrade Sequence<a class="headerlink" href="#upgrade-sequence" title="Permanent link">&para;</a></h2>
 <h3 id="upgrade-order-dependency-chain">Upgrade Order Dependency Chain<a class="headerlink" href="#upgrade-order-dependency-chain" title="Permanent link">&para;</a></h3>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     start(["Start upgrade\nmaintenance window"])
     start --&gt; vc["1. Upgrade vCenter\nboth protected + recovery sites"]
     vc --&gt; srmCheck{"Plugins load\ncorrectly?"}
@@ -4525,54 +4569,43 @@
     class vc,srmUpgrade,vrUpgrade,sraUpdate,validate,fixVC action
     class srmCheck check
     class start,done terminal</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Validate all protection groups show `OK` and all VMs show `Protected` after each upgrade step before proceeding.
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## License Management
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>SRM licenses are per protected VM:
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>- **Perpetual + SnS**: Annual renewal of Support and Subscription
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>- **Subscription**: Monthly or annual via Broadcom Advantage portal
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>- **License compliance threshold**: Review at 80% utilisation; initiate procurement at 90%
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Check current protected VM count:
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>- SRM UI → Inventory → Virtual Machines → Protected (count in top bar)
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>Track in CMDB:
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>| Field | Value |
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>|---|---|
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>| License type | Perpetual / Subscription |
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| Licensed VM count | &lt;number&gt; |
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| Current protected VM count | &lt;number from SRM UI&gt; |
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| Renewal date | &lt;date&gt; |
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>## EOL Tracking
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>SRM lifecycle is tied to vSphere:
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>- SRM 8.x aligned to vSphere 8.x lifecycle
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>- vSphere 7.x general support ended: October 2025
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>- Track End of General Support and End of Technical Guidance dates in CMDB
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>## Migrating from Array Replication to vSphere Replication
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>When decommissioning array-based SRA in favour of vSphere Replication:
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>1. Document all VMs in array-based protection groups
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>2. Create new vSphere Replication-based protection group
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>3. Enable vSphere Replication on each VM (configure RPO)
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>4. Wait for initial sync to complete
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>5. Remove VMs from old array-based protection group
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>6. Retire old protection group and delete SRA configuration
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>7. Deregister old array manager in SRM → Array Managers
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>Expect initial sync to take hours to days depending on VMDK size and link bandwidth.
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>## SRM Appliance Backup
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>Back up the SRM configuration database daily:
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>```powershell
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a># Windows-based SRM: back up via SQL Server or embedded DB backup
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a># Linux-based SRM (8.8+): use VAMI backup or API
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>Invoke-WebRequest -Uri &quot;https://&lt;srm-appliance&gt;:5480/api/v1/config/export&quot; -OutFile srm-config-backup.zip
+<p>Validate all protection groups show <code>OK</code> and all VMs show <code>Protected</code> after each upgrade step before proceeding.</p>
+<h2 id="license-management">License Management<a class="headerlink" href="#license-management" title="Permanent link">&para;</a></h2>
+<p>SRM licenses are per protected VM:
+- <strong>Perpetual + SnS</strong>: Annual renewal of Support and Subscription
+- <strong>Subscription</strong>: Monthly or annual via Broadcom Advantage portal
+- <strong>License compliance threshold</strong>: Review at 80% utilisation; initiate procurement at 90%</p>
+<p>Check current protected VM count:
+- SRM UI → Inventory → Virtual Machines → Protected (count in top bar)</p>
+<p>Track in CMDB:
+| Field | Value |
+|---|---|
+| License type | Perpetual / Subscription |
+| Licensed VM count | <number> |
+| Current protected VM count | <number from SRM UI> |
+| Renewal date | <date> |</p>
+<h2 id="eol-tracking">EOL Tracking<a class="headerlink" href="#eol-tracking" title="Permanent link">&para;</a></h2>
+<p>SRM lifecycle is tied to vSphere:
+- SRM 8.x aligned to vSphere 8.x lifecycle
+- vSphere 7.x general support ended: October 2025
+- Track End of General Support and End of Technical Guidance dates in CMDB</p>
+<h2 id="migrating-from-array-replication-to-vsphere-replication">Migrating from Array Replication to vSphere Replication<a class="headerlink" href="#migrating-from-array-replication-to-vsphere-replication" title="Permanent link">&para;</a></h2>
+<p>When decommissioning array-based SRA in favour of vSphere Replication:</p>
+<ol>
+<li>Document all VMs in array-based protection groups</li>
+<li>Create new vSphere Replication-based protection group</li>
+<li>Enable vSphere Replication on each VM (configure RPO)</li>
+<li>Wait for initial sync to complete</li>
+<li>Remove VMs from old array-based protection group</li>
+<li>Retire old protection group and delete SRA configuration</li>
+<li>Deregister old array manager in SRM → Array Managers</li>
+</ol>
+<p>Expect initial sync to take hours to days depending on VMDK size and link bandwidth.</p>
+<h2 id="srm-appliance-backup">SRM Appliance Backup<a class="headerlink" href="#srm-appliance-backup" title="Permanent link">&para;</a></h2>
+<p>Back up the SRM configuration database daily:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Windows-based SRM: back up via SQL Server or embedded DB backup</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># Linux-based SRM (8.8+): use VAMI backup or API</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="s2">&quot;https://&lt;srm-appliance&gt;:5480/api/v1/config/export&quot;</span> <span class="n">-OutFile</span> <span class="n">srm-config-backup</span><span class="p">.</span><span class="n">zip</span>
 </code></pre></div></p>
 
 

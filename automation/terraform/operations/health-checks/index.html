@@ -3788,8 +3788,30 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Drift Detection Flow">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drift-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drift Detection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Drift Detection">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-drift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Drift
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#using-terraform-plan-for-drift-detection" class="md-nav__link">
@@ -4008,7 +4030,7 @@
 
 <h1 id="terraform-health-checks">Terraform — Health Checks<a class="headerlink" href="#terraform-health-checks" title="Permanent link">&para;</a></h1>
 <h2 id="drift-detection-flow">Drift Detection Flow<a class="headerlink" href="#drift-detection-flow" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     schedule["Scheduled Trigger\n(cron / CI weekday 08:00)"]
     tfInit["terraform init\n-reconfigure"]
     tfPlan["terraform plan\n-detailed-exitcode\n-refresh=true"]
@@ -4029,24 +4051,19 @@
     driftFound --&gt; parsePlan
     parsePlan --&gt; alertOps
     alertOps --&gt; remediate</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Drift Detection
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>### What is Drift
+<hr />
+<h2 id="drift-detection">Drift Detection<a class="headerlink" href="#drift-detection" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-drift">What is Drift<a class="headerlink" href="#what-is-drift" title="Permanent link">&para;</a></h3>
+<p>Drift occurs when the real infrastructure diverges from what Terraform's state describes — caused by manual changes, external automation, or resource failures.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Detect drift: plan with a refresh forces a state update first</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-refresh<span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Explicitly refresh state from real infrastructure before planning</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-refresh-only
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Drift occurs when the real infrastructure diverges from what Terraform&#39;s state describes — caused by manual changes, external automation, or resource failures.
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>```bash
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Detect drift: plan with a refresh forces a state update first
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>terraform plan -refresh=true
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Explicitly refresh state from real infrastructure before planning
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>terraform apply -refresh-only
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Accept the refreshed state without making other changes
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>terraform apply -refresh-only -auto-approve
-</code></pre></div></p>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Accept the refreshed state without making other changes</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-refresh-only<span class="w"> </span>-auto-approve
+</code></pre></div>
 <h3 id="using-terraform-plan-for-drift-detection">Using terraform plan for Drift Detection<a class="headerlink" href="#using-terraform-plan-for-drift-detection" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Standard drift detection run</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-detailed-exitcode

@@ -4572,6 +4572,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#integration-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Failures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#reviewing-aiops-system-events" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4723,7 +4734,7 @@
 <p>This page covers common operational problems with Dell AIOps: AI alert false positives, data gaps in the analytics pipeline, and failures in the integration between AIOps and connected systems.</p>
 <h2 id="diagnosing-false-positive-ai-alerts">Diagnosing False Positive AI Alerts<a class="headerlink" href="#diagnosing-false-positive-ai-alerts" title="Permanent link">&para;</a></h2>
 <p>False positives occur when the model fires an alert for a normal but unusual event (scheduled backup, bulk migration, test run).</p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List recent AI alerts with confidence scores</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List recent AI alerts with confidence scores</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/alerts?filter=state%20eq%20%27ACTIVE%27&amp;select=id,type,metric,confidence,started_at,system_name&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -4736,28 +4747,52 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;reason&quot;: &quot;FALSE_POSITIVE&quot;, &quot;comment&quot;: &quot;Weekly backup job 22:00–02:00, expected anomaly&quot;}&#39;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Data gap causes and resolution:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Cause | Symptom | Fix |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|---|
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| SRS/ESRS gateway offline | All data stops at same time | Restart gateway service; check internet path |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| System firmware bug | Gaps in specific metric streams | Apply firmware update for known telemetry issues |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| New system &lt; 14 days old | No predictions, limited insights | Wait for baseline accumulation period |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| System type not fully supported | Only basic health visible | Check AIOps supported systems matrix |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Tenant configuration error | System in wrong site group | Reassign system to correct site in CloudIQ settings |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>## Integration Failures
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>AIOps integrates with CloudIQ system registration, ESRS telemetry, and optional ITSM connectors (ServiceNow). Integration failures prevent alerts from being acted upon.
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>```bash
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Test CloudIQ API authentication
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>curl -sk -X POST \
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  &quot;https://cloudiq.apis.dell.com/auth/oauth/v2/token&quot; \
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  -H &quot;Content-Type: application/x-www-form-urlencoded&quot; \
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  -d &quot;grant_type=client_credentials&amp;client_id=&lt;clientId&gt;&amp;client_secret=&lt;clientSecret&gt;&quot; \
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  | jq &#39;{access_token, expires_in}&#39;
-</code></pre></div></p>
+<p>Data gap causes and resolution:</p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Symptom</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRS/ESRS gateway offline</td>
+<td>All data stops at same time</td>
+<td>Restart gateway service; check internet path</td>
+</tr>
+<tr>
+<td>System firmware bug</td>
+<td>Gaps in specific metric streams</td>
+<td>Apply firmware update for known telemetry issues</td>
+</tr>
+<tr>
+<td>New system &lt; 14 days old</td>
+<td>No predictions, limited insights</td>
+<td>Wait for baseline accumulation period</td>
+</tr>
+<tr>
+<td>System type not fully supported</td>
+<td>Only basic health visible</td>
+<td>Check AIOps supported systems matrix</td>
+</tr>
+<tr>
+<td>Tenant configuration error</td>
+<td>System in wrong site group</td>
+<td>Reassign system to correct site in CloudIQ settings</td>
+</tr>
+</tbody>
+</table>
+<h2 id="integration-failures">Integration Failures<a class="headerlink" href="#integration-failures" title="Permanent link">&para;</a></h2>
+<p>AIOps integrates with CloudIQ system registration, ESRS telemetry, and optional ITSM connectors (ServiceNow). Integration failures prevent alerts from being acted upon.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test CloudIQ API authentication</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/auth/oauth/v2/token&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&amp;client_id=&lt;clientId&gt;&amp;client_secret=&lt;clientSecret&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{access_token, expires_in}&#39;</span>
+</code></pre></div>
 <p>Common integration issues:</p>
 <table>
 <thead>

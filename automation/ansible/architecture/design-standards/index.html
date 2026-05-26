@@ -3614,7 +3614,18 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Project Layout">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Naming Conventions">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3915,7 +3926,7 @@
 <p>Part of the <a href="../">Ansible Architecture</a> reference.</p>
 </blockquote>
 <h2 id="project-layout">Project Layout<a class="headerlink" href="#project-layout" title="Permanent link">&para;</a></h2>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ansible-project/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ansible-project/
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── ansible.cfg
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── requirements.yml
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>├── site.yml
@@ -3941,25 +3952,24 @@
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   └── postgresql/
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>└── molecule/
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>!!! warning &quot;Never commit credentials in ansible.cfg&quot;
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    `ansible.cfg` is version-controlled. Never store passwords, tokens, or private key contents here.
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>## Naming Conventions
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>```yaml
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Playbooks and tasks — verb phrase, describe the action
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- name: Configure nginx virtual hosts for production web tier  # good
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- name: nginx                                                   # bad
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Variables — snake_case, role-prefixed
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>nginx_port: 80                    # good — role prefix
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>log_dir: /var/log                 # bad — too generic
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Vault variables — vault_ prefix
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>vault_db_password: !vault |       # encrypted value
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  $ANSIBLE_VAULT;1.2;AES256 ...
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>db_password: &quot;{{ vault_db_password }}&quot;  # plaintext reference
-</code></pre></div></p>
+<div class="admonition warning">
+<p class="admonition-title">Never commit credentials in ansible.cfg</p>
+<p><code>ansible.cfg</code> is version-controlled. Never store passwords, tokens, or private key contents here.</p>
+</div>
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Playbooks and tasks — verb phrase, describe the action</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure nginx virtual hosts for production web tier</span><span class="w">  </span><span class="c1"># good</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span><span class="w">                                                   </span><span class="c1"># bad</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Variables — snake_case, role-prefixed</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nt">nginx_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w">                    </span><span class="c1"># good — role prefix</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nt">log_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/log</span><span class="w">                 </span><span class="c1"># bad — too generic</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Vault variables — vault_ prefix</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nt">vault_db_password</span><span class="p">:</span><span class="w"> </span><span class="kt">!vault</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w">       </span><span class="c1"># encrypted value</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="no">$ANSIBLE_VAULT;1.2;AES256 ...</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nt">db_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vault_db_password</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w">  </span><span class="c1"># plaintext reference</span>
+</code></pre></div>
 <h3 id="templates-and-files">Templates and Files<a class="headerlink" href="#templates-and-files" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>templates/nginx.conf.j2      # .j2 suffix for all Jinja2 templates
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>tasks/packages.yml           # domain concept, not a verb

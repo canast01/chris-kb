@@ -3628,6 +3628,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#awx-aap-escalation-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWX / AAP Escalation Data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#red-hat-support-aap" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3886,30 +3897,28 @@
 <li>SSH transport bugs (pipelining, ControlMaster, ControlPersist edge cases)</li>
 </ul>
 <h2 id="internal-escalation-path">Internal Escalation Path<a class="headerlink" href="#internal-escalation-path" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>flowchart LR
     L1[L1 Ops\nRun diagnostics\nCheck logs] --&gt; L2[L2 Automation Engineering\nModule-level debug\nvvv trace + stack trace]
     L2 --&gt; L3[Platform Team / SME\nAWX admin access\nExecution environment rebuild]
     L3 --&gt; Vendor[Red Hat Support\nor GitHub issue]</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## AWX / AAP Escalation Data
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># AWX version and configuration
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl -H &quot;Authorization: Bearer $AWX_TOKEN&quot; \
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  https://awx.example.com/api/v2/config/ | python3 -m json.tool
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Failed job details
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>curl -H &quot;Authorization: Bearer $AWX_TOKEN&quot; \
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  &quot;https://awx.example.com/api/v2/jobs/$JOB_ID/&quot; | python3 -m json.tool
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># Job stdout (full output)
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>curl -H &quot;Authorization: Bearer $AWX_TOKEN&quot; \
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  &quot;https://awx.example.com/api/v2/jobs/$JOB_ID/stdout/?format=txt&quot; &gt; /tmp/job-stdout.txt
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Kubernetes pod logs (for AWX operator deployments)
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>kubectl logs deployment/awx-prod-web -n awx --tail=200 &gt; /tmp/awx-web.log
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>kubectl logs deployment/awx-prod-task -n awx --tail=200 &gt; /tmp/awx-task.log
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>kubectl describe pod -l app.kubernetes.io/name=awx-web -n awx &gt; /tmp/awx-pod.txt
-</code></pre></div></p>
+<h2 id="awx-aap-escalation-data">AWX / AAP Escalation Data<a class="headerlink" href="#awx-aap-escalation-data" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># AWX version and configuration</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>https://awx.example.com/api/v2/config/<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Failed job details</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="s2">&quot;https://awx.example.com/api/v2/jobs/</span><span class="nv">$JOB_ID</span><span class="s2">/&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Job stdout (full output)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="s2">&quot;https://awx.example.com/api/v2/jobs/</span><span class="nv">$JOB_ID</span><span class="s2">/stdout/?format=txt&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/job-stdout.txt
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Kubernetes pod logs (for AWX operator deployments)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>deployment/awx-prod-web<span class="w"> </span>-n<span class="w"> </span>awx<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/awx-web.log
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>deployment/awx-prod-task<span class="w"> </span>-n<span class="w"> </span>awx<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/awx-task.log
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>awx-web<span class="w"> </span>-n<span class="w"> </span>awx<span class="w"> </span>&gt;<span class="w"> </span>/tmp/awx-pod.txt
+</code></pre></div>
 <h2 id="red-hat-support-aap">Red Hat Support (AAP)<a class="headerlink" href="#red-hat-support-aap" title="Permanent link">&para;</a></h2>
 <h3 id="opening-a-case">Opening a Case<a class="headerlink" href="#opening-a-case" title="Permanent link">&para;</a></h3>
 <ol>

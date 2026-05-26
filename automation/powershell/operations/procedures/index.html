@@ -3894,6 +3894,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#html-reports-with-convertto-html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTML Reports with ConvertTo-Html
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#send-mailmessage-and-email-reports" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4186,7 +4197,7 @@
 <li>[ ] Module versions on target hosts match the expected baseline</li>
 </ul>
 <h2 id="powershell-error-handling-flow">PowerShell Error Handling Flow<a class="headerlink" href="#powershell-error-handling-flow" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     scriptStart["Script Execution\n($ErrorActionPreference = Stop)"]
     tryBlock["try { ... }"]
     cmdRun["Cmdlet / Command\nExecutes"]
@@ -4208,32 +4219,30 @@
     sendAlert --&gt; finallyBlock
     success --&gt; finallyBlock
     finallyBlock --&gt; exitCode</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### HTML Reports with ConvertTo-Html
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```powershell
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Basic HTML report
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>$header = &quot;&lt;style&gt;body{font-family:Arial} table{border-collapse:collapse} td,th{border:1px solid #ccc;padding:6px}&lt;/style&gt;&quot;
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Get-Service |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    Where-Object { $_.Status -eq &#39;Stopped&#39; } |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    Select-Object Name, DisplayName, StartType |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    ConvertTo-Html -Title &quot;Stopped Services&quot; -Head $header |
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    Out-File C:\Reports\stopped-services.html
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Multi-section HTML report
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>$htmlBody = &quot;&quot;
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>$htmlBody += &quot;&lt;h2&gt;Disk Usage&lt;/h2&gt;&quot;
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>$htmlBody += Get-PSDrive -PSProvider FileSystem |
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    Select-Object Name, @{N=&#39;Used(GB)&#39;;E={[math]::Round($_.Used/1GB,2)}}, @{N=&#39;Free(GB)&#39;;E={[math]::Round($_.Free/1GB,2)}} |
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    ConvertTo-Html -Fragment
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>$htmlBody += &quot;&lt;h2&gt;Top Processes by CPU&lt;/h2&gt;&quot;
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>$htmlBody += Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 Name, CPU, WorkingSet |
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    ConvertTo-Html -Fragment
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>ConvertTo-Html -Title &quot;Server Report&quot; -Head $header -Body $htmlBody |
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    Out-File C:\Reports\server-report.html
-</code></pre></div></p>
+<h3 id="html-reports-with-convertto-html">HTML Reports with ConvertTo-Html<a class="headerlink" href="#html-reports-with-convertto-html" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Basic HTML report</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$header</span> <span class="p">=</span> <span class="s2">&quot;&lt;style&gt;body{font-family:Arial} table{border-collapse:collapse} td,th{border:1px solid #ccc;padding:6px}&lt;/style&gt;&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">Get-Service</span> <span class="p">|</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-eq</span> <span class="s1">&#39;Stopped&#39;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">StartType</span> <span class="p">|</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="nb">ConvertTo-Html</span> <span class="n">-Title</span> <span class="s2">&quot;Stopped Services&quot;</span> <span class="n">-Head</span> <span class="nv">$header</span> <span class="p">|</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="nb">Out-File</span> <span class="n">C</span><span class="p">:\</span><span class="n">Reports</span><span class="p">\</span><span class="n">stopped-services</span><span class="p">.</span><span class="n">html</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Multi-section HTML report</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">$htmlBody</span> <span class="p">=</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nv">$htmlBody</span> <span class="p">+=</span> <span class="s2">&quot;&lt;h2&gt;Disk Usage&lt;/h2&gt;&quot;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nv">$htmlBody</span> <span class="p">+=</span> <span class="nb">Get-PSDrive</span> <span class="n">-PSProvider</span> <span class="n">FileSystem</span> <span class="p">|</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Used(GB)&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Used</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">2</span><span class="p">)}},</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Free(GB)&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Free</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">2</span><span class="p">)}}</span> <span class="p">|</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="nb">ConvertTo-Html</span> <span class="n">-Fragment</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nv">$htmlBody</span> <span class="p">+=</span> <span class="s2">&quot;&lt;h2&gt;Top Processes by CPU&lt;/h2&gt;&quot;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nv">$htmlBody</span> <span class="p">+=</span> <span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CPU</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="n">Name</span><span class="p">,</span> <span class="n">CPU</span><span class="p">,</span> <span class="n">WorkingSet</span> <span class="p">|</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="nb">ConvertTo-Html</span> <span class="n">-Fragment</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nb">ConvertTo-Html</span> <span class="n">-Title</span> <span class="s2">&quot;Server Report&quot;</span> <span class="n">-Head</span> <span class="nv">$header</span> <span class="n">-Body</span> <span class="nv">$htmlBody</span> <span class="p">|</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="nb">Out-File</span> <span class="n">C</span><span class="p">:\</span><span class="n">Reports</span><span class="p">\</span><span class="n">server-report</span><span class="p">.</span><span class="n">html</span>
+</code></pre></div>
 <h3 id="send-mailmessage-and-email-reports">Send-MailMessage and Email Reports<a class="headerlink" href="#send-mailmessage-and-email-reports" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Send a report by email (PowerShell 5.1 — deprecated but still functional)</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$mailParams</span> <span class="p">=</span> <span class="p">@{</span>

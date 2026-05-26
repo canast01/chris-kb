@@ -3965,6 +3965,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#credential-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credential Isolation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#storage-isolation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4132,7 +4143,7 @@
 - Re-encrypt or corrupt systems being restored.</p>
 <p>Isolation eliminates these lateral movement paths.</p>
 <h2 id="network-isolation-architecture">Network Isolation Architecture<a class="headerlink" href="#network-isolation-architecture" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>graph TB
+<pre class="mermaid"><code>graph TB
     PROD["Production Environment\n(potentially compromised)"]
     JUMP["Jump Host\n(IRE management access\nMFA required)"]
     IRE["Isolated Recovery Environment\n(dedicated VLANs / VNet)"]
@@ -4144,23 +4155,43 @@
     FW --&gt; IRE
     STORE --&gt; IRE
     IRE -.-&gt;|No route back to PROD| PROD</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Credential Isolation
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Requirement | Rationale |
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|---|---|
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| Dedicated IRE admin accounts | Production accounts may be compromised |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| No shared service accounts | Compromised service account credentials span both environments |
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| Separate AD/IdP | IRE domain controllers are not replicas of production AD |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| Break-glass accounts | Dedicated, MFA-protected, stored offline (sealed envelope / PAW) |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| No domain trust | IRE domain has no trust relationship with production domain |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>```powershell
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># Check for domain trusts in IRE AD (should return nothing)
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>Get-ADTrust -Filter *
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a># Verify IRE domain controller has no replication partners outside IRE
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>Get-ADReplicationPartnerMetadata -Target (hostname) -Scope Server
-</code></pre></div></p>
+<h2 id="credential-isolation">Credential Isolation<a class="headerlink" href="#credential-isolation" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dedicated IRE admin accounts</td>
+<td>Production accounts may be compromised</td>
+</tr>
+<tr>
+<td>No shared service accounts</td>
+<td>Compromised service account credentials span both environments</td>
+</tr>
+<tr>
+<td>Separate AD/IdP</td>
+<td>IRE domain controllers are not replicas of production AD</td>
+</tr>
+<tr>
+<td>Break-glass accounts</td>
+<td>Dedicated, MFA-protected, stored offline (sealed envelope / PAW)</td>
+</tr>
+<tr>
+<td>No domain trust</td>
+<td>IRE domain has no trust relationship with production domain</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check for domain trusts in IRE AD (should return nothing)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-ADTrust</span> <span class="n">-Filter</span> <span class="p">*</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Verify IRE domain controller has no replication partners outside IRE</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-ADReplicationPartnerMetadata</span> <span class="n">-Target</span> <span class="p">(</span><span class="n">hostname</span><span class="p">)</span> <span class="n">-Scope</span> <span class="n">Server</span>
+</code></pre></div>
 <h2 id="storage-isolation">Storage Isolation<a class="headerlink" href="#storage-isolation" title="Permanent link">&para;</a></h2>
 <p>Backup copies used for IRE restoration must be:</p>
 <ul>

@@ -3870,7 +3870,7 @@
 
 <h1 id="terraform-authentication">Terraform — Authentication<a class="headerlink" href="#terraform-authentication" title="Permanent link">&para;</a></h1>
 <h2 id="provider-credential-flow-cicd">Provider Credential Flow — CI/CD<a class="headerlink" href="#provider-credential-flow-cicd" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>graph LR
+<pre class="mermaid"><code>graph LR
     ciPipeline["CI/CD Pipeline\n(GitHub Actions / GitLab)"]
     ciSecrets["CI/CD Secrets\n(repository secrets)"]
     oidcToken["OIDC Token\n(short-lived)"]
@@ -3886,13 +3886,12 @@
     iamRole --&gt; envVars
     envVars --&gt; tfProvider
     tfProvider --&gt; cloudAPI</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```hcl
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a># provider.tf — uses environment variables automatically
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>provider &quot;aws&quot; {
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  region = &quot;eu-west-1&quot;
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  # Do not hardcode access_key or secret_key here
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>}
-</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># provider.tf — uses environment variables automatically</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;eu-west-1&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">  # Do not hardcode access_key or secret_key here</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">}</span>
+</code></pre></div>
 <h3 id="azure">Azure<a class="headerlink" href="#azure" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Service principal — preferred for CI/CD</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ARM_CLIENT_ID</span><span class="o">=</span>...

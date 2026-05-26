@@ -4295,6 +4295,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#creating-recovery-plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Recovery Plans
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating Recovery Plans">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recovery-plan-design-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plan Design Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-recovery-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a Recovery Plan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attaching-custom-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attaching Custom Scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#test-failover-non-disruptive-dr-drill" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4640,7 +4690,7 @@
 <p>VMware Live Site Recovery (formerly Site Recovery Manager) orchestrates disaster recovery workflows between two vCenter-managed sites. This page covers the full operational procedure set: creating protection groups, building recovery plans, running test failovers, performing planned migrations, executing emergency failovers, failing back, and re-protecting.</p>
 <hr />
 <h2 id="operational-flow-overview">Operational Flow Overview<a class="headerlink" href="#operational-flow-overview" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     start([Trigger Event]) --&gt; assess{Planned or\nUnplanned?}
 
     assess --&gt;|Planned migration / DR drill| pm[Planned Migration\nor Test Failover]
@@ -4664,47 +4714,62 @@
     class reprotect,reprotect2,failback action
     class assess decision
     class start,pm,fo terminal</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Creating Recovery Plans
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>A recovery plan references one or more protection groups and defines the power-on sequence, IP customisation rules, and pre/post-recovery scripts.
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>### Recovery Plan Design Rules
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Setting | Standard |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>|---|---|
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| Name convention | `RP-P&lt;priority&gt;-&lt;tier&gt;-&lt;site-pair&gt;` (e.g., `RP-P1-DB-DC1DC2`) |
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>| Boot order | Infrastructure (DC/DNS) → DB tier → App tier → Web/presentation tier |
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>| Step delay | 120 s after DC/DNS; 60 s after DB tier before app start |
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>| IP customisation | Required for all VMs in non-routed test/recovery networks |
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>| Max VMs per plan | 500 VMs (VLSR 9.0 supports up to 1500 VMs per protection group) |
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>### Creating a Recovery Plan
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>1. Navigate to **Site Recovery** &gt; **Recovery Plans** &gt; **New Recovery Plan**.
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>2. Enter plan name using the naming convention above.
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>3. Select the protection group(s) to include.
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>4. Configure the recovery site.
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>5. Set the **Test network** — use the dedicated bubble/test portgroup (e.g., `vPG-SRM-Test-Bubble`) to isolate test VMs from production networks.
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>6. Define VM boot sequence — drag VMs into numbered recovery steps; set per-step delays.
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>7. Add IP customisation rules for VMs that need different IP configuration at the recovery site.
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>8. Optionally attach **pre-power-on scripts** (e.g., DNS record update, load balancer pool drain) and **post-power-on scripts** (e.g., application health check, monitoring alert suppression).
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>9. Finish and run a validation before first use.
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>### Attaching Custom Scripts
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>SRM supports PowerShell and shell scripts called as recovery steps:
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>```powershell
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a># Example: post-power-on script to verify a Windows service is running
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>param([string]$ServerName, [string]$ServiceName)
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>$svc = Get-Service -ComputerName $ServerName -Name $ServiceName -ErrorAction Stop
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>if ($svc.Status -ne &#39;Running&#39;) {
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    throw &quot;Service $ServiceName on $ServerName is not running after failover&quot;
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>}
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>Write-Output &quot;Service $ServiceName is running on $ServerName&quot;
-</code></pre></div></p>
+<hr />
+<h2 id="creating-recovery-plans">Creating Recovery Plans<a class="headerlink" href="#creating-recovery-plans" title="Permanent link">&para;</a></h2>
+<p>A recovery plan references one or more protection groups and defines the power-on sequence, IP customisation rules, and pre/post-recovery scripts.</p>
+<h3 id="recovery-plan-design-rules">Recovery Plan Design Rules<a class="headerlink" href="#recovery-plan-design-rules" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name convention</td>
+<td><code>RP-P&lt;priority&gt;-&lt;tier&gt;-&lt;site-pair&gt;</code> (e.g., <code>RP-P1-DB-DC1DC2</code>)</td>
+</tr>
+<tr>
+<td>Boot order</td>
+<td>Infrastructure (DC/DNS) → DB tier → App tier → Web/presentation tier</td>
+</tr>
+<tr>
+<td>Step delay</td>
+<td>120 s after DC/DNS; 60 s after DB tier before app start</td>
+</tr>
+<tr>
+<td>IP customisation</td>
+<td>Required for all VMs in non-routed test/recovery networks</td>
+</tr>
+<tr>
+<td>Max VMs per plan</td>
+<td>500 VMs (VLSR 9.0 supports up to 1500 VMs per protection group)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="creating-a-recovery-plan">Creating a Recovery Plan<a class="headerlink" href="#creating-a-recovery-plan" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to <strong>Site Recovery</strong> &gt; <strong>Recovery Plans</strong> &gt; <strong>New Recovery Plan</strong>.</li>
+<li>Enter plan name using the naming convention above.</li>
+<li>Select the protection group(s) to include.</li>
+<li>Configure the recovery site.</li>
+<li>Set the <strong>Test network</strong> — use the dedicated bubble/test portgroup (e.g., <code>vPG-SRM-Test-Bubble</code>) to isolate test VMs from production networks.</li>
+<li>Define VM boot sequence — drag VMs into numbered recovery steps; set per-step delays.</li>
+<li>Add IP customisation rules for VMs that need different IP configuration at the recovery site.</li>
+<li>Optionally attach <strong>pre-power-on scripts</strong> (e.g., DNS record update, load balancer pool drain) and <strong>post-power-on scripts</strong> (e.g., application health check, monitoring alert suppression).</li>
+<li>Finish and run a validation before first use.</li>
+</ol>
+<h3 id="attaching-custom-scripts">Attaching Custom Scripts<a class="headerlink" href="#attaching-custom-scripts" title="Permanent link">&para;</a></h3>
+<p>SRM supports PowerShell and shell scripts called as recovery steps:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Example: post-power-on script to verify a Windows service is running</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">param</span><span class="p">(</span><span class="no">[string]</span><span class="nv">$ServerName</span><span class="p">,</span> <span class="no">[string]</span><span class="nv">$ServiceName</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">$svc</span> <span class="p">=</span> <span class="nb">Get-Service</span> <span class="n">-ComputerName</span> <span class="nv">$ServerName</span> <span class="n">-Name</span> <span class="nv">$ServiceName</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">if</span> <span class="p">(</span><span class="nv">$svc</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s1">&#39;Running&#39;</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="k">throw</span> <span class="s2">&quot;Service $ServiceName on $ServerName is not running after failover&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">}</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">Write-Output</span> <span class="s2">&quot;Service $ServiceName is running on $ServerName&quot;</span>
+</code></pre></div>
 <p>Place scripts in a location accessible to the SRM server service account and reference the UNC path in the recovery plan step.</p>
 <hr />
 <h2 id="test-failover-non-disruptive-dr-drill">Test Failover (Non-Disruptive DR Drill)<a class="headerlink" href="#test-failover-non-disruptive-dr-drill" title="Permanent link">&para;</a></h2>

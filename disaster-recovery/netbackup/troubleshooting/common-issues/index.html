@@ -4144,6 +4144,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#status-83-media-write-error-tape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status 83 — Media write error (tape)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#status-96-unable-to-allocate-new-media" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4468,7 +4479,7 @@
 <h2 id="backup-failures">Backup Failures<a class="headerlink" href="#backup-failures" title="Permanent link">&para;</a></h2>
 <h3 id="status-23-socket-readwrite-error">Status 23 — Socket read/write error<a class="headerlink" href="#status-23-socket-readwrite-error" title="Permanent link">&para;</a></h3>
 <p>Status 23 occurs when the network connection between master and client is interrupted during job execution.</p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check bpcd is running on the client</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check bpcd is running on the client</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>bpps<span class="w"> </span>-a<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>bpcd
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Test connectivity from master to client on NetBackup port</span>
@@ -4480,20 +4491,17 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Review bpbrm log on master</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>tail<span class="w"> </span>-200<span class="w"> </span>/usr/openv/netbackup/logs/bpbrm/log.&lt;yyyymmdd&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Mismatches between DNS short name and FQDN are a common cause. Ensure `CLIENT_NAME` is set to exactly the name the master server uses.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Status 83 — Media write error (tape)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Check bptm log for hardware-level error detail
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>grep -i &quot;error\|fail&quot; /usr/openv/netbackup/logs/bptm/log.&lt;yyyymmdd&gt;
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Query drive status
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>vmquery -b -drive &lt;drive-index&gt;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Clean drive if mount count threshold exceeded
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>tpclean -C &lt;drive-name&gt;
-</code></pre></div></p>
+<p>Mismatches between DNS short name and FQDN are a common cause. Ensure <code>CLIENT_NAME</code> is set to exactly the name the master server uses.</p>
+<h3 id="status-83-media-write-error-tape">Status 83 — Media write error (tape)<a class="headerlink" href="#status-83-media-write-error-tape" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check bptm log for hardware-level error detail</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span><span class="w"> </span>/usr/openv/netbackup/logs/bptm/log.&lt;yyyymmdd&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Query drive status</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vmquery<span class="w"> </span>-b<span class="w"> </span>-drive<span class="w"> </span>&lt;drive-index&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Clean drive if mount count threshold exceeded</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>tpclean<span class="w"> </span>-C<span class="w"> </span>&lt;drive-name&gt;
+</code></pre></div>
 <p>If errors persist after cleaning, engage tape vendor support and check robotic library firmware version.</p>
 <h3 id="status-96-unable-to-allocate-new-media">Status 96 — Unable to allocate new media<a class="headerlink" href="#status-96-unable-to-allocate-new-media" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List available scratch media</span>

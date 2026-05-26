@@ -4132,6 +4132,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-log-analysis-what-to-look-for-in-a-support-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Log Analysis: What to Look For in a Support Bundle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#splitter-health-check-on-esxi-rp4vm" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4316,33 +4327,56 @@
 </table>
 <hr />
 <h2 id="support-bundle-collection">Support Bundle Collection<a class="headerlink" href="#support-bundle-collection" title="Permanent link">&para;</a></h2>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Via boxmgmt</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Via boxmgmt</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>boxmgmt<span class="w"> </span>support<span class="w"> </span>collect_bundle
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Common Log Analysis: What to Look For in a Support Bundle
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>After collecting a support bundle (`boxmgmt support collect_bundle`), extract and review the following:
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Log File (inside bundle) | What to Look For |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| `system/messages` | Kernel errors, OOM events, hardware faults |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| `rp/rpa_log` | RPA process crashes, journal overflow events, CG state transitions |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| `rp/wcc_log` | WAN connectivity controller errors; look for `LINK_DOWN` or `TIMEOUT` entries |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| `rp/splitter_log` | Splitter-to-RPA communication failures; `SPLIT_ERROR` indicates data not being captured |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| `rp/journal_log` | Journal allocation failures, journal full events — indicates RPO at risk |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| `network/ifconfig` | Verify NIC configuration matches expected topology |
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| `storage/disk_info` | Storage path failures, multipath issues |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>**Key patterns to grep for:**
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>```bash
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># After extracting the bundle tarball
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>grep -i &quot;LINK_DOWN\|TIMEOUT\|JOURNAL_FULL\|SPLIT_ERROR\|CG_PAUSED&quot; rp/rpa_log
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>grep -i &quot;error\|critical\|fatal&quot; system/messages | grep -v &quot;audit&quot;
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>grep -i &quot;INIT\|PAUSE\|FAILOVER&quot; rp/rpa_log | tail -50
-</code></pre></div></p>
+<hr />
+<h2 id="common-log-analysis-what-to-look-for-in-a-support-bundle">Common Log Analysis: What to Look For in a Support Bundle<a class="headerlink" href="#common-log-analysis-what-to-look-for-in-a-support-bundle" title="Permanent link">&para;</a></h2>
+<p>After collecting a support bundle (<code>boxmgmt support collect_bundle</code>), extract and review the following:</p>
+<table>
+<thead>
+<tr>
+<th>Log File (inside bundle)</th>
+<th>What to Look For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>system/messages</code></td>
+<td>Kernel errors, OOM events, hardware faults</td>
+</tr>
+<tr>
+<td><code>rp/rpa_log</code></td>
+<td>RPA process crashes, journal overflow events, CG state transitions</td>
+</tr>
+<tr>
+<td><code>rp/wcc_log</code></td>
+<td>WAN connectivity controller errors; look for <code>LINK_DOWN</code> or <code>TIMEOUT</code> entries</td>
+</tr>
+<tr>
+<td><code>rp/splitter_log</code></td>
+<td>Splitter-to-RPA communication failures; <code>SPLIT_ERROR</code> indicates data not being captured</td>
+</tr>
+<tr>
+<td><code>rp/journal_log</code></td>
+<td>Journal allocation failures, journal full events — indicates RPO at risk</td>
+</tr>
+<tr>
+<td><code>network/ifconfig</code></td>
+<td>Verify NIC configuration matches expected topology</td>
+</tr>
+<tr>
+<td><code>storage/disk_info</code></td>
+<td>Storage path failures, multipath issues</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key patterns to grep for:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># After extracting the bundle tarball</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;LINK_DOWN\|TIMEOUT\|JOURNAL_FULL\|SPLIT_ERROR\|CG_PAUSED&quot;</span><span class="w"> </span>rp/rpa_log
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|critical\|fatal&quot;</span><span class="w"> </span>system/messages<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;audit&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;INIT\|PAUSE\|FAILOVER&quot;</span><span class="w"> </span>rp/rpa_log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+</code></pre></div>
 <hr />
 <h2 id="splitter-health-check-on-esxi-rp4vm">Splitter Health Check on ESXi (RP4VM)<a class="headerlink" href="#splitter-health-check-on-esxi-rp4vm" title="Permanent link">&para;</a></h2>
 <p>The RP4VM vSphere splitter is installed as a VIB on ESXi hosts. Use these commands directly on the ESXi host (SSH or ESXi shell).</p>

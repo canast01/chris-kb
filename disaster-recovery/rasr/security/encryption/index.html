@@ -4201,6 +4201,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#external-key-management-server-kmip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External Key Management Server (KMIP)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4571,7 +4582,7 @@
 <h2 id="array-level-data-at-rest-encryption-dre">Array-Level Data at Rest Encryption (D@RE)<a class="headerlink" href="#array-level-data-at-rest-encryption-dre" title="Permanent link">&para;</a></h2>
 <p>Dell EMC storage arrays support hardware-level encryption of all data at rest using Self-Encrypting Drives (SEDs) or software encryption.</p>
 <h3 id="verify-encryption-status">Verify Encryption Status<a class="headerlink" href="#verify-encryption-status" title="Permanent link">&para;</a></h3>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Unity — check Data at Rest Encryption status</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Unity — check Data at Rest Encryption status</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>/sys/security/encryption<span class="w"> </span>show
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Expected output should show:</span>
@@ -4584,18 +4595,15 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># View individual drive encryption status</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>uemcli<span class="w"> </span>/stor/drive<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### External Key Management Server (KMIP)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Using an external KMIP-compliant KMS (such as Thales CipherTrust or HashiCorp Vault Enterprise) separates encryption keys from the storage array.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```yaml
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>KMIP integration requirements:
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- KMS must be highly available (cluster of 2+ nodes)
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- Mutual TLS authentication between array and KMS
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- Key rotation policy: annually or on personnel change
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- Key backup: KMS keys must be backed up to a separate offline location
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- Loss of KMS access = array data inaccessible — plan for KMS DR
-</code></pre></div></p>
+<h3 id="external-key-management-server-kmip">External Key Management Server (KMIP)<a class="headerlink" href="#external-key-management-server-kmip" title="Permanent link">&para;</a></h3>
+<p>Using an external KMIP-compliant KMS (such as Thales CipherTrust or HashiCorp Vault Enterprise) separates encryption keys from the storage array.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">KMIP integration requirements</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">KMS must be highly available (cluster of 2+ nodes)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mutual TLS authentication between array and KMS</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Key rotation policy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">annually or on personnel change</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Key backup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">KMS keys must be backed up to a separate offline location</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Loss of KMS access = array data inaccessible — plan for KMS DR</span>
+</code></pre></div>
 <h2 id="recovery-media-encryption">Recovery Media Encryption<a class="headerlink" href="#recovery-media-encryption" title="Permanent link">&para;</a></h2>
 <h3 id="luks-encrypted-recovery-usb-linux">LUKS-Encrypted Recovery USB (Linux)<a class="headerlink" href="#luks-encrypted-recovery-usb-linux" title="Permanent link">&para;</a></h3>
 <p>Recovery media containing Linux system images should be encrypted so lost media cannot be read.</p>

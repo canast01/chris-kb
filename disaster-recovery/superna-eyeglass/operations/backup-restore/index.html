@@ -4306,6 +4306,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#configuring-scheduled-backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuring Scheduled Backups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#restoring-eyeglass-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4589,7 +4600,7 @@
 </table>
 <hr />
 <h2 id="backup-architecture">Backup Architecture<a class="headerlink" href="#backup-architecture" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>flowchart LR
     subgraph "Eyeglass Appliance"
         EG[Eyeglass Engine]
         CFG[Config Store]
@@ -4605,31 +4616,45 @@
     EG --&gt; LOCAL
     EG --&gt; NFS
     EG --&gt; SFTP</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Configuring Scheduled Backups
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Navigate to: **Admin → Backup &amp; Restore → Schedule**
+<hr />
+<h2 id="configuring-scheduled-backups">Configuring Scheduled Backups<a class="headerlink" href="#configuring-scheduled-backups" title="Permanent link">&para;</a></h2>
+<p>Navigate to: <strong>Admin → Backup &amp; Restore → Schedule</strong></p>
+<p><strong>Recommended schedule:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frequency</td>
+<td>Daily</td>
+</tr>
+<tr>
+<td>Time</td>
+<td>02:00 (outside replication windows)</td>
+</tr>
+<tr>
+<td>Retention</td>
+<td>7 backups</td>
+</tr>
+<tr>
+<td>Remote target</td>
+<td>NFS share or SFTP (off-appliance)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Configure remote backup target via CLI</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>igls<span class="w"> </span>backup<span class="w"> </span>configure-remote<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--type<span class="w"> </span>nfs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--host<span class="w"> </span>&lt;nfs-server-ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--path<span class="w"> </span>/exports/eyeglass-backups
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>**Recommended schedule:**
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Setting | Value |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>|---|---|
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| Frequency | Daily |
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>| Time | 02:00 (outside replication windows) |
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>| Retention | 7 backups |
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>| Remote target | NFS share or SFTP (off-appliance) |
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>```bash
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Configure remote backup target via CLI
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>igls backup configure-remote \
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  --type nfs \
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  --host &lt;nfs-server-ip&gt; \
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  --path /exports/eyeglass-backups
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a># Verify remote target connectivity
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>igls backup test-remote
-</code></pre></div></p>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Verify remote target connectivity</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>igls<span class="w"> </span>backup<span class="w"> </span>test-remote
+</code></pre></div>
 <hr />
 <h2 id="restoring-eyeglass-configuration">Restoring Eyeglass Configuration<a class="headerlink" href="#restoring-eyeglass-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="restore-to-same-appliance">Restore to Same Appliance<a class="headerlink" href="#restore-to-same-appliance" title="Permanent link">&para;</a></h3>

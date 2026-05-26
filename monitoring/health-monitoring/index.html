@@ -3724,6 +3724,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#server-health-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server Health (Windows)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#storage-array-health" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3876,7 +3887,7 @@
 
 
 <h1 id="infrastructure-health-monitoring">Infrastructure Health Monitoring<a class="headerlink" href="#infrastructure-health-monitoring" title="Permanent link">&para;</a></h1>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── Monitoring — Health Monitoring ────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── Monitoring — Health Monitoring ────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │             Health Monitoring — Composite Health Scores and Component-Level Checks            │   │
@@ -3919,18 +3930,16 @@
 <a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│                                                                                                       │
 <a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Server Health (Windows)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```powershell
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Services not running that should be
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Get-Service | Where-Object { $_.Status -ne &#39;Running&#39; -and $_.StartType -eq &#39;Automatic&#39; }
+<h2 id="server-health-windows">Server Health (Windows)<a class="headerlink" href="#server-health-windows" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Services not running that should be</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s1">&#39;Running&#39;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s1">&#39;Automatic&#39;</span> <span class="p">}</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Disk usage</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-Volume</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">DriveLetter</span><span class="p">,</span> <span class="n">FileSystemLabel</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;UsedGB&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$_</span><span class="p">.</span><span class="n">Size</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">SizeRemaining</span><span class="p">)/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;FreeGB&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeRemaining</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Size&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Size</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Disk usage
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Get-Volume | Select-Object DriveLetter, FileSystemLabel, @{N=&#39;UsedGB&#39;;E={[math]::Round(($_.Size - $_.SizeRemaining)/1GB,1)}}, @{N=&#39;FreeGB&#39;;E={[math]::Round($_.SizeRemaining/1GB,1)}}, @{N=&#39;Size&#39;;E={[math]::Round($_.Size/1GB,1)}}
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Recent system errors
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Get-EventLog -LogName System -EntryType Error -Newest 20
-</code></pre></div></p>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Recent system errors</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-EntryType</span> <span class="n">Error</span> <span class="n">-Newest</span> <span class="n">20</span>
+</code></pre></div>
 <h2 id="storage-array-health">Storage Array Health<a class="headerlink" href="#storage-array-health" title="Permanent link">&para;</a></h2>
 <p><strong>NetApp ONTAP:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show<span class="w">          </span><span class="c1"># overall health</span>

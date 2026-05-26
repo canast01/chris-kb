@@ -4296,6 +4296,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#2-image-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Image Integrity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#3-recovery-share-capacity" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4507,7 +4518,7 @@
 <p>Regular health checks verify that RASR is ready to perform a recovery — before an incident occurs. Run these on a monthly cadence and after any change to protected servers.</p>
 <h2 id="quick-health-check-5-minutes">Quick Health Check (5 minutes)<a class="headerlink" href="#quick-health-check-5-minutes" title="Permanent link">&para;</a></h2>
 <p>Run on each RASR-protected server:</p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Collect all key indicators in one pass</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Collect all key indicators in one pass</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$rasrKey</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SOFTWARE\Dell\RASR&quot;</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">$share</span>   <span class="p">=</span> <span class="s2">&quot;\\nas01\rasr-images\prod\</span><span class="p">$(</span><span class="n">hostname</span><span class="p">)</span><span class="s2">&quot;</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
@@ -4523,25 +4534,23 @@
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                       <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">Name</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Format-List</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### 2. Image Integrity
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```powershell
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Verify the most recent image is readable (DISM metadata check — does not restore)
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>$imagePath = (Get-ChildItem &quot;\\nas01\rasr-images\prod\$(hostname)&quot; -Filter &quot;*.wim&quot; |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>              Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>if ($imagePath) {
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    $result = dism /Get-ImageInfo /ImageFile:$imagePath 2&gt;&amp;1
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    if ($LASTEXITCODE -eq 0) {
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        Write-Host &quot;PASS: Image readable — $imagePath&quot;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    } else {
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        Write-Warning &quot;FAIL: Image unreadable — $imagePath&quot;
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        Write-Warning $result
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    }
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>} else {
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    Write-Warning &quot;No image found in share&quot;
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>}
-</code></pre></div></p>
+<h3 id="2-image-integrity">2. Image Integrity<a class="headerlink" href="#2-image-integrity" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Verify the most recent image is readable (DISM metadata check — does not restore)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$imagePath</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-ChildItem</span> <span class="s2">&quot;\\nas01\rasr-images\prod\</span><span class="p">$(</span><span class="n">hostname</span><span class="p">)</span><span class="s2">&quot;</span> <span class="n">-Filter</span> <span class="s2">&quot;*.wim&quot;</span> <span class="p">|</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>              <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">FullName</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">if</span> <span class="p">(</span><span class="nv">$imagePath</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="nv">$result</span> <span class="p">=</span> <span class="n">dism</span> <span class="p">/</span><span class="nb">Get-ImageInfo</span> <span class="p">/</span><span class="n">ImageFile</span><span class="p">:</span><span class="nv">$imagePath</span> <span class="n">2</span><span class="p">&gt;&amp;</span><span class="n">1</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$LASTEXITCODE</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;PASS: Image readable — $imagePath&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;FAIL: Image unreadable — $imagePath&quot;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="nb">Write-Warning</span> <span class="nv">$result</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="p">}</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="nb">Write-Warning</span> <span class="s2">&quot;No image found in share&quot;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">}</span>
+</code></pre></div>
 <h3 id="3-recovery-share-capacity">3. Recovery Share Capacity<a class="headerlink" href="#3-recovery-share-capacity" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check free space on the recovery share host</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$share</span> <span class="p">=</span> <span class="s2">&quot;\\nas01\rasr-images&quot;</span>

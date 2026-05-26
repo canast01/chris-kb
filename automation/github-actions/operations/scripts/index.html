@@ -3791,6 +3791,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#artifact-cleanup-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Artifact Cleanup Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#workflow-run-monitor" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3984,7 +3995,7 @@
 </blockquote>
 <p>Utility scripts for managing GitHub Actions infrastructure — secrets rotation, runner health, artifact cleanup, and workflow monitoring.</p>
 <h2 id="secret-rotation-script">Secret Rotation Script<a class="headerlink" href="#secret-rotation-script" title="Permanent link">&para;</a></h2>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="ch">#!/bin/bash</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># rotate-secrets.sh — Rotate GitHub secrets from HashiCorp Vault</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
@@ -4014,44 +4025,42 @@
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;All secrets rotated.&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Artifact Cleanup Script
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>#!/bin/bash
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a># cleanup-artifacts.sh — Delete expired and oversized artifacts
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>set -euo pipefail
+<h2 id="artifact-cleanup-script">Artifact Cleanup Script<a class="headerlink" href="#artifact-cleanup-script" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># cleanup-artifacts.sh — Delete expired and oversized artifacts</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">REPO</span><span class="o">=</span><span class="s2">&quot;org/infra&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">MAX_AGE_DAYS</span><span class="o">=</span><span class="m">30</span>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>REPO=&quot;org/infra&quot;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>MAX_AGE_DAYS=30
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>echo &quot;=== GitHub Actions Artifact Cleanup ===&quot;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Delete expired artifacts
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>echo &quot;Deleting expired artifacts...&quot;
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>gh api repos/$REPO/actions/artifacts --paginate | \
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  jq -r &#39;.artifacts[] | select(.expired == true) | .id&#39; | \
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  while read -r artifact_id; do
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    gh api --method DELETE repos/$REPO/actions/artifacts/$artifact_id
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    echo &quot;  Deleted artifact $artifact_id&quot;
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  done
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># Delete artifacts older than MAX_AGE_DAYS
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>CUTOFF=$(date -d &quot;$MAX_AGE_DAYS days ago&quot; +%Y-%m-%dT%H:%M:%SZ)
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>echo &quot;Deleting artifacts older than $MAX_AGE_DAYS days...&quot;
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>gh api repos/$REPO/actions/artifacts --paginate | \
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  jq --arg cutoff &quot;$CUTOFF&quot; \
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    -r &#39;.artifacts[] | select(.created_at &lt; $cutoff) | .id&#39; | \
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  while read -r artifact_id; do
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    gh api --method DELETE repos/$REPO/actions/artifacts/$artifact_id
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    echo &quot;  Deleted artifact $artifact_id (older than $MAX_AGE_DAYS days)&quot;
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  done
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a># Show remaining cache usage
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>echo &quot;&quot;
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>echo &quot;Current cache usage:&quot;
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>gh api repos/$REPO/actions/cache/usage | \
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>  jq &#39;&quot;Active caches: \(.active_caches_count) | Size: \(.active_caches_size_in_bytes / 1048576 | round) MB&quot;&#39;
-</code></pre></div></p>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== GitHub Actions Artifact Cleanup ===&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Delete expired artifacts</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Deleting expired artifacts...&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>gh<span class="w"> </span>api<span class="w"> </span>repos/<span class="nv">$REPO</span>/actions/artifacts<span class="w"> </span>--paginate<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.artifacts[] | select(.expired == true) | .id&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>artifact_id<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>DELETE<span class="w"> </span>repos/<span class="nv">$REPO</span>/actions/artifacts/<span class="nv">$artifact_id</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  Deleted artifact </span><span class="nv">$artifact_id</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span><span class="k">done</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Delete artifacts older than MAX_AGE_DAYS</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="nv">CUTOFF</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$MAX_AGE_DAYS</span><span class="s2"> days ago&quot;</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Deleting artifacts older than </span><span class="nv">$MAX_AGE_DAYS</span><span class="s2"> days...&quot;</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>gh<span class="w"> </span>api<span class="w"> </span>repos/<span class="nv">$REPO</span>/actions/artifacts<span class="w"> </span>--paginate<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span>jq<span class="w"> </span>--arg<span class="w"> </span>cutoff<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CUTOFF</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">    </span>-r<span class="w"> </span><span class="s1">&#39;.artifacts[] | select(.created_at &lt; $cutoff) | .id&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>artifact_id<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">    </span>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>DELETE<span class="w"> </span>repos/<span class="nv">$REPO</span>/actions/artifacts/<span class="nv">$artifact_id</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  Deleted artifact </span><span class="nv">$artifact_id</span><span class="s2"> (older than </span><span class="nv">$MAX_AGE_DAYS</span><span class="s2"> days)&quot;</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">  </span><span class="k">done</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1"># Show remaining cache usage</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Current cache usage:&quot;</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>gh<span class="w"> </span>api<span class="w"> </span>repos/<span class="nv">$REPO</span>/actions/cache/usage<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;&quot;Active caches: \(.active_caches_count) | Size: \(.active_caches_size_in_bytes / 1048576 | round) MB&quot;&#39;</span>
+</code></pre></div>
 <h2 id="workflow-run-monitor">Workflow Run Monitor<a class="headerlink" href="#workflow-run-monitor" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># monitor-workflow.sh — Wait for a workflow run to complete and report status</span>

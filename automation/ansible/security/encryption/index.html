@@ -3676,6 +3676,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#inline-encrypted-strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inline Encrypted Strings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#recommended-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3907,7 +3918,7 @@
 </blockquote>
 <h2 id="ansible-vault">Ansible Vault<a class="headerlink" href="#ansible-vault" title="Permanent link">&para;</a></h2>
 <p>Ansible Vault encrypts sensitive data at rest using AES-256-CBC. Encrypted content lives alongside plaintext YAML in the same repository — safely committed to Git.</p>
-<p><pre class="mermaid"><code>graph LR
+<pre class="mermaid"><code>graph LR
     plainSecret["Plaintext Secret\n(password / API key)"]
     vaultEncrypt["ansible-vault\nencrypt_string"]
     vaultFile["vault.yml\n(encrypted at rest)"]
@@ -3921,13 +3932,11 @@
     mainYml --&gt; playbook["Playbook\n(uses db_password)"]
     vcKeyFile --&gt;|decrypt at runtime| playbook
     playbook --&gt;|over SSH| managedHost["Managed Host"]</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Inline Encrypted Strings
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ansible-vault encrypt_string &#39;prod-db-password&#39; \
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  --name &#39;vault_db_password&#39; \
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  --vault-id prod@~/.vault_pass_prod
-</code></pre></div></p>
+<h3 id="inline-encrypted-strings">Inline Encrypted Strings<a class="headerlink" href="#inline-encrypted-strings" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ansible-vault<span class="w"> </span>encrypt_string<span class="w"> </span><span class="s1">&#39;prod-db-password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--name<span class="w"> </span><span class="s1">&#39;vault_db_password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--vault-id<span class="w"> </span>prod@~/.vault_pass_prod
+</code></pre></div>
 <p>Paste the output directly into a plaintext YAML file:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># group_vars/prod/main.yml</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">vault_db_password</span><span class="p">:</span><span class="w"> </span><span class="kt">!vault</span><span class="w"> </span><span class="p p-Indicator">|</span>

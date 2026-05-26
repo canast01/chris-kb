@@ -4312,6 +4312,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#upgrade-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-upgrade-checklist-vbr-version-upgrades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Upgrade Checklist (VBR Version Upgrades)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pre-Upgrade Checklist (VBR Version Upgrades)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#before-the-upgrade-window" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before the Upgrade Window
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#after-the-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        After the Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#decommission-procedure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4470,7 +4553,7 @@
 <h2 id="release-cadence">Release Cadence<a class="headerlink" href="#release-cadence" title="Permanent link">&para;</a></h2>
 <p>Veeam releases major versions (VBR 12, 12.1, 12.2) annually with cumulative patches (P-releases) throughout the year.</p>
 <h3 id="upgrade-component-order">Upgrade Component Order<a class="headerlink" href="#upgrade-component-order" title="Permanent link">&para;</a></h3>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     start(["Start upgrade\nmaintenance window"])
     start --&gt; configBackup["Export VBR configuration backup\nExport-VBRConfiguration\nVerify backup off-server"]
     configBackup --&gt; snapshot["Take VM snapshot of\nVBR Server (if virtualised)"]
@@ -4491,78 +4574,106 @@
     class configBackup,snapshot,wait,vbrUpgrade,voneUpgrade,proxyUpgrade,repoUpgrade,validate,cleanup action
     class jobCheck decision
     class start,done terminal</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Additional checks:
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- [ ] Veeam ONE version is compatible with target VBR version
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- [ ] vCenter version supported by target VBR version
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- [ ] Proxy and repository OS versions supported (Windows Server 2016+ or supported Linux)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>## Upgrade Procedure
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>1. **Backup server upgrade**: Run the VBR installer — it performs a pre-upgrade compatibility check, backs up the config DB, and upgrades in-place
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>2. **Veeam ONE upgrade** (if deployed): Run the Veeam ONE installer on the Veeam ONE server
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>3. **Push proxy upgrades**: VBR console → Backup Infrastructure → Backup Proxies → right-click each proxy → Upgrade
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>4. **Update repositories**: VBR console → Backup Infrastructure → Backup Repositories → right-click Linux repos → Upgrade
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>5. **Post-upgrade validation**: Run a test backup on a non-critical VM
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>## Pre-Upgrade Checklist (VBR Version Upgrades)
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>### Before the Upgrade Window
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>- [ ] Read the Veeam release notes — check for breaking changes, deprecated features, and required component upgrades.
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>- [ ] Verify OS and SQL Server compatibility for the new version.
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>- [ ] Export the current VBR configuration backup:
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  ```powershell
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>  Export-VBRConfiguration -Path &quot;C:\vbr-config-backup-$(Get-Date -Format yyyyMMdd).xml&quot;
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>  ```
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>- [ ] Take a snapshot of the Veeam Backup Server VM (if virtualised) immediately before the upgrade.
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>- [ ] Confirm all running jobs are complete and no jobs are scheduled to start during the upgrade window.
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>- [ ] Notify stakeholders of the maintenance window and expected impact.
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>- [ ] Download the ISO or installer from Veeam&#39;s site and verify the checksum.
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>### After the Upgrade
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>- [ ] Confirm the VBR service starts and the console connects.
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>- [ ] Run `Get-VBRJob` to confirm all jobs are visible and their schedules are intact.
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>- [ ] Manually start a non-critical backup job to confirm end-to-end function.
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>- [ ] Upgrade the Veeam ONE server and agent if in use (must match VBR version).
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>- [ ] Delete the pre-upgrade VM snapshot after 48 hours of stable operation.
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>- [ ] Update this runbook with the new version number and upgrade date.
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>## Version Compatibility
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>| Scenario | Supported? |
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>|---|---|
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>| Proxy N-1 minor behind Backup Server | Supported — upgrade within next cycle |
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>| Proxy N-2 behind Backup Server | Not supported — upgrade immediately |
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>| Veeam ONE different major version | Not supported — must match VBR major |
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>## License Management
-<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>
-<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>| License Model | Tracking |
-<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>|---|---|
-<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>| Veeam Universal License (VUL) | Per-workload; check consumed vs. licensed monthly |
-<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>| Per-socket (legacy) | Per vSphere socket; count sockets in vCenter |
-<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>| Rental/subscription | Annual renewal; Veeam licensing portal |
-<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>
-<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>Check licence utilisation: Veeam Backup console → Main Menu → License.
-<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>
-<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>Alert at 90% utilisation — procurement lead time can be 2–4 weeks.
-<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>
-<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>## Configuration Backup
-<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>
-<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>Run a configuration backup before every change and on a scheduled daily basis:
-<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>
-<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>```powershell
-<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a># VBR config backup — always run before upgrades
-<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a># Main Menu → Configuration Backup → Backup Now
-<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>
-<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a># Verify backup exists
-<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>Get-ChildItem &quot;C:\VBR\Config\&quot; | Sort-Object LastWriteTime -Descending | Select-Object -First 5
-</code></pre></div></p>
+<p>Additional checks:
+- [ ] Veeam ONE version is compatible with target VBR version
+- [ ] vCenter version supported by target VBR version
+- [ ] Proxy and repository OS versions supported (Windows Server 2016+ or supported Linux)</p>
+<h2 id="upgrade-procedure">Upgrade Procedure<a class="headerlink" href="#upgrade-procedure" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Backup server upgrade</strong>: Run the VBR installer — it performs a pre-upgrade compatibility check, backs up the config DB, and upgrades in-place</p>
+</li>
+<li>
+<p><strong>Veeam ONE upgrade</strong> (if deployed): Run the Veeam ONE installer on the Veeam ONE server</p>
+</li>
+<li>
+<p><strong>Push proxy upgrades</strong>: VBR console → Backup Infrastructure → Backup Proxies → right-click each proxy → Upgrade</p>
+</li>
+<li>
+<p><strong>Update repositories</strong>: VBR console → Backup Infrastructure → Backup Repositories → right-click Linux repos → Upgrade</p>
+</li>
+<li>
+<p><strong>Post-upgrade validation</strong>: Run a test backup on a non-critical VM</p>
+</li>
+</ol>
+<h2 id="pre-upgrade-checklist-vbr-version-upgrades">Pre-Upgrade Checklist (VBR Version Upgrades)<a class="headerlink" href="#pre-upgrade-checklist-vbr-version-upgrades" title="Permanent link">&para;</a></h2>
+<h3 id="before-the-upgrade-window">Before the Upgrade Window<a class="headerlink" href="#before-the-upgrade-window" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Read the Veeam release notes — check for breaking changes, deprecated features, and required component upgrades.</li>
+<li>[ ] Verify OS and SQL Server compatibility for the new version.</li>
+<li>[ ] Export the current VBR configuration backup:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">Export-VBRConfiguration</span> <span class="n">-Path</span> <span class="s2">&quot;C:\vbr-config-backup-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.xml&quot;</span>
+</code></pre></div></li>
+<li>[ ] Take a snapshot of the Veeam Backup Server VM (if virtualised) immediately before the upgrade.</li>
+<li>[ ] Confirm all running jobs are complete and no jobs are scheduled to start during the upgrade window.</li>
+<li>[ ] Notify stakeholders of the maintenance window and expected impact.</li>
+<li>[ ] Download the ISO or installer from Veeam's site and verify the checksum.</li>
+</ul>
+<h3 id="after-the-upgrade">After the Upgrade<a class="headerlink" href="#after-the-upgrade" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Confirm the VBR service starts and the console connects.</li>
+<li>[ ] Run <code>Get-VBRJob</code> to confirm all jobs are visible and their schedules are intact.</li>
+<li>[ ] Manually start a non-critical backup job to confirm end-to-end function.</li>
+<li>[ ] Upgrade the Veeam ONE server and agent if in use (must match VBR version).</li>
+<li>[ ] Delete the pre-upgrade VM snapshot after 48 hours of stable operation.</li>
+<li>[ ] Update this runbook with the new version number and upgrade date.</li>
+</ul>
+<h2 id="version-compatibility">Version Compatibility<a class="headerlink" href="#version-compatibility" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Supported?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Proxy N-1 minor behind Backup Server</td>
+<td>Supported — upgrade within next cycle</td>
+</tr>
+<tr>
+<td>Proxy N-2 behind Backup Server</td>
+<td>Not supported — upgrade immediately</td>
+</tr>
+<tr>
+<td>Veeam ONE different major version</td>
+<td>Not supported — must match VBR major</td>
+</tr>
+</tbody>
+</table>
+<h2 id="license-management">License Management<a class="headerlink" href="#license-management" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>License Model</th>
+<th>Tracking</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Veeam Universal License (VUL)</td>
+<td>Per-workload; check consumed vs. licensed monthly</td>
+</tr>
+<tr>
+<td>Per-socket (legacy)</td>
+<td>Per vSphere socket; count sockets in vCenter</td>
+</tr>
+<tr>
+<td>Rental/subscription</td>
+<td>Annual renewal; Veeam licensing portal</td>
+</tr>
+</tbody>
+</table>
+<p>Check licence utilisation: Veeam Backup console → Main Menu → License.</p>
+<p>Alert at 90% utilisation — procurement lead time can be 2–4 weeks.</p>
+<h2 id="configuration-backup">Configuration Backup<a class="headerlink" href="#configuration-backup" title="Permanent link">&para;</a></h2>
+<p>Run a configuration backup before every change and on a scheduled daily basis:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># VBR config backup — always run before upgrades</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># Main Menu → Configuration Backup → Backup Now</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Verify backup exists</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-ChildItem</span> <span class="s2">&quot;C:\VBR\Config\&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">5</span>
+</code></pre></div>
 <p>Store the config backup off the Backup Server — it is useless if the server hosting it is lost.</p>
 <h2 id="decommission-procedure">Decommission Procedure<a class="headerlink" href="#decommission-procedure" title="Permanent link">&para;</a></h2>
 <p>When retiring a Veeam Backup Server:

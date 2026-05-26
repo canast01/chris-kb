@@ -3617,6 +3617,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#state-conflicts-and-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State Conflicts and Errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#refresh-and-reconciliation-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3795,7 +3806,7 @@
 
 <h1 id="terraform-common-issues">Terraform — Common Issues<a class="headerlink" href="#terraform-common-issues" title="Permanent link">&para;</a></h1>
 <h2 id="terraform-troubleshooting-decision-flow">Terraform Troubleshooting Decision Flow<a class="headerlink" href="#terraform-troubleshooting-decision-flow" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     failure["Terraform Error\nor Unexpected Behaviour"]
     failure --&gt; errType{"Error category?"}
     errType --&gt;|Provider auth| checkCreds["Check cloud credentials\naws sts get-caller-identity"]
@@ -3808,28 +3819,26 @@
     errType --&gt;|Drift after apply| refreshOnly["terraform apply\n-refresh-only"]
     errType --&gt;|Unknown| enableDebug["TF_LOG=DEBUG\nTF_LOG_PATH=debug.log"]
     enableDebug --&gt; reviewLog["Review provider\nAPI call trace"]</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## State Conflicts and Errors
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Error: state locked by another process
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a># Get the lock ID from the error message, then force-unlock
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>terraform force-unlock &lt;LOCK_ID&gt;
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Error: state file is corrupt or incompatible
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># Pull the state and inspect it
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>terraform state pull &gt; current.tfstate
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>cat current.tfstate | jq &#39;.version, .terraform_version&#39;
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Error: resource already exists in another state
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># Remove from state and re-import under the correct address
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>terraform state rm aws_instance.duplicate
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>terraform import aws_instance.web01 i-0abc1234
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Error: inconsistent result after apply
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a># Usually a provider bug — re-run plan to confirm real state
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>terraform refresh
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>terraform plan
-</code></pre></div></p>
+<h2 id="state-conflicts-and-errors">State Conflicts and Errors<a class="headerlink" href="#state-conflicts-and-errors" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Error: state locked by another process</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Get the lock ID from the error message, then force-unlock</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>terraform<span class="w"> </span>force-unlock<span class="w"> </span>&lt;LOCK_ID&gt;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Error: state file is corrupt or incompatible</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Pull the state and inspect it</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>terraform<span class="w"> </span>state<span class="w"> </span>pull<span class="w"> </span>&gt;<span class="w"> </span>current.tfstate
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>cat<span class="w"> </span>current.tfstate<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.version, .terraform_version&#39;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Error: resource already exists in another state</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Remove from state and re-import under the correct address</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>terraform<span class="w"> </span>state<span class="w"> </span>rm<span class="w"> </span>aws_instance.duplicate
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>terraform<span class="w"> </span>import<span class="w"> </span>aws_instance.web01<span class="w"> </span>i-0abc1234
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Error: inconsistent result after apply</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Usually a provider bug — re-run plan to confirm real state</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>terraform<span class="w"> </span>refresh
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>terraform<span class="w"> </span>plan
+</code></pre></div>
 <h2 id="refresh-and-reconciliation-issues">Refresh and Reconciliation Issues<a class="headerlink" href="#refresh-and-reconciliation-issues" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Manually refresh state from real infrastructure</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-refresh-only

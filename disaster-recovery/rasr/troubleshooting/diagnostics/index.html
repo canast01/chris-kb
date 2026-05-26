@@ -4138,6 +4138,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#backup-job-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Job Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#network-share-diagnostics" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4400,7 +4411,7 @@
 </tbody>
 </table>
 <h3 id="collecting-rasr-logs">Collecting RASR logs<a class="headerlink" href="#collecting-rasr-logs" title="Permanent link">&para;</a></h3>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># View most recent RASR logs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># View most recent RASR logs</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$logDir</span> <span class="p">=</span> <span class="s2">&quot;C:\Logs\RASR&quot;</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="nv">$logDir</span> <span class="n">-Filter</span> <span class="s2">&quot;*.log&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">5</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
@@ -4412,31 +4423,28 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">LevelDisplayName</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="nb">Export-Csv</span> <span class="s2">&quot;C:\Temp\RASR-AppEvents.csv&quot;</span> <span class="n">-NoTypeInformation</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Backup Job Diagnostics
+<hr />
+<h2 id="backup-job-diagnostics">Backup Job Diagnostics<a class="headerlink" href="#backup-job-diagnostics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Run a manual backup and capture exit code</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">&amp;</span> <span class="s2">&quot;C:\Program Files\Dell\RASR\rasrutil.exe&quot;</span> <span class="p">/</span><span class="n">backup</span> <span class="p">/</span><span class="n">destination</span> <span class="s2">&quot;\\nas01\rasr-images\$env:COMPUTERNAME&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Exit code: $LASTEXITCODE&quot;</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```powershell
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Run a manual backup and capture exit code
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>&amp; &quot;C:\Program Files\Dell\RASR\rasrutil.exe&quot; /backup /destination &quot;\\nas01\rasr-images\$env:COMPUTERNAME&quot;
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Write-Host &quot;Exit code: $LASTEXITCODE&quot;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># RASR exit codes:
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># 0  = Success
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># 1  = General error
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># 3  = Destination not accessible
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># 4  = Insufficient space on destination
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># 5  = Image file corrupt
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># 6  = Restore target disk not found
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># 10 = Authentication failure
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># Verify an existing image
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>&amp; &quot;C:\Program Files\Dell\RASR\rasrutil.exe&quot; /verify /source &quot;\\nas01\rasr-images\$env:COMPUTERNAME\latest.wim&quot;
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Write-Host &quot;Verify exit code: $LASTEXITCODE&quot;
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a># List images on share to confirm backup exists
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Get-ChildItem &quot;\\nas01\rasr-images\$env:COMPUTERNAME&quot; | Sort-Object LastWriteTime -Descending | Select-Object -First 10
-</code></pre></div></p>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># RASR exit codes:</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># 0  = Success</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># 1  = General error</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># 3  = Destination not accessible</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># 4  = Insufficient space on destination</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># 5  = Image file corrupt</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># 6  = Restore target disk not found</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c"># 10 = Authentication failure</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c"># Verify an existing image</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">&amp;</span> <span class="s2">&quot;C:\Program Files\Dell\RASR\rasrutil.exe&quot;</span> <span class="p">/</span><span class="n">verify</span> <span class="p">/</span><span class="n">source</span> <span class="s2">&quot;\\nas01\rasr-images\$env:COMPUTERNAME\latest.wim&quot;</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Verify exit code: $LASTEXITCODE&quot;</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c"># List images on share to confirm backup exists</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="nb">Get-ChildItem</span> <span class="s2">&quot;\\nas01\rasr-images\$env:COMPUTERNAME&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span>
+</code></pre></div>
 <hr />
 <h2 id="network-share-diagnostics">Network Share Diagnostics<a class="headerlink" href="#network-share-diagnostics" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Test TCP connectivity to NAS on SMB port</span>

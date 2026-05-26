@@ -3788,8 +3788,30 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Daily Checks">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linting-workflow-files-with-actionlint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linting Workflow Files with actionlint
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#schema-validation" class="md-nav__link">
@@ -4001,7 +4023,7 @@
 </blockquote>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     start(["Daily health check"]) --&gt; workflowList
 
     workflowList["gh workflow list\nAll workflows enabled?"]
@@ -4014,32 +4036,28 @@
     branchProt --&gt; result{Issues found?}
     result --&gt;|No| ok(["Health check passed"])
     result --&gt;|Yes| investigate(["Investigate and remediate"])</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Validation
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>### Linting Workflow Files with actionlint
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>`actionlint` is a static analysis tool for GitHub Actions workflow YAML files.
+<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
+<h3 id="linting-workflow-files-with-actionlint">Linting Workflow Files with actionlint<a class="headerlink" href="#linting-workflow-files-with-actionlint" title="Permanent link">&para;</a></h3>
+<p><code>actionlint</code> is a static analysis tool for GitHub Actions workflow YAML files.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Install actionlint (macOS)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>brew<span class="w"> </span>install<span class="w"> </span>actionlint
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Lint all workflows in the current repository</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actionlint
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```bash
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Install actionlint (macOS)
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>brew install actionlint
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Lint all workflows in the current repository
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>actionlint
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># Lint a specific file
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>actionlint .github/workflows/ci.yml
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Output as JSON for integration with other tools
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>actionlint -format &#39;{{json .}}&#39;
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a># Ignore a specific rule
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>actionlint -ignore &#39;expression syntax error&#39;
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a># Run inside a Docker container (no install required)
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>docker run --rm -v &quot;$(pwd):/repo&quot; --workdir /repo \
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  rhysd/actionlint:latest
-</code></pre></div></p>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Lint a specific file</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>actionlint<span class="w"> </span>.github/workflows/ci.yml
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Output as JSON for integration with other tools</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>actionlint<span class="w"> </span>-format<span class="w"> </span><span class="s1">&#39;{{json .}}&#39;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Ignore a specific rule</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>actionlint<span class="w"> </span>-ignore<span class="w"> </span><span class="s1">&#39;expression syntax error&#39;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Run inside a Docker container (no install required)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">:/repo&quot;</span><span class="w"> </span>--workdir<span class="w"> </span>/repo<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>rhysd/actionlint:latest
+</code></pre></div>
 <h3 id="schema-validation">Schema Validation<a class="headerlink" href="#schema-validation" title="Permanent link">&para;</a></h3>
 <p>VS Code and JetBrains IDEs provide schema-based validation when the schema URL is declared.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Add to the top of any workflow file for IDE validation</span>

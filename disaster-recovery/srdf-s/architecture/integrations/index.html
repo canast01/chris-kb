@@ -4121,6 +4121,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#vsphere-metro-storage-cluster-vmsc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Metro Storage Cluster (vMSC)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#aria-operations-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4303,7 +4314,7 @@
 </blockquote>
 <hr />
 <h2 id="vmsc-and-srm-integration-topology">vMSC and SRM Integration Topology<a class="headerlink" href="#vmsc-and-srm-integration-topology" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>graph TD
+<pre class="mermaid"><code>graph TD
     subgraph siteA ["Site A — Production"]
         vcA["vCenter\n(Site A)"]
         srmA["SRM Server\n(Protected Site)"]
@@ -4330,24 +4341,20 @@
     srmA &lt;--&gt;|"SRM pairing"| srmB
     sra1 --&gt; r1
     sra2 --&gt; r2</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Map each protection group to an SRDF group:
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- One protection group per SRDF group (one per application tier)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- Include all datastores in the consistency group within a single protection group
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>---
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>## vSphere Metro Storage Cluster (vMSC)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>SRDF/S supports vMSC configurations with RPO=0 for stretched clusters:
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>- Both sites present the same SRDF/S volumes to ESXi hosts via separate fabric paths
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>- vSphere HA configured with `vm.minLastFailoverTime = 0` for immediate failover
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>- vSAN witness appliance in a third site (or substitute with PDL handling policies)
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>- Host affinity rules keep VMs at their preferred site under normal operation
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>Verify vMSC readiness:
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>```bash
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>esxcli storage nmp path list | grep -i powermax   # Confirm paths at both sites
+<p>Map each protection group to an SRDF group:
+- One protection group per SRDF group (one per application tier)
+- Include all datastores in the consistency group within a single protection group</p>
+<hr />
+<h2 id="vsphere-metro-storage-cluster-vmsc">vSphere Metro Storage Cluster (vMSC)<a class="headerlink" href="#vsphere-metro-storage-cluster-vmsc" title="Permanent link">&para;</a></h2>
+<p>SRDF/S supports vMSC configurations with RPO=0 for stretched clusters:</p>
+<ul>
+<li>Both sites present the same SRDF/S volumes to ESXi hosts via separate fabric paths</li>
+<li>vSphere HA configured with <code>vm.minLastFailoverTime = 0</code> for immediate failover</li>
+<li>vSAN witness appliance in a third site (or substitute with PDL handling policies)</li>
+<li>Host affinity rules keep VMs at their preferred site under normal operation</li>
+</ul>
+<p>Verify vMSC readiness:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>powermax<span class="w">   </span><span class="c1"># Confirm paths at both sites</span>
 </code></pre></div></p>
 <hr />
 <h2 id="aria-operations-integration">Aria Operations Integration<a class="headerlink" href="#aria-operations-integration" title="Permanent link">&para;</a></h2>

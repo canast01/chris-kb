@@ -4296,6 +4296,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#initiating-failover-via-eyeglass-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initiating Failover via Eyeglass CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#access-zone-activation-at-dr-site" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4563,7 +4574,7 @@
 <h1 id="superna-eyeglass-procedures">Superna Eyeglass — Procedures<a class="headerlink" href="#superna-eyeglass-procedures" title="Permanent link">&para;</a></h1>
 <h2 id="failover">Failover<a class="headerlink" href="#failover" title="Permanent link">&para;</a></h2>
 <p>Eyeglass DR Assistant orchestrates failover of PowerScale (Isilon) access zones from a production cluster to a DR cluster. Failover includes stopping SyncIQ replication, activating DR access zones, and remapping NFS/SMB shares and DNS entries.</p>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     detect(["Detect: Production\ncluster unavailable / event declared"])
     validateRPO["Validate RPO\nCheck SyncIQ lag vs threshold"]
     preflight["egcli drtest preflight\nConfirm DR prerequisites"]
@@ -4581,27 +4592,25 @@
     ready --&gt;|No| noGo
     ready --&gt;|Yes| triggerFO
     triggerFO --&gt; breakSync --&gt; activateZones --&gt; dnsSwitch --&gt; notify --&gt; validate --&gt; done</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Initiating Failover via Eyeglass CLI
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># List all configured DR policies
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>egcli drpolicy list
+<h3 id="initiating-failover-via-eyeglass-cli">Initiating Failover via Eyeglass CLI<a class="headerlink" href="#initiating-failover-via-eyeglass-cli" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all configured DR policies</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check the current state of all DR policies</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>status<span class="w"> </span>--all
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Check the current state of all DR policies
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>egcli drpolicy status --all
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Run a DR test (non-disruptive rehearsal — confirms readiness without cutting over DNS)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>run<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Run a DR test (non-disruptive rehearsal — confirms readiness without cutting over DNS)
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>egcli drtest run --policy &lt;policy_name&gt;
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Initiate a full failover (disruptive — activates DR cluster)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>egcli<span class="w"> </span>drfailover<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--confirm
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Initiate a full failover (disruptive — activates DR cluster)
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>egcli drfailover --policy &lt;policy_name&gt; --confirm
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Monitor failover progress</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>egcli<span class="w"> </span>drfailover<span class="w"> </span>status<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Monitor failover progress
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>egcli drfailover status --policy &lt;policy_name&gt;
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a># Watch Eyeglass job log for failover steps
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>egcli jobs list --type failover
-</code></pre></div></p>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Watch Eyeglass job log for failover steps</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>egcli<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>failover
+</code></pre></div>
 <h3 id="access-zone-activation-at-dr-site">Access Zone Activation at DR Site<a class="headerlink" href="#access-zone-activation-at-dr-site" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># After failover is triggered — confirm DR access zones are active</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>egcli<span class="w"> </span>accesszone<span class="w"> </span>status<span class="w"> </span>--cluster<span class="w"> </span>&lt;dr-cluster&gt;

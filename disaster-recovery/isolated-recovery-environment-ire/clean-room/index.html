@@ -3965,6 +3965,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#data-validation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Validation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-integrity-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Integrity Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#escalation-if-malware-found" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4121,7 +4143,7 @@
 - Encrypted files that appear intact but are inaccessible.</p>
 <p>The clean room is where analysis occurs. Data and systems are treated as suspect until proven clean.</p>
 <h2 id="clean-room-architecture">Clean Room Architecture<a class="headerlink" href="#clean-room-architecture" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>graph LR
+<pre class="mermaid"><code>graph LR
     BACKUP["Immutable Backup Copy"] --&gt; RESTORE["Restore to\nIRE Staging"]
     RESTORE --&gt; SCAN["Malware Scan\n(offline AV + forensics)"]
     SCAN --&gt;|"Clean"| CLEANROOM["Clean Room\n(validated data)"]
@@ -4129,30 +4151,63 @@
     CLEANROOM --&gt; VALIDATE["Business Validation\n(app team testing)"]
     VALIDATE --&gt;|"Approved"| REINTRODUCE["Reintroduce to Production"]
     VALIDATE --&gt;|"Issues found"| RESTORE</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Data Validation Checklist
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Step | Owner | Pass condition |
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|---|---|---|
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| AV scan complete | IR team | 0 detections or all detections reviewed and cleared |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| File integrity check | IR team | Hash manifest matches backup catalogue |
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| Encrypted file check | IR team | No files in known encrypted extensions (`.locky`, `.ryuk`, etc.) |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| Application startup test | App team | Application starts and reaches health check endpoint |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Database consistency check | DBA | No corruption reported (DBCC CHECKDB / pg_dump test) |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| Data completeness | Business owner | Critical records present up to the chosen recovery point |
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| Sign-off | DR lead | Written approval before data leaves clean room |
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>## Database Integrity Checks
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>```sql
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>-- SQL Server: check for corruption
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>DBCC CHECKDB (&#39;YourDatabase&#39;) WITH NO_INFOMSGS, ALL_ERRORMSGS;
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>-- PostgreSQL: test dump (will fail if corrupted)
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>pg_dump -h localhost -U postgres -d recovered_db &gt; /dev/null &amp;&amp; echo &quot;Dump OK&quot;
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>-- Oracle: check data file integrity
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>RMAN&gt; VALIDATE DATABASE;
-</code></pre></div></p>
+<h2 id="data-validation-checklist">Data Validation Checklist<a class="headerlink" href="#data-validation-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Owner</th>
+<th>Pass condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AV scan complete</td>
+<td>IR team</td>
+<td>0 detections or all detections reviewed and cleared</td>
+</tr>
+<tr>
+<td>File integrity check</td>
+<td>IR team</td>
+<td>Hash manifest matches backup catalogue</td>
+</tr>
+<tr>
+<td>Encrypted file check</td>
+<td>IR team</td>
+<td>No files in known encrypted extensions (<code>.locky</code>, <code>.ryuk</code>, etc.)</td>
+</tr>
+<tr>
+<td>Application startup test</td>
+<td>App team</td>
+<td>Application starts and reaches health check endpoint</td>
+</tr>
+<tr>
+<td>Database consistency check</td>
+<td>DBA</td>
+<td>No corruption reported (DBCC CHECKDB / pg_dump test)</td>
+</tr>
+<tr>
+<td>Data completeness</td>
+<td>Business owner</td>
+<td>Critical records present up to the chosen recovery point</td>
+</tr>
+<tr>
+<td>Sign-off</td>
+<td>DR lead</td>
+<td>Written approval before data leaves clean room</td>
+</tr>
+</tbody>
+</table>
+<h2 id="database-integrity-checks">Database Integrity Checks<a class="headerlink" href="#database-integrity-checks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- SQL Server: check for corruption</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">DBCC</span><span class="w"> </span><span class="n">CHECKDB</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;YourDatabase&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">NO_INFOMSGS</span><span class="p">,</span><span class="w"> </span><span class="n">ALL_ERRORMSGS</span><span class="p">;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">-- PostgreSQL: test dump (will fail if corrupted)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">pg_dump</span><span class="w"> </span><span class="o">-</span><span class="n">h</span><span class="w"> </span><span class="n">localhost</span><span class="w"> </span><span class="o">-</span><span class="n">U</span><span class="w"> </span><span class="n">postgres</span><span class="w"> </span><span class="o">-</span><span class="n">d</span><span class="w"> </span><span class="n">recovered_db</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="k">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">echo</span><span class="w"> </span><span class="ss">&quot;Dump OK&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1">-- Oracle: check data file integrity</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">RMAN</span><span class="o">&gt;</span><span class="w"> </span><span class="n">VALIDATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="p">;</span>
+</code></pre></div>
 <h2 id="escalation-if-malware-found">Escalation — If Malware Found<a class="headerlink" href="#escalation-if-malware-found" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. Halt all access to the clean room immediately.
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2. Preserve the infected restore point (do not delete — needed for forensics).

@@ -3675,6 +3675,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#pinning-action-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pinning Action Versions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#branch-protection" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3846,7 +3857,7 @@
 </blockquote>
 <hr />
 <h2 id="minimal-permissions">Minimal Permissions<a class="headerlink" href="#minimal-permissions" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     repo["GitHub Repository"]
     branchProtect["Branch Protection\nmain branch\nrequired status checks\nPR reviews enforced"]
     workflowPerms["Workflow permissions\ncontents: read (default)\nOverride per job only"]
@@ -3859,18 +3870,15 @@
     repo --&gt; actionPin
     repo --&gt; secretScan
     repo --&gt; selfHostedIsolate</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Pinning Action Versions
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Third-party actions should be pinned to a specific commit SHA to prevent supply-chain attacks.
+<h2 id="pinning-action-versions">Pinning Action Versions<a class="headerlink" href="#pinning-action-versions" title="Permanent link">&para;</a></h2>
+<p>Third-party actions should be pinned to a specific commit SHA to prevent supply-chain attacks.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Avoid floating tags like @main or @master</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">steps</span><span class="p">:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span><span class="w">           </span><span class="c1"># semver tag (acceptable)</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```yaml
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Avoid floating tags like @main or @master
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>steps:
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  - uses: actions/checkout@v4           # semver tag (acceptable)
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  # Preferred: pin to the exact SHA
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-</code></pre></div></p>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="c1"># Preferred: pin to the exact SHA</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683</span><span class="w">  </span><span class="c1"># v4.2.2</span>
+</code></pre></div>
 <p>Use Dependabot to keep pinned actions up to date automatically:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># .github/dependabot.yml</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>

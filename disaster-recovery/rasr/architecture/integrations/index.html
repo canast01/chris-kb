@@ -4129,8 +4129,41 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Dell OpenManage Integration">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#active-directory-post-recovery-domain-rejoin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Directory — Post-Recovery Domain Rejoin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Active Directory — Post-Recovery Domain Rejoin">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#symptoms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Symptoms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remediation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remediation Steps
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#gpo-re-application" class="md-nav__link">
@@ -4377,33 +4410,26 @@
 </ul>
 <p><strong>RASR Agent service name:</strong> <code>Dell RASR Service</code></p>
 <p><strong>Verify RASR Agent status via PowerShell:</strong></p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;DellRASR&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;DellRASR&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Supported iDRAC versions:** iDRAC8 (14G), iDRAC9 (15G/16G). Virtual media ISO mount is available on Express and Enterprise licenses.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Active Directory — Post-Recovery Domain Rejoin
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>After a bare-metal restore, the server&#39;s **machine account** in Active Directory may be out of sync with the restored OS image (particularly if the image is older than the machine account password rotation cycle — typically 30 days).
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>### Symptoms
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- Event ID **3210** or **5719** in System log.
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>- &quot;The secure channel to domain controller is broken.&quot;
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>- `nltest /sc_verify:&lt;domain&gt;` returns `ERROR_NO_LOGON_SERVERS`.
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>### Remediation Steps
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>**Option 1 — Reset secure channel (no rejoin required):**
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>```powershell
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># Test the secure channel first
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Test-ComputerSecureChannel -Verbose
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a># Repair without full rejoin
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Test-ComputerSecureChannel -Repair -Credential (Get-Credential)
-</code></pre></div></p>
+<p><strong>Supported iDRAC versions:</strong> iDRAC8 (14G), iDRAC9 (15G/16G). Virtual media ISO mount is available on Express and Enterprise licenses.</p>
+<hr />
+<h2 id="active-directory-post-recovery-domain-rejoin">Active Directory — Post-Recovery Domain Rejoin<a class="headerlink" href="#active-directory-post-recovery-domain-rejoin" title="Permanent link">&para;</a></h2>
+<p>After a bare-metal restore, the server's <strong>machine account</strong> in Active Directory may be out of sync with the restored OS image (particularly if the image is older than the machine account password rotation cycle — typically 30 days).</p>
+<h3 id="symptoms">Symptoms<a class="headerlink" href="#symptoms" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Event ID <strong>3210</strong> or <strong>5719</strong> in System log.</li>
+<li>"The secure channel to domain controller is broken."</li>
+<li><code>nltest /sc_verify:&lt;domain&gt;</code> returns <code>ERROR_NO_LOGON_SERVERS</code>.</li>
+</ul>
+<h3 id="remediation-steps">Remediation Steps<a class="headerlink" href="#remediation-steps" title="Permanent link">&para;</a></h3>
+<p><strong>Option 1 — Reset secure channel (no rejoin required):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Test the secure channel first</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Test-ComputerSecureChannel</span> <span class="n">-Verbose</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Repair without full rejoin</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Test-ComputerSecureChannel</span> <span class="n">-Repair</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+</code></pre></div>
 <p><strong>Option 2 — Full domain rejoin:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Remove from domain (local admin required)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Remove-Computer</span> <span class="n">-UnjoinDomainCredential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span> <span class="n">-Restart</span> <span class="n">-Force</span>

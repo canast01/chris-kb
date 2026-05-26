@@ -3675,6 +3675,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#set-psdebug" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set-PSDebug
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#trace-command" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3935,7 +3946,7 @@
 </blockquote>
 <hr />
 <h2 id="diagnostic-flowchart">Diagnostic Flowchart<a class="headerlink" href="#diagnostic-flowchart" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     A([Script or automation fails]) --&gt; B{Error message available?}
     B -- Yes --&gt; C[Inspect $Error\[0\] / Get-Error]
     B -- No --&gt; D[Enable transcript logging]
@@ -3956,24 +3967,20 @@
     M -- No --&gt; O([Escalate — see Escalation runbook])
     style O fill:#c62828,color:#fff
     style N fill:#2e7d32,color:#fff</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## `Set-PSDebug`
+<hr />
+<h2 id="set-psdebug"><code>Set-PSDebug</code><a class="headerlink" href="#set-psdebug" title="Permanent link">&para;</a></h2>
+<p><code>Set-PSDebug</code> enables low-level script tracing. Use <code>Trace 1</code> for statement-level tracing and <code>Trace 2</code> for variable assignments as well.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Trace every statement (level 1)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Set-PSDebug</span> <span class="n">-Trace</span> <span class="n">1</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">.\</span><span class="n">MyScript</span><span class="p">.</span><span class="n">ps1</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>`Set-PSDebug` enables low-level script tracing. Use `Trace 1` for statement-level tracing and `Trace 2` for variable assignments as well.
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```powershell
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Trace every statement (level 1)
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Set-PSDebug -Trace 1
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>.\MyScript.ps1
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># Trace statements AND variable assignments (level 2)
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>Set-PSDebug -Trace 2
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>.\MyScript.ps1
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Disable tracing
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>Set-PSDebug -Off
-</code></pre></div></p>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Trace statements AND variable assignments (level 2)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Set-PSDebug</span> <span class="n">-Trace</span> <span class="n">2</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">.\</span><span class="n">MyScript</span><span class="p">.</span><span class="n">ps1</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c"># Disable tracing</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">Set-PSDebug</span> <span class="n">-Off</span>
+</code></pre></div>
 <p>Sample trace output:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">DEBUG</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">1+ &gt;&gt;&gt;&gt; $result = Get-Widget -Name &#39;widget-01&#39;</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">DEBUG</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">2+ &gt;&gt;&gt;&gt; if ($result.State -eq &#39;Active&#39;) {</span>

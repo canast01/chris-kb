@@ -4561,6 +4561,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#scheduling-reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scheduling Reports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#downloading-generated-reports" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4720,7 +4731,7 @@
 
 
 <h1 id="aria-operations-scheduled-reports-and-pdf-export">Aria Operations: Scheduled Reports and PDF Export<a class="headerlink" href="#aria-operations-scheduled-reports-and-pdf-export" title="Permanent link">&para;</a></h1>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── Aria Operations — Reports ──────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── Aria Operations — Reports ──────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │       Built-in Reports      │  │        Custom Reports       │  │          Scheduling         │   │
@@ -4751,37 +4762,54 @@
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Scheduling Reports
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Reports can be sent on a recurring schedule (daily, weekly, monthly) to one or more email addresses.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Navigation: **Reports &gt; Report Templates &gt; [Template] &gt; Schedule**
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Schedule configuration fields:
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Field | Options |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|---|---|
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Frequency | Once, Hourly, Daily, Weekly, Monthly |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Time | Specific time of day (uses Aria Ops server timezone) |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| Email recipients | Comma-separated addresses |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| Format | PDF (default), CSV |
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Traverse All Levels | Include sub-objects in a group hierarchy |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>```bash
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Create a scheduled report via API
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>curl -sk -X POST \
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  &quot;https://aria-ops.example.com/suite-api/api/reportdefinitions/&lt;templateId&gt;/schedules&quot; \
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  -H &quot;Authorization: vRealizeOpsToken &lt;token&gt;&quot; \
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  -d &#39;{
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    &quot;recurrence&quot;: &quot;WEEKLY&quot;,
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    &quot;dayOfWeek&quot;: &quot;MONDAY&quot;,
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    &quot;hours&quot;: 7,
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    &quot;minutes&quot;: 0,
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    &quot;emailTo&quot;: [&quot;ops-team@example.com&quot;],
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    &quot;reportFormat&quot;: &quot;PDF&quot;
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  }&#39;
-</code></pre></div></p>
+<h2 id="scheduling-reports">Scheduling Reports<a class="headerlink" href="#scheduling-reports" title="Permanent link">&para;</a></h2>
+<p>Reports can be sent on a recurring schedule (daily, weekly, monthly) to one or more email addresses.</p>
+<p>Navigation: <strong>Reports &gt; Report Templates &gt; [Template] &gt; Schedule</strong></p>
+<p>Schedule configuration fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Options</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frequency</td>
+<td>Once, Hourly, Daily, Weekly, Monthly</td>
+</tr>
+<tr>
+<td>Time</td>
+<td>Specific time of day (uses Aria Ops server timezone)</td>
+</tr>
+<tr>
+<td>Email recipients</td>
+<td>Comma-separated addresses</td>
+</tr>
+<tr>
+<td>Format</td>
+<td>PDF (default), CSV</td>
+</tr>
+<tr>
+<td>Traverse All Levels</td>
+<td>Include sub-objects in a group hierarchy</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a scheduled report via API</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://aria-ops.example.com/suite-api/api/reportdefinitions/&lt;templateId&gt;/schedules&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;recurrence&quot;: &quot;WEEKLY&quot;,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">    &quot;dayOfWeek&quot;: &quot;MONDAY&quot;,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    &quot;hours&quot;: 7,</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">    &quot;minutes&quot;: 0,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">    &quot;emailTo&quot;: [&quot;ops-team@example.com&quot;],</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">    &quot;reportFormat&quot;: &quot;PDF&quot;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
 <h2 id="downloading-generated-reports">Downloading Generated Reports<a class="headerlink" href="#downloading-generated-reports" title="Permanent link">&para;</a></h2>
 <p>Completed reports are stored in <strong>Reports &gt; Generated Reports</strong>. Reports expire after 30 days by default.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List generated reports</span>

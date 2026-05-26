@@ -4239,25 +4239,24 @@
 </tr>
 </tbody>
 </table>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify IRE local admin accounts are not shared with production</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify IRE local admin accounts are not shared with production</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$prodAdmins</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Invoke-Command</span> <span class="n">-ComputerName</span> <span class="n">prod-dc01</span> <span class="p">{</span> <span class="nb">Get-ADGroupMember</span> <span class="n">Administrators</span> <span class="p">}).</span><span class="n">Name</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">$ireAdmins</span>  <span class="p">=</span> <span class="p">(</span><span class="nb">Invoke-Command</span> <span class="n">-ComputerName</span> <span class="n">ire-dc01</span>  <span class="p">{</span> <span class="nb">Get-ADGroupMember</span> <span class="n">Administrators</span> <span class="p">}).</span><span class="n">Name</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">Compare-Object</span> <span class="nv">$prodAdmins</span> <span class="nv">$ireAdmins</span> <span class="n">-IncludeEqual</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">SideIndicator</span> <span class="o">-eq</span> <span class="s2">&quot;==&quot;</span><span class="p">}</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Should return empty — no overlapping accounts</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a># Verify jump host has session recording enabled (example: HashiCorp Vault SSH helper)
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vault secrets enable ssh
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vault write ssh/config/ca generate_signing_key=true
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vault write ssh/roles/ire-operator allow_user_certificates=true \
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  default_extensions=&#39;{&quot;permit-pty&quot;:&quot;&quot;,&quot;permit-user-rc&quot;:&quot;&quot;}&#39; \
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  key_type=ca max_ttl=4h
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># All SSH sessions to IRE recorded via:
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># - HashiCorp Vault SSH + tlog, or
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># - CyberArk PSM, or
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># - Azure Bastion (session recording in Storage Account)
-</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify jump host has session recording enabled (example: HashiCorp Vault SSH helper)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vault<span class="w"> </span>secrets<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>ssh
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vault<span class="w"> </span>write<span class="w"> </span>ssh/config/ca<span class="w"> </span><span class="nv">generate_signing_key</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vault<span class="w"> </span>write<span class="w"> </span>ssh/roles/ire-operator<span class="w"> </span><span class="nv">allow_user_certificates</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nv">default_extensions</span><span class="o">=</span><span class="s1">&#39;{&quot;permit-pty&quot;:&quot;&quot;,&quot;permit-user-rc&quot;:&quot;&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nv">key_type</span><span class="o">=</span>ca<span class="w"> </span><span class="nv">max_ttl</span><span class="o">=</span>4h
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># All SSH sessions to IRE recorded via:</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># - HashiCorp Vault SSH + tlog, or</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># - CyberArk PSM, or</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># - Azure Bastion (session recording in Storage Account)</span>
+</code></pre></div>
 <h2 id="certificate-and-key-management">Certificate and Key Management<a class="headerlink" href="#certificate-and-key-management" title="Permanent link">&para;</a></h2>
 <p>Do not import or use production certificates in the IRE.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Generate fresh self-signed CA for IRE (valid only for recovery duration)</span>

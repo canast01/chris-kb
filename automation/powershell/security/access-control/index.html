@@ -3733,6 +3733,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#just-enough-administration-jea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Just Enough Administration (JEA)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#rbac-with-active-directory-groups" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3904,7 +3915,7 @@
 </blockquote>
 <hr />
 <h2 id="powershell-access-control-architecture">PowerShell Access Control Architecture<a class="headerlink" href="#powershell-access-control-architecture" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>graph TD
+<pre class="mermaid"><code>graph TD
     user["User / Script\n(caller)"]
     execPolicy["Execution Policy\n(RemoteSigned / AllSigned)"]
     jea["JEA Endpoint\n(Register-PSSessionConfiguration)"]
@@ -3921,32 +3932,51 @@
     user --&gt; adGroup
     adGroup --&gt;|Member| svcAccount
     svcAccount --&gt; transcript</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>| Policy | Behaviour |
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|---|---|
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| `Restricted` | No scripts allowed (Windows default) |
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>| `AllSigned` | Only scripts signed by a trusted publisher |
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| `RemoteSigned` | Remote scripts need a signature; local scripts run freely |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| `Unrestricted` | All scripts run; remote scripts prompt for confirmation |
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| `Bypass` | Nothing blocked, no warnings |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>## Just Enough Administration (JEA)
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Restricted</code></td>
+<td>No scripts allowed (Windows default)</td>
+</tr>
+<tr>
+<td><code>AllSigned</code></td>
+<td>Only scripts signed by a trusted publisher</td>
+</tr>
+<tr>
+<td><code>RemoteSigned</code></td>
+<td>Remote scripts need a signature; local scripts run freely</td>
+</tr>
+<tr>
+<td><code>Unrestricted</code></td>
+<td>All scripts run; remote scripts prompt for confirmation</td>
+</tr>
+<tr>
+<td><code>Bypass</code></td>
+<td>Nothing blocked, no warnings</td>
+</tr>
+</tbody>
+</table>
+<h2 id="just-enough-administration-jea">Just Enough Administration (JEA)<a class="headerlink" href="#just-enough-administration-jea" title="Permanent link">&para;</a></h2>
+<p>JEA restricts what cmdlets a user can run in a remote session, without giving full admin rights.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Create a role capability file</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">New-PSRoleCapabilityFile</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">JEA</span><span class="p">\</span><span class="n">WebAdminRole</span><span class="p">.</span><span class="n">psrc</span> <span class="p">`</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">-VisibleCmdlets</span> <span class="s1">&#39;Get-WebSite&#39;</span><span class="p">,</span> <span class="s1">&#39;Restart-WebAppPool&#39;</span> <span class="p">`</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">-VisibleFunctions</span> <span class="s1">&#39;Get-ServiceStatus&#39;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c"># Create a session configuration</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">New-PSSessionConfigurationFile</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">JEA</span><span class="p">\</span><span class="n">WebAdmin</span><span class="p">.</span><span class="n">pssc</span> <span class="p">`</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">-SessionType</span> <span class="n">RestrictedRemoteServer</span> <span class="p">`</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">-RoleDefinitions</span> <span class="p">@{</span> <span class="s1">&#39;DOMAIN\WebAdmins&#39;</span> <span class="p">=</span> <span class="p">@{</span> <span class="n">RoleCapabilities</span> <span class="p">=</span> <span class="s1">&#39;WebAdminRole&#39;</span> <span class="p">}</span> <span class="p">}</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>JEA restricts what cmdlets a user can run in a remote session, without giving full admin rights.
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>```powershell
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># Create a role capability file
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>New-PSRoleCapabilityFile -Path C:\JEA\WebAdminRole.psrc `
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    -VisibleCmdlets &#39;Get-WebSite&#39;, &#39;Restart-WebAppPool&#39; `
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    -VisibleFunctions &#39;Get-ServiceStatus&#39;
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a># Create a session configuration
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>New-PSSessionConfigurationFile -Path C:\JEA\WebAdmin.pssc `
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    -SessionType RestrictedRemoteServer `
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    -RoleDefinitions @{ &#39;DOMAIN\WebAdmins&#39; = @{ RoleCapabilities = &#39;WebAdminRole&#39; } }
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a># Register the JEA endpoint
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>Register-PSSessionConfiguration -Name WebAdmin -Path C:\JEA\WebAdmin.pssc -Force
-</code></pre></div></p>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c"># Register the JEA endpoint</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">Register-PSSessionConfiguration</span> <span class="n">-Name</span> <span class="n">WebAdmin</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">JEA</span><span class="p">\</span><span class="n">WebAdmin</span><span class="p">.</span><span class="n">pssc</span> <span class="n">-Force</span>
+</code></pre></div>
 <h2 id="rbac-with-active-directory-groups">RBAC with Active Directory Groups<a class="headerlink" href="#rbac-with-active-directory-groups" title="Permanent link">&para;</a></h2>
 <p>Scope script access by checking group membership at runtime.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check if the current user is in an AD group</span>

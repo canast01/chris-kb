@@ -4284,6 +4284,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#replication-sync-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication &amp; Sync Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#failover" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4473,7 +4484,7 @@
 
 <h1 id="superna-eyeglass-cli-reference">Superna Eyeglass — CLI Reference<a class="headerlink" href="#superna-eyeglass-cli-reference" title="Permanent link">&para;</a></h1>
 <p>Eyeglass provides the <code>igls</code> CLI accessible from the appliance shell via SSH and a REST API for automation. OneFS SyncIQ CLI commands are used alongside Eyeglass operations to verify the underlying replication state. SSH to the Eyeglass appliance as the <code>admin</code> user.</p>
-<p><pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>flowchart LR
     operator(["Operator /\nAutomation"])
     ssh["SSH\nadmin@eyeglass-ip"]
     iglsCLI["igls CLI\n(Eyeglass appliance)"]
@@ -4485,25 +4496,21 @@
     operator --&gt; ssh --&gt; iglsCLI --&gt; eyeglassSvc
     operator --&gt; restAPI --&gt; eyeglassSvc
     eyeglassSvc --&gt; psApi --&gt; synciq</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Replication &amp; Sync Status
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Monitor SyncIQ policy replication state from Eyeglass.
+<hr />
+<h2 id="replication-sync-status">Replication &amp; Sync Status<a class="headerlink" href="#replication-sync-status" title="Permanent link">&para;</a></h2>
+<p>Monitor SyncIQ policy replication state from Eyeglass.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all monitored SyncIQ policies and their status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>igls<span class="w"> </span>sync<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show sync status for a specific policy</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>igls<span class="w"> </span>sync<span class="w"> </span>show<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```bash
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># List all monitored SyncIQ policies and their status
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>igls sync show
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Show sync status for a specific policy
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>igls sync show --policy &lt;policy_name&gt;
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># Force a manual sync check
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>igls sync refresh
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Show last replication run times
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>igls sync history
-</code></pre></div></p>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Force a manual sync check</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>igls<span class="w"> </span>sync<span class="w"> </span>refresh
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show last replication run times</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>igls<span class="w"> </span>sync<span class="w"> </span><span class="nb">history</span>
+</code></pre></div>
 <hr />
 <h2 id="failover">Failover<a class="headerlink" href="#failover" title="Permanent link">&para;</a></h2>
 <p>Eyeglass-managed failover delegates SyncIQ policy operations and DNS updates to the appliance. Run failover from the UI when possible; CLI is for automation.</p>

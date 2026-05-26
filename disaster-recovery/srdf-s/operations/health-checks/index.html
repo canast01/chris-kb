@@ -4284,6 +4284,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#rdf-director-and-link-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDF Director and Link Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#performance-and-throughput-metrics" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4560,7 +4571,7 @@
 </blockquote>
 <p>Regular health checks on SRDF/S replication confirm that all device pairs are synchronized, RDF directors and links are operational, and no track backlogs exist. These checks should run daily as part of infrastructure monitoring and immediately before any planned failover or maintenance activity.</p>
 <p>Health checks cover four layers: pair state, link/director status, performance metrics, and array-level configuration consistency.</p>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     dailyStart["Daily Health Check"]
     pairState["Check Pair State\nsymrdf query -g dgname"]
     allSynced{"All Pairs\nSynchronized?"}
@@ -4595,36 +4606,54 @@
     style investigateRTT fill:#be123c,color:#fff
     style investigateDir fill:#be123c,color:#fff
     style investigateLink fill:#b45309,color:#fff</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>**Checklist items to confirm:**
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Check | Expected |
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|---|---|
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| All pairs in `Synchronized` state | No `Invalid`, `Split`, `Write Disabled`, or `Mixed` entries |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| SRDF group port state | All ports `Online` on both R1 and R2 |
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| WAN RTT to DR site | Within agreed latency budget (typically ≤5 ms RTT) |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| Write I/O response time | Within application baseline ±10% |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| No pairs transitioning (SyncInProg) without a known cause | Confirm against open change tickets |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>---
+<p><strong>Checklist items to confirm:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All pairs in <code>Synchronized</code> state</td>
+<td>No <code>Invalid</code>, <code>Split</code>, <code>Write Disabled</code>, or <code>Mixed</code> entries</td>
+</tr>
+<tr>
+<td>SRDF group port state</td>
+<td>All ports <code>Online</code> on both R1 and R2</td>
+</tr>
+<tr>
+<td>WAN RTT to DR site</td>
+<td>Within agreed latency budget (typically ≤5 ms RTT)</td>
+</tr>
+<tr>
+<td>Write I/O response time</td>
+<td>Within application baseline ±10%</td>
+</tr>
+<tr>
+<td>No pairs transitioning (SyncInProg) without a known cause</td>
+<td>Confirm against open change tickets</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="rdf-director-and-link-health">RDF Director and Link Health<a class="headerlink" href="#rdf-director-and-link-health" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List RDF directors and port status on local array</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-dir<span class="w"> </span>all<span class="w"> </span>-rdf
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show detailed director configuration</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symcfg<span class="w"> </span>show<span class="w"> </span>-dir<span class="w"> </span>RF-1F<span class="w"> </span>-v
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Query RDF link statistics (bandwidth, utilization)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symstat<span class="w"> </span>-rdf<span class="w"> </span>-dir<span class="w"> </span>RF-1F<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span><span class="w"> </span>-c<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check remote array connectivity</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span><span class="m">10</span><span class="w"> </span>-detail
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>## RDF Director and Link Health
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>```bash
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># List RDF directors and port status on local array
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>symcfg list -dir all -rdf
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a># Show detailed director configuration
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>symcfg show -dir RF-1F -v
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a># Query RDF link statistics (bandwidth, utilization)
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>symstat -rdf -dir RF-1F -i 5 -c 3
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a># Check remote array connectivity
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>symcfg list -rdfg 10 -detail
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a># Confirm remote array is reachable via SYMAPI
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>symcfg list -v | grep -A2 &quot;Remote&quot;
-</code></pre></div></p>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Confirm remote array is reachable via SYMAPI</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A2<span class="w"> </span><span class="s2">&quot;Remote&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="performance-and-throughput-metrics">Performance and Throughput Metrics<a class="headerlink" href="#performance-and-throughput-metrics" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Monitor RDF write throughput and latency (5-second intervals, 6 samples)</span>

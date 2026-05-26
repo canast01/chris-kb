@@ -3791,6 +3791,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#apply-destroy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3995,7 +4006,7 @@
 <p>Install with <code>brew install terraform</code> (macOS), <code>apt install terraform</code> (Debian), or download from terraform.io. Run <code>terraform init</code> in any new working directory before other commands.</p>
 </blockquote>
 <h2 id="state-backend-topology">State Backend Topology<a class="headerlink" href="#state-backend-topology" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>graph TD
+<pre class="mermaid"><code>graph TD
     tfClient["Terraform Client\n(local / CI runner)"]
 
     subgraph localBackend["Local Backend"]
@@ -4024,27 +4035,23 @@
     blobStorage --&gt; blobLease
     tfClient --&gt;|backend remote| tfcState
     tfcState --&gt; tfcRuns</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Plan
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Preview what Terraform will do before making any changes. Always run `plan` before `apply`. Save the plan to a file to guarantee that `apply` runs exactly what you reviewed.
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```bash
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Preview changes
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>terraform plan
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>terraform plan -out=tfplan           # save plan to file (apply this file to guarantee exact changes)
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>terraform plan -var &#39;env=prod&#39;       # pass a variable
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>terraform plan -var-file=prod.tfvars # load variables from file
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>terraform plan -target=resource_type.name   # only plan a specific resource
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a># Destroy plan (preview what would be deleted)
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>terraform plan -destroy
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Detailed exit codes (useful in CI/CD scripts)
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>terraform plan -detailed-exitcode
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a># Exit code: 0 = no changes, 1 = error, 2 = changes present
-</code></pre></div></p>
+<hr />
+<h2 id="plan">Plan<a class="headerlink" href="#plan" title="Permanent link">&para;</a></h2>
+<p>Preview what Terraform will do before making any changes. Always run <code>plan</code> before <code>apply</code>. Save the plan to a file to guarantee that <code>apply</code> runs exactly what you reviewed.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Preview changes</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>terraform<span class="w"> </span>plan
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>tfplan<span class="w">           </span><span class="c1"># save plan to file (apply this file to guarantee exact changes)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-var<span class="w"> </span><span class="s1">&#39;env=prod&#39;</span><span class="w">       </span><span class="c1"># pass a variable</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-var-file<span class="o">=</span>prod.tfvars<span class="w"> </span><span class="c1"># load variables from file</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-target<span class="o">=</span>resource_type.name<span class="w">   </span><span class="c1"># only plan a specific resource</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Destroy plan (preview what would be deleted)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-destroy
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Detailed exit codes (useful in CI/CD scripts)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-detailed-exitcode
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Exit code: 0 = no changes, 1 = error, 2 = changes present</span>
+</code></pre></div>
 <hr />
 <h2 id="apply-destroy">Apply &amp; Destroy<a class="headerlink" href="#apply-destroy" title="Permanent link">&para;</a></h2>
 <p>Apply makes the changes from a plan. Destroy removes all resources managed by Terraform. Use <code>-target</code> to operate on a specific resource instead of everything.</p>

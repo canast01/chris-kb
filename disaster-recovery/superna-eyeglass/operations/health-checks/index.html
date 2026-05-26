@@ -4295,6 +4295,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#dr-policy-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DR Policy Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#synciq-replication-health" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4557,7 +4568,7 @@
 <h1 id="superna-eyeglass-health-checks">Superna Eyeglass — Health Checks<a class="headerlink" href="#superna-eyeglass-health-checks" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Eyeglass health checks cover the Eyeglass appliance itself, PowerScale cluster connectivity, SyncIQ policy status, and DR policy readiness. Run daily as a minimum; automated checks should run every 15–30 minutes.</p>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     start([Health Check Run]) --&gt; appSvc
 
     subgraph "Eyeglass Appliance"
@@ -4586,25 +4597,22 @@
     drives --&gt; result{All checks pass?}
     result --&gt;|Yes| ok([DR Ready - Score 100%])
     result --&gt;|No| investigate([Investigate and remediate])</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## DR Policy Status
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```bash
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># List all DR policies and their current state
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>egcli drpolicy list
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># Detailed status for all policies
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>egcli drpolicy status --all
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># Status for a specific policy
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>egcli drpolicy status --policy &lt;policy_name&gt;
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a># Expected output fields:
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>#   Policy Name         State           Last Test     SyncIQ Lag
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>#   POL-NAS-PROD        Replicating     2026-05-01    45s
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>#   POL-HOME-PROD       Replicating     2026-05-01    12s
-</code></pre></div></p>
+<hr />
+<h2 id="dr-policy-status">DR Policy Status<a class="headerlink" href="#dr-policy-status" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all DR policies and their current state</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Detailed status for all policies</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>status<span class="w"> </span>--all
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Status for a specific policy</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>status<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Expected output fields:</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1">#   Policy Name         State           Last Test     SyncIQ Lag</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1">#   POL-NAS-PROD        Replicating     2026-05-01    45s</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1">#   POL-HOME-PROD       Replicating     2026-05-01    12s</span>
+</code></pre></div>
 <hr />
 <h2 id="synciq-replication-health">SyncIQ Replication Health<a class="headerlink" href="#synciq-replication-health" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On production PowerScale cluster</span>

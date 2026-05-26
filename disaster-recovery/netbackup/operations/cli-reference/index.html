@@ -4295,6 +4295,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#backup-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#restore-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4502,7 +4513,7 @@
 <h1 id="netbackup-cli-reference">NetBackup CLI Reference<a class="headerlink" href="#netbackup-cli-reference" title="Permanent link">&para;</a></h1>
 <h2 id="master-media-client-topology">Master → Media → Client Topology<a class="headerlink" href="#master-media-client-topology" title="Permanent link">&para;</a></h2>
 <p>Understanding the three-tier topology is essential before using the CLI — commands execute at the correct tier.</p>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     subgraph masterTier [Primary / Master Server]
         master["Primary Server\n(catalog, policy DB,\njob scheduler, EMM)"]
         catalog[("NetBackup Catalog\nbpdbm — image metadata")]
@@ -4547,28 +4558,24 @@
     class ms1,ms2,ms3 media
     class vmHost,dbHost,nasHost client
     class dd,msdp,s3 storage</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Backup Operations
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Initiate manual backups and inspect policy configuration.
+<hr />
+<h2 id="backup-operations">Backup Operations<a class="headerlink" href="#backup-operations" title="Permanent link">&para;</a></h2>
+<p>Initiate manual backups and inspect policy configuration.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Initiate manual backup for a policy/schedule/client</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>bpbackup<span class="w"> </span>-p<span class="w"> </span>&lt;policy&gt;<span class="w"> </span>-s<span class="w"> </span>&lt;schedule&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;client&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List all policies</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>bppllist<span class="w"> </span>-allpolicies<span class="w"> </span>-L
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```bash
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Initiate manual backup for a policy/schedule/client
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>bpbackup -p &lt;policy&gt; -s &lt;schedule&gt; -c &lt;client&gt;
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># List all policies
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>bppllist -allpolicies -L
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># List file list for a policy
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>bpplinclude -L -p &lt;policy&gt;
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># List schedules for a policy
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>bpplschedrep &lt;policy&gt;
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a># List clients assigned to a policy
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>bpplclients &lt;policy&gt;
-</code></pre></div></p>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List file list for a policy</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>bpplinclude<span class="w"> </span>-L<span class="w"> </span>-p<span class="w"> </span>&lt;policy&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List schedules for a policy</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>bpplschedrep<span class="w"> </span>&lt;policy&gt;
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List clients assigned to a policy</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>bpplclients<span class="w"> </span>&lt;policy&gt;
+</code></pre></div>
 <hr />
 <h2 id="restore-operations">Restore Operations<a class="headerlink" href="#restore-operations" title="Permanent link">&para;</a></h2>
 <h3 id="catalog-restore-sequence">Catalog Restore Sequence<a class="headerlink" href="#catalog-restore-sequence" title="Permanent link">&para;</a></h3>

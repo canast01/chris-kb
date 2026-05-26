@@ -3799,8 +3799,30 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Source Code Backup">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-backup-requirements-freeze" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Backup (requirements freeze)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dependency Backup (requirements freeze)">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pip-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pip projects
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#poetry-projects" class="md-nav__link">
@@ -4157,7 +4179,7 @@
 <hr />
 <h2 id="source-code-backup">Source Code Backup<a class="headerlink" href="#source-code-backup" title="Permanent link">&para;</a></h2>
 <p>All automation code lives in Git. The Git repository is the authoritative backup.</p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify all scripts are tracked</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify all scripts are tracked</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>status
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Ensure nothing is untracked that should be committed</span>
@@ -4167,25 +4189,20 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.4.2<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Pre-maintenance snapshot </span><span class="k">$(</span>date<span class="w"> </span>-I<span class="k">)</span><span class="s2">&quot;</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v1.4.2
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Dependency Backup (`requirements freeze`)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>The lock file must always be committed. It is the exact specification needed to recreate the runtime environment.
+<hr />
+<h2 id="dependency-backup-requirements-freeze">Dependency Backup (<code>requirements freeze</code>)<a class="headerlink" href="#dependency-backup-requirements-freeze" title="Permanent link">&para;</a></h2>
+<p>The lock file must always be committed. It is the exact specification needed to recreate the runtime environment.</p>
+<h3 id="pip-projects"><code>pip</code> projects<a class="headerlink" href="#pip-projects" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create/update the lock file</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pip<span class="w"> </span>freeze<span class="w"> </span>&gt;<span class="w"> </span>requirements.txt
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify it captures everything needed</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w"> </span>--dry-run
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>### `pip` projects
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>```bash
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Create/update the lock file
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>pip freeze &gt; requirements.txt
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Verify it captures everything needed
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>pip install -r requirements.txt --dry-run
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># For multi-environment setups
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>pip freeze &gt; requirements.txt          # production deps
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>pip freeze &gt; requirements-dev.txt      # includes dev tools
-</code></pre></div></p>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># For multi-environment setups</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>pip<span class="w"> </span>freeze<span class="w"> </span>&gt;<span class="w"> </span>requirements.txt<span class="w">          </span><span class="c1"># production deps</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>pip<span class="w"> </span>freeze<span class="w"> </span>&gt;<span class="w"> </span>requirements-dev.txt<span class="w">      </span><span class="c1"># includes dev tools</span>
+</code></pre></div>
 <h3 id="poetry-projects"><code>poetry</code> projects<a class="headerlink" href="#poetry-projects" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Lock file is auto-managed — update after dependency changes</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>poetry<span class="w"> </span>lock

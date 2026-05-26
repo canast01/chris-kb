@@ -4329,6 +4329,45 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#recommended-backup-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Backup Schedule
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Procedure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Restore Procedure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-boot-from-rasr-media" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — Boot from RASR Media
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#phase-2-winpe-environment" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4576,41 +4615,53 @@
 <li>Confirm the image was written successfully and note the image filename.</li>
 </ol>
 <h3 id="creating-an-image-via-command-line">Creating an Image via Command Line<a class="headerlink" href="#creating-an-image-via-command-line" title="Permanent link">&para;</a></h3>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>:: Basic image to network share
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>:: Basic image to network share
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>rasrutil.exe /backup /dest \\nas01\rasr-images\SERVER01 /user DOMAIN\svc-rasr /pass P@ssw0rd!
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>:: With compression and verbose output
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>rasrutil.exe /backup /dest \\nas01\rasr-images\SERVER01 /compress /log C:\Logs\rasr-backup.log /user DOMAIN\svc-rasr /pass P@ssw0rd!
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Recommended Backup Schedule
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Frequency | Scope | Retention |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|---|
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Weekly (Sunday 02:00) | Full system image | Keep 4 (rolling 4 weeks) |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Monthly (1st Sunday) | Full system image | Keep 12 (rolling 12 months) |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Pre-change | Full system image | Keep until change confirmed stable |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>---
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>## Restore Procedure
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>### Phase 1 — Boot from RASR Media
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>**Option A: Physical USB**
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Insert the RASR boot USB into the server. On POST, press **F11** (Dell boot menu) and select the USB drive.
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>**Option B: iDRAC Virtual Media (remote recovery)**
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>```bash
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># Mount ISO via racadm
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>racadm remoteimage -c -u &lt;idrac-user&gt; -p &lt;idrac-pass&gt; \
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  -l //nas01.example.com/rasr-media/RASR_WinSrv2022.iso
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>racadm set iDRAC.ServerBoot.BootOnce 1
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>racadm set iDRAC.ServerBoot.FirstBootDevice VCD-DVD
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>racadm serveraction powercycle
-</code></pre></div></p>
+<h3 id="recommended-backup-schedule">Recommended Backup Schedule<a class="headerlink" href="#recommended-backup-schedule" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Frequency</th>
+<th>Scope</th>
+<th>Retention</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Weekly (Sunday 02:00)</td>
+<td>Full system image</td>
+<td>Keep 4 (rolling 4 weeks)</td>
+</tr>
+<tr>
+<td>Monthly (1st Sunday)</td>
+<td>Full system image</td>
+<td>Keep 12 (rolling 12 months)</td>
+</tr>
+<tr>
+<td>Pre-change</td>
+<td>Full system image</td>
+<td>Keep until change confirmed stable</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="restore-procedure">Restore Procedure<a class="headerlink" href="#restore-procedure" title="Permanent link">&para;</a></h2>
+<h3 id="phase-1-boot-from-rasr-media">Phase 1 — Boot from RASR Media<a class="headerlink" href="#phase-1-boot-from-rasr-media" title="Permanent link">&para;</a></h3>
+<p><strong>Option A: Physical USB</strong></p>
+<p>Insert the RASR boot USB into the server. On POST, press <strong>F11</strong> (Dell boot menu) and select the USB drive.</p>
+<p><strong>Option B: iDRAC Virtual Media (remote recovery)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Mount ISO via racadm</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>racadm<span class="w"> </span>remoteimage<span class="w"> </span>-c<span class="w"> </span>-u<span class="w"> </span>&lt;idrac-user&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;idrac-pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-l<span class="w"> </span>//nas01.example.com/rasr-media/RASR_WinSrv2022.iso
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.ServerBoot.BootOnce<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.ServerBoot.FirstBootDevice<span class="w"> </span>VCD-DVD
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>racadm<span class="w"> </span>serveraction<span class="w"> </span>powercycle
+</code></pre></div>
 <h3 id="phase-2-winpe-environment">Phase 2 — WinPE Environment<a class="headerlink" href="#phase-2-winpe-environment" title="Permanent link">&para;</a></h3>
 <p>The server boots into the RASR WinPE environment. The RASR recovery wizard launches automatically. If it does not, open a command prompt and run:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>X:\Dell\RASR\rasrwizard.exe

@@ -3653,8 +3653,41 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Phase 1 — Validate Replication State">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-notify-stakeholders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Notify Stakeholders
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-initiate-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Initiate Failover
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 3 — Initiate Failover">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Failover
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#vm-failover-vmware-srm" class="md-nav__link">
@@ -3847,33 +3880,28 @@
 <p><strong>SRDF (PowerMax):</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfgroup&gt;<span class="w"> </span>query
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Confirm R2 volumes are Synchronized or Consistent before failing over</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Veeam — check last successful backup:**
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Navigate to: Home → Jobs → check Last Result and Last Run columns
+</code></pre></div></p>
+<p><strong>Veeam — check last successful backup:</strong>
+Navigate to: Home → Jobs → check Last Result and Last Run columns</p>
+<p><strong>VMware SRM:</strong>
+- Protection Groups → check replication state of all protected VMs
+- Recovery Plan → Review plan before executing</p>
+<h2 id="phase-2-notify-stakeholders">Phase 2 — Notify Stakeholders<a class="headerlink" href="#phase-2-notify-stakeholders" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Application owners (impact notification)</li>
+<li>Service desk (user-facing message, expected RTO)</li>
+<li>Management chain</li>
+<li>Vendor TAC if array/fabric fault is involved</li>
+</ul>
+<h2 id="phase-3-initiate-failover">Phase 3 — Initiate Failover<a class="headerlink" href="#phase-3-initiate-failover" title="Permanent link">&para;</a></h2>
+<h3 id="storage-failover">Storage Failover<a class="headerlink" href="#storage-failover" title="Permanent link">&para;</a></h3>
+<p><strong>NetApp SnapMirror — break and make R2 writeable:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Break mirror (R2 becomes writable, R1 no longer replicating)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;dr-svm&gt;:&lt;dr-vol&gt;
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>**VMware SRM:**
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Protection Groups → check replication state of all protected VMs
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- Recovery Plan → Review plan before executing
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>## Phase 2 — Notify Stakeholders
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- Application owners (impact notification)
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- Service desk (user-facing message, expected RTO)
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>- Management chain
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>- Vendor TAC if array/fabric fault is involved
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>## Phase 3 — Initiate Failover
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>### Storage Failover
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>**NetApp SnapMirror — break and make R2 writeable:**
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>```bash
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># Break mirror (R2 becomes writable, R1 no longer replicating)
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>snapmirror break -destination-path &lt;dr-svm&gt;:&lt;dr-vol&gt;
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a># Verify
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>snapmirror show -destination-path &lt;dr-svm&gt;:&lt;dr-vol&gt;
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a># State should show: Broken-off
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dr-svm&gt;:&lt;dr-vol&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># State should show: Broken-off</span>
 </code></pre></div></p>
 <p><strong>SRDF — failover to R2:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Planned failover (R1 accessible)</span>

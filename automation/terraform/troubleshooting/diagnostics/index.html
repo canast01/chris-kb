@@ -3617,6 +3617,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#validation-and-syntax-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation and Syntax Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#plan-inspection" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3795,7 +3806,7 @@
 
 <h1 id="terraform-diagnostics">Terraform — Diagnostics<a class="headerlink" href="#terraform-diagnostics" title="Permanent link">&para;</a></h1>
 <h2 id="terraform-diagnostics-workflow">Terraform Diagnostics Workflow<a class="headerlink" href="#terraform-diagnostics-workflow" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>graph LR
+<pre class="mermaid"><code>graph LR
     symptom["Symptom /\nUnexpected Output"]
     validate["terraform validate\n(syntax check)"]
     fmtCheck["terraform fmt -check\n(formatting)"]
@@ -3819,19 +3830,17 @@
     graph --&gt; resolved
     symptom --&gt; debugLog
     debugLog --&gt; resolved</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Validation and Syntax Checks
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Validate configuration without connecting to provider
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>terraform validate
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Format and check for syntax errors
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>terraform fmt -check -recursive
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>echo $?   # non-zero means formatting issues found
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Use -json output for easier scripted inspection
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>terraform plan -json 2&gt;/dev/null | jq &#39;.diagnostics&#39;
-</code></pre></div></p>
+<h2 id="validation-and-syntax-checks">Validation and Syntax Checks<a class="headerlink" href="#validation-and-syntax-checks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Validate configuration without connecting to provider</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>terraform<span class="w"> </span>validate
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Format and check for syntax errors</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>terraform<span class="w"> </span>fmt<span class="w"> </span>-check<span class="w"> </span>-recursive
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span><span class="w">   </span><span class="c1"># non-zero means formatting issues found</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Use -json output for easier scripted inspection</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-json<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.diagnostics&#39;</span>
+</code></pre></div>
 <h2 id="plan-inspection">Plan Inspection<a class="headerlink" href="#plan-inspection" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Graph the dependency tree to identify cycles</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>terraform<span class="w"> </span>graph<span class="w"> </span><span class="p">|</span><span class="w"> </span>dot<span class="w"> </span>-Tsvg<span class="w"> </span>&gt;<span class="w"> </span>graph.svg

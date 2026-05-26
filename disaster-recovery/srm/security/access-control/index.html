@@ -4180,6 +4180,56 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#local-srm-account-break-glass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local SRM Account (Break-Glass)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-where-srm-logs-dr-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit: Where SRM Logs DR Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Audit: Where SRM Logs DR Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#audit-log-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Log Locations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-commands-for-log-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Commands for Log Review
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#exporting-recovery-history-for-compliance" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4342,7 +4392,7 @@
 <h1 id="srm-security-access-control">SRM Security — Access Control<a class="headerlink" href="#srm-security-access-control" title="Permanent link">&para;</a></h1>
 <h2 id="vcenter-rbac-for-dr-operators">vCenter RBAC for DR Operators<a class="headerlink" href="#vcenter-rbac-for-dr-operators" title="Permanent link">&para;</a></h2>
 <p>Define a dedicated <code>DR-Operator</code> role in vCenter with only the privileges required for SRM operations:</p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">Privileges to include</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">Privileges to include</span><span class="p">:</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">Site Recovery Manager</span><span class="p">:</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Site Recovery.Manage</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Site Recovery.Test</span>
@@ -4354,43 +4404,63 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="nt">Virtual Machine</span><span class="p">:</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Virtual Machine.Provisioning.* (for recovery)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Local SRM Account (Break-Glass)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Access local SRM accounts at `https://&lt;srm-appliance&gt;:5480` (VAMI). Use only when vCenter SSO is unavailable. Rotate the local admin password after each use and store in a sealed break-glass envelope or PAM vault.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>---
+<h3 id="local-srm-account-break-glass">Local SRM Account (Break-Glass)<a class="headerlink" href="#local-srm-account-break-glass" title="Permanent link">&para;</a></h3>
+<p>Access local SRM accounts at <code>https://&lt;srm-appliance&gt;:5480</code> (VAMI). Use only when vCenter SSO is unavailable. Rotate the local admin password after each use and store in a sealed break-glass envelope or PAM vault.</p>
+<hr />
+<h2 id="audit-where-srm-logs-dr-operations">Audit: Where SRM Logs DR Operations<a class="headerlink" href="#audit-where-srm-logs-dr-operations" title="Permanent link">&para;</a></h2>
+<p>SRM records all operations in multiple locations. Use these for compliance, change auditing, and post-DR review.</p>
+<h3 id="audit-log-locations">Audit Log Locations<a class="headerlink" href="#audit-log-locations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Log Source</th>
+<th>Location / Access Method</th>
+<th>What It Records</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRM Events</td>
+<td>vCenter UI → Site Recovery → Events tab</td>
+<td>All SRM operations: plan runs, test start/end, errors</td>
+</tr>
+<tr>
+<td>vCenter Tasks</td>
+<td>vCenter UI → Tasks — filter by SRM task type</td>
+<td>Task completion, duration, initiating user</td>
+</tr>
+<tr>
+<td>Recovery History</td>
+<td>SRM UI → Recovery Plans → select plan → History</td>
+<td>Per-plan execution records with timestamps and outcomes</td>
+</tr>
+<tr>
+<td>SRM appliance syslog</td>
+<td><code>/var/log/vmware/dr/</code> on SRM appliance (SSH)</td>
+<td>Detailed server-side logs for troubleshooting</td>
+</tr>
+<tr>
+<td>vCenter Audit Log</td>
+<td>vCenter UI → Administration → Events → export</td>
+<td>Includes RBAC changes affecting SRM roles</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-commands-for-log-review">Key Commands for Log Review<a class="headerlink" href="#key-commands-for-log-review" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to SRM appliance (admin or root)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@&lt;srm-appliance&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># View live SRM server log</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/dr/dr.log
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>## Audit: Where SRM Logs DR Operations
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>SRM records all operations in multiple locations. Use these for compliance, change auditing, and post-DR review.
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Search for recovery plan execution events</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;recovery plan\|RECOVERY_STARTED\|RECOVERY_COMPLETE\|RECOVERY_FAILED&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>/var/log/vmware/dr/dr.log
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>### Audit Log Locations
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| Log Source | Location / Access Method | What It Records |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>|---|---|---|
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| SRM Events | vCenter UI → Site Recovery → Events tab | All SRM operations: plan runs, test start/end, errors |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| vCenter Tasks | vCenter UI → Tasks — filter by SRM task type | Task completion, duration, initiating user |
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| Recovery History | SRM UI → Recovery Plans → select plan → History | Per-plan execution records with timestamps and outcomes |
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>| SRM appliance syslog | `/var/log/vmware/dr/` on SRM appliance (SSH) | Detailed server-side logs for troubleshooting |
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| vCenter Audit Log | vCenter UI → Administration → Events → export | Includes RBAC changes affecting SRM roles |
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>### Key Commands for Log Review
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>```bash
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a># SSH to SRM appliance (admin or root)
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>ssh admin@&lt;srm-appliance&gt;
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a># View live SRM server log
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>tail -f /var/log/vmware/dr/dr.log
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a># Search for recovery plan execution events
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>grep -i &quot;recovery plan\|RECOVERY_STARTED\|RECOVERY_COMPLETE\|RECOVERY_FAILED&quot; \
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>  /var/log/vmware/dr/dr.log
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a># Search for authentication events (login/logout, permission denied)
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>grep -i &quot;authentication\|login\|permission denied\|unauthorized&quot; \
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  /var/log/vmware/dr/dr.log | tail -50
-</code></pre></div></p>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Search for authentication events (login/logout, permission denied)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;authentication\|login\|permission denied\|unauthorized&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>/var/log/vmware/dr/dr.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+</code></pre></div>
 <h3 id="exporting-recovery-history-for-compliance">Exporting Recovery History for Compliance<a class="headerlink" href="#exporting-recovery-history-for-compliance" title="Permanent link">&para;</a></h3>
 <p>In the SRM UI: <strong>Recovery Plans</strong> → select plan → <strong>History</strong> → <strong>Export</strong> — produces a CSV with plan name, start time, end time, result, and initiating user. Retain exports for audit evidence per your retention policy (typically 1–3 years for DR events).</p>
 

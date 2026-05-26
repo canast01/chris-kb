@@ -4132,6 +4132,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#dell-hardware-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dell Hardware Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#network-recovery-share-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4331,7 +4353,7 @@
 </tr>
 </tbody>
 </table>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Protected Windows Server
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Protected Windows Server
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── RASR Agent (RASRAgent Windows service)
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── RASR Console (GUI in Windows)
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└── Captured Image → Network Recovery Share (SMB)
@@ -4340,36 +4362,53 @@
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└── WinPE boot environment
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>      └── RASR Recovery Engine + Dell hardware drivers
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Dell Hardware Integration
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>RASR is designed specifically for Dell PowerEdge servers:
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- **iDRAC Virtual Media** — boot the RASR ISO from iDRAC without physical USB, enabling remote bare-metal recovery
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- **PERC Storage Controller** support — WinPE includes current PERC drivers, ensuring the recovery environment can see all local disks
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- **Lifecycle Controller** — RASR can be invoked from within the iDRAC Lifecycle Controller on compatible servers (R750, R650, R740 and later)
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- **OpenManage Integration** — RASR Agent status appears in the OpenManage Server Administrator dashboard
+<h2 id="dell-hardware-integration">Dell Hardware Integration<a class="headerlink" href="#dell-hardware-integration" title="Permanent link">&para;</a></h2>
+<p>RASR is designed specifically for Dell PowerEdge servers:</p>
+<ul>
+<li><strong>iDRAC Virtual Media</strong> — boot the RASR ISO from iDRAC without physical USB, enabling remote bare-metal recovery</li>
+<li><strong>PERC Storage Controller</strong> support — WinPE includes current PERC drivers, ensuring the recovery environment can see all local disks</li>
+<li><strong>Lifecycle Controller</strong> — RASR can be invoked from within the iDRAC Lifecycle Controller on compatible servers (R750, R650, R740 and later)</li>
+<li><strong>OpenManage Integration</strong> — RASR Agent status appears in the OpenManage Server Administrator dashboard</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Server Generation</th>
+<th>WinPE Driver Pack</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerEdge 14G (R740, R640)</td>
+<td>WinPE 10</td>
+<td>Full PERC H730/H740 support</td>
+</tr>
+<tr>
+<td>PowerEdge 15G (R750, R650)</td>
+<td>WinPE 10/11</td>
+<td>PERC H755, HBA355</td>
+</tr>
+<tr>
+<td>PowerEdge 16G (R760, R660)</td>
+<td>WinPE 11</td>
+<td>PERC H965i, BOSS-N1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="agent-management">Agent Management<a class="headerlink" href="#agent-management" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check RASR Agent status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="n">RASRAgent</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Restart agent</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="n">RASRAgent</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Check last backup result</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Dell\RASR&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Version</span><span class="p">,</span> <span class="n">LastBackupTime</span><span class="p">,</span> <span class="n">LastBackupResult</span>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Server Generation | WinPE Driver Pack | Notes |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|---|---|---|
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| PowerEdge 14G (R740, R640) | WinPE 10 | Full PERC H730/H740 support |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| PowerEdge 15G (R750, R650) | WinPE 10/11 | PERC H755, HBA355 |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| PowerEdge 16G (R760, R660) | WinPE 11 | PERC H965i, BOSS-N1 |
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>## Agent Management
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>```powershell
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># Check RASR Agent status
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Get-Service -Name RASRAgent
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># Restart agent
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Restart-Service -Name RASRAgent
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a># Check last backup result
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>Get-ItemProperty &quot;HKLM:\SOFTWARE\Dell\RASR&quot; | Select-Object Version, LastBackupTime, LastBackupResult
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a># View recent agent log
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>Get-Content &quot;C:\Program Files\Dell\RASR\Logs\RASRAgent.log&quot; -Tail 50
-</code></pre></div></p>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># View recent agent log</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\Program Files\Dell\RASR\Logs\RASRAgent.log&quot;</span> <span class="n">-Tail</span> <span class="n">50</span>
+</code></pre></div>
 <h2 id="network-recovery-share-requirements">Network Recovery Share Requirements<a class="headerlink" href="#network-recovery-share-requirements" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

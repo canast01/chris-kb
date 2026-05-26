@@ -4121,6 +4121,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#pair-enters-write-disabled-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pair Enters Write Disabled State
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#pair-in-invalid-state" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4315,7 +4326,7 @@
 <p>SRDF/S issues typically manifest as pair state transitions away from <code>Synchronized</code>, elevated host write latency, or unexpected failover splits. Because SRDF/S is synchronous, any WAN degradation <strong>directly impacts production write latency</strong> — treat RTT increases above 5ms as a storage incident, not purely a network event.</p>
 <p>Always collect <code>symrdf query -g &lt;group&gt; -v</code> and array event logs before engaging Dell support.</p>
 <h2 id="link-down-recovery-decision-tree">Link-Down Recovery Decision Tree<a class="headerlink" href="#link-down-recovery-decision-tree" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     linkAlert["Alert: SRDF/S Link Down\nor Pairs not Synchronized"]
     checkPairState["Check Pair State\nsymrdf -g dgname -sid sid query"]
     pairStateVal{"Pair State?"}
@@ -4363,28 +4374,21 @@
     style engageSupport fill:#be123c,color:#fff
     style escalateNet fill:#b45309,color:#fff
     style checkDataAuth fill:#be123c,color:#fff</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>**Root cause:** Any increase in the WAN RTT adds directly to host write latency for SRDF/S. Every 1ms of additional RTT adds ~2ms to host write response time.
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>**Immediate action:**
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>1. Get the current RTT from the network team — compare to the baseline measured at deployment.
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>2. If RTT has spiked, check for WAN link congestion or routing path changes.
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>3. Engage the network team if RTT is elevated — do not accept &quot;the link is up&quot; as resolution; RTT matters.
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>---
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>## Pair Enters Write Disabled State
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>**Symptom:** `symrdf query` shows pair state as `Write Disabled`; hosts may report I/O errors.
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>`Write Disabled` indicates the R1 array could not complete writes to R2 within the write timeout threshold (typically due to RTT spike or link loss). The R1 array disables writes on the affected R1 devices to preserve data consistency.
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>```bash
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Confirm Write Disabled state
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query | grep &quot;Write Disabled&quot;
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a># Check for link errors
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>symcfg -sid &lt;r1_sid&gt; list -rdfg &lt;group_num&gt; -v
-</code></pre></div></p>
+<p><strong>Root cause:</strong> Any increase in the WAN RTT adds directly to host write latency for SRDF/S. Every 1ms of additional RTT adds ~2ms to host write response time.</p>
+<p><strong>Immediate action:</strong>
+1. Get the current RTT from the network team — compare to the baseline measured at deployment.
+2. If RTT has spiked, check for WAN link congestion or routing path changes.
+3. Engage the network team if RTT is elevated — do not accept "the link is up" as resolution; RTT matters.</p>
+<hr />
+<h2 id="pair-enters-write-disabled-state">Pair Enters Write Disabled State<a class="headerlink" href="#pair-enters-write-disabled-state" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> <code>symrdf query</code> shows pair state as <code>Write Disabled</code>; hosts may report I/O errors.</p>
+<p><code>Write Disabled</code> indicates the R1 array could not complete writes to R2 within the write timeout threshold (typically due to RTT spike or link loss). The R1 array disables writes on the affected R1 devices to preserve data consistency.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Confirm Write Disabled state</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Write Disabled&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check for link errors</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group_num&gt;<span class="w"> </span>-v
+</code></pre></div>
 <p><strong>Recovery:</strong></p>
 <ol>
 <li>Resolve the underlying link or RTT issue first.</li>

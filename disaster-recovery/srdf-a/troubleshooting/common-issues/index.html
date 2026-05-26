@@ -4314,7 +4314,7 @@
 </blockquote>
 <p>Common SRDF/A issues: link failures, increasing cycle times, suspended consistency groups, and volume capacity mismatches. Always collect <code>symrdf query -g &lt;group&gt; -v</code> and array event logs before engaging Dell support. Correlate with network monitoring timestamps to distinguish storage-side from WAN-side causes.</p>
 <h2 id="lag-alert-triage-decision-tree">Lag Alert Triage Decision Tree<a class="headerlink" href="#lag-alert-triage-decision-tree" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     lagAlert["Lag Alert Fires\n(RPO threshold breached)"]
     checkPairState["Check Pair State\nsymrdf -g grp -sid sid query"]
     pairState{"Pair State?"}
@@ -4362,22 +4362,20 @@
     style monitorRecovery fill:#15803d,color:#fff
     style throttleIO fill:#b45309,color:#fff
     style checkNetOps fill:#b45309,color:#fff</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>**Triage path:**
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>1. Check SAN switch ISL counters — is the FCIP tunnel or dark fibre link up?
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>2. Check FCIP session state from both switches (Cisco MDS: `show fcip session`; Brocade: `portshow fcipport`).
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>3. If the link is physically up but SRDF shows no traffic, check SRDF director port zoning.
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>4. If the link is down, escalate to network team with the affected FCIP tunnel endpoints.
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Once the link is restored:
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>```bash
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Resume SRDF/A after link restoration
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resume -noprompt
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># Monitor delta set queue flushing — expect high bandwidth burst as backlog clears
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
-</code></pre></div></p>
+<p><strong>Triage path:</strong></p>
+<ol>
+<li>Check SAN switch ISL counters — is the FCIP tunnel or dark fibre link up?</li>
+<li>Check FCIP session state from both switches (Cisco MDS: <code>show fcip session</code>; Brocade: <code>portshow fcipport</code>).</li>
+<li>If the link is physically up but SRDF shows no traffic, check SRDF director port zoning.</li>
+<li>If the link is down, escalate to network team with the affected FCIP tunnel endpoints.</li>
+</ol>
+<p>Once the link is restored:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Resume SRDF/A after link restoration</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Monitor delta set queue flushing — expect high bandwidth burst as backlog clears</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
+</code></pre></div>
 <hr />
 <h2 id="cycle-time-increasing-rpo-growing">Cycle Time Increasing / RPO Growing<a class="headerlink" href="#cycle-time-increasing-rpo-growing" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> <code>symrdf query</code> shows cycle time significantly above the configured interval; RPO alerts fire.</p>

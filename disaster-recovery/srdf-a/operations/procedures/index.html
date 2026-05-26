@@ -4340,6 +4340,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#failover-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failover Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#confirming-rpo-at-failover-time" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4632,7 +4643,7 @@
 <p>SRDF/A failover promotes R2 volumes to read/write. Because SRDF/A is asynchronous, R2 is consistent to the last <strong>completed cycle</strong> rather than the last write, so there is an inherent RPO equal to the lag at the moment of failure. Before failing over, always check the cycle state and lag to understand the data exposure window.</p>
 <p>Planned failover (site still accessible) uses <code>-establish</code> to immediately reverse replication after the split. Unplanned failover (primary site down) uses the standard <code>failover</code> command and requires a separate restore+establish sequence to recover replication.</p>
 <h3 id="failover-decision-flow">Failover Decision Flow<a class="headerlink" href="#failover-decision-flow" title="Permanent link">&para;</a></h3>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     incident["Incident: Primary Site Issue Reported"]
     primaryReachable{"Primary Site\nReachable?"}
     checkCycleState["Check Cycle State and Lag\nsymrdf -g 20 -type A query -detail"]
@@ -4666,23 +4677,20 @@
     style unplannedFO fill:#7c3aed,color:#fff
     style validateApp fill:#15803d,color:#fff
     style waitSite fill:#6b7280,color:#fff</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>If R2 is in `Transmitting` state at the moment of failover, the current cycle in flight will be discarded. RPO will be one full cycle older than the lag counter shows. Confirm this with stakeholders before proceeding.
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>### Failover Execution
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>```bash
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a># Planned failover — reverses replication after split
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>symrdf -g 20 -type A failover -establish -noprompt
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a># Unplanned failover — R2 becomes writable (primary site down)
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>symrdf -g 20 -type A failover -noprompt
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a># Failover a single device
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>symrdf -sid 0001 -dev 0B1 -type A failover -noprompt
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a># Confirm Failed Over state
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>symrdf -g 20 -type A query
-</code></pre></div></p>
+<p>If R2 is in <code>Transmitting</code> state at the moment of failover, the current cycle in flight will be discarded. RPO will be one full cycle older than the lag counter shows. Confirm this with stakeholders before proceeding.</p>
+<h3 id="failover-execution">Failover Execution<a class="headerlink" href="#failover-execution" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Planned failover — reverses replication after split</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>failover<span class="w"> </span>-establish<span class="w"> </span>-noprompt
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Unplanned failover — R2 becomes writable (primary site down)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>failover<span class="w"> </span>-noprompt
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Failover a single device</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">0001</span><span class="w"> </span>-dev<span class="w"> </span>0B1<span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>failover<span class="w"> </span>-noprompt
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Confirm Failed Over state</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query
+</code></pre></div>
 <p>After failover, present R2 volumes to DR hosts using the array's storage masking configuration.</p>
 <h3 id="confirming-rpo-at-failover-time">Confirming RPO at Failover Time<a class="headerlink" href="#confirming-rpo-at-failover-time" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Immediately after failover, record the cycle timestamp</span>

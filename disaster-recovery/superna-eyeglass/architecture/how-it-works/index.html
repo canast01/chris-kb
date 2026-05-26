@@ -4132,6 +4132,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#dr-readiness-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DR Readiness Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#connectivity" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4323,7 +4334,7 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Superna Eyeglass is a DR orchestration platform purpose-built for NetApp PowerScale (Isilon). It automates the share, quota, and DNS reconfiguration steps that previously required hours of manual work during a SyncIQ failover. Eyeglass continuously monitors DR readiness and scores it at 100% only when all shares, exports, quotas, and DNS zones are aligned between primary and DR clusters.</p>
 <h2 id="component-topology">Component Topology<a class="headerlink" href="#component-topology" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>graph LR
+<pre class="mermaid"><code>graph LR
   PS_A["PowerScale Cluster A\n(production)"] --&gt;|"SyncIQ policy"| PS_B["PowerScale Cluster B\n(DR)"]
   EG["Superna Eyeglass\nDR Assistant"] --&gt;|"monitors SyncIQ"| PS_A
   EG --&gt;|"orchestrates failover\naccess zone migration"| PS_B
@@ -4337,21 +4348,17 @@
   class PS_B dr
   class EG mgmt
   class ADMIN,DNS host</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>RTO: typically 5–15 minutes for file services, depending on share count.
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## DR Readiness Dashboard
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Eyeglass continuously monitors and scores DR readiness at `https://&lt;eyeglass-ip&gt;` → DR → Readiness:
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```text
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>DR Readiness Score = 100% when:
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  ✓ All SyncIQ policies in sync state (not lagging beyond RPO threshold)
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  ✓ All SMB shares mirrored on DR cluster
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  ✓ All NFS exports mirrored on DR cluster
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  ✓ All quotas aligned between primary and DR cluster
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  ✓ DNS zones pre-configured for cutover
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  ✓ Both Eyeglass appliances healthy and communicating
-</code></pre></div></p>
+<p>RTO: typically 5–15 minutes for file services, depending on share count.</p>
+<h2 id="dr-readiness-dashboard">DR Readiness Dashboard<a class="headerlink" href="#dr-readiness-dashboard" title="Permanent link">&para;</a></h2>
+<p>Eyeglass continuously monitors and scores DR readiness at <code>https://&lt;eyeglass-ip&gt;</code> → DR → Readiness:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>DR Readiness Score = 100% when:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  ✓ All SyncIQ policies in sync state (not lagging beyond RPO threshold)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  ✓ All SMB shares mirrored on DR cluster
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  ✓ All NFS exports mirrored on DR cluster
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  ✓ All quotas aligned between primary and DR cluster
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  ✓ DNS zones pre-configured for cutover
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  ✓ Both Eyeglass appliances healthy and communicating
+</code></pre></div>
 <h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

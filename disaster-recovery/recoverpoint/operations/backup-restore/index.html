@@ -4328,6 +4328,23 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failback-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failback Procedure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Failback Procedure">
+      <ul class="md-nav__list">
+        
           <li class="md-nav__item">
   <a href="#failback-steps" class="md-nav__link">
     <span class="md-ellipsis">
@@ -4595,7 +4612,7 @@
 <li>Click <strong>OK</strong>.</li>
 </ol>
 <h3 id="via-cli-boxmgmt-rpsc">Via CLI (boxmgmt / rpsc)<a class="headerlink" href="#via-cli-boxmgmt-rpsc" title="Permanent link">&para;</a></h3>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Connect to RecoverPoint appliance</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Connect to RecoverPoint appliance</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@rpa01.example.com
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List consistency groups</span>
@@ -4607,33 +4624,28 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List bookmarks for a CG</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>get_bookmarks<span class="w"> </span>--cg<span class="w"> </span><span class="s2">&quot;CG_PROD_SQL&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Failback Procedure
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>After the primary site is recovered, fail back from DR to primary.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```mermaid
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sequenceDiagram
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    participant Primary as Primary Site
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    participant RP as RecoverPoint
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    participant DR as DR Site
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    Note over DR: DR is running production (post-failover)
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    Primary-&gt;&gt;RP: Primary site restored — initiate failback
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    RP-&gt;&gt;RP: Establish reverse replication (DR→Primary)
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    RP-&gt;&gt;Primary: Sync delta changes from DR to Primary
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    Note over RP: Full sync or delta sync depending on state
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    RP-&gt;&gt;Primary: Sync complete — confirm cutover window
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    Primary-&gt;&gt;RP: Initiate failback cutover
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    RP-&gt;&gt;DR: Quiesce I/O on DR volumes briefly
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    RP-&gt;&gt;Primary: Promote Primary volumes
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    RP-&gt;&gt;RP: Flip replication direction (Primary→DR)
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    DR-&gt;&gt;RP: DR resumes as replica
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    Primary-&gt;&gt;Primary: Restart production workloads
-</code></pre></div></p>
+<hr />
+<h2 id="failback-procedure">Failback Procedure<a class="headerlink" href="#failback-procedure" title="Permanent link">&para;</a></h2>
+<p>After the primary site is recovered, fail back from DR to primary.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Primary as Primary Site
+    participant RP as RecoverPoint
+    participant DR as DR Site
+
+    Note over DR: DR is running production (post-failover)
+
+    Primary-&gt;&gt;RP: Primary site restored — initiate failback
+    RP-&gt;&gt;RP: Establish reverse replication (DR→Primary)
+    RP-&gt;&gt;Primary: Sync delta changes from DR to Primary
+    Note over RP: Full sync or delta sync depending on state
+
+    RP-&gt;&gt;Primary: Sync complete — confirm cutover window
+    Primary-&gt;&gt;RP: Initiate failback cutover
+    RP-&gt;&gt;DR: Quiesce I/O on DR volumes briefly
+    RP-&gt;&gt;Primary: Promote Primary volumes
+    RP-&gt;&gt;RP: Flip replication direction (Primary→DR)
+    DR-&gt;&gt;RP: DR resumes as replica
+    Primary-&gt;&gt;Primary: Restart production workloads</code></pre>
 <h3 id="failback-steps">Failback Steps<a class="headerlink" href="#failback-steps" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Confirm the primary site is healthy and volumes are accessible.</li>

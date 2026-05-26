@@ -4561,6 +4561,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#performance-predictions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Predictions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#bottleneck-detection" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4720,7 +4731,7 @@
 
 
 <h1 id="dell-aiops-workload-insights-performance-predictions-and-bottleneck-detection">Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection<a class="headerlink" href="#dell-aiops-workload-insights-performance-predictions-and-bottleneck-detection" title="Permanent link">&para;</a></h1>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────── Dell AIOps — Insights ────────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────── Dell AIOps — Insights ────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │             AIOps Insights: AI-generated summaries of infrastructure health trends            │   │
@@ -4751,27 +4762,57 @@
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>I/O pattern classifications:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Pattern | Read/Write Split | Block Size | Typical Workload |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|---|---|
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Sequential Read | &gt;70% read | &gt;128 KB | Backup restore, analytics |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Sequential Write | &gt;70% write | &gt;128 KB | Log streaming, backup |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Random Read | &gt;70% read | &lt;32 KB | Database index scans |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Random Write | &gt;70% write | &lt;32 KB | OLTP databases |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Mixed Random | ~50/50 | &lt;64 KB | Virtualisation |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>## Performance Predictions
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>AIOps provides a 7 and 30-day forward projection of key performance metrics based on current trends.
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>```bash
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Get performance prediction for a specific system
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>curl -sk -X GET \
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/performance_predictions?system_id=&lt;systemId&gt;&quot; \
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  -H &quot;Authorization: Bearer &lt;access_token&gt;&quot; \
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  -H &quot;Accept: application/json&quot; | jq &#39;.predictions[] | {metric, current_value, predicted_7d, predicted_30d, confidence}&#39;
-</code></pre></div></p>
+<p>I/O pattern classifications:</p>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Read/Write Split</th>
+<th>Block Size</th>
+<th>Typical Workload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sequential Read</td>
+<td>&gt;70% read</td>
+<td>&gt;128 KB</td>
+<td>Backup restore, analytics</td>
+</tr>
+<tr>
+<td>Sequential Write</td>
+<td>&gt;70% write</td>
+<td>&gt;128 KB</td>
+<td>Log streaming, backup</td>
+</tr>
+<tr>
+<td>Random Read</td>
+<td>&gt;70% read</td>
+<td>&lt;32 KB</td>
+<td>Database index scans</td>
+</tr>
+<tr>
+<td>Random Write</td>
+<td>&gt;70% write</td>
+<td>&lt;32 KB</td>
+<td>OLTP databases</td>
+</tr>
+<tr>
+<td>Mixed Random</td>
+<td>~50/50</td>
+<td>&lt;64 KB</td>
+<td>Virtualisation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="performance-predictions">Performance Predictions<a class="headerlink" href="#performance-predictions" title="Permanent link">&para;</a></h2>
+<p>AIOps provides a 7 and 30-day forward projection of key performance metrics based on current trends.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get performance prediction for a specific system</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/performance_predictions?system_id=&lt;systemId&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.predictions[] | {metric, current_value, predicted_7d, predicted_30d, confidence}&#39;</span>
+</code></pre></div>
 <p>Key predicted metrics:</p>
 <table>
 <thead>

@@ -4149,6 +4149,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#job-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Job Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#client-connectivity-diagnostics" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4423,7 +4434,7 @@
 </tbody>
 </table>
 <h3 id="vxul-unified-logs">VxUL unified logs<a class="headerlink" href="#vxul-unified-logs" title="Permanent link">&para;</a></h3>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># VxUL logs are stored under:</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># VxUL logs are stored under:</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/usr/openv/logs/
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Query with vxlogview for a specific OID and time window</span>
@@ -4435,27 +4446,24 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># 119 — nbstserv (storage service)</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># 143 — nbwebsvc (NetBackup web service)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Job Diagnostics
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Summary of all jobs in the last 24 hours
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>bpdbjobs -report -all_columns -hoursago 24
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Detail for a specific failed job
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>bpdbjobs -jobid &lt;job-id&gt; -report
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Show failed jobs in last 24 hours with status code
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>bpdbjobs -report -failed -hoursago 24 | grep -E &quot;jobid|status&quot;
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Get the status code explanation
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>bperror -S &lt;status-code&gt; -L
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Trace a job end-to-end (requires debug logging enabled)
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>grep &quot;&lt;job-id&gt;&quot; /usr/openv/netbackup/logs/bpbrm/log.&lt;yyyymmdd&gt;
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>grep &quot;&lt;job-id&gt;&quot; /usr/openv/netbackup/logs/bprd/log.&lt;yyyymmdd&gt;
-</code></pre></div></p>
+<hr />
+<h2 id="job-diagnostics">Job Diagnostics<a class="headerlink" href="#job-diagnostics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Summary of all jobs in the last 24 hours</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>bpdbjobs<span class="w"> </span>-report<span class="w"> </span>-all_columns<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">24</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Detail for a specific failed job</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>bpdbjobs<span class="w"> </span>-jobid<span class="w"> </span>&lt;job-id&gt;<span class="w"> </span>-report
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Show failed jobs in last 24 hours with status code</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>bpdbjobs<span class="w"> </span>-report<span class="w"> </span>-failed<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">24</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;jobid|status&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Get the status code explanation</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>bperror<span class="w"> </span>-S<span class="w"> </span>&lt;status-code&gt;<span class="w"> </span>-L
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Trace a job end-to-end (requires debug logging enabled)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>grep<span class="w"> </span><span class="s2">&quot;&lt;job-id&gt;&quot;</span><span class="w"> </span>/usr/openv/netbackup/logs/bpbrm/log.&lt;yyyymmdd&gt;
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>grep<span class="w"> </span><span class="s2">&quot;&lt;job-id&gt;&quot;</span><span class="w"> </span>/usr/openv/netbackup/logs/bprd/log.&lt;yyyymmdd&gt;
+</code></pre></div>
 <hr />
 <h2 id="client-connectivity-diagnostics">Client Connectivity Diagnostics<a class="headerlink" href="#client-connectivity-diagnostics" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test NetBackup client from master server</span>

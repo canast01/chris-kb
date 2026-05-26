@@ -3842,7 +3842,7 @@
 
 <h1 id="python-automation-access-control">Python Automation — Access Control<a class="headerlink" href="#python-automation-access-control" title="Permanent link">&para;</a></h1>
 <h2 id="least-privilege-access-model">Least Privilege Access Model<a class="headerlink" href="#least-privilege-access-model" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>graph TD
+<pre class="mermaid"><code>graph TD
     script["Python Script\n(automation job)"]
     svcAccount["Dedicated Service Account\n(linux: automation user)"]
     iamRole["IAM Role / API Token\n(scoped to task)"]
@@ -3856,14 +3856,13 @@
     iamRole --&gt; writePerms
     svcAccount --&gt; auditLog
     iamRole --&gt; auditLog</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```python
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a># Verify the script is running as the expected user at startup
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>import os, sys
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>EXPECTED_USER = &quot;automation&quot;
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>if os.getlogin() != EXPECTED_USER:
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    sys.exit(f&quot;ERROR: This script must run as &#39;{EXPECTED_USER}&#39;, not &#39;{os.getlogin()}&#39;&quot;)
-</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify the script is running as the expected user at startup</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">EXPECTED_USER</span> <span class="o">=</span> <span class="s2">&quot;automation&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getlogin</span><span class="p">()</span> <span class="o">!=</span> <span class="n">EXPECTED_USER</span><span class="p">:</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ERROR: This script must run as &#39;</span><span class="si">{</span><span class="n">EXPECTED_USER</span><span class="si">}</span><span class="s2">&#39;, not &#39;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getlogin</span><span class="p">()</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+</code></pre></div>
 <h2 id="aws-iam-least-privilege">AWS IAM Least Privilege<a class="headerlink" href="#aws-iam-least-privilege" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>

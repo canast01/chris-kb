@@ -4558,7 +4558,7 @@
 <p>Veeam Backup &amp; Replication provides comprehensive recovery options ranging from full VM restore to granular application-item recovery. Choosing the right restore type minimises RTO and avoids unnecessary data movement.</p>
 <hr />
 <h2 id="restore-type-decision-tree">Restore Type Decision Tree<a class="headerlink" href="#restore-type-decision-tree" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     A([Recovery Required]) --&gt; B{What is lost?}
     B --&gt; |Entire VM| C{Production available?}
     B --&gt; |Files/Folders| G[File-Level Recovery]
@@ -4574,16 +4574,15 @@
     G --&gt; J
     H --&gt; J
     I --&gt; J</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```powershell
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a># Via PowerShell (Veeam PowerShell Toolkit)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Add-PSSnapin VeeamPSSnapIn
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>$vm      = Find-VBRViEntity -Name &quot;PRODVM01&quot;
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>$backup  = Get-VBRBackup -Name &quot;PRODVM01 - Backup&quot;
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>$rp      = Get-VBRRestorePoint -Backup $backup | Sort-Object CreationTime -Descending | Select-Object -First 1
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Start-VBRInstantVMRecovery -RestorePoint $rp -TargetServer &quot;esx01.corp.example.com&quot; -PowerVM $true
-</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Via PowerShell (Veeam PowerShell Toolkit)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Add-PSSnapin</span> <span class="n">VeeamPSSnapIn</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">$vm</span>      <span class="p">=</span> <span class="nb">Find-VBRViEntity</span> <span class="n">-Name</span> <span class="s2">&quot;PRODVM01&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">$backup</span>  <span class="p">=</span> <span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">&quot;PRODVM01 - Backup&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nv">$rp</span>      <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="nv">$backup</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Start-VBRInstantVMRecovery</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span> <span class="n">-TargetServer</span> <span class="s2">&quot;esx01.corp.example.com&quot;</span> <span class="n">-PowerVM</span> <span class="nv">$true</span>
+</code></pre></div>
 <p><strong>After stabilisation — migrate from backup to production:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Veeam Console → Home → Instant Recovery → select running recovery →
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Migrate to Production → select datastore → Run migration

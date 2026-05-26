@@ -3951,6 +3951,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Validation Gates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -4115,29 +4132,27 @@
 <h1 id="ire-validation">IRE — Validation<a class="headerlink" href="#ire-validation" title="Permanent link">&para;</a></h1>
 <p>Validation is the final gate before restored systems return to production. It covers technical verification (application health, data integrity) and business verification (data completeness, process functionality).</p>
 <h2 id="validation-gates">Validation Gates<a class="headerlink" href="#validation-gates" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>flowchart LR
     SCAN["Malware Scan\n(IR team)"] --&gt; TECH["Technical Validation\n(infra team)"]
     TECH --&gt; BIZ["Business Validation\n(app owners)"]
     BIZ --&gt; DRTEST["DR Test\n(simulated failover)"]
     DRTEST --&gt; SIGNOFF["DR Lead Sign-Off\n(written approval)"]
     SIGNOFF --&gt; PROD["Reintroduce to Production"]</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Database
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```sql
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>-- SQL Server: verify no corruption
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>DBCC CHECKDB (&#39;recovered_db&#39;) WITH NO_INFOMSGS;
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>-- Check row counts match expected (compare against pre-incident baseline)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>SELECT TABLE_NAME, TABLE_ROWS
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>FROM information_schema.TABLES
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>WHERE TABLE_SCHEMA = &#39;recovered_db&#39;
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ORDER BY TABLE_ROWS DESC;
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>-- PostgreSQL: check for bloat or corruption
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>SELECT schemaname, tablename, n_live_tup, n_dead_tup
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>FROM pg_stat_user_tables
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>ORDER BY n_dead_tup DESC LIMIT 20;
-</code></pre></div></p>
+<h3 id="database">Database<a class="headerlink" href="#database" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- SQL Server: verify no corruption</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">DBCC</span><span class="w"> </span><span class="n">CHECKDB</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;recovered_db&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">NO_INFOMSGS</span><span class="p">;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">-- Check row counts match expected (compare against pre-incident baseline)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">TABLE_NAME</span><span class="p">,</span><span class="w"> </span><span class="n">TABLE_ROWS</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">TABLES</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">TABLE_SCHEMA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;recovered_db&#39;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">TABLE_ROWS</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1">-- PostgreSQL: check for bloat or corruption</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">schemaname</span><span class="p">,</span><span class="w"> </span><span class="n">tablename</span><span class="p">,</span><span class="w"> </span><span class="n">n_live_tup</span><span class="p">,</span><span class="w"> </span><span class="n">n_dead_tup</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_user_tables</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">n_dead_tup</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
+</code></pre></div>
 <h2 id="business-validation-checklist">Business Validation Checklist<a class="headerlink" href="#business-validation-checklist" title="Permanent link">&para;</a></h2>
 <p>Business owners test against a defined scenario list. Scenarios must be agreed before the incident.</p>
 <table>

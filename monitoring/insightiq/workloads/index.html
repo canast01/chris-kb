@@ -4583,6 +4583,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#client-node-affinity-and-smartconnect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client Node Affinity and SmartConnect
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#using-client-data-for-capacity-planning" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4771,7 +4782,7 @@
 </tbody>
 </table>
 <h2 id="identifying-top-consuming-clients">Identifying Top-Consuming Clients<a class="headerlink" href="#identifying-top-consuming-clients" title="Permanent link">&para;</a></h2>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On PowerScale OneFS — real-time top clients by total throughput</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On PowerScale OneFS — real-time top clients by total throughput</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@powerscale.example.com
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Sort by total bytes (in + out)</span>
@@ -4799,31 +4810,67 @@
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span>--limit<span class="o">=</span><span class="m">10</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">  </span>--format<span class="w"> </span>table
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Workload classification criteria:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| I/O Pattern | Read % | Block Size | Latency Tolerance | Example |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|---|---|---|
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Streaming Read | &gt; 80% | &gt; 256 KB | Moderate | Backup restore, media playout |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Streaming Write | &lt; 20% | &gt; 256 KB | Moderate | Video ingest, log aggregation |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Random Mixed | 40–60% | &lt; 64 KB | Low | VMware NFS, databases |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Metadata Heavy | ~50% | &lt; 8 KB | Very low | HOME dirs, many small files |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Batch Analytics | Variable | &gt; 1 MB | High | Hadoop/Spark HDFS jobs |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>## Client Node Affinity and SmartConnect
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Clients connect to PowerScale via SmartConnect DNS zones, which load-balance connections across nodes. An imbalanced distribution is visible in InsightIQ.
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>```bash
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Check current SmartConnect zone configuration
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ssh admin@powerscale.example.com
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>isi network pools list
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># Check per-node client count
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>isi statistics node list --stats=node.clientstats.connected --format table
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a># Manually check client connection distribution
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>isi statistics client list --format csv | awk -F&#39;,&#39; &#39;{print $2}&#39; | sort | uniq -c | sort -rn
-</code></pre></div></p>
+<p>Workload classification criteria:</p>
+<table>
+<thead>
+<tr>
+<th>I/O Pattern</th>
+<th>Read %</th>
+<th>Block Size</th>
+<th>Latency Tolerance</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Streaming Read</td>
+<td>&gt; 80%</td>
+<td>&gt; 256 KB</td>
+<td>Moderate</td>
+<td>Backup restore, media playout</td>
+</tr>
+<tr>
+<td>Streaming Write</td>
+<td>&lt; 20%</td>
+<td>&gt; 256 KB</td>
+<td>Moderate</td>
+<td>Video ingest, log aggregation</td>
+</tr>
+<tr>
+<td>Random Mixed</td>
+<td>40–60%</td>
+<td>&lt; 64 KB</td>
+<td>Low</td>
+<td>VMware NFS, databases</td>
+</tr>
+<tr>
+<td>Metadata Heavy</td>
+<td>~50%</td>
+<td>&lt; 8 KB</td>
+<td>Very low</td>
+<td>HOME dirs, many small files</td>
+</tr>
+<tr>
+<td>Batch Analytics</td>
+<td>Variable</td>
+<td>&gt; 1 MB</td>
+<td>High</td>
+<td>Hadoop/Spark HDFS jobs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="client-node-affinity-and-smartconnect">Client Node Affinity and SmartConnect<a class="headerlink" href="#client-node-affinity-and-smartconnect" title="Permanent link">&para;</a></h2>
+<p>Clients connect to PowerScale via SmartConnect DNS zones, which load-balance connections across nodes. An imbalanced distribution is visible in InsightIQ.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check current SmartConnect zone configuration</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@powerscale.example.com
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>list
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check per-node client count</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>isi<span class="w"> </span>statistics<span class="w"> </span>node<span class="w"> </span>list<span class="w"> </span>--stats<span class="o">=</span>node.clientstats.connected<span class="w"> </span>--format<span class="w"> </span>table
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Manually check client connection distribution</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>isi<span class="w"> </span>statistics<span class="w"> </span>client<span class="w"> </span>list<span class="w"> </span>--format<span class="w"> </span>csv<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
+</code></pre></div>
 <h2 id="using-client-data-for-capacity-planning">Using Client Data for Capacity Planning<a class="headerlink" href="#using-client-data-for-capacity-planning" title="Permanent link">&para;</a></h2>
 <p>Combine client analysis with capacity growth data to project per-tenant or per-application growth rates:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Identify which directories are growing fastest</span>

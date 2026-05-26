@@ -3803,6 +3803,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#3-download-and-install-the-new-runner-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Download and install the new runner package
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#4-restart-the-runner-service" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4026,19 +4037,16 @@
 <p>Self-hosted runners do not auto-update by default (unlike GitHub-hosted runners). Follow this procedure for each upgrade cycle.</p>
 <h3 id="1-check-the-current-runner-version">1. Check the current runner version<a class="headerlink" href="#1-check-the-current-runner-version" title="Permanent link">&para;</a></h3>
 <p>On each runner host, check the installed version:</p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>/opt/actions-runner<span class="w">   </span><span class="c1"># or wherever the runner is installed</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>/opt/actions-runner<span class="w">   </span><span class="c1"># or wherever the runner is installed</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>./config.sh<span class="w"> </span>--version
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Wait for any in-flight workflow jobs to complete before proceeding. If runners are registered in a runner group, temporarily remove the runner from active job queues via the GitHub UI (Settings &gt; Actions &gt; Runners) rather than hard-stopping the service.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### 3. Download and install the new runner package
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>cd /opt/actions-runner
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>curl -O -L https://github.com/actions/runner/releases/download/v&lt;VERSION&gt;/actions-runner-linux-x64-&lt;VERSION&gt;.tar.gz
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>tar xzf ./actions-runner-linux-x64-&lt;VERSION&gt;.tar.gz
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>./bin/installdependencies.sh
-</code></pre></div></p>
+<p>Wait for any in-flight workflow jobs to complete before proceeding. If runners are registered in a runner group, temporarily remove the runner from active job queues via the GitHub UI (Settings &gt; Actions &gt; Runners) rather than hard-stopping the service.</p>
+<h3 id="3-download-and-install-the-new-runner-package">3. Download and install the new runner package<a class="headerlink" href="#3-download-and-install-the-new-runner-package" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>/opt/actions-runner
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-O<span class="w"> </span>-L<span class="w"> </span>https://github.com/actions/runner/releases/download/v&lt;VERSION&gt;/actions-runner-linux-x64-&lt;VERSION&gt;.tar.gz
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>tar<span class="w"> </span>xzf<span class="w"> </span>./actions-runner-linux-x64-&lt;VERSION&gt;.tar.gz
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>./bin/installdependencies.sh
+</code></pre></div>
 <p>Re-registration is not required for in-place upgrades — the existing <code>.credentials</code> and <code>.runner</code> files remain valid.</p>
 <h3 id="4-restart-the-runner-service">4. Restart the runner service<a class="headerlink" href="#4-restart-the-runner-service" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>actions.runner.&lt;org&gt;-&lt;name&gt;.service

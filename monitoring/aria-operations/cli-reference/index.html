@@ -4583,6 +4583,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#resources-inventory" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4744,7 +4755,7 @@
 <h1 id="aria-operations-cli-reference">Aria Operations CLI Reference<a class="headerlink" href="#aria-operations-cli-reference" title="Permanent link">&para;</a></h1>
 <h2 id="aria-operations-formerly-vrealize-operations-is-managed-via-the-rest-api-and-the-vracli-tool-on-the-vapp-node-the-rest-api-base-url-is-httpsariaops_fqdnsuite-apiapi-ssh-to-the-analytics-node-as-root-for-appliance-level-operations">Aria Operations (formerly vRealize Operations) is managed via the REST API and the <code>vracli</code> tool on the vApp node. The REST API base URL is <code>https://&lt;ariaops_fqdn&gt;/suite-api/api</code>. SSH to the analytics node as root for appliance-level operations.<a class="headerlink" href="#aria-operations-formerly-vrealize-operations-is-managed-via-the-rest-api-and-the-vracli-tool-on-the-vapp-node-the-rest-api-base-url-is-httpsariaops_fqdnsuite-apiapi-ssh-to-the-analytics-node-as-root-for-appliance-level-operations" title="Permanent link">&para;</a></h2>
 <h2 id="appliance-status">Appliance Status<a class="headerlink" href="#appliance-status" title="Permanent link">&para;</a></h2>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to Aria Operations node</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to Aria Operations node</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>root@&lt;ariaops_fqdn&gt;
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check cluster node status</span>
@@ -4757,23 +4768,20 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>tail<span class="w"> </span>-f<span class="w"> </span>/data/vcops/log/analytics.log
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>tail<span class="w"> </span>-f<span class="w"> </span>/data/vcops/log/collector.log
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Alerts
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># List active alerts
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>curl -k -X GET &quot;https://&lt;ariaops_fqdn&gt;/suite-api/api/alerts?activeOnly=true&quot;   -H &quot;Authorization: OpsToken &lt;token&gt;&quot;
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># List alerts by criticality (CRITICAL, WARNING, IMMEDIATE)
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>curl -k -X GET &quot;https://&lt;ariaops_fqdn&gt;/suite-api/api/alerts?criticality=CRITICAL&amp;activeOnly=true&quot;   -H &quot;Authorization: OpsToken &lt;token&gt;&quot;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Acknowledge an alert
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>curl -k -X PATCH &quot;https://&lt;ariaops_fqdn&gt;/suite-api/api/alerts/&lt;alert_id&gt;/acknowledge&quot;   -H &quot;Authorization: OpsToken &lt;token&gt;&quot;
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Cancel an alert
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>curl -k -X PATCH &quot;https://&lt;ariaops_fqdn&gt;/suite-api/api/alerts/cancel&quot;   -H &quot;Authorization: OpsToken &lt;token&gt;&quot;   -H &quot;Content-Type: application/json&quot;   -d &#39;{&quot;alertIds&quot;:[&quot;&lt;alert_id&gt;&quot;]}&#39;
-</code></pre></div></p>
+<hr />
+<h2 id="alerts">Alerts<a class="headerlink" href="#alerts" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List active alerts</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;ariaops_fqdn&gt;/suite-api/api/alerts?activeOnly=true&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: OpsToken &lt;token&gt;&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List alerts by criticality (CRITICAL, WARNING, IMMEDIATE)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;ariaops_fqdn&gt;/suite-api/api/alerts?criticality=CRITICAL&amp;activeOnly=true&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: OpsToken &lt;token&gt;&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Acknowledge an alert</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">&quot;https://&lt;ariaops_fqdn&gt;/suite-api/api/alerts/&lt;alert_id&gt;/acknowledge&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: OpsToken &lt;token&gt;&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Cancel an alert</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">&quot;https://&lt;ariaops_fqdn&gt;/suite-api/api/alerts/cancel&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: OpsToken &lt;token&gt;&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;alertIds&quot;:[&quot;&lt;alert_id&gt;&quot;]}&#39;</span>
+</code></pre></div>
 <hr />
 <h2 id="resources-inventory">Resources &amp; Inventory<a class="headerlink" href="#resources-inventory" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all resources</span>

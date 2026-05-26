@@ -3733,6 +3733,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#encrypting-strings-with-dpapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encrypting Strings with DPAPI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#secure-communication-winrm-over-https" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3904,7 +3915,7 @@
 </blockquote>
 <hr />
 <h2 id="powershell-encryption-and-secure-communication">PowerShell Encryption and Secure Communication<a class="headerlink" href="#powershell-encryption-and-secure-communication" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>graph TD
+<pre class="mermaid"><code>graph TD
     plainText["Plaintext Password\n/ API Key"]
     secureString["SecureString\n(in-memory, encrypted)"]
     dpapi["ConvertFrom-SecureString\n(DPAPI encrypted string)"]
@@ -3921,23 +3932,20 @@
     clixml --&gt;|Import-Clixml| secureString
     secureString --&gt;|New-PSSession -UseSSL| winrmHTTPS
     winrmHTTPS --&gt; remoteSession</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Encrypting Strings with DPAPI
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>`ConvertTo-SecureString` and `ConvertFrom-SecureString` use Windows DPAPI to encrypt values that only the current user on the current machine can decrypt.
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```powershell
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Encrypt a string and save it to a file
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>$secure = Read-Host -AsSecureString -Prompt &#39;Enter API key&#39;
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>$encrypted = ConvertFrom-SecureString $secure
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>$encrypted | Out-File C:\Secrets\api-key.txt
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Load and decrypt on the same machine/user
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>$encrypted = Get-Content C:\Secrets\api-key.txt
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>$secure = ConvertTo-SecureString $encrypted
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>$plain = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto(
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>)
-</code></pre></div></p>
+<h2 id="encrypting-strings-with-dpapi">Encrypting Strings with DPAPI<a class="headerlink" href="#encrypting-strings-with-dpapi" title="Permanent link">&para;</a></h2>
+<p><code>ConvertTo-SecureString</code> and <code>ConvertFrom-SecureString</code> use Windows DPAPI to encrypt values that only the current user on the current machine can decrypt.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Encrypt a string and save it to a file</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$secure</span> <span class="p">=</span> <span class="nb">Read-Host</span> <span class="n">-AsSecureString</span> <span class="n">-Prompt</span> <span class="s1">&#39;Enter API key&#39;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">$encrypted</span> <span class="p">=</span> <span class="nb">ConvertFrom-SecureString</span> <span class="nv">$secure</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">$encrypted</span> <span class="p">|</span> <span class="nb">Out-File</span> <span class="n">C</span><span class="p">:\</span><span class="n">Secrets</span><span class="p">\</span><span class="n">api-key</span><span class="p">.</span><span class="n">txt</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c"># Load and decrypt on the same machine/user</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nv">$encrypted</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="n">C</span><span class="p">:\</span><span class="n">Secrets</span><span class="p">\</span><span class="n">api-key</span><span class="p">.</span><span class="n">txt</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nv">$secure</span> <span class="p">=</span> <span class="nb">ConvertTo-SecureString</span> <span class="nv">$encrypted</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nv">$plain</span> <span class="p">=</span> <span class="no">[System.Runtime.InteropServices.Marshal]</span><span class="p">::</span><span class="n">PtrToStringAuto</span><span class="p">(</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="no">[System.Runtime.InteropServices.Marshal]</span><span class="p">::</span><span class="n">SecureStringToBSTR</span><span class="p">(</span><span class="nv">$secure</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)</span>
+</code></pre></div>
 <h2 id="secure-communication-winrm-over-https">Secure Communication (WinRM over HTTPS)<a class="headerlink" href="#secure-communication-winrm-over-https" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Use SSL for PSSession to prevent credential interception</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$sessionOption</span> <span class="p">=</span> <span class="nb">New-PSSessionOption</span> <span class="n">-SkipCACheck</span> <span class="n">-SkipCNCheck</span>

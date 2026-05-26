@@ -3616,6 +3616,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#escalation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3767,40 +3778,38 @@
 <hr />
 <h2 id="github-status-and-known-issues">GitHub Status and Known Issues<a class="headerlink" href="#github-status-and-known-issues" title="Permanent link">&para;</a></h2>
 <p>Before escalating, check whether the issue is a platform-wide incident.</p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check GitHub&#39;s status page</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check GitHub&#39;s status page</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>open<span class="w"> </span>https://githubstatus.com
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Subscribe to status notifications via the GitHub Status API</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>https://www.githubstatus.com/api/v2/status.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.status&#39;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Escalation Checklist
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- [ ] Confirmed issue is not on the [GitHub Status page](https://githubstatus.com)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- [ ] Captured the full run ID and workflow file name
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- [ ] Downloaded run logs: `gh run download RUN_ID --dir ./run-logs`
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- [ ] Identified the exact step, error message, and exit code
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- [ ] Reproduced the issue or confirmed it is consistent
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- [ ] Checked GitHub Community discussions for similar reports
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- [ ] Raised a support ticket with run ID, repo name, and log excerpt
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>```mermaid
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>flowchart TD
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    issue([&quot;Workflow issue\ncannot self-resolve&quot;])
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    statusPage[&quot;Check githubstatus.com\nPlatform incident?&quot;]
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    incident{Platform\nincident?}
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    waitResolve[&quot;Wait for GitHub\nto resolve&quot;]
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    collectData[&quot;Collect data\ngh run view RUN_ID --log\ngh run list --workflow ci.yml&quot;]
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    community[&quot;Search GitHub Community\nDiscussions for similar reports&quot;]
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    found{Solution\nfound?}
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    openTicket[&quot;Open GitHub Support ticket\nRun ID + repo name + log excerpt\nEnterprise plan: SLA-backed&quot;]
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    done([&quot;Issue resolved&quot;])
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    issue --&gt; statusPage --&gt; incident
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    incident --&gt;|Yes| waitResolve --&gt; done
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    incident --&gt;|No| collectData --&gt; community --&gt; found
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    found --&gt;|Yes| done
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    found --&gt;|No| openTicket --&gt; done
-</code></pre></div></p>
+<h2 id="escalation-checklist">Escalation Checklist<a class="headerlink" href="#escalation-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Confirmed issue is not on the <a href="https://githubstatus.com">GitHub Status page</a></li>
+<li>[ ] Captured the full run ID and workflow file name</li>
+<li>[ ] Downloaded run logs: <code>gh run download RUN_ID --dir ./run-logs</code></li>
+<li>[ ] Identified the exact step, error message, and exit code</li>
+<li>[ ] Reproduced the issue or confirmed it is consistent</li>
+<li>[ ] Checked GitHub Community discussions for similar reports</li>
+<li>[ ] Raised a support ticket with run ID, repo name, and log excerpt</li>
+</ul>
+<pre class="mermaid"><code>flowchart TD
+    issue(["Workflow issue\ncannot self-resolve"])
+    statusPage["Check githubstatus.com\nPlatform incident?"]
+    incident{Platform\nincident?}
+    waitResolve["Wait for GitHub\nto resolve"]
+    collectData["Collect data\ngh run view RUN_ID --log\ngh run list --workflow ci.yml"]
+    community["Search GitHub Community\nDiscussions for similar reports"]
+    found{Solution\nfound?}
+    openTicket["Open GitHub Support ticket\nRun ID + repo name + log excerpt\nEnterprise plan: SLA-backed"]
+    done(["Issue resolved"])
+
+    issue --&gt; statusPage --&gt; incident
+    incident --&gt;|Yes| waitResolve --&gt; done
+    incident --&gt;|No| collectData --&gt; community --&gt; found
+    found --&gt;|Yes| done
+    found --&gt;|No| openTicket --&gt; done</code></pre>
 
 
 

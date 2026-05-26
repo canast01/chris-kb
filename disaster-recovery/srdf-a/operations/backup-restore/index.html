@@ -4317,6 +4317,45 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srdfa-failover-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF/A Failover Procedure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SRDF/A Failover Procedure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-failover-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Failover Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failover-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failover Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
           <li class="md-nav__item">
   <a href="#failover-with-storage-group-sg-based-management" class="md-nav__link">
     <span class="md-ellipsis">
@@ -4629,50 +4668,67 @@
 <h2 id="symcli-command-reference">SYMCLI Command Reference<a class="headerlink" href="#symcli-command-reference" title="Permanent link">&para;</a></h2>
 <p>All SRDF operations use <code>symrdf</code> from the <strong>Symmetrix Command Line Interface (SYMCLI)</strong> suite.</p>
 <h3 id="environment-setup">Environment Setup<a class="headerlink" href="#environment-setup" title="Permanent link">&para;</a></h3>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Set the Symmetrix/VMAX SID (array serial number)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Set the Symmetrix/VMAX SID (array serial number)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SYMCLI_SID</span><span class="o">=</span><span class="m">000123456789</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Or use -sid flag on each command</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;rdf_group&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Device states to understand:**
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| State | Meaning |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| `WD` (Write Disabled) | R2 is synchronized and write-protected |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| `NR` (Not Ready) | Device offline or not accessible |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| `RW` (Read/Write) | Device is accessible for reads and writes (post-failover) |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| `Suspended` | Replication paused |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| `Failed Over` | Failover has occurred; R1 link broken |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>---
+<p><strong>Device states to understand:</strong></p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WD</code> (Write Disabled)</td>
+<td>R2 is synchronized and write-protected</td>
+</tr>
+<tr>
+<td><code>NR</code> (Not Ready)</td>
+<td>Device offline or not accessible</td>
+</tr>
+<tr>
+<td><code>RW</code> (Read/Write)</td>
+<td>Device is accessible for reads and writes (post-failover)</td>
+</tr>
+<tr>
+<td><code>Suspended</code></td>
+<td>Replication paused</td>
+</tr>
+<tr>
+<td><code>Failed Over</code></td>
+<td>Failover has occurred; R1 link broken</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="srdfa-failover-procedure">SRDF/A Failover Procedure<a class="headerlink" href="#srdfa-failover-procedure" title="Permanent link">&para;</a></h2>
+<h3 id="pre-failover-requirements">Pre-Failover Requirements<a class="headerlink" href="#pre-failover-requirements" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Confirm R1 (source) site is unavailable or inaccessible.</li>
+<li>[ ] Identify the latest consistent delta set received at R2.</li>
+<li>[ ] Coordinate with application owners — failover causes brief I/O disruption on R2.</li>
+<li>[ ] Confirm R2 storage and compute infrastructure is operational.</li>
+</ul>
+<h3 id="failover-steps">Failover Steps<a class="headerlink" href="#failover-steps" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Verify current SRDF state — confirm it is not in a transient state</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># 2. Execute failover — promotes R2 devices to RW, isolates from R1</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>failover<span class="w"> </span>-force
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 3. Confirm R2 devices are now RW and R1 link shows &quot;Failed Over&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># 4. Present R2 volumes to DR hosts (if not using host-based failover automation)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># This step is environment-specific — SRM, host scripts, or manual masking</span>
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>## SRDF/A Failover Procedure
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>### Pre-Failover Requirements
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>- [ ] Confirm R1 (source) site is unavailable or inaccessible.
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>- [ ] Identify the latest consistent delta set received at R2.
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>- [ ] Coordinate with application owners — failover causes brief I/O disruption on R2.
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>- [ ] Confirm R2 storage and compute infrastructure is operational.
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>### Failover Steps
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>```bash
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a># 1. Verify current SRDF state — confirm it is not in a transient state
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>symrdf query -g PROD_RDF_GROUP
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a># 2. Execute failover — promotes R2 devices to RW, isolates from R1
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>symrdf -g PROD_RDF_GROUP failover -force
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a># 3. Confirm R2 devices are now RW and R1 link shows &quot;Failed Over&quot;
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>symrdf query -g PROD_RDF_GROUP
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a># 4. Present R2 volumes to DR hosts (if not using host-based failover automation)
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a># This step is environment-specific — SRM, host scripts, or manual masking
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a># 5. Start production workloads on DR site
-</code></pre></div></p>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># 5. Start production workloads on DR site</span>
+</code></pre></div>
 <p><strong>Important:</strong> The <code>-force</code> flag is required when R1 is inaccessible and the link cannot confirm synchronization. Without it, <code>symrdf failover</code> will refuse to proceed if the link is already down.</p>
 <h3 id="failover-with-storage-group-sg-based-management">Failover with Storage Group (SG-based management)<a class="headerlink" href="#failover-with-storage-group-sg-based-management" title="Permanent link">&para;</a></h3>
 <p>In modern VMAX/PowerMax environments, RDF operations are performed at the Storage Group level:</p>
