@@ -65,19 +65,51 @@ graph LR
     class witness witness
     class clients client
 ```
-
----
-
-## Logical Hierarchy
-
-```text
-vCenter Server
-└── Datacenter (DC-<site>)
-    ├── Cluster (CL-<site>-<function>)
-    │   ├── ESXi Host (esxi-01.<domain>)
-    │   │   └── VMs
-    │   └── vSAN Datastore / VMFS / NFS
-    └── Standalone Host (uncommon in production)
+┌──────────────────────────────────── vCenter Server — How It Works ────────────────────────────────────┐
+│                                                                                                       │
+│  vCenter Server is the centralised management platform for vSphere; all                               │
+│  ESXi hosts, VMs, clusters, and policies are controlled through its APIs.                             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Client Layer                 │  │             API / Service Layer             │   │
+│   │          vSphere Client (HTML5 UI)           │  │             REST API + SOAP API             │   │
+│   │             CLI: govc, PowerCLI              │  │           SSO token auth for calls          │   │
+│   │            SDKs: Python, Go, Java            │  │             vCenter API gateway             │   │
+│   │             vCenter Mob browser              │  │               Task / event bus              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Client requests hit the API gateway; SSO validates the token before any operation.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Core Services                 │  │              Host Agent (vpxa)              │   │
+│   │          Inventory: hosts/VMs/nets           │  │            Runs on each ESXi host           │   │
+│   │            Scheduler: DRS/HA/DPM             │  │            Relays tasks to hostd            │   │
+│   │            Storage: SDRS/profiles            │  │           Reports events up to VC           │   │
+│   │           Postgres DB: full state            │  │           Reconnects on VC restart          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vCenter Server Appliance (VCSA) runs as a Linux VM on an ESXi host; requires                         │
+│  shared storage and management network reachability from all managed hosts.                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VCSA          = vCenter Server Appliance; OVA-deployed Photon OS VM                                  │
+│  vpxd          = vCenter Server daemon; core process; crash restarts service                          │
+│  vpxa          = vCenter agent on each ESXi host; bridges host and vCenter                            │
+│  hostd         = host daemon on ESXi; handles VM power ops, storage, network                          │
+│  PSC           = Platform Services Controller; merged into VCSA 7.0+                                  │
+│  SSO           = Single Sign-On; identity store; issues SAML tokens for API                           │
+│  DRS           = Distributed Resource Scheduler; automates VM placement                               │
+│  HA            = High Availability; restarts VMs on host failure automatically                        │
+│  DPM           = Distributed Power Management; powers off idle hosts                                  │
+│  SDRS          = Storage DRS; balances datastore utilisation automatically                            │
+│  vDS           = vSphere Distributed Switch; managed centrally from vCenter                           │
+│  Inventory     = hierarchical object tree: DC → cluster → host → VM                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Resource pools, vSphere tags, and content libraries are vCenter-level constructs applied within this hierarchy.

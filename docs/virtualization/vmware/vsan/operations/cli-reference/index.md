@@ -30,36 +30,51 @@ CLI TOOL CHAIN
                            ▼
                vSAN Kernel Modules (LSOM / CLOM / DOM / CMMDS)
 ```
-
-> All `esxcli vsan` commands run from the ESXi host shell (SSH as root). PowerCLI commands run from a Windows/Linux workstation with the VMware.PowerCLI module installed.
-
----
-
-## Cluster Status & Capacity
-
-Get a high-level view of vSAN cluster membership, storage devices, and overall capacity. Run these commands first when checking cluster health.
-
-```bash
-# From ESXi host shell
-
-# Cluster membership and status
-esxcli vsan cluster get
-
-# All vSAN storage devices on this host
-esxcli vsan storage list
-
-# Filter to SSDs (cache tier in hybrid; all-flash uses SSDs as capacity)
-esxcli vsan storage list | grep -i ssd
-
-# Filter to HDDs (capacity tier in hybrid configurations)
-esxcli vsan storage list | grep -i hdd
-
-# Disk groups — shows SSD (cache leader) and capacity disks
-esxcli vsan storage list | grep -E "Display Name|Type|UUID"
-
-# vSAN VMkernel network adapters
-esxcli vsan network list
-esxcli vsan network ipconfig list
+┌──────────────────────────────────────── vSAN — CLI Reference ─────────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN CLI operations use esxcli on hosts, RVC (Ruby vSphere Console), PowerCLI,                       │
+│  and the vSphere Client UI for health, disk, and object management.                                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               esxcli Commands                │  │                 RVC Commands                │   │
+│   │           esxcli vsan cluster get            │  │           vsan.health.health_test           │   │
+│   │           esxcli vsan storage list           │  │            vsan.disks_info <host>           │   │
+│   │           esxcli vsan network list           │  │            vsan.obj_status_report           │   │
+│   │           esxcli vsan debug object           │  │            vsan.resync_dashboard            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  esxcli runs on the ESXi host shell; RVC runs from the vCenter or jump host.                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              PowerCLI Commands               │  │            Object & Disk Commands           │   │
+│   │         Get-VsanClusterConfiguration         │  │           esxcli vsan debug object          │   │
+│   │           Get-VsanDisk | Ft Status           │  │          cmmds-tool find (metadata)         │   │
+│   │            Test-VsanClusterHealth            │  │           vsanObserver (perf data)          │   │
+│   │           Get-VsanView (advanced)            │  │            esxcli vsan trace cat            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  All commands execute against host or vCenter management plane; cmmds-tool                            │
+│  is host-local only and reads cluster metadata database.                                              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  esxcli vsan   = vSAN management namespace in ESXi CLI                                                │
+│  RVC           = Ruby vSphere Console; legacy; still used for vSAN diag                               │
+│  cmmds-tool    = Cluster Monitoring, Membership, Directory Service tool                               │
+│  CMMDS         = cluster metadata store; tracks object component locations                            │
+│  vsanObserver  = performance observability tool; requires RVC                                         │
+│  obj_status    = per-object health report; shows degraded/absent                                      │
+│  resync_dash   = RVC command showing active resync bytes/throughput                                   │
+│  debug object  = detailed per-object component and placement info                                     │
+│  vsan trace    = per-host vSAN trace log; crash and I/O analysis                                      │
+│  health_test   = runs all vSAN health checks programmatically                                         │
+│  Get-VsanDisk  = PowerCLI; lists disk status across cluster                                           │
+│  Test-VsanCluster= PowerCLI; triggers health check run                                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Capacity & Objects

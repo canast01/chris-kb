@@ -1,5 +1,52 @@
 # VCF Troubleshooting — Escalation
 
+```
+┌──────────────────────────────── VMware Cloud Foundation — Escalation ─────────────────────────────────┐
+│                                                                                                       │
+│  Escalate VCF issues to VMware GSS when upgrade is stuck, data is at risk,                            │
+│  or SDDC Manager is inaccessible; attach SOS bundle and timeline.                                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │             Pre-Escalation Steps            │   │
+│   │            SDDC Mgr inaccessible             │  │               Run SOS utility               │   │
+│   │              Upgrade stuck >4h               │  │          Collect component bundles          │   │
+│   │         Data at risk: vSAN degraded          │  │           Document failed task ID           │   │
+│   │           All self-steps exhausted           │  │             Timeline of changes             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SOS bundle and task IDs allow GSS to quickly triage the failure point.                               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                GSS Engagement                │  │               Escalation Path               │   │
+│   │         Open SR at support.broadcom          │  │               T1: triage + SOS              │   │
+│   │           Severity P1: full outage           │  │             T2: VCF SE assigned             │   │
+│   │         Include VCF version + build          │  │            T3: engineering review           │   │
+│   │                Attach SOS ZIP                │  │        CritSit: 24/7 if data at risk        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  GSS may request live SSH session to SDDC Manager and component appliances;                           │
+│  prepare access for remote engineers before the call.                                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SOS utility   = VCF support bundle; /opt/vmware/sddc-support/sos                                     │
+│  SR            = Service Request; raise at support.broadcom.com                                       │
+│  Task ID       = SDDC Mgr async operation ID; include in SR                                           │
+│  P1 severity   = highest priority; production outage; 24/7 SLA                                        │
+│  CritSit       = Critical Situation; exec escalation + war room                                       │
+│  VCF version   = e.g., VCF 5.2.0.0 build 12345678                                                     │
+│  T2 VCF SE     = VMware senior engineer specialising in VCF                                           │
+│  Timeline      = chronological list of changes before issue                                           │
+│  Broadcom      = VMware support portal post-acquisition                                               │
+│  Live SSH      = GSS remote debug via Bomgar or WebEx                                                 │
+│  Do not remediate= stop retrying stuck upgrades; wait for GSS guidance                                │
+│  Component bundle= per-product logs (VC/NSX/ESXi) for targeted debug                                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 VCF Escalation Workflow
 ┌─────────────────────────────────────────────────────┐

@@ -30,71 +30,51 @@ Credential Rotation (all via SDDC Manager — never manually):
 │  Schedule: every 90 days (or per policy)            │
 └─────────────────────────────────────────────────────┘
 ```
-
-> Part of the [VMware Cloud Foundation](../../index.md) reference.
-
----
-
-## SDDC Manager Roles
-
-| Role | Access |
-|---|---|
-| ADMIN | Full access — lifecycle, security, credential rotation |
-| OPERATOR | Day-to-day operations — health, tasks, monitoring; no credential access |
-| VIEWER | Read-only dashboards and health views |
-
-**Assign roles to AD groups:**
-
-1. SDDC Manager → Administration → Single Sign-On → add Active Directory identity source
-2. Administration → Users and Groups → assign roles to AD groups
-3. Remove direct user-level assignments — group-based assignment is auditable and survives staff changes
-
----
-
-## NSX Manager Roles
-
-| Role | Capabilities | Typical Assignees |
-|---|---|---|
-| **Enterprise Admin** | Full NSX configuration — logical switching, routing, micro-segmentation, load balancing, gateway firewall, certificate management, user management | Network architects, NSX platform owners |
-| **Network Engineer** | Configure and manage logical switches, routers, and load balancers; cannot modify security policy or manage users | Network operations team |
-| **Security Engineer** | Create and modify distributed firewall rules, security groups, and gateway firewall policies; cannot modify network topology | Security team, firewall engineers |
-| **Auditor** | Read-only access to all NSX configuration and logs; cannot make any changes | Compliance, audit staff, monitoring service accounts |
-
-NSX roles are assigned in NSX Manager under **System → User Management → Roles**. In a VCF environment, NSX Manager user management should be configured to use the same AD identity source as SDDC Manager to ensure consistent group-based access.
-
----
-
-## vCenter Server Roles in VCF Context
-
-In a VCF-managed deployment, vCenter permissions are managed through SDDC Manager rather than directly in the vCenter UI. This ensures that VCF lifecycle operations retain the permissions they require.
-
-| Principle | Detail |
-|---|---|
-| **VCF service account** | SDDC Manager creates and manages a service account in each vCenter. Do not modify or disable this account — VCF lifecycle tasks (upgrades, expansions) depend on it. |
-| **Human user access** | Grant human users access to vCenter via AD group membership in vCenter → Administration → Global Permissions. Use built-in roles (Administrator, Read-Only, Virtual Machine User) or custom roles with least privilege. |
-| **Role scope** | Apply roles at the lowest inventory level possible (VM folder, cluster, or datacenter object) rather than at the global level. Global permissions propagate to all vCenter objects and should be reserved for platform admins. |
-| **No local vCenter accounts** | In a VCF environment, disable local vCenter accounts (other than the built-in `administrator@vsphere.local` break-glass account). All access should flow through the AD identity source. |
-
----
-
-## API Service Account Guidance
-
-SDDC Manager exposes a REST API used by automation pipelines, CMDB integrations, and monitoring tools.
-
-| Use Case | Recommended Role | Authentication Method |
-|---|---|---|
-| Read-only monitoring (health, inventory queries) | VIEWER | API token (Bearer) — generate under My Account in SDDC Manager |
-| Automation pipelines (deploy workload domains, expand clusters) | OPERATOR or ADMIN depending on operations required | API token with short expiry; rotate on each pipeline run via CI/CD secrets manager |
-| CMDB or asset discovery | VIEWER | Long-lived API token stored in secrets vault; rotate every 90 days |
-
-**Obtaining an API token:**
-
-```bash
-# Authenticate and retrieve a session token
-curl -sk -X POST https://<sddc-manager-fqdn>/v1/tokens \
-  -H "Content-Type: application/json" \
-  -d '{"username":"svc-automation@vsphere.local","password":"<password>"}' \
-  | jq -r '.accessToken'
+┌────────────────────────────── VMware Cloud Foundation — Access Control ───────────────────────────────┐
+│                                                                                                       │
+│  VCF access control spans SDDC Manager (admin/operator/viewer roles), vCenter RBAC                    │
+│  per domain, NSX RBAC, and credential management for all service accounts.                            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              SDDC Manager Roles              │  │               Per-Domain RBAC               │   │
+│   │             Admin: full control              │  │           Each domain: own vCenter          │   │
+│   │       Operator: manage but not config        │  │             AD groups per domain            │   │
+│   │         Viewer: read-only dashboard          │  │            NSX: per-domain roles            │   │
+│   │           SSO: AD-integrated login           │  │            No cross-domain access           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SDDC Manager roles control VCF platform ops; domain RBAC controls workload access.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Credential Management             │  │              Audit & Compliance             │   │
+│   │          SDDC Mgr: rotate passwords          │  │           Log: all SDDC Mgr events          │   │
+│   │          Service accounts: managed           │  │           Review admin list qtrly           │   │
+│   │         Break-glass: local SSO admin         │  │           Alert: failed login SIEM          │   │
+│   │         Vault integration: optional          │  │           SDDC Mgr audit log: API           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SDDC Manager runs on management domain; AD must be reachable on management network                   │
+│  for identity-based login; all SDDC Mgr operations are logged.                                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SDDC Manager Admin= full platform control; assign to minimal staff                                   │
+│  Operator role= manage domains/clusters; cannot change VCF config                                     │
+│  Viewer role   = read-only; safe for monitoring teams                                                 │
+│  AD integration= SDDC Mgr authenticates against AD via LDAP                                           │
+│  Break-glass   = local admin account; used when AD is unreachable                                     │
+│  Credential rotation= SDDC Mgr rotates service account passwords automatically                        │
+│  Vault integration= optional HashiCorp Vault for credential storage                                   │
+│  SIEM          = receives SDDC Mgr syslog and vCenter events                                          │
+│  Audit API     = SDDC Mgr REST API /v1/audit-events endpoint                                          │
+│  Quarterly review= verify admin role assignments across all domains                                   │
+│  No cross-domain= workload domain RBAC is isolated per domain                                         │
+│  Service accounts= SDDC Mgr manages all component service credentials                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Use the returned `accessToken` as a Bearer token in subsequent API calls:

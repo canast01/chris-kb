@@ -20,28 +20,51 @@
 │  └──────────────────────┘   └──────────────────────────┘     │
 └──────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Connection Server Hardening
-
-### locked.properties
-
-The `locked.properties` file enforces security settings that override console configuration:
-
-```powershell
-# File location:
-$props = "C:\Program Files\VMware\VMware View\Server\sslgateway\conf\locked.properties"
-
-# Restrict admin console to management network only (prevents console access from desktops)
-Add-Content $props "checkOrigin=true"
-Add-Content $props "allowedHosts=10.10.10.0/24"    # management subnet only
-
-# Disable TLS 1.0 and 1.1
-Add-Content $props "sslprotocols=TLSv1.2,TLSv1.3"
-Add-Content $props "enabledCipherSuites=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
-
-Restart-Service "VMware Horizon View Connection Server"
+┌───────────────────────────────────── VMware Horizon — Hardening ──────────────────────────────────────┐
+│                                                                                                       │
+│  Horizon hardening follows the VMware Horizon Security Hardening Guide: TLS enforcement,              │
+│  MFA, network isolation, session timeout, and audit logging.                                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Network Hardening               │  │              Session Hardening              │   │
+│   │            Desktop VLAN: isolated            │  │           Session timeout: 8h max           │   │
+│   │           DMZ: UAG only, port 443            │  │            Disconnect timeout: 1h           │   │
+│   │          No direct CS from internet          │  │         Logoff on disconnect: enable        │   │
+│   │            Firewall: CS mgmt only            │  │           USB: restrict or disable          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  UAG as the only external entry point is the most important network control.                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Auth Hardening                │  │              Audit & Compliance             │   │
+│   │            MFA: RADIUS/RSA on UAG            │  │            Events DB: all logins            │   │
+│   │           TLS 1.2 minimum: enforce           │  │          Syslog: CS events to SIEM          │   │
+│   │         Smart card: enforce for govt         │  │          SIEM: login failure alerts         │   │
+│   │           SSO: Workspace ONE + MFA           │  │         Quarterly: entitlement audit        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Desktop VMs run on dedicated ESXi hosts with isolated VLAN; Connection Server VMs                    │
+│  on management network; UAG in DMZ; profile shares on NAS.                                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Session timeout= max session age; logoff user after 8h inactivity                                    │
+│  Disconnect timeout= auto-logoff disconnected sessions after 1h                                       │
+│  Logoff on disconnect= destroy instant clone on disconnect for security                               │
+│  USB restrict  = limit USB redirection to approved device classes                                     │
+│  DMZ           = demilitarised zone; UAG sits here with dual NIC                                      │
+│  Events DB     = Horizon SQL event log; login/session/admin events                                    │
+│  SIEM          = Security Info and Event Mgmt; receives CS syslog                                     │
+│  TLS 1.2       = minimum; disable TLS 1.0/1.1 in CS config                                            │
+│  MFA           = Multi-Factor Auth; configured on UAG                                                 │
+│  Entitlement audit= check all pool entitlements; remove stale groups                                  │
+│  RADIUS        = MFA backend; OTP from RSA/Duo/Okta                                                   │
+│  Isolated VLAN = desktop VMs cannot reach management or other VLANs                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Windows Hardening of Connection Server

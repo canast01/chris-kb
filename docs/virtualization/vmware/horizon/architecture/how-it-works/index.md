@@ -39,30 +39,51 @@ VMware Horizon is a broker-based VDI and published application delivery platform
          |
    [DEM Config Share] <-- GPO applies DEM Agent
 ```
-
----
-
-## Desktop Pool Types
-
-### Instant Clone Pools
-
-Instant Clone is the current standard for stateless desktop delivery. Each desktop VM is forked from a running **parent VM** (which is itself derived from a published golden image snapshot). The fork operation happens at the memory and disk level — the child VM shares the parent's memory pages until written (copy-on-write) and is running within seconds.
-
-**Key characteristics:**
-- Desktops are disposable — deleted and recreated on logoff (if configured)
-- All configuration state is in the golden image or applied at first boot via customization
-- A **Replica VM** is created per datastore from the golden image snapshot; the parent VM is forked from this
-- Pool refresh = push new golden image snapshot → new replica → new parent → all desktops replaced on next logoff
-
-**Instant Clone provisioning flow:**
-```text
-Golden Image VM
-  └─ Snapshot (published)
-       └─ Replica VM (per datastore, read-only disk)
-            └─ Parent VM (running, shared disk + memory)
-                 └─ Child VM 1 (instant fork — seconds to provision)
-                 └─ Child VM 2
-                 └─ Child VM N
+┌──────────────────────────────────── VMware Horizon — How It Works ────────────────────────────────────┐
+│                                                                                                       │
+│  Horizon delivers virtualised desktops and apps via Connection Servers that broker                    │
+│  sessions between clients and desktop pools or RDS farms.                                             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Session Broker Layer             │  │             Desktop & App Layer             │   │
+│   │          Connection Server: broker           │  │             Instant clone pools             │   │
+│   │             Authenticates via AD             │  │        Full clone pools (persistent)        │   │
+│   │          Selects resource from pool          │  │            RDS: App/Desktop farms           │   │
+│   │         Blast Extreme: display prot          │  │               GPUs: vGPU pools              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Connection Server brokers AD auth then hands session to pool agent on target VM.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Client Layer                 │  │            Unified Access Gateway           │   │
+│   │          Horizon Client: native app          │  │            UAG: DMZ reverse proxy           │   │
+│   │             HTML Access: browser             │  │            Offloads external auth           │   │
+│   │            Blast TCP/UDP 8443/443            │  │          SAML to Connection Server          │   │
+│   │            PCoIP: legacy protocol            │  │         Dual NIC: internal+external         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Connection Servers run as Windows VMs; desktop VMs run on ESXi hosts with vSAN                       │
+│  or NFS storage; UAG VMs sit in DMZ with dual-NIC on separate networks.                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Connection Server= Windows Server VM; Horizon broker and management                                  │
+│  Instant clone   = desktop provisioned in seconds from parent snapshot                                │
+│  Full clone      = independent persistent VM; slow to provision                                       │
+│  RDS             = Remote Desktop Services; server-based desktop/app                                  │
+│  UAG             = Unified Access Gateway; replaces Security Server                                   │
+│  Blast Extreme   = VMware display protocol; lower latency than PCoIP                                  │
+│  PCoIP           = PC over IP; legacy display protocol; UDP-based                                     │
+│  HTML Access     = browser-based Horizon client; uses WebSocket                                       │
+│  SAML            = assertion from UAG to Connection Server for auth                                   │
+│  vGPU            = NVIDIA GPU partition shared across desktop VMs                                     │
+│  Pool            = collection of desktops with same policy                                            │
+│  Farm            = collection of RDS hosts for app/desktop delivery                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Customization at fork:** A post-customization script (`horizon-customization.ps1` or sysprep alternative) runs in each child VM immediately after the fork to:

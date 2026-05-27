@@ -19,41 +19,51 @@
 │            └─────────────────────┘                          │
 └─────────────────────────────────────────────────────────────┘
 ```
-
-## Connection Server Sizing
-
-### Per-Server Limits
-
-| Metric | Recommended Limit | Hard Limit |
-|---|---|---|
-| Concurrent sessions per Connection Server | 2,000 | 4,000 (not recommended) |
-| Connection Servers per pod | 2 (min HA) – 7 (max) | 7 |
-| vCenter instances per pod | 1 (typical) – 10 | 10 |
-| Desktops per pod (Instant Clone) | 10,000 | ~15,000 |
-| Pools per pod | 200 | 200 |
-
-### Connection Server VM Sizing
-
-| Environment Scale | vCPU | RAM | Disk |
-|---|---|---|---|
-| Small (<500 concurrent) | 4 | 10 GB | 60 GB |
-| Medium (500–2000 concurrent) | 8 | 16 GB | 60 GB |
-| Large (2000+ concurrent) | 8–12 | 16–24 GB | 60 GB |
-
-Connection Server is CPU-bound at high session counts. Do not over-commit CPU on the ESXi host running Connection Server VMs. Recommend dedicated management cluster.
-
-### HA Requirements
-
-- **Minimum 2 Connection Servers** per pod for HA — one can go down without service impact
-- All Connection Servers replicate configuration via AD LDS (ADAM) — no shared database required
-- Place behind a load balancer or DNS round-robin for client distribution
-- Do not place all Connection Servers on the same ESXi host — use anti-affinity rules
-
-```powershell
-# PowerCLI — create anti-affinity DRS rule for Connection Servers
-$cluster = Get-Cluster "Management-Cluster"
-$vms = Get-VM "cs01","cs02","cs03"
-New-DrsRule -Cluster $cluster -Name "CS-AntiAffinity" -KeepTogether $false -VM $vms -Enabled $true
+┌────────────────────────────────── VMware Horizon — Design Standards ──────────────────────────────────┐
+│                                                                                                       │
+│  Horizon design standards define Connection Server sizing, UAG placement, desktop                     │
+│  pool type selection, storage tier, and display protocol choices.                                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Connection Server Sizing           │  │                 Pool Design                 │   │
+│   │           Max 4000 sessions per CS           │  │          Instant clone: non-persist         │   │
+│   │               Min 2 CS for HA                │  │         Full clone: persistent desks        │   │
+│   │           2 UAGs per site minimum            │  │            RDS farm: server-based           │   │
+│   │          Replica CS: read-only pod           │  │           vGPU: graphics-intensive          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Instant clone pools for non-persistent; full clone for persistent with profile.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Storage Standards               │  │              Protocol Standards             │   │
+│   │          vSAN: preferred for pools           │  │            Blast Extreme: default           │   │
+│   │           Separate OS from profile           │  │             UDP: Blast over 8443            │   │
+│   │         vSAN dedupe: instant clones          │  │            PCoIP: legacy use only           │   │
+│   │         Profile: CIFS share or vVol          │  │         HTML5: fallback for browsers        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Desktop ESXi hosts need high RAM (512GB+) and fast storage for pool density;                         │
+│  Connection Server VMs need 8 vCPU / 32GB RAM per 4000 sessions.                                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Connection Server= Horizon broker; max 4000 concurrent sessions                                      │
+│  Replica CS    = secondary Connection Server; read-only LDAP replica                                  │
+│  UAG           = Unified Access Gateway; external session proxy                                       │
+│  Instant clone = forked from running parent VM in seconds                                             │
+│  Full clone    = independent persistent VM; user-assigned                                             │
+│  RDS farm      = RDSH hosts delivering published apps or desktops                                     │
+│  Blast Extreme = VMware display protocol; adaptive UDP/TCP                                            │
+│  PCoIP         = PC over IP; Teradici protocol; use for legacy clients                                │
+│  vSAN dedupe   = space savings on instant clone OS disks                                              │
+│  vGPU          = NVIDIA GRID partition; for CAD/graphics VDI                                          │
+│  Profile share = Windows file share for DEM/FSLogix user profiles                                     │
+│  Pod           = group of Connection Servers in same broadcast domain                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

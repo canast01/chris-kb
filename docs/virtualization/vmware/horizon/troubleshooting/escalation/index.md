@@ -22,54 +22,51 @@
 │  └─────────────────────────────────────────────────────────┘ │
 └──────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Before Opening a VMware Support Case
-
-Collect the following:
-
-| Item | How to Collect |
-|---|---|
-| Horizon support bundle | Horizon Console → Help → Download Support Bundle |
-| UAG log bundle | UAG Admin UI REST API or SSH to appliance |
-| Affected user session ID | Horizon Console → Monitor → Sessions → select session → ID |
-| Desktop VM name | Note the exact VM name from Horizon Console |
-| vCenter events for affected VM | vCenter → [VM] → Monitor → Events |
-| Horizon Agent logs from guest | `C:\ProgramData\VMware\VDM\logs\` from inside VM |
-| Horizon version | Horizon Console → Help → About |
-| vSphere version | vCenter → About |
-| App Volumes version | App Volumes Manager → About (if App Volumes involved) |
-| Symptom timeline | When first reported, what changed before issue began |
-| Pool configuration screenshot | Pool settings including protocol and clone type |
-
----
-
-## Severity Definitions
-
-| Severity | Condition |
-|---|---|
-| Sev 1 | All users unable to connect — complete VDI outage |
-| Sev 2 | Partial outage — specific pool or site down, significant user impact |
-| Sev 3 | Single user or desktop issue, intermittent problems |
-| Sev 4 | General question, minor cosmetic issue, feature request |
-
-For Sev 1: create case online, then immediately call VMware Support to request phone bridge.
-
----
-
-## Additional Diagnostic Steps Before Escalation
-
-```powershell
-# Export last 24 hours of Connection Server events:
-Get-WinEvent -LogName "Application" -MaxEvents 500 |
-  Where-Object { $_.ProviderName -like "*VMware*" -and 
-                 $_.TimeCreated -gt (Get-Date).AddHours(-24) } |
-  Select-Object TimeCreated, LevelDisplayName, Message |
-  Export-Csv "horizon-cs-events-$(Get-Date -Format yyyyMMdd-HHmm).csv" -NoTypeInformation
-
-# Export active session list
-Get-HVLocalSession | Export-Csv "horizon-sessions.csv" -NoTypeInformation
+┌───────────────────────────────────── VMware Horizon — Escalation ─────────────────────────────────────┐
+│                                                                                                       │
+│  Escalate Horizon issues to VMware GSS when all users are impacted, agent fails                       │
+│  on all desktops, or Connection Server is unresponsive.                                               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │             Pre-Escalation Steps            │   │
+│   │           All users: cannot login            │  │          Collect CS support bundle          │   │
+│   │         CS unresponsive: all failed          │  │              Collect agent logs             │   │
+│   │        Pool provisioning: 100% error         │  │           Document error messages           │   │
+│   │          Agent crash loop: all VMs           │  │             Timeline of changes             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  If all Connection Servers fail simultaneously, priority is restore from snapshot or backup.          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                GSS Engagement                │  │               Escalation Path               │   │
+│   │         Open P1 SR: broadcom portal          │  │             T1: triage + bundles            │   │
+│   │           Include Horizon version            │  │                T2: Horizon SE               │   │
+│   │           Attach CS support bundle           │  │            T3: engineering review           │   │
+│   │            Attach agent logs ZIP             │  │         CritSit: P1 with VIP impact         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  GSS may request Bomgar remote access to Connection Server and desktop VMs;                           │
+│  provide admin RDP to CS and vCenter access for remote engineers.                                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SR            = Service Request; support ticket at support.broadcom.com                              │
+│  P1 severity   = highest; production VDI outage; 24/7 response                                        │
+│  CS support bundle= generated via Horizon Admin UI > Support                                          │
+│  Agent logs    = C:\ProgramData\VMware\VDM\debug*.log on desktop                                      │
+│  Timeline      = list of recent changes before failure                                                │
+│  Horizon version= check Administration > Product Licensing                                            │
+│  T2 Horizon SE = VMware senior Horizon specialist                                                     │
+│  CritSit       = Critical Situation; exec escalation; 24/7 war room                                   │
+│  Bomgar        = remote support tool; GSS engineer connect                                            │
+│  Snapshot restore= fastest recovery for CS failure                                                    │
+│  LDAP restore  = vdmimport from backup if CS config lost                                              │
+│  KB article    = check VMware KB before raising SR                                                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

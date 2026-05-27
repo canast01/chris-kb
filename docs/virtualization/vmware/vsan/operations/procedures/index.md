@@ -38,45 +38,51 @@ KEY PROCEDURE FLOWS
          ▼
   Monitor until compliant
 ```
-
----
-
-## Disk Groups
-
-### Disk Replacement Decision Flow
-
-```mermaid
-graph TD
-    alert(["vSAN disk failure alert"])
-    checkType{"Which disk\nfailed?"}
-    capDisk["Capacity disk failure\n(objects degraded)"]
-    cacheDisk["Cache SSD failure\n(entire disk group offline)"]
-
-    capFlow1["Remove failed capacity disk:\nesxcli vsan storage remove -d <naa>"]
-    capFlow2["Replace physical disk\n(hardware procedure)"]
-    capFlow3["Add new disk to existing\ndisk group: esxcli vsan storage add\n-s <cache_naa> -d <new_naa>"]
-
-    cacheFlow1["Remove entire disk group:\nesxcli vsan storage remove -s <naa>"]
-    cacheFlow2["Replace cache SSD\n(hardware procedure)"]
-    cacheFlow3["Recreate disk group:\nesxcli vsan storage add\n-s <new_ssd> -d <cap1> -d <cap2>"]
-
-    monitor["Monitor resync:\nesxcli vsan debug resync summary get"]
-    done(["Disk group healthy\nresync complete"])
-
-    alert --> checkType
-    checkType -->|"Capacity disk"| capDisk
-    checkType -->|"Cache SSD"| cacheDisk
-    capDisk --> capFlow1 --> capFlow2 --> capFlow3 --> monitor
-    cacheDisk --> cacheFlow1 --> cacheFlow2 --> cacheFlow3 --> monitor
-    monitor --> done
-
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-
-    class checkType decision
-    class capDisk,cacheDisk,capFlow1,capFlow2,capFlow3,cacheFlow1,cacheFlow2,cacheFlow3,monitor action
-    class alert,done terminal
+┌────────────────────────────────────── vSAN — Common Procedures ───────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN operational procedures: disk replacement, host removal, policy update,                          │
+│  rebalancing, decommission, and storage policy compliance remediation.                                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Disk Replacement               │  │              Host Decommission              │   │
+│   │            Mark disk failed in UI            │  │          Full data evacuation mode          │   │
+│   │              Remove disk group               │  │           Wait for resync complete          │   │
+│   │           Physically replace disk            │  │             Remove from cluster             │   │
+│   │             Claim new disk in UI             │  │          Verify no degraded objects         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Always mark disk as failed before physical removal to trigger safe data migration.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Policy & Rebalancing             │  │             Capacity Management             │   │
+│   │       Edit policy: Policies & Profiles       │  │           Check usage in Health UI          │   │
+│   │          Apply policy to VM storage          │  │           Rebalance if imbalanced           │   │
+│   │        Compliance: fix non-compliant         │  │           Add host: expand cluster          │   │
+│   │           Re-apply: right-click VM           │  │          Decommission disk: gradual         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  All vSAN disk operations trigger resync; ensure >30% free space before starting;                     │
+│  replacements must use HCL-approved disk models.                                                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Mark failed    = UI action; moves data off disk before physical removal                              │
+│  Full evacuation= moves all data off host before decommission                                         │
+│  Resync         = rebuild missing components after disk/host change                                   │
+│  Policy compliance= VM storage matches defined FTT/RAID policy                                        │
+│  Non-compliant  = policy not met; often after host failure or disk loss                               │
+│  Rebalance      = redistribute objects across hosts for even utilisation                              │
+│  Policies & Profiles= VC area for defining storage policies                                           │
+│  Re-apply policy= recalculate placement to restore compliance                                         │
+│  Decommission disk= graceful removal with data migration                                              │
+│  Claim disk     = assign new physical disk to vSAN cache/capacity role                                │
+│  Disk group     = one cache + up to 7 capacity disks per ESXi host                                    │
+│  30% free       = minimum headroom for resync operations                                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Add a Disk Group to an Existing Host

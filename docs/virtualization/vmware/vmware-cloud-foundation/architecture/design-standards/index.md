@@ -38,72 +38,51 @@ VCF Physical and Logical Design Requirements
 │  NTP: all components synchronised                   │
 └─────────────────────────────────────────────────────┘
 ```
-
-VCF deployments must adhere to strict naming and sizing standards to ensure SDDC Manager can successfully validate and manage all components throughout the lifecycle.
-
-## Management Domain Sizing
-
-| Component | Minimum | Recommended |
-|---|---|---|
-| ESXi hosts (management domain) | 4 | 6 |
-| vSAN disk groups per host | 1 | 2 |
-| Management NIC speed | 10 GbE | 25 GbE |
-| SDDC Manager vCPU | 4 | 8 |
-| SDDC Manager RAM | 16 GB | 24 GB |
-| NSX Manager nodes | 3 (cluster) | 3 |
-| vCenter RAM | 14 GB (small) | 24 GB (medium) |
-
-## Workload Domain Sizing
-
-| Component | Minimum | Notes |
-|---|---|---|
-| ESXi hosts per cluster | 3 | vSAN stretched: 4 (2 per site + witness) |
-| Clusters per domain | 1 | Multiple clusters supported |
-| Workload domains | 1 | Up to 15 per SDDC Manager |
-
-## Naming Convention
-
-All VCF components must have resolvable DNS names before deployment:
-
-| Component | Format | Example |
-|---|---|---|
-| SDDC Manager | `sddc-mgr-<env>.<domain>` | `sddc-mgr-prod.example.local` |
-| vCenter | `vc-<domain>-<env>.<domain>` | `vc-mgmt-prod.example.local` |
-| NSX Manager | `nsx-<env>-<node#>.<domain>` | `nsx-prod-01.example.local` |
-| ESXi hosts | `esxi-<rack>-<unit>.<domain>` | `esxi-r01-u01.example.local` |
-| Network pools | `<dc>-<env>-pool-<purpose>` | `dc1-prod-pool-workload` |
-
-## Network Requirements
-
-| VMkernel | Purpose | Minimum Speed |
-|---|---|---|
-| Management (vmk0) | Host management, vCenter comms | 1 GbE |
-| vMotion | Live migration traffic | 10 GbE |
-| vSAN | vSAN storage traffic | 10 GbE (25 GbE recommended) |
-| NSX overlay (TEP) | Geneve encapsulation | 10 GbE (25 GbE recommended) |
-
-All VMkernel adapters must be on the VCF-managed VDS — standard vSwitches are not supported.
-
-## Password Policy
-
-SDDC Manager enforces password complexity on all managed accounts:
-
-- Minimum 15 characters
-- Must include uppercase, lowercase, number, and special character
-- Maximum 30 characters
-- Passwords rotate on a configurable schedule via Lifecycle Management
-
-## vSAN Ready Node Requirements
-
-All hosts in VCF must be validated against the vSAN Ready Node specification:
-
-- Listed on the VMware Hardware Compatibility List (HCL)
-- vSAN-certified SSD for cache tier
-- Consistent hardware configuration within a cluster (CPU generation, NIC model)
-
-```bash
-# Check HCL compliance from SDDC Manager
-# Lifecycle Management → Hardware Compatibility → Run HCL Check
+┌───────────────────────────── VMware Cloud Foundation — Design Standards ──────────────────────────────┐
+│                                                                                                       │
+│  VCF design standards define domain layout, host sizing, VLAN scheme, NSX topology,                   │
+│  and upgrade sequencing following VMware VCF design guidance.                                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Domain Design                 │  │                Network Design               │   │
+│   │          1 mgmt domain: min 4 hosts          │  │           VLANs: mgmt/vSAN/vMotion          │   │
+│   │             1+ workload domains              │  │          NSX overlay: VXLAN/GENEVE          │   │
+│   │            Separate VC per domain            │  │            25GbE minimum uplinks            │   │
+│   │           NSX: shared or dedicated           │  │             MTU 9000: all VLANs             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Mgmt domain hosts VCF tooling; workload domains host applications.                                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Upgrade Standards               │  │               Sizing Standards              │   │
+│   │           SDDC Mgr: upgrade via UI           │  │            Mgmt hosts: 512GB RAM+           │   │
+│   │         Bundle: download from depot          │  │         Workload: right-size for app        │   │
+│   │          Upgrade order: VCF defined          │  │             vSAN: HCL disks only            │   │
+│   │         Pre-check: run before apply          │  │             NVMe/SSD: ESA or OSA            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Servers must be on VCF HCL; 25GbE TOR switches; dedicated management network;                        │
+│  separate OOB management (iDRAC/iLO) for host lifecycle.                                              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Management domain= first VCF domain; hosts SDDC Manager + shared infra                               │
+│  Workload domain = application cluster; separate lifecycle from mgmt                                  │
+│  SDDC Manager  = automation hub; upgrade bundles applied here                                         │
+│  Bundle        = VCF update package; downloaded from VMware depot                                     │
+│  Pre-check     = automated readiness validation before applying bundle                                │
+│  NSX shared    = one NSX manager serving multiple domains                                             │
+│  NSX dedicated = per-domain NSX manager for isolation                                                 │
+│  GENEVE        = NSX-T overlay protocol; replaced VXLAN                                               │
+│  MTU 9000      = jumbo frames; required for all VCF network segments                                  │
+│  OOB           = Out-of-Band management; iDRAC/iLO for host power/BIOS                                │
+│  HCL           = Hardware Compatibility List; VCF-specific requirements                               │
+│  Upgrade order = VCF prescribes sequence; SDDC Mgr → vCenter → ESXi → NSX                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Supported Configurations

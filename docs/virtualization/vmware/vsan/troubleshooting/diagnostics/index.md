@@ -34,30 +34,51 @@ DIAGNOSTIC TOOL CHAIN
                           ▼
                  Upload to Broadcom case
 ```
-
----
-
-## Diagnostic Sequence
-
-```mermaid
-graph TD
-    incident(["vSAN incident reported"])
-    s1["1. Cluster status\nesxcli vsan cluster get"]
-    s2["2. Health checks\nesxcli vsan health cluster list"]
-    s3["3. Object health\nesxcli vsan debug object list\n(filter: grep -v Healthy)"]
-    s4["4. Resync status\nesxcli vsan debug resync summary get"]
-    s5["5. Disk group status\nesxcli vsan storage list"]
-    s6["6. Network test\nesxcli vsan debug network test\nvmkping -d -s 8972 <peer>"]
-    s7["7. Log review\nvmkernel.log / clomd.log\ncmmdsd.log / vsanmgmt.log"]
-    s8["8. Collect support bundle\nvm-support --vsan\nUpload to Broadcom case"]
-
-    incident --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
-
-    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef start fill:#15803d,stroke:#166534,color:#fff
-
-    class s1,s2,s3,s4,s5,s6,s7,s8 step
-    class incident start
+┌───────────────────────────────────────── vSAN — Diagnostics ──────────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN diagnostics use the health UI, esxcli, RVC, cmmds-tool, and support bundle                      │
+│  to identify root causes of component, network, and performance issues.                               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Health UI Checks               │  │               CLI Diagnostics               │   │
+│   │           vSAN Health: all green?            │  │           esxcli vsan debug object          │   │
+│   │          Object health: policy met?          │  │         cmmds-tool find -t DOM_NAME         │   │
+│   │           Network: MTU test pass?            │  │           esxcli vsan storage list          │   │
+│   │           Disk: all SMART healthy?           │  │         vsan.resync_dashboard (RVC)         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Start in health UI; drill to object level with esxcli for per-component detail.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Performance Diagnostics            │  │                Log Collection               │   │
+│   │          vSAN Perf: latency graphs           │  │         VC support bundle: host logs        │   │
+│   │         vsanObserver: per-host stats         │  │           vm-support on host shell          │   │
+│   │        IOPS/throughput per datastore         │  │               vsan_health*.log              │   │
+│   │         NIC utilisation: esxtop net          │  │             vsantraces: I/O path            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  All diagnostics run from ESXi host shell or vCenter; vsanObserver requires Java;                     │
+│  support bundle is generated from vSphere Client > vCenter.                                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  cmmds-tool    = Cluster Membership and Directory Service CLI                                         │
+│  DOM_NAME      = Distributed Object Manager; per-object UUID                                          │
+│  RVC           = Ruby vSphere Console; vsan.resync_dashboard                                          │
+│  vsanObserver  = performance data collection tool; needs RVC                                          │
+│  vsan trace    = detailed I/O path log; written per host                                              │
+│  vm-support    = ESXi support bundle generator; per host                                              │
+│  esxtop net    = real-time ESXi NIC stats; throughput + drops                                         │
+│  MTU test      = pings vSAN VMkernel with 8972-byte payload                                           │
+│  IOPS graph    = vSAN Performance Service; must be enabled                                            │
+│  vsan_health   = health service log; check for ERROR lines                                            │
+│  Object health = per-VM health; shows absent/degraded components                                      │
+│  SMART         = disk self-test; pre-failure indicator                                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Log Locations

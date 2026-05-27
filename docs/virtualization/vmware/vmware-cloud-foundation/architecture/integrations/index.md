@@ -30,69 +30,51 @@ NSX Federation (multi-site)
 │   └──────────────────┘  └──────────────────┘         │
 └──────────────────────────────────────────────────────┘
 ```
-
-## Integration Summary
-
-| Integration | Method | Notes |
-|---|---|---|
-| Aria Operations | VCF Management Pack | Install MP on Aria Ops; add SDDC Manager as source |
-| Aria Automation | Cloud Account (VCF type) | Requires vCenter and NSX credentials per domain |
-| NSX Federation | Global Manager | Cross-site; deploy Global Manager outside VCF lifecycle |
-| Active Directory | SDDC Manager Identity Source | LDAP/LDAPS under Administration → Single Sign-On |
-| SIEM / Syslog | Syslog from SDDC Manager | Configure under Administration → Syslog |
-| Backup tools | VM-level via vCenter | No native VCF backup integration — use Veeam/NetBackup via vCenter |
-
----
-
-## Aria Operations
-
-The VCF Management Pack for Aria Operations provides topology views, vSAN health, and capacity analytics scoped to VCF domain constructs.
-
-**Setup:**
-
-1. Download the VCF Management Pack from VMware Solution Exchange.
-2. Aria Operations → Administration → Solutions → Import Management Pack.
-3. Add a VCF account: provide SDDC Manager FQDN and admin credentials.
-4. Aria Operations discovers vCenter, NSX, and vSAN components from SDDC Manager automatically.
-
-**What it surfaces:**
-
-- Domain health rollup per workload domain
-- vSAN capacity and performance per cluster
-- Certificate expiry across all managed components
-- LCM compliance — which domains have pending bundle updates
-
----
-
-## Aria Automation
-
-Aria Automation connects to VCF workload domains as cloud accounts, enabling IaC VM provisioning on SDDC Manager-managed clusters.
-
-**Setup:**
-
-1. Aria Automation → Infrastructure → Cloud Accounts → Add → vCenter (or VCF).
-2. Provide the workload domain vCenter FQDN and a service account with the vCenter Admin or CloudAdmin role.
-3. Add the NSX-T Manager for the domain to enable network provisioning.
-4. Create a Cloud Zone scoped to the workload domain clusters.
-
-**Service account minimum permissions:**
-
-- vCenter: `CloudAdmin` role on the relevant cluster(s)
-- NSX: `Enterprise Admin` or a scoped role with segment and security group create/delete rights
-
----
-
-## Active Directory Integration
-
-SDDC Manager uses AD for operator authentication. Each workload domain vCenter is also typically joined to the same AD identity source.
-
-**Add AD identity source to SDDC Manager:**
-
-```text
-SDDC Manager → Administration → Single Sign-On
-→ Add Identity Source → Active Directory over LDAP
-→ Enter domain FQDN, LDAPS server, bind account DN and password
-→ Test connection → Save
+┌─────────────────────────────── VMware Cloud Foundation — Integrations ────────────────────────────────┐
+│                                                                                                       │
+│  VCF integrates with external identity (AD/LDAP), backup tools, external KMS,                         │
+│  monitoring (Aria Operations), and cloud connectivity (VMware Cloud Gateway).                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Identity Integrations             │  │             Backup Integrations             │   │
+│   │         AD/LDAP: per vCenter domain          │  │            VADP: Veeam/Commvault            │   │
+│   │           SSO: per workload domain           │  │             vSAN: CBT snapshots             │   │
+│   │            vIDM: unified identity            │  │           SDDC Mgr: config backup           │   │
+│   │         SAML federation: Aria suite          │  │              NSX: config export             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Identity integrates per domain; vIDM provides unified SSO across all VCF components.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Monitoring & Security             │  │              Cloud Integrations             │   │
+│   │         Aria Operations: all domains         │  │             VMware Cloud Gateway            │   │
+│   │         Aria Logs: syslog ingestion          │  │              HCX: VM migration              │   │
+│   │           KMS: per vSAN encryption           │  │            VMC on AWS integration           │   │
+│   │             SIEM: forward syslog             │  │           Tanzu: Kubernetes on VCF          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Integration traffic crosses management network; KMS must be reachable from all hosts;                │
+│  HCX uses dedicated uplink network for VM migrations.                                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vIDM       = VMware Identity Manager; unified SSO across VCF products                                │
+│  SAML       = Security Assertion Markup Language; federation token format                             │
+│  HCX        = Hybrid Cloud Extension; WAN-optimised VM migration                                      │
+│  VMC        = VMware Cloud on AWS; extend VCF to public cloud                                         │
+│  Cloud GW   = on-prem appliance connecting VCF to VMware cloud services                               │
+│  Tanzu      = Kubernetes runtime integrated into VCF workload domains                                 │
+│  Aria Ops   = operations management; multi-domain visibility                                          │
+│  Aria Logs  = centralised log management for all VCF components                                       │
+│  KMS        = external key server for vSAN at-rest encryption                                         │
+│  VADP       = vStorage APIs for Data Protection; backup integration                                   │
+│  SDDC Mgr backup= exports SDDC Manager config; restore to rebuild                                     │
+│  SIEM       = Security Information and Event Management; log receiver                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Assign roles to AD groups:**

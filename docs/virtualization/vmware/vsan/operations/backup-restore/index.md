@@ -35,38 +35,50 @@ BACKUP FLOW — vSAN VM TO TARGET
          ▼
   VM powered on + validated
 ```
-
-vSAN is a storage platform, not a backup solution. All virtual machine data on vSAN must be protected by an external backup product. This page covers backup strategy, supported tools, operational procedures, and restore workflows for vSAN-backed workloads.
-
----
-
-## Backup Strategy for vSAN
-
-vSAN provides resiliency (FTT policy, RAID-1/5/6) but resiliency is not backup. A storage policy with FTT=1 protects against a single host or disk failure — it does not protect against accidental deletion, VM corruption, ransomware, or a full cluster failure.
-
-**Required protection layers:**
-
-```mermaid
-graph TD
-    workload["VM Workloads\non vSAN"]
-
-    ftt["vSAN FTT Policy\n(RAID-1/5/6)\nProtects: hardware failure"]
-    backup["External Backup\n(Veeam / Commvault / VADP)\nProtects: deletion, corruption,\nransomware"]
-    dr["DR / Stretched Cluster\nor vSAN HCI Mesh\nProtects: site-level failure"]
-    snap["vSphere Snapshot\n(short-term only)\nNOT a substitute for backup"]
-
-    workload --> ftt
-    workload --> backup
-    workload --> dr
-    workload -.->|"limited scope"| snap
-
-    classDef good fill:#15803d,stroke:#166534,color:#fff
-    classDef limited fill:#b45309,stroke:#92400e,color:#fff
-    classDef vm fill:#2563eb,stroke:#1d4ed8,color:#fff
-
-    class ftt,backup,dr good
-    class snap limited
-    class workload vm
+┌─────────────────────────────────────── vSAN — Backup & Restore ───────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN itself is not a backup solution; VMs on vSAN are backed up via VADP;                            │
+│  restore targets can be the same or a different datastore.                                            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Backup Methods                │  │              vSAN Config Backup             │   │
+│   │         VADP: Veeam/Commvault/Avamar         │  │         vCenter backup includes vSAN        │   │
+│   │         CBT: incremental efficiency          │  │           Disk group config: in DB          │   │
+│   │          HotAdd: proxy on same host          │  │           Storage policies: VC DB           │   │
+│   │          NBD fallback if no HotAdd           │  │        Re-create diskgroup on restore       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  HotAdd provides fastest backup throughput; NBD over 10GbE is fallback.                               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Restore Procedure               │  │                 DR with vSAN                │   │
+│   │        Restore from backup to vSAN DS        │  │            vSAN stretched: RPO=0            │   │
+│   │         Apply correct storage policy         │  │            SRM: vSAN replication            │   │
+│   │           Wait for resync if FTT>0           │  │           vSAN HCI Mesh: xsite DS           │   │
+│   │          Validate policy compliance          │  │           vSphere Rep: per-VM RPO           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Backup proxy VMs need access to vSAN datastore; HotAdd requires proxy on same cluster.               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VADP       = vStorage APIs for Data Protection; backup quiescing API                                 │
+│  CBT        = Changed Block Tracking; tracks changed sectors since last backup                        │
+│  HotAdd     = proxy VM on same host; attaches VMDK directly; fastest                                  │
+│  NBD        = Network Block Device; backup over TCP; slower fallback                                  │
+│  Proxy      = backup VM; intermediary between vSAN VM and backup target                               │
+│  Resync     = after restore, vSAN rebuilds missing replicas per policy                                │
+│  Policy compliance= UI shows red/yellow if restored VM policy not met                                 │
+│  SRM        = Site Recovery Manager; orchestrates vSAN failover                                       │
+│  vSphere Rep= vSphere Replication; per-VM async replication to DR site                                │
+│  HCI Mesh   = cross-cluster vSAN datastore sharing (vSAN 7.0+)                                        │
+│  Stretched  = 2-site active-active; RPO=0; needs >10ms RTT <5ms preferred                             │
+│  Diskgroup  = cache + capacity units; re-created after disk replacement                               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 | Layer | Provided by | Purpose |

@@ -16,33 +16,51 @@
                    └─────────────────┘   │  AppStacks)   │
                                          └───────────────┘
 ```
-
----
-
-## Prerequisites
-
-| Requirement | Detail |
-|---|---|
-| Windows Server | 2019 or 2022 for Connection Server |
-| Domain | Connection Server must be domain-joined |
-| vCenter | Supported version — check Horizon Compatibility Matrix |
-| SQL Server | Optional — for Events DB (SQLExpress included but not recommended for production) |
-| DNS | FQDN for each Connection Server resolvable internally and externally |
-| NTP | All servers time-synchronized (±5 seconds) |
-| Certificate | Wildcard or SAN cert for Connection Server and UAG |
-
----
-
-## Connection Server Installation
-
-```powershell
-# Run installer on Windows Server — must be domain admin
-# Download: customerconnect.vmware.com → VMware Horizon → Connection Server installer
-
-# Silent install (for automation):
-VMware-Horizon-Connection-Server-x86_64-<version>.exe /silent /norestart `
-  /v"VDM_SERVER_INSTANCE_TYPE=1 VDM_FQDN=horizon-cs01.example.local `
-  VDM_INITIAL_ADMIN_SID=<domain-admin-SID>"
+┌───────────────────────────────── VMware Horizon — Install & Upgrade ──────────────────────────────────┐
+│                                                                                                       │
+│  Horizon installation deploys Connection Servers on Windows VMs; upgrade applies                      │
+│  the installer sequentially to each CS, then updates UAGs and agents.                                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Pre-Install Requirements           │  │                Install Steps                │   │
+│   │           Windows Server 2019/2022           │  │          Install first CS: standard         │   │
+│   │               AD domain joined               │  │           Add replica CS: same pod          │   │
+│   │            SQL Server: events DB             │  │             Deploy UAGs via OVA             │   │
+│   │            DNS: CS FQDN resolves             │  │          Link to vCenter in Horizon         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Install first Connection Server before replicas; all share same LDAP config.                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Upgrade Sequence               │  │                Agent Upgrade                │   │
+│   │            1. Snapshot all CS VMs            │  │             Update golden image             │   │
+│   │             2. Upgrade first CS              │  │         Push: Horizon Agent install         │   │
+│   │            3. Upgrade replica CSs            │  │         Instant clones: auto-reclone        │   │
+│   │               4. Upgrade UAGs                │  │        Full clone: manual agent push        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Connection Server VMs need 8 vCPU / 32GB RAM; Windows Server licence required;                       │
+│  UAGs need dual-NIC access to both internal and external networks.                                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Connection Server= Horizon broker; requires Windows Server OS                                        │
+│  Replica CS    = secondary broker; replicates LDAP from first CS                                      │
+│  Pod           = group of Connection Servers sharing same LDAP                                        │
+│  UAG           = Unified Access Gateway; OVA deployed; DMZ placement                                  │
+│  Events DB     = SQL Server; stores Horizon event log and reports                                     │
+│  LDAP          = Horizon config store; Active Directory Lightweight DS                                │
+│  Golden image  = master VM; Horizon Agent installed; used for clones                                  │
+│  Reclone       = instant clone pool refreshes from updated golden image                               │
+│  Agent push    = software distribution to full clone VMs                                              │
+│  Snapshot CS   = pre-upgrade rollback point; delete within 72h                                        │
+│  vCenter link  = Horizon must register vCenter in Administration UI                                   │
+│  Windows Server= required OS; 2019 or 2022; domain joined                                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 For replica servers (additional Connection Servers in the same pod):

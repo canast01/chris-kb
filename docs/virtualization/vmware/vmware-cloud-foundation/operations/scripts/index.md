@@ -29,21 +29,51 @@ VCF API Automation — Data Flow
 │  → CMDB asset discovery                             │
 └─────────────────────────────────────────────────────┘
 ```
-
-VCF REST API scripts use the SDDC Manager API base URL `https://<sddc-mgr-fqdn>/v1` with Basic authentication. The primary use cases are listing workload domain inventory, polling component health, and triggering SoS health checks programmatically for integration with monitoring platforms. Python is preferred for VCF API scripts due to the available `requests` library on the SDDC Manager appliance.
-
-## List All Workload Domains (Python)
-
-```python
-#!/usr/bin/env python3
-import requests, sys, json
-from requests.auth import HTTPBasicAuth
-
-sddc = sys.argv[1]; user = sys.argv[2]; pw = sys.argv[3]
-r = requests.get(f"https://{sddc}/v1/domains",
-                 auth=HTTPBasicAuth(user, pw), verify=False)
-for d in r.json().get("elements", []):
-    print(f"{d['name']:30} status={d['status']}  type={d['type']}")
+┌──────────────────────────── VMware Cloud Foundation — Operational Scripts ────────────────────────────┐
+│                                                                                                       │
+│  PowerVCF scripts automate VCF operations: domain inventory, upgrade status,                          │
+│  credential audit, certificate expiry check, and health report generation.                            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Inventory Scripts               │  │            Health & Cert Scripts            │   │
+│   │          Get-VCFDomain | Export-Csv          │  │           Request-VCFToken (auth)           │   │
+│   │           Get-VCFHost (all hosts)            │  │         Get-VCFCertificate (expiry)         │   │
+│   │        Get-VCFCluster (all clusters)         │  │       VMware.CloudFoundation.Reporting      │   │
+│   │          Get-VCFCredential (audit)           │  │            Invoke-VcfHealthReport           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  PowerVCF scripts connect to SDDC Manager REST API; read-only ops need no approval.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Upgrade Scripts                │  │             Automation Examples             │   │
+│   │         Get-VCFBundle (list bundles)         │  │            New-VCFDomain (create)           │   │
+│   │            Start-VCFBundleUpload             │  │           Add-VCFHost (commission)          │   │
+│   │          Start-VCFUpgrade (trigger)          │  │          Set-VCFCredential (rotate)         │   │
+│   │          Get-VCFTask (status poll)           │  │          Watch upgrade via task ID          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Scripts run from management jump host; connect to SDDC Manager on port 443;                          │
+│  VMware.CloudFoundation.Reporting module needs PowerCLI + PowerVCF.                                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  PowerVCF       = PowerShell module for SDDC Manager automation                                       │
+│  Request-VCFToken= authenticate and store bearer token for session                                    │
+│  Get-VCFBundle  = list available upgrade bundles in depot/local                                       │
+│  Start-VCFUpgrade= trigger upgrade for a domain or component                                          │
+│  Get-VCFTask   = poll async task status by task ID                                                    │
+│  Invoke-VcfHealthReport= generates HTML health report for all domains                                 │
+│  Get-VCFCertificate= certificate expiry report for all components                                     │
+│  New-VCFDomain = automate workload domain creation via API                                            │
+│  Add-VCFHost   = commission new host to SDDC Manager                                                  │
+│  Set-VCFCredential= trigger credential rotation for component                                         │
+│  Reporting module= VMware.CloudFoundation.Reporting on PowerShell Gallery                             │
+│  Task ID       = async operation ID; poll with Get-VCFTask until complete                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Trigger SoS Health Check and Poll Result (Bash)

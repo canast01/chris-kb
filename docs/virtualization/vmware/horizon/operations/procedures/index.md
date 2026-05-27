@@ -22,27 +22,51 @@
 │                  │  └────────────┘  │                        │
 └──────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Create an Instant Clone Desktop Pool
-
-**Prerequisites:** Golden image VM with Horizon Agent installed, parent snapshot taken, vCenter service account configured.
-
-```yaml
-Horizon Console → Inventory → Desktops → Add Desktop Pool
-  Type: Automated Desktop Pool
-  User Assignment: Floating or Dedicated
-  vCenter: select your vCenter
-  Desktop Pool ID: pool-win10-float
-  Display Name: Windows 10 — Floating Pool
-  Template: select parent VM
-  Snapshot: select the snapshot taken after Agent install
-  vSphere cluster / resource pool / datastore: select appropriately
-  Naming Pattern: win10-{n:fixed=3}   (e.g., win10-001)
-  Pool size: Minimum: 5, Maximum: 50, Headroom: 5
-  Protocol: Blast Extreme (primary), PCoIP (backup)
-  Power policy: Ensure VMs are always powered on (for Instant Clone)
+┌───────────────────────────────── VMware Horizon — Common Procedures ──────────────────────────────────┐
+│                                                                                                       │
+│  Common Horizon procedures: update golden image, push to pool, manage sessions,                       │
+│  entitle users, and maintain certificates on Connection Servers.                                      │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Golden Image Update              │  │              Session Management             │   │
+│   │          Power off, snapshot parent          │  │            Logoff: force if stuck           │   │
+│   │             Install patches/apps             │  │            Reset: restart desktop           │   │
+│   │            Snapshot: new version             │  │             Send message to user            │   │
+│   │        Push scheduled via Horizon UI         │  │          Disable: maintenance mode          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Golden image update is the most frequent Horizon maintenance task; schedule off-hours.               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Entitlements & Certs             │  │               Pool Maintenance              │   │
+│   │          Add entitlement: AD group           │  │          Pool in maintenance: drain         │   │
+│   │           Remove: revoke from pool           │  │            Delete stuck VM: force           │   │
+│   │         Cert: replace on CS via MMC          │  │         Add machines: increase pool         │   │
+│   │          vdmadmin: reset passwords           │  │         Disable provisioning: pause         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Golden image updates temporarily reduce pool availability; schedule maintenance windows;             │
+│  certificate replacement requires IIS restart on Connection Server.                                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Golden image  = parent VM for instant clone pools                                                    │
+│  Push          = schedule pool to use new parent snapshot                                             │
+│  Maintenance mode= pool unavailable; existing sessions continue                                       │
+│  Entitlement   = AD user or group assigned to a pool                                                  │
+│  Revoke        = remove AD group/user entitlement from pool                                           │
+│  MMC           = Microsoft Management Console; cert store on Windows                                  │
+│  IIS restart   = required after cert replacement on CS                                                │
+│  Force delete  = remove stuck VM from pool that failed to provision                                   │
+│  Send message  = warn users before forced logoff/pool push                                            │
+│  Pool size     = min/max/spare desktops; tuned for peak usage                                         │
+│  Drain         = wait for sessions to end before pool action                                          │
+│  Provisioning  = Horizon auto-creates VMs to fill pool spare count                                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

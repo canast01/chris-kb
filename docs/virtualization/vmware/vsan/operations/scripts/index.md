@@ -33,126 +33,50 @@ AUTOMATION FLOW
                  ├── Exit code (0=PASS, 1=WARN, 2=CRIT)
                  └── Alert / notification (email, webhook)
 ```
-
-## vSAN Cluster Health Check (PowerShell / PowerCLI)
-
-Run the full vSAN health test suite via PowerCLI and exit non-zero if any test is YELLOW or RED.
-
-~~~powershell
-#Requires -Modules VMware.PowerCLI
-# vsan_cluster_health.ps1
-# Usage: pwsh -File vsan_cluster_health.ps1
-# Env vars: VCENTER_HOST, VC_USER, VC_PASS, CLUSTER_NAME
-
-param(
-    [string]$VCenterHost  = $env:VCENTER_HOST,
-    [string]$VCUser       = $env:VC_USER,
-    [string]$VCPass       = $env:VC_PASS,
-    [string]$ClusterName  = $env:CLUSTER_NAME
-)
-
-Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
-$cred = New-Object System.Management.Automation.PSCredential(
-    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
-)
-Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
-
-$cluster = Get-Cluster -Name $ClusterName -ErrorAction Stop
-
-Write-Host "`n=== vSAN Health Check: $($cluster.Name) ===" -ForegroundColor Cyan
-Write-Host "($(Get-Date -Format 'o'))`n"
-
-$overallExit = 0
-
-# --- Cluster health summary ---
-$healthSummary = Get-VsanClusterHealthSummary -Cluster $cluster -FetchFromCache:$false
-foreach ($group in $healthSummary.Groups) {
-    foreach ($test in $group.GroupTests) {
-        $s = switch ($test.TestHealth) {
-            'green'   { 'PASS'     }
-            'yellow'  { 'WARNING'  }
-            'red'     { 'CRITICAL' }
-            default   { 'UNKNOWN'  }
-        }
-        $colour = switch ($s) {
-            'PASS'     { 'Green'  }
-            'WARNING'  { 'Yellow' }
-            'CRITICAL' { 'Red'    }
-            default    { 'White'  }
-        }
-        if ($s -eq 'CRITICAL') { $overallExit = 2 }
-        if ($s -eq 'WARNING' -and $overallExit -lt 2) { $overallExit = 1 }
-        Write-Host ("[{0,-8}] {1}" -f $s, $test.TestName) -ForegroundColor $colour
-    }
-}
-
-# --- Disk group capacity ---
-Write-Host "`n--- Disk Group Capacity ---"
-$diskGroups = Get-VsanDiskGroup -Cluster $cluster
-foreach ($dg in $diskGroups) {
-    $capacityDisks = $dg.ExtensionData.DiskMapping.NonSsd
-    $totalGB  = ($capacityDisks | Measure-Object -Property CapacityGB -Sum).Sum
-    $usedGB   = ($capacityDisks | Measure-Object -Property UsedGB     -Sum).Sum
-    $usedPct  = if ($totalGB -gt 0) { [Math]::Round($usedGB / $totalGB * 100, 1) } else { 0 }
-    $s = if ($usedPct -ge 70) { 'WARNING' } else { 'PASS' }
-    if ($s -eq 'WARNING' -and $overallExit -lt 2) { $overallExit = 1 }
-    Write-Host ("[{0,-8}] Host={1}  Total={2:N0}GB  Used={3:N0}GB  {4}%" -f
-        $s, $dg.VMHost.Name, $totalGB, $usedGB, $usedPct)
-}
-
-# --- Object resync status ---
-Write-Host "`n--- Resync Status ---"
-$vsanView = Get-VsanView -Id "VsanObjectSystem-vsan-cluster-object-system"
-if ($vsanView) {
-    $resync = $vsanView.VsanQueryObjectIdentities($cluster.ExtensionData.MoRef, $null, $null, $false, $true, $false)
-    $resyncing = if ($resync) { ($resync.Health | Where-Object { $_.Status -ne 'healthy' }).Count } else { 0 }
-    $s = if ($resyncing -gt 0) { 'WARNING' } else { 'PASS' }
-    if ($s -eq 'WARNING' -and $overallExit -lt 2) { $overallExit = 1 }
-    Write-Host ("[{0,-8}] Objects resyncing: {1}" -f $s, $resyncing)
-}
-
-Write-Host "`nOverall: $(if ($overallExit -eq 0){'PASS'} elseif ($overallExit -eq 1){'WARNING'} else{'CRITICAL'})"
-Disconnect-VIServer -Confirm:$false
-exit $overallExit
-~~~
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
-- VMware PowerCLI module — install it once by running this in PowerShell:
-  `Install-Module -Name VMware.PowerCLI -Scope CurrentUser -Force`
-  When prompted about an untrusted repository, type `Y` and press Enter
-- Network access to your vCenter server
-- A vSAN cluster must exist in vCenter
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** on your Windows PC
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Set "Save as type" to **All Files** (important — otherwise Windows adds .txt)
-5. Name it `vsan_cluster_health.ps1` and save it to your Desktop
-
-**Step 2 — Fill in your details**
-
-Open the file in Notepad and update the `param(` block:
-
-| Variable | What to enter | How to find it |
-|---|---|---|
-| `$VCenterHost` | vCenter IP or FQDN e.g. `"vcenter.company.local"` | Your vCenter server address |
-| `$VCUser` | vCenter username e.g. `"administrator@vsphere.local"` | Your vCenter login |
-| `$VCPass` | vCenter password | Your vCenter password |
-| `$ClusterName` | Exact name of your vSAN cluster | vSphere Client → cluster name in the inventory |
-
-**Step 3 — Open PowerShell as Administrator**
-
-Windows key → type `PowerShell` → right-click → **Run as Administrator**
-
-**Step 4 — Allow scripts to run (one-time per session)**
-
-```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+┌───────────────────────────────────── vSAN — Operational Scripts ──────────────────────────────────────┐
+│                                                                                                       │
+│  PowerCLI and esxcli scripts automate vSAN health checks, capacity reporting,                         │
+│  disk status audits, object compliance scans, and resync monitoring.                                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Health & Capacity Scripts           │  │            Disk & Object Scripts            │   │
+│   │            Test-VsanClusterHealth            │  │           Get-VsanDisk | Ft Status          │   │
+│   │         Get-VsanClusterConfiguration         │  │           esxcli vsan debug object          │   │
+│   │         Capacity: Get-VsanDatastore          │  │         cmmds-tool find -t DOM_NAME         │   │
+│   │        Export CSV for capacity report        │  │            vsan.resync_dashboard            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Health scripts run read-only; object debug scripts may need host shell access.                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Policy Compliance Scripts           │  │              Resync Monitoring              │   │
+│   │         Get-SpbmEntityConfiguration          │  │            Watch-VsanResync loop            │   │
+│   │            Find non-compliant VMs            │  │           esxcli vsan debug object          │   │
+│   │         Set-SpbmEntityConfiguration          │  │          RVC: vsan.resync_dashboard         │   │
+│   │         Bulk policy re-apply script          │  │           Alert if resync >4h old           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Scripts connect via PowerCLI to vCenter; esxcli/cmmds-tool run on ESXi host shell.                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Test-VsanClusterHealth= PowerCLI health check trigger                                                │
+│  Get-VsanDisk  = list disk state across all vSAN hosts                                                │
+│  Get-SpbmEntityConfiguration= policy compliance per VM                                                │
+│  Set-SpbmEntityConfiguration= apply storage policy to VM                                              │
+│  cmmds-tool    = Cluster Membership and Metadata Directory Service tool                               │
+│  DOM_NAME      = Distributed Object Manager; each object has a UUID                                   │
+│  vsan.resync_dashboard= RVC command; shows resync progress                                            │
+│  SPBM          = Storage Policy Based Management; VC policy engine                                    │
+│  Non-compliant = VM FTT not met; data at risk                                                         │
+│  Watch loop    = PowerShell while loop; poll resync every 60s                                         │
+│  Alert >4h     = resync older than 4h suggests stuck operation                                        │
+│  Capacity report= UsedCapacity/TotalCapacity per datastore per host                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Step 5 — Run it**

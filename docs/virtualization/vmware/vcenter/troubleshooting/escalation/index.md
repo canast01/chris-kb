@@ -40,35 +40,51 @@ Escalation Path — Broadcom / VMware Support
   │       for prolonged P1 outages                 │
   └─────────────────────────────────────────────────┘
 ```
-
-## Support Portal
-
-All VMware/vSphere support is now handled through **Broadcom Support** following the 2023 VMware acquisition:
-
-- Portal: [https://support.broadcom.com](https://support.broadcom.com)
-- My Cases: Log in → Support → My Cases
-- Download Center: Log in → VMware Cloud Foundation → vSphere
-
-Ensure your Broadcom account is linked to your company's entitlement. Contact your account team if entitlement is missing after the migration.
-
-## Opening a Support Case
-
-### Information to Collect Before Opening
-
-| Item | How to Get It |
-|---|---|
-| vCenter version + build number | `https://<vcenter>/ui` → Help → About |
-| ESXi version + build numbers | `esxcli system version get` or vCenter host summary |
-| Issue symptom and timeline | Document exact error, first occurrence, and change history |
-| Number of hosts/VMs affected | Cluster inventory from vCenter |
-| HA/DRS status at time of issue | vCenter Events tab |
-| Recent changes (patches, upgrades, config) | Change log / CMDB |
-
-### Log Bundle Collection
-
-**From vCenter VAMI (recommended):**
-```text
-https://<vcenter>:5480 → Support → Create Support Bundle
+┌───────────────────────────────────── vCenter Server — Escalation ─────────────────────────────────────┐
+│                                                                                                       │
+│  Escalate vCenter issues to VMware GSS when self-service troubleshooting exhausts                     │
+│  available options; attach support bundle and document timeline.                                      │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │             Pre-Escalation Steps            │   │
+│   │           VCSA crashes repeatedly            │  │            Collect support bundle           │   │
+│   │             Data loss suspected              │  │           Snapshot VCSA if stable           │   │
+│   │           All self-steps exhausted           │  │          Document exact error text          │   │
+│   │          P1 outage: VC inaccessible          │  │            Timeline: when started           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  GSS requires SR number, support bundle, and change timeline to start root-cause.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                GSS Engagement                │  │               Escalation Path               │   │
+│   │         Open SR at support.broadcom          │  │            T1: SR triage + bundle           │   │
+│   │         Severity: P1 for full outage         │  │            T2: Senior SE assigned           │   │
+│   │           Include vCenter version            │  │            T3: Engineering review           │   │
+│   │          Attach support bundle ZIP           │  │            CritSit: 24/7 coverage           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  GSS may request live session access via Bomgar/WebEx; prepare VCSA SSH access                        │
+│  and vSphere Client access for remote support engineers.                                              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  GSS          = Global Support Services; VMware (Broadcom) official support                           │
+│  SR           = Service Request; support ticket number; reference in all calls                        │
+│  Support bundle= ZIP of all VCSA logs; generated via UI or vc-support.sh                              │
+│  Severity P1  = critical; production outage; fastest SLA response                                     │
+│  CritSit      = Critical Situation; escalation for P1 with exec involvement                           │
+│  T1/T2/T3     = support tiers; T3 has access to engineering teams                                     │
+│  Bomgar       = VMware remote access tool; screen share for live debug                                │
+│  Timeline     = chronological list of changes/events before the issue                                 │
+│  Snapshot     = pre-work safety net; capture VCSA state before GSS changes                            │
+│  KB article   = VMware knowledge base; check before raising SR                                        │
+│  vCenter version= full build number from Administration > About                                       │
+│  Broadcom portal= support.broadcom.com replaced my.vmware.com for SRs                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **From vCenter UI:**

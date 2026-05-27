@@ -25,33 +25,51 @@ VCF Daily Health Check — Coverage Map
 │ zones: OK?   │ │ green?   │ │                       │
 └──────────────┘ └──────────┘ └──────────────────────┘
 ```
-
-## Daily Health Check
-
-**SDDC Manager:**
-
-1. Dashboard — all workload domains show **Healthy**; no domains in Warning or Error state
-2. Security → Certificates — no certificates expiring within 60 days
-3. Lifecycle Management → Bundle Management — review available updates; note critical patches
-4. Administration → Backup — confirm last successful backup timestamp
-
-**NSX Manager:**
-
-5. System → Fabric → Nodes — all transport nodes and edge nodes show **Up**
-6. Networking → Tier-0 Gateways → BGP neighbours — all peers in **Established** state
-7. System → Fabric → Transport Zones — all zones healthy
-
-**vCenter (per workload domain):**
-
-```powershell
-# Check all hosts connected
-Get-VMHost | Where-Object {$_.ConnectionState -ne "Connected"} | Select Name, ConnectionState
-
-# Check for snapshots older than 3 days
-Get-VM | Get-Snapshot | Where-Object {$_.Created -lt (Get-Date).AddDays(-3)} |
-  Select VM, Name, Created, SizeGB
-
-# vSAN Skyline Health — check for critical (red) alerts in vCenter → vSAN Cluster → Skyline Health
+┌─────────────────────────────── VMware Cloud Foundation — Health Checks ───────────────────────────────┐
+│                                                                                                       │
+│  VCF health checks span SDDC Manager, all vCenters, NSX managers, vSAN clusters,                      │
+│  and certificate validity across all workload and management domains.                                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             SDDC Manager Health              │  │               Component Health              │   │
+│   │         Dashboard: all green status          │  │           All vCenters: connected           │   │
+│   │          Free pool: hosts available          │  │              NSX: all nodes UP              │   │
+│   │            Backup: last run <24h             │  │              vSAN: health green             │   │
+│   │         LCM: no upgrade in progress          │  │           Credentials: not expired          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SDDC Manager dashboard gives holistic view; drill into each domain for detail.                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Certificate Health              │  │           Network & Storage Health          │   │
+│   │          SDDC Mgr cert expiry >30d           │  │            vSAN: resync = 0 bytes           │   │
+│   │            vCenter STS cert check            │  │              NSX: BGP/routes OK             │   │
+│   │             NSX cert expiry >30d             │  │             MTU: vSAN test pass             │   │
+│   │            Rotate before expiry!             │  │             Hosts: all connected            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  All VCF components run as VMs on the management domain; SDDC Manager health                          │
+│  depends on underlying ESXi hosts and vSAN datastore availability.                                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SDDC Manager  = checks aggregated health of all VCF components                                       │
+│  LCM           = Lifecycle Manager; controls upgrade pipelines                                        │
+│  Free pool     = unassigned hosts; availability affects domain growth                                 │
+│  STS cert      = SSO Security Token Service cert; 2yr expiry                                          │
+│  NSX cert      = NSX Manager and edge certs; auto-renew in 8.0+                                       │
+│  Credentials   = SDDC Mgr manages passwords for all components                                        │
+│  vSAN resync   = 0 bytes = no data movement in progress                                               │
+│  BGP           = NSX routing protocol to physical network                                             │
+│  MTU test      = vSAN jumbo frame validation across all hosts                                         │
+│  Backup health = SDDC Mgr tracks last backup success timestamp                                        │
+│  Rotate cert   = use SDDC Mgr to rotate certs >30d before expiry                                      │
+│  Domain view   = per-domain health in SDDC Mgr Workload Domains tab                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **SDDC Manager appliance disk:**

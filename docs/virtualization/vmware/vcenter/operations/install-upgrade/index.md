@@ -46,32 +46,51 @@ vSphere Upgrade Sequence
   Rollback: full restore from pre-upgrade backup only
             (no in-place rollback; keep old VCSA off for 24h window)
 ```
-
-## Version and Support Matrix
-
-| Version | Release | General Support End | Technical Guidance End |
-|---|---|---|---|
-| vSphere 6.5 | 2016-11 | 2022-10-15 | 2023-11-15 |
-| vSphere 6.7 | 2018-04 | 2022-10-15 | 2023-11-15 |
-| vSphere 7.0 | 2020-04 | 2025-04-02 | 2027-04-02 |
-| vSphere 7.0 U3 | 2021-10 | 2025-04-02 | 2027-04-02 |
-| vSphere 8.0 | 2022-10 | 2027-10 (est.) | 2029-10 (est.) |
-| vSphere 8.0 U2 | 2023-09 | 2027-10 (est.) | 2029-10 (est.) |
-| vSphere 8.0 U3 | 2024-06 | 2027-10 (est.) | 2029-10 (est.) |
-
-Always verify at [Broadcom Product Lifecycle](https://support.broadcom.com/group/ecx/productlifecycle).
-
-## Upgrade Order (Critical)
-
-Always upgrade in this sequence to maintain interoperability support:
-
-```text
-1. vCenter Server (VCSA)          ← upgrade first, always
-2. vSAN (if applicable)           ← vSAN upgrade wizard in vCenter
-3. NSX Manager (if applicable)    ← must be compatible with new vCenter
-4. ESXi hosts                     ← one at a time, cluster by cluster
-5. VM hardware version            ← optional; check guest OS compatibility
-6. VMware Tools                   ← can be done before or after VM hardware
+┌───────────────────────────────── vCenter Server — Install & Upgrade ──────────────────────────────────┐
+│                                                                                                       │
+│  vCenter is deployed as an OVA; upgrades use the built-in VCSA installer ISO                          │
+│  which migrates config from the old appliance in two stages.                                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Pre-Install Checklist             │  │               Deployment Steps              │   │
+│   │          DNS A + PTR records ready           │  │            Mount ISO on jump host           │   │
+│   │           NTP configured on hosts            │  │            Run vcsa-ui-installer            │   │
+│   │            Port 443/80/9443 open             │  │             Stage 1: OVA deploy             │   │
+│   │         SSO password complexity met          │  │            Stage 2: configure SSO           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Pre-install DNS and NTP are critical; failures here block SSO certificate issuance.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Upgrade Pre-Checks              │  │              Upgrade Procedure              │   │
+│   │              Snapshot old VCSA               │  │           ISO: vcsa-deploy upgrade          │   │
+│   │           Run Pre-Upgrade Checker            │  │           Stage 1: new VCSA boots           │   │
+│   │           Check cert expiry first            │  │           Stage 2: config migrated          │   │
+│   │          Drain old VC of snapshots           │  │           Old VC powered off after          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Target ESXi host needs sufficient RAM/CPU/storage for VCSA size tier;                                │
+│  upgrade deploys a second appliance temporarily (needs 2x storage).                                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VCSA installer = GUI/CLI ISO tool; runs on Windows/Linux/Mac jump host                               │
+│  vcsa-deploy    = CLI installer included in the VCSA ISO                                              │
+│  Stage 1        = OVA deployment; network and storage config                                          │
+│  Stage 2        = SSO setup; inventory and config import                                              │
+│  Pre-check      = built-in checker; validates certs, DNS, ports, DB                                   │
+│  Snapshot (pre) = rollback point before upgrade; remove after success                                 │
+│  Jump host      = Windows/Linux machine that mounts and runs ISO installer                            │
+│  DNS PTR        = reverse lookup; required for VCSA identity establishment                            │
+│  SSO complexity = min 8 chars, upper, lower, digit, special                                           │
+│  Drain snapshots= remove all VM snapshots before upgrading to avoid bloat                             │
+│  Port 9443      = VCSA appliance management HTTPS (VAMI)                                              │
+│  2x storage     = upgrade deploys new VCSA alongside old; same datastore OK                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Never upgrade ESXi before vCenter.** A newer ESXi host is not supported by an older vCenter.

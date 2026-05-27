@@ -39,40 +39,51 @@ vCenter Hardening Layers
   │  SIEM alerts: LoginFailure, PermissionAdded, admin@  │
   └──────────────────────────────────────────────────────┘
 ```
-
-## Hardening Baseline
-
-Follow the **VMware vSphere Security Configuration Guide (SCG)** published by Broadcom for the specific vSphere version. The SCG is the authoritative hardening reference and is updated with each vSphere release. Download from the Broadcom Knowledge Base for your version (search "vSphere Security Configuration Guide").
-
-Key controls from the SCG:
-
-| Control | Setting | Reference |
-|---|---|---|
-| Restrict Shell access | Disable ESXi Shell except during maintenance | SCG: ESXi.shell |
-| Lockdown Mode | Enable Normal or Strict Lockdown on all ESXi hosts | SCG: ESXi.lockdown |
-| vCenter admin accounts | Named accounts only; no shared `administrator@vsphere.local` | SCG: vCenter.auth |
-| API access | Restrict API access to management jump hosts (firewall rules) | SCG: vCenter.network |
-| NTP | Synchronised on all vCenter and ESXi nodes | SCG: vCenter.time |
-| Unused services | Disable unused vCenter plugins | SCG: vCenter.services |
-| VAMI access | Restrict port 5480 access to admin subnets | SCG: vCenter.vami |
-| TLS minimum | 1.2 enforced; 1.0 and 1.1 disabled | SCG: vCenter.tls |
-| SSH access to VCSA | Disabled except during break-glass/maintenance | SCG: vCenter.ssh |
-
----
-
-## VCSA SSH Hardening
-
-SSH to the VCSA is disabled by default in vSphere 8.0. Enable only when needed and disable immediately after:
-
-```bash
-# Enable SSH from VAMI: https://<vcenter>:5480 → Access → Enable SSH login
-
-# Or from the VCSA console (direct VM console access)
-# DCUI → Toggle SSH access
-
-# From an existing SSH session — disable SSH
-chkconfig sshd off
-service sshd stop
+┌───────────────────────────────────── vCenter Server — Hardening ──────────────────────────────────────┐
+│                                                                                                       │
+│  vCenter hardening follows the VMware Security Hardening Guide and CIS benchmark;                     │
+│  key controls: network isolation, MFA, minimal admin, FIPS mode, audit logging.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Network Hardening               │  │               Access Hardening              │   │
+│   │         Mgmt network: dedicated VLAN         │  │            MFA: smart card/RADIUS           │   │
+│   │         Firewall: only needed ports          │  │           SSO lockout: 5 attempts           │   │
+│   │         Disable SSH when not needed          │  │         Admin group: 2 accounts max         │   │
+│   │           TLS 1.2 minimum enforced           │  │            Log: all admin actions           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Network isolation and MFA are the highest-value controls for vCenter hardening.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Patch & Config Hardening           │  │              Audit & Compliance             │   │
+│   │         Apply patches within 30 days         │  │           vCenter Chargeback audit          │   │
+│   │          FIPS mode: enable in VAMI           │  │           Syslog: forward to SIEM           │   │
+│   │          Disable banner-less login           │  │             CIS benchmark scans             │   │
+│   │          Shell access: time-limited          │  │            Review perms quarterly           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  VCSA runs on ESXi host; ESXi itself must be hardened; management VLAN must                           │
+│  be unreachable from guest VM networks.                                                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VMware Hardening Guide= published per vSphere version; CIS baseline                                  │
+│  CIS benchmark= Center for Internet Security; independent hardening standard                          │
+│  FIPS 140-2   = US federal cryptography standard; enable in VAMI > Security                           │
+│  MFA          = Multi-Factor Authentication; prevents credential-only login                           │
+│  SIEM         = Security Info and Event Mgmt; receives syslog from vCenter                            │
+│  Shell timeout= SSH session auto-closes after idle period (set to 900s)                               │
+│  Lockout      = SSO disables account after N failed login attempts                                    │
+│  Banner       = login warning message; required by some compliance frameworks                         │
+│  Dedicated VLAN= separate network segment for vCenter management traffic                              │
+│  Patch SLA    = agree cadence: critical <7d, high <30d, medium <90d                                   │
+│  Quarterly review= revoke stale/unnecessary role assignments                                          │
+│  Admin count  = fewer admin accounts = smaller blast radius on compromise                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Configure SSH timeout so idle sessions are terminated automatically:

@@ -22,17 +22,51 @@
 │   Error = 0?)                                                    │
 └──────────────────┘
 ```
-
----
-
-## Connection Server Dashboard
-
-```text
-Horizon Console → Dashboard → Summary
-  Global health indicator: Green = all services healthy
-  vCenter connection: should show Connected
-  Composer: Connected (if using Linked Clones — not needed for Instant Clone)
-  Pod status: all Connection Servers should show green
+┌─────────────────────────────────── VMware Horizon — Health Checks ────────────────────────────────────┐
+│                                                                                                       │
+│  Horizon health checks verify Connection Server status, pool availability, agent                      │
+│  health, UAG connectivity, and session counts against licensed capacity.                              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Connection Server Health           │  │                 Pool Health                 │   │
+│   │           All CS: Connected status           │  │           Available desktops count          │   │
+│   │          AD: reachable from all CS           │  │            No pool in error state           │   │
+│   │           Cert: not expired on CS            │  │          Provisioning: no stuck VMs         │   │
+│   │         Services: all running on CS          │  │          vCenter: connected to pool         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  CS status and pool availability are the primary daily health indicators.                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             UAG & Session Health             │  │            Capacity & Performance           │   │
+│   │         UAG: reachable from external         │  │          Sessions < licensed limit          │   │
+│   │          UAG: health endpoint green          │  │             Blast latency <50ms             │   │
+│   │        Active sessions: normal range         │  │           vCPU/RAM: no contention           │   │
+│   │           Abandoned sessions: none           │  │          Disk IOPS: within baseline         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Connection Servers and UAGs are VMs; desktop VMs on ESXi cluster; monitor                            │
+│  ESXi host resource utilisation to predict capacity for new sessions.                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CS Connected  = Connection Server can reach LDAP and vCenter                                         │
+│  UAG health    = REST endpoint /rest/healthcheck on UAG port 443                                      │
+│  Pool error    = pool stuck in provisioning, error, or maintenance                                    │
+│  Available count= desktops ready for session assignment                                               │
+│  Blast latency = display protocol round-trip; <50ms = good UX                                         │
+│  Abandoned     = session disconnected without logout; wasted license                                  │
+│  Licensed limit= concurrent sessions allowed by Horizon licence                                       │
+│  Provisioning stuck= instant clone VM not completing creation                                         │
+│  vCenter link  = Connection Server must reach vCenter for pool management                             │
+│  AD reachable  = Connection Server must reach AD for user authentication                              │
+│  Cert expiry   = expired cert causes browser login failures                                           │
+│  Session count = active + disconnected; both consume licence                                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -37,46 +37,51 @@ VSAN UPGRADE SEQUENCE (host-by-host rolling)
   ├── Disk format version current
   └── Object compliance 100%
 ```
-
-## vSAN Version Matrix
-
-vSAN versions are tied to vSphere releases. There is no standalone vSAN upgrade path — upgrading vSAN means upgrading vSphere.
-
-| vSphere Version | vSAN Version | Key Features | General Support EOL |
-|---|---|---|---|
-| vSphere 6.7 U3 | vSAN 6.7 | All-flash, stretched cluster, encryption | October 2022 |
-| vSphere 7.0 U3 | vSAN 7.0 | File Services, HCI Mesh, OSA improvements | April 2025 |
-| vSphere 8.0 U1 | vSAN 8.0 (ESA) | Express Storage Architecture, NVMe-only, inline compression | TBA (current) |
-| vSphere 8.0 U2+ | vSAN 8.0 U2 | ESA capacity improvements, ESA RAID-5/6 | TBA (current) |
-
-Check the current Broadcom Product Lifecycle page at https://support.broadcom.com for up-to-date EOL dates. Do not operate clusters on end-of-general-support versions.
-
-## Upgrade Procedure
-
-vSAN upgrades are performed through the vSphere Lifecycle Manager (vLCM) cluster image workflow. Never upgrade ESXi hosts manually on a vSAN cluster — always use vLCM to ensure vSAN health is validated at each step.
-
-```mermaid
-graph TD
-    pre["Pre-upgrade checks:\nHealth green, no degraded objects,\nresync queue empty, backup current"]
-    vcUpgrade["1. Upgrade vCenter Server\n(always first)"]
-    vLCMImage["2. Update vLCM cluster image\nto target ESXi version"]
-    hostLoop["3. Remediate one host at a time\n(vLCM puts host in maintenance mode)"]
-    healthCheck["4. Verify vSAN health\nafter each host"]
-    allDone{"All hosts\nremediated?"}
-    postCheck["5. Post-upgrade validation:\nbuild numbers, health, object compliance"]
-    done(["Upgrade complete"])
-
-    pre --> vcUpgrade --> vLCMImage --> hostLoop --> healthCheck --> allDone
-    allDone -->|"No — next host"| hostLoop
-    allDone -->|"Yes"| postCheck --> done
-
-    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-
-    class pre,vcUpgrade,vLCMImage,hostLoop,healthCheck,postCheck step
-    class allDone decision
-    class done terminal
+┌────────────────────────────────────── vSAN — Install & Upgrade ───────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN is enabled per cluster in vCenter; hardware must be on the HCL; upgrades                        │
+│  use vSphere Lifecycle Manager (vLCM) with host remediation.                                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Enable vSAN Checklist             │  │             Disk Group Creation             │   │
+│   │            HCL: verify all disks             │  │              Claim disks in UI              │   │
+│   │           10GbE+ VMkernel per host           │  │           Cache: 1 disk per group           │   │
+│   │           Jumbo frames on switches           │  │           Capacity: 1–7 per group           │   │
+│   │          Cluster > Configure > vSAN          │  │           ESA: all NVMe auto-claim          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  HCL compliance is mandatory; non-HCL disks cause unsupported configuration warning.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Upgrade with vLCM               │  │              Post-Upgrade Steps             │   │
+│   │            Create baseline image             │  │              Run health checks              │   │
+│   │              Attach to cluster               │  │          Verify disk format version         │   │
+│   │           Remediate: rolling hosts           │  │          Upgrade disk format (OSA)          │   │
+│   │          Hosts: maintenance → patch          │  │           Monitor resync complete           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Each host must enter maintenance mode before remediation; vSAN evacuates data                        │
+│  during maintenance; requires 30% free space for safe data migration.                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vLCM          = vSphere Lifecycle Manager; baseline images + remediation                             │
+│  Remediate     = apply baseline to host; put in maintenance, patch, reboot                            │
+│  HCL           = Hardware Compatibility List; required for support                                    │
+│  Disk format   = vSAN on-disk format version; upgrade after host upgrade                              │
+│  OSA           = Original Storage Architecture; needs explicit format upgrade                         │
+│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe                                      │
+│  VMkernel      = vSAN network adapter; must be enabled with vSAN tag                                  │
+│  Maintenance mode= evacuates VMs; ensures FTT=1 redundancy before host offline                        │
+│  Jumbo frames  = MTU 9000; configure on TOR switches and VMkernel                                     │
+│  Resync        = post-upgrade, data rebalances across now-updated hosts                               │
+│  Claim disks   = select disks in VC UI for cache/capacity role                                        │
+│  Disk group    = logical container of cache + capacity disks per host                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Pre-upgrade checks:**

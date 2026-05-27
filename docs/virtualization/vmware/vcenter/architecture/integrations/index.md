@@ -34,74 +34,50 @@ vCenter Integration Map
   │    └── Lookup Service             ← registry     │
   └──────────────────────────────────────────────────┘
 ```
-
-## Storage Integration
-
-### VASA Providers
-
-Storage vendors register as VASA (vSphere APIs for Storage Awareness) providers to expose storage capabilities to vCenter for SPBM (Storage Policy-Based Management).
-
-| Vendor | Provider | vVols Support |
-|---|---|---|
-| Pure Storage FlashArray | Pure Storage VASA Provider | Yes |
-| Dell PowerStore | Dell EMC VASA Provider | Yes |
-| NetApp ONTAP | NetApp VASA Provider | Yes |
-| HPE Nimble | HPE Nimble VASA Provider | Yes |
-
-Register VASA providers: **vCenter → Storage → Storage Providers → Add**
-
-### Traditional Datastores
-
-| Type | Protocol | Notes |
-|---|---|---|
-| VMFS6 | FC, iSCSI, FCoE | Block storage; default for most deployments |
-| NFS 4.1 | NFS | File storage; Kerberos auth supported |
-| vVols | FC, iSCSI, NFS | Object-based; requires VASA |
-| vSAN | Internal (vSAN network) | HCI; managed from within vCenter |
-
-### iSCSI Configuration Flow
-
-1. Enable iSCSI adapter on ESXi hosts (`esxcli iscsi adapter add`)
-2. Add dynamic/static discovery targets
-3. Rescan HBAs
-4. Apply multipathing policy (typically Round Robin for iSCSI)
-5. Format and mount VMFS datastore from vCenter
-
-## Backup Integration
-
-### VADP (vSphere APIs for Data Protection)
-
-VADP is the standard backup API. Backup solutions use VADP to take crash-consistent or application-consistent snapshots without requiring an agent inside each VM.
-
-```mermaid
-graph TD
-    backupSrv["Backup Server\n(Veeam / Commvault)"]
-    vcenter["vCenter\n(VADP API)"]
-    proxy["Backup Proxy VM\n(on same cluster)"]
-    targetVM["Protected VM\n(snapshot via CBT)"]
-    backupRepo["Backup Repository\n(SFTP / S3 / disk)"]
-
-    subgraph "Hot-Add (preferred)"
-        proxy -->|"mount VMDK directly"| targetVM
-    end
-
-    subgraph "NBD / NBDSSL (fallback)"
-        proxy2["Backup Proxy"] -->|"network transfer\nover management LAN"| targetVM2["Protected VM"]
-    end
-
-    backupSrv --> vcenter
-    vcenter --> proxy
-    proxy --> backupRepo
-
-    classDef server fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef proxy fill:#15803d,stroke:#166534,color:#fff
-    classDef vm fill:#b45309,stroke:#92400e,color:#fff
-    classDef repo fill:#7c3aed,stroke:#6d28d9,color:#fff
-
-    class backupSrv,vcenter server
-    class proxy,proxy2 proxy
-    class targetVM,targetVM2 vm
-    class backupRepo repo
+┌──────────────────────────────────── vCenter Server — Integrations ────────────────────────────────────┐
+│                                                                                                       │
+│  vCenter integrates with identity, storage, network, backup, and monitoring                           │
+│  systems via standardised APIs and plugin frameworks.                                                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Identity Integrations             │  │             Storage Integrations            │   │
+│   │          Active Directory via LDAP           │  │            VASA: storage policies           │   │
+│   │             SAML IdP federation              │  │            vVols: per-VM volumes            │   │
+│   │               SSO local domain               │  │           NFS / iSCSI / FC mounts           │   │
+│   │          MFA via smart card/RADIUS           │  │             HCI: vSAN integrated            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Identity gates all logins; storage providers register via VASA for policy management.                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Network & Security              │  │             Backup & Monitoring             │   │
+│   │             NSX: SDN via vCenter             │  │               VADP: backup API              │   │
+│   │          vDS: distributed switching          │  │           CBT: changed block track          │   │
+│   │            Firewall rules via NSX            │  │            vROps: perf monitoring           │   │
+│   │           Microsegmentation policy           │  │             SNMP / syslog export            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Integration traffic crosses the management network; VADP uses NBD or SAN transport.                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VADP    = vStorage APIs for Data Protection; backup quiescing and CBT                                │
+│  CBT     = Changed Block Tracking; incremental backup efficiency mechanism                            │
+│  VASA    = vSphere APIs for Storage Awareness; policy-based storage mgmt                              │
+│  vVols   = Virtual Volumes; per-VM storage objects on VASA-capable arrays                             │
+│  vDS     = vSphere Distributed Switch; centralised network config in VC                               │
+│  NSX     = Network & Security virtualisation; integrates with vCenter                                 │
+│  vROps   = VMware Aria Operations; pulls metrics via vCenter APIs                                     │
+│  SAML    = Security Assertion Markup Language; federated SSO token format                             │
+│  LDAP    = Lightweight Directory Access Protocol; AD identity source                                  │
+│  NBD     = Network Block Device; backup transport over TCP (slower)                                   │
+│  SAN     = Storage Area Network; fast backup transport via FC/iSCSI                                   │
+│  HCI     = Hyper-Converged Infrastructure; vSAN = primary HCI integration                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Supported backup proxy modes:**

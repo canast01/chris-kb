@@ -41,69 +41,51 @@ ESCALATION PATH
   ├── vc-support bundle
   └── Timeline + environment details
 ```
-
----
-
-## When to Escalate
-
-### Escalate Immediately (P1 — Data Risk)
-
-Open a support case and mark it Priority 1 if any of the following conditions exist:
-
-| Condition | Why It Is P1 |
-|---|---|
-| VM objects in "Inaccessible" state and cannot be recovered after network and host checks | Production VMs are completely unavailable |
-| More host or disk failures than FTT policy can tolerate | Risk of data loss — cluster is below minimum fault protection |
-| vSAN datastore disappears from vCenter | Complete management plane or data plane failure |
-| Object resync has shown zero progress for > 4 hours with confirmed network and capacity health | Blocked rebuild — increasing data loss risk with each passing hour |
-| Disk group failure on a host that is already the sole survivor of a previous failure | One more disk failure = permanent data loss |
-
-Contact VMware Support: [support.broadcom.com](https://support.broadcom.com) — use the phone option for P1 cases.
-
-### Escalate Same Day (P2 — Degraded Cluster)
-
-Open a support case and mark it Priority 2 if:
-
-| Condition |
-|---|
-| One or more objects degraded for > 24 hours with no hardware failure identified |
-| Resync has been running for > 48 hours on a single host or disk replacement |
-| Skyline Health shows RED for Data Integrity or Object Health after the expected recovery window |
-| A disk group repeatedly goes offline and comes back without an identified cause |
-| vSAN network health test consistently reports packet loss and network teams cannot find the cause |
-| Cluster encryption key management errors that cannot be resolved through KMS configuration |
-
-### Escalate Within the Week (P3 — Warning State)
-
-| Condition |
-|---|
-| Skyline Health has persistent YELLOW tests that are not resolved by documented remediation steps |
-| Capacity is consistently above 70% and expansion is not yet approved |
-| Performance degradation that cannot be attributed to known workload changes |
-| HCL check fails for hardware that you believe is certified (possible HCL database issue) |
-| Questions about ESA migration planning or stretched cluster design validation |
-
----
-
-## Pre-Escalation Checklist
-
-Collect all of the following before opening a case. A complete first submission significantly reduces time to resolution — VMware support will request this data regardless.
-
-### State Capture
-
-```bash
-# On each affected ESXi host — capture cluster and object state
-esxcli vsan cluster get > /tmp/vsan_cluster_state.txt
-esxcli vsan health cluster list >> /tmp/vsan_cluster_state.txt
-esxcli vsan debug object list >> /tmp/vsan_cluster_state.txt
-esxcli vsan debug resync summary get >> /tmp/vsan_cluster_state.txt
-esxcli vsan storage list >> /tmp/vsan_cluster_state.txt
-esxcli vsan network list >> /tmp/vsan_cluster_state.txt
-esxcli vsan debug network test >> /tmp/vsan_cluster_state.txt
-
-# Save to a time-stamped file
-cp /tmp/vsan_cluster_state.txt \
-    /tmp/vsan_state_$(date +%Y%m%d_%H%M%S).txt
+┌────────────────────────────────────────── vSAN — Escalation ──────────────────────────────────────────┐
+│                                                                                                       │
+│  Escalate vSAN issues to VMware GSS when data is at risk, resync is stalled,                          │
+│  or cluster is degraded below FTT policy with no recovery path.                                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │             Pre-Escalation Steps            │   │
+│   │            Multiple disk failures            │  │            Collect support bundle           │   │
+│   │             All objects degraded             │  │           Run vm-support on hosts           │   │
+│   │           Resync stalled >4 hours            │  │          Note exact error messages          │   │
+│   │         Data inaccessible / I/O hang         │  │          Capture cmmds-tool output          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Multiple simultaneous disk failures require urgent GSS engagement; data may be at risk.              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                GSS Engagement                │  │               Escalation Path               │   │
+│   │            Open P1 SR immediately            │  │             T1: triage + bundle             │   │
+│   │          Include vSAN build number           │  │             T2: vSAN SE assigned            │   │
+│   │          Attach support bundle ZIP           │  │            T3: engineering review           │   │
+│   │            Do NOT power off hosts            │  │             CritSit if data lost            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Do not touch physical disks or power cycle hosts without GSS guidance when data                      │
+│  is degraded; further failures may push below quorum threshold.                                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Degraded      = FTT policy not met; one more failure = data loss                                     │
+│  Quorum        = majority of object components must be accessible                                     │
+│  I/O hang      = VMs stalled waiting for storage; immediate P1                                        │
+│  Support bundle= includes all vSAN host logs + CMMDS metadata                                         │
+│  vm-support    = per-host diagnostic bundle; run on all affected hosts                                │
+│  cmmds-tool    = shows component placement; critical for GSS triage                                   │
+│  P1 SR         = highest priority SR; triggers 24/7 oncall response                                   │
+│  CritSit       = Critical Situation; executive escalation; 24/7 war room                              │
+│  T2/T3         = senior SE or engineering involvement                                                 │
+│  Do not power off= hosts hold component data; powering off worsens state                              │
+│  Build number  = vSAN version from: esxcli vsan cluster get                                           │
+│  GSS           = Global Support Services (VMware/Broadcom)                                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Information Template

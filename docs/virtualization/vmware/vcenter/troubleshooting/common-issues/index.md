@@ -39,44 +39,51 @@ Symptom Triage Map
   │ for root error   │    services unrecoverable
   └──────────────────┘
 ```
-
-## Triage Decision Flow
-
-```mermaid
-graph TD
-    start(["vCenter issue reported"])
-    checkUI{"vSphere Client\nloading?"}
-    checkSSO{"SSO login\nworking?"}
-    checkSvc{"vpxd service\nrunning?"}
-    checkDB{"vpostgres\nrunning?"}
-    checkDisk{"Disk space\nOK?"}
-    fixDisk["Free /storage/log\nor /storage/db"]
-    startDB["Start vmware-vpostgres\nthen vpxd"]
-    restartSvc["Restart vpxd\ncheck vpxd.log"]
-    fixSSO["Restart vmware-stsd\ncheck identity source"]
-    escalate["Escalate to VMware\nSupport — DB corrupt\nor services unrecoverable"]
-    resolved(["Issue resolved"])
-
-    start --> checkUI
-    checkUI -->|"Yes"| checkSSO
-    checkUI -->|"No"| checkSvc
-    checkSSO -->|"No"| fixSSO --> resolved
-    checkSSO -->|"Yes"| resolved
-    checkSvc -->|"Running"| restartSvc --> resolved
-    checkSvc -->|"Stopped"| checkDB
-    checkDB -->|"Stopped"| checkDisk
-    checkDB -->|"Running"| restartSvc
-    checkDisk -->|"Full"| fixDisk --> startDB --> resolved
-    checkDisk -->|"OK"| startDB
-    startDB -->|"Still failing"| escalate
-
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-
-    class checkUI,checkSSO,checkSvc,checkDB,checkDisk decision
-    class fixDisk,startDB,restartSvc,fixSSO action
-    class start,resolved,escalate terminal
+┌─────────────────────────────────── vCenter Server — Common Issues ────────────────────────────────────┐
+│                                                                                                       │
+│  Common vCenter issues: hosts disconnecting, certificate errors, SSO login failure,                   │
+│  service crashes, disk space exhaustion, and database performance degradation.                        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Connectivity Issues              │  │              Certificate Issues             │   │
+│   │        Host disconnected: check vpxa         │  │          Login fails: cert expired          │   │
+│   │         Reconnect: right-click host          │  │            Error: SEC_E_UNTRUSTED           │   │
+│   │         vpxa restart: esxcli on host         │  │           Fix: renew cert via VAMI          │   │
+│   │         Network check: ping VC FQDN          │  │          STS cert: scripted renewal         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Cert expiry is the most common cause of login/connectivity failures; check first.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Service & Disk Issues             │  │              SSO & Login Issues             │   │
+│   │          Service down: vmon-cli -l           │  │            SSO: password lock out           │   │
+│   │           Restart: service-control           │  │            Unlock: dir-cli unlock           │   │
+│   │        Disk /storage >80%: purge logs        │  │            AD: domain unreachable           │   │
+│   │       DB vacuum stuck: kill + restart        │  │           Use local SSO for access          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Most issues trace back to: network (FQDN/DNS), storage (disk full), time (NTP),                      │
+│  or certificates (expired); check all four before deep investigation.                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vpxa          = vCenter host agent; handles VC→host communication                                    │
+│  vmon-cli -l   = list all VCSA services and their current state                                       │
+│  service-control= restart VCSA services; --restart --all (use carefully)                              │
+│  dir-cli       = SSO CLI; list users, unlock accounts, set passwords                                  │
+│  SEC_E_UNTRUSTED= Windows error: cert chain not trusted; replace cert                                 │
+│  STS cert      = Security Token Service cert; 2yr expiry; most common failure                         │
+│  /storage      = VCSA data partition; full = service crashes                                          │
+│  DB vacuum     = Postgres autovacuum job; kill if stuck; restart postgres                             │
+│  NTP skew      = clock drift >5min breaks SSO certificate validation                                  │
+│  Reconnect     = right-click disconnected host; re-establishes vpxa link                              │
+│  Local SSO     = vsphere.local admin; always works if AD is unreachable                               │
+│  Log purge     = /var/log compression/rotation; also rotate stats DB                                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Issue Summary

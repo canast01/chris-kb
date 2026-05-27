@@ -33,44 +33,51 @@ vSphere Encryption Key Flow
   │  vCenter ──TLS──▶ ESXi :443 (host management)      │
   └────────────────────────────────────────────────────┘
 ```
-
-## Data in Transit
-
-vCenter enforces TLS 1.2 minimum by default (vSphere 7.0+). TLS 1.0 and 1.1 are disabled.
-
-All API and UI traffic to vCenter uses HTTPS on port 443. VAMI traffic uses HTTPS on port 5480. LDAPS (port 636) is required for Active Directory identity source connections.
-
-Verify TLS configuration after upgrading from older vSphere versions using the `tls-reconfigurator` tool available in the VCSA.
-
-## Data at Rest — VM Encryption
-
-vCenter manages VM-level encryption through vSphere Native Key Provider (NKP) or an external KMS.
-
-### vSphere Native Key Provider (NKP)
-
-Available from vSphere 7.0 U2+. No external KMS required. The key is stored in vCenter and distributed to ESXi hosts.
-
-- Enable from **vCenter → Configure → Key Providers → Add Native Key Provider**
-- Back up the NKP immediately after creation — the backup passphrase is required for recovery
-- Used for VM encryption, vSAN encryption (where supported), and TPM attestation
-
-### External KMS Integration
-
-For compliance environments requiring an external KMIP-compatible KMS:
-
-- Supported KMS: Thales CipherTrust, Entrust nShield, HyTrust KeyControl
-- Register at **vCenter → Configure → Key Providers → Add Standard Key Provider**
-- vCenter acts as KMIP client; ESXi hosts retrieve keys via vCenter
-
-### Encrypted VM Management
-
-```powershell
-# Check VM encryption status
-Get-VM | Get-View | Select-Object -Property Name,
-    @{N="Encrypted";E={$_.Config.KeyId -ne $null}}
-
-# Encrypt a VM (requires key provider configured)
-# Use vSphere Client: VM → Edit Settings → VM Options → Encryption
+┌───────────────────────────────────── vCenter Server — Encryption ─────────────────────────────────────┐
+│                                                                                                       │
+│  vCenter encrypts management traffic via TLS and integrates with external KMS                         │
+│  for VM encryption and vSAN encryption key management.                                                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Transport Encryption             │  │                VM Encryption                │   │
+│   │          All API traffic: TLS 1.2+           │  │            Encrypt VM via policy            │   │
+│   │           VCSA ↔ ESXi: TLS on 443            │  │           KMS: external key server          │   │
+│   │           DB: Postgres on loopback           │  │             DEK per VM: AES-256             │   │
+│   │          Backup: encrypted tarball           │  │            KEK from KMS wraps DEK           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Transport encryption protects management plane; VM encryption protects data at rest.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Certificate Management            │  │               vSAN Encryption               │   │
+│   │              VMCA: internal CA               │  │           vSAN: cluster-level AES           │   │
+│   │          Custom CA: enterprise PKI           │  │            KMS required for vSAN            │   │
+│   │          Cert expiry: monitor 30d+           │  │         Re-key: rolling no downtime         │   │
+│   │          STS cert: 2yr manual renew          │  │           Shred key: destroys data          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  KMS server must be reachable from vCenter management network on KMIP port 5696;                      │
+│  KMS unavailability prevents encrypted VM power-on.                                                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  TLS 1.2+     = minimum transport security for all vCenter API traffic                                │
+│  VMCA         = vSphere Certificate Authority; embedded in VCSA                                       │
+│  STS cert     = Security Token Service cert; 2-year expiry; breaks SSO                                │
+│  KMS          = Key Management Server; KMIP protocol; stores KEKs                                     │
+│  KMIP         = Key Management Interoperability Protocol; port 5696                                   │
+│  DEK          = Data Encryption Key; unique per VM; encrypts VMDK                                     │
+│  KEK          = Key Encryption Key; stored in KMS; wraps DEKs                                         │
+│  AES-256      = Advanced Encryption Standard; key size used by VM/vSAN enc                            │
+│  Re-key       = rotate DEKs without powering off VM; KMS generates new KEK                            │
+│  Shred key    = destroy KEK in KMS; renders encrypted data unrecoverable                              │
+│  Custom CA    = replace VMCA-signed certs with enterprise PKI certs                                   │
+│  vSAN enc     = cluster-wide encryption; hosts encrypt writes to disk                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## vSAN Encryption

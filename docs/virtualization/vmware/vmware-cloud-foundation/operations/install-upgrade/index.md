@@ -40,39 +40,51 @@ VCF Upgrade Flow — SDDC Manager Orchestration
 │  All domains green · services healthy · no alarms   │
 └─────────────────────────────────────────────────────┘
 ```
-
-## Lifecycle Overview
-
-VCF upgrades are orchestrated entirely through SDDC Manager, which downloads lifecycle bundles from the VMware depot (or an offline bundle depot) and applies them in a strictly enforced sequence.
-
-### Upgrade Sequence
-
-SDDC Manager enforces this order — you cannot skip steps:
-
-1. **SDDC Manager** — always first; gates all other upgrades
-2. **vCenter Server** — management domain, then VI workload domains
-3. **ESXi hosts** — host remediation per cluster, one cluster at a time
-4. **NSX-T** — NSX Manager cluster, then NSX Edge clusters
-5. **vSAN** — firmware and driver updates validated against HCL
-
-### Version Compatibility Matrix
-
-| VCF Release | ESXi | vCenter | NSX-T | vSAN | EoGS |
-|---|---|---|---|---|---|
-| 5.2 | 8.0 U3 | 8.0 U3 | 4.2 | 8.0 U3 | Check Broadcom lifecycle |
-| 5.1 | 8.0 U2 | 8.0 U2 | 4.1 | 8.0 U2 | Check Broadcom lifecycle |
-| 4.5 | 7.0 U3 | 7.0 U3 | 3.2 | 7.0 U3 | Check Broadcom lifecycle |
-
-Always verify against the [Broadcom VCF Release Notes](https://docs.vmware.com/en/VMware-Cloud-Foundation/) before upgrade.
-
-### Bundle Management
-
-```bash
-# SDDC Manager UI: Lifecycle Management → Bundle Management
-# Check for available bundles (requires internet or depot connectivity)
-
-# Offline depot: configure custom depot in SDDC Manager
-# Administration → Depot Settings → set offline depot URL
+┌───────────────────────────── VMware Cloud Foundation — Install & Upgrade ─────────────────────────────┐
+│                                                                                                       │
+│  VCF installation uses Cloud Builder to deploy the management domain; upgrades                        │
+│  are orchestrated by SDDC Manager LCM using versioned upgrade bundles.                                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Installation Steps              │  │           Pre-Install Requirements          │   │
+│   │           Deploy Cloud Builder OVA           │  │           HCL: all hardware listed          │   │
+│   │          Complete bringup JSON spec          │  │            DNS: all FQDNs resolve           │   │
+│   │        Cloud Builder validates input         │  │            NTP: all hosts synced            │   │
+│   │           Deploy mgmt domain (~2h)           │  │          VLANs: created on switches         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  DNS and NTP must be correct before bringup; validation failures abort deployment.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Upgrade Process                │  │              Post-Upgrade Steps             │   │
+│   │         Download bundle in SDDC Mgr          │  │             Run VCF health check            │   │
+│   │           Run pre-check validation           │  │            Verify all certs valid           │   │
+│   │           Apply: mgmt domain first           │  │              Check vSAN health              │   │
+│   │        Then apply to workload domains        │  │             Validate NSX routing            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Bringup needs 4+ identical bare-metal servers; upgrade temporarily increases                         │
+│  host resource usage during patching; maintain 30% vSAN free space.                                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Cloud Builder = OVA appliance; validates spec and deploys management domain                          │
+│  Bringup       = initial VCF deployment process; ~2h for management domain                            │
+│  JSON spec     = configuration file for Cloud Builder; all IP/FQDN values                             │
+│  SDDC Manager  = takes over from Cloud Builder post-bringup                                           │
+│  LCM           = Lifecycle Manager in SDDC Mgr; manages all upgrades                                  │
+│  Bundle        = versioned upgrade package; downloaded from VMware depot                              │
+│  Pre-check     = automated readiness validation; must pass before upgrade                             │
+│  Mgmt domain first= always upgrade management domain before workload domains                          │
+│  VCF version   = e.g., VCF 5.2; all components versioned together                                     │
+│  HCL           = Hardware Compatibility List; VCF-specific server/NIC list                            │
+│  VLAN scheme   = mgmt/vSAN/vMotion/uplink VLANs defined in spec                                       │
+│  Depot         = VMware online update repository; SDDC Mgr downloads from                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Bundles are downloaded automatically on a configured schedule or manually triggered.

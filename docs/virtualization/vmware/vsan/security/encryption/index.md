@@ -19,33 +19,51 @@ vCenter (Key Management Service client)
                     └── Data Encryption Key (DEK) — per disk group
                             └── Encrypted data on disk
 ```
-
-```mermaid
-graph TD
-    kms["KMS Server\n(KMIP 1.1+)\nThales / Entrust / Vault"]
-    vc["vCenter Server\n(KMIP client — requests KEKs\nat cluster startup)"]
-    esxi["ESXi Host\n(receives KEK, generates DEK)"]
-    kek["KEK — Key Encryption Key\nper host, held in host memory"]
-    dek["DEK — Data Encryption Key\nper disk group, encrypted by KEK\nstored locally on host"]
-    dg["Disk Group\n(capacity disks)\nAES-256-XTS encrypted"]
-
-    kms -->|"provides KEK (KMIP/TLS port 5696)"| vc
-    vc -->|"delivers KEK to host"| esxi
-    esxi --> kek
-    kek -->|"wraps"| dek
-    dek -->|"encrypts writes"| dg
-
-    classDef kmsNode fill:#dc2626,stroke:#b91c1c,color:#fff
-    classDef vcNode fill:#b45309,stroke:#92400e,color:#fff
-    classDef hostNode fill:#15803d,stroke:#166534,color:#fff
-    classDef keyNode fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef diskNode fill:#1d4ed8,stroke:#1e40af,color:#fff
-
-    class kms kmsNode
-    class vc vcNode
-    class esxi hostNode
-    class kek,dek keyNode
-    class dg diskNode
+┌────────────────────────────────────────── vSAN — Encryption ──────────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN offers cluster-level data-at-rest encryption (OSA) and inline encryption                        │
+│  (ESA); both require an external KMS and use AES-256 with KEK/DEK hierarchy.                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           OSA Encryption (at-rest)           │  │            ESA Inline Encryption            │   │
+│   │             Enabled per cluster              │  │           vSAN 8+ / all-NVMe only           │   │
+│   │               AES-256 XTS mode               │  │          Encrypts before disk write         │   │
+│   │            KEK from KMS wraps DEK            │  │           Lower overhead than OSA           │   │
+│   │          Re-key: rolling no outage           │  │             Same KMS integration            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  OSA encrypts data at the disk layer; ESA encrypts inline before storage commit.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              KMS Configuration               │  │              Key Management Ops             │   │
+│   │          Add KMS cluster in vCenter          │  │          Re-key: new KEK, same DEKs         │   │
+│   │          Trust KMS cert in vCenter           │  │           Shred key: wipe cluster           │   │
+│   │       Enable enc: Cluster > Configure        │  │            Backup KMS: critical!            │   │
+│   │           Erase disks when removed           │  │             KMS HA: cluster pair            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  KMS must be highly available and reachable from all ESXi hosts; losing KMS                           │
+│  access prevents encrypted VM power-on.                                                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OSA enc       = Original Storage Architecture encryption; data at rest                               │
+│  ESA inline    = Express Storage Architecture; encrypts before NVMe write                             │
+│  AES-256 XTS   = encryption algorithm; XTS mode for block storage                                     │
+│  DEK           = Data Encryption Key; per disk group; AES-256                                         │
+│  KEK           = Key Encryption Key; stored in KMS; wraps DEKs                                        │
+│  Re-key        = rotate KEK from KMS; no downtime; existing DEKs unchanged                            │
+│  Shred key     = destroy KEK in KMS; all data becomes unreadable                                      │
+│  Erase disks   = secure wipe when decommissioning encrypted disks                                     │
+│  KMS backup    = critical; if KMS lost with no backup, data is gone                                   │
+│  KMS cluster   = HA pair; both nodes hold key copies                                                  │
+│  KMIP          = Key Management Interoperability Protocol; port 5696                                  │
+│  Trust KMS cert= vCenter must trust KMS server TLS cert for KMIP                                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 - **KMS (Key Management Service):** External server holding the KEKs. vCenter connects to the KMS to retrieve keys at startup.

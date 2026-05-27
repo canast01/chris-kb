@@ -18,17 +18,51 @@
                                       │  └─────────────────────┘   │
                                       └─────────────────────────────┘
 ```
-
----
-
-## Primary Authentication: Active Directory
-
-Connection Server authenticates users against AD. The Connection Server must be domain-joined:
-
-```powershell
-# Verify domain membership on Connection Server
-(Get-WmiObject Win32_ComputerSystem).Domain
-# Should return corp.local
+┌─────────────────────────────────── VMware Horizon — Authentication ───────────────────────────────────┐
+│                                                                                                       │
+│  Horizon authenticates users via AD; external users authenticate through UAG with                     │
+│  optional MFA (RADIUS/RSA); smart card and SAML federation are also supported.                        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Internal Auth Flow              │  │              External Auth Flow             │   │
+│   │          Client → Connection Server          │  │           Client → UAG (internet)           │   │
+│   │         CS validates AD credentials          │  │              UAG → optional MFA             │   │
+│   │            Kerberos or NTLM to AD            │  │               UAG → SAML to CS              │   │
+│   │             Session token issued             │  │             CS validates with AD            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Internal flow is direct to CS; external flow proxies through UAG with optional MFA.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 MFA Options                  │  │             Passwordless Options            │   │
+│   │              RADIUS: OTP token               │  │             Smart card: PIV/CAC             │   │
+│   │              RSA SecurID token               │  │         Kerberos SSO: domain joined         │   │
+│   │              Duo: RADIUS proxy               │  │          SAML: Workspace ONE Access         │   │
+│   │              Configured on UAG               │  │            Windows Hello: W1 UEM            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AD DCs must be reachable from Connection Servers on management network;                              │
+│  RADIUS server reachable from UAG; smart card reader at physical endpoint.                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  AD auth       = Kerberos (domain joined) or NTLM to AD DC                                            │
+│  RADIUS        = MFA protocol; UAG sends credentials to RADIUS server                                 │
+│  RSA SecurID   = OTP hardware token; RADIUS integration                                               │
+│  Duo           = cloud MFA; accessed via RADIUS proxy from UAG                                        │
+│  SAML          = federated auth; Workspace ONE Access as IdP                                          │
+│  Smart card    = PIV/CAC cert-based login; AD smart card auth                                         │
+│  Kerberos SSO  = domain-joined client gets desktop without re-auth                                    │
+│  UAG           = Unified Access Gateway; handles external MFA flow                                    │
+│  CS            = Connection Server; final auth validator with AD                                      │
+│  Windows Hello = biometric/PIN auth; requires Workspace ONE UEM                                       │
+│  Session token = issued by CS after successful auth; used for session                                 │
+│  OTP           = One-Time Password; from hardware or soft token                                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Configure AD domains in Horizon:

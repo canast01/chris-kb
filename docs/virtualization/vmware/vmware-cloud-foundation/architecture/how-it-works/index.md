@@ -36,83 +36,51 @@ VCF Bring-Up and Lifecycle Flow
 │  deploys dedicated vCenter, NSX, vSAN as a unit      │
 └─────────────────────────────────────────────────────┘
 ```
-
-## SDDC Manager
-
-SDDC Manager is the central orchestrator for VCF. It manages the entire lifecycle of all components — deployment, upgrades, password rotation, certificate management, and inventory — across every workload domain.
-
-| Function | Description |
-|---|---|
-| Workload domain provisioning | Deploys vCenter, NSX, and vSAN as a validated unit |
-| Lifecycle Management (LCM) | Orchestrates upgrades across the full BOM stack |
-| Password management | Rotates credentials on all managed accounts on schedule |
-| Certificate management | Issues and renews certificates for all components via VMCA or third-party CA |
-| Network pool management | Allocates IP ranges for VMkernel adapters during host commissioning |
-| Inventory | Single pane of glass for all domains, hosts, and components |
-| Precheck | Validates DNS, NTP, certificates, vSAN health, and password status before upgrades |
-
----
-
-## Deployment Domains
-
-### Management Domain
-
-The Management Domain hosts VCF's own management stack. It is always the first domain deployed and must be healthy before workload domains can be created.
-
-| Component | Role |
-|---|---|
-| SDDC Manager | VCF orchestration plane |
-| vCenter (management) | Manages management domain ESXi hosts |
-| NSX Manager cluster | Provides overlay networking for the management domain |
-| vSAN | Storage for management VMs |
-
-Minimum 4 ESXi hosts. Management components (SDDC Manager, vCenter VMs, NSX Manager VMs) all run within this domain.
-
-### VI Workload Domain
-
-VI (Virtual Infrastructure) Workload Domains host general-purpose vSphere workloads. Each domain has its own vCenter and NSX instance, managed by SDDC Manager.
-
-- Isolated failure domain from other workload domains
-- Independent vSAN cluster(s) per domain
-- NSX instance scoped to the domain (or shared via NSX Federation)
-- Up to 15 workload domains per SDDC Manager instance
-
-### VVF Workload Domain (Tanzu)
-
-VVF (VMware vSphere Foundation) Workload Domains add Tanzu Kubernetes Grid Supervisor to a VI domain, enabling containerised workloads alongside VMs.
-
----
-
-## Bill of Materials (BOM)
-
-The BOM defines the validated, interoperable versions of all components for a given VCF release. You cannot mix component versions outside the BOM.
-
-| Component | Example (VCF 5.1) |
-|---|---|
-| ESXi | 8.0 U2 |
-| vCenter | 8.0 U2 |
-| NSX | 4.1.x |
-| vSAN | Embedded in ESXi |
-| SDDC Manager | 5.1.x |
-
-Check the BOM before any upgrade: **SDDC Manager → Lifecycle Management → Release Notes**.
-
----
-
-## Lifecycle Management (LCM)
-
-LCM is the upgrade engine. SDDC Manager downloads bundles from the depot (online or offline), validates compatibility, runs prechecks, and orchestrates rolling upgrades across the stack.
-
-### Upgrade Flow
-
-```text
-1. Download bundle from depot (or upload from offline file)
-2. Run Precheck — validates DNS, NTP, certs, vSAN health, password status
-3. Review precheck results — resolve any WARN or ERROR items
-4. Schedule upgrade window
-5. SDDC Manager upgrades components in BOM order:
-   ESXi → vCenter → NSX → vSAN (firmware optional)
-6. Post-upgrade validation — SDDC Manager verifies all services healthy
+┌─────────────────────────────── VMware Cloud Foundation — How It Works ────────────────────────────────┐
+│                                                                                                       │
+│  VCF bundles vSphere, vSAN, NSX, and Aria into a single SDDC stack; SDDC Manager                      │
+│  automates lifecycle, domain creation, and cluster expansion.                                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 SDDC Manager                 │  │                 Domain Model                │   │
+│   │           Lifecycle management hub           │  │         Management domain: ops stack        │   │
+│   │         Deploys vCenter + NSX + vSAN         │  │           Workload domains: tenant          │   │
+│   │            Certificate management            │  │           VI domain: vSphere+vSAN           │   │
+│   │        Password rotation: all stacks         │  │          NSX: shared or per-domain          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SDDC Manager orchestrates all operations; management domain deploys first.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Bring-Up Process               │  │              Cluster Expansion              │   │
+│   │        Cloud Builder: initial deploy         │  │               Add host to pool              │   │
+│   │            Validates HW readiness            │  │           SDDC Mgr: expand cluster          │   │
+│   │          Deploys mgmt domain stack           │  │            Create workload domain           │   │
+│   │         JSON spec: all config values         │  │            Hosts: from free pool            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  VCF requires VMware-compatible servers on the VCF HCL; minimum 4 hosts for                           │
+│  management domain; 25GbE+ network with defined VLAN layout.                                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SDDC Manager  = VCF automation and lifecycle engine; manages all components                          │
+│  Cloud Builder = initial deployment tool; validates and bootstraps VCF                                │
+│  Management domain= first domain; runs SDDC Mgr, vCenter, NSX, vSAN                                   │
+│  Workload domain= tenant cluster; separate vCenter + NSX per domain                                   │
+│  VI domain     = vSphere+vSAN workload domain; most common type                                       │
+│  NSX shared    = single NSX manager serves multiple workload domains                                  │
+│  Free pool     = unallocated hosts available for domain creation                                      │
+│  JSON spec     = configuration file passed to Cloud Builder for bringup                               │
+│  Bring-up      = process to deploy management domain from scratch                                     │
+│  HCL           = Hardware Compatibility List; VCF-specific list                                       │
+│  vLCM          = vSphere Lifecycle Manager; manages ESXi patching in VCF                              │
+│  SDDC          = Software-Defined Data Center; the overall VCF platform                               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Bundle Management

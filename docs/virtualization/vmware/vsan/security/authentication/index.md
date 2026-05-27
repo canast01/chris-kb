@@ -20,22 +20,51 @@ vSphere SSO (Platform Services Controller embedded in VCSA)
                 ├── Active Directory (LDAP / Integrated Windows Auth)
                 └── OpenLDAP
 ```
-
-```mermaid
-sequenceDiagram
-    participant client as User / Automation
-    participant vc as vCenter (HTTPS/443)
-    participant sso as vSphere SSO
-    participant ad as Active Directory (LDAP/636)
-
-    client->>vc: Login request
-    vc->>sso: Authenticate user
-    sso->>ad: LDAP bind + user lookup
-    ad-->>sso: User attributes & groups
-    sso-->>vc: SAML token (signed)
-    vc-->>client: Session established
-
-    Note over client,ad: vSAN operations then checked\nagainst vCenter RBAC at cluster scope
+┌──────────────────────────────────────── vSAN — Authentication ────────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN cluster nodes authenticate each other using the ESXi host SSL certificates;                     │
+│  management authentication uses vCenter SSO.                                                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Cluster Node Auth               │  │               Management Auth               │   │
+│   │            ESXi SSL cert: node ID            │  │           vCenter SSO: all logins           │   │
+│   │         Cluster UUID: shared secret          │  │           SAML token for API calls          │   │
+│   │        Host join: vCenter issues UUID        │  │            AD groups: role-mapped           │   │
+│   │       RDT: Reliable Datagram Transport       │  │           MFA: per vCenter policy           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Cluster node trust uses ESXi certs; management trust uses vCenter SSO tokens.                        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              KMS Authentication              │  │           Certificate Requirements          │   │
+│   │          KMS: client cert per ESXi           │  │           Host cert: auto-renewed           │   │
+│   │             KMIP mutual TLS auth             │  │            VMCA: signs host certs           │   │
+│   │         KMS cluster: redundant pair          │  │           Custom CA: replace VMCA           │   │
+│   │         Key retrieval: power-on path         │  │           Expiry: monitor >30 days          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  KMS server must be reachable from each ESXi host on management network port 5696;                    │
+│  KMS cluster ensures HA key retrieval for encrypted vSAN.                                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Cluster UUID  = unique identifier shared across all vSAN cluster nodes                               │
+│  RDT           = Reliable Datagram Transport; vSAN inter-host protocol                                │
+│  KMIP          = Key Management Interoperability Protocol; port 5696                                  │
+│  KMS           = Key Management Server; holds encryption keys                                         │
+│  Mutual TLS    = both client and server present certs; bidirectional auth                             │
+│  VMCA          = vSphere Certificate Authority; signs host machine certs                              │
+│  Host cert     = SSL cert on each ESXi host; auto-renewed by VMCA                                     │
+│  Custom CA     = replace VMCA with enterprise PKI for compliance                                      │
+│  SAML token    = SSO assertion; used for vCenter API auth                                             │
+│  KMS cluster   = HA pair of KMS nodes; both must be reachable                                         │
+│  Key retrieval = power-on of encrypted VM triggers KMS request                                        │
+│  AD groups     = Active Directory groups mapped to vCenter RBAC roles                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 vSAN-specific operations — creating disk groups, modifying storage policies, enabling encryption — all require authentication to vCenter. No separate vSAN credentials exist.

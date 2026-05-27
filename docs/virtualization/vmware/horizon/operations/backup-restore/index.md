@@ -16,37 +16,51 @@
 │  + AppStack VMDKs   │               │  on datastore              │
 └─────────────────────┘               └────────────────────────────┘
 ```
-
-## What to Back Up
-
-| Component | Backup Method | RPO Target | Critical? |
-|---|---|---|---|
-| Connection Server ADAM/LDAP config | `vdmexport.exe` | Daily | Yes — entire pod config |
-| App Volumes Manager SQL database | SQL Server backup | Daily | Yes — all AppStack/writable assignments |
-| DEM Config Share | File-level backup (agent-based or SMB snapshot) | Daily | Yes — all user environment policies |
-| vCenter golden image VM snapshots | vSphere snapshot + datastore backup | Weekly | Yes — without this, pool rebuilds require re-imaging |
-| App Volumes AppStack VMDKs | Datastore-level backup or file copy | Weekly | Yes — application packages |
-| UAG configuration | INI file + screenshot of settings | Per change | Yes — allows rapid redeploy |
-| Horizon event database (SQL) | SQL Server backup | Daily | No — historical reporting only |
-
----
-
-## Connection Server ADAM Backup (vdmexport)
-
-The Connection Server configuration is stored in an **ADAM (Active Directory Lightweight Directory Services)** instance on each Connection Server. `vdmexport.exe` exports this as an LDIF file.
-
-### Backup
-
-```cmd
-:: Run on the Connection Server (or any CS in the pod)
-:: Default install path
-cd "C:\Program Files\VMware\VMware View\Server\tools\bin"
-
-:: Export to LDIF
-vdmexport.exe -f C:\Backups\horizon-config-backup.ldif
-
-:: Export with date stamp (run from CMD)
-vdmexport.exe -f "C:\Backups\horizon-config-%DATE:~10,4%%DATE:~4,2%%DATE:~7,2%.ldif"
+┌────────────────────────────────── VMware Horizon — Backup & Restore ──────────────────────────────────┐
+│                                                                                                       │
+│  Horizon backup covers the LDAP config database on Connection Servers, golden image                   │
+│  VMs, and user profile shares; desktop VMs themselves are stateless (instant clone).                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Config Backup                 │  │             Golden Image Backup             │   │
+│   │          LDAP backup: vdmexport.exe          │  │          VM snapshot before update          │   │
+│   │           Schedule: daily minimum            │  │         Clone golden image: pre-push        │   │
+│   │           Store: secure file share           │  │            Keep N-1 + N-2 images            │   │
+│   │          Include: Events DB backup           │  │          VADP: backup if persistent         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  LDAP backup is most critical; without it Horizon config must be rebuilt manually.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Profile & Restore               │  │              Restore Procedure              │   │
+│   │          User profiles: FSLogix/DEM          │  │           Restore LDAP: vdmimport           │   │
+│   │         Profile share: daily backup          │  │          Re-register CS: reconnect          │   │
+│   │           DEM config: GPO + share            │  │          Rebuild pools from golden          │   │
+│   │          AppStack: backup VMDK file          │  │             Validate: test login            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Connection Server VMs should be backed up via VADP as well; profile CIFS share                       │
+│  must be on backed-up NAS; AppStack VMDKs on backed-up datastore.                                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vdmexport.exe = Horizon LDAP config export tool; run on Connection Server                            │
+│  vdmimport     = Horizon LDAP config import; restore from backup                                      │
+│  LDAP          = Horizon stores its config in AD LDS (LDAP store)                                     │
+│  Golden image  = template VM; all instant clones derive from this                                     │
+│  N-1/N-2       = keep two previous golden image versions for rollback                                 │
+│  Events DB     = Horizon event log; SQL Server; backup separately                                     │
+│  FSLogix       = user profile container; VHDX file on CIFS share                                      │
+│  DEM           = Dynamic Environment Manager; policy-based profile                                    │
+│  AppStack      = App Volumes VMDK; contains installed applications                                    │
+│  VADP          = backup API; use for persistent full clone VMs                                        │
+│  CIFS share    = Windows file share; user profile store                                               │
+│  Re-register   = reconnect Connection Server to Horizon pod after restore                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Automate with Task Scheduler:**
