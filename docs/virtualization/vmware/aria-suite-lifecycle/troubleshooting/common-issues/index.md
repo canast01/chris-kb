@@ -24,28 +24,49 @@
 │  └─────────────────┘      └──────────────────┘                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
-
-## Installation and Deployment Failures
-
-```bash
-# Check LCM installer log for root cause
-tail -200 /var/log/vmware/vrlcm/lcm-install.log
-
-# Verify DNS resolution for all product FQDNs from LCM node
-for fqdn in vrops.example.local vra.example.local vidm.example.local vrli.example.local; do
-  echo -n "$fqdn → "; nslookup "$fqdn" | grep "Address" | tail -1
-done
-
-# Verify reverse DNS (PTR) for each product IP
-for ip in 10.0.1.10 10.0.1.11 10.0.1.20 10.0.1.30; do
-  echo -n "$ip → "; nslookup "$ip" | grep "name ="
-done
-
-# Check NTP — certificate operations fail with drift > 5 seconds
-chronyc tracking | grep "System time"
-
-# Disk space — /data needs at least 50 GB free per product version
-df -h /data /var/log /tmp
+┌──────────────────────────────────── Aria Suite LCM Common Issues ─────────────────────────────────────┐
+│                                                                                                       │
+│  Common LCM issues: deployment failure, certificate mismatch, and disk full.                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Deployment Failure              │  │             Certificate Mismatch            │   │
+│   │            Check pre-check result            │  │           Verify SAN matches FQDN           │   │
+│   │            DNS: FQDN resolvable?             │  │            Re-import correct cert           │   │
+│   │           vCenter: credentials OK?           │  │           LCM: replace cert action          │   │
+│   │            Disk: LCM VM not full?            │  │           Check product cert trust          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Deployment failure and cert mismatch are most frequent; disk full causes both.                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Disk Full Issue                │  │              vIDM / SSO Failure             │   │
+│   │          df -h: find full partition          │  │            vIDM: service running?           │   │
+│   │             Delete old PAK files             │  │           Check vIDM cert validity          │   │
+│   │           Clean /tmp and log dirs            │  │           Test SSO login manually           │   │
+│   │          Expand disk if persistent           │  │           Re-register LCM in vIDM           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM on vSphere; vCenter for deploy; vIDM for auth; NFS for depot and backup                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Deployment Failure  = LCM deploy action failed; check pre-check and installer.log                    │
+│  Pre-check Result    = LCM validation output; shows root cause before deploy fails                    │
+│  Cert Mismatch       = Product cert SAN does not match FQDN; causes TLS errors                        │
+│  SAN                 = Subject Alternative Name; must include product FQDN                            │
+│  Replace Cert Action = LCM-orchestrated cert replacement; resolves mismatch                           │
+│  Disk Full           = LCM VM /storage or / partition full; blocks all operations                     │
+│  PAK Cleanup         = Delete old PAK binaries from LCM depot to free disk                            │
+│  /tmp Cleanup        = Clear temp files accumulated during failed deployments                         │
+│  vIDM SSO Failure    = LCM cannot redirect auth; all users locked out                                 │
+│  vIDM Re-register    = Re-add LCM as vIDM app if SSO trust is broken                                  │
+│  installer.log       = Deployment log; shows exact step and error for failures                        │
+│  df -h               = Disk usage check; first step for any disk-related issue                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 | Error Code | Meaning | Resolution |

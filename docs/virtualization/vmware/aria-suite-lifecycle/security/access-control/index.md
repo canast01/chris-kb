@@ -20,23 +20,49 @@
 │  Never assign roles to individual user accounts                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
-
-## RBAC Model
-
-LCM uses a role-based access control model backed by Workspace ONE Access (VIDM) for group resolution. Roles should be assigned to AD groups synced via VIDM — never assign roles to individual user accounts.
-
-| Role | Capabilities |
-|---|---|
-| **LCM Admin** | Full access: deploy products, run upgrades, manage Locker (certs/passwords/licences), manage vCenter and VIDM integrations, manage users and roles |
-| **LCM Content Developer** | Read access + content lifecycle operations (extract and deploy dashboards, blueprints); cannot initiate product deployments or upgrades |
-| **Viewer** | Read-only dashboard access to environment health, Locker inventory, and request history; no write operations |
-
----
-
-## Configuring Role Assignments
-
-```text
-LCM → Settings → Access Control → Add Role Assignment
+┌──────────────────────────────────── Aria Suite LCM Access Control ────────────────────────────────────┐
+│                                                                                                       │
+│  Admin and User roles with vIDM group mapping for Aria Suite Lifecycle Manager.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Built-in Roles                │  │               Role Permissions              │   │
+│   │            System Admin: full LCM            │  │           SystemAdmin: all actions          │   │
+│   │          Content Admin: deploy only          │  │         ContentAdmin: deploy/upgrade        │   │
+│   │              Viewer: read-only               │  │          Viewer: no config changes          │   │
+│   │         Least privilege: use Viewer          │  │             Admin: ops team only            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Three roles cover LCM access; vIDM maps AD groups to roles for SSO login.                            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              vIDM Group Mapping              │  │              API Access Control             │   │
+│   │           LCM: Settings > Identity           │  │           REST API: session token           │   │
+│   │            Map vIDM group to role            │  │           Token tied to user role           │   │
+│   │              SSO login via vIDM              │  │          No separate API-only role          │   │
+│   │           Review group mapping 90d           │  │         Rotate API tokens regularly         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM; vIDM appliance for SSO; AD/LDAP for group source; network to vIDM                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  System Admin        = Full LCM access: deploy, upgrade, cert, user management                        │
+│  Content Admin       = Can deploy and upgrade products; no user management                            │
+│  Viewer Role         = Read-only: see environments and health; no actions                             │
+│  vIDM Group Mapping  = AD group in vIDM assigned LCM role for SSO access                              │
+│  SSO Login           = SAML2 redirect to vIDM on LCM browser access                                   │
+│  Local Admin         = LCM-internal admin account; break-glass only                                   │
+│  API Token           = Session token from POST /auth/login; inherits user role                        │
+│  Least Privilege     = Assign Viewer to read-only teams; Admin to ops only                            │
+│  Group Review        = Quarterly check of vIDM group to LCM role mappings                             │
+│  Token Rotation      = Invalidate and reissue API tokens periodically                                 │
+│  vIDM Integration    = LCM registered as app in vIDM for SAML SSO                                     │
+│  Audit Log           = LCM records all user actions and config changes                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 1. Select the role from the dropdown

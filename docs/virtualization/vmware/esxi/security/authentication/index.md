@@ -30,47 +30,51 @@ Password Policy Controls (enforced via Host Profile)
 │  /Config/Etc/issue             = login banner text        │
 └──────────────────────────────────────────────────────────┘
 ```
-
-## Authentication Architecture
-
-ESXi supports three authentication paths:
-
-| Path | Mechanism | Use |
-|---|---|---|
-| vCenter SSO | AD via vCenter identity source | Normal day-to-day administration |
-| Direct AD (ESXi joined to domain) | AD Kerberos or LDAP directly | Not recommended; complex to manage |
-| Local account | Password-based against `/etc/passwd` | Break-glass only |
-
-The recommended approach is to authenticate all users through vCenter using AD as the identity source. Direct ESXi authentication is the exception (break-glass), not the norm.
-
----
-
-## Local Accounts
-
-### Principle
-
-Minimise local accounts. Production ESXi hosts should have:
-
-- `root` — primary break-glass account with a strong, unique password per host
-- One named break-glass account (e.g., `infra-breakglass`) — in the exception users list for Normal Lockdown
-
-All other local accounts should be removed or disabled.
-
-### Set Root Password
-
-```bash
-# Interactive — SSH or ESXi Shell (or DCUI)
-passwd root
-
-# Via PowerCLI across all hosts in a cluster
-Get-Cluster "CL-PROD" | Get-VMHost | ForEach-Object {
-    $h = $_
-    $spec = New-Object VMware.Vim.HostAccountSpec
-    $spec.id = "root"
-    $spec.password = "NewRootPassword!!"
-    $h.ExtensionData.ConfigManager.AccountManager.UpdateUser($spec)
-    Write-Host "Root password updated: $($h.Name)"
-}
+┌──────────────────────────────────────── ESXi — Authentication ────────────────────────────────────────┐
+│                                                                                                       │
+│  SSO, AD/LDAP join, smart card (CAC), and MFA configuration for ESXi access.                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 vCenter SSO                  │  │             Host AD Integration             │   │
+│   │         vsphere.local default domain         │  │            Join host to AD domain           │   │
+│   │          Add AD as identity source           │  │           AD users log in to DCUI           │   │
+│   │            Password policy in SSO            │  │              ESXi Shell AD auth             │   │
+│   │         Token policy: timeout/count          │  │           AD group to DCUI access           │   │
+│   │          MFA: RSA SecurID / Radius           │  │            Leave domain on decomm           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SSO identity source → vCenter auth → RBAC mapping → ESXi host access.                                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Smart Card / CAC Auth             │  │              MFA Configuration              │   │
+│   │          vCenter: enable cert auth           │  │           RSA SecurID integration           │   │
+│   │           Map cert UPN to AD user            │  │           Radius server configured          │   │
+│   │           CAC card + PIN required            │  │            SSO MFA policy enabled           │   │
+│   │          OCSP/CRL revocation check           │  │          Fallback: local admin only         │   │
+│   │           DOD/STIG CAC requirement           │  │            MFA for vCenter UI/API           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, management network, AD/LDAP servers, RSA/Radius MFA servers                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SSO         = Single Sign-On; vCenter embedded auth service                                          │
+│  vsphere.local = built-in SSO domain; local admin accounts live here                                  │
+│  Identity source = AD/LDAP added to SSO; users can log in with domain                                 │
+│  CAC         = Common Access Card; US Gov smart card for auth                                         │
+│  OCSP        = Online Certificate Status Protocol; checks cert revocation                             │
+│  CRL         = Certificate Revocation List; offline revocation list                                   │
+│  RSA SecurID = MFA token; OTP used as second factor for vCenter                                       │
+│  Radius      = Remote Auth Dial-In User Service; MFA protocol                                         │
+│  UPN         = User Principal Name; cert field mapped to AD user                                      │
+│  DCUI        = Direct Console UI; local access; can use AD auth                                       │
+│  Token policy = SSO setting: session lifetime and concurrent count                                    │
+│  STIG        = Security Technical Implementation Guide; DOD hardening                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Store root passwords in the organisation's secrets vault (CyberArk, HashiCorp Vault, or equivalent). Each host should have a **unique** root password — password reuse across hosts increases blast radius if one password is compromised.

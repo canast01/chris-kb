@@ -19,39 +19,49 @@ tail -200 /data/vcops/log/adapters/VMwareAdapter/adapter.log | grep -i "error\|a
 # Restart the watchdog (restarts failed services automatically)
 service vmware-vcops-watchdog restart
 ```
-
-Common causes and resolutions:
-
-| Cause | Symptom | Resolution |
-|---|---|---|
-| Expired service account password | Adapter shows "Authentication failed" in collection state | Update credentials in Administration → Solutions → edit adapter |
-| vCenter certificate change | SSL handshake errors in adapter log | Re-accept the vCenter certificate: edit adapter → accept new thumbprint |
-| Network connectivity lost | Adapter shows "Connection refused" | Verify firewall and routing from Aria Operations appliance to target |
-| vCenter unreachable (maintenance) | Adapter transitions to Not Collecting | Create a maintenance schedule; adapter recovers automatically when vCenter is back |
-| Adapter memory leak | Collector service consuming excessive CPU | Restart the collector service: `service vmware-vcops-collector restart` |
-
----
-
-## Log Locations
-
-| Log File | Path | Purpose |
-|---|---|---|
-| Collector log | `/data/vcops/log/collector.log` | Adapter collection events, errors, and warnings |
-| Adapter-specific log | `/data/vcops/log/adapters/<adapter-name>/` | Per-adapter debug output |
-| Casa log | `/data/vcops/log/casa.log` | Authentication events, session management |
-| Analytics log | `/data/vcops/log/analytics.log` | Metric processing pipeline, capacity calculations |
-| Cassandra log | `/data/vcops/log/cassandra/system.log` | Storage backend events |
-| Gemfire log | `/data/vcops/log/gemfire/` | In-memory cache events |
-
-```bash
-# Real-time adapter collection errors
-tail -f /data/vcops/log/collector.log | grep -i "error\|fail\|exception"
-
-# Authentication failures (including LDAP/AD issues)
-grep -i "login\|auth\|session" /data/vcops/log/casa.log | tail -100
-
-# Cassandra storage health (slow queries or compaction issues)
-tail -100 /data/vcops/log/cassandra/system.log | grep -i "error\|warn\|compaction"
+┌──────────────────────────────────── Aria Operations Common Issues ────────────────────────────────────┐
+│                                                                                                       │
+│  Common issues: adapter disconnected, no data in dashboards, and alert storms.                        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Adapter Disconnected             │  │            No Data in Dashboards            │   │
+│   │          Check adapter credentials           │  │          Check adapter green status         │   │
+│   │          Verify source reachability          │  │          Check collection interval          │   │
+│   │           Service account locked?            │  │          Widget: correct resource?          │   │
+│   │          Re-test adapter connection          │  │           Time range: too narrow?           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Adapter and data issues are most frequent; alert storms require policy tuning.                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Alert Storm                  │  │         Node Offline / Cluster Issue        │   │
+│   │            Identify noisy symptom            │  │          Check VAMI cluster status          │   │
+│   │            Raise alert threshold             │  │         Verify node VM is powered on        │   │
+│   │           Use wait cycles setting            │  │           Check inter-node network          │   │
+│   │         Suppress during maintenance          │  │           Restart vmware-vcops svc          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vROps cluster on vSphere; AD/LDAP for adapter auth; management network for nodes                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Adapter Disconnected = Data source not collecting; shown as red/yellow in UI                         │
+│  Service Acct Lock    = AD lockout from repeated failed vROps authentication                          │
+│  No Dashboard Data    = Widget blank; adapter issue or wrong resource scope                           │
+│  Alert Storm          = Excessive alert volume; caused by over-sensitive thresholds                   │
+│  Wait Cycles          = Alert setting requiring symptom to persist N cycles to fire                   │
+│  Symptom Suppression  = Temporarily disable alert during planned maintenance                          │
+│  Node Offline         = Cluster node unreachable; check VM power and network                          │
+│  vmware-vcops         = Main vROps service; restart if node appears stuck                             │
+│  Cluster Status       = VAMI Admin page showing all node roles and health states                      │
+│  Collection Interval  = Default 5 min; gap > 10 min indicates collection failure                      │
+│  Re-test Connection   = vROps built-in adapter test; run after credential update                      │
+│  Time Range           = Dashboard widget setting; widen if no data appears                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

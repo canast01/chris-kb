@@ -61,15 +61,51 @@ for r in d.get('results', []):
 "
 # Expected: action=DROP
 ```
-
-If the default rule is ALLOW, the DFW is effectively disabled. Change it immediately:
-
-```bash
-curl -sk -u 'admin:password' \
-  -X PATCH \
-  -H "Content-Type: application/json" \
-  -d '{"action": "DROP"}' \
-  "https://<nsx-manager>/policy/api/v1/infra/domains/default/security-policies/default-layer3-section/rules/default-rule"
+┌─────────────────────────────────────────── NSX — Hardening ───────────────────────────────────────────┐
+│                                                                                                       │
+│  CIS NSX benchmark, API security, DFW default-deny, and lockdown posture.                             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             CIS / STIG Controls              │  │                 API Security                │   │
+│   │         Disable root SSH on manager          │  │                TLS 1.2+ only                │   │
+│   │          Change default admin pass           │  │             Disable TLS 1.0/1.1             │   │
+│   │         NTP configured on all nodes          │  │          Replace self-signed certs          │   │
+│   │          Syslog to SIEM/syslog host          │  │             Rate limit API calls            │   │
+│   │            FIPS mode if required             │  │         Named service accounts only         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Baseline hardening → DFW default-deny policy → regular audit reviews.                                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              DFW Default Policy              │  │               Hardening Review              │   │
+│   │          Default layer: deny + log           │  │           Review DFW rules monthly          │   │
+│   │        Emergency allow above default         │  │            Alert on new allow-all           │   │
+│   │           Micro-seg by app / zone            │  │           Check cert expiry < 60d           │   │
+│   │           Log all blocked traffic            │  │           Verify FIPS if mandated           │   │
+│   │        Gateway firewall as perimeter         │  │            Audit role assignments           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  NSX Manager VMs, Edge VMs, ESXi hosts, syslog/SIEM, management network                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CIS         = Center for Internet Security; NSX hardening benchmark                                  │
+│  STIG        = Security Technical Implementation Guide; DOD hardening                                 │
+│  FIPS 140-2  = US crypto standard; NSX FIPS mode enforces compliant algos                             │
+│  DFW default = last DFW rule; set to deny+log to block unmatched traffic                              │
+│  Micro-seg   = per-VM/app firewall rules; east-west security enforcement                              │
+│  Gateway FW  = NSX Edge firewall; north-south perimeter rule enforcement                              │
+│  TLS 1.2     = minimum TLS for NSX API; 1.3 preferred                                                 │
+│  SIEM        = Security Info & Event Mgmt; receives NSX syslog                                        │
+│  Rate limit  = API throttle; prevents brute force or runaway scripts                                  │
+│  Root SSH    = disabled on NSX Manager appliance in hardened config                                   │
+│  Named accts = automation uses dedicated named service accounts                                       │
+│  NTP         = time sync; required for cert validity and log correlation                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Emergency Category Rules

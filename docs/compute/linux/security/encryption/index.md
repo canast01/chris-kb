@@ -28,45 +28,43 @@ mount /dev/mapper/secure-data /mnt/secure-data
 ```
 ┌───────────────────────────────────────── Linux — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │
-│  Linux encryption: LUKS disk encryption, TLS for services, GPG for files, and key management.         │
+│  Encryption at rest (LUKS) and in transit (TLS/SSH) for Linux systems.                                │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Disk Encryption (LUKS)            │  │                  TLS / PKI                  │   │
-│   │        cryptsetup luksFormat /dev/sdX        │  │          openssl req: generate CSR          │   │
-│   │        cryptsetup open: mapped device        │  │        certbot: Let Encrypt TLS cert        │   │
-│   │        /etc/crypttab: unlock at boot         │  │        update-ca-certificates: trust        │   │
-│   │       Tang/Clevis: network auto-unlock       │  │         stunnel: TLS wrapper for TCP        │   │
+│   │            Disk Encryption — LUKS            │  │            Transport — TLS / SSH            │   │
+│   │            cryptsetup luksFormat             │  │              OpenSSL: cert mgmt             │   │
+│   │            dm-crypt: kernel layer            │  │               TLS 1.2/1.3 only              │   │
+│   │           /etc/crypttab: auto open           │  │            SSH: ed25519 preferred           │   │
+│   │            TPM2: key seal/unseal             │  │             stunnel: TLS wrapper            │   │
+│   │            Clevis + Tang: network            │  │            WireGuard: modern VPN            │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    LUKS for data at rest; TLS for data in transit; GPG for file-level                                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             GPG File Encryption              │  │           SSH Transport Encryption          │   │
-│   │        gpg --gen-key: create keypair         │  │         AES-256-GCM: session cipher         │   │
-│   │           gpg -e -r recipient file           │  │         ed25519: host key algorithm         │   │
-│   │           gpg -d file.gpg: decrypt           │  │         known_hosts: host key trust         │   │
-│   │           gpg-agent: key in memory           │  │          StrictHostKeyChecking yes          │   │
+│   │           File / Secret Encryption           │  │                Key Management               │   │
+│   │             GPG: file encryption             │  │            PKCS#11: HSM interface           │   │
+│   │             age: modern enc tool             │  │            TPM2-tools: seal keys            │   │
+│   │            ansible-vault encrypt             │  │            HashiCorp Vault agent            │   │
+│   │            /dev/urandom: entropy             │  │             Clevis: auto-unseal             │   │
+│   │             shred: secure delete             │  │            Tang: network key srv            │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical or virtual server · TPM · HSM (optional) · CA infrastructure                                │
+│  x86-64 servers · TPM 2.0 chip · hardware HSM · encrypted SSDs · NIC                                  │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  LUKS         = Linux Unified Key Setup; standard for block device encryption                         │
-│  cryptsetup   = tool to create/manage LUKS containers and dm-crypt devices                            │
-│  crypttab     = /etc/crypttab; lists encrypted volumes to unlock at boot                              │
-│  Tang/Clevis  = network-bound disk encryption; auto-unlock via NBDE server                            │
-│  GPG          = GNU Privacy Guard; PGP-compatible asymmetric encryption                               │
-│  CSR          = Certificate Signing Request; submitted to CA for signed cert                          │
-│  certbot      = Let Encrypt ACME client; automates cert issuance/renewal                              │
-│  update-ca-certificates= adds CA cert to system trust store (Debian/Ubuntu)                           │
-│  stunnel      = wraps plain TCP in TLS; useful for legacy app encryption                              │
-│  known_hosts  = ~/.ssh/known_hosts; stores trusted server public key hashes                           │
-│  StrictHostKeyChecking= reject connection if host key not in known_hosts                              │
-│  dm-crypt     = kernel device mapper; LUKS sits on top as a key manager                               │
+│  LUKS        = Linux Unified Key Setup; block device encryption standard                              │
+│  dm-crypt    = Kernel device-mapper target providing transparent encryption                           │
+│  cryptsetup  = CLI for managing LUKS containers and dm-crypt mappings                                 │
+│  TPM         = Trusted Platform Module; stores keys in hardware, survives reboot                      │
+│  Clevis      = Automated LUKS unlock framework supporting TPM and Tang backends                       │
+│  Tang        = Network-bound disk encryption server; key released only on LAN                         │
+│  GPG         = GNU Privacy Guard; OpenPGP for file/email encryption and signing                       │
+│  age         = Modern file encryption tool; simpler than GPG, X25519/SSH keys                         │
+│  TLS         = Transport Layer Security; cryptographic protocol for secure channels                   │
+│  WireGuard   = Modern VPN protocol; kernel module, fast, simple configuration                         │
+│  HSM         = Hardware Security Module; tamper-resistant key storage device                          │
+│  PKCS#11     = Standard API for interacting with HSMs and smart cards                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

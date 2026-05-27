@@ -5,52 +5,56 @@ Fabric OS runs on Brocade/Broadcom FC switches in dual-fabric core-edge topology
 </div>
 
 ```
-┌────────────────────────────── FabricOS Architecture — Component Layers ───────────────────────────────┐
+┌────────────────────────────────── Brocade Fabric OS — Architecture ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   FabricOS runs on Brocade ASICs (Condor, Goldeneye, Orca families) + embedded Linux kernel   │   │
-│   │      Architecture: hardware forwarding plane + software control plane + management plane      │   │
-│   │       Control plane: fabric services (FSPF, NS, Zone Server) run as daemons on main CPU       │   │
-│   │           Data plane: FC frames forwarded in hardware by switching ASIC at line rate          │   │
+│   │        FOS architecture: layered OS on embedded Linux with FC ASIC hardware abstraction       │   │
+│   │       Data plane: FC frames switched in ASIC at line rate; no CPU involvement per frame       │   │
+│   │         Control plane: FSPF routing, FCNS updates, zone DB distribution across fabric         │   │
+│   │            Management plane: CLI daemon, REST server, SNMP agent, syslog forwarder            │   │
+│   │            HA on directors: CP blade active/standby; failover <10 s non-disruptive            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│    Hardware (ASIC) -> FOS kernel/drivers -> fabric services -> management interfaces                  │
 │                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Control Plane                 │  │                  Data Plane                 │   │
-│   │             FSPF routing daemon              │  │             ASIC frame switching            │   │
-│   │              Zone Server daemon              │  │            Hardware zoning lookup           │   │
-│   │              Name Server daemon              │  │             Port buffer credits             │   │
-│   │             MAPS monitor daemon              │  │            ISL trunk aggregation            │   │
-│   │                SSH / REST API                │  │              SFP DOM monitoring             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          HW / ASIC          │  │       Fabric Services       │  │          Management         │   │
+│   │       FC frame switch       │  │          FCNS/FSPF          │  │          CLI (SSH)          │   │
+│   │        SFP PHY layer        │  │         Zone DB dist        │  │           REST API          │   │
+│   │         Port buffers        │  │        Domain ID mgmt       │  │          SNMP agent         │   │
+│   │        CP blade (HA)        │  │        FCSM security        │  │          Syslog fwd         │   │
+│   │         RAS sensors         │  │        MAPS alerting        │  │         SANnav link         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    CP blade failover is non-disruptive; FC frame forwarding continues during switchover               │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Protocol     │     Function     │       CLI        │   │
-│   │     Control      │   FSPF daemon    │       SW_ILS      │  Fabric routing  │   topologyshow   │   │
-│   │     Control      │   Zone Server    │       SW_ILS      │   Zone enforce   │     cfgshow      │   │
-│   │       Mgmt       │     REST API     │       HTTPS       │    Automation    │   curl/Postman   │   │
-│   │       Data       │       ASIC       │         FC        │    Frame fwd     │     portshow     │   │
+│   │      Layer       │    Component     │      Function     │      Plane       │      Notes       │   │
+│   │        HW        │     FC ASIC      │  Frame switching  │       Data       │    Line-rate     │   │
+│   │      Kernel      │    FOS Linux     │     Driver/OS     │     Control      │     Embedded     │   │
+│   │     Services     │    FCNS/FSPF     │    Fabric ctrl    │     Control      │   Distributed    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: FC director chassis · blades · SFPs · inter-chassis ICL cables · power supplies          │
+│    Physical: FC ASIC chips · CP/line blades on X7 directors · SFP optics · RAS sensors                │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │
-│    Control plane   = Software layer: routing, zone enforcement, name resolution decisions             │
-│    Data plane      = Hardware layer: ASIC forwards FC frames at full line rate                        │
-│    ASIC            = Application-Specific IC; Condor4/Orca on modern Brocade directors                │
-│    Buffer credits  = Flow control units; each port has Rx credits; exhaustion = backpressure          │
-│    DOM             = Digital Optical Monitoring; SFP reports Tx/Rx power, temp, voltage               │
-│    FSPF daemon     = Software process computing shortest-path fabric routes                           │
-│    Zone Server     = Daemon storing zone DB; pushes active config to ASIC for enforcement             │
-│    ICL             = Inter-Chassis Link; high-density connection between director blades              │
-│    topologyshow    = CLI command displaying fabric topology and domain IDs                            │
-│    portshow        = CLI command showing per-port statistics and state                                │
-│    cfgshow         = CLI command listing all zone configurations in the database                      │
-│    SW_ILS          = Switch Internal Link Service; fabric-wide control frames                         │
+│    FC ASIC        = Custom silicon switching FC frames at line rate with no CPU overhead              │
+│    CP blade       = Control Processor blade on X7 directors; runs FOS management plane                │
+│    Data plane     = FC frame forwarding in hardware; unaffected by control plane events               │
+│    Control plane  = FSPF routing, FCNS updates, zone DB sync; CPU-managed services                    │
+│    FSPF           = Fabric Shortest Path First; computes optimal ISL paths                            │
+│    RAS sensors    = Reliability/Availability/Serviceability sensors for temp, fan, PSU                │
+│    HA failover    = CP blade switchover; non-disruptive to data-plane traffic                         │
+│    Buffer credits = Per-port FC flow control mechanism; prevents frame loss on congested links        │
+│    MAPS           = Monitoring and Alerting Policy Suite; threshold-based alerting engine             │
+│    SFP PHY        = Physical layer transceiver; digital diagnostics accessible via FOS CLI            │
+│    FOS Linux      = Embedded Linux kernel underpinning FabricOS user-space services                   │
+│    Zone DB dist   = Zone configuration replicated from principal switch to all fabric switches        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

@@ -5,35 +5,37 @@ Linux server infrastructure running RHEL and Ubuntu — systemd service manageme
 </div>
 
 ```
-┌────────────────────────────────────────── Linux — Overview ───────────────────────────────────────────┐
+┌────────────────────────────────────── Linux — Platform Overview ──────────────────────────────────────┐
 │                                                                                                       │
-│  Linux is the open-source OS kernel underpinning servers, containers, and cloud infrastructure.       │
+│  Linux is the primary OS for compute workloads: servers, containers, and automation.                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Core Subsystems       │  │      Key Distributions      │  │          Use Cases          │   │
-│   │   Kernel: process + memory  │  │   RHEL/CentOS: enterprise   │  │       Web/app servers       │   │
-│   │  Filesystem: VFS + ext4/xfs │  │   Ubuntu: cloud + desktop   │  │       Container hosts       │   │
-│   │  Network: TCP/IP + iptables │  │     Debian: stable base     │  │        HPC workloads        │   │
-│   │   Systemd: service + boot   │  │    SUSE: SAP + Kubernetes   │  │         Embedded/IoT        │   │
+│   │         Architecture        │  │          Operations         │  │           Security          │   │
+│   │      Kernel + userspace     │  │       Day-2 procedures      │  │        Access control       │   │
+│   │       Distro selection      │  │       Backup & restore      │  │        Authentication       │   │
+│   │      Integration model      │  │        Health checks        │  │          Encryption         │   │
+│   │       Design standards      │  │       Install/upgrade       │  │          Hardening          │   │
+│   │         How it works        │  │        Scripts & CLI        │  │      Audit & compliance     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical or virtual server · CPU · RAM · NIC · storage disks/LUNs                                    │
+│  x86-64 / ARM64 servers · NIC · SAN/NAS storage · network switches · power & cooling                  │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  Kernel       = core OS code managing hardware, memory, processes, drivers                            │
-│  VFS          = Virtual File System; abstraction layer over real filesystems                          │
-│  Systemd      = init system and service manager; PID 1 on most modern distros                         │
-│  RHEL         = Red Hat Enterprise Linux; subscription-based enterprise distro                        │
-│  CentOS       = RHEL-compatible free rebuild; CentOS Stream is upstream of RHEL                       │
-│  iptables     = netfilter firewall rules; nftables is modern replacement                              │
-│  ext4         = default Linux filesystem; journalled, supports large files                            │
-│  xfs          = high-performance journalled FS; default on RHEL 7+                                    │
-│  cgroups      = control groups; limit CPU/memory/IO per process group                                 │
-│  namespaces   = isolate PID/net/mount/user views; foundation of containers                            │
-│  SELinux      = mandatory access control; labels processes and files                                  │
-│  systemctl    = command to start/stop/enable/status systemd services                                  │
+│  kernel      = Core of the OS; manages CPU, memory, devices, and system calls                         │
+│  userspace   = Everything outside the kernel: daemons, shells, applications                           │
+│  distro      = Linux distribution: kernel + package manager + default tooling                         │
+│  RHEL        = Red Hat Enterprise Linux; subscription-based, enterprise-grade OS                      │
+│  Ubuntu      = Debian-based distro popular for cloud and development workloads                        │
+│  systemd     = Init system and service manager; PID 1 on modern Linux distros                         │
+│  cgroups     = Kernel feature to limit and isolate CPU/memory per process group                       │
+│  namespace   = Kernel isolation for PID, network, mount, UTS, IPC, user scopes                        │
+│  SELinux     = Mandatory access control framework built into the Linux kernel                         │
+│  PAM         = Pluggable Authentication Modules; flexible auth stack for Linux                        │
+│  LVM         = Logical Volume Manager; flexible disk/volume abstraction layer                         │
+│  LUKS        = Linux Unified Key Setup; standard for block-device encryption                          │
+│  rpm / dpkg  = Package managers for RHEL/Debian families respectively                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

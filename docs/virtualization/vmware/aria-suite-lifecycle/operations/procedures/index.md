@@ -22,43 +22,49 @@
 │  └──────────────────┘                                           │
 └─────────────────────────────────────────────────────────────────┘
 ```
-
-## Deploy a New Aria Product
-
-1. LCM → Lifecycle Operations → Environments → select or create environment
-2. Click **Add Product**
-3. Select product, version, and deployment size (Medium/Large)
-4. Provide vCenter target: cluster, datastore, network, IP addresses, FQDNs, and admin password (stored in LCM Locker)
-5. LCM runs pre-checks (DNS, NTP, vCenter connectivity) — all must pass before deployment begins
-6. Click **Deploy** — monitor progress via **Lifecycle Operations → Requests**
-7. Post-deployment: validate product UI is accessible and health shows green in LCM environment view
-
----
-
-## Trigger a Product Upgrade
-
-1. LCM → Lifecycle Operations → Environments → click the environment containing the product
-2. Locate the product card and click **Upgrade**
-3. LCM presents compatible target versions — select the target version
-4. Review pre-checks: fix any failures before proceeding (disk space, DNS, NTP, snapshot presence)
-5. Click **Start Upgrade** — LCM takes snapshots automatically, performs the upgrade, and validates post-state
-6. Monitor: **Lifecycle Operations → Requests** — the upgrade request shows stages and percentage complete
-
-If the upgrade fails mid-way, LCM provides a **Rollback** option that reverts all product VMs from the snapshots taken at step 5.
-
----
-
-## Import and Replace a Product Certificate via Locker
-
-Use this procedure when renewing a CA-signed certificate for any LCM-managed product.
-
-**Step 1 — Generate a CSR:**
-
-```bash
-# On the LCM appliance (SSH)
-# LCM can generate the CSR or you can supply your own
-# Via UI: LCM → Locker → Certificates → Generate CSR
-# Fill in: CN (product FQDN), SANs (all product node FQDNs + VIP), key size 4096
+┌────────────────────────────────────── Aria Suite LCM Procedures ──────────────────────────────────────┐
+│                                                                                                       │
+│  Certificate rotation, password rotation, and add product procedures for LCM.                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Certificate Rotation             │  │              Password Rotation              │   │
+│   │          1. Import new cert to LCM           │  │          1. Update account password         │   │
+│   │        2. Assign cert to environment         │  │          2. LCM: Locker > Password          │   │
+│   │         3. LCM: replace cert action          │  │         3. Update stored credential         │   │
+│   │           4. Validate all products           │  │            4. Test product health           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Cert rotation via LCM covers all nodes; password rotation via LCM Locker.                            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Add Product to Environment          │  │                Remove Product               │   │
+│   │         1. Depot: ensure PAK synced          │  │            1. LCM: Delete product           │   │
+│   │         2. Environment > Add Product         │  │           2. LCM removes from env           │   │
+│   │          3. Complete product wizard          │  │            3. Delete VM manually            │   │
+│   │         4. Validate health post-add          │  │           4. Clean DNS + firewall           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM; managed product VMs on vSphere; CA for cert signing; AD for accounts                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Cert Rotation       = LCM replaces TLS cert across all nodes of a product                            │
+│  LCM Locker          = Secure password store in LCM; holds all product creds                          │
+│  Password Rotation   = Update credential in LCM Locker after account pw change                        │
+│  Cert Import         = Upload CA-signed cert and key to LCM trust store                               │
+│  Cert Assignment     = Link imported cert to an environment or specific product                       │
+│  Replace Cert Action = LCM-orchestrated cert push to all product VMs                                  │
+│  Add Product         = Deploy new Aria product into existing LCM environment                          │
+│  Product Wizard      = LCM UI wizard collecting hostname, IP, size for new product                    │
+│  Remove Product      = LCM unregisters product; VM must be deleted separately                         │
+│  PAK Sync            = Required before adding product; ensures binary is available                    │
+│  Health Validation   = Post-procedure check that all products remain green                            │
+│  Credential Test     = LCM verifies stored account password still authenticates                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Step 2 — Submit CSR to CA and retrieve the signed certificate chain.**

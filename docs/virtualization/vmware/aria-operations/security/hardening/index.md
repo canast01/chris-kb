@@ -22,19 +22,49 @@ echo | openssl s_client -connect vrops-prod-01.example.local:443 2>/dev/null | \
 
 # Confirm it is self-signed (Issuer == Subject)
 ```
-
-Replace via: **Administration → Certificates → Replace Certificate** (or via LCM Locker for LCM-managed deployments).
-
----
-
-## LDAPS (Encrypted LDAP)
-
-Never configure Active Directory over plain LDAP (port 389) in production. Use LDAPS (port 636) with a valid domain CA certificate.
-
-Import the AD CA certificate before configuring the authentication source:
-
-```text
-Administration → Certificates → Import Certificate → paste the root CA PEM
+┌───────────────────────────────── Aria Operations Security Hardening ──────────────────────────────────┐
+│                                                                                                       │
+│  Network restrictions, MFA via vIDM, audit logging, and STIG hardening for vROps.                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Network Hardening               │  │              Account Hardening              │   │
+│   │         Firewall: allow TCP 443 only         │  │         Use vIDM/LDAP for all users         │   │
+│   │           SSH: jump host CIDR only           │  │        admin@local: break-glass only        │   │
+│   │         Port 5480: mgmt network only         │  │           Rotate local pw 90 days           │   │
+│   │           Disable unused services            │  │            MFA enforced via vIDM            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Network and account hardening are foundational; audit and STIG are compliance layers.                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Audit Logging                 │  │                STIG Hardening               │   │
+│   │            Enable vROps audit log            │  │         Apply VMware STIG for vROps         │   │
+│   │          Forward to SIEM via syslog          │  │         Disable unneeded OS services        │   │
+│   │         Log: login + config changes          │  │          OS: CentOS hardening guide         │   │
+│   │             Retain logs 90+ days             │  │          Validate with STIG viewer          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vROps VMs on vSphere; NSX/physical firewall; SIEM for log collection; vIDM for MFA                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Firewall Allow-list  = Restrict vROps to TCP 443, 5480; block all other inbound                      │
+│  MFA                  = Multi-Factor Auth; enforced at vIDM layer for all logins                      │
+│  Audit Log            = vROps internal log of user login and configuration changes                    │
+│  SIEM Syslog          = Forward audit events to Splunk/Sentinel for correlation                       │
+│  STIG                 = Security Technical Implementation Guide from DISA/VMware                      │
+│  STIG Viewer          = Tool to assess and document STIG compliance findings                          │
+│  Break-glass Account  = admin@local kept secure in vault; used only in emergency                      │
+│  Password Rotation    = 90-day cycle for local and service accounts                                   │
+│  SSH Restriction      = Allow SSH only from jump host CIDR; deny all other sources                    │
+│  Port 5480            = VAMI; restrict to management network CIDR only                                │
+│  Log Retention        = Minimum 90 days; match organisational compliance policy                       │
+│  Unused Services      = Disable OS services not needed; reduce attack surface                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Then configure the AD source with port 636 and SSL enabled.

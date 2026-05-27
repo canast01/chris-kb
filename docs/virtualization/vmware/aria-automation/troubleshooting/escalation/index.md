@@ -43,23 +43,49 @@ ls -lh /tmp/vracli-support-bundle*.tar.gz
 # Copy to a local machine for upload
 scp root@vra-prod-01.example.local:/tmp/vracli-support-bundle*.tar.gz /tmp/
 ```
-
-The bundle includes: service logs from all Kubernetes namespaces, cluster configuration, pod descriptions, database diagnostics (no data, structure only), networking information, and Kubernetes events.
-
-**Targeted log collection** (when the full bundle cannot be generated):
-
-```bash
-# Collect logs from the prelude namespace (core Aria Automation services)
-kubectl logs -n prelude -l app=assembler --tail=500 > /tmp/assembler.log
-kubectl logs -n prelude -l app=iaas-gateway --tail=500 > /tmp/iaas-gateway.log
-kubectl logs -n prelude -l app=catalog --tail=500 > /tmp/catalog.log
-kubectl logs -n prelude -l app=postgres --tail=200 > /tmp/postgres.log
-
-# Collect Kubernetes events (shows pod restarts and resource issues)
-kubectl get events --all-namespaces --sort-by='.metadata.creationTimestamp' > /tmp/k8s-events.log
-
-# Collect pod status
-kubectl get pods --all-namespaces -o wide > /tmp/pod-status.log
+┌──────────────────────────────────── Aria Automation — Escalation ─────────────────────────────────────┐
+│                                                                                                       │
+│  Escalate vRA issues when self-service diagnostics are exhausted and impact is unresolved.            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │          Prepare Before Escalating          │   │
+│   │          vRA service down > 30 min           │  │       Support bundle (LCM logscraper)       │   │
+│   │      Data loss or corruption suspected       │  │         vRA version and patch level         │   │
+│   │         Upgrade failure mid-process          │  │        Timeline of events and changes       │   │
+│   │       Security breach or data exposure       │  │         Deployment events + pod logs        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Open VMware SR with P1 priority for service-down; provide bundle and timeline.                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             VMware Support Path              │  │             Internal Escalation             │   │
+│   │         SR: my.vmware.com or portal          │  │      Platform team: notify stakeholders     │   │
+│   │       P1: live call with GSS engineer        │  │       Change freeze if upgrade-related      │   │
+│   │     TAM: escalate for critical accounts      │  │       DR: consider vRA failover if HA       │   │
+│   │        KB: search kb.vmware.com first        │  │        Post-incident: RCA within 48h        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRA appliance cluster · LCM · Postgres · vIDM · vCenter · support upload endpoint                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SR                = Support Request; formal case opened with VMware GSS                              │
+│  P1 priority       = Critical severity; service down with no workaround; live engineer call           │
+│  GSS               = Global Support Services; VMware technical support team                           │
+│  TAM               = Technical Account Manager; premium support contact for critical accounts         │
+│  LCM logscraper    = Diagnostic archive tool; collect before calling support                          │
+│  Support bundle    = Generated from VAMI or LCM; contains pod logs, DB state, configs                 │
+│  Change freeze     = Halt all non-critical changes during active incident investigation               │
+│  RCA               = Root Cause Analysis; post-incident document describing failure and fix           │
+│  vRA HA            = High Availability mode; second vRA node can serve if primary fails               │
+│  kb.vmware.com     = VMware Knowledge Base; search before opening SR to find known fixes              │
+│  Timeline          = Chronological record of events, changes, and symptoms before the issue           │
+│  Stakeholder notif = Communicate impact and ETA to application owners and business units              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

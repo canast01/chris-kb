@@ -32,66 +32,51 @@ ESXi Host Hardening Layers
 └─────────────────────────────────────────────────────────┘
   Reference: VMware vSphere SCG → CIS → DISA STIG
 ```
-
-## Hardening Baseline
-
-Follow the **VMware vSphere Security Configuration Guide (SCG)** for the specific ESXi version in use. Download from the Broadcom Knowledge Base (search "vSphere Security Configuration Guide"). The SCG maps to CIS Benchmarks and DISA STIG requirements.
-
----
-
-## Hardening Checklist
-
-Apply the following controls to every ESXi host before placing it in production. Use host profiles to enforce these settings consistently across the cluster.
-
-| Control | Command / Action | Notes |
-|---|---|---|
-| Enable Lockdown Mode (Normal) | vCenter → Host → Configure → Security Profile → Lockdown Mode | Restricts direct host access; all management via vCenter |
-| Disable SSH when not in use | `vim-cmd hostsvc/disable_ssh` | Re-enable only for break-glass maintenance |
-| Disable ESXi Shell | `vim-cmd hostsvc/disable_esx_shell` | Re-enable only for break-glass |
-| Set shell timeout | `esxcli system settings advanced set -o /UserVars/ESXiShellTimeOut -i 600` | Auto-disables shell after 10 min |
-| Configure NTP | `esxcli system ntp set --server=ntp1.example.com --enabled=true` | Clock skew causes cert and auth failures |
-| Restrict SSH access by IP | `esxcli network firewall ruleset set --ruleset-id sshServer --allowed-all false` | Limit to admin subnet only |
-| Enable UEFI Secure Boot | Set in BIOS/UEFI firmware before ESXi install | Prevents unsigned bootloader |
-| Replace self-signed certificate | Replace with VMCA or CA-signed cert via vCenter | Required for production |
-| Set login banner | `esxcli system settings advanced set -o /Config/Etc/issue -s "..."` | Legal warning banner |
-| Disable unused services | Review running services; disable FTP, telnet, CIM if unused | Minimise attack surface |
-| Enable syslog forwarding | `esxcli system syslog config set --loghost=tcp://syslog.example.local:514` | All logs off-host before reboot |
-| Set password policy | Advanced settings → `Security.AccountLockFailures = 5` | Prevent brute force |
-| Disable BPDU filter | Leave at default (enabled on vDS) | Prevent spanning tree manipulation |
-
----
-
-## Lockdown Mode
-
-Lockdown mode prevents direct root access to ESXi hosts — all management must go through vCenter.
-
-**Normal Lockdown:**
-- DCUI accessible for local console access
-- vCenter API access permitted
-- SSH disabled; can be temporarily re-enabled via DCUI for break-glass access
-
-**Strict Lockdown:**
-- DCUI disabled entirely
-- All access must go through vCenter
-- Use only in environments where vCenter is highly available
-
-### Configure Lockdown Mode
-
-```bash
-# Via PowerCLI — enable Normal Lockdown on all hosts in a cluster
-Get-Cluster "CL-PROD" | Get-VMHost | ForEach-Object {
-    $_.ExtensionData.EnterLockdownMode()
-    Write-Host "Lockdown enabled: $($_.Name)"
-}
-
-# Check lockdown status
-Get-VMHost | Select-Object Name,
-    @{N="LockdownMode"; E={$_.ExtensionData.Config.LockdownMode}}
-
-# Disable lockdown (for maintenance — re-enable after)
-Get-VMHost "esxi-01.example.local" | ForEach-Object {
-    $_.ExtensionData.ExitLockdownMode()
-}
+┌────────────────────────────────────────── ESXi — Hardening ───────────────────────────────────────────┐
+│                                                                                                       │
+│  CIS VMware benchmark, lockdown mode, host firewall, and hardening profile.                           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            CIS / STIG Benchmarks             │  │                Lockdown Mode                │   │
+│   │          CIS VMware ESXi benchmark           │  │           Normal: DCUI restricted           │   │
+│   │            DISA STIG for vSphere             │  │            Strict: no DCUI at all           │   │
+│   │          Disable SSH in production           │  │            Exception users config           │   │
+│   │             Disable MOB browser              │  │            All access via vCenter           │   │
+│   │           vSphere Assessment Tool            │  │           Enter/exit lockdown API           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  CIS/STIG baseline → lockdown mode → firewall rules → Host Profile enforce.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Host Firewall                 │  │              Hardening Controls             │   │
+│   │          Default: deny all inbound           │  │            NTP configured (ntpd)            │   │
+│   │          Allow: vCenter/vMotion IPs          │  │            Syslog to remote host            │   │
+│   │         esxcli network firewall rule         │  │              Banner / MOTD set              │   │
+│   │            Limit SSH to mgmt VLAN            │  │              Disable SNMP v1/v2             │   │
+│   │          Close unnecessary services          │  │            Host Profile enforced            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, management VLAN, dedicated OOB network, syslog collector                                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CIS         = Center for Internet Security; produces hardening benchmarks                            │
+│  STIG        = Security Technical Implementation Guide; DOD hardening                                 │
+│  DISA        = Defense Information Systems Agency; publishes STIGs                                    │
+│  MOB         = Managed Object Browser; web debug UI; disable in prod                                  │
+│  Lockdown    = ESXi mode blocking direct host admin; enforces vCenter                                 │
+│  Exception users = accounts exempt from lockdown for break-glass access                               │
+│  MOTD        = Message of the Day; banner displayed at ESXi login                                     │
+│  ntpd        = NTP daemon on ESXi; keeps host clock in sync                                           │
+│  Host Profile= vCenter desired-state enforcement; applied after reconfig                              │
+│  VAT         = vSphere Assessment Tool; checks ESXi against benchmark                                 │
+│  Firewall rule= ESXi kernel-level packet filter; allow/deny per service                               │
+│  SNMP v3     = secure SNMP version with auth+enc; v1/v2 must be disabled                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Exception Users List:**

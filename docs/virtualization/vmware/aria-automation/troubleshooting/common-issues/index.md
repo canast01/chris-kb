@@ -14,38 +14,49 @@ curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
 python3 -c "import yaml,sys; yaml.safe_load(open('blueprint.yaml'))" \
   && echo "YAML OK" || echo "YAML syntax error"
 ```
-
-| Error | Cause | Fix |
-|---|---|---|
-| `Resource type not found` | Typo in resource type or cloud account not linked to project | Verify resource type and cloud account → cloud zone → project association |
-| `Required property missing` | Mandatory field omitted in the template | Add the required property from the schema reference |
-| `Circular dependency` | Resource A depends on B which depends on A | Remove circular `${resource...}` binding |
-| `Flavor not found` | Flavor mapping missing for the target cloud zone | Add flavor mapping: **Infrastructure → Configure → Flavor Mappings** |
-| `Image not found` | Image mapping missing for cloud zone | Add image mapping: **Infrastructure → Configure → Image Mappings** |
-| `Network profile not found` | No network profile matched to the cloud zone | Create a network profile and associate it with the cloud zone |
-| `Cloud zone quota exceeded` | Project CPU/memory/VM limit reached | Increase project quota or delete unused deployments |
-
----
-
-## Cloud Account Connectivity Failure
-
-Symptoms: cloud account shows a red/warning indicator; new deployments fail at the "Provisioning" stage.
-
-```bash
-# Test vCenter reachability from Aria Automation appliance
-ssh root@vra-prod-01.example.local
-curl -sk -o /dev/null -w "%{http_code}" \
-  https://vcenter-prod.example.local/rest/com/vmware/cis/session
-# 401 = reachable but auth needed (expected)
-# 000 = unreachable (DNS, firewall, or vCenter down)
-
-# Check for expired service account password
-kubectl logs -n prelude -l app=iaas-gateway --tail=200 | \
-  grep -i "invalid credentials\|401\|authentication"
-
-# Test NSX connectivity
-curl -sk -o /dev/null -w "%{http_code}" \
-  https://nsx-mgr-01.example.local/api/v1/transport-nodes
+┌─────────────────────────────────── Aria Automation — Common Issues ───────────────────────────────────┐
+│                                                                                                       │
+│  Common vRA issues: failed requests, data collection errors, SSO failures, Orchestrator faults.       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Provisioning Failures             │  │             Integration Failures            │   │
+│   │       Network: NSX segment not created       │  │       vIDM SSO: cert mismatch/expired       │   │
+│   │      Storage: no datastore match policy      │  │       Cloud acct: data collect failed       │   │
+│   │      Quota exceeded: project limit hit       │  │      Orchestrator: endpoint unreachable     │   │
+│   │      Template invalid: YAML syntax err       │  │       ABX timeout: action >5 min fails      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Check deployment events tab and pod logs for root cause before escalating.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Diagnostic Steps               │  │                 Quick Fixes                 │   │
+│   │     Deployment events tab: error detail      │  │      YAML error: vRA template validator     │   │
+│   │      kubectl logs <pod>: service error       │  │       SSO: re-import vIDM cert in VAMI      │   │
+│   │      Cloud acct: check data collect log      │  │     Quota: increase or reassign project     │   │
+│   │      vracli status: find failed service      │  │       ABX: increase timeout in action       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRA appliance · kubectl (k3s) · Postgres · vIDM · NSX manager · vCenter                              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Deployment events = vRA timeline of provisioning steps; shows which step and why it failed           │
+│  Data collection   = vRA polling cloud endpoints; failure means stale or missing resource list        │
+│  NSX segment fail  = vRA cannot create network; check NSX account connection and permissions          │
+│  Storage policy    = Placement rule matching VM to datastore; fails if no datastore matches           │
+│  Quota exceeded    = Project hit CPU/mem/count limit; admin must raise quota or delete unused         │
+│  YAML validation   = vRA cloud template syntax check; run in template editor before publish           │
+│  ABX timeout       = Default 5-minute action limit; increase for long-running tasks                   │
+│  vIDM cert mismatch= TLS cert on vIDM does not match SAN expected by vRA; update VAMI                 │
+│  Orch endpoint     = Aria Orchestrator endpoint registered in vRA; must be reachable on 443           │
+│  Pod log           = kubectl logs <pod-name> -n prelude; per-microservice diagnostic output           │
+│  vracli status     = Summary health; find which service is failing before diving into pods            │
+│  Cloud acct log    = vRA data collection history; shows timestamps and errors per account             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Resolution:

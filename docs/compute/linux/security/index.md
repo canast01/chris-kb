@@ -2,35 +2,36 @@
 
 
 ```
-┌────────────────────────────────────────── Linux — Security ───────────────────────────────────────────┐
+┌────────────────────────────────────── Linux — Security Overview ──────────────────────────────────────┐
 │                                                                                                       │
-│  Linux security layers: access control, authentication, encryption, and hardening.                    │
+│  Linux security spans access control, authentication, encryption, and system hardening.               │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │        Access Control       │  │        Authentication       │  │          Hardening          │   │
-│   │       DAC: chmod/chown      │  │      SSH key-based auth     │  │    Patch: yum/apt update    │   │
-│   │    MAC: SELinux/AppArmor    │  │     PAM: pluggable auth     │  │    Firewall: iptables/nft   │   │
-│   │  sudo: privilege escalation │  │      SSSD: AD/LDAP join     │  │   CIS benchmark: baseline   │   │
-│   │    ACLs: getfacl/setfacl    │  │      MFA: TOTP via PAM      │  │   auditd: syscall logging   │   │
+│   │       DAC: chmod/chown      │  │          PAM stack          │  │        CIS Benchmarks       │   │
+│   │         MAC: SELinux        │  │         SSH key auth        │  │       sysctl hardening      │   │
+│   │        RBAC via sudo        │  │          MFA / OTP          │  │       Minimal packages      │   │
+│   │      File capabilities      │  │       LDAP / Kerberos       │  │        Kernel params        │   │
+│   │        ACLs (setfacl)       │  │        Audit logging        │  │        auditd / AIDE        │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical or virtual server · TPM chip · UEFI Secure Boot · HSM (optional)                            │
+│  x86-64 servers · TPM chip · hardware HSM · NIC · locked server room                                  │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  DAC          = Discretionary Access Control; owner sets permissions (chmod/chown)                    │
-│  MAC          = Mandatory Access Control; kernel enforces labels (SELinux/AppArmor)                   │
-│  SELinux      = Security-Enhanced Linux; type enforcement, context labels                             │
-│  AppArmor     = path-based MAC; simpler than SELinux; default on Ubuntu/Debian                        │
-│  PAM          = Pluggable Authentication Modules; auth pipeline for login/sudo                        │
-│  SSSD         = System Security Services Daemon; integrates with AD/LDAP                              │
-│  sudo         = run command as another user (usually root); logged in /var/log/secure                 │
-│  auditd       = kernel audit subsystem; logs file access, syscalls, user actions                      │
-│  ACL          = Access Control List; per-user/group permissions beyond owner/group                    │
-│  CIS          = Center for Internet Security; publishes Linux hardening benchmarks                    │
-│  Secure Boot  = UEFI feature verifying bootloader signature before execution                          │
-│  TPM          = Trusted Platform Module; hardware for key storage and measured boot                   │
+│  DAC         = Discretionary Access Control; owner sets permissions on resources                      │
+│  MAC         = Mandatory Access Control; policy enforced by OS, overrides DAC                         │
+│  SELinux     = Security-Enhanced Linux; label-based MAC built into the kernel                         │
+│  PAM         = Pluggable Authentication Modules; auth pipeline for Linux services                     │
+│  capability  = Fine-grained privilege subdivision; alternative to full root access                    │
+│  ACL         = Access Control List; per-user/group permissions beyond rwx triplet                     │
+│  sudo        = Delegated privilege escalation controlled by /etc/sudoers policy                       │
+│  TPM         = Trusted Platform Module; hardware root of trust for key storage                        │
+│  auditd      = Linux audit daemon; records system calls and security events                           │
+│  AIDE        = Advanced Intrusion Detection Environment; file integrity monitor                       │
+│  CIS         = Center for Internet Security; publishes OS hardening benchmarks                        │
+│  sysctl      = Runtime kernel parameter tuning; /etc/sysctl.conf persists settings                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

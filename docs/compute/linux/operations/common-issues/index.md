@@ -30,47 +30,45 @@ flowchart TD
     hardware -- No --> changed
     changed --> resources --> services --> resolve
 ```
-┌──────────────────────────────────────── Linux — Common Issues ────────────────────────────────────────┐
+┌────────────────────────────────── Linux — Common Operational Issues ──────────────────────────────────┐
 │                                                                                                       │
-│  Most frequent Linux operational issues: disk full, high load, OOM kills, and network errors.         │
+│  Recurring Linux issues and their triage steps for quick resolution.                                  │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Disk and Filesystem              │  │                 Performance                 │   │
-│   │        Disk full → df -h, find large         │  │           High load → top, iostat           │   │
-│   │           Inode exhausted → df -i            │  │          High mem → free -h, ps aux         │   │
-│   │          Mount fails → fstab syntax          │  │         OOM kill → /var/log/messages        │   │
-│   │        FS corrupt → fsck (unmounted)         │  │            Swap usage → swapon -s           │   │
+│   │              Performance Issues              │  │                Storage Issues               │   │
+│   │              High CPU: top/htop              │  │            Disk full: df -h / du            │   │
+│   │             OOM: journalctl grep             │  │             Inode exhaust: df -i            │   │
+│   │            High LA: check iowait             │  │              Mount fail: dmesg              │   │
+│   │              Memory leak: pmap               │  │               FS errors: fsck               │   │
+│   │             Swap thrash: vmstat              │  │             LVM resize: lvextend            │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Disk and inode issues are separate; high load can be CPU or I/O wait                               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                   Network                    │  │               Service and Boot              │   │
-│   │          No route → ip route check           │  │       Service fail → systemctl status       │   │
-│   │           DNS fails → resolv.conf            │  │         Boot hang → systemd-analyze         │   │
-│   │         Port blocked → ss, iptables          │  │      Unit not found → systemctl enable      │   │
-│   │          SSH refused → sshd status           │  │         Kernel panic → dmesg | tail         │   │
+│   │                Network Issues                │  │                Service Issues               │   │
+│   │              No route: ip route              │  │             Service fail: status            │   │
+│   │           DNS fail: dig / nslookup           │  │           Port conflict: ss -tlnp           │   │
+│   │            MTU mismatch: ping -M             │  │             Dep missing: rpm -q             │   │
+│   │            FW block: iptables -L             │  │             Config error: syslog            │   │
+│   │            SSH timeout: tcp dumps            │  │           SELinux deny: audit2why           │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical or virtual server · CPU · RAM · NIC · storage disks                                         │
+│  x86-64 servers · NIC · storage arrays · network switches · out-of-band IPMI                          │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  Inode        = metadata entry for a file; exhausted when too many small files                        │
-│  OOM kill     = Out of Memory killer terminates process to free RAM                                   │
-│  I/O wait     = CPU idle waiting for disk; high iowait = storage bottleneck                           │
-│  fsck         = filesystem check; must run on unmounted filesystem                                    │
-│  fstab        = /etc/fstab; lists filesystems to mount at boot                                        │
-│  resolv.conf  = /etc/resolv.conf; nameserver config for DNS resolution                                │
-│  swapon -s    = list swap devices and usage                                                           │
-│  systemd-analyze= shows boot time per unit; blame shows slowest units                                 │
-│  dmesg        = kernel ring buffer; shows hardware and boot messages                                  │
-│  ss           = socket statistics; replacement for netstat                                            │
-│  iostat       = I/O statistics per disk; part of sysstat package                                      │
-│  Kernel panic = fatal error; system halts; check dmesg before reboot                                  │
+│  OOM killer  = Kernel mechanism that kills processes when RAM is exhausted                            │
+│  load avg    = 1/5/15 min averages of runnable + uninterruptible processes                            │
+│  iowait      = CPU time spent waiting for I/O; high value indicates disk bottleneck                   │
+│  inode       = Fixed-count metadata structures; can exhaust independently of disk space               │
+│  fsck        = Filesystem consistency check and repair tool; run on unmounted FS                      │
+│  vmstat      = Reports virtual memory stats: swap, io, cpu, processes                                 │
+│  pmap        = Displays memory map of a process; useful for leak investigation                        │
+│  audit2why   = Explains SELinux denials in human-readable form from audit.log                         │
+│  MTU         = Maximum Transmission Unit; packet size limit on a network interface                    │
+│  dmesg       = Kernel ring buffer log; first place to check hardware/driver errors                    │
+│  lvextend    = LVM command to grow a logical volume; paired with resize2fs/xfs_growfs                 │
+│  ss          = Socket statistics; replaces netstat; shows ports, states, processes                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

@@ -32,45 +32,43 @@ flowchart TD
 ```
 ┌──────────────────────────────── Linux — Troubleshooting Common Issues ────────────────────────────────┐
 │                                                                                                       │
-│  Common Linux issues: SSH failures, boot problems, OOM kills, and permission errors.                  │
+│  Quick-reference for the most frequently encountered Linux operational problems.                      │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  SSH Issues                  │  │                Boot Problems                │   │
-│   │        Connection refused: sshd down?        │  │         Hang: systemd-analyze blame         │   │
-│   │         Permission denied: check key         │  │         grub rescue: boot partition         │   │
-│   │        Host key changed: known_hosts         │  │          Emergency mode: root fs ro         │   │
-│   │         MaxSessions: too many logins         │  │          Kernel panic: dmesg serial         │   │
+│   │            Boot & Startup Issues             │  │              Performance Issues             │   │
+│   │            grub rescue: grub.cfg             │  │            CPU spike: top -o %CPU           │   │
+│   │          initramfs: dracut --force           │  │               RAM low: free -h              │   │
+│   │           fstab error: nofail opt            │  │             Disk wait: iostat -x            │   │
+│   │            SELinux relabel needed            │  │             Network slow: iperf3            │   │
+│   │             Kernel panic: dmesg              │  │             Zombie procs: pstree            │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    SSH issues: check daemon, then key, then host; boot: single-user or rescue                         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Permission Errors               │  │                 Memory / OOM                │   │
-│   │    Operation not permitted: capabilities     │  │          OOM kill: dmesg | grep oom         │   │
-│   │        Access denied: SELinux context        │  │        Adjust /proc/sys/vm/overcommit       │   │
-│   │        Cannot write: check owner/mode        │  │            Add swap: dd + mkswap            │   │
-│   │        sudo: not in sudoers: add user        │  │           Tune vm.swappiness value          │   │
+│   │             Auth & Access Issues             │  │               Disk & FS Issues              │   │
+│   │              SSH deny: auth.log              │  │            ENOSPC: df -h / df -i            │   │
+│   │            sudo fail: sudoers -l             │  │              FS ro: remount rw              │   │
+│   │            SSSD down: sssd status            │  │             fsck -y: auto repair            │   │
+│   │            Lock: faillock --reset            │  │             LVM snap for backup             │   │
+│   │           PAM deny: /var/log/auth            │  │             xfs_repair: XFS fix             │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical or virtual server · serial console (for boot) · SSH client                                  │
+│  x86-64 servers · BIOS/UEFI · RAID controller · NIC · IPMI for OOB console                            │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  Connection refused= port closed or sshd not running; check systemctl status sshd                     │
-│  known_hosts  = remove stale entry: ssh-keygen -R hostname                                            │
-│  Emergency mode= systemd fallback; root filesystem mounted read-only for repair                       │
-│  GRUB rescue  = minimal grub shell; set root/prefix then insmod + boot                                │
-│  SELinux      = context mismatch causes silent denial; check audit.log                                │
-│  OOM killer   = selects victim by oom_score; protect with oom_score_adj                               │
-│  overcommit   = 0=heuristic, 1=always, 2=never; 2 prevents OOM but limits malloc                      │
-│  swappiness   = 0-100; lower = prefer RAM; 60 default; 10 for database hosts                          │
-│  Capabilities = sudo not required; use CAP_NET_ADMIN etc. for specific ops                            │
-│  MaxSessions  = sshd_config; default 10 mux sessions per connection                                   │
-│  single-user  = boot target for recovery; append single to kernel cmdline                             │
-│  serial console= kernel console on COM1; needed when SSH/VGA unavailable                              │
+│  initramfs   = Temporary root FS loaded by kernel at boot before real root                            │
+│  dracut      = Tool to build initramfs images on RHEL/Fedora systems                                  │
+│  GRUB        = GRand Unified Bootloader; chainloads kernel at system start                            │
+│  nofail      = fstab option; system boots even if that mount point is unavailable                     │
+│  kernel panic= Unrecoverable kernel error; system halts/reboots automatically                         │
+│  ENOSPC      = Error No Space; filesystem has no free blocks or inodes                                │
+│  zombie proc = Process that has exited but parent has not yet waited on it                            │
+│  iostat      = Reports CPU and I/O stats; -x for extended disk utilisation                            │
+│  iperf3      = Network throughput test tool; client/server model                                      │
+│  faillock    = PAM tool to show and reset account lockout records                                     │
+│  xfs_repair  = Offline XFS filesystem repair utility                                                  │
+│  fsck        = Filesystem check and repair; must be run on unmounted filesystem                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

@@ -24,20 +24,49 @@
 │     └──────────┘ └──────────┘   └─────────────┘                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
-
-## Workspace ONE Access (VIDM)
-
-Workspace ONE Access is the SSO identity provider for all Aria products — it is registered with LCM during initial setup.
-
-1. During LCM setup: Lifecycle Operations → Identity Provider → Register VIDM
-2. Provide the VIDM FQDN and admin credentials
-3. All subsequent product deployments inherit VIDM as their SSO source
-
-Verify VIDM integration health:
-```bash
-# On LCM appliance (SSH)
-curl -k https://vidm.example.local/SAAS/API/1.0/REST/system/health
-# Expected: {"status": "UP"}
+┌───────────────────────────────────── Aria Suite LCM Integrations ─────────────────────────────────────┐
+│                                                                                                       │
+│  vIDM, vCenter, all Aria products, NFS/S3 content store integrations for LCM.                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Core Platform Integrations          │  │                Content Store                │   │
+│   │         vCenter: deploy product VMs          │  │            NFS: local PAK storage           │   │
+│   │          vIDM: SSO for all products          │  │            S3: cloud depot option           │   │
+│   │          DNS: FQDN resolution check          │  │           VMware online depot sync          │   │
+│   │          NTP: time sync validation           │  │         SFTP: custom content source         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  vCenter and vIDM are mandatory; content store provides PAK files for all products.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Aria Product Integrations           │  │            Certificate Authority            │   │
+│   │           vROps: deploy + upgrade            │  │            Import CA cert to LCM            │   │
+│   │            vRLI: deploy + upgrade            │  │            LCM pushes to products           │   │
+│   │            vRA: deploy + upgrade             │  │          Cert rotation orchestrated         │   │
+│   │            vRNI: deploy + upgrade            │  │            Expired cert alerting            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM on vSphere; vCenter cluster; NFS/S3 for content; CA for cert signing                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vCenter Integration = LCM uses vCenter API to deploy product VMs and check resources                 │
+│  vIDM Integration    = LCM registers all products with vIDM for unified SSO                           │
+│  NFS Content Store   = Local file share holding PAK/OVA files for offline install                     │
+│  S3 Depot            = Cloud object store as alternative content source for LCM                       │
+│  SFTP Content Source = Custom SFTP server as content source for PAK delivery                          │
+│  Online Depot        = VMware Customer Connect; LCM syncs PAK catalog from here                       │
+│  CA Import           = Trusted CA cert uploaded to LCM for cert validation                            │
+│  Cert Push           = LCM distributes assigned cert to all product nodes                             │
+│  Cert Expiry Alert   = LCM tracks cert validity dates and warns on approach                           │
+│  DNS Integration     = LCM validates FQDN resolution before deploying each product                    │
+│  NTP Integration     = LCM checks time sync on LCM and target product VMs                             │
+│  Product Version     = LCM tracks deployed version; drives upgrade PAK selection                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## vCenter Server

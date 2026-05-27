@@ -18,81 +18,49 @@ Collectors maintain a persistent TLS connection back to the Platform VM on TCP 4
 [Physical switches]  ──NetFlow UDP 2055──► [Collector VM]
 [Palo Alto firewall] ──Syslog/API──────►  [Collector VM]
 ```
-
-## Data Collection Flow
-
-### Phase 1: Topology Ingestion
-
-On first pairing and on a polling interval (default: 10 minutes for vCenter, 10 minutes for NSX-T), the Collector polls:
-
-- **vCenter API** — VM inventory, NIC-to-portgroup mapping, host/cluster/datacenter hierarchy, vDS portgroup configs
-- **NSX-T Manager API** — logical switches, segments, T0/T1 routers, router interfaces, DFW rules, security groups, NSX tags, NSX-T transport nodes
-- **Physical switch APIs** (where applicable) — interface descriptions, VLAN assignments, routing table snapshots
-
-### Phase 2: Flow Data Ingestion
-
-Flow data arrives continuously on the Collector's UDP/TCP listeners:
-
-| Protocol | Default Port | Sources |
-|---|---|---|
-| NetFlow v5/v9 | UDP 2055 | Cisco IOS/IOS-XE/NX-OS, Juniper |
-| IPFIX | UDP 2055 | Arista EOS, VMware vDS, NSX-T, Fortinet |
-| sFlow | UDP 6343 | Arista, Brocade (limited support) |
-
-The Collector correlates each flow record with its topology context: VM name, host, cluster, NSX segment, security group. Enriched records are batched and pushed to the Platform for indexing.
-
-### Phase 3: Analytics
-
-The Platform stores enriched flows in an internal time-series store (Cassandra). The analytics engine:
-1. Builds application dependency maps from observed flow patterns
-2. Scores security group recommendations using observed traffic
-3. Runs network assurance checks (MTU consistency, BGP session health, gateway reachability)
-4. Detects anomalies (new flows, policy violations, topology changes)
-
-## Data Plane vs Management Plane Visibility
-
-| Layer | What AON Sees | How |
-|---|---|---|
-| Management plane | NSX-T DFW rules, security groups, tags, segments, T0/T1 config | NSX-T API polling |
-| Management plane | VM inventory, portgroup membership, vDS config | vCenter API polling |
-| Data plane | Actual traffic flows between workloads (src IP, dst IP, port, protocol, bytes, packets) | NetFlow/IPFIX from vDS or physical |
-| Data plane | Micro-segmentation gap analysis (flows that cross DFW rules or would be blocked) | Correlation of flow data + DFW rule set |
-
-AON does **not** sit inline — it is 100% passive for data plane traffic. Flow data is sampled or exported by the fabric, not mirrored packet-by-packet (with default NetFlow sampling on physical switches, typically 1:1000 or 1:512).
-
-## Supported Data Sources
-
-| Data Source | Integration Type | Data Collected |
-|---|---|---|
-| VMware NSX-T 3.x / 4.x | REST API (read-only) | Segments, DFW rules, groups, tags, T0/T1, transport nodes |
-| VMware NSX-V 6.4 | REST API (read-only) | Logical switches, DFW, security groups, ESGs |
-| VMware vCenter 7.0 / 8.0 | REST API (read-only) | VM inventory, NICs, hosts, clusters, vDS portgroups |
-| VMware vDS (ESXi) | IPFIX | Flow records per vNIC, per host |
-| NSX-T (built-in IPFIX) | IPFIX | East-west flows within NSX overlay |
-| Cisco IOS-XE | NetFlow v9 export | Physical switch flows, interface stats |
-| Cisco NX-OS | NetFlow v9 export | Data center fabric flows |
-| Arista EOS | IPFIX export | Spine/leaf fabric flows |
-| Juniper Junos | NetFlow v5/v9 | Physical flows |
-| Palo Alto PAN-OS | Traffic log syslog / API | Firewall allow/deny logs |
-| Checkpoint (limited) | Syslog | Firewall logs |
-| AWS VPC | VPC Flow Logs (S3) | Cloud flow data |
-| Azure (limited) | NSG Flow Logs | Cloud flow data |
-| ServiceNow CMDB | REST API | CMDB asset correlation |
-
-## Micro-Segmentation Workflow
-
-AON's microsegmentation planning workflow follows four stages:
-
-### Stage 1: Discover Flows
-
-AON collects flow data from all configured sources for a recommended **30-day baseline period** before generating recommendations. The discovery period ensures seasonal and weekly traffic patterns are captured.
-
-In the UI: **Plan & Assess → Micro-Segmentation → Applications → Select Application → Flows tab**
-
-Alternatively, query flows directly:
-
-```text
-flows where destination port = 3306 and flow type = 'East-West'
+┌─────────────────────────────────────────── How vRNI Works ────────────────────────────────────────────┐
+│                                                                                                       │
+│  Flow collection from NSX/switches/cloud, analytics processing, and flow map rendering.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Flow Collection Layer             │  │             Inventory Collection            │   │
+│   │           NSX-T IPFIX to collector           │  │           vCenter API: VMs + hosts          │   │
+│   │           Physical switch NetFlow            │  │          NSX API: segments + rules          │   │
+│   │             Cloud VPC flow logs              │  │             DNS: name resolution            │   │
+│   │        Collector forwards to platform        │  │           CMDB enrichment optional          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Collected flows and inventory feed the analytics engine for correlation and search.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Analytics Engine               │  │                Flow Map & UI                │   │
+│   │          Correlates IPs to VM names          │  │        Flow Map: entity traffic view        │   │
+│   │         Detects micro-seg violations         │  │        Search: natural language query       │   │
+│   │          Anomaly detection on flows          │  │         Dashboards: predefined views        │   │
+│   │           Path tracing end-to-end            │  │           Export: CSV / API query           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRNI platform VM + collector VMs on vSphere; NSX-T and physical switches as sources                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Flow Record         = 5-tuple (src IP, dst IP, src port, dst port, proto) + byte/packet count        │
+│  IPFIX               = Standard flow export protocol; used by NSX-T and modern switches               │
+│  Collector           = Lightweight VM that receives IPFIX/NetFlow from data sources                   │
+│  Analytics Engine    = Platform component correlating flows with inventory for search                 │
+│  Flow Map            = Visual graph of traffic between application tiers and VMs                      │
+│  Path Tracing        = vRNI feature showing physical + logical path for a given flow                  │
+│  Micro-seg Violation = Flow allowed/denied differently than NSX DFW rule intent                       │
+│  Natural Language Search= vRNI query interface using plain English flow queries                       │
+│  Anomaly Detection   = Automatic flagging of unusual flow volume or new connections                   │
+│  Entity              = Any named object: VM, host, IP, application, security group                    │
+│  Inventory Sync      = Periodic API poll of vCenter/NSX to refresh entity metadata                    │
+│  VPC Flow Logs       = Cloud flow records from AWS/Azure ingested as a data source                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Stage 2: Map Application Dependencies

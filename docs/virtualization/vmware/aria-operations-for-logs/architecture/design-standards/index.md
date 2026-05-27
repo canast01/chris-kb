@@ -7,56 +7,49 @@ Follow the same naming scheme as other LCM-managed appliances:
 ```text
 vrli-<env>-<node#>.<domain>
 ```
-
-| Environment | Master Node | Worker Nodes |
-|---|---|---|
-| Production | `vrli-prod-01.example.local` | `vrli-prod-02.example.local`, `vrli-prod-03.example.local` |
-| DR/Standby | `vrli-dr-01.example.local` | `vrli-dr-02.example.local` |
-| Development | `vrli-dev-01.example.local` | — |
-
----
-
-## Deployment Size Reference
-
-| Size | Nodes | vCPUs (per node) | RAM (per node) | Disk (per node) | Daily Ingestion |
-|---|---|---|---|---|---|
-| Extra Small | 1 (Master only) | 4 | 8 GB | 200 GB | Up to 20 GB/day |
-| Small | 1 (Master only) | 8 | 18 GB | 500 GB | Up to 75 GB/day |
-| Medium (HA) | 3 (1 Master + 2 Workers) | 8 | 18 GB | 500 GB | Up to 225 GB/day |
-| Large (HA) | 6 (1 Master + 5 Workers) | 8 | 18 GB | 1 TB | Up to 500 GB/day |
-
-For production, deploy a minimum 3-node cluster (1 master + 2 workers) for high availability. The master handles query coordination and the UI; workers provide additional ingestion throughput and storage.
-
-Add worker nodes to scale horizontally — ingestion capacity scales linearly with workers.
-
----
-
-## Pre-Deployment Checklist
-
-- [ ] DNS A record created for each node FQDN — verify: `nslookup vrli-prod-01.example.local`
-- [ ] DNS PTR record for each node IP — verify: `nslookup <ip>`
-- [ ] NTP reachable; time delta < 1 second — verify: `chronyc tracking`
-- [ ] Static IPs reserved in IPAM for all nodes
-- [ ] Firewall rules permit inbound on ports 514 (UDP), 1514 (TCP), 9543 (TCP), 443 (TCP)
-- [ ] Sufficient disk space: minimum 500 GB per node for standard production retention (30 days)
-- [ ] CA certificate chain ready for import (leaf + intermediate + root)
-- [ ] SMTP relay accessible for alert notifications
-- [ ] vCenter credentials available for the vSphere content pack configuration
-
----
-
-## Log Retention Standards
-
-| Data Tier | Retention | Storage |
-|---|---|---|
-| Hot (searchable, interactive analytics) | 30 days (default) | Local node disk |
-| Warm (archived, not in real-time search) | 90–365 days | NFS archive target |
-| Cold (compliance archive) | 1–7 years | Object storage or tape |
-
-Configure retention:
-```text
-Administration → General → Retention → set retention period in days
-Administration → Archiving → configure NFS archive target
+┌───────────────────────────── Aria Operations for Logs — Design Standards ─────────────────────────────┐
+│                                                                                                       │
+│  Standards for sizing, retention, clustering, and source onboarding in vRLI deployments.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Sizing Standards               │  │             Retention Standards             │   │
+│   │      Master: 4 vCPU/16 GB/1 TB storage       │  │        Hot retention: 90 days on-disk       │   │
+│   │     Workers: add for >500 GB/day ingest      │  │        Archive: 1 year NFS/S3 export        │   │
+│   │     Cluster: master + 2 workers minimum      │  │     Security events: 1 year hot minimum     │   │
+│   │       Network: 10 Gbps for high ingest       │  │     GDPR/compliance: region-local store     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Source onboarding and alert design standards ensure consistent and actionable logging.               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Source Onboarding               │  │                 Alert Design                │   │
+│   │     Install content pack before onboard      │  │      Alert on error patterns, not noise     │   │
+│   │      Use TLS syslog (6514) for security      │  │    Threshold: count-based, not always-on    │   │
+│   │      Tag sources: env/product/location       │  │       Route: critical → PagerDuty/SNow      │   │
+│   │       ESXi: set syslog.global.logHost        │  │         Suppress: known noisy events        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRLI VMs (master + workers) · 10GbE NIC · NFS/S3 archive · vCenter · ESXi                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Hot retention     = On-disk log storage duration; older data rolled to archive or deleted            │
+│  Archive           = Off-appliance export to NFS or S3; compressed, searchable via vRLI               │
+│  Worker node       = Additional vRLI VM; master delegates ingestion and query to workers              │
+│  Cluster           = Master + 2+ workers sharing index; required for HA and high ingest               │
+│  syslog.global.logHost= ESXi advanced config key pointing ESXi syslog to vRLI IP:port                 │
+│  TLS syslog        = Encrypted log transport on port 6514; prevents log tampering in transit          │
+│  Source tag        = Custom field applied at ingest to identify source environment or product         │
+│  Content pack      = Pre-built dashboards+alerts for a product; install before onboarding             │
+│  Alert threshold   = Count or rate trigger; e.g. fire if >5 auth failures in 5 minutes                │
+│  Suppress rule     = vRLI filter excluding known noisy or low-value events from alerting              │
+│  GDPR retention    = Data residency requirement; logs stored in same region as source                 │
+│  Ingest rate       = Measured in GB/day; determines sizing (master-only vs. cluster)                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

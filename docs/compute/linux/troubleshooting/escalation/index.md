@@ -23,47 +23,45 @@ flowchart TD
     openSR --> monitor
     monitor -->|"No progress 24h"| escalateAccount
 ```
-┌───────────────────────────────────────── Linux — Escalation ──────────────────────────────────────────┐
+┌──────────────────────────────────── Linux — Escalation Procedures ────────────────────────────────────┐
 │                                                                                                       │
-│  Linux escalation paths: kernel panics, hardware failures, data corruption, security incidents.       │
+│  Escalation paths, contacts, and runbooks when Linux issues exceed local resolution.                  │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Kernel Panic / Crash             │  │               Hardware Failure              │   │
-│   │          1. Capture dmesg / vmcore           │  │          1. Check dmesg for errors          │   │
-│   │          2. Analyse with crash tool          │  │           2. Run smartctl on disks          │   │
-│   │      3. Report kernel BZ if kernel bug       │  │         3. Replace failed component         │   │
-│   │            4. Patch or workaround            │  │        4. Restore from backup if data       │   │
+│   │             Escalation Triggers              │  │               Escalation Path               │   │
+│   │            Production outage >15m            │  │               L1: ops on-call               │   │
+│   │           Data loss risk detected            │  │            L2: senior Linux admin           │   │
+│   │            Kernel panic recurring            │  │              L3: vendor support             │   │
+│   │          Security breach suspected           │  │             CISO + legal notify             │   │
+│   │           Hardware fault confirmed           │  │           DC ops + hardware vendor          │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Kernel issues → vendor support; hardware → ops team + replacement parts                            │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Data Corruption                │  │              Security Incident              │   │
-│   │          1. Stop writes immediately          │  │         1. Isolate host from network        │   │
-│   │          2. Snapshot / backup image          │  │          2. Preserve logs + memory          │   │
-│   │           3. fsck on unmounted FS            │  │         3. Escalate to security team        │   │
-│   │       4. Restore from last good backup       │  │         4. Forensic image + analysis        │   │
+│   │            Information to Gather             │  │               Post-Escalation               │   │
+│   │            hostname / kernel ver             │  │             Create RCA document             │   │
+│   │           dmesg + journalctl dump            │  │                Update runbook               │   │
+│   │             sar / vmstat output              │  │             File bug with vendor            │   │
+│   │              Recent change log               │  │             Apply preventive fix            │   │
+│   │             Network topology map             │  │             Schedule post-mortem            │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical or virtual server · backup storage · IPMI/iDRAC · SIEM                                      │
+│  x86-64 servers · IPMI/iDRAC OOB · phone bridge · monitoring dashboards                               │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  vmcore       = kernel crash dump; saved to /var/crash by kdump service                               │
-│  kdump        = kernel crash dump mechanism; second kernel captures vmcore                            │
-│  crash tool   = analyses vmcore with debug symbols; bt command shows stack                            │
-│  kernel BZ    = kernel bug report to bugzilla.kernel.org or vendor tracker                            │
-│  smartctl     = SMART disk health; Reallocated_Sector_Ct indicates bad blocks                         │
-│  fsck         = filesystem check/repair; must run on unmounted filesystem                             │
-│  Forensic image= dd or dcfldd to preserve disk state; chain of custody                                │
-│  Isolate      = remove network access; preserve state without shutdown                                │
-│  Preserve logs= copy /var/log before shutdown; volatile data lost on reboot                           │
-│  IPMI/iDRAC   = out-of-band management; access console without network                                │
-│  fsck -n      = dry-run check only; -y auto-fixes; use interactively                                  │
-│  Snapshot     = VM snapshot or LVM snapshot before repair attempts                                    │
+│  escalation  = Formal handover of an issue to a higher-tier resolver or vendor                        │
+│  RCA         = Root Cause Analysis; document explaining what failed and why                           │
+│  post-mortem = Blameless review meeting after incident; produces action items                         │
+│  runbook     = Step-by-step procedure document for known operational tasks                            │
+│  P1/P2       = Priority classification; P1 = critical production impact                               │
+│  on-call     = Rotation of engineers responsible for responding outside hours                         │
+│  CISO        = Chief Information Security Officer; leads security escalations                         │
+│  OOB         = Out-of-Band management; IPMI/iDRAC for access when OS is down                          │
+│  change log  = Record of recent system changes; critical for incident correlation                     │
+│  SLA         = Service Level Agreement; defines uptime and response targets                           │
+│  MTTR        = Mean Time To Repair; average time to restore service after failure                     │
+│  war room    = Bridge call with all stakeholders during major incident                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

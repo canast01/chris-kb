@@ -36,36 +36,49 @@ curl -sk -X POST "${PLATFORM}/api/ni/datasources/vcenter" \
     "enabled": true
   }' | python3 -m json.tool
 ```
-
-## Add NSX-T Manager Data Source
-
-1. Settings → Accounts and Data Sources → Add Source → NSX-T Manager
-2. Fill in:
-   - **Nickname**: `NSX-T-ProdDC`
-   - **NSX-T Manager IP/FQDN**: `nsxmgr.example.local`
-   - **Username**: `svc-aon` (Auditor role)
-   - **Password**: —
-   - **Collector**: same Collector as the associated vCenter
-3. Click **Validate** → **Submit**
-
-Post-add verification:
-- Settings → Accounts and Data Sources → NSX-T-ProdDC → Last Sync should show < 15 minutes ago
-- Search bar: `NSX-T Logical Switches` or `segments` — should return segment list
-
-```bash
-curl -sk -X POST "${PLATFORM}/api/ni/datasources/nsxt" \
-  -H "Authorization: NetworkInsight ${TOKEN}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nickname": "NSX-T-ProdDC",
-    "credentials": {
-      "ip": "nsxmgr.example.local",
-      "username": "svc-aon",
-      "password": "PASSWORD"
-    },
-    "collector_id": "collector-001",
-    "enabled": true
-  }' | python3 -m json.tool
+┌───────────────────────────────────── vRNI Operational Procedures ─────────────────────────────────────┐
+│                                                                                                       │
+│  Add data source, certificate rotation, and credential rotation procedures for vRNI.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Add Data Source                │  │             Certificate Rotation            │   │
+│   │          1. Settings > Data Sources          │  │           1. Generate new cert/CSR          │   │
+│   │            2. Select source type             │  │           2. Upload cert via VAMI           │   │
+│   │          3. Enter IP + credentials           │  │            3. Restart UI service            │   │
+│   │         4. Test + Save; verify green         │  │          4. Validate browser trust          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Data source addition and cert rotation are common day-2 operational tasks.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Credential Rotation              │  │            Application Definition           │   │
+│   │         1. Update source account pw          │  │          1. Applications > Add New          │   │
+│   │         2. Edit data source in vRNI          │  │          2. Define VM/IP membership         │   │
+│   │           3. Enter new credential            │  │           3. Name tiers and groups          │   │
+│   │         4. Test + Save; verify green         │  │           4. View app in Flow Map           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRNI platform VM; vCenter and NSX as credential targets; CA for cert signing                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Data Source         = vRNI connection object; requires valid credentials to collect                  │
+│  Credential Rotation = Updating stored API/service account password in vRNI source config             │
+│  Certificate         = TLS cert for vRNI web UI; uploaded via VAMI SSL settings                       │
+│  CSR                 = Certificate Signing Request; generated for CA-signed cert flow                 │
+│  VAMI                = Virtual Appliance Management Interface; used for cert upload                   │
+│  Application         = Logical grouping of VMs/IPs in vRNI for Flow Map filtering                     │
+│  Tier                = Sub-group within an Application; e.g. Web, App, DB layers                      │
+│  Flow Map            = Visual traffic graph; Applications appear as named nodes                       │
+│  Green Status        = Data source successfully syncing; last seen < 15 minutes ago                   │
+│  Service Account     = Dedicated read-only account used by vRNI for API polling                       │
+│  LDAP Credential     = Directory service account for vRNI group-based auth mapping                    │
+│  Test Connection     = vRNI built-in check that validates API reachability + auth                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Configure NetFlow Export from a Cisco Switch

@@ -29,145 +29,51 @@ Script Execution Flow (PowerCLI example)
 │           └── Report: PASS / WARNING / CRITICAL       │
 └─────────────────────────────────────────────────────┘
 ```
-
-## ESXi Host Health Check (PowerShell / PowerCLI)
-
-Connect to vCenter or directly to an ESXi host and produce a per-host health report covering hardware sensors, datastore usage, network adapter state, and required service status.
-
-~~~powershell
-#Requires -Modules VMware.PowerCLI
-# esxi_host_health.ps1
-# Usage: pwsh -File esxi_host_health.ps1
-# Env vars: VCENTER_HOST, VC_USER, VC_PASS
-
-param(
-    [string]$VCenterHost = $env:VCENTER_HOST,
-    [string]$VCUser      = $env:VC_USER,
-    [string]$VCPass      = $env:VC_PASS
-)
-
-Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
-
-$cred = New-Object System.Management.Automation.PSCredential(
-    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
-)
-Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
-
-$RequiredServices = @('hostd', 'vpxa', 'ntpd')
-$DatastoreWarnPct  = 80
-$overallExit = 0
-
-function Write-Status {
-    param($Label, $Status, $Detail)
-    $colour = switch ($Status) {
-        'PASS'     { 'Green'  }
-        'WARNING'  { 'Yellow' }
-        'CRITICAL' { 'Red'    }
-        default    { 'White'  }
-    }
-    Write-Host ("[{0,-8}] {1,-35} {2}" -f $Status, $Label, $Detail) -ForegroundColor $colour
-}
-
-foreach ($vmhost in (Get-VMHost | Sort-Object Name)) {
-    Write-Host "`n=== $($vmhost.Name) ===" -ForegroundColor Cyan
-
-    # Connection / power state
-    if ($vmhost.ConnectionState -ne 'Connected') {
-        Write-Status "ConnectionState" "CRITICAL" $vmhost.ConnectionState
-        $overallExit = 2; continue
-    }
-    if ($vmhost.PowerState -ne 'PoweredOn') {
-        Write-Status "PowerState" "WARNING" $vmhost.PowerState
-        $overallExit = [Math]::Max($overallExit, 1)
-    } else {
-        Write-Status "ConnectionState" "PASS" "Connected / PoweredOn"
-    }
-
-    # Hardware sensors
-    try {
-        $hw = Get-VMHostHardware -VMHost $vmhost -ErrorAction Stop
-        $badSensors = $hw.CpuInfo | Where-Object { $_.HealthState -ne 'Green' }
-        if ($badSensors) {
-            Write-Status "Hardware Sensors" "WARNING" "$($badSensors.Count) sensor(s) not green"
-            $overallExit = [Math]::Max($overallExit, 1)
-        } else {
-            Write-Status "Hardware Sensors" "PASS" "All sensors green"
-        }
-    } catch {
-        Write-Status "Hardware Sensors" "WARNING" "Could not retrieve hardware info"
-    }
-
-    # Datastore capacity
-    $datastores = Get-Datastore -VMHost $vmhost
-    foreach ($ds in $datastores) {
-        if ($ds.CapacityGB -eq 0) { continue }
-        $usedPct = [Math]::Round((1 - $ds.FreeSpaceGB / $ds.CapacityGB) * 100, 1)
-        $s = if ($usedPct -ge $DatastoreWarnPct) { 'WARNING' } else { 'PASS' }
-        if ($s -eq 'WARNING') { $overallExit = [Math]::Max($overallExit, 1) }
-        Write-Status "Datastore: $($ds.Name)" $s ("Used={0}%  Free={1:N0}GB" -f $usedPct, $ds.FreeSpaceGB)
-    }
-
-    # Network adapters
-    $badNics = Get-VMHostNetworkAdapter -VMHost $vmhost | Where-Object { -not $_.BitRatePerSec -and $_.DeviceName -notmatch 'vmk' }
-    if ($badNics) {
-        Write-Status "Network Adapters" "WARNING" "$($badNics.DeviceName -join ', ') — no link"
-        $overallExit = [Math]::Max($overallExit, 1)
-    } else {
-        Write-Status "Network Adapters" "PASS" "All adapters have link"
-    }
-
-    # Required services
-    $services = Get-VMHostService -VMHost $vmhost
-    foreach ($svc in $RequiredServices) {
-        $s = $services | Where-Object { $_.Key -eq $svc }
-        if (-not $s -or $s.Running -eq $false) {
-            Write-Status "Service: $svc" "CRITICAL" "NOT RUNNING"
-            $overallExit = 2
-        } else {
-            Write-Status "Service: $svc" "PASS" "Running"
-        }
-    }
-}
-
-Disconnect-VIServer -Confirm:$false
-exit $overallExit
-~~~
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
-- VMware PowerCLI module — install it once by running this in PowerShell:
-  `Install-Module -Name VMware.PowerCLI -Scope CurrentUser -Force`
-  When prompted about an untrusted repository, type `Y` and press Enter
-- Network access to your vCenter server (the script connects via vCenter, which then manages the ESXi hosts)
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** on your Windows PC
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Set "Save as type" to **All Files** (important — otherwise Windows adds .txt)
-5. Name it `esxi_host_health.ps1` and save it to your Desktop
-
-**Step 2 — Fill in your details**
-
-Open the file in Notepad and update the `param(` block:
-
-| Variable | What to enter | How to find it |
-|---|---|---|
-| `$VCenterHost` | vCenter IP or FQDN e.g. `"vcenter.company.local"` | Your vCenter server address |
-| `$VCUser` | vCenter username e.g. `"administrator@vsphere.local"` | Your vCenter login |
-| `$VCPass` | vCenter password | Your vCenter password |
-
-**Step 3 — Open PowerShell as Administrator**
-
-Windows key → type `PowerShell` → right-click → **Run as Administrator**
-
-**Step 4 — Allow scripts to run (one-time per session)**
-
-```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+┌─────────────────────────────────────────── ESXi — Scripts ────────────────────────────────────────────┐
+│                                                                                                       │
+│  PowerCLI, shell, and Python scripts automating ESXi host operations at scale.                        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               PowerCLI Scripts               │  │            Shell / esxcli Scripts           │   │
+│   │           Get-VMHost health report           │  │          esxcli system version get          │   │
+│   │           Set-VMHostNTP / DNS bulk           │  │          for host in list; ssh cmd          │   │
+│   │             Move-VM bulk vMotion             │  │           esxcli storage core path          │   │
+│   │         Get-Datastore free space rpt         │  │            esxcli vm process kill           │   │
+│   │           Invoke-VMScript in guest           │  │          cron + configBundle backup         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  PowerCLI for vCenter-scope tasks; esxcli over SSH for per-host automation.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Python / pyVmomi Scripts           │  │             Automation Patterns             │   │
+│   │           ServiceInstance connect            │  │              Idempotent design              │   │
+│   │           Traverse container view            │  │            Error handling + retry           │   │
+│   │           Get host config objects            │  │              Dry-run mode flag              │   │
+│   │           Reconfigure host via API           │  │              Log output to file             │   │
+│   │          Task monitoring wait loop           │  │             Pipeline integration            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ESXi hosts on x86, management network, jump host for script execution                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  PowerCLI    = VMware PowerShell SDK; Connect-VIServer for vCenter/ESXi                               │
+│  pyVmomi     = Python SDK for vSphere API; official VMware library                                    │
+│  esxcli      = on-host CLI; run via SSH or Ansible for bulk host ops                                  │
+│  govc        = Go CLI for vCenter API; lightweight alternative to PowerCLI                            │
+│  Invoke-VMScript = PowerCLI cmd to run script in guest via VMtools                                    │
+│  Container view = pyVmomi API for traversing vCenter inventory objects                                │
+│  Task object = vSphere async task; polled until complete or error                                     │
+│  Idempotent  = script produces same result if run multiple times safely                               │
+│  Dry-run     = logic executes but no changes applied; safe testing                                    │
+│  cron        = Linux scheduler on jump host; triggers backup/health scripts                           │
+│  SSH         = Secure Shell; disabled by default on ESXi; enable per-host                             │
+│  VMtools     = VMware Tools; guest agent enabling Invoke-VMScript                                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Step 5 — Run it**

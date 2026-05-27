@@ -20,20 +20,49 @@ Aria Operations supports multiple authentication sources. Users can authenticate
 ```text
 Administration → Authentication Sources → Add Source
 ```
-
-Provide:
-- **Source Type**: Active Directory
-- **Display Name**: `corp.local`
-- **Base DN**: `DC=corp,DC=local`
-- **Bind User**: `CN=svc-vrops-ldap,OU=Service Accounts,DC=corp,DC=local`
-- **Bind Password**: service account password
-- **Host**: domain controller FQDN or IP (use multiple for HA)
-- **Port**: 636 (LDAPS — required for production) or 389 (LDAP — lab only)
-- **Use SSL**: Yes (LDAPS) — import the domain CA certificate into Aria Operations trust store first
-
-```bash
-# Import domain CA certificate into Aria Operations trust store
-# Via UI: Administration → Certificates → Import Certificate → paste CA PEM
+┌─────────────────────────────────── Aria Operations Authentication ────────────────────────────────────┐
+│                                                                                                       │
+│  Local, AD/LDAP, vIDM SSO, and API token authentication for Aria Operations (vROps).                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Local Authentication             │  │           LDAP / AD Authentication          │   │
+│   │          admin@local: set at deploy          │  │            Admin > Access Control           │   │
+│   │             Break-glass use only             │  │              Add LDAP/AD source             │   │
+│   │           Rotate password 90 days            │  │          Import AD groups to roles          │   │
+│   │             Keep creds in vault              │  │          LDAPS (port 636) required          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Local is break-glass; LDAP/vIDM for all users; API token for automation.                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           vIDM SSO Authentication            │  │                API Token Auth               │   │
+│   │            Register vROps in vIDM            │  │        POST /suite-api/api/auth/token       │   │
+│   │           vIDM groups map to roles           │  │             Returns Bearer token            │   │
+│   │           SAML2 redirect on login            │  │         Use in Authorization header         │   │
+│   │             MFA enforced at vIDM             │  │           Refresh on token expiry           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vROps cluster; AD/LDAP server; vIDM appliance for SSO; PKI for LDAPS certs                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  admin@local         = Built-in local admin; set during OVA wizard; break-glass only                  │
+│  LDAP Source         = Directory server added in vROps Access Control settings                        │
+│  LDAPS               = LDAP over TLS port 636; required for secure auth in vROps                      │
+│  AD Group Import     = Pull AD group into vROps to assign a role                                      │
+│  vIDM Registration   = Add vROps as an app in vIDM for SAML SSO                                       │
+│  SAML2               = Authentication protocol for SSO between vIDM and vROps                         │
+│  MFA                 = Multi-Factor Auth enforced at vIDM layer; not in vROps itself                  │
+│  Bearer Token        = Temporary API credential; set in Authorization: Bearer header                  │
+│  Token Expiry        = Default 24h; automate refresh in scripts on 401 response                       │
+│  Break-glass         = Local admin used when AD/vIDM is unreachable                                   │
+│  Password Vault      = Secrets manager storing local admin credential securely                        │
+│  Bind Account        = Service account for LDAP queries; read-only, dedicated                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Test the LDAP connection:**

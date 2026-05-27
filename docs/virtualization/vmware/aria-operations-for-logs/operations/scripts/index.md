@@ -27,31 +27,49 @@ echo "=== Active Alerts (Critical) ==="
 curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/alerts?severity=critical&status=active" | \
   jq -r '.alerts[] | "\(.name)\t\(.timestamp)"' | column -t
 ```
-
----
-
-## Agent Coverage Report
-
-Identifies agents that have not checked in within the last 30 minutes — potential connectivity or service failures.
-
-```bash
-#!/usr/bin/env bash
-VRLI=$1; USER=$2; PASS=$3
-THRESHOLD_MINS=30
-THRESHOLD_MS=$((THRESHOLD_MINS * 60 * 1000))
-NOW_MS=$(date +%s%3N)
-
-echo "=== Agents not checked in within $THRESHOLD_MINS minutes ==="
-curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/agents" | \
-  jq --argjson now "$NOW_MS" --argjson thresh "$THRESHOLD_MS" \
-  '.agents[] | select(($now - (.lastActive | tonumber)) > $thresh) |
-   {host: .hostname, lastActive: .lastActive, state: .state}' | \
-  jq -r '"STALE: \(.host) — last seen \(.lastActive)"'
-
-echo ""
-echo "=== All agents summary ==="
-curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/agents" | \
-  jq -r '.agents | length' | xargs -I{} echo "Total agents registered: {}"
+┌──────────────────────────── Aria Operations for Logs — Scripts Reference ─────────────────────────────┐
+│                                                                                                       │
+│  vRLI scripting uses REST API for config export/import, ingest, and query automation.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Common REST API Scripts            │  │          ESXi Syslog Config Script          │   │
+│   │      GET /api/v1/config/export → backup      │  │       esxcli system syslog config set       │   │
+│   │      POST /api/v1/config/import restore      │  │        --loghost=ssl://vRLI-FQDN:6514       │   │
+│   │       POST /api/v1/events/ingest push        │  │         esxcli system syslog reload         │   │
+│   │       GET /api/v1/cluster/nodes status       │  │       Apply via PowerCLI foreach host       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Disk and alert scripts automate routine operations for large-scale deployments.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │        Appliance Maintenance Scripts         │  │              Monitoring Scripts             │   │
+│   │          df -h /storage: disk check          │  │        curl GET /api/v1/cluster/nodes       │   │
+│   │          service loginsight restart          │  │       Parse JSON: check state==MASTER       │   │
+│   │       find /storage -mtime +90 archive       │  │        Alert if disk > 80% threshold        │   │
+│   │      netstat -tulpn: verify ports open       │  │       Cron: daily config export to NFS      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRLI Linux appliance · ESXi hosts · PowerCLI station · NFS for backup scripts                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Config export API = GET /api/v1/config/export; JSON backup of all vRLI settings                      │
+│  Config import API = POST /api/v1/config/import; restore from config JSON backup                      │
+│  Ingest API        = POST /api/v1/events/ingest; body: {events:[{text,fields,timestamp}]}             │
+│  Cluster nodes API = GET /api/v1/cluster/nodes; returns state (MASTER/WORKER/etc)                     │
+│  esxcli syslog     = ESXi command to configure log destination; run per-host or via PowerCLI          │
+│  PowerCLI foreach  = Connect-VIServer then Get-VMHost | foreach {Invoke-EsxCli...}                    │
+│  loginsight svc    = service loginsight restart; safe restart without data loss                       │
+│  Cron config backup= Daily cron calling config export API and writing JSON to NFS                     │
+│  Disk alert script = Checks df -h output; emails/pages if /storage >80% used                          │
+│  SSL syslog URL    = ssl://vRLI-FQDN:6514 format used in esxcli loghost config                        │
+│  Sessions API      = POST /api/v1/sessions with creds; returns sessionId for auth                     │
+│  Bearer header     = Authorization: Bearer <sessionId> on subsequent API calls                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

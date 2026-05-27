@@ -42,16 +42,49 @@ TOKEN=$(curl -sk -X POST "${PLATFORM}/api/ni/auth/token" \
   | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
 echo "Token: $TOKEN"
 ```
-
-Download the config backup:
-
-```bash
-curl -sk -X GET "${PLATFORM}/api/ni/settings/backup" \
-  -H "Authorization: NetworkInsight ${TOKEN}" \
-  -H "Content-Type: application/json" \
-  --output "aon-backup-$(date +%Y%m%d-%H%M%S).tar.gz"
-
-echo "Backup size: $(ls -lh aon-backup-*.tar.gz | tail -1 | awk '{print $5}')"
+┌──────────────────────────────────────── vRNI Backup & Restore ────────────────────────────────────────┐
+│                                                                                                       │
+│  Configuration export via REST API and full restore steps for Aria Operations for Networks.           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               What to Back Up                │  │                Backup Method                │   │
+│   │         Data source configs (creds)          │  │         REST API: GET /data-sources         │   │
+│   │            Alert rule definitions            │  │          REST API: GET /alert-rules         │   │
+│   │        Custom dashboards / pinboards         │  │           REST API: GET /pinboards          │   │
+│   │       Application definitions (groups)       │  │         REST API: GET /applications         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Export config JSON via REST; snapshot VM for full appliance backup before upgrades.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Restore Procedure               │  │              Appliance Snapshot             │   │
+│   │             1. Deploy fresh OVA              │  │          Snapshot VM before upgrade         │   │
+│   │          2. POST /data-sources JSON          │  │          Revert snapshot on failure         │   │
+│   │          3. POST /alert-rules JSON           │  │         Snapshot: quiesced preferred        │   │
+│   │          4. POST /applications JSON          │  │          Flow data: not restorable          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRNI platform VM on vSphere; vSphere snapshots for appliance; S3/NFS for JSON exports                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  REST API            = vRNI northbound API; used for config export and import                         │
+│  Data Source         = vRNI connection object (vCenter, NSX, switch) with credentials                 │
+│  Alert Rule          = Threshold-based rule triggering notifications on flow anomalies                │
+│  Pinboard            = vRNI custom dashboard saved by user; exportable as JSON                        │
+│  Application         = Named group of VMs/IPs in vRNI for flow filtering and mapping                  │
+│  OVA                 = Open Virtualization Appliance; vRNI deployment package                         │
+│  Quiesced Snapshot   = VM snapshot with guest OS file system flushed; preferred for DBs               │
+│  Flow Data           = Historical flow records; not included in config backup/restore                 │
+│  API Token           = Bearer token used to authenticate REST API backup calls                        │
+│  JSON Export         = Machine-readable config dump for data sources, rules, dashboards               │
+│  PAK File            = vRNI upgrade bundle; snapshot before applying                                  │
+│  Restore Validation  = Post-restore check: data sources green, flows appearing, alerts OK             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Automate with a cron job on a management host:

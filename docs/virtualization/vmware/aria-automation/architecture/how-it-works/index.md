@@ -30,42 +30,49 @@ graph TB
   class ADMIN host
   class CLOUDS cloud
 ```
-
-## Single Node vs. 3-Node Cluster
-
-| Attribute | Single Node | 3-Node Cluster |
-|---|---|---|
-| HA | No — single point of failure | Yes — quorum-based HA |
-| Use case | Lab / non-prod | Production |
-| Load balancer | Not required | Required (L4/L7 VIP in front of 3 nodes) |
-
-## Core Services
-
-| Service | Purpose |
-|---|---|
-| Automation Assembler | Cloud template (YAML IaC) authoring and resource provisioning |
-| Service Broker | Self-service catalog — exposes templates to end users via projects |
-| Event Broker | Internal event bus — routes lifecycle events to ABX/Orchestrator subscriptions |
-| Orchestrator (embedded vRO) | Workflow engine for Day-2 operations and approval routing |
-| Automation Pipelines | CI/CD pipeline engine triggered from Git events |
-| PostgreSQL | Deployment state, catalog definitions, event log |
-| RabbitMQ | Async messaging between microservices |
-| Kubernetes | Container orchestration for all microservices (managed by appliance) |
-| Nginx / Envoy | HTTPS ingress and load balancing between microservice endpoints |
-
-## Kubernetes Namespaces (Diagnostics)
-
-| Namespace | Services |
-|---|---|
-| `prelude` | Core services: assembler, catalog, event-broker |
-| `vro` | Embedded vRealize Orchestrator |
-| `saltstack` | Automation Config (SaltStack) |
-| `pipeline` | Automation Pipelines (Code Stream) |
-
-```bash
-kubectl get pods -n prelude
-kubectl logs -n prelude -l app=assembler --tail=100
-kubectl describe pod -n prelude <pod-name>
+┌─────────────────────────────────── Aria Automation — How It Works ────────────────────────────────────┐
+│                                                                                                       │
+│  Cloud-agnostic self-service automation via blueprints, cloud templates, and resource orchestration.  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │       Service Portal (Consumer layer)        │  │            Designer / Admin layer           │   │
+│   │     Self-service catalog of deployments      │  │       Cloud templates (YAML/drag-drop)      │   │
+│   │      Request → approval → provisioning       │  │     Blueprints define topology + inputs     │   │
+│   │    Day-2 actions: resize/snapshot/delete     │  │       Policies: cost, network, storage      │   │
+│   │   Role: consumer sees only entitled items    │  │      Projects isolate teams and quotas      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Approved requests flow to the orchestration engine which calls cloud account APIs.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Orchestration Engine             │  │          Cloud Accounts / Endpoints         │   │
+│   │       Workflow runs: Aria Orchestrator       │  │      vSphere, AWS, Azure, GCP accounts      │   │
+│   │       ABX extensibility actions (FaaS)       │  │        NSX-T for network provisioning       │   │
+│   │       Resource lifecycle state machine       │  │       vCenter clusters and datastores       │   │
+│   │        Event broker for async events         │  │        Terraform provider integration       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Linux VMs (vRA appliances) · vCenter hosts · DNS · LDAP/AD · NTP · TLS certificates                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Cloud template    = YAML descriptor defining resources, inputs, and conditions for a deployment      │
+│  Blueprint         = Older term for cloud template; still used in vRA 8.x UI and docs                 │
+│  Project           = Tenant boundary in vRA; owns cloud accounts, members, and quotas                 │
+│  Catalog item      = Versioned cloud template published to the service catalog for consumers          │
+│  ABX action        = Action-Based Extensibility; serverless function triggered by vRA events          │
+│  Aria Orchestrator = Workflow engine embedded in vRA; executes complex multi-step automations         │
+│  Day-2 action      = Post-deployment operation (resize, snapshot, decommission) on a resource         │
+│  Cloud account     = vRA connection to an infrastructure endpoint (vCenter, AWS, Azure)               │
+│  Deployment        = Running instance of a provisioned cloud template with tracked lifecycle          │
+│  Approval policy   = Governance rule requiring human sign-off before provisioning proceeds            │
+│  Terraform config  = HCL workspace managed by vRA IaaC integration for Terraform providers            │
+│  Event subscription= vRA event broker rule mapping resource event to ABX action or workflow           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Cloud Account Types

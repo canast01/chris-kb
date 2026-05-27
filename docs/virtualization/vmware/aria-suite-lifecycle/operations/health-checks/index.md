@@ -21,26 +21,49 @@
 │  └─────────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────────┘
 ```
-
-## Daily Health Checks
-
-```bash
-# LCM appliance disk usage — keep /data (NFS) and / below 80%
-df -h
-
-# LCM service status
-systemctl status lcm
-systemctl status nginx
-
-# Check recent log errors
-grep -E "ERROR|WARN" /var/log/vmware/vrlcm/lcm-app.log | tail -50
-
-# Verify NFS mount is healthy
-mount | grep /data
-ls /data/ | head -20
-
-# Check NTP sync — LCM certificate operations fail if time drift > 5 seconds
-chronyc tracking | grep -E "System time|Stratum|RMS offset"
+┌──────────────────────────────────── Aria Suite LCM Health Checks ─────────────────────────────────────┐
+│                                                                                                       │
+│  Product health, depot connectivity, and certificate expiry checks for LCM.                           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             LCM Appliance Health             │  │            Product Health Checks            │   │
+│   │            vlcm service running?             │  │          LCM: Environments > Health         │   │
+│   │            Disk < 80% on LCM VM?             │  │         All products: Green status?         │   │
+│   │                 NTP in sync?                 │  │         vIDM: accessible + auth OK?         │   │
+│   │               VAMI accessible?               │  │          vROps: collection active?          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  LCM appliance health feeds into product health; depot and cert checks follow.                        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Depot Connectivity              │  │              Certificate Health             │   │
+│   │          Depot: sync status green?           │  │           Certs: expiry > 30 days?          │   │
+│   │         Binaries: latest available?          │  │           LCM cert dashboard check          │   │
+│   │          Network: depot reachable?           │  │             Renew expiring certs            │   │
+│   │             Local NFS: mount OK?             │  │           Validate after rotation           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM on vSphere; NFS for depot/backup; internet or proxy for online depot                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vlcm Service        = LCM main service; check status if UI is unresponsive                           │
+│  Product Health      = LCM Environments page showing green/yellow/red per product                     │
+│  Depot Sync          = LCM download of latest product PAK catalog from VMware                         │
+│  Cert Dashboard      = LCM page listing all managed certs with expiry dates                           │
+│  Cert Expiry         = Days remaining on TLS cert; alert at 60/30/14 day marks                        │
+│  NFS Mount           = Local depot content share; unmounted = install/upgrade fails                   │
+│  vIDM Health         = vIDM reachable and authenticating; critical for all products                   │
+│  NTP Sync            = LCM and all product VMs must sync to same NTP source                           │
+│  Disk Usage          = LCM disk fills with PAK files; monitor and clean old content                   │
+│  Green Status        = Product health indicator; all services running correctly                       │
+│  Pre-check Result    = LCM validation output; review before any upgrade action                        │
+│  Logscraper          = Run after health check failure to collect diagnostic logs                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 In the LCM UI:

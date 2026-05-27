@@ -19,69 +19,49 @@ graph TB
   class IDX store
   class SRC1,SRC2,SRC3,ADMIN host
 ```
-
-## Cluster Topology
-
-| Node Role | Description |
-|---|---|
-| Master | Primary node — ingestion, indexing, query coordination, cluster management UI |
-| Worker | Scale-out nodes — increase ingestion throughput and storage capacity |
-
-Minimum for production HA: **3 nodes** (1 master + 2 workers) on separate ESXi hosts with vSphere HA anti-affinity rules.
-
-## Ingestion Protocols
-
-| Protocol | Port | Encrypted | Best For |
-|---|---|---|---|
-| Syslog UDP | 514 | No | ESXi, network devices (ESXi cannot use TLS syslog) |
-| Syslog TCP | 1514 | No | Linux/network devices with TCP syslog |
-| cfapi (unencrypted) | 9000 | No | LI Agent — lab only |
-| cfapi (TLS) | 9543 | Yes | LI Agent on Linux/Windows VMs — production |
-| SNMP trap receiver | 162 | No | Network switches, firewalls |
-| REST Ingestion API | 9000 / 9543 | Optional | Custom applications, CI/CD pipelines |
-
-## Data Storage Model
-
-| Tier | Retention | Storage | Searchable |
-|---|---|---|---|
-| Hot | Configurable (default: 30 days) | Local node disk (`/var/log/loginsight`) | Yes — full interactive analytics |
-| Archive | 90–365 days typical | NFS share | No — requires re-import for analysis |
-
-Storage planning: assume 2–5× compression. A cluster ingesting 50 GB/day of raw syslog stores ~10–25 GB/day in the hot index.
-
-## Content Packs
-
-| Content Pack | Source | What It Provides |
-|---|---|---|
-| vSphere | Built-in | ESXi and vCenter log parsing, dashboards, alerts |
-| NSX-T | Marketplace | NSX-T Manager and Edge node log parsing |
-| Linux General | Marketplace | Generic Linux syslog parsing and security dashboards |
-| Windows | Marketplace | Windows Event Log parsing via LI Agent |
-| Kubernetes | Marketplace | Container and pod log parsing |
-
-## HA Behaviour (3-Node Cluster)
-
-- **Master failure**: ingestion and search may stop after ~90 seconds. Workers do not auto-elect a new master — manual recovery required.
-- **Worker failure**: ingestion and search continue on remaining nodes. Cassandra rebalances reads but does not replicate the failed node's data until it is recovered.
-- **Network partition**: nodes that cannot reach the master stop accepting ingestion; master continues alone.
-
-## Log Insight Agent (LI Agent)
-
-The LI Agent collects from any log file path and forwards over cfapi/TLS with field tagging, 200 MB local buffering, and encrypted transport. Preferred over raw syslog for all Linux/Windows VMs.
-
-```bash
-# Install on RHEL
-rpm -ivh VMware-Log-Insight-Agent-*.rpm
-systemctl enable --now liagentd
-
-# Configure (minimal)
-cat > /var/lib/loginsight-agent/liagent.ini << 'EOF'
-[server]
-hostname=<vrli-fqdn>
-proto=cfapi
-port=9543
-ssl=yes
-EOF
+┌─────────────────────────────── Aria Operations for Logs — How It Works ───────────────────────────────┐
+│                                                                                                       │
+│  Centralised log aggregation, indexing, and alerting for VMware and multi-cloud environments.         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Ingestion Layer                │  │                Analysis Layer               │   │
+│   │        Syslog: UDP/TCP 514, TLS 6514         │  │       Real-time indexing of log events      │   │
+│   │       vSphere agent: ESXi/vCenter logs       │  │     Interactive analytics: filter+group     │   │
+│   │       CF/vRLI agent: app log shipping        │  │       Field extraction: auto + custom       │   │
+│   │      REST ingest API for custom sources      │  │        Dashboards: saved query views        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Alerts fire on query thresholds; Aria Ops integration correlates logs with metrics.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Alerting and Forwarding            │  │                 Integration                 │   │
+│   │        Alert: query matches threshold        │  │    Aria Operations: log launch-in-context   │   │
+│   │       Notify: email/webhook/ServiceNow       │  │         vCenter: VM log correlation         │   │
+│   │       Forward: syslog to SIEM (Splunk)       │  │        NSX: DFW rule match log events       │   │
+│   │       Archive: export to S3/NFS for DR       │  │       VxRail: hardware event ingestion      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Linux VM (vRLI appliance) · NIC for syslog ingestion · vCenter · ESXi hosts · NTP                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vRLI              = vRealize Log Insight; former name for Aria Operations for Logs                   │
+│  Syslog            = Protocol for log transmission; UDP 514 (unreliable) or TCP/TLS 6514              │
+│  vSphere agent     = vRLI agent on ESXi and vCenter; ships structured logs directly                   │
+│  Field extraction  = vRLI parses log text to create queryable structured fields                       │
+│  Interactive analytics= vRLI UI for free-text search, filter, group, and timeline analysis            │
+│  Alert             = Query-based trigger; fires when event count or pattern exceeds threshold         │
+│  Content pack      = Pre-built dashboards and alerts for a specific product (e.g. NSX, vSAN)          │
+│  Launch in context = Aria Ops alert opens vRLI filtered to same host/timeframe                        │
+│  SIEM forwarding   = vRLI forwards selected events to Splunk or other SIEM via syslog                 │
+│  Archive           = Long-term log export to NFS or S3 for compliance retention                       │
+│  Worker node       = Additional vRLI VM for horizontal scale; master distributes ingestion            │
+│  Ingestion API     = REST endpoint for pushing structured JSON logs from custom applications          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## ESXi Syslog Configuration

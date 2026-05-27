@@ -23,46 +23,49 @@ logger -n vrli-prod-01.example.local -P 514 -d "test ingestion check"
 # Check ingestion log for parse failures or drops
 grep -i "drop\|overflow\|parse error\|reject" /var/log/loginsight/ingestion.log | tail -50
 ```
-
-| Cause | Symptom | Resolution |
-|---|---|---|
-| Disk > 90% full | Cluster stops accepting events; no syslog listener response | Free disk space or add a worker node |
-| All cluster nodes offline | Syslog sources connect but events not indexed | Restore from snapshot; restart loginsight service |
-| Ingestion filter too broad | Events matching the filter are silently dropped | Review Administration → Ingestion Filters |
-| Network firewall blocking ports | Sources sending but nothing arriving | Check firewall rules for UDP 514, TCP 1514, TCP 9543 |
-
----
-
-## Searching ESXi Host Logs
-
-Search for a specific host by name or IP and filter by log source appname:
-
-| `appname` value | Log Source | Common Searches |
-|---|---|---|
-| `hostd` | VM and host operation daemon | `hostd AND (error OR failed)` |
-| `vpxa` | vCenter agent on the host | `vpxa AND disconnect` |
-| `vmkernel` | Kernel-level events | `vmkernel AND (SCSI OR NFS OR warning)` |
-| `vobd` | Hardware and storage observer | `vobd AND (APD OR PDL OR disk)` |
-| `vmkwarning` | Kernel warning messages | `vmkwarning` |
-
-Quick searches for common ESXi problems:
-
-```bash
-# Host connectivity lost
-text contains "lost connectivity" AND appname = "vpxa"
-
-# SCSI or storage errors
-(appname = "vmkernel" OR appname = "vobd") AND (text contains "SCSI" OR text contains "APD" OR text contains "PDL")
-
-# vMotion failures
-text contains "VMotionFailed" OR (text contains "vmotion" AND text contains "error")
-
-# HA failover events
-text contains "ha.vm.restart" OR text contains "HA failover"
-
-# Certificate or SSO errors
-text contains "certificate" AND text contains "invalid"
-text contains "STS" AND text contains "error"
+┌────────────────────────────── Aria Operations for Logs — Common Issues ───────────────────────────────┐
+│                                                                                                       │
+│  Common vRLI issues: disk full, missing sources, alert failures, LDAP auth errors.                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Ingestion Issues               │  │            Authentication Issues            │   │
+│   │      Source not sending: check firewall      │  │     LDAP auth fail: bind account locked     │   │
+│   │       Drop rate high: disk nearly full       │  │      SSO fail: cert mismatch vIDM/vRLI      │   │
+│   │      ESXi logs missing: syslog not set       │  │       Login loop: check SAML assertion      │   │
+│   │      High ingest lag: worker overloaded      │  │       Local admin: password forgotten       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Check disk first; full disk stops ingestion and can corrupt the vRLI index.                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Alert and Cluster Issues           │  │                 Quick Fixes                 │   │
+│   │       Alert not firing: check disabled       │  │     Disk full: archive + purge old data     │   │
+│   │       Webhook 500: target URL changed        │  │     Source missing: check syslog config     │   │
+│   │        Worker disconnected: NTP skew         │  │      LDAP: reset bind account password      │   │
+│   │       Cluster split: network partition       │  │         Alert: re-enable + test fire        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRLI appliance · /storage disk · ESXi syslog config · AD/LDAP · vIDM · firewall                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Drop rate         = Events discarded; spikes when disk full or ingest rate exceeds capacity          │
+│  Disk full         = /storage partition fills with log index; causes ingestion to stop                │
+│  syslog not set    = ESXi syslog.global.logHost not configured or pointing to wrong host              │
+│  Bind account lock = LDAP service account locked in AD; vRLI cannot authenticate users                │
+│  SAML loop         = Browser redirects to vIDM repeatedly; check cert SAN and clock sync              │
+│  Alert disabled    = Imported or upgraded alerts may be disabled; manually re-enable                  │
+│  Webhook 500       = HTTP error from alert target; update URL or check target service                 │
+│  NTP skew          = Time difference between vRLI nodes breaks cluster consensus                      │
+│  Cluster split     = Network partition causing master and worker to lose contact                      │
+│  Archive + purge   = Export logs to NFS then reduce retention period to free disk                     │
+│  Ingest lag        = Events delayed; add worker node or reduce ingest sources                         │
+│  Worker overloaded = Worker CPU/RAM at limit; scale out by adding another worker VM                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -9,14 +9,49 @@ lost connectivity to the server
 not responding
 connection refused
 ```
-
-### vCenter Authentication Failures
-
-```text
-Failed to authenticate
-Login failed
-password incorrect
-SessionManager
+┌──────────────────────────────── Aria Operations for Logs — Procedures ────────────────────────────────┐
+│                                                                                                       │
+│  Common operational procedures: add sources, rotate certs, manage disk, adjust alerts.                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Add Log Source                │  │             Certificate Rotation            │   │
+│   │     1. Install content pack if available     │  │    1. Generate new cert with correct SAN    │   │
+│   │      2. Configure device syslog to vRLI      │  │        2. Import cert via VAMI → SSL        │   │
+│   │     3. Verify events arriving in Explore     │  │        3. Restart loginsight service        │   │
+│   │      4. Tag source: env/product fields       │  │     4. Verify sources still sending logs    │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Disk and retention management prevent appliance from filling up during high-volume events.           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Disk Management                │  │               Alert Management              │   │
+│   │       Monitor: Admin → System Monitor        │  │         Add: Queries → create alert         │   │
+│   │        Archive: trigger manual export        │  │      Test: fire test from alert editor      │   │
+│   │        Purge: reduce retention period        │  │       Route: map to webhook/email/SNow      │   │
+│   │      Expand: add worker for more space       │  │     Suppress: noise via suppression rule    │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRLI appliance · /storage disk · NFS archive target · vCenter · syslog sources                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Content pack      = Install before onboarding; provides parsers and dashboards for source            │
+│  Explore           = vRLI real-time log viewer; used to confirm new sources are sending               │
+│  Source tag        = Custom field on ingested events identifying environment or product               │
+│  SAN cert          = Subject Alternative Name; FQDN of vRLI must be in cert SAN list                  │
+│  loginsight service= Linux service restarted after cert change to apply new TLS cert                  │
+│  System Monitor    = vRLI Admin section showing disk, CPU, RAM, and ingestion metrics                 │
+│  Manual archive    = Trigger export of log data to NFS/S3 before disk fills                           │
+│  Retention period  = Days of hot log data kept on disk; reduce to free space                          │
+│  Worker node       = Add for more disk and processing; joins cluster automatically                    │
+│  Alert suppression = Rule preventing noisy known-good events from firing notifications                │
+│  Webhook route     = Notification channel sending HTTP POST to external system on alert               │
+│  Alert test        = Manual trigger in alert editor; confirms notification delivery                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Certificate Errors

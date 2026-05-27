@@ -28,51 +28,49 @@
 │  └──────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
 ```
-
-## When to Escalate to Broadcom Support
-
-Escalate when the following conditions are met and internal troubleshooting has not resolved the issue:
-
-- Upgrade workflow is stuck and **Retry** does not clear it
-- LCM application cannot be started after a failed upgrade
-- Locker data is inaccessible (lost Master Password requires SR-guided recovery)
-- Product appliance VMs are in an unknown state following an LCM rollback that failed partway through
-- LCM API returns 500 errors persistently with no clear cause in logs
-- Certificate replacement via LCM causes a product outage and re-apply does not recover it
-
-Do not power cycle product VMs without SR guidance if they are in a partially upgraded state — this can cause split-brain or unrecoverable database corruption.
-
----
-
-## Opening a Broadcom Support Request
-
-Broadcom support for LCM is accessed via the [Broadcom Support Portal](https://support.broadcom.com).
-
-**Product to select:** VMware Aria Suite Lifecycle (under the VMware Cloud Foundation portfolio)
-
-**Severity definitions:**
-
-| Severity | Description | Target Initial Response |
-|---|---|---|
-| S1 | Production environment down, no workaround | 30 minutes (24x7) |
-| S2 | Major feature unavailable, significant business impact | 4 hours (24x7) |
-| S3 | Partial degradation, workaround available | Next business day |
-| S4 | General question, documentation request, or enhancement | Next business day |
-
----
-
-## Data to Collect Before Opening an SR
-
-Collect all of the following before opening the SR — providing this upfront avoids the first support response being a data collection request.
-
-**LCM system details:**
-
-```bash
-# LCM version — note output
-curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/system/details" | jq '.'
-
-# Or via UI: LCM → Settings → System Details → Version
+┌────────────────────────────────────── Aria Suite LCM Escalation ──────────────────────────────────────┐
+│                                                                                                       │
+│  Escalation with logscraper bundle, SR process, and TAM engagement for LCM.                           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │              SR Severity Levels             │   │
+│   │             LCM UI inaccessible              │  │          P1: LCM down or data loss          │   │
+│   │            All products degraded             │  │           P2: deploy/upgrade fails          │   │
+│   │           Upgrade fails and stuck            │  │          P3: cert or feature issue          │   │
+│   │          Cert expiry causing outage          │  │            P4: question / how-to            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Identify severity; run logscraper; open SR with bundle; call TAM for P1.                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  SR Process                  │  │                TAM Engagement               │   │
+│   │          1. Run logscraper + bundle          │  │             Call TAM for P1 now             │   │
+│   │          2. Open GSS SR + severity           │  │           TAM escalates internally          │   │
+│   │         3. Attach bundle + timeline          │  │              Bridge call for P1             │   │
+│   │            4. Follow GSS guidance            │  │           Provide change log + env          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM; logscraper via LCM UI; GSS portal for SR; TAM for P1/P2 escalation                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Logscraper          = LCM tool collecting logs from all products; mandatory for SR                   │
+│  Support Bundle      = LCM-level log archive from lcm-support.sh or VAMI                              │
+│  GSS                 = Global Support Services; Broadcom support portal                               │
+│  SR                  = Support Request; opened with severity and bundle attached                      │
+│  P1 Severity         = LCM or product fully down; 24/7 response; bridge call                          │
+│  P2 Severity         = Deploy/upgrade failure; priority business-hours response                       │
+│  P3 Severity         = Cert or feature issue; standard SLA                                            │
+│  TAM                 = Technical Account Manager; escalation for P1/P2                                │
+│  Bridge Call         = Live call with GSS + TAM + customer for P1 resolution                          │
+│  Change Log          = Recent changes provided to GSS for root cause analysis                         │
+│  Environment Details = LCM environment config; share with GSS for context                             │
+│  RCA                 = Root Cause Analysis document issued after P1 resolution                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Log bundle (required for all SRs):**

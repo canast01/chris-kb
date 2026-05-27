@@ -68,57 +68,49 @@ curl -sk https://aon-platform.example.local -o /dev/null -w "HTTP %{http_code}\n
 ssh ubuntu@aon-platform.example.local
 sudo systemctl status vrni-platform nginx cassandra
 ```
-
-### Initial Setup Wizard
-
-Navigate to `https://aon-platform.example.local` in a browser.
-
-1. **Login**: admin@local / (password set during OVA deployment)
-2. **License key**: Enter the AON license key obtained from Broadcom
-3. **Network config review**: Verify hostname, IP, DNS, NTP shown match what was set
-4. **Accept EULA**
-5. Click **Finish** — platform is now ready for data sources
-
-## Collector VM Deployment
-
-### Generate Pairing Key
-
-Before deploying the Collector OVA, generate a pairing key from the Platform UI:
-
-Settings → Accounts and Data Sources → Collectors → Add Collector → Generate Pairing Key
-
-Copy the pairing key — it is a long random string. It expires after 24 hours if unused.
-
-### Deploy Collector OVA
-
-1. vCenter → Deploy OVF Template → select Collector OVA
-2. Set VM name (e.g., `aon-collector-dc1`) and target location
-3. Configure OVF properties:
-
-| Property | Value |
-|---|---|
-| IP Address | `10.10.10.51` |
-| Subnet Mask | `255.255.255.0` |
-| Default Gateway | `10.10.10.1` |
-| DNS Server | `10.10.0.1` |
-| Hostname (FQDN) | `aon-collector-dc1.example.local` |
-| NTP Server | `ntp.example.local` |
-| Platform IP/FQDN | `aon-platform.example.local` |
-| Pairing Key | (paste from UI) |
-
-4. Power on the Collector VM. First boot takes 5–10 minutes.
-
-### Verify Collector Pairing
-
-```bash
-# SSH to Collector and check pairing status
-ssh ubuntu@aon-collector-dc1.example.local
-sudo systemctl status ni-collector
-sudo journalctl -u ni-collector -n 50
-
-# From Platform UI:
-# Settings → Accounts and Data Sources → Collectors
-# Collector should show Status: Connected
+┌─────────────────────────────────────── vRNI Install & Upgrade ────────────────────────────────────────┐
+│                                                                                                       │
+│  OVA deployment, PAK upgrade process, and pre-requisites for Aria Operations for Networks.            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Pre-Requisites                │  │             OVA Deployment Steps            │   │
+│   │         vSphere 6.7+ for platform VM         │  │          1. Download OVA from depot         │   │
+│   │         DNS A + PTR records created          │  │         2. Deploy via vSphere client        │   │
+│   │             NTP server reachable             │  │          3. Set IP/DNS/NTP in VAMI          │   │
+│   │         Network ports opened (docs)          │  │           4. Register license key           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Pre-requisites must be met before OVA deploy; PAK upgrade follows same sequence.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              PAK Upgrade Steps               │  │               Collector Deploy              │   │
+│   │           1. Snapshot platform VM            │  │             Deploy collector OVA            │   │
+│   │          2. Download PAK from depot          │  │         Register to platform via UI         │   │
+│   │            3. Upload PAK via VAMI            │  │        Set IPFIX target to collector        │   │
+│   │            4. Monitor upgrade log            │  │            Validate flow receipt            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vSphere cluster for platform + collector VMs; NFS/vSAN datastore; 1GbE+ management NIC               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OVA                 = Open Virtualization Appliance; vRNI platform/collector package                 │
+│  PAK File            = Product Activation Key file; contains upgrade binaries for vRNI                │
+│  VAMI                = Virtual Appliance Mgmt Interface on port 5480; used for upgrade                │
+│  Depot               = VMware Customer Connect or LCM depot for PAK download                          │
+│  DNS PTR             = Reverse DNS record; required for vRNI hostname resolution                      │
+│  NTP                 = Time sync; mismatched clocks cause flow correlation failures                   │
+│  License Key         = vRNI entitlement; applied in VAMI after first boot                             │
+│  Collector OVA       = Separate lightweight VM for remote segment flow collection                     │
+│  IPFIX Target        = Device config pointing flow export to the collector IP                         │
+│  Snapshot            = vSphere VM checkpoint taken before upgrade for rollback                        │
+│  Upgrade Log         = Available in VAMI during PAK apply; shows progress and errors                  │
+│  Port Requirements   = UDP 2055, TCP 443, TCP 5480; documented in VMware port guide                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 If the Collector does not appear as Connected within 10 minutes, check:

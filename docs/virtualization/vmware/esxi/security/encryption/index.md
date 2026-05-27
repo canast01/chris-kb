@@ -29,31 +29,51 @@ ESXi Encryption Stack
   ESXi Host Certificate: /etc/vmware/ssl/rui.crt
   Managed by VMCA (vCenter CA) — auto-renewed
 ```
-
-## VM Encryption
-
-VM Encryption is a vSphere feature that encrypts virtual machine files (VMX, VMDK, and log files) at rest using keys managed by a Key Management Server (KMS) or VMware's native Key Provider (NKP).
-
-### Key Provider Types
-
-| Type | Name | Use Case |
-|---|---|---|
-| Standard Key Provider | External KMS (KMIP 1.1) | Enterprise with existing KMS (Thales, HyTrust, etc.) |
-| Native Key Provider (NKP) | vCenter-managed keys | Simpler; no external KMS dependency |
-| Trusted Authority KMS | vSphere Trust Authority | Attestation-based; for high-assurance environments |
-
-### Configure Native Key Provider (NKP)
-
-In vCenter: **vCenter → Configure → Security → Key Providers → Add Native Key Provider**
-
-```powershell
-# PowerCLI — create NKP and back up the key material
-$nkp = New-KeyProvider -Name "NKP-Prod" -Type Native
-# IMPORTANT: Back up the NKP immediately after creation
-# vCenter → Key Providers → NKP-Prod → Back Up
-
-# The backup file is a password-protected archive
-# Store the archive and password separately in a vault
+┌────────────────────────────────────────── ESXi — Encryption ──────────────────────────────────────────┐
+│                                                                                                       │
+│  VM encryption, vMotion encryption, and KMS key management for ESXi workloads.                        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                VM Encryption                 │  │               KMS Integration               │   │
+│   │          Enabled via Storage Policy          │  │             vCenter Key Provider            │   │
+│   │            Encrypts VMDK + config            │  │             KMIP-compatible KMS             │   │
+│   │         DEK wrapped by KEK from KMS          │  │        Native Key Provider (vCenter)        │   │
+│   │         Requires Crypto-Enabled host         │  │         HyTrust / Thales / Vormetric        │   │
+│   │           Snapshots encrypted too            │  │            Key rotation procedure           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  KMS provides KEKs; vCenter wraps VM DEKs; host decrypts at power-on.                                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              vMotion Encryption              │  │               vSAN Encryption               │   │
+│   │         Required/Opportunistic modes         │  │           Data-at-rest encryption           │   │
+│   │          AES-256 in-flight traffic           │  │          Enabled per cluster policy         │   │
+│   │            Requires vSphere 6.5+             │  │          KMS provides cluster keys          │   │
+│   │          Config in cluster settings          │  │           Dedup disabled if enc on          │   │
+│   │          Enabled by default (8.0+)           │  │          Key re-key on node failure         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts with AES-NI CPU, management network, external KMS appliance                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VM Encryption = VMDK encrypted at rest using DEK/KEK model                                           │
+│  DEK          = Data Encryption Key; encrypts actual VM data on disk                                  │
+│  KEK          = Key Encryption Key; wraps the DEK; stored in KMS                                      │
+│  KMS          = Key Management Server; KMIP server storing KEKs                                       │
+│  KMIP         = Key Mgmt Interoperability Protocol; standard KMS API                                  │
+│  Native KP    = vCenter built-in key provider; no external KMS needed                                 │
+│  Crypto host  = ESXi host in crypto-enabled state; required for enc VMs                               │
+│  vMotion enc  = encrypts live migration traffic; required or opportunistic                            │
+│  vSAN enc     = encrypts all data written to vSAN datastore                                           │
+│  AES-NI       = CPU instruction set accelerating AES encryption                                       │
+│  Key rotation = replacing KEK; re-wraps DEKs without re-encrypting data                               │
+│  Dedup        = deduplication; disabled when vSAN encryption is active                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 NKP backup is critical — if vCenter is lost without a NKP backup, all VMs encrypted with that provider become unrecoverable.

@@ -17,22 +17,49 @@ Always attach a support bundle when opening a case.
 ```text
 Administration > Support > Generate Support Bundle
 ```
-
-Download the bundle from the UI once generated.
-
-### Via CLI
-
-```bash
-ssh admin@<aria-ops-primary-fqdn>
-
-# Generate support bundle
-vracli support bundle generate
-
-# List available bundles
-ls -lh /storage/log/support-bundle/
-
-# SCP bundle to local machine
-scp admin@<aria-ops-primary-fqdn>:/storage/log/support-bundle/<bundle-file>.zip /tmp/
+┌───────────────────────────────────── Aria Operations Escalation ──────────────────────────────────────┐
+│                                                                                                       │
+│  SR process, P1/P2 severity definitions, and TAM engagement for Aria Operations.                      │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │              SR Severity Levels             │   │
+│   │           vROps UI completely down           │  │         P1: monitoring down/no data         │   │
+│   │          All adapters disconnected           │  │          P2: major adapter failure          │   │
+│   │             Cluster node offline             │  │          P3: feature broken or slow         │   │
+│   │          Upgrade fails or corrupts           │  │            P4: question / how-to            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Identify severity; open SR with bundle; engage TAM for P1/P2 platform outages.                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  SR Process                  │  │                TAM Engagement               │   │
+│   │          1. Generate support bundle          │  │         Call TAM for P1 immediately         │   │
+│   │          2. Open GSS SR + severity           │  │         TAM escalates to engineering        │   │
+│   │         3. Attach bundle + timeline          │  │           Join bridge call for P1           │   │
+│   │            4. Follow GSS guidance            │  │          Provide change log to TAM          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vROps cluster; support bundle from SSH or VAMI; GSS portal for SR submission                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Support Bundle      = Log archive; always attach to SR before GSS can assist                         │
+│  GSS                 = Global Support Services; Broadcom support portal                               │
+│  SR                  = Support Request; tracks issue from open to resolution                          │
+│  P1 Severity         = Production monitoring down; 24/7 response; bridge call                         │
+│  P2 Severity         = Major degradation; priority business-hours response                            │
+│  P3 Severity         = Feature broken; standard SLA response                                          │
+│  TAM                 = Technical Account Manager; internal escalation path                            │
+│  Bridge Call         = Live conference call for P1; GSS + TAM + customer                              │
+│  Change Log          = Timeline of recent changes; critical for root cause analysis                   │
+│  Engineering Escalation= GSS routes SR to product engineering for complex bugs                        │
+│  RCA                 = Root Cause Analysis; document issued after P1 resolution                       │
+│  Upgrade Corruption  = Data or config damaged by failed upgrade; always P1/P2                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

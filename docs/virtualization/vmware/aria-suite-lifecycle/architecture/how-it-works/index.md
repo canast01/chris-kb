@@ -22,76 +22,49 @@ graph TB
   class VROPS,VRLI,VRA,VRNI ctrl
   class ADMIN host
 ```
-
-## Core Components
-
-| Component | Role |
-|---|---|
-| LCM Appliance | Central orchestration, UI, REST API, Locker vault |
-| Workspace ONE Access (VIDM) | Identity provider and SSO for all Aria products |
-| vRealize Easy Installer | Bootstrap ISO for initial multi-product deployment |
-| NFS Share | Binary repository (`.pak` files) and snapshot storage |
-| NTP Server | Time synchronisation — mandatory; certificate operations fail on >5s skew |
-| DNS | Forward + reverse resolution required for every node FQDN |
-
-## Upgrade Sequencing
-
-Always upgrade in this order to avoid dependency conflicts:
-
-1. Aria Suite Lifecycle (LCM itself)
-2. Workspace ONE Access (VIDM) — identity provider must be upgraded first
-3. Aria Operations for Logs
-4. Aria Operations
-5. Aria Automation
-
-## Upgrade Workflow (per product)
-
-1. **Pre-check** — validates DNS, NTP, disk space, NFS, vCenter reachability
-2. **Snapshot** — takes VM snapshots of all product appliances (rollback point)
-3. **Binary stage** — copies upgrade bundle from NFS to product appliances
-4. **Upgrade** — runs in-product upgrade agent; clustered products upgrade node by node
-5. **Post-check** — verifies services are running and health indicators are green
-6. **Rollback** — if post-check fails, LCM reverts to pre-upgrade snapshots
-
-## Deployment Pre-Requisites
-
-| Prerequisite | Why Required | Verification |
-|---|---|---|
-| DNS A + PTR records for every FQDN | LCM agents communicate by FQDN; PTR required for SSO | `nslookup <fqdn>` from LCM appliance |
-| NTP delta < 5 seconds | Certificate operations fail on time skew | `chronyc tracking` on LCM |
-| NFS share at `/data` | Stores `.pak` binary files | `df -h /data && touch /data/.test` |
-| vCenter service account | LCM deploys OVAs via vCenter API | Test in LCM → Settings → vCenter |
-| CA-signed certificate with full chain | Locker imports require full chain | `openssl verify -CAfile chain.pem leaf.pem` |
-| VIDM registered or deployed | All Aria products use VIDM for SSO | `curl -sk https://vidm.example.local/SAAS/API/1.0/REST/system/health` |
-
-## Product Version Matrix
-
-| Product | Current Version | Min LCM Version | EOS Date |
-|---|---|---|---|
-| Aria Suite Lifecycle | 8.16 | — | Nov 2026 |
-| Aria Operations | 8.17 | 8.14 | Nov 2026 |
-| Aria Operations for Logs | 8.16 | 8.14 | Nov 2026 |
-| Aria Automation | 8.17 | 8.14 | Nov 2026 |
-| Workspace ONE Access | 23.09 | 8.12 | Sep 2025 |
-
-## LCM API Quick Reference
-
-```bash
-# Authenticate
-TOKEN=$(curl -sk -X POST "https://lcm-prod-01.example.local/lcm/authz/api/v2/login" \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin@local","password":"<password>"}' | jq -r '.token')
-
-# List all environments
-curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments" | \
-  jq '.[] | {name: .environmentName, health: .environmentHealth}'
-
-# Trigger upgrade
-curl -sk -X POST -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments/<env-id>/products/<product-id>/upgrade" \
-  -H "Content-Type: application/json" \
-  -d '{"targetVersion":"8.17.0","snapshotBeforeUpgrade":true}'
+┌────────────────────────────────────── How Aria Suite LCM Works ───────────────────────────────────────┐
+│                                                                                                       │
+│  Depot sync, environment creation, product deployment, and cert management in LCM.                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Depot & Content                │  │            Environment Lifecycle            │   │
+│   │          Depot: online or local NFS          │  │           Create environment in UI          │   │
+│   │          Sync PAK files from depot           │  │           Associate vCenter + vIDM          │   │
+│   │           Download: vROps/vRLI/vRA           │  │           Add products one by one           │   │
+│   │          Binary stored on LCM disk           │  │          LCM runs pre-checks first          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Depot provides binaries; environments group products; LCM orchestrates deployment.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Product Deployment Flow            │  │            Certificate Management           │   │
+│   │           1. Select PAK from depot           │  │           Import cert to LCM trust          │   │
+│   │        2. LCM deploys OVA to vSphere         │  │          Assign cert to environment         │   │
+│   │          3. LCM configures product           │  │          LCM pushes cert to product         │   │
+│   │         4. Product joins environment         │  │            Rotate cert via LCM UI           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM on vSphere; vCenter for product VM deployment; NFS/S3 for depot storage                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Depot               = Content source: VMware online or local NFS with PAK files                      │
+│  PAK File            = Product Activation Key; contains binaries for deploy/upgrade                   │
+│  Environment         = LCM grouping of related products sharing vCenter and vIDM                      │
+│  Pre-check           = LCM automated validation before deployment or upgrade                          │
+│  OVA Deploy          = LCM deploys product VM from OVA via vCenter API                                │
+│  Product Config      = LCM automates post-deploy config: IP, DNS, vIDM registration                   │
+│  Cert Trust Store    = LCM internal store of trusted CA certs and product certs                       │
+│  Cert Assignment     = Linking a TLS cert to a specific product in an environment                     │
+│  Cert Rotation       = LCM-orchestrated cert replacement across all product nodes                     │
+│  vIDM Registration   = Product registration with vIDM for SSO; done by LCM                            │
+│  Logscraper          = LCM diagnostic tool collecting logs from all products                          │
+│  Content Sync        = LCM downloads and caches PAK files from online depot                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 | API Path | Purpose |

@@ -28,33 +28,51 @@ ESXi Diagnostic Data Sources
 │  └── DS Latency   < 10ms  │ > 20ms → investigate         │
 └──────────────────────────────────────────────────────────┘
 ```
-
-## Host Health
-
-ESXi host health, sensors, hardware status, services, and operational readiness.
-
-### Daily Checks
-
-| Check | Notes |
-|---|---|
-| Review active alarms | vSphere Client → host → Monitor → Issues |
-| Check recent failed tasks | vSphere Client → host → Monitor → Tasks |
-| Confirm service health | `hostd`, `vpxa`, `ntpd` must be running |
-| Confirm capacity and performance are normal | CPU ready, memory balloon, datastore latency |
-| Check recent changes | Change log or ticket references |
-
-### Health Commands
-
-```bash
-esxcli system version get
-esxcli hardware platform get
-esxcli network ip interface list
-esxcli network nic list
-esxcli storage core path list
-esxcli storage filesystem list
-esxcli system ntp get
-/etc/init.d/hostd status
-/etc/init.d/vpxa status
+┌───────────────────────────────────────── ESXi — Diagnostics ──────────────────────────────────────────┐
+│                                                                                                       │
+│  Log file locations, esxcli diagnostic commands, and support bundle collection.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Key Log Files                 │  │          esxcli Diagnostic Commands         │   │
+│   │            /var/log/vmkernel.log             │  │             esxcli system stats             │   │
+│   │              /var/log/hostd.log              │  │           esxcli network stat get           │   │
+│   │              /var/log/vpxa.log               │  │           esxcli storage core path          │   │
+│   │            /var/log/fdm.log (HA)             │  │            esxcli vm process list           │   │
+│   │            /scratch/log (SD/USB)             │  │            esxcli system process            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Logs → esxcli live state → esxtop performance → support bundle for GSS.                              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              esxtop Performance              │  │                Support Bundle               │   │
+│   │            esxtop interactive TUI            │  │          vm-support -w /tmp/bundle          │   │
+│   │             c=CPU, m=mem, d=disk             │  │           vCenter: Export Support           │   │
+│   │            n=network, i=interrupt            │  │           Includes logs + configs           │   │
+│   │             batch mode: -b -n 5              │  │             Upload to VMware SR             │   │
+│   │             DAVG > 25ms = issue              │  │             Keep for 30 days min            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, SAN/NAS storage, management network, syslog server for logs                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vmkernel.log = main ESXi kernel log; storage/network/crash events                                    │
+│  hostd.log   = host daemon log; VM operations, config changes                                         │
+│  vpxa.log    = vCenter agent log; connection issues to vCenter                                        │
+│  fdm.log     = HA agent log; cluster membership and failover events                                   │
+│  esxtop      = real-time performance tool; CPU/mem/disk/net metrics                                   │
+│  DAVG        = device average latency; > 25ms indicates storage issue                                 │
+│  KAVG        = kernel average latency; VMkernel queue delay                                           │
+│  vm-support  = CLI tool to create ESXi diagnostic bundle                                              │
+│  SR          = Service Request; VMware GSS support ticket                                             │
+│  /scratch    = persistent log path; on SD/USB hosts may be volatile                                   │
+│  batch mode  = esxtop -b -n N; captures N iterations non-interactively                                │
+│  Support bundle = zip of logs, configs, hardware state for GSS analysis                               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Common Issues

@@ -13,12 +13,49 @@ sudo -i
 # Or use sudo for individual commands
 sudo systemctl status vrni-platform
 ```
-
-**Collector VM** also uses `ubuntu` as the default SSH user.
-
-```bash
-ssh ubuntu@aon-collector.example.local
-sudo -i
+┌───────────────────────────────────────── vRNI CLI Reference ──────────────────────────────────────────┐
+│                                                                                                       │
+│  REST API endpoints, VAMI management, and SSH appliance commands for vRNI.                            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Key REST API Endpoints            │  │               VAMI Operations               │   │
+│   │           POST /api/ni/auth/token            │  │             https://<vrni>:5480             │   │
+│   │           GET /api/ni/data-sources           │  │          Network config + NTP + DNS         │   │
+│   │              GET /api/ni/flows               │  │           SSL cert upload via VAMI          │   │
+│   │           GET /api/ni/entities/vms           │  │         Reboot / shutdown appliance         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  REST API for config and query; VAMI for appliance mgmt; SSH for service-level ops.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            SSH Appliance Commands            │  │            Collector SSH Commands           │   │
+│   │        service network-insight status        │  │           service collector status          │   │
+│   │       service network-insight restart        │  │          service collector restart          │   │
+│   │           tail -f /var/log/app.log           │  │          tail -f /var/log/proxy.log         │   │
+│   │           support-bundle generate            │  │         ping <platform-ip> from coll        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRNI platform VM + collector VMs; SSH access via jump host or direct; VAMI on port 5480              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  REST API            = HTTP/JSON northbound interface; requires Bearer token auth                     │
+│  VAMI                = Virtual Appliance Management Interface on port 5480                            │
+│  Bearer Token        = Short-lived API token obtained via POST /auth/token                            │
+│  network-insight     = Main vRNI platform service; controls analytics and web UI                      │
+│  collector           = vRNI collector service; receives and forwards IPFIX/NetFlow                    │
+│  app.log             = Primary platform log; first stop for error investigation                       │
+│  proxy.log           = Collector-side log; records flow receipt and forwarding                        │
+│  support-bundle      = Compressed archive of all logs and config for GSS submission                   │
+│  GET /entities/vms   = API endpoint returning VM inventory with flow metadata                         │
+│  GET /flows          = API endpoint for querying flow records with filter params                      │
+│  NTP                 = Network Time Protocol; required for accurate flow timestamps                   │
+│  SSH                 = Secure Shell; admin access to appliance CLI on port 22                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 SSH is available on port 22. Restrict access to jump hosts only — see Hardening page.

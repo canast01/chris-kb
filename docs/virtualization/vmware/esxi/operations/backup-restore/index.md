@@ -28,57 +28,51 @@ ESXi Backup & Restore Flow
 │  └── Exit Maintenance Mode → validate reconnect        │
 └────────────────────────────────────────────────────────┘
 ```
-
-## Host Maintenance Mode Process
-
-### Pre-Checks
-
-- Confirm cluster has sufficient capacity to absorb workload
-- Confirm DRS is enabled and set to at least Partially Automated
-- Check for VMs with DRS anti-affinity or must-run-on rules
-- Confirm vSAN evacuation setting if vSAN is in use
-
-### Entering Maintenance Mode
-
-1. In vCenter, right-click the host → **Maintenance Mode** → **Enter Maintenance Mode**
-2. Select evacuation option:
-   - **Move powered-off and suspended VMs** (standard)
-   - **Ensure accessibility** (vSAN — leaves data accessible but does not fully evacuate)
-   - **Full data migration** (vSAN — migrates all data off the host)
-3. Click OK and monitor the task
-
-### Monitoring the Process
-
-- Watch DRS task progress in Recent Tasks
-- Confirm VMs are migrating to other hosts
-- Check vSAN resync if full migration was selected — wait for it to complete before proceeding
-
-### Completing Approved Work
-
-- Perform hardware, firmware, or patching work as planned
-- Do not extend beyond the approved maintenance window without notification
-
-### Exiting Maintenance Mode
-
-1. Right-click the host → **Maintenance Mode** → **Exit Maintenance Mode**
-2. Confirm the host reconnects and shows as Connected
-3. Wait for vSAN to rebalance if applicable
-
-### Post-Maintenance Validation
-
-- Confirm host is Connected in vCenter
-- Confirm no new alerts on the host
-- Confirm vSAN health is green if vSAN is used
-- Confirm VMs are distributed as expected by DRS
-- Confirm host hardware health in iDRAC
-
-## ESXi Host Configuration Backup
-
-Export the ESXi host configuration before any major change or on a regular schedule:
-
-```bash
-# Via PowerCLI — export host configuration bundle
-Get-VMHostFirmware -VMHost <esxi-host> -BackupConfiguration -DestinationPath C:\backups\
+┌────────────────────────────────────── ESXi — Backup and Restore ──────────────────────────────────────┐
+│                                                                                                       │
+│  configBundle backup, Host Profiles, and full reinstall restore procedure.                            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Config Backup (configBundle)         │  │             Host Profile Backup             │   │
+│   │          vim-cmd hostsvc/firmware/           │  │         Export profile from vCenter         │   │
+│   │         sync_config → backup_config          │  │           Includes NIC/storage/dns          │   │
+│   │          Exports .tgz configBundle           │  │          Attach to host compliance          │   │
+│   │           Schedule via cron/script           │  │          vLCM image backup included         │   │
+│   │           Store off-host (NFS/NAS)           │  │          Compare with desired state         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Backup configBundle → store safely → restore via firmware/restore_config.                            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Restore Procedure               │  │              Verification Steps             │   │
+│   │         Reinstall ESXi same version          │  │            Check vmk0 IP restored           │   │
+│   │         Upload configBundle to host          │  │          Verify vCenter reconnects          │   │
+│   │           firmware/restore_config            │  │            Check datastore mounts           │   │
+│   │           Reboot → rejoin cluster            │  │             Validate VM power-on            │   │
+│   │          Apply Host Profile if used          │  │           Confirm HA agent running          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 host, local boot media (SD/M.2), management network, NAS backup store                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  configBundle = .tgz ESXi host config archive; firmware/backup_config cmd                             │
+│  vim-cmd     = ESXi CLI tool for host service and management tasks                                    │
+│  Host Profile = vCenter policy capturing desired ESXi configuration state                             │
+│  vLCM        = vSphere Lifecycle Mgr; manages ESXi image and firmware                                 │
+│  restore_config = vim-cmd call to apply a previously saved configBundle                               │
+│  HA agent    = fdm process on ESXi; communicates with vCenter HA master                               │
+│  sync_config = vim-cmd call to flush pending config before backup                                     │
+│  NAS         = Network Attached Storage; stores configBundle files                                    │
+│  Desired state = Host Profile compliance target; re-applied after restore                             │
+│  DCUI        = Direct Console UI; local console for host configuration                                │
+│  fdm         = Fault Domain Manager; ESXi HA agent process                                            │
+│  Cluster     = group of ESXi hosts sharing HA, DRS, and vSAN resources                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash

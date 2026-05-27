@@ -25,26 +25,51 @@ ESXi Integration Map
           │      NBD / SAN                             │
           └────────────────────────────────────────────┘
 ```
-
-## vCenter Integration
-
-ESXi hosts are managed by vCenter Server and must be joined to a vCenter instance for full functionality. To add a host: vCenter > Hosts and Clusters > right-click datacenter or cluster > Add Host. Provide the ESXi hostname or IP, root credentials, and optionally assign a licence.
-
-Host Profiles capture a reference host's configuration (networking, storage, security, services) and apply it to other hosts in the cluster, enforcing consistency. Attach a profile to a cluster and remediate hosts to bring them into compliance.
-
-Auto Deploy enables stateless ESXi provisioning via PXE boot. The host boots from a software image stored in vCenter; no local disk required. Rules in the Auto Deploy rule engine match hosts to image profiles and host profiles. Useful for large-scale or bare-metal refresh scenarios.
-
-## Storage Integration
-
-**Fibre Channel (FC):** HBA zoning must be configured on the FC switch before ESXi discovers LUNs. Single-initiator/single-target zoning is best practice. ESXi registers as an initiator; storage array presents LUNs as VMFS datastores or RDMs.
-
-**iSCSI:** Software iSCSI initiator is enabled via:
-
-```bash
-esxcli iscsi adapter list
-esxcli iscsi adapter enable --adapter=vmhba65
-esxcli iscsi adapter discovery statictarget add --adapter=vmhba65 --address=<target-ip>:3260,1 --name=<iqn>
-esxcli storage core adapter rescan --adapter=vmhba65
+┌───────────────────────────────────────── ESXi — Integrations ─────────────────────────────────────────┐
+│                                                                                                       │
+│  ESXi integrates with vCenter, storage arrays, AD, backup agents, monitoring.                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             vCenter Integration              │  │             Storage Integration             │   │
+│   │        vCenter manages host lifecycle        │  │            VMFS on iSCSI/FC/FCoE            │   │
+│   │          vLCM patches ESXi firmware          │  │            NFS v3/v4.1 datastores           │   │
+│   │          HA/DRS cluster membership           │  │            vSAN local disk pools            │   │
+│   │         vMotion/svMotion operations          │  │            NVMe-oF fabric support           │   │
+│   │           dvSwitch port group mgmt           │  │            VAAI offload to array            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  vCenter API → ESXi agent; backup uses VADP/CBT snapshot transport.                                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Identity / AD Integration           │  │             Backup / Monitoring             │   │
+│   │            AD join for host auth             │  │           Veeam VADP proxy on ESXi          │   │
+│   │            Smart card / CAC login            │  │            Commvault / Avamar CBT           │   │
+│   │          LDAP for SSO identity src           │  │           Aria Ops agent per host           │   │
+│   │          Local host users fallback           │  │              SNMP traps to NMS              │   │
+│   │          vSphere Roles on AD groups          │  │            Syslog to Log Insight            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, SAN/NAS arrays, 10/25 GbE NICs, mgmt network for vCenter reach                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VADP     = vStorage APIs for Data Protection; snapshot-based backup API                              │
+│  CBT      = Changed Block Tracking; tracks dirty disk blocks since backup                             │
+│  VAAI     = vStorage APIs for Array Integration; offloads clone/zero to array                         │
+│  vLCM     = vSphere Lifecycle Mgr; manages ESXi image + firmware baseline                             │
+│  dvSwitch = Distributed vSwitch; centrally managed by vCenter across hosts                            │
+│  VMFS     = VMware File System; clustered FS shared across ESXi hosts                                 │
+│  NFS      = Network File System; supported as ESXi datastore v3 and v4.1                              │
+│  NVMe-oF  = NVMe over Fabrics; high-perf block storage protocol on ESXi                               │
+│  Aria Ops = VMware monitoring; collects ESXi metrics via agent/API                                    │
+│  SNMP     = Simple Network Mgmt Protocol; ESXi sends traps on events                                  │
+│  SSO      = Single Sign-On; vCenter auth; integrates AD for ESXi login                                │
+│  svMotion = Storage vMotion; migrates VMDK between datastores live                                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Bind the iSCSI adapter to dedicated vmkernel ports for multipathing.

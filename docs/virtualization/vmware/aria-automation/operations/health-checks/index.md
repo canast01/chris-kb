@@ -9,18 +9,49 @@ All vCenter and NSX cloud accounts must show a green status indicator:
 ```text
 Infrastructure → Connections → Cloud Accounts
 ```
-
-Any account showing a warning or error status means Aria Automation cannot provision into that target. Common causes: expired service account password, vCenter certificate change, NSX Manager unreachable.
-
-```bash
-# Check cloud account status via API
-TOKEN=$(curl -sk -X POST "https://vra-prod-01.example.local/csp/gateway/am/api/login" \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"<password>"}' | jq -r '.token')
-
-curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-prod-01.example.local/iaas/api/cloud-accounts" | \
-  jq '.content[] | {name: .name, type: .cloudAccountType, status: .cloudAccountStatus}'
+┌─────────────────────────────────── Aria Automation — Health Checks ───────────────────────────────────┐
+│                                                                                                       │
+│  Daily health checks cover service status, cloud account sync, Orchestrator, and vIDM.                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Service Health                │  │              Integration Health             │   │
+│   │        vracli status --all: all green        │  │      Cloud accounts: data collection OK     │   │
+│   │        kubectl get pods: all Running         │  │     vIDM: SSO login works for test user     │   │
+│   │         VAMI: disk/mem/CPU in limits         │  │    Orchestrator: endpoint connections OK    │   │
+│   │         Postgres replication lag: 0          │  │      NSX-T account: networks enumerated     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Functional checks confirm catalog, requests, and event broker are operating correctly.               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Functional Checks               │  │               Alert Thresholds              │   │
+│   │     Catalog: items visible to consumers      │  │          Disk: warn >70%, crit >85%         │   │
+│   │        Test request: deploy+delete VM        │  │           Postgres lag: warn >30s           │   │
+│   │        ABX test action: runs in <30s         │  │         Data collection fail: alert         │   │
+│   │      Event broker: subscription active       │  │       Pod restart >3/hour: investigate      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRA appliance VMs · Postgres nodes · vIDM VM · vCenter · NSX manager · NTP                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vracli status     = CLI command returning per-service health (green/red) for all vRA services        │
+│  Data collection   = vRA background job syncing cloud resource inventory from each account            │
+│  Postgres lag      = Replication delay between primary and standby Postgres nodes                     │
+│  Pod restart count = kubectl restartCount; high value indicates crashing microservice                 │
+│  VAMI disk check   = /storage partition usage on vRA appliance; log growth can fill disk              │
+│  ABX test action   = Simple echo/ping ABX action run to verify FaaS execution pipeline                │
+│  Event broker sub  = Active subscription count; zero subscriptions means no event hooks fire          │
+│  SSO login test    = Browser login via vIDM to confirm SAML chain is working end-to-end               │
+│  Cloud account OK  = vRA data collection status shows green for all registered endpoints              │
+│  Orchestrator conn = vRA Orchestrator endpoint reachable and authenticated from vRA service           │
+│  NSX enumeration   = vRA lists NSX segments proving NSX-T integration is functional                   │
+│  Catalog visible   = Consumer role user sees expected items in self-service portal                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

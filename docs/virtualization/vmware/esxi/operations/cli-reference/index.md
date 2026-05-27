@@ -28,33 +28,51 @@ ESXi CLI Tool Map
 │  Logs  /var/log/vmkernel.log  hostd  vpxa  fdm  auth     │
 └─────────────────────────────────────────────────────────┘
 ```
-
-## System, Services & Maintenance
-
-```bash
-# Version and identity
-esxcli system version get
-esxcli system hostname get
-esxcli system hostname set --host <hostname> --domain <domain>
-esxcli system uuid get
-esxcli system uptime get
-esxcli system time get
-
-# Accounts and permissions
-esxcli system account list
-esxcli system account add -i <username> -p <password> -d "Description"
-esxcli system account remove -i <username>
-esxcli system permission list
-esxcli system permission set -i <username> -r Admin
-
-# Kernel modules
-esxcli system module list
-esxcli system module get -m <module>
-
-# Syslog
-esxcli system syslog config get
-esxcli system syslog config set --loghost udp://<ip>:514
-esxcli system syslog reload
+┌──────────────────────────────────────── ESXi — CLI Reference ─────────────────────────────────────────┐
+│                                                                                                       │
+│  esxcli on-host, vim-cmd, govc (remote), and PowerCLI automation commands.                            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               esxcli (on-host)               │  │              vim-cmd (on-host)              │   │
+│   │          esxcli system version get           │  │           vim-cmd vmsvc/getallvms           │   │
+│   │         esxcli network ip interface          │  │          vim-cmd vmsvc/power.on ID          │   │
+│   │           esxcli storage core path           │  │         vim-cmd hostsvc/maintenance         │   │
+│   │            esxcli vm process list            │  │          vim-cmd hostsvc/firmware/          │   │
+│   │           esxcli software vib list           │  │           vim-cmd solo/registervm           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  govc (remote vCenter API) and PowerCLI for scripted multi-host operations.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              govc (remote CLI)               │  │              PowerCLI (remote)              │   │
+│   │                govc host.info                │  │           Get-VMHost | select Name          │   │
+│   │              govc datastore.ls               │  │          Get-Datastore | sort Name          │   │
+│   │            govc vm.migrate -host             │  │           Move-VM -Destination $h           │   │
+│   │         govc host.maintenance.enter          │  │           Set-VMHost -State Maint           │   │
+│   │         govc events -type HostEvent          │  │            Get-VIEvent -Entity $h           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ESXi hosts on x86; management network for SSH/API access to host/vCenter                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  esxcli    = on-host CLI; namespaces: system, network, storage, vm, software                          │
+│  vim-cmd   = on-host; wraps vSphere API calls (hostsvc/vmsvc namespaces)                              │
+│  govc      = open-source Go CLI for vCenter API; runs from any workstation                            │
+│  PowerCLI  = VMware PowerShell module for scripted vSphere management                                 │
+│  VIB       = vSphere Installation Bundle; ESXi extension/driver package                               │
+│  GOVC_URL  = env var pointing govc at vCenter: https://user:pass@vc/sdk                               │
+│  maintenance = host state; vCenter migrates VMs before maintenance tasks                              │
+│  hostsvc   = vim-cmd namespace for host-level service operations                                      │
+│  vmsvc     = vim-cmd namespace for VM lifecycle operations                                            │
+│  PSC       = Platform Services Controller; SSO/certs (pre-7.0)                                        │
+│  fdm       = Fault Domain Manager; HA agent queried via vim-cmd                                       │
+│  vCenter API = REST + SOAP endpoint; govc/PowerCLI both use it                                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash

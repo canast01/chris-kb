@@ -49,41 +49,51 @@ vsipioctl getstats -f <filter-name>
 # NSX Manager UI: Plan & Troubleshoot → Traceflow
 # Source: VM vNIC, Destination: gateway IP, Protocol: ICMP
 ```
-
-### Common Causes
-
-| Cause | Fix |
-|---|---|
-| DFW default-deny blocking | Add allow rule for gateway traffic in Infrastructure policy |
-| Wrong gateway IP configured on segment | Update segment subnet in NSX Manager |
-| T1 not connected to a T0 | Connect T1 to T0 in NSX Manager |
-| T1 not advertising connected routes | Enable `TIER1_CONNECTED` route advertisement on T1 |
-| Missing route on T0 | Check T0 routing table from Edge CLI |
-
----
-
-## BGP Session Down
-
-### Symptom
-
-BGP neighbor on Tier-0 gateway shows state other than `Established`. External prefixes are not being received; NSX overlay routes are not being advertised to physical network.
-
-### Diagnosis
-
-```bash
-# SSH to the Edge node
-vrf <tier0-vrf-id>
-get bgp neighbor summary
-# Look for: State: Active, Idle, or Connect — not Established
-
-# Detailed neighbor info
-get bgp neighbor <neighbor-ip>
-# Reason for not establishing: auth failure, TCP failure, hold timer, etc.
-
-# Check physical uplink interface
-get interface fp-eth0
-get interface fp-eth0 counters
-# Verify UP state and non-zero Rx counters
+┌───────────────────────────────────────── NSX — Common Issues ─────────────────────────────────────────┐
+│                                                                                                       │
+│  BGP session down, DFW unexpected drops, transport node failures, and fixes.                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             BGP / Routing Issues             │  │               DFW Drop Issues               │   │
+│   │           Session Idle or Connect            │  │         Traffic unexpectedly dropped        │   │
+│   │            Check Edge uplink VLAN            │  │             Check DFW rule order            │   │
+│   │           Verify BGP timers match            │  │             Enable DFW flow logs            │   │
+│   │            Check ASN/neighbor IP             │  │              Use Traceflow tool             │   │
+│   │           get bgp neighbor summary           │  │            Check group membership           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  BGP/routing diagnosis first; DFW Traceflow for east-west drop issues.                                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Transport Node Issues             │  │            Manager Cluster Issues           │   │
+│   │             Node shows degraded              │  │             Node shows DEGRADED             │   │
+│   │           Check NSX agent on ESXi            │  │           Check disk space on mgr           │   │
+│   │            Resync transport node             │  │            Restart proton service           │   │
+│   │            Check TEP connectivity            │  │              Verify NTP in sync             │   │
+│   │           N-VDS mtu / uplink check           │  │            Check /var/log/proton            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  NSX Manager VMs, Edge VMs, ESXi transport nodes, ToR switches, vCenter                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  BGP session = routing peer; Idle/Connect = not established                                           │
+│  Traceflow   = NSX tool; sends test packet to debug path/drops                                        │
+│  DFW flow log= per-rule hit log; enabled in rule settings                                             │
+│  Transport node = ESXi/Edge with N-VDS; resync forces config refresh                                  │
+│  TEP         = Tunnel Endpoint; GENEVE source; ping to verify                                         │
+│  N-VDS       = NSX distributed switch; check uplink binding                                           │
+│  proton      = NSX Manager core service; restart to recover stuck state                               │
+│  DEGRADED    = NSX cluster status; one or more nodes unhealthy                                        │
+│  Group memb  = DFW group members; wrong group = wrong firewall policy                                 │
+│  ASN         = Autonomous System Number; must match on BGP peers                                      │
+│  Edge uplink = VLAN uplink on Edge to physical switch; check tagging                                  │
+│  Resync      = NSX Manager pushes config to transport node again                                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Common Causes

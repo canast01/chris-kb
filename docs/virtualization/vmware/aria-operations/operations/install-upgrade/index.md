@@ -37,42 +37,49 @@ Aria Operations — Upgrade Paths
 │  ✔ Backup completed within last 24h                 │
 └─────────────────────────────────────────────────────┘
 ```
-
-## Version History and Rebranding
-
-| Product Name | Version | Notes |
-|-------------|---------|-------|
-| vRealize Operations Manager | 8.0 – 8.6 | Legacy name |
-| VMware Aria Operations | 8.10 – 8.18 | Rebranded Q3 2022 |
-
-> Check the [VMware Product Interoperability Matrix](https://interopmatrix.vmware.com/) for supported vSphere versions per Aria Operations release.
-
----
-
-## Upgrade Paths
-
-### Via Aria Suite Lifecycle (Recommended)
-
-1. Log in to Aria Suite Lifecycle (LCM) → **Lifecycle Operations**
-2. Select the environment containing Aria Operations
-3. Click **Upgrade** and select the target version from the marketplace
-4. Run pre-upgrade health checks
-5. Follow the LCM wizard — nodes are upgraded in sequence (data nodes → replica → primary)
-
-### In-Product Upgrade Wizard (Standalone)
-
-1. Log in to Aria Operations UI → **Administration > Software Update**
-2. Upload the PAK file or point to the online repository
-3. Run pre-check validation
-4. Proceed with upgrade
-
-### Manual PAK File (Air-gap)
-
-```bash
-# Download PAK from Broadcom Customer Connect
-# Upload via UI: Administration > Software Update > Upload PAK
-# Or SCP to appliance and trigger via CLI:
-vracli software-update install --file /tmp/VMware-vRealize-Operations-<version>.pak
+┌────────────────────────────────── Aria Operations Install & Upgrade ──────────────────────────────────┐
+│                                                                                                       │
+│  OVA/PAK deployment, node cluster setup, and upgrade for Aria Operations (vROps).                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Pre-Requisites                │  │               OVA Deploy Steps              │   │
+│   │           vSphere 6.7+ environment           │  │          1. Download OVA from depot         │   │
+│   │        DNS forward + reverse records         │  │         2. Deploy via vSphere client        │   │
+│   │            NTP server configured             │  │        3. Complete VAMI setup wizard        │   │
+│   │           SMTP for alert delivery            │  │         4. Add data nodes if needed         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Pre-requisites validated before OVA; cluster nodes added after master is ready.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              PAK Upgrade Steps               │  │             LCM-Managed Upgrade             │   │
+│   │          1. Backup CaSA + snapshot           │  │          LCM: Environment > Upgrade         │   │
+│   │            2. Upload PAK in VAMI             │  │          LCM handles PAK + sequence         │   │
+│   │           3. Upgrade master first            │  │            Pre-check before apply           │   │
+│   │          4. Then data/replica nodes          │  │          Validate after completion          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vSphere cluster; SSD-backed NFS or vSAN; SMTP server; NTP; DNS with PTR records                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OVA                 = Open Virtualization Appliance; vROps node deployment package                   │
+│  PAK File            = Product upgrade bundle; applied via VAMI or LCM                                │
+│  VAMI Setup Wizard   = First-boot configuration: IP, DNS, NTP, admin password                         │
+│  Data Node           = Analytics scale-out node added to master cluster post-deploy                   │
+│  Replica Node        = HA standby for master; added and promoted via VAMI cluster UI                  │
+│  LCM Upgrade         = Aria Suite LCM orchestrates full cluster upgrade                               │
+│  CaSA Backup         = Required before any upgrade; stored on NFS or SFTP                             │
+│  Pre-check           = LCM validation before upgrade: disk, memory, connectivity                      │
+│  Upgrade Sequence    = Master first, then replica, then data nodes, then collectors                   │
+│  DNS PTR             = Reverse DNS required for node-to-node cluster communication                    │
+│  NTP Sync            = All nodes must be time-synced before and after upgrade                         │
+│  Depot               = VMware/Broadcom source for PAK file download via LCM                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -58,15 +58,51 @@ join management-plane <node1-ip> username admin thumbprint <node1-thumbprint>
 # Get node 1's thumbprint from node 1 CLI:
 get certificate api thumbprint
 ```
-
-After joining, verify on node 1:
-
-```bash
-get managers
-# Should list all 3 nodes with status CONNECTED
-
-get cluster status
-# Management Cluster Status: STABLE
+┌────────────────────────────────────── NSX — Install and Upgrade ──────────────────────────────────────┐
+│                                                                                                       │
+│  NSX Manager OVA deployment, transport node prep, and in-place upgrade flow.                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Fresh Deployment               │  │              Upgrade Procedure              │   │
+│   │            Deploy Manager OVA x3             │  │           Download upgrade bundle           │   │
+│   │          Form cluster (join nodes)           │  │            Upload to NSX Manager            │   │
+│   │           Register compute manager           │  │           Run pre-check validation          │   │
+│   │         Deploy edge transport nodes          │  │           Upgrade MP → CCP → hosts          │   │
+│   │          Prepare ESXi hosts (N-VDS)          │  │         Verify each tier before next        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Deploy manager cluster → compute manager → edges → ESXi transport nodes.                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Prerequisites                 │  │            Version Compatibility            │   │
+│   │           vCenter registered first           │  │             NSX 4.x — current GA            │   │
+│   │          IP pool for TEP addresses           │  │            vCenter 7.0+ required            │   │
+│   │         Uplink/overlay profiles set          │  │            ESXi 7.0+ for N-VDS 2            │   │
+│   │           MTU 1600+ on fabric NICs           │  │             Interop matrix check            │   │
+│   │         BGP ASN planned with NetEng          │  │            VCF: use SDDC Mgr LCM            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ESXi hosts, vCenter, physical ToR with BGP, SFTP server, management network                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OVA         = Open Virtualisation Appliance; NSX Manager deploy format                               │
+│  Compute Mgr = vCenter registered in NSX; source of host inventory                                    │
+│  Transport node = ESXi or Edge with N-VDS installed for overlay                                       │
+│  N-VDS       = NSX managed vSwitch replacing dvSwitch on host                                         │
+│  TEP         = Tunnel Endpoint; source IP for GENEVE overlay traffic                                  │
+│  Uplink profile= defines LAG, teaming, VLAN for TEP traffic                                           │
+│  IP pool     = range of IPs assigned to TEPs during host prep                                         │
+│  MP          = Management Plane; upgraded first in NSX upgrade sequence                               │
+│  CCP         = Central Control Plane; upgraded second after MP                                        │
+│  SDDC Mgr    = VCF lifecycle mgr; handles NSX upgrades in VCF context                                 │
+│  Pre-check   = NSX upgrade validator; runs before bundle apply                                        │
+│  Interop     = VMware Product Interoperability Matrix for version support                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Configure Virtual IP (VIP)

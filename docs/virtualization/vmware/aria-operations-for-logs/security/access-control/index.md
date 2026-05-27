@@ -17,17 +17,49 @@ Aria Operations for Logs uses a simple two-tier RBAC model: users are either adm
 ```text
 Administration → Authentication → Active Directory → Configure
 ```
-
-Provide:
-- **Domain**: `corp.local`
-- **Domain controller**: `dc01.example.local` (use multiple for HA)
-- **Port**: 636 (LDAPS) — required for production
-- **Bind DN**: `CN=svc-vrli-ldap,OU=Service Accounts,DC=corp,DC=local`
-- **Bind password**: stored in CyberArk or vault; retrieved during configuration
-
-Import the domain CA certificate before configuring LDAPS:
-```text
-Administration → SSL → Import Certificate → paste the root CA PEM
+┌────────────────────────────── Aria Operations for Logs — Access Control ──────────────────────────────┐
+│                                                                                                       │
+│  vRLI access is controlled by built-in roles and AD group mappings via LDAP integration.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Built-in Roles                │  │              LDAP Group Mapping             │   │
+│   │       Super Admin: full configuration        │  │       AD group → vRLI role assignment       │   │
+│   │        User: view and query logs only        │  │      LDAP config: Administration → Auth     │   │
+│   │       Dashboard User: dashboards only        │  │      Group DN: full distinguished name      │   │
+│   │       API: programmatic ingest access        │  │      Test LDAP: verify bind and search      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Network access control limits which systems can push logs and access the UI.                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Network Access Control            │  │              API Access Control             │   │
+│   │      Firewall: restrict UI to mgmt nets      │  │      API key: separate from user login      │   │
+│   │     Syslog: allow from source CIDR only      │  │      Session token: 30 min default TTL      │   │
+│   │      Admin VAMI (:9543): jumphost only       │  │         Rotate API key periodically         │   │
+│   │      No direct DB access from prod nets      │  │         Audit: log all admin actions        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRLI appliance · AD/LDAP server · firewall rules · management VLAN · NTP                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Super Admin       = Full access to all vRLI configuration, sources, and users                        │
+│  User role         = Can search and view logs and dashboards; cannot change config                    │
+│  Dashboard User    = Restricted role; view dashboards only, no Explore or admin access                │
+│  LDAP integration  = AD connection in vRLI; maps AD groups to Super Admin or User role                │
+│  Group DN          = Distinguished Name of AD group used in LDAP group mapping                        │
+│  LDAP bind user    = Read-only service account vRLI uses to query AD for group membership             │
+│  API key           = vRLI static token for ingest API; does not expire unless rotated                 │
+│  Session token     = Short-lived bearer token returned by /api/v1/sessions login                      │
+│  VAMI access       = Port 9543; restrict to jump hosts or management network only                     │
+│  Syslog source ACL = Firewall rule limiting which source IPs can reach vRLI ports                     │
+│  Audit log         = vRLI logs all login, config change, and admin actions for review                 │
+│  MFA               = Not native to vRLI; enforce MFA via vIDM if SSO integrated                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

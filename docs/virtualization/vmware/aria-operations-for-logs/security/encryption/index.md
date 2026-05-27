@@ -9,32 +9,49 @@ Aria Operations for Logs ships with a self-signed certificate. Replace it with a
 ```text
 Administration → SSL → Replace Certificate
 ```
-
-Upload in order:
-1. **Private key** (PEM, no passphrase)
-2. **Certificate** (PEM — leaf certificate only)
-3. **CA chain** (PEM — intermediate + root, concatenated)
-
-After upload, Aria Ops for Logs restarts its web services — expect 1–3 minutes of unavailability.
-
-**Via CLI:**
-
-```bash
-ssh admin@vrli-prod-01.example.local
-
-# Copy certificate files to the appliance
-# Then replace via the loginsight configuration tool
-/usr/lib/loginsight/application/sbin/loginsight certificate import \
-  --key /tmp/vrli-prod-01.key \
-  --cert /tmp/vrli-prod-01.pem \
-  --cacert /tmp/chain.pem
-
-# Restart to apply
-systemctl restart loginsight
-
-# Verify the new certificate
-echo | openssl s_client -connect vrli-prod-01.example.local:443 2>/dev/null | \
-  openssl x509 -noout -subject -dates -issuer
+┌──────────────────────────────── Aria Operations for Logs — Encryption ────────────────────────────────┐
+│                                                                                                       │
+│  vRLI encrypts log transport (TLS 6514) and UI/API access (TLS 443); storage uses vSAN D@RE.          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Data in Transit                │  │                 Data at Rest                │   │
+│   │         UI/API: TLS 1.2+ on port 443         │  │     Log data: vSAN D@RE or datastore enc    │   │
+│   │        Syslog encrypted: TCP TLS 6514        │  │       Archive: compress + GPG encrypt       │   │
+│   │       Cluster comms: TLS between nodes       │  │       Config backup: encrypted archive      │   │
+│   │        LDAP: LDAPS (636) or STARTTLS         │  │        VAMI creds: encrypted at rest        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Certificate management uses VAMI import; LCM manages certs in managed deployments.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Certificate Management            │  │               Cipher Standards              │   │
+│   │      Import CA cert + key via VAMI SSL       │  │        TLS 1.2 minimum; 1.3 preferred       │   │
+│   │       LCM: manages cert if in LCM env        │  │          RSA 2048+ or ECDSA P-256+          │   │
+│   │      Cert expiry: alert at <30d warning      │  │        No MD5/SHA-1; SHA-256 minimum        │   │
+│   │         SAN: must include vRLI FQDN          │  │        LDAPS: port 636 to AD for auth       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRLI appliance · vSAN (D@RE) · CA infrastructure · LDAP/AD · NFS archive                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  TLS syslog 6514   = Encrypted syslog transport; devices must trust vRLI cert CA                      │
+│  D@RE              = Data at Rest Encryption; vSAN or datastore encrypts vRLI VM disks                │
+│  LDAPS             = LDAP over TLS on port 636; required for secure AD authentication                 │
+│  STARTTLS          = Upgrade plain LDAP to TLS; alternative to LDAPS                                  │
+│  VAMI SSL section  = Administration → SSL in VAMI; upload new cert and key                            │
+│  SAN               = Subject Alternative Name; vRLI FQDN must be listed for browser trust             │
+│  Cert rotation     = Import new cert via VAMI → restart loginsight service                            │
+│  LCM cert mgmt     = Aria Suite LCM rotates certs across all products in managed environment          │
+│  Archive encryption= GPG or password-zip for archived log exports stored on NFS                       │
+│  Cluster TLS       = Worker-to-master communication encrypted; cert from same CA                      │
+│  Cipher suite      = TLS_AES_256_GCM_SHA384 preferred; weak ciphers disabled                          │
+│  Cert expiry alert = vRLI shows warning banner when cert expires within 30 days                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

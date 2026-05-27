@@ -32,49 +32,51 @@ ESXi Common Issue Resolution Paths
 │  └── esxcli system ntp set + /etc/init.d/ntpd restart  │
 └────────────────────────────────────────────────────────┘
 ```
-
-## Quick Reference
-
-| Symptom | First Check | Key Command |
-|---|---|---|
-| Host disconnected from vCenter | vpxa / hostd service | `/etc/init.d/vpxa restart` |
-| Host not responding | PSOD, mgmt network partition | IPMI/iLO console access |
-| All paths down (APD) | Storage fabric, HBA | `esxcli storage core path list` |
-| VMFS datastore inaccessible | APD/PDL state, rescan | `esxcli storage core adapter rescan --all` |
-| High CPU ready | NUMA, DRS, overcommit | `esxtop` — `%CSTP`, `%RDY` |
-| High balloon / swap | Memory overcommit | `esxtop` — `MCTLSZ`, `SWR/s` |
-| NTP drift | Clock skew, auth failures | `esxcli system ntp get` |
-| PSOD | Hardware fault, driver bug | `/var/core/` vmss/vmem dumps |
-| VM stuck in consolidate | Snapshot delta chain | `vim-cmd vmsvc/snapshot.removeall <vmid>` |
-| Dead storage paths | HBA, SAN fabric, zoning | `esxcli storage core path list \| grep dead` |
-| vCenter loses host trust | Certificate mismatch | Reconnect host from vCenter |
-| SSH blocked after lockdown | Lockdown mode enabled | DCUI → Lockdown Mode |
-
----
-
-## Host Disconnected from vCenter
-
-### Symptoms
-
-- Host shows `Disconnected` or `Not Responding` in vCenter
-- vCenter cannot start tasks on the host
-- VMs still running on the host (data plane unaffected)
-
-### Diagnosis
-
-```bash
-# Can you SSH or reach the DCUI console?
-# If yes — check management agents
-
-# Check hostd status
-/etc/init.d/hostd status
-
-# Check vpxa (vCenter agent) status
-/etc/init.d/vpxa status
-
-# Review log errors
-tail -100 /var/log/hostd.log | grep -i "error\|fail"
-tail -100 /var/log/vpxa.log | grep -i "error\|disconnected\|cert"
+┌──────────────────────────────────────── ESXi — Common Issues ─────────────────────────────────────────┐
+│                                                                                                       │
+│  Host disconnect, PSOD, storage APD/PDL, VM power-on failures, and fixes.                             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Host Connectivity Issues           │  │             PSOD / Kernel Crash             │   │
+│   │          vCenter shows disconnected          │  │           Purple screen on console          │   │
+│   │           Check mgmt vmk0 IP/VLAN            │  │           Note error code + offset          │   │
+│   │             Restart hostd / vpxa             │  │          Collect vm-support bundle          │   │
+│   │             Check DNS resolution             │  │           Review /var/log/vmkernel          │   │
+│   │          Reconnect from vCenter UI           │  │              Engage VMware GSS              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Diagnose host/network issues first; storage APD/PDL separate path below.                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Storage Issues                │  │             VM Power-On Failures            │   │
+│   │            APD: check path state             │  │            Insufficient resources           │   │
+│   │         PDL: array controller check          │  │          Lock file from prior crash         │   │
+│   │           esxcli storage core path           │  │            Remove stale .lck file           │   │
+│   │           Latency: check DAVG/KAVG           │  │             Disk space exhausted            │   │
+│   │           Rescan storage adapters            │  │           VMtools version mismatch          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, SAN/NAS/vSAN storage, ToR switches, management network, vCenter                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  PSOD     = Purple Screen Of Death; ESXi kernel panic; host reboots                                   │
+│  APD      = All Paths Down; storage paths lost; VM I/O paused                                         │
+│  PDL      = Permanent Device Loss; device signals permanent failure                                   │
+│  hostd    = ESXi host agent; manages host locally; restart to recover                                 │
+│  vpxa     = vCenter agent on ESXi; communicates with vCenter                                          │
+│  DAVG     = Device Average latency; measured at storage adapter layer                                 │
+│  KAVG     = Kernel Average latency; delay in VMkernel queue                                           │
+│  .lck     = VM lock file; stale lock prevents VM power-on                                             │
+│  vm-support = bundle command to collect ESXi diagnostic data                                          │
+│  vmkernel.log = main ESXi system log; first check for any issue                                       │
+│  Reconnect = vCenter action to re-establish agent connection to host                                  │
+│  vmk0     = management VMkernel adapter; ping test first step                                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Resolution Steps

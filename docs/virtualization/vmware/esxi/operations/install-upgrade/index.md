@@ -36,42 +36,51 @@ ESXi Upgrade Flow — vLCM Rolling Cluster Upgrade
               │  All vSAN health green  │
               └─────────────────────────┘
 ```
-
-## Version and Support Matrix
-
-| Version | Release | General Support End | Technical Guidance End |
-|---|---|---|---|
-| ESXi 6.5 | 2016-11 | 2022-10-15 | 2023-11-15 |
-| ESXi 6.7 | 2018-04 | 2022-10-15 | 2023-11-15 |
-| ESXi 7.0 | 2020-04 | 2025-04-02 | 2027-04-02 |
-| ESXi 7.0 U3 | 2021-10 | 2025-04-02 | 2027-04-02 |
-| ESXi 8.0 | 2022-10 | 2027-10 (est.) | 2029-10 (est.) |
-| ESXi 8.0 U1 | 2023-04 | 2027-10 (est.) | 2029-10 (est.) |
-| ESXi 8.0 U2 | 2023-09 | 2027-10 (est.) | 2029-10 (est.) |
-| ESXi 8.0 U3 | 2024-06 | 2027-10 (est.) | 2029-10 (est.) |
-
-Always check at [Broadcom Product Lifecycle](https://support.broadcom.com/group/ecx/productlifecycle).
-
-## Patch Cadence
-
-VMware follows a **quarterly patch cadence** for ESXi. Patches are delivered as:
-
-- **General Release (GA)**: Quarterly cumulative patches
-- **Security Patches**: Out-of-band for VMSA advisories; apply based on CVSSv3 score
-- **Async Drivers**: Hardware driver updates decoupled from ESXi base version
-
-Subscribe to [Broadcom Security Advisories](https://support.broadcom.com/web/ecx/security-advisory) for immediate notification of critical VMSA advisories.
-
-## Lifecycle Management Tools
-
-### vSphere Lifecycle Manager (vLCM) — Recommended
-
-vLCM manages ESXi hosts using a **desired-state cluster image**:
-
-```text
-Cluster Image = ESXi Base Version
-              + Vendor Add-ons (OEM driver bundle)
-              + Components (individual VIBs)
+┌───────────────────────────────────── ESXi — Install and Upgrade ──────────────────────────────────────┐
+│                                                                                                       │
+│  Fresh install via ISO/PXE and in-place upgrade via vLCM baseline or image.                           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Fresh Install                 │  │                 vLCM Upgrade                │   │
+│   │            Boot from ISO/USB/PXE             │  │         Create cluster image in vLCM        │   │
+│   │           Accept EULA, select disk           │  │          Attach baseline to cluster         │   │
+│   │         Set root password + mgmt IP          │  │          Remediate in rolling order         │   │
+│   │           Reboot → add to vCenter            │  │        Maintenance → upgrade → reboot       │   │
+│   │          Apply Host Profile config           │  │         Verify version post-upgrade         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Prerequisites → install/upgrade → add to cluster → verify health state.                              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Prerequisites                 │  │                Version Matrix               │   │
+│   │            HCL check for hardware            │  │           ESXi 8.0 U3 — current GA          │   │
+│   │           vCenter >= ESXi version            │  │           ESXi 7.0 U3 — supported           │   │
+│   │          Storage/NIC drivers on HCL          │  │          vCenter must lead ESXi ver         │   │
+│   │         Boot disk >= 8 GB (>= 32 GB)         │  │           N-2 upgrade path maximum          │   │
+│   │          Mgmt network planned ahead          │  │         Check VMware interop matrix         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 server on HCL, IPMI/iDRAC for PXE, 10 GbE mgmt NIC, boot disk (M.2/SD)                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vLCM     = vSphere Lifecycle Mgr; image-based ESXi patch and upgrade mgmt                            │
+│  HCL      = VMware Hardware Compatibility List; validated hardware for ESXi                           │
+│  PXE      = Preboot Execution Env; network boot for ESXi install via TFTP                             │
+│  Baseline = vLCM patch set; defines target ESXi build for remediation                                 │
+│  Remediate= vLCM process: puts host in maintenance + upgrades ESXi                                    │
+│  EULA     = End User License Agreement; accepted during ESXi installer                                │
+│  N-2 path = VMware supports skipping up to 2 major versions in upgrade                                │
+│  Host Profile = desired state config applied after fresh ESXi install                                 │
+│  Interop  = VMware Product Interoperability Matrix; validates version combos                          │
+│  GA       = General Availability; production-ready official release                                   │
+│  Rolling  = upgrade one host at a time; VMs migrated before each upgrade                              │
+│  Boot disk = ESXi install target; SD/USB (legacy), M.2 NVMe (recommended)                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Workflow:**

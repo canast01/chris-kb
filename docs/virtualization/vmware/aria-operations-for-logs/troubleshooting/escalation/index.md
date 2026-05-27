@@ -1,5 +1,50 @@
 # Aria Ops for Logs — Escalation
 
+```
+┌──────────────────────────────── Aria Operations for Logs — Escalation ────────────────────────────────┐
+│                                                                                                       │
+│  Escalate vRLI issues when log ingestion loss or corruption impacts operations and compliance.        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │           Pre-Escalation Checklist          │   │
+│   │        Log ingestion stopped > 1 hour        │  │           Support bundle from VAMI          │   │
+│   │      Cluster node down, cannot recover       │  │         vRLI version and patch level        │   │
+│   │        Disk corruption / index error         │  │       Timeline: when ingestion stopped      │   │
+│   │        Compliance data loss suspected        │  │          System monitor screenshot          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Open VMware SR with support bundle; engage TAM for compliance-critical data loss.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             VMware Support Path              │  │               Internal Actions              │   │
+│   │         SR: my.vmware.com or portal          │  │       Notify security/compliance team       │   │
+│   │      P2: node down; P1: full data loss       │  │       Redirect sources to SIEM direct       │   │
+│   │         TAM: compliance data loss P1         │  │      Change freeze during investigation     │   │
+│   │         KB: search before opening SR         │  │       RCA: document and present in 48h      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRLI appliance · /storage disk · VAMI · VMware SR portal · SIEM fallback target                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Support bundle    = VAMI-generated archive; mandatory before opening VMware SR                       │
+│  P1 SR             = Critical: full log ingestion loss; compliance risk; live call                    │
+│  P2 SR             = Major: single node down but cluster partial; business hours                      │
+│  TAM               = Technical Account Manager; escalation path for premium accounts                  │
+│  SIEM fallback     = Direct syslog to Splunk/SIEM while vRLI is being recovered                       │
+│  Compliance notify = Inform security/compliance team if regulated log data lost                       │
+│  Change freeze     = Halt all changes during active incident to preserve evidence                     │
+│  RCA               = Root Cause Analysis; required after P1 by most compliance frameworks             │
+│  Index error       = vRLI log data index corruption; may require rebuild with data loss               │
+│  Disk corruption   = /storage filesystem error; requires vRLI restore from backup                     │
+│  Cluster node down = Worker or master unavailable; check NTP + network + disk                         │
+│  kb.vmware.com     = Search VMware KB before opening SR; known fixes often available                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## When to Escalate
 
 Escalate to Broadcom support when:

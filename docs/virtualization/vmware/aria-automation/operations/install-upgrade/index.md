@@ -35,51 +35,49 @@ If LCM is already deployed and Aria Automation needs to be added:
 ```text
 LCM → Lifecycle Operations → Environments → select or create environment → Add Product → Aria Automation
 ```
-
-1. Select the Aria Automation version from the available bundles
-2. Choose deployment size: Small (1 node) or Medium/Large (3 nodes)
-3. Provide vCenter target: cluster, datastore, network, static IPs, FQDNs
-4. Provide admin credentials (stored automatically in the LCM Locker)
-5. LCM runs pre-checks (DNS, NTP, vCenter, disk space) — all must pass
-6. LCM deploys the OVAs and configures the cluster
-7. Monitor via: **Lifecycle Operations → Requests**
-
-### Manual OVA Deployment (Standalone)
-
-For environments without LCM:
-
-1. Deploy the Aria Automation OVA via vSphere Client: **Actions → Deploy OVF Template**
-2. Complete the OVA customisation: hostname, IP, gateway, DNS, NTP, root password
-3. Power on and wait for first-boot (10–15 minutes)
-4. Open VAMI: `https://<vra-fqdn>:5480`
-5. Configure VIDM integration: VAMI → Identity Provider → Configure
-6. For 3-node clusters: deploy all three OVAs, then join the second and third nodes to the first
-
----
-
-## Upgrade Paths
-
-### Via Aria Suite Lifecycle (Recommended)
-
-Upgrades through LCM are orchestrated, validated with pre-checks, and include automatic rollback capability via snapshots.
-
-1. Upgrade LCM itself to the version that supports the target Aria Automation version (LCM must always be upgraded first)
-2. In LCM: **Lifecycle Operations → Environments → select environment → Aria Automation → Upgrade**
-3. Select the target version from the bundle list
-4. Resolve any pre-check failures before proceeding
-5. LCM takes VM snapshots automatically before beginning the upgrade
-6. Monitor upgrade progress: **Lifecycle Operations → Requests**
-
-LCM upgrades nodes sequentially for 3-node clusters. The cluster remains partially available during the upgrade (2 of 3 nodes active), but requests should be paused during the upgrade window.
-
-### In-Product Upgrade (Standalone, No LCM)
-
-For environments not managed by LCM:
-
-**Via VAMI:**
-
-```text
-https://<vra-fqdn>:5480 → Lifecycle Management → System Upgrade → Upload PAK file
+┌──────────────────────────────── Aria Automation — Install and Upgrade ────────────────────────────────┐
+│                                                                                                       │
+│  Aria Automation is deployed and upgraded via Aria Suite LCM; manual OVA only for new installs.       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Pre-Install / Pre-Upgrade           │  │           Install / Upgrade Steps           │   │
+│   │          DNS: fwd+rev for vRA FQDN           │  │        LCM: Environment → Add product       │   │
+│   │          NTP: appliance time synced          │  │        Select version from LCM depot        │   │
+│   │      vCenter: resource pool + datastore      │  │        LCM pre-checks must pass green       │   │
+│   │        TLS cert: SAN matches vRA FQDN        │  │      Deploy OVA → power on → VAMI init      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Post-install: configure vIDM, cloud accounts, projects, and catalog before handover.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Post-Install Config              │  │              Upgrade Validation             │   │
+│   │          VAMI: set FQDN, NTP, proxy          │  │        vracli status --all: all green       │   │
+│   │         vIDM integration: SAML/LDAP          │  │      Catalog items visible post-upgrade     │   │
+│   │       Cloud accounts: add vCenter/AWS        │  │        Test request: deploy small VM        │   │
+│   │      Projects and quotas: set per team       │  │        Orchestrator: workflows intact       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRA OVA (4 vCPU/25 GB RAM min) · vCenter · DNS/NTP · LCM appliance · TLS CA                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  LCM depot         = Aria Suite LCM binary repository; download product OVAs for managed deploy       │
+│  Environment       = LCM grouping of related Aria products sharing vIDM and certificates              │
+│  OVA deployment    = vCenter deploy from OVA; used for initial install only (not upgrades)            │
+│  VAMI init         = First-boot configuration wizard setting hostname, NTP, password                  │
+│  Pre-checks        = LCM automated validation of DNS, NTP, cert, and resource before deploy           │
+│  vIDM integration  = SAML trust configured in vRA VAMI; enables SSO for all Aria products             │
+│  Cloud account add = vRA wizard adding vCenter/AWS/Azure credentials and verifying connectivity       │
+│  Project quota     = Resource limits set per project after install; not set by default                │
+│  Upgrade sequence  = LCM handles version ordering; do not upgrade vRA before vIDM                     │
+│  Rollback point    = VM snapshot taken before LCM upgrade; revert if upgrade fails                    │
+│  Greenfield install = New vRA in a new LCM environment; no migration from older vRA 7.x               │
+│  SAN cert          = Subject Alternative Name; must include vRA FQDN for browser trust                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Upload the Aria Automation `.pak` file from Broadcom Support Portal. The VAMI validates the file and presents a pre-upgrade compatibility check. Click **Upgrade** if all checks pass.

@@ -27,16 +27,49 @@ Settings → Authentication → LDAP → Configure
   Group Attribute: memberOf
   Test Connection → "Connection successful"
 ```
-
-Map AD groups to roles:
-
-```text
-Settings → Authentication → Role Mappings → Add Mapping
-
-  CN=vRNI-Admins,OU=Groups,DC=corp,DC=local → Super Admin
-  CN=vRNI-NetOps,OU=Groups,DC=corp,DC=local → Network Engineer
-  CN=vRNI-SecOps,OU=Groups,DC=corp,DC=local → Security Engineer
-  CN=vRNI-Audit,OU=Groups,DC=corp,DC=local  → Auditor
+┌───────────────────────────────────────── vRNI Access Control ─────────────────────────────────────────┐
+│                                                                                                       │
+│  Admin and Member roles, LDAP group mapping, and access control for vRNI.                             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Built-in Roles                │  │               Role Permissions              │   │
+│   │          Administrator: full access          │  │         Admin: add/edit data sources        │   │
+│   │           Member: read-only viewer           │  │            Admin: user management           │   │
+│   │           No custom roles in vRNI            │  │           Member: view flows/maps           │   │
+│   │         Least privilege: use Member          │  │             Member: run searches            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Two roles only; LDAP groups map to Admin or Member; vIDM SSO extends this.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              LDAP Group Mapping              │  │              API Access Control             │   │
+│   │          Settings > Authentication           │  │         API tokens tied to user role        │   │
+│   │          Map AD group to Admin role          │  │          Token inherits user perms          │   │
+│   │         Map AD group to Member role          │  │          No separate API-only role          │   │
+│   │            Test LDAP bind on save            │  │          Rotate tokens periodically         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRNI platform VM; AD/LDAP directory; vIDM optional SSO; network access to LDAP port                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Administrator Role   = Full vRNI access: data sources, users, settings, all queries                  │
+│  Member Role          = Read-only: view flows, maps, dashboards; no config changes                    │
+│  LDAP Group Mapping   = AD security group assigned to Admin or Member role in vRNI                    │
+│  vIDM SSO             = VMware Identity Manager federated login; maps vIDM groups                     │
+│  API Token            = Bearer token for REST API; inherits the generating user role                  │
+│  Least Privilege      = Grant Member role by default; Admin only for operators                        │
+│  LDAP Bind Account    = Service account vRNI uses to query the directory for groups                   │
+│  Local Account        = Admin account created during OVA deploy; backup if LDAP fails                 │
+│  Group DN             = Distinguished Name of the AD group used in LDAP mapping                       │
+│  Token Rotation       = Periodically invalidate and reissue API tokens for security                   │
+│  Authentication Test  = vRNI built-in LDAP test button; validates bind and group DN                   │
+│  Audit Log            = Records user login, config changes, and data source edits                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

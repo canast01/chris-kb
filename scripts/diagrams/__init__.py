@@ -7,6 +7,7 @@ from . import storage_dell
 from . import storage_netapp
 from . import vmware_apps
 from . import vmware_aria
+from . import vmware_aria_part2
 from . import vmware_core
 from . import vxrail
 from . import disaster_recovery_backup

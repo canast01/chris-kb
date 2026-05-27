@@ -35,15 +35,49 @@ Aria Operations — CLI Command Reference Map
 │  GET  /api/cluster/nodes        node status         │
 └─────────────────────────────────────────────────────┘
 ```
-
-## Access
-
-```bash
-# SSH to primary node
-ssh admin@<aria-ops-primary-fqdn>
-
-# For maintenance mode or advanced tasks, escalate to root via sudo
-sudo -i
+┌──────────────────────────────────── Aria Operations CLI Reference ────────────────────────────────────┐
+│                                                                                                       │
+│  REST API, VAMI, and SSH service commands for Aria Operations (vROps).                                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Key REST API Endpoints            │  │               VAMI Operations               │   │
+│   │        POST /suite-api/api/auth/token        │  │             https://<vrops>:5480            │   │
+│   │          GET /suite-api/api/alerts           │  │           Cluster management page           │   │
+│   │         GET /suite-api/api/resources         │  │             Backup / restore UI             │   │
+│   │        GET /suite-api/api/statistics         │  │            Certificate management           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  REST API for automation; VAMI for appliance config; SSH for service-level control.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             SSH Service Commands             │  │            Useful Admin Commands            │   │
+│   │         service vmware-vcops status          │  │           df -h: disk usage check           │   │
+│   │         service vmware-vcops restart         │  │            top: CPU/RAM real-time           │   │
+│   │         tail -f /var/log/vcops/*.log         │  │           vcops-support bundle gen          │   │
+│   │           cluster-mgmt-cli status            │  │           ntpq -p: NTP sync check           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vROps master/data nodes on vSphere; SSH via jump host; VAMI browser on port 5480                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  suite-api           = vROps REST API path prefix; all endpoints under /suite-api                     │
+│  Auth Token          = Bearer token from POST /auth/token; required for API calls                     │
+│  GET /alerts         = Returns all active alerts with severity and resource context                   │
+│  GET /resources      = Lists monitored objects with adapter kind and resource kind                    │
+│  GET /statistics     = Retrieves metric values for a resource over a time range                       │
+│  VAMI                = Virtual Appliance Mgmt Interface; port 5480 browser access                     │
+│  vmware-vcops        = Main vROps service name on the appliance OS                                    │
+│  cluster-mgmt-cli    = CLI tool for checking cluster node health and status                           │
+│  vcops-support       = CLI command to generate vROps support bundle                                   │
+│  vcops/*.log         = Log directory for analytics, collector, and UI logs                            │
+│  ntpq -p             = Verifies NTP peer sync; important for metric timestamps                        │
+│  df -h               = Disk usage; vROps is disk-heavy; monitor /storage/db                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

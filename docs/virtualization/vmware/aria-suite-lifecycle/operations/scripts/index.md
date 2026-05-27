@@ -21,36 +21,49 @@
 │  API base: https://<lcm>/lcm/lcmservice/api/v2                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
-
-Automation scripts for LCM target three primary use cases: pre-upgrade validation (confirming disk space, certificate validity, and product health before initiating an upgrade), certificate expiry monitoring (scanning all Locker entries and alerting when within a configurable threshold), and scheduled health checks via the LCM REST API. Scripts use the LCM API base URL `https://<lcm-fqdn>/lcm/lcmservice/api/v2` with Basic or token authentication.
-
----
-
-## Certificate Expiry Monitor
-
-Queries the Locker API and prints certificates expiring within a configurable threshold.
-
-```bash
-#!/usr/bin/env bash
-# Usage: ./cert-expiry-check.sh <lcm-fqdn> <username> <password> <warn-days>
-LCM=$1; USER=$2; PASS=$3; WARN=${4:-30}
-
-TOKEN=$(curl -sk -X POST "https://$LCM/lcm/authz/api/v2/login" \
-  -H 'Content-Type: application/json' \
-  -d "{\"username\":\"$USER\",\"password\":\"$PASS\"}" | jq -r '.token')
-
-echo "=== Certificates expiring within $WARN days ==="
-curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://$LCM/lcm/locker/api/v2/certificates" | \
-  jq --argjson w "$WARN" \
-  '.certificates[] | select((.daysToExpiry|tonumber) <= $w) |
-   "[\(.daysToExpiry) days] \(.alias) — expires \(.expirationDate)"' -r
-
-echo "=== All Locker certificates ==="
-curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://$LCM/lcm/locker/api/v2/certificates" | \
-  jq -r '.certificates[] | "\(.alias)\t\(.daysToExpiry) days\t\(.expirationDate)"' | \
-  sort -t$'\t' -k2 -n
+┌─────────────────────────────────────── Aria Suite LCM Scripts ────────────────────────────────────────┐
+│                                                                                                       │
+│  REST API scripts for LCM environment management, product queries, and cert actions.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Auth & Environment Scripts          │  │            Product Query Scripts            │   │
+│   │         POST /lcm/api/v1/auth/login          │  │           GET /lcm/api/v1/products          │   │
+│   │         GET /lcm/api/v1/environments         │  │           Filter by environment ID          │   │
+│   │          Check env status via REST           │  │           GET product version info          │   │
+│   │           Monitor request progress           │  │           List available upgrades           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Auth scripts get tokens; env scripts check state; product scripts drive upgrades.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Request Trigger Scripts            │  │            Cert & Health Scripts            │   │
+│   │            POST /request/upgrade             │  │            GET /lcm/api/v1/health           │   │
+│   │          POST /request/cert-rotate           │  │             GET cert expiry list            │   │
+│   │           GET /request/{id}/status           │  │            Alert on expiry < 30d            │   │
+│   │             Poll until COMPLETED             │  │         Script cert rotation trigger        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM; scripts from jump host or CI/CD with HTTPS access to LCM API port 443                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  LCM REST API        = HTTP/JSON interface for all LCM automation tasks                               │
+│  POST /auth/login    = Returns session token for subsequent API calls                                 │
+│  GET /environments   = Lists all environments with ID, name, and product count                        │
+│  GET /products       = Lists managed products with version and health status                          │
+│  POST /request       = Triggers a LCM action (upgrade, cert-rotate, etc.)                             │
+│  Request ID          = Unique ID for a LCM action; poll for status                                    │
+│  GET /request/status = Polls action status: PENDING, IN_PROGRESS, COMPLETED                           │
+│  GET /health         = Returns LCM and managed product health summary                                 │
+│  Cert Expiry Script  = Queries cert list; sends alert if expiry < 30 days                             │
+│  Upgrade Script      = Triggers version upgrade for a product via REST                                │
+│  Cert Rotate Script  = Triggers LCM cert rotation action via REST API                                 │
+│  CI/CD Integration   = Scripts run on schedule for drift detection and reporting                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -21,56 +21,56 @@ graph TB
   class FA,PM store
   class H1,H2 host
 ```
-┌─────────────────────────── FabricOS — How It Works: Login, Zoning, Routing ───────────────────────────┐
+┌────────────────────────────────── Brocade Fabric OS — How It Works ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Device login: HBA sends FLOGI to switch, switch assigns FCID, NS registers WWN+FCID      │   │
-│   │       Zone lookup: switch checks active zone config in ASIC; denies frames outside zone       │   │
-│   │       FSPF: each switch builds topology from Link State Records; computes shortest path       │   │
-│   │       MAPS: monitors counters every polling interval; fires alert if threshold breached       │   │
+│   │        FOS operational flow: fabric init, device login, zone enforcement, frame routing       │   │
+│   │     Fabric init: switches exchange E_Port BRCDs, elect principal switch, assign domain IDs    │   │
+│   │      Device login: HBA sends FLOGI, fabric assigns FCID, FCNS records WWN-to-FCID mapping     │   │
+│   │       Zone enforcement: each frame checked against active zone set at ingress port ASIC       │   │
+│   │     Frame routing: FSPF computes least-cost path; ISL trunk distributes load across links     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Three parallel operational flows on every FabricOS switch:                                         │
+│    Fabric init -> device login (FLOGI/PLOGI) -> zone check -> FSPF routing -> delivery                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Login Flow         │  │         Zone Enforce        │  │         FSPF Routing        │   │
-│   │       HBA sends FLOGI       │  │        Frame arrives        │  │         LSR exchange        │   │
-│   │        FCID assigned        │  │       ASIC zone check       │  │         SPF computed        │   │
-│   │       NS registration       │  │        Allow or deny        │  │       Route table set       │   │
-│   │       PLOGI to target       │  │       Port quarantine       │  │       Frame forwarded       │   │
-│   │         PRLI (SCSI)         │  │        Counter logged       │  │         ISL selected        │   │
+│   │         Fabric Init         │  │         Device Login        │  │        Frame Routing        │   │
+│   │        E_Port detect        │  │        FLOGI from HBA       │  │         FSPF lookup         │   │
+│   │       Principal elect       │  │        FCID assigned        │  │        ISL selection        │   │
+│   │       Domain ID assign      │  │        FCNS register        │  │          Zone check         │   │
+│   │         Zone DB push        │  │          PLOGI/PRLI         │  │         Credit flow         │   │
+│   │        Fabric stable        │  │          I/O begins         │  │         Error detect        │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    MAPS polls error counters every 60 s by default; alerts via SNMP trap or email                     │
+│    Zone enforcement happens in ASIC at ingress; denied frames dropped before routing                  │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Flow       │     Trigger      │      Key step     │      Result      │    CLI verify    │   │
-│   │      Login       │   HBA power-on   │   FLOGI to FCID   │  Device online   │      nsshow      │   │
-│   │       Zone       │    Frame sent    │    ASIC lookup    │    Allow/Deny    │     cfgshow      │   │
-│   │       FSPF       │   Topology chg   │     LSR flood     │  SPF recompute   │   topologyshow   │   │
-│   │       MAPS       │   Counter poll   │   Threshold chk   │   Alert fired    │     mapsshow     │   │
+│   │      Phase       │      Event       │     Initiator     │      Result      │      Notes       │   │
+│   │       Init       │  BRCD exchange   │      Switches     │  Fabric formed   │      ISL up      │   │
+│   │      Login       │      FLOGI       │        HBA        │  FCID assigned   │   FCNS updated   │   │
+│   │     Routing      │    FSPF calc     │        FOS        │  Path selected   │    ISL trunk     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: HBA ports · SFP transceivers · fibre patch panels · FC switch line cards                 │
+│    Physical: HBA in server -> FC cable -> switch port -> ISL -> storage target port                   │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │
-│    FLOGI           = Fabric Login; HBA registers itself with the fabric                               │
-│    FCID            = Fibre Channel ID (24-bit address: domain.area.port)                              │
-│    PLOGI           = Port Login; initiator opens session with target after FLOGI                      │
-│    PRLI            = Process Login; SCSI upper-layer protocol negotiation                             │
-│    LSR             = Link State Record; contains port and neighbour information                       │
-│    SPF             = Shortest Path First; algorithm computing optimal fabric routes                   │
-│    ASIC zone check = Hardware-enforced zone lookup on every FC frame at line rate                     │
-│    Port quarantine = Switch isolates offending port; traffic blocked at hardware level                │
-│    nsshow          = Displays Name Server entries: WWN, FCID, port type                               │
-│    mapsshow        = Shows MAPS policy rules, thresholds, and recent alert history                    │
-│    topologyshow    = Displays fabric topology: domains, ISLs, path costs                              │
-│    cfgshow         = Lists zone database: zone sets, zones, members                                   │
+│    FLOGI          = Fabric Login; first FC login HBA performs to join the fabric                      │
+│    FCID           = Fabric Controller ID; 24-bit address assigned to device by fabric                 │
+│    PLOGI          = Port Login; HBA-to-target login establishing parameters for I/O                   │
+│    PRLI           = Process Login; FCP/NVMe service parameters negotiated after PLOGI                 │
+│    E_Port         = Expansion port; ISL port connecting two FC switches                               │
+│    Principal switch = Switch elected to manage domain IDs; owns zone DB distribution                  │
+│    Domain ID      = Unique 8-bit number per switch in a fabric (1-239 valid range)                    │
+│    FSPF           = Fabric Shortest Path First; link-state protocol for optimal routing               │
+│    ISL trunk      = Multiple ISL links aggregated; FSPF load-balances frames across them              │
+│    Zone check     = ASIC validates source/destination WWN pair against active zone set                │
+│    Buffer credit  = Per-link flow control token; receiver grants credit to allow transmission         │
+│    BRCD exchange  = Brocade-specific capability exchange over E_Port during fabric init               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

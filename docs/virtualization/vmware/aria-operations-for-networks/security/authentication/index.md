@@ -26,23 +26,49 @@ Change password:
 ```text
 Settings → My Account → Change Password
 ```
-
----
-
-## LDAP / Active Directory
-
-```text
-Settings → Authentication → LDAP → Configure
-
-  Server URL:     ldaps://dc01.example.local:636
-  Base DN:        DC=corp,DC=local
-  Bind DN:        CN=svc-vrni,OU=ServiceAccounts,DC=corp,DC=local
-  Bind Password:  <password>
-  User Attribute: sAMAccountName
-  Group Attribute: memberOf
-
-  → Test Connection → "Connection successful"
-  → Save
+┌───────────────────────────────────────── vRNI Authentication ─────────────────────────────────────────┐
+│                                                                                                       │
+│  Local, LDAP, vIDM SSO, and API token authentication methods for vRNI.                                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Local Authentication             │  │           LDAP / AD Authentication          │   │
+│   │             admin@local account              │  │          Settings > Authentication          │   │
+│   │          Set during OVA deployment           │  │            LDAP server + bind DN            │   │
+│   │           Use only as break-glass            │  │           Base DN for user search           │   │
+│   │          Rotate password regularly           │  │         Group mapping: Admin/Member         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Local is break-glass only; LDAP or vIDM SSO for normal operations; API token for scripts.            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                   vIDM SSO                   │  │                API Token Auth               │   │
+│   │            Register vRNI in vIDM             │  │           POST /api/ni/auth/token           │   │
+│   │           vIDM groups map to roles           │  │          Body: username + password          │   │
+│   │           SAML2 redirect on login            │  │            Response: Bearer token           │   │
+│   │            MFA enforced via vIDM             │  │         Token TTL: 24 hours default         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRNI platform VM; AD/LDAP server; vIDM appliance for SSO; PKI for LDAPS certs                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  admin@local         = Default local administrator; used as break-glass account                       │
+│  LDAP Bind DN        = Service account DN vRNI uses to authenticate to directory                      │
+│  Base DN             = Root of directory tree vRNI searches for user accounts                         │
+│  Group Mapping       = Links AD group to vRNI Admin or Member role                                    │
+│  vIDM                = VMware Identity Manager; provides SAML2 SSO for vRNI                           │
+│  SAML2               = Security Assertion Markup Language; SSO federation protocol                    │
+│  MFA                 = Multi-Factor Auth enforced at vIDM layer for all vRNI logins                   │
+│  API Token           = Bearer token obtained via REST POST; used for script auth                      │
+│  Token TTL           = Time-to-live for API token; default 24h; re-auth required                      │
+│  Break-glass         = Emergency local account used when directory is unreachable                     │
+│  LDAPS               = LDAP over TLS on port 636; required for secure directory auth                  │
+│  SSO Redirect        = Browser redirected to vIDM login page on vRNI access                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 After LDAP is configured, add Role Mappings (Settings → Authentication → Role Mappings) to map AD groups to vRNI roles.

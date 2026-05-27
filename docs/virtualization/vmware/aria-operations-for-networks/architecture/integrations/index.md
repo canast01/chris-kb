@@ -43,42 +43,49 @@ curl -k -u 'svc-aon:PASSWORD' \
   https://nsxmgr.example.local/policy/api/v1/infra/tier-0s \
   -o /dev/null -w "HTTP %{http_code}\n"
 ```
-
-## NSX-V Integration
-
-NSX-V 6.4 is supported via the NSX-V Manager REST API. Add NSX-V Manager as a separate data source.
-
-Data collected: logical switches, distributed logical routers, ESGs, DFW sections/rules, security groups, IP sets, MAC sets.
-
-NSX-V is end-of-life; AON support for NSX-V may not be included in AON 6.13+. Verify compatibility on the VMware Interoperability Matrix.
-
-## vCenter Integration
-
-The Collector polls vCenter via the vSphere SOAP/REST API every 10 minutes.
-
-**Data pulled from vCenter:**
-
-| vSphere Object | Data Collected |
-|---|---|
-| Datacenter | Hierarchy/naming context |
-| Cluster | HA/DRS membership, resource pool tree |
-| ESXi Host | Version, vSwitch/vDS NIC config, pNIC adapters |
-| Virtual Machine | Name, UUID, power state, guest OS, Tools IP |
-| Network Adapter (vNIC) | MAC address, portgroup attachment, driver |
-| Distributed Virtual Switch | vDS UUID, portgroup names, MTU, LACP |
-| Distributed Port Group | VLAN ID, teaming policy, IPFIX enabled flag |
-
-**Minimum vCenter privileges** for the AON service account:
-
-```text
-System.Anonymous
-System.Read
-System.View
-Global.Diagnostics
-Host.Config.NetFlow
-Network.Assign
-VirtualMachine.Interact.GuestControl
-Datastore.Browse
+┌────────────────────────────────────────── vRNI Integrations ──────────────────────────────────────────┐
+│                                                                                                       │
+│  NSX-T, vCenter, AWS/Azure, Splunk, and ServiceNow integrations for vRNI.                             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             VMware Integrations              │  │              Cloud Integrations             │   │
+│   │           NSX-T: IPFIX + DFW rules           │  │           AWS: VPC Flow Logs + IAM          │   │
+│   │         vCenter: VM inventory + tags         │  │             Azure: NSG flow logs            │   │
+│   │           vRNI API → vROps metrics           │  │            GCP: VPC flow support            │   │
+│   │           vIDM: SSO authentication           │  │          Cloud: read-only IAM role          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  VMware and cloud sources feed flows; 3rd-party tools consume vRNI alerts and data.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           SIEM / ITSM Integration            │  │           Physical Network Sources          │   │
+│   │          Splunk: syslog / REST push          │  │           Cisco: SNMP + NetFlow v9          │   │
+│   │          ServiceNow: alert webhook           │  │             Arista: IPFIX + eAPI            │   │
+│   │           Email: SMTP alert notify           │  │           Dell/Brocade: SNMP poll           │   │
+│   │          REST API: external queries          │  │          Palo Alto: firewall flows          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRNI platform + collectors on vSphere; physical switches and firewalls as flow sources               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  NSX-T Data Source   = vRNI connection using NSX API credentials for DFW rules + IPFIX                │
+│  vCenter Data Source = vRNI connection using vCenter API for VM inventory and tags                    │
+│  VPC Flow Logs       = AWS/Azure cloud flow records ingested via cloud data source type               │
+│  SNMP                = Protocol used to poll physical switch interface stats and topology             │
+│  NetFlow v9          = Cisco flow export protocol version; widely supported by switches               │
+│  IPFIX               = RFC 7011 standard flow export; used by NSX-T and modern hardware               │
+│  Splunk Integration  = vRNI pushes alerts via syslog or REST webhook to Splunk HEC                    │
+│  ServiceNow Webhook  = HTTP POST from vRNI alert to ServiceNow event intake endpoint                  │
+│  vIDM SSO            = VMware Identity Manager; federated login for vRNI web console                  │
+│  REST API            = vRNI northbound API for external tools to query flows and entities             │
+│  IAM Role            = Cloud read-only role allowing vRNI to fetch VPC/NSG flow logs                  │
+│  eAPI                = Arista EOS API used by vRNI for topology and flow collection                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 The built-in **Read-Only** role at the vCenter root object covers most of these. Add `Host.Config.NetFlow` if AON will manage IPFIX configuration push to ESXi hosts.

@@ -2,35 +2,36 @@
 
 
 ```
-┌─────────────────────────────────────── Linux — Troubleshooting ───────────────────────────────────────┐
+┌────────────────────────────────── Linux — Troubleshooting Overview ───────────────────────────────────┐
 │                                                                                                       │
-│  Linux troubleshooting: system performance, storage, network, and service failures.                   │
+│  Structured approach to Linux problem diagnosis: common issues, diagnostics, escalation.              │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Performance         │  │           Storage           │  │           Network           │   │
-│   │  top / htop: CPU breakdown  │  │   df -h: filesystem usage   │  │      ping / traceroute      │   │
-│   │  vmstat / sar: memory trend │  │    iostat: disk I/O stats   │  │    ss -tulpn: open ports    │   │
-│   │perf / strace: deep profiling│  │      dmesg: disk errors     │  │   tcpdump: packet capture   │   │
-│   │    OOM → dmesg | grep oom   │  │   fsck: filesystem repair   │  │     dig: DNS resolution     │   │
+│   │        Common Issues        │  │         Diagnostics         │  │          Escalation         │   │
+│   │       Perf degradation      │  │      dmesg / journalctl     │  │        Vendor support       │   │
+│   │       Network failures      │  │       strace / ltrace       │  │       Escalation path       │   │
+│   │       Disk / FS errors      │  │       perf / bpftrace       │  │        Runbook links        │   │
+│   │       Service crashes       │  │        gdb / coredump       │  │         P1 contacts         │   │
+│   │        Auth failures        │  │         tcpdump / ss        │  │         RCA template        │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical or virtual server · CPU · RAM · NIC · storage disks                                         │
+│  x86-64 servers · IPMI/iDRAC (OOB access) · console cable · NIC · storage                             │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  vmstat       = virtual memory stats; shows CPU, swap, I/O wait over interval                         │
-│  sar          = System Activity Reporter; historical performance data                                 │
-│  perf         = Linux performance analysis tool; CPU profiling, tracing                               │
-│  strace       = traces syscalls of a process; reveals file/network ops                                │
-│  tcpdump      = packet capture; filters by interface, port, host                                      │
-│  iostat       = I/O statistics per disk; part of sysstat package                                      │
-│  fsck         = filesystem check/repair; run on unmounted filesystem                                  │
-│  dmesg        = kernel ring buffer; hardware events, disk errors, OOM kills                           │
-│  OOM          = Out of Memory; kernel kills process to free RAM                                       │
-│  iowait       = CPU time waiting for I/O; high value = disk bottleneck                                │
-│  load average = 1/5/15-min runqueue depth; > nCPU = saturation                                        │
-│  tcpdump -nn  = no hostname/port resolution; faster capture output                                    │
+│  strace      = Traces system calls made by a process; essential for debugging                         │
+│  ltrace      = Traces library calls; complements strace for userspace debugging                       │
+│  perf        = Linux performance analysis tool; CPU sampling and tracing                              │
+│  bpftrace    = eBPF-based tracing tool; powerful kernel and app observability                         │
+│  gdb         = GNU debugger; inspects running processes and core dumps                                │
+│  coredump    = Memory snapshot of crashed process; analysed with gdb                                  │
+│  dmesg       = Kernel ring buffer; first check for hardware/driver errors                             │
+│  journalctl  = Query systemd journal; -u for unit, -b for boot, -f follow                             │
+│  IPMI        = Out-of-band management; console access even when OS is down                            │
+│  RCA         = Root Cause Analysis; post-incident document explaining failure                         │
+│  tcpdump     = Packet capture tool; diagnose network-level communication issues                       │
+│  OOB         = Out-of-Band; management network separate from production traffic                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

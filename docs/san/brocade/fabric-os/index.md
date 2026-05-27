@@ -5,56 +5,56 @@ Brocade Fabric OS knowledge base covering switch architecture, zoning, ISLs, por
 </div>
 
 ```
-┌───────────────────────────── Brocade FabricOS — Switch Operating System ──────────────────────────────┐
+┌──────────────────────────────────── Brocade Fabric OS — Overview ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    FabricOS: embedded OS on Brocade FC switches — manages fabric, zones, ports, MAPS alerts   │   │
-│   │           CLI via SSH (admin/root); web GUI via DCFM/SANnav; REST API from FOS 8.2+           │   │
-│   │        Key services: Name Server, Fabric Shortest Path First (FSPF), Zone Server, MAPS        │   │
-│   │         Supports ISL trunking, D-Port diagnostics, Virtual Fabrics, and FCIP gateways         │   │
+│   │          Fabric OS (FOS): Brocade switch OS for FC SAN — zoning, routing, management          │   │
+│   │           Runs on all Brocade FC switches (G630, G720, G730, X7 director platforms)           │   │
+│   │             Core services: FCNS (name server), FCSM, zone management, ISL trunking            │   │
+│   │         Management interfaces: CLI (SSH), REST API (FOS 8.2+), SANnav GUI integration         │   │
+│   │     Fabric-wide config distribution: zone DB, fabric parameters, principal switch election    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Core subsystems of FabricOS on every Brocade FC switch:                                            │
+│    Core OS services -> fabric-level functions -> management and integration layer                     │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Fabric Services       │  │        Port Services        │  │        Mgmt Services        │   │
-│   │         Name Server         │  │         Port config         │  │          CLI (SSH)          │   │
-│   │         Zone Server         │  │          Speed/mode         │  │           REST API          │   │
-│   │         FSPF routing        │  │         D-Port diag         │  │          SNMP agent         │   │
-│   │         ISL trunking        │  │        Port mirroring       │  │            Syslog           │   │
-│   │       MAPS thresholds       │  │          QoS/Zoning         │  │          Audit log          │   │
+│   │         FC Services         │  │         Fabric Layer        │  │          Management         │   │
+│   │       FCNS name server      │  │         Zone DB sync        │  │         CLI via SSH         │   │
+│   │      Port login (FLOGI)     │  │         ISL trunking        │  │           REST API          │   │
+│   │      FC routing (FSPF)      │  │       Principal switch      │  │          SANnav GUI         │   │
+│   │        FCSM security        │  │        Fabric params        │  │         SNMP/syslog         │   │
+│   │       RAS/diagnostics       │  │        Domain ID mgmt       │  │          LDAP auth          │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Fabric-wide events (login, zone activate) propagate via SW_ILS frames to all switches              │
+│    Zone changes replicated across fabric; principal switch coordinates domain IDs                     │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Subsystem     │   CLI command    │      Function     │      Scope       │      Notes       │   │
-│   │   Zone Server    │     cfgshow      │    Zone db mgmt   │   Fabric-wide    │  Saved in flash  │   │
-│   │   Name Server    │      nsshow      │     WWN lookup    │    Per-switch    │  Auto-populated  │   │
-│   │       MAPS       │     mapsshow     │  Threshold alerts │    Per-switch    │    Email/SNMP    │   │
-│   │    ISL trunk     │    trunkshow     │   Aggregate ISLs  │   Inter-switch   │ ICL on directors │   │
+│   │    Component     │       Role       │      Protocol     │     Version      │      Notes       │   │
+│   │       FCNS       │   Name server    │       FC-GS       │      FOS 6+      │  Per-fabric DB   │   │
+│   │       FSPF       │    FC routing    │       FC-SW       │      FOS 6+      │ Least-cost path  │   │
+│   │     REST API     │  Mgmt interface  │       HTTPS       │     FOS 8.2+     │     JSON/XML     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Brocade FC switches · HBAs in hosts · SFPs · OM4 fibre · FC directors                    │
+│    Physical: Brocade G630/G720/G730 switches · X7-8/X7-4 directors · FC SFP optics · ISL cables       │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │
-│    FabricOS (FOS)  = Brocade embedded switch OS; versions 7.x, 8.x, 9.x                               │
-│    FSPF            = Fabric Shortest Path First; FC routing protocol analogous to OSPF                │
-│    Zone Server     = Fabric service holding zone DB; active config enforced in hardware               │
-│    Name Server     = Tracks WWN-to-FC-address mappings; queried on device login                       │
-│    MAPS            = Monitoring and Alerting Policy Suite; threshold-based health alerts              │
-│    ISL trunk       = Multiple ISLs bonded for higher bandwidth between two switches                   │
-│    D-Port          = Diagnostic port mode; runs optical and cable tests end-to-end                    │
-│    Virtual Fabric  = Logical switch partitioning; multiple logical switches on one chassis            │
-│    cfgshow         = CLI command to display zone configuration database                               │
-│    nsshow          = CLI command showing Name Server entries on local switch                          │
-│    SW_ILS          = Switch Internal Link Service; fabric-wide event propagation frames               │
-│    FCIP gateway    = Extends FC fabric over IP/WAN using TCP tunnels                                  │
+│    Fabric OS      = Brocade proprietary OS running on all Brocade FC switch hardware                  │
+│    FCNS           = Fibre Channel Name Server; maps WWN to N_Port ID within the fabric                │
+│    FSPF           = Fabric Shortest Path First; FC link-state routing protocol                        │
+│    FLOGI          = Fabric Login; HBA registers with fabric and obtains FC address (FCID)             │
+│    FCSM           = FC Security Manager; enforces DH-CHAP switch authentication                       │
+│    Zone DB        = Fabric-wide zone configuration replicated to all switches in fabric               │
+│    ISL trunk      = Multiple ISLs bundled for bandwidth aggregation between switches                  │
+│    Principal switch = Elected switch managing domain ID assignments for the fabric                    │
+│    Domain ID      = Unique numeric identifier for each switch in the fabric (1-239)                   │
+│    REST API       = FOS 8.2+ HTTP management interface; JSON/XML payloads over HTTPS                  │
+│    MAPS           = Monitoring and Alerting Policy Suite; FOS threshold alert engine                  │
+│    portcfg        = FOS CLI command to configure port speed, mode, and behaviour                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

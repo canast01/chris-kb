@@ -22,35 +22,49 @@
 │  Locker Master Password → offline vault (required for restore)  │
 └─────────────────────────────────────────────────────────────────┘
 ```
-
-LCM itself does not have a built-in scheduled backup agent. The recommended approach is to combine a **file-system-level NFS backup** of the binary repository with a **VM-level snapshot or backup** of the LCM appliance. The Locker (certificates, passwords, licences) state is stored on the appliance disk, so the appliance backup is the recovery point for all Locker data.
-
----
-
-## What Needs to Be Backed Up
-
-| Component | Storage Location | Backup Method |
-|---|---|---|
-| LCM application database | `/var/lib/vrlcm/` on LCM appliance | VM backup / snapshot |
-| Locker (certs, passwords, licences) | `/opt/vmware/vrlcm/` on LCM appliance | VM backup / snapshot |
-| Product binaries / NFS repo | NFS share mounted at `/data` | NFS-server-side backup |
-| LCM configuration (VIDM, vCenter) | Embedded in application DB | VM backup / snapshot |
-| Deployment manifests | LCM DB + exported snapshots | API export (see below) |
-
----
-
-## Backing Up the LCM Appliance
-
-### Option 1 — VM Snapshot (Pre-Change Only)
-
-Take a snapshot before any upgrade, certificate rotation, or major change. Do not use snapshots as the long-term backup mechanism — they grow indefinitely and degrade VM performance.
-
-```bash
-# PowerCLI — snapshot the LCM VM before a change
-$vm = Get-VM -Name "lcm-prod-01"
-New-Snapshot -VM $vm -Name "pre-upgrade-$(Get-Date -Format yyyyMMdd)" `
-  -Description "Pre-upgrade snapshot — LCM 8.x to 8.y" `
-  -Quiesce -Memory:$false
+┌─────────────────────────────────── Aria Suite LCM Backup & Restore ───────────────────────────────────┐
+│                                                                                                       │
+│  LCM database backup, logscraper archive, and environment product backup steps.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               What to Back Up                │  │                Backup Method                │   │
+│   │         LCM database (appliance DB)          │  │             VAMI: backup to NFS             │   │
+│   │          Cert store and trust certs          │  │           vSphere snapshot LCM VM           │   │
+│   │          Environment configuration           │  │           Export environment JSON           │   │
+│   │         Product: each product backup         │  │           Each product: own backup          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  LCM backup covers its own DB; each managed product must be backed up separately.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Restore Procedure               │  │           Post-Restore Validation           │   │
+│   │           1. Deploy fresh LCM OVA            │  │              LCM UI accessible?             │   │
+│   │         2. Restore from VAMI backup          │  │            Environments visible?            │   │
+│   │         3. Reconnect vCenter + vIDM          │  │             Products: health OK?            │   │
+│   │          4. Validate product health          │  │             Cert store: intact?             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM on vSphere; NFS for backup target; vCenter and vIDM must be reachable                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  LCM Database        = Internal PostgreSQL DB storing environments, products, certs                   │
+│  VAMI Backup         = LCM built-in backup to NFS at port 5480                                        │
+│  vSphere Snapshot    = Full LCM VM checkpoint; use before upgrades                                    │
+│  Environment JSON    = Export of LCM environment definition for reference                             │
+│  Cert Store          = LCM-internal trusted CA and product cert repository                            │
+│  Product Backup      = Each Aria product (vROps, vRLI, vRA) needs own backup                          │
+│  Logscraper          = LCM diagnostic tool; not a backup tool but useful for SR                       │
+│  Restore             = VAMI-driven LCM DB restore from backup file on NFS                             │
+│  Reconnect vCenter   = After restore, re-add vCenter connection in LCM settings                       │
+│  Post-restore Check  = Validate environment, product health, and cert store                           │
+│  NFS Target          = Backup storage; LCM writes backup archive to NFS share                         │
+│  Backup Schedule     = Automate daily LCM backup via VAMI scheduler                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Remove the snapshot within 48 hours of a successful upgrade:

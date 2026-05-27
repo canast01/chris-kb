@@ -29,45 +29,43 @@ flowchart LR
 ```
 ┌──────────────────────────────────────── Linux — CLI Reference ────────────────────────────────────────┐
 │                                                                                                       │
-│  Essential Linux CLI commands grouped by area: files, processes, network, and services.               │
+│  Command-line reference for day-to-day Linux administration tasks.                                    │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             File and Filesystem              │  │              Process Management             │   │
-│   │           ls -lah / find / locate            │  │             ps aux / top / htop             │   │
-│   │             cp / mv / rm / mkdir             │  │            kill -9 <pid> / pkill            │   │
-│   │            chmod / chown / chgrp             │  │            nice / renice / ionice           │   │
-│   │            df -h / du -sh / lsblk            │  │         systemctl start/stop/status         │   │
+│   │               System & Process               │  │                 File & Disk                 │   │
+│   │            ps aux: all processes             │  │            ls -lah: list w/ sizes           │   │
+│   │            top / htop: live view             │  │              df -h: disk usage              │   │
+│   │           kill / killall: signals            │  │             du -sh *: dir sizes             │   │
+│   │             systemctl status svc             │  │              find / grep / awk              │   │
+│   │             journalctl -u svc -f             │  │            rsync / scp: transfer            │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    File ops are atomic where possible; use systemctl over service for systemd                         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                   Network                    │  │                Text and Logs                │   │
-│   │        ip addr / ip route / ss -tulpn        │  │            grep / awk / sed / cut           │   │
-│   │           ping / traceroute / dig            │  │           tail -f / journalctl -f           │   │
-│   │               curl / wget / nc               │  │             sort / uniq / wc -l             │   │
-│   │            iptables -L / nft list            │  │            less / vim / cat / tee           │   │
+│   │                   Network                    │  │              User & Permissions             │   │
+│   │              ip addr / ip route              │  │              useradd / usermod              │   │
+│   │             ss -tlnp: open ports             │  │                passwd / chage               │   │
+│   │              ping / traceroute               │  │                chmod / chown                │   │
+│   │                nmap / netstat                │  │                sudo / visudo                │   │
+│   │                tcpdump / curl                │  │              id / groups / who              │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical or virtual server · TTY/SSH terminal · NIC · storage                                        │
+│  x86-64 servers · terminal emulator · SSH client · NIC · storage mounts                               │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  ss -tulpn    = socket stats: TCP/UDP listening sockets with PID/process                              │
-│  ip addr      = show/manage IP addresses; replaces ifconfig                                           │
-│  ip route     = show/manage routing table; replaces route                                             │
-│  journalctl   = query systemd journal; -f follows, -u filters by unit                                 │
-│  lsblk        = list block devices in tree view; shows mounts                                         │
-│  df -h        = disk free in human-readable units per filesystem                                      │
-│  du -sh       = disk usage of directory recursively, summarised                                       │
-│  chmod        = change file permissions: chmod 755 file                                               │
-│  chown        = change file owner/group: chown user:group file                                        │
-│  nice/renice  = set process priority (-20 highest, 19 lowest)                                         │
-│  ionice       = set I/O scheduler class for a process                                                 │
-│  tee          = reads stdin, writes to both stdout and file                                           │
+│  stdin/stdout= Standard input (fd 0) and output (fd 1); pipes connect them                            │
+│  stderr      = Standard error (fd 2); separate from stdout for clean pipelines                        │
+│  pipe |      = Passes stdout of left command as stdin of right command                                │
+│  redirect >  = Sends stdout to a file; >> appends; 2>&1 merges stderr                                 │
+│  signal      = IPC mechanism: SIGTERM (15) graceful, SIGKILL (9) immediate                            │
+│  PID         = Process ID; unique integer assigned by kernel to each process                          │
+│  UID / GID   = User/Group ID; integers that control file permission checks                            │
+│  sudo        = Run command as another user (default root) via policy in sudoers                       │
+│  sticky bit  = Restricts file deletion in shared dir to owner only (e.g. /tmp)                        │
+│  inode       = Metadata structure on disk: permissions, owner, size, timestamps                       │
+│  hard link   = Directory entry pointing to same inode; same data, diff name                           │
+│  symlink     = Symbolic link; pointer to another path, can cross filesystems                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

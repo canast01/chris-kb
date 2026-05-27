@@ -30,49 +30,51 @@ ESXi Escalation Path — Broadcom Support
 │  HCL check: https://compatibilityguide.broadcom.com     │
 └─────────────────────────────────────────────────────────┘
 ```
-
-## Support Portal
-
-Broadcom acquired VMware in 2023. All VMware product support is now handled through the Broadcom Support Portal:
-
-**https://support.broadcom.com**
-
-Log in with your Broadcom Support account (formerly VMware Customer Connect). Support contracts are attached to your Broadcom account. If your organisation has a VCPP (VMware Cloud Provider Programme) partner agreement, support may be routed through your VCPP partner.
-
-## Opening a Case
-
-When opening a support case for an ESXi issue, collect and provide the following information upfront to avoid back-and-forth and reduce time to first response:
-
-| Field | How to Retrieve |
-|---|---|
-| ESXi version and build | `vmware -v` on the host shell |
-| Host hardware model and serial | `esxcli hardware platform get` |
-| vCenter version and build | vSphere Client > Help > About |
-| Symptom description | Specific error message, affected operations, time of first occurrence |
-| Affected VMs | VM names, guest OS, workload type |
-| Recent changes | Patches, configuration changes, hardware replacements |
-| Reproducibility | Intermittent vs. consistent; steps to reproduce |
-
-Set the correct severity when opening the case:
-
-| Severity | Criteria |
-|---|---|
-| P1 — Critical | Production system down, data loss risk, no workaround |
-| P2 — Major | Production degraded, workaround exists |
-| P3 — Minor | Non-production affected or low-impact issue |
-| P4 — Informational | Questions, how-to, documentation requests |
-
-## Information to Collect
-
-Generate an ESXi support bundle before contacting support. The bundle includes vmkernel logs, hostd logs, network config, storage config, and system state.
-
-**From ESXi shell:**
-
-```bash
-vm-support -w /tmp/
-# Bundle is created at /tmp/esx-<hostname>-<timestamp>.tgz
-# Copy to a datastore for retrieval:
-cp /tmp/esx-*.tgz /vmfs/volumes/<datastore>/
+┌────────────────────────────────────────── ESXi — Escalation ──────────────────────────────────────────┐
+│                                                                                                       │
+│  VMware GSS escalation, support bundle collection, and severity level matrix.                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Decision              │  │             Pre-Escalation Steps            │   │
+│   │            PSOD / data loss risk             │  │            Collect support bundle           │   │
+│   │           Unexplained host failure           │  │           Document symptoms + time          │   │
+│   │          Storage APD not resolving           │  │             Capture esxtop batch            │   │
+│   │          Cluster HA not recovering           │  │          Note ESXi/vCenter version          │   │
+│   │          Suspected driver/firmware           │  │           Verify HCL status first           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Internal diagnosis → pre-escalation bundle → VMware SR → severity match.                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Severity Levels                │  │           Support Bundle Contents           │   │
+│   │           S1: prod down, data loss           │  │             /var/log/* all logs             │   │
+│   │           S2: major feature broken           │  │              vmkernel PSOD dump             │   │
+│   │           S3: degraded, workaround           │  │            Hardware config + HCL            │   │
+│   │              S4: info/question               │  │           Network config (vmknic)           │   │
+│   │           S1 = 24x7 phone support            │  │          Storage path state output          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, SAN/NAS/vSAN, vCenter appliance, management network, OOB access                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  GSS         = Global Support Services; VMware support organisation                                   │
+│  SR          = Service Request; support ticket raised via my.vmware.com                               │
+│  S1          = Severity 1; production system down; 24x7 phone response                                │
+│  S2          = Severity 2; major impact but workaround possible                                       │
+│  Support bundle = vm-support archive; upload to SR for GSS analysis                                   │
+│  PSOD dump   = memory dump from kernel crash; captured at panic time                                  │
+│  HCL         = Hardware Compatibility List; confirm before escalating                                 │
+│  vmkernel.log= primary ESXi system log; first item GSS will review                                    │
+│  esxtop batch= esxtop -b output; shows performance at time of issue                                   │
+│  my.vmware.com= VMware customer portal; SR creation and file upload                                   │
+│  Workaround  = temporary fix; allows S2 to remain S2 not S1                                           │
+│  Phone bridge= S1 SR triggers phone call from VMware engineer                                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **From vSphere Client:**

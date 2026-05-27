@@ -1,5 +1,50 @@
 # Aria Automation — Standards
 
+```
+┌───────────────────────────────── Aria Automation — Design Standards ──────────────────────────────────┐
+│                                                                                                       │
+│  Design patterns for projects, templates, naming, and governance in Aria Automation.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Project & Naming Standards          │  │          Template Design Standards          │   │
+│   │       One project per team/BU/env tier       │  │     Inputs: only required params exposed    │   │
+│   │       Naming: env-team-purpose pattern       │  │      Constraints: machine.count limits      │   │
+│   │        Cloud zones linked per project        │  │    Versioning: major for breaking changes   │   │
+│   │       Quotas: CPU/memory/storage caps        │  │       No hardcoded IPs or credentials       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Governance standards enforce consistent tagging, approvals, and lifecycle management.                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Governance Standards             │  │           Extensibility Standards           │   │
+│   │     Approval policies for all prod items     │  │     ABX actions in version control (Git)    │   │
+│   │    Cost policies: budget alerts per proj     │  │     Orchestrator workflows tested in dev    │   │
+│   │       Lease policies: auto-expire VMs        │  │     No inline scripts in cloud templates    │   │
+│   │        Mandatory tags: env/owner/team        │  │      ABX: separate actions per concern      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRA appliance cluster · vCenter · NSX-T · AD · Git for IaC and action source control                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Cloud zone        = Placement policy linking a project to a vCenter cluster or cloud region          │
+│  Quota             = Resource limit (CPU/mem/storage count) enforced per project in vRA               │
+│  Lease policy      = Expiry rule: deployments auto-deleted or sent for approval after N days          │
+│  Approval policy   = Governance workflow requiring authoriser sign-off before provisioning            │
+│  Cost policy       = Budget threshold triggering alert or block when project spend exceeds limit      │
+│  Template version  = Immutable snapshot of a cloud template; major versions break consumers           │
+│  Constraint tag    = vRA tag applied to a resource (cluster/datastore) to control placement           │
+│  Input property    = Template parameter exposed to consumer at request time (dropdown/free text)      │
+│  ABX source control= Git repo storing ABX action code; imported via vRA integration setting           │
+│  No inline scripts = Design rule: scripts belong in ABX actions, not cloudConfig/customisation        │
+│  Naming convention = Consistent env-team-role-seq pattern for VMs, networks, and deployments          │
+│  Mandatory tag     = Tag enforced by lease/approval policy; deployment blocked without it             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Naming Conventions
 
 | Object | Convention | Example |
