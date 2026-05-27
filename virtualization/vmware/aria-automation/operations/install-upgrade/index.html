@@ -4498,56 +4498,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#manual-ova-deployment-standalone" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Manual OVA Deployment (Standalone)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-paths" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Paths
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Upgrade Paths">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#via-aria-suite-lifecycle-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Via Aria Suite Lifecycle (Recommended)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#in-product-upgrade-standalone-no-lcm" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In-Product Upgrade (Standalone, No LCM)
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -4861,54 +4811,63 @@
 </ol>
 <h3 id="via-lcm-adding-aria-automation-to-existing-lcm-environment">Via LCM (Adding Aria Automation to Existing LCM Environment)<a class="headerlink" href="#via-lcm-adding-aria-automation-to-existing-lcm-environment" title="Permanent link">&para;</a></h3>
 <p>If LCM is already deployed and Aria Automation needs to be added:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>LCM → Lifecycle Operations → Environments → select or create environment → Add Product → Aria Automation
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>LCM → Lifecycle Operations → Environments → select or create environment → Add Product → Aria Automation
 </code></pre></div>
-<ol>
-<li>Select the Aria Automation version from the available bundles</li>
-<li>Choose deployment size: Small (1 node) or Medium/Large (3 nodes)</li>
-<li>Provide vCenter target: cluster, datastore, network, static IPs, FQDNs</li>
-<li>Provide admin credentials (stored automatically in the LCM Locker)</li>
-<li>LCM runs pre-checks (DNS, NTP, vCenter, disk space) — all must pass</li>
-<li>LCM deploys the OVAs and configures the cluster</li>
-<li>Monitor via: <strong>Lifecycle Operations → Requests</strong></li>
-</ol>
-<h3 id="manual-ova-deployment-standalone">Manual OVA Deployment (Standalone)<a class="headerlink" href="#manual-ova-deployment-standalone" title="Permanent link">&para;</a></h3>
-<p>For environments without LCM:</p>
-<ol>
-<li>Deploy the Aria Automation OVA via vSphere Client: <strong>Actions → Deploy OVF Template</strong></li>
-<li>Complete the OVA customisation: hostname, IP, gateway, DNS, NTP, root password</li>
-<li>Power on and wait for first-boot (10–15 minutes)</li>
-<li>Open VAMI: <code>https://&lt;vra-fqdn&gt;:5480</code></li>
-<li>Configure VIDM integration: VAMI → Identity Provider → Configure</li>
-<li>For 3-node clusters: deploy all three OVAs, then join the second and third nodes to the first</li>
-</ol>
-<hr />
-<h2 id="upgrade-paths">Upgrade Paths<a class="headerlink" href="#upgrade-paths" title="Permanent link">&para;</a></h2>
-<h3 id="via-aria-suite-lifecycle-recommended">Via Aria Suite Lifecycle (Recommended)<a class="headerlink" href="#via-aria-suite-lifecycle-recommended" title="Permanent link">&para;</a></h3>
-<p>Upgrades through LCM are orchestrated, validated with pre-checks, and include automatic rollback capability via snapshots.</p>
-<ol>
-<li>Upgrade LCM itself to the version that supports the target Aria Automation version (LCM must always be upgraded first)</li>
-<li>In LCM: <strong>Lifecycle Operations → Environments → select environment → Aria Automation → Upgrade</strong></li>
-<li>Select the target version from the bundle list</li>
-<li>Resolve any pre-check failures before proceeding</li>
-<li>LCM takes VM snapshots automatically before beginning the upgrade</li>
-<li>Monitor upgrade progress: <strong>Lifecycle Operations → Requests</strong></li>
-</ol>
-<p>LCM upgrades nodes sequentially for 3-node clusters. The cluster remains partially available during the upgrade (2 of 3 nodes active), but requests should be paused during the upgrade window.</p>
-<h3 id="in-product-upgrade-standalone-no-lcm">In-Product Upgrade (Standalone, No LCM)<a class="headerlink" href="#in-product-upgrade-standalone-no-lcm" title="Permanent link">&para;</a></h3>
-<p>For environments not managed by LCM:</p>
-<p><strong>Via VAMI:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>https://&lt;vra-fqdn&gt;:5480 → Lifecycle Management → System Upgrade → Upload PAK file
-</code></pre></div>
-<p>Upload the Aria Automation <code>.pak</code> file from Broadcom Support Portal. The VAMI validates the file and presents a pre-upgrade compatibility check. Click <strong>Upgrade</strong> if all checks pass.</p>
-<p><strong>Via CLI:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Copy PAK file to the appliance</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>scp<span class="w"> </span>VMware-vRealize-Automation-*.pak<span class="w"> </span>root@vra-prod-01.example.local:/tmp/
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># SSH to the appliance and trigger upgrade via vracli</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>vracli<span class="w"> </span>software-update<span class="w"> </span>install<span class="w"> </span>--file<span class="w"> </span>/tmp/VMware-vRealize-Automation-*.pak
-</code></pre></div>
+┌──────────────────────────────── Aria Automation — Install and Upgrade ────────────────────────────────┐
+│                                                                                                       │
+│  Aria Automation is deployed and upgraded via Aria Suite LCM; manual OVA only for new installs.       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Pre-Install / Pre-Upgrade           │  │           Install / Upgrade Steps           │   │
+│   │          DNS: fwd+rev for vRA FQDN           │  │        LCM: Environment → Add product       │   │
+│   │          NTP: appliance time synced          │  │        Select version from LCM depot        │   │
+│   │      vCenter: resource pool + datastore      │  │        LCM pre-checks must pass green       │   │
+│   │        TLS cert: SAN matches vRA FQDN        │  │      Deploy OVA → power on → VAMI init      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Post-install: configure vIDM, cloud accounts, projects, and catalog before handover.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Post-Install Config              │  │              Upgrade Validation             │   │
+│   │          VAMI: set FQDN, NTP, proxy          │  │        vracli status --all: all green       │   │
+│   │         vIDM integration: SAML/LDAP          │  │      Catalog items visible post-upgrade     │   │
+│   │       Cloud accounts: add vCenter/AWS        │  │        Test request: deploy small VM        │   │
+│   │      Projects and quotas: set per team       │  │        Orchestrator: workflows intact       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRA OVA (4 vCPU/25 GB RAM min) · vCenter · DNS/NTP · LCM appliance · TLS CA                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  LCM depot         = Aria Suite LCM binary repository; download product OVAs for managed deploy       │
+│  Environment       = LCM grouping of related Aria products sharing vIDM and certificates              │
+│  OVA deployment    = vCenter deploy from OVA; used for initial install only (not upgrades)            │
+│  VAMI init         = First-boot configuration wizard setting hostname, NTP, password                  │
+│  Pre-checks        = LCM automated validation of DNS, NTP, cert, and resource before deploy           │
+│  vIDM integration  = SAML trust configured in vRA VAMI; enables SSO for all Aria products             │
+│  Cloud account add = vRA wizard adding vCenter/AWS/Azure credentials and verifying connectivity       │
+│  Project quota     = Resource limits set per project after install; not set by default                │
+│  Upgrade sequence  = LCM handles version ordering; do not upgrade vRA before vIDM                     │
+│  Rollback point    = VM snapshot taken before LCM upgrade; revert if upgrade fails                    │
+│  Greenfield install = New vRA in a new LCM environment; no migration from older vRA 7.x               │
+│  SAN cert          = Subject Alternative Name; must include vRA FQDN for browser trust                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Upload the Aria Automation `.pak` file from Broadcom Support Portal. The VAMI validates the file and presents a pre-upgrade compatibility check. Click **Upgrade** if all checks pass.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>**Via CLI:**
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Copy PAK file to the appliance
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>scp VMware-vRealize-Automation-*.pak root@vra-prod-01.example.local:/tmp/
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># SSH to the appliance and trigger upgrade via vracli
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>ssh root@vra-prod-01.example.local
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>vracli software-update install --file /tmp/VMware-vRealize-Automation-*.pak
+</code></pre></div></p>
 <hr />
 <h2 id="pre-upgrade-checklist">Pre-Upgrade Checklist<a class="headerlink" href="#pre-upgrade-checklist" title="Permanent link">&para;</a></h2>
 <p>Run this checklist before initiating any upgrade:</p>
@@ -4926,34 +4885,34 @@
 <li>[ ] Maintenance window communicated to users (catalog will be unavailable during upgrade)</li>
 <li>[ ] Downstream integrations notified: ServiceNow, Ansible Tower, monitoring systems</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Pre-upgrade disk and service check on appliance</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Disk space</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>df<span class="w"> </span>-h<span class="w"> </span>/<span class="w"> </span>/var
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Pod health — no CrashLoopBackOff or Pending pods</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed\|Succeeded&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Service health</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>vracli<span class="w"> </span>status
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Confirm backup is current</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>vracli<span class="w"> </span>backup<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Pre-upgrade disk and service check on appliance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Disk space</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>df<span class="w"> </span>-h<span class="w"> </span>/<span class="w"> </span>/var
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Pod health — no CrashLoopBackOff or Pending pods</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed\|Succeeded&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Service health</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>vracli<span class="w"> </span>status
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Confirm backup is current</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>vracli<span class="w"> </span>backup<span class="w"> </span>status
 </code></pre></div>
 <hr />
 <h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
 <p>Run immediately after the upgrade completes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm installed version matches target</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>vracli<span class="w"> </span>version
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Confirm all pods are Running</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed\|Succeeded&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Expected: no output (all pods healthy)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Confirm cluster node status (3-node deployments)</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Confirm installed version matches target</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vracli<span class="w"> </span>version
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Confirm all pods are Running</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed\|Succeeded&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Expected: no output (all pods healthy)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Confirm cluster node status (3-node deployments)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>health
 </code></pre></div>
 <p>Via UI validation:</p>
 <ul>

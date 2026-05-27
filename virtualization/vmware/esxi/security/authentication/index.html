@@ -4338,62 +4338,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#authentication-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Authentication Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#local-accounts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Local Accounts
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Local Accounts">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#principle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Principle
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#set-root-password" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Set Root Password
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#create-a-break-glass-local-account" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Create a Break-Glass Local Account
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#list-and-remove-unused-local-accounts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4401,11 +4345,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -4770,7 +4709,7 @@
 
 
 <h1 id="esxi-authentication">ESXi — Authentication<a class="headerlink" href="#esxi-authentication" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ESXi Authentication Paths
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ESXi Authentication Paths
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Recommended Path (day-to-day)                           │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                          │
@@ -4799,79 +4738,75 @@
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  /Config/Etc/issue             = login banner text        │
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└──────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="authentication-architecture">Authentication Architecture<a class="headerlink" href="#authentication-architecture" title="Permanent link">&para;</a></h2>
-<p>ESXi supports three authentication paths:</p>
-<table>
-<thead>
-<tr>
-<th>Path</th>
-<th>Mechanism</th>
-<th>Use</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vCenter SSO</td>
-<td>AD via vCenter identity source</td>
-<td>Normal day-to-day administration</td>
-</tr>
-<tr>
-<td>Direct AD (ESXi joined to domain)</td>
-<td>AD Kerberos or LDAP directly</td>
-<td>Not recommended; complex to manage</td>
-</tr>
-<tr>
-<td>Local account</td>
-<td>Password-based against <code>/etc/passwd</code></td>
-<td>Break-glass only</td>
-</tr>
-</tbody>
-</table>
-<p>The recommended approach is to authenticate all users through vCenter using AD as the identity source. Direct ESXi authentication is the exception (break-glass), not the norm.</p>
-<hr />
-<h2 id="local-accounts">Local Accounts<a class="headerlink" href="#local-accounts" title="Permanent link">&para;</a></h2>
-<h3 id="principle">Principle<a class="headerlink" href="#principle" title="Permanent link">&para;</a></h3>
-<p>Minimise local accounts. Production ESXi hosts should have:</p>
-<ul>
-<li><code>root</code> — primary break-glass account with a strong, unique password per host</li>
-<li>One named break-glass account (e.g., <code>infra-breakglass</code>) — in the exception users list for Normal Lockdown</li>
-</ul>
-<p>All other local accounts should be removed or disabled.</p>
-<h3 id="set-root-password">Set Root Password<a class="headerlink" href="#set-root-password" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Interactive — SSH or ESXi Shell (or DCUI)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>passwd<span class="w"> </span>root
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Via PowerCLI across all hosts in a cluster</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Get-Cluster<span class="w"> </span><span class="s2">&quot;CL-PROD&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nv">$h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nv">$spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-Object<span class="w"> </span>VMware.Vim.HostAccountSpec
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nv">$spec</span>.id<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;root&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nv">$spec</span>.password<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;NewRootPassword!!&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nv">$h</span>.ExtensionData.ConfigManager.AccountManager.UpdateUser<span class="o">(</span><span class="nv">$spec</span><span class="o">)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>Write-Host<span class="w"> </span><span class="s2">&quot;Root password updated: </span><span class="k">$(</span><span class="nv">$h</span>.Name<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="o">}</span>
-</code></pre></div>
-<p>Store root passwords in the organisation's secrets vault (CyberArk, HashiCorp Vault, or equivalent). Each host should have a <strong>unique</strong> root password — password reuse across hosts increases blast radius if one password is compromised.</p>
-<h3 id="create-a-break-glass-local-account">Create a Break-Glass Local Account<a class="headerlink" href="#create-a-break-glass-local-account" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On each ESXi host</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-i<span class="w"> </span><span class="s2">&quot;infra-breakglass&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-p<span class="w"> </span><span class="s2">&quot;UniqueStr0ngP@ss!!&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;Break-glass account — see vault for password&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Assign Admin role</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>system<span class="w"> </span>permission<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;infra-breakglass&quot;</span><span class="w"> </span>-r<span class="w"> </span>Admin
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Verify</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>list
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>esxcli<span class="w"> </span>system<span class="w"> </span>permission<span class="w"> </span>list
-</code></pre></div>
+┌──────────────────────────────────────── ESXi — Authentication ────────────────────────────────────────┐
+│                                                                                                       │
+│  SSO, AD/LDAP join, smart card (CAC), and MFA configuration for ESXi access.                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 vCenter SSO                  │  │             Host AD Integration             │   │
+│   │         vsphere.local default domain         │  │            Join host to AD domain           │   │
+│   │          Add AD as identity source           │  │           AD users log in to DCUI           │   │
+│   │            Password policy in SSO            │  │              ESXi Shell AD auth             │   │
+│   │         Token policy: timeout/count          │  │           AD group to DCUI access           │   │
+│   │          MFA: RSA SecurID / Radius           │  │            Leave domain on decomm           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SSO identity source → vCenter auth → RBAC mapping → ESXi host access.                                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Smart Card / CAC Auth             │  │              MFA Configuration              │   │
+│   │          vCenter: enable cert auth           │  │           RSA SecurID integration           │   │
+│   │           Map cert UPN to AD user            │  │           Radius server configured          │   │
+│   │           CAC card + PIN required            │  │            SSO MFA policy enabled           │   │
+│   │          OCSP/CRL revocation check           │  │          Fallback: local admin only         │   │
+│   │           DOD/STIG CAC requirement           │  │            MFA for vCenter UI/API           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, management network, AD/LDAP servers, RSA/Radius MFA servers                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SSO         = Single Sign-On; vCenter embedded auth service                                          │
+│  vsphere.local = built-in SSO domain; local admin accounts live here                                  │
+│  Identity source = AD/LDAP added to SSO; users can log in with domain                                 │
+│  CAC         = Common Access Card; US Gov smart card for auth                                         │
+│  OCSP        = Online Certificate Status Protocol; checks cert revocation                             │
+│  CRL         = Certificate Revocation List; offline revocation list                                   │
+│  RSA SecurID = MFA token; OTP used as second factor for vCenter                                       │
+│  Radius      = Remote Auth Dial-In User Service; MFA protocol                                         │
+│  UPN         = User Principal Name; cert field mapped to AD user                                      │
+│  DCUI        = Direct Console UI; local access; can use AD auth                                       │
+│  Token policy = SSO setting: session lifetime and concurrent count                                    │
+│  STIG        = Security Technical Implementation Guide; DOD hardening                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Store root passwords in the organisation&#39;s secrets vault (CyberArk, HashiCorp Vault, or equivalent). Each host should have a **unique** root password — password reuse across hosts increases blast radius if one password is compromised.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Create a Break-Glass Local Account
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># On each ESXi host
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>esxcli system account add \
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  -i &quot;infra-breakglass&quot; \
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  -p &quot;UniqueStr0ngP@ss!!&quot; \
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  -d &quot;Break-glass account — see vault for password&quot;
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Assign Admin role
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>esxcli system permission set -i &quot;infra-breakglass&quot; -r Admin
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Verify
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>esxcli system account list
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>esxcli system permission list
+</code></pre></div></p>
 <h3 id="list-and-remove-unused-local-accounts">List and Remove Unused Local Accounts<a class="headerlink" href="#list-and-remove-unused-local-accounts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View all local accounts</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>list
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Remove an account</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>remove<span class="w"> </span>-i<span class="w"> </span>&lt;username&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View all local accounts</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Remove an account</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>remove<span class="w"> </span>-i<span class="w"> </span>&lt;username&gt;
 </code></pre></div>
 <hr />
 <h2 id="password-policy">Password Policy<a class="headerlink" href="#password-policy" title="Permanent link">&para;</a></h2>
@@ -4918,17 +4853,17 @@
 </tbody>
 </table>
 <p>Configure via advanced settings:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View current password quality settings</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span>get<span class="w"> </span>-o<span class="w"> </span>/Security/PasswordQualityControl
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Set password complexity requirements</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-o<span class="w"> </span>/Security/PasswordQualityControl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-s<span class="w"> </span><span class="s2">&quot;similar=deny retry=3 min=disabled,disabled,disabled,7,7&quot;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Failed login lockout</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Security/AccountLockFailures<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Security/AccountUnlockTime<span class="w"> </span>-i<span class="w"> </span><span class="m">900</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View current password quality settings</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span>get<span class="w"> </span>-o<span class="w"> </span>/Security/PasswordQualityControl
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Set password complexity requirements</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-o<span class="w"> </span>/Security/PasswordQualityControl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-s<span class="w"> </span><span class="s2">&quot;similar=deny retry=3 min=disabled,disabled,disabled,7,7&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Failed login lockout</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Security/AccountLockFailures<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Security/AccountUnlockTime<span class="w"> </span>-i<span class="w"> </span><span class="m">900</span>
 </code></pre></div>
 <p>Or via Host Profile: <strong>Policies and Profiles → Host Profile → Security → Security Settings → Login Banner / Password Policy</strong></p>
 <hr />
@@ -4937,75 +4872,75 @@
 <blockquote>
 <p><strong>Note</strong>: Joining ESXi directly to AD is supported but not the recommended pattern for most environments. The preferred approach is to use vCenter as the AD identity broker and maintain lockdown mode on hosts. Only join ESXi hosts to AD if there is a specific operational requirement.</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Via ESXi Shell (or ESXCLI from vCenter)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcfg-auth<span class="w"> </span>--enablead<span class="w"> </span>--addomain<span class="o">=</span>corp.local<span class="w"> </span>--addc<span class="o">=</span>dc01.example.local
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Or via ESXCLI</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>module<span class="w"> </span>parameters<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-m<span class="w"> </span>lsass<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;ad_domain=corp.local ad_server=dc01.example.local&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Verify join status</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>esxcli<span class="w"> </span>system<span class="w"> </span>module<span class="w"> </span>parameters<span class="w"> </span>get<span class="w"> </span>-m<span class="w"> </span>lsass
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Via ESXi Shell (or ESXCLI from vCenter)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcfg-auth<span class="w"> </span>--enablead<span class="w"> </span>--addomain<span class="o">=</span>corp.local<span class="w"> </span>--addc<span class="o">=</span>dc01.example.local
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Or via ESXCLI</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>module<span class="w"> </span>parameters<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-m<span class="w"> </span>lsass<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;ad_domain=corp.local ad_server=dc01.example.local&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify join status</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>esxcli<span class="w"> </span>system<span class="w"> </span>module<span class="w"> </span>parameters<span class="w"> </span>get<span class="w"> </span>-m<span class="w"> </span>lsass
 </code></pre></div>
 <p>Via vSphere Client: <strong>Host → Configure → System → Authentication Services → Change</strong></p>
 <p>After joining, AD users can be assigned roles in vCenter on this host. AD group <code>ESX Admins</code> is automatically granted administrator access — rename or disable this group if it exists in AD but should not have host access.</p>
 <h3 id="esx-admins-group-security-note">ESX Admins Group (Security Note)<a class="headerlink" href="#esx-admins-group-security-note" title="Permanent link">&para;</a></h3>
 <p>When an ESXi host is joined to AD, the AD group <code>ESX Admins</code> is granted full administrator access by default. This is a significant risk if the group exists in AD:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Rename or disable the automatic ESX Admins privilege</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-o<span class="w"> </span>/Config/HostAgent/plugins/hostsvc/esxAdminsGroupAutoAdd<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-i<span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Or change which AD group gets auto-admin rights</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-o<span class="w"> </span>/Config/HostAgent/plugins/hostsvc/esxAdminsGroup<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>-s<span class="w"> </span><span class="s2">&quot;ESX-Controlled-Access-Group&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Rename or disable the automatic ESX Admins privilege</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-o<span class="w"> </span>/Config/HostAgent/plugins/hostsvc/esxAdminsGroupAutoAdd<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-i<span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Or change which AD group gets auto-admin rights</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-o<span class="w"> </span>/Config/HostAgent/plugins/hostsvc/esxAdminsGroup<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>-s<span class="w"> </span><span class="s2">&quot;ESX-Controlled-Access-Group&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="authentication-hardening">Authentication Hardening<a class="headerlink" href="#authentication-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="disable-pam-telnet-and-ftp-if-enabled">Disable PAM Telnet and FTP (If Enabled)<a class="headerlink" href="#disable-pam-telnet-and-ftp-if-enabled" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check if telnet or FTP is enabled</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;telnet|ftp&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Disable them</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpClient
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpServer
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check if telnet or FTP is enabled</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;telnet|ftp&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Disable them</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpClient
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpServer
 </code></pre></div>
 <h3 id="ssh-key-based-authentication">SSH Key-Based Authentication<a class="headerlink" href="#ssh-key-based-authentication" title="Permanent link">&para;</a></h3>
 <p>For break-glass SSH access, prefer key-based authentication over passwords:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On the ESXi host — create authorized_keys directory</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/ssh/keys-root
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Add the public key</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/ssh/keys-root/authorized_keys
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>chown<span class="w"> </span>root:root<span class="w"> </span>/etc/ssh/keys-root/authorized_keys
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Verify key is loaded</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_rsa<span class="w"> </span>root@&lt;esxi-host&gt;<span class="w"> </span><span class="s2">&quot;esxcli system version get&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On the ESXi host — create authorized_keys directory</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/ssh/keys-root
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Add the public key</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/ssh/keys-root/authorized_keys
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>chown<span class="w"> </span>root:root<span class="w"> </span>/etc/ssh/keys-root/authorized_keys
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Verify key is loaded</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_rsa<span class="w"> </span>root@&lt;esxi-host&gt;<span class="w"> </span><span class="s2">&quot;esxcli system version get&quot;</span>
 </code></pre></div>
 <p>Keys are not persisted across reboots on stateless ESXi (Auto Deploy) without configuration in the host profile.</p>
 <h3 id="ssh-hardening-esxi-sshd">SSH Hardening (ESXi SSHD)<a class="headerlink" href="#ssh-hardening-esxi-sshd" title="Permanent link">&para;</a></h3>
 <p>If SSH must remain enabled temporarily, review <code>/etc/ssh/sshd_config</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># View current SSH config</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>cat<span class="w"> </span>/etc/ssh/sshd_config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">&quot;</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Key hardening settings to verify:</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># PermitRootLogin yes          (required for break-glass on ESXi)</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># PasswordAuthentication yes   (ESXi default; disable if using key-only)</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># ClientAliveInterval 300      (disconnect idle sessions after 5 minutes)</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># ClientAliveCountMax 0        (strict: no keepalive retries before disconnect)</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># AllowTcpForwarding no        (disable port forwarding)</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># X11Forwarding no             (disable X11)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># View current SSH config</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cat<span class="w"> </span>/etc/ssh/sshd_config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Key hardening settings to verify:</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># PermitRootLogin yes          (required for break-glass on ESXi)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># PasswordAuthentication yes   (ESXi default; disable if using key-only)</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># ClientAliveInterval 300      (disconnect idle sessions after 5 minutes)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># ClientAliveCountMax 0        (strict: no keepalive retries before disconnect)</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># AllowTcpForwarding no        (disable port forwarding)</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># X11Forwarding no             (disable X11)</span>
 </code></pre></div>
 <p>Note: <code>/etc/ssh/sshd_config</code> changes do not persist across reboots unless stored in a persistent config location or enforced via host profile.</p>
 <hr />
 <h2 id="login-banner">Login Banner<a class="headerlink" href="#login-banner" title="Permanent link">&para;</a></h2>
 <p>Display a legal / unauthorised access warning banner on SSH and DCUI logins:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Set login banner</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-o<span class="w"> </span>/Config/Etc/issue<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-s<span class="w"> </span><span class="s2">&quot;AUTHORISED USERS ONLY. This system is monitored. Unauthorised access is prohibited.&quot;</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Verify</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span>get<span class="w"> </span>-o<span class="w"> </span>/Config/Etc/issue
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Set login banner</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-o<span class="w"> </span>/Config/Etc/issue<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>-s<span class="w"> </span><span class="s2">&quot;AUTHORISED USERS ONLY. This system is monitored. Unauthorised access is prohibited.&quot;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Verify</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span>get<span class="w"> </span>-o<span class="w"> </span>/Config/Etc/issue
 </code></pre></div>
 <p>The banner appears on SSH login and in the DCUI. Configure via Host Profile to enforce consistently.</p>
 <hr />
@@ -5042,22 +4977,22 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># View recent authentication failures</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>grep<span class="w"> </span><span class="s2">&quot;Failed\|Invalid\|Authentication failure&quot;</span><span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># View shell commands</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#&quot;</span><span class="w"> </span>/var/log/shell.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># View DCUI logins</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>grep<span class="w"> </span><span class="s2">&quot;dcui\|DCUI\|login&quot;</span><span class="w"> </span>/var/log/vobd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># View recent authentication failures</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>grep<span class="w"> </span><span class="s2">&quot;Failed\|Invalid\|Authentication failure&quot;</span><span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># View shell commands</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#&quot;</span><span class="w"> </span>/var/log/shell.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># View DCUI logins</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>grep<span class="w"> </span><span class="s2">&quot;dcui\|DCUI\|login&quot;</span><span class="w"> </span>/var/log/vobd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
 <h3 id="verify-logs-are-forwarding">Verify Logs Are Forwarding<a class="headerlink" href="#verify-logs-are-forwarding" title="Permanent link">&para;</a></h3>
-<h2 id="confirm-syslog-configuration-esxcli-system-syslog-config-get-confirm-log-forwarding-is-working-check-siem-for-recent-esxi-entries-or-generate-a-test-entry-logger-t-esxi-auth-test-test-auth-log-entry-date"><div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Confirm syslog configuration</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Confirm log forwarding is working (check SIEM for recent ESXi entries)</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Or generate a test entry</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>logger<span class="w"> </span>-t<span class="w"> </span>esxi-auth-test<span class="w"> </span><span class="s2">&quot;Test auth log entry </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
+<h2 id="confirm-syslog-configuration-esxcli-system-syslog-config-get-confirm-log-forwarding-is-working-check-siem-for-recent-esxi-entries-or-generate-a-test-entry-logger-t-esxi-auth-test-test-auth-log-entry-date"><div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Confirm syslog configuration</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Confirm log forwarding is working (check SIEM for recent ESXi entries)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Or generate a test entry</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>logger<span class="w"> </span>-t<span class="w"> </span>esxi-auth-test<span class="w"> </span><span class="s2">&quot;Test auth log entry </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
 </code></pre></div><a class="headerlink" href="#confirm-syslog-configuration-esxcli-system-syslog-config-get-confirm-log-forwarding-is-working-check-siem-for-recent-esxi-entries-or-generate-a-test-entry-logger-t-esxi-auth-test-test-auth-log-entry-date" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
 <ul>

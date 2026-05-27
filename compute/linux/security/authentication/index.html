@@ -3562,45 +3562,43 @@
 </code></pre></div>
 ┌─────────────────────────────────────── Linux — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
-│  Linux authentication: SSH keys, PAM modules, SSSD for AD/LDAP, and MFA enforcement.                  │
+│  Linux authentication: PAM stack, SSH keys, MFA, LDAP/Kerberos, and audit logging.                    │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            SSH Key Authentication            │  │              PAM Authentication             │   │
-│   │       Generate: ssh-keygen -t ed25519        │  │         /etc/pam.d/sshd: auth stack         │   │
-│   │        Deploy: ssh-copy-id user@host         │  │            pam_unix: local passwd           │   │
-│   │       ~/.ssh/authorized_keys: pub key        │  │          pam_google_auth: TOTP MFA          │   │
-│   │      PasswordAuthentication no in sshd       │  │             pam_ldap: LDAP bind             │   │
+│   │                  PAM Stack                   │  │              SSH Authentication             │   │
+│   │             /etc/pam.d/* config              │  │          Public key auth preferred          │   │
+│   │            auth / account modules            │  │            ~/.ssh/authorized_keys           │   │
+│   │              session / password              │  │              ed25519 / RSA-4096             │   │
+│   │            pam_faillock: lockout             │  │            sshd_config hardening            │   │
+│   │             pam_unix / pam_ldap              │  │          Certificate authority SSH          │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    SSH key auth preferred; disable password; use PAM for MFA + LDAP                                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          SSSD (AD/LDAP Integration)          │  │           Local Account Management          │   │
-│   │        realm join domain.example.com         │  │         useradd / usermod / userdel         │   │
-│   │         /etc/sssd/sssd.conf: config          │  │       passwd / chpasswd: set password       │   │
-│   │       sssctl user-checks: diagnostics        │  │        chage: password expiry policy        │   │
-│   │        Kerberos tickets: kinit/klist         │  │        /etc/shadow: hashed passwords        │   │
+│   │              Directory Services              │  │                 MFA &amp; Audit                 │   │
+│   │             SSSD: AD/LDAP bridge             │  │            pam_google_auth / TOTP           │   │
+│   │            Kerberos: ticket auth             │  │               pam_duo: Duo MFA              │   │
+│   │             realmd: AD join tool             │  │             auditd: login events            │   │
+│   │             krb5.conf: realm cfg             │  │             last / lastlog / who            │   │
+│   │             klist: view tickets              │  │              /var/log/auth.log              │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical or virtual server · AD domain controllers · LDAP server · NTP                               │
+│  x86-64 servers · AD/LDAP servers · NTP (Kerberos req) · NIC · HSM for CA keys                        │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  ed25519      = modern elliptic-curve SSH key type; preferred over RSA                                │
-│  authorized_keys= file listing public keys allowed to authenticate via SSH                            │
-│  PAM          = Pluggable Authentication Modules; stacked auth policy                                 │
-│  pam_google_auth= PAM module adding TOTP (Google Authenticator) second factor                         │
-│  SSSD         = System Security Services Daemon; caches AD/LDAP credentials                           │
-│  realm join   = joins Linux host to AD domain; configures Kerberos + SSSD                             │
-│  Kerberos     = ticket-based network auth; realm join enables it on Linux                             │
-│  kinit        = obtain Kerberos ticket-granting ticket                                                │
-│  chage        = change password aging info: expiry, min/max days                                      │
-│  /etc/shadow  = stores hashed passwords; root-readable only                                           │
-│  sssctl       = SSSD control tool; check user/group lookup and auth                                   │
-│  PasswordAuthentication= sshd_config option; set to no to disable SSH passwords                       │
+│  PAM         = Pluggable Authentication Modules; modular auth framework for Linux                     │
+│  SSSD        = System Security Services Daemon; caches AD/LDAP credentials locally                    │
+│  Kerberos    = Network auth protocol using encrypted tickets; AD uses it natively                     │
+│  TGT         = Ticket Granting Ticket; initial Kerberos ticket from KDC (AS)                          │
+│  realm       = Kerberos/AD domain identifier (e.g. CORP.EXAMPLE.COM)                                  │
+│  realmd      = Discovers and joins AD/Kerberos realms; configures SSSD + krb5                         │
+│  pam_faillock= Locks account after N failed auth attempts; thwarts brute force                        │
+│  TOTP        = Time-based One-Time Password (RFC 6238); 30-second rotating code                       │
+│  authorized_keys= File listing public keys allowed to log in via SSH                                  │
+│  ed25519     = Modern elliptic-curve SSH key type; faster and more secure than RSA                    │
+│  Certificate = SSH CA-signed cert; enables expiring, revocable SSH credentials                        │
+│  auditd      = Linux audit daemon; records logins, sudo, file access as events                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Apply changed settings to existing accounts:

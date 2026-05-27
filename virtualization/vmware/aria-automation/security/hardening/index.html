@@ -4349,17 +4349,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#certificate-replacement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Replacement
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#service-account-principle-of-least-privilege" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4616,30 +4605,76 @@
 <h1 id="aria-automation-hardening">Aria Automation — Hardening<a class="headerlink" href="#aria-automation-hardening" title="Permanent link">&para;</a></h1>
 <h2 id="default-account-hardening">Default Account Hardening<a class="headerlink" href="#default-account-hardening" title="Permanent link">&para;</a></h2>
 <p>The <code>admin</code> account is a local system account in the VIDM System Domain. Change its password immediately after deployment:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VAMI (https://vra-prod-01.example.local:5480) → Services → Change Admin Password
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VAMI (https://vra-prod-01.example.local:5480) → Services → Change Admin Password
 </code></pre></div>
-<p>Or via VIDM console:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VIDM → Users &amp; Groups → Users → admin (System Domain) → Edit → Change Password
+┌───────────────────────────────────── Aria Automation — Hardening ─────────────────────────────────────┐
+│                                                                                                       │
+│  Harden vRA by disabling unused services, enforcing TLS, MFA, and minimal access.                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Network Hardening               │  │               Access Hardening              │   │
+│   │       Firewall: allow only 443 inbound       │  │       MFA mandatory for all vRA users       │   │
+│   │      Disable SSH after setup (use VAMI)      │  │     Minimum privilege: member not admin     │   │
+│   │       Management VLAN: restrict access       │  │      Break-glass: change after each use     │   │
+│   │      No direct DB access from prod nets      │  │       vIDM: enforce device compliance       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Configuration hardening removes attack surface and enforces secure defaults.                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Configuration Hardening            │  │             Audit and Compliance            │   │
+│   │      TLS 1.2+ only; disable TLS 1.0/1.1      │  │        Aria Ops: vRA operations audit       │   │
+│   │      No self-signed certs in production      │  │       vRA activity log: 90d retention       │   │
+│   │     Approval policies on all prod items      │  │       SIEM: forward vRA syslog events       │   │
+│   │       Lease policies: no unlimited VMs       │  │       VMware STIG: apply vRA hardening      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRA appliance VMs · management VLAN · firewall rules · vIDM · SIEM for log forwarding                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VAMI SSH disable  = After setup, SSH on vRA appliance is disabled; use VAMI for mgmt tasks           │
+│  Management VLAN   = Isolated network segment for vRA appliance management interfaces                 │
+│  Break-glass acct  = Local admin used only in emergency; password rotated after every use             │
+│  Device compliance = vIDM policy requiring managed/enrolled device for vRA access                     │
+│  TLS enforcement   = vRA config disabling TLS 1.0 and 1.1 on all endpoints                            │
+│  VMware STIG       = Security Technical Implementation Guide published by VMware/DISA                 │
+│  Syslog forwarding = vRA sends audit events to SIEM via rsyslog or vRealize Log Insight               │
+│  Lease policy      = Enforces time limit on deployments; prevents VM sprawl                           │
+│  Approval policy   = Prevents unreviewed production deployments; mandatory for prod catalog           │
+│  Minimum privilege = Users assigned lowest role that meets their work requirements                    │
+│  Activity log      = vRA built-in audit trail of all requests, approvals, and actions                 │
+│  SIEM integration  = Security Information and Event Management; aggregates vRA and vIDM logs          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Store the new password in an enterprise vault. Do not use the `admin` account for routine access — create named AD-backed accounts for all users.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Certificate Replacement
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Replace the self-signed certificate with a CA-signed certificate before production use:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>**Via LCM (preferred for LCM-managed deployments):**
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>```text
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>LCM → Locker → import certificate → LCM → Lifecycle Operations → Aria Automation → Replace Certificate
 </code></pre></div></p>
-<p>Store the new password in an enterprise vault. Do not use the <code>admin</code> account for routine access — create named AD-backed accounts for all users.</p>
-<hr />
-<h2 id="certificate-replacement">Certificate Replacement<a class="headerlink" href="#certificate-replacement" title="Permanent link">&para;</a></h2>
-<p>Replace the self-signed certificate with a CA-signed certificate before production use:</p>
-<p><strong>Via LCM (preferred for LCM-managed deployments):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>LCM → Locker → import certificate → LCM → Lifecycle Operations → Aria Automation → Replace Certificate
-</code></pre></div>
 <p><strong>Via vracli (standalone deployments):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Import certificate</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>import<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--cert<span class="w"> </span>/tmp/vra-prod-01.pem<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--key<span class="w"> </span>/tmp/vra-prod-01.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--ca<span class="w"> </span>/tmp/chain.pem
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Verify the certificate is active</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-prod-01.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Import certificate</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>import<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--cert<span class="w"> </span>/tmp/vra-prod-01.pem<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--key<span class="w"> </span>/tmp/vra-prod-01.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--ca<span class="w"> </span>/tmp/chain.pem
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Verify the certificate is active</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-prod-01.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
 </code></pre></div>
 <hr />
 <h2 id="service-account-principle-of-least-privilege">Service Account Principle of Least Privilege<a class="headerlink" href="#service-account-principle-of-least-privilege" title="Permanent link">&para;</a></h2>
@@ -4685,22 +4720,22 @@
 <p>Create a dedicated service account: <code>svc-vra@vsphere.local</code> or a domain account <code>svc-vra@corp.local</code>. Store the password in the enterprise vault and rotate annually (or after any staff change).</p>
 <hr />
 <h2 id="ssh-and-console-access">SSH and Console Access<a class="headerlink" href="#ssh-and-console-access" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Restrict SSH access to management network CIDR</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;sshd: 10.0.1.0/24&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/hosts.allow
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ALL: ALL&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/hosts.deny
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Disable root password login — require key-based SSH</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Edit /etc/ssh/sshd_config:</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>PermitRootLogin<span class="w"> </span>prohibit-password
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Restrict SSH access to management network CIDR</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;sshd: 10.0.1.0/24&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/hosts.allow
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ALL: ALL&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/hosts.deny
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Disable root password login — require key-based SSH</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Edit /etc/ssh/sshd_config:</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>PermitRootLogin<span class="w"> </span>prohibit-password
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
 </code></pre></div>
 <p>For the VAMI (port 5480), restrict access to the management network at the firewall level — VAMI does not natively support IP-based access control.</p>
 <hr />
 <h2 id="kubernetes-security">Kubernetes Security<a class="headerlink" href="#kubernetes-security" title="Permanent link">&para;</a></h2>
 <p>The embedded Kubernetes cluster should not be accessible outside the appliance:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify kubectl is only usable from within the appliance (localhost)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>kubectl<span class="w"> </span>config<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;server:&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Should show: server: https://127.0.0.1:&lt;port&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify kubectl is only usable from within the appliance (localhost)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>kubectl<span class="w"> </span>config<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;server:&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Should show: server: https://127.0.0.1:&lt;port&gt;</span>
 </code></pre></div>
 <p>Do not expose the Kubernetes API port externally. All management is done via <code>kubectl</code> on the appliance SSH session or via the Aria Automation REST API.</p>
 <hr />
@@ -4792,15 +4827,15 @@
 <hr />
 <h2 id="audit-and-compliance">Audit and Compliance<a class="headerlink" href="#audit-and-compliance" title="Permanent link">&para;</a></h2>
 <p>Aria Automation logs all deployment requests, approval decisions, and administrative actions in the audit log.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Access audit events via API</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">TOKEN</span><span class="o">=</span>&lt;your-token&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/audit/api/events?size=100&amp;sort=timestamp,desc&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {type: .type, user: .principal, resource: .resource, time: .timestamp}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Access audit events via API</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">TOKEN</span><span class="o">=</span>&lt;your-token&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/audit/api/events?size=100&amp;sort=timestamp,desc&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {type: .type, user: .principal, resource: .resource, time: .timestamp}&#39;</span>
 </code></pre></div>
 <p>Forward syslog to Aria Ops for Logs or SIEM for centralised audit trail:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;*.* @@vrli-prod-01.example.local:514&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/vra-audit.conf
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;*.* @@vrli-prod-01.example.local:514&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/vra-audit.conf
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
 </code></pre></div>
 <hr />
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>

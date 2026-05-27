@@ -4464,28 +4464,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#cloud-account-connectivity-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cloud Account Connectivity Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#blueprint-version-audit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Blueprint Version Audit
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -4677,7 +4655,7 @@
 <h1 id="aria-automation-scripts">Aria Automation — Scripts<a class="headerlink" href="#aria-automation-scripts" title="Permanent link">&para;</a></h1>
 <h2 id="get-failed-deployments-in-the-last-24-hours">Get Failed Deployments in the Last 24 Hours<a class="headerlink" href="#get-failed-deployments-in-the-last-24-hours" title="Permanent link">&para;</a></h2>
 <p>Uses the Aria Automation REST API. Returns deployment name, ID, and failure reason.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Get-FailedDeployments.ps1</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Get-FailedDeployments.ps1</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># Returns all deployments that failed in the last 24 hours.</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">param</span><span class="p">(</span>
@@ -4716,73 +4694,89 @@
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;No failed deployments in the last 24 hours.&quot;</span>
 <a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="p">}</span>
 </code></pre></div>
-<hr />
-<h2 id="cloud-account-connectivity-check">Cloud Account Connectivity Check<a class="headerlink" href="#cloud-account-connectivity-check" title="Permanent link">&para;</a></h2>
-<p>Validates that all configured cloud accounts are reachable from Aria Automation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check-CloudAccounts.ps1</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># Reports the status of all cloud accounts.</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">param</span><span class="p">(</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span><span class="no">[string]</span><span class="nv">$Server</span><span class="p">,</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span><span class="no">[string]</span><span class="nv">$Username</span><span class="p">,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span><span class="no">[SecureString]</span><span class="nv">$Password</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nv">$PlainPass</span> <span class="p">=</span> <span class="no">[System.Runtime.InteropServices.Marshal]</span><span class="p">::</span><span class="n">PtrToStringAuto</span><span class="p">(</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="no">[System.Runtime.InteropServices.Marshal]</span><span class="p">::</span><span class="n">SecureStringToBSTR</span><span class="p">(</span><span class="nv">$Password</span><span class="p">)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="p">)</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nv">$LoginBody</span> <span class="p">=</span> <span class="p">@{</span> <span class="n">username</span> <span class="p">=</span> <span class="nv">$Username</span><span class="p">;</span> <span class="n">password</span> <span class="p">=</span> <span class="nv">$PlainPass</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nv">$TokenResponse</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">POST</span> <span class="p">`</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="n">-Uri</span> <span class="s2">&quot;https://$Server/csp/gateway/am/api/login&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="n">-Body</span> <span class="nv">$LoginBody</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="nv">$Token</span> <span class="p">=</span> <span class="nv">$TokenResponse</span><span class="p">.</span><span class="n">access_token</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="nv">$Headers</span> <span class="p">=</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">&quot;Bearer $Token&quot;</span> <span class="p">}</span>
+┌───────────────────────────────── Aria Automation — Scripts Reference ─────────────────────────────────┐
+│                                                                                                       │
+│  vRA scripting uses ABX actions (Python/Node/PS), Orchestrator workflows, and REST API calls.         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             ABX Action Examples              │  │         Orchestrator Script Examples        │   │
+│   │         Python: tag VM after deploy          │  │         vCenter: snapshot VM via API        │   │
+│   │        Node.js: call ServiceNow REST         │  │         AD: create computer account         │   │
+│   │         PowerShell: run WinRM on VM          │  │          NSX: create security group         │   │
+│   │          Python: update CMDB record          │  │         DNS: add A record via plugin        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  REST API scripts interact with vRA programmatically for automation and reporting.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           REST API Script Patterns           │  │               Useful Utilities              │   │
+│   │         GET token → GET deployments          │  │         vracli status --all (health)        │   │
+│   │          POST /request catalog item          │  │         kubectl get pods -n prelude         │   │
+│   │       DELETE /deployment/{id} cleanup        │  │            pg_dump for DB backup            │   │
+│   │       PATCH /blueprint update template       │  │          curl -k for quick API test         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRA appliance · ABX FaaS runtime · Orchestrator embedded · Postgres · vIDM                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ABX action        = Serverless function in Python/Node.js/PowerShell executed by vRA event           │
+│  Action input      = JSON context object passed to ABX action with resource properties                │
+│  Action output     = Key-value pairs returned by ABX to update deployment properties                  │
+│  Orchestrator wf   = Visual workflow in Aria Orchestrator; called from vRA via ABX or event           │
+│  WinRM             = Windows Remote Management; used by PowerShell ABX to run scripts on VMs          │
+│  REST bearer token = JWT from /csp/gateway/am/api/login; header: Authorization: Bearer <tok>          │
+│  CMDB update       = ABX POST to ServiceNow or custom CMDB REST API after resource creation           │
+│  Deployment ID     = UUID assigned to each vRA deployment; used in API paths for operations           │
+│  vracli status     = Appliance CLI health check; useful in shell scripts for monitoring               │
+│  pg_dump           = PostgreSQL backup tool; script to dump vRA DB to NFS before upgrades             │
+│  kubectl           = Kubernetes CLI on vRA appliance; script to check pod health or restart           │
+│  Event subscription= ABX or Orchestrator wf registered to run on specific vRA resource events         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Blueprint Version Audit
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Lists all cloud templates with their version count and last modified date.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```powershell
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Blueprint-VersionAudit.ps1
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Lists all blueprints with version count and last modification date.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>param(
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    [Parameter(Mandatory)][string]$Server,
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    [Parameter(Mandatory)][string]$Username,
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    [Parameter(Mandatory)][SecureString]$Password
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>)
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>$PlainPass = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto(
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password)
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>)
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="nv">$CloudAccounts</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">GET</span> <span class="p">`</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    <span class="n">-Uri</span> <span class="s2">&quot;https://$Server/iaas/api/cloud-accounts&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    <span class="n">-Headers</span> <span class="nv">$Headers</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="nv">$CloudAccounts</span><span class="p">.</span><span class="n">content</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">name</span><span class="p">,</span> <span class="n">cloudAccountType</span><span class="p">,</span> <span class="n">enabledRegions</span><span class="p">,</span> <span class="p">@{</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    <span class="n">Name</span> <span class="p">=</span> <span class="s2">&quot;Status&quot;</span><span class="p">;</span> <span class="n">Expression</span> <span class="p">=</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">enabled</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;Enabled&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;Disabled&quot;</span> <span class="p">}</span> <span class="p">}</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-</code></pre></div>
-<hr />
-<h2 id="blueprint-version-audit">Blueprint Version Audit<a class="headerlink" href="#blueprint-version-audit" title="Permanent link">&para;</a></h2>
-<p>Lists all cloud templates with their version count and last modified date.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Blueprint-VersionAudit.ps1</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># Lists all blueprints with version count and last modification date.</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">param</span><span class="p">(</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span><span class="no">[string]</span><span class="nv">$Server</span><span class="p">,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span><span class="no">[string]</span><span class="nv">$Username</span><span class="p">,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span><span class="no">[SecureString]</span><span class="nv">$Password</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nv">$PlainPass</span> <span class="p">=</span> <span class="no">[System.Runtime.InteropServices.Marshal]</span><span class="p">::</span><span class="n">PtrToStringAuto</span><span class="p">(</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="no">[System.Runtime.InteropServices.Marshal]</span><span class="p">::</span><span class="n">SecureStringToBSTR</span><span class="p">(</span><span class="nv">$Password</span><span class="p">)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">)</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nv">$LoginBody</span> <span class="p">=</span> <span class="p">@{</span> <span class="n">username</span> <span class="p">=</span> <span class="nv">$Username</span><span class="p">;</span> <span class="n">password</span> <span class="p">=</span> <span class="nv">$PlainPass</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nv">$TokenResponse</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">POST</span> <span class="p">`</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">-Uri</span> <span class="s2">&quot;https://$Server/csp/gateway/am/api/login&quot;</span> <span class="p">`</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="n">-Body</span> <span class="nv">$LoginBody</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="nv">$Token</span> <span class="p">=</span> <span class="nv">$TokenResponse</span><span class="p">.</span><span class="n">access_token</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="nv">$Headers</span> <span class="p">=</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">&quot;Bearer $Token&quot;</span> <span class="p">}</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="nv">$Blueprints</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">GET</span> <span class="p">`</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>    <span class="n">-Uri</span> <span class="s2">&quot;https://$Server/blueprint/api/blueprints?</span><span class="se">`$</span><span class="s2">top=200&quot;</span> <span class="p">`</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>    <span class="n">-Headers</span> <span class="nv">$Headers</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="nv">$Blueprints</span><span class="p">.</span><span class="n">content</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">name</span><span class="p">,</span> <span class="n">projectName</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>    <span class="p">@{</span> <span class="n">Name</span> <span class="p">=</span> <span class="s2">&quot;LastModified&quot;</span><span class="p">;</span> <span class="n">Expression</span> <span class="p">=</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">updatedAt</span> <span class="p">}</span> <span class="p">},</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>    <span class="p">@{</span> <span class="n">Name</span> <span class="p">=</span> <span class="s2">&quot;Versions&quot;</span><span class="p">;</span> <span class="n">Expression</span> <span class="p">=</span> <span class="p">{</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>        <span class="nv">$BpVersions</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">GET</span> <span class="p">`</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>            <span class="n">-Uri</span> <span class="s2">&quot;https://$Server/blueprint/api/blueprints/</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="s2">/versions&quot;</span> <span class="p">`</span>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>            <span class="n">-Headers</span> <span class="nv">$Headers</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>        <span class="nv">$BpVersions</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="n">Count</span>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>    <span class="p">}}</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-</code></pre></div>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>$LoginBody = @{ username = $Username; password = $PlainPass } | ConvertTo-Json
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>$TokenResponse = Invoke-RestMethod -Method POST `
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    -Uri &quot;https://$Server/csp/gateway/am/api/login&quot; `
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    -Body $LoginBody -ContentType &quot;application/json&quot;
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>$Token = $TokenResponse.access_token
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>$Headers = @{ Authorization = &quot;Bearer $Token&quot; }
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>$Blueprints = Invoke-RestMethod -Method GET `
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    -Uri &quot;https://$Server/blueprint/api/blueprints?`$top=200&quot; `
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    -Headers $Headers
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>$Blueprints.content | Select-Object name, projectName, status,
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    @{ Name = &quot;LastModified&quot;; Expression = { $_.updatedAt } },
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    @{ Name = &quot;Versions&quot;; Expression = {
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>        $BpVersions = Invoke-RestMethod -Method GET `
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>            -Uri &quot;https://$Server/blueprint/api/blueprints/$($_.id)/versions&quot; `
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>            -Headers $Headers
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>        $BpVersions.content.Count
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    }} | Format-Table -AutoSize
+</code></pre></div></p>
 
 
 

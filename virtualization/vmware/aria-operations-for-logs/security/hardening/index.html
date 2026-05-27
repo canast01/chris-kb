@@ -4349,17 +4349,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#replace-self-signed-certificate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Replace Self-Signed Certificate
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#ldaps-only-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4605,24 +4594,60 @@
 <h1 id="aria-ops-for-logs-hardening">Aria Ops for Logs — Hardening<a class="headerlink" href="#aria-ops-for-logs-hardening" title="Permanent link">&para;</a></h1>
 <h2 id="default-account-hardening">Default Account Hardening<a class="headerlink" href="#default-account-hardening" title="Permanent link">&para;</a></h2>
 <p>Change the <code>admin</code> password immediately after completing the setup wizard:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Administration → Authentication → Local Users → admin → Edit → Change Password
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Administration → Authentication → Local Users → admin → Edit → Change Password
 </code></pre></div>
-<ul>
-<li>Minimum 16 characters, mixed case, numbers, and symbols</li>
-<li>Store in an enterprise vault (CyberArk, HashiCorp Vault)</li>
-<li>Do not use the <code>admin</code> account for routine interactive access — create named AD-backed accounts</li>
-</ul>
-<hr />
-<h2 id="replace-self-signed-certificate">Replace Self-Signed Certificate<a class="headerlink" href="#replace-self-signed-certificate" title="Permanent link">&para;</a></h2>
-<p>Before any log sources or users connect, replace the default self-signed certificate:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Administration → SSL → Replace Certificate
-</code></pre></div>
-<p>Upload: private key (no passphrase), leaf certificate (PEM), CA chain (intermediate + root, PEM).</p>
-<p>Verify after replacement:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vrli-prod-01.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-issuer<span class="w"> </span>-subject<span class="w"> </span>-dates
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Issuer should be your internal CA, not &quot;VMware&quot; or &quot;self-signed&quot;</span>
-</code></pre></div>
+┌──────────────────────────────── Aria Operations for Logs — Hardening ─────────────────────────────────┐
+│                                                                                                       │
+│  Harden vRLI with TLS syslog, firewall restrictions, minimal admin accounts, and audit.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Network Hardening               │  │               Access Hardening              │   │
+│   │          Use TLS 6514, not UDP 514           │  │       Minimum accounts: disable unused      │   │
+│   │       Firewall: UI (443) mgmt-net only       │  │       Admin password: strong + rotated      │   │
+│   │         VAMI (9543): jump host only          │  │       LDAP: use LDAPS (636), not plain      │   │
+│   │       SSH: disable after initial setup       │  │        MFA via vIDM if SSO configured       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Audit and monitoring settings ensure log integrity and compliance for vRLI itself.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Configuration Hardening            │  │             Audit and Compliance            │   │
+│   │       Disable TLS 1.0/1.1 on all ports       │  │          Syslog vRLI itself to SIEM         │   │
+│   │     CA-signed cert; no self-signed prod      │  │       Admin action audit in vRLI logs       │   │
+│   │     NTP: synced for log timestamp trust      │  │        VMware STIG: apply vRLI guide        │   │
+│   │     No plaintext syslog from prod hosts      │  │      Log retention: meet compliance min     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRLI appliance · management VLAN · firewall · vIDM (SSO+MFA) · AD LDAPS · CA                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  UDP 514 disable   = UDP syslog provides no encryption or auth; replace with TLS 6514                 │
+│  VAMI restriction  = Restrict port 9543 to jump hosts only; avoid internet exposure                   │
+│  SSH disable       = SSH to vRLI appliance disabled post-setup; use VAMI for maintenance              │
+│  LDAPS             = LDAP over TLS; prevents AD credential sniffing                                   │
+│  Self-signed cert  = Acceptable in lab; production requires CA-signed cert                            │
+│  VMware STIG       = Security hardening guide; follow applicable controls for vRLI                    │
+│  Log vRLI to SIEM  = vRLI forwards its own admin audit events to Splunk/SIEM                          │
+│  Timestamp trust   = NTP sync ensures log timestamps are accurate; critical for forensics             │
+│  Compliance min    = Many regulations require ≥90d hot + 1yr archive log retention                    │
+│  TLS 1.0/1.1       = Deprecated protocols; disable in vRLI SSL config                                 │
+│  Admin audit       = vRLI logs all login, config change events in runtime.log                         │
+│  MFA enforcement   = Handled by vIDM access policy if vRLI uses SSO                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Upload: private key (no passphrase), leaf certificate (PEM), CA chain (intermediate + root, PEM).
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Verify after replacement:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>echo | openssl s_client -connect vrli-prod-01.example.local:443 2&gt;/dev/null | \
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  openssl x509 -noout -issuer -subject -dates
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Issuer should be your internal CA, not &quot;VMware&quot; or &quot;self-signed&quot;
+</code></pre></div></p>
 <hr />
 <h2 id="ldaps-only-authentication">LDAPS-Only Authentication<a class="headerlink" href="#ldaps-only-authentication" title="Permanent link">&para;</a></h2>
 <p>Disable plain LDAP (port 389) for AD authentication — always use LDAPS (port 636):</p>
@@ -4634,16 +4659,16 @@
 </ol>
 <hr />
 <h2 id="ssh-hardening">SSH Hardening<a class="headerlink" href="#ssh-hardening" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Restrict SSH to the management network</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;sshd: 10.0.1.0/24&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/hosts.allow
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ALL: ALL&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/hosts.deny
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Disable root password login</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Edit /etc/ssh/sshd_config:</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>PermitRootLogin<span class="w"> </span>prohibit-password
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>PasswordAuthentication<span class="w"> </span>no<span class="w">   </span><span class="c1"># Only after SSH keys are configured</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Restrict SSH to the management network</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;sshd: 10.0.1.0/24&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/hosts.allow
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ALL: ALL&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/hosts.deny
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Disable root password login</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Edit /etc/ssh/sshd_config:</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>PermitRootLogin<span class="w"> </span>prohibit-password
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>PasswordAuthentication<span class="w"> </span>no<span class="w">   </span><span class="c1"># Only after SSH keys are configured</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
 </code></pre></div>
 <hr />
 <h2 id="firewall-rules">Firewall Rules<a class="headerlink" href="#firewall-rules" title="Permanent link">&para;</a></h2>
@@ -4735,11 +4760,11 @@
 <hr />
 <h2 id="syslog-output-for-audit">Syslog Output for Audit<a class="headerlink" href="#syslog-output-for-audit" title="Permanent link">&para;</a></h2>
 <p>Forward the Aria Ops for Logs appliance's own system logs to a SIEM or separate log repository — a log analytics platform should not be its own audit log store:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/vrli-audit.conf<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="s"># Forward all syslog to SIEM</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="s">*.* @@siem.example.local:514</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s">EOF</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/vrli-audit.conf<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="s"># Forward all syslog to SIEM</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s">*.* @@siem.example.local:514</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s">EOF</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
 </code></pre></div>
 <hr />
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>

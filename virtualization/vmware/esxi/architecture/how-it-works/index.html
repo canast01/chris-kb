@@ -4280,139 +4280,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#hypervisor-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hypervisor Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#management-interfaces" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Management Interfaces
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vmkernel-processes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VMkernel Processes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#networking-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Networking Architecture
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Networking Architecture">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#standard-vswitch-vss" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Standard vSwitch (vSS)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#distributed-vswitch-vds" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Distributed vSwitch (vDS)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nioc-network-io-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NIOC (Network I/O Control)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lacp-link-aggregation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LACP / Link Aggregation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vmkernel-adapters-vmk" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VMkernel Adapters (vmk)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#storage-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage Architecture
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Storage Architecture">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#multipathing-psp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Multipathing (PSP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#cpu-and-memory-scheduling" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4729,7 +4596,7 @@
 
 
 <h1 id="esxi-how-it-works">ESXi — How It Works<a class="headerlink" href="#esxi-how-it-works" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VMkernel Internals — Resource Stack
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VMkernel Internals — Resource Stack
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌────────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  VMkernel (bare-metal, no general OS underneath)           │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                            │
@@ -4751,246 +4618,120 @@
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└────────────────────────────────────────────────────────────┘
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  ↑ Hardware: CPUs · RAM · HBAs (FC/NVMe) · NICs · Disk
 </code></pre></div>
-<h2 id="hypervisor-overview">Hypervisor Overview<a class="headerlink" href="#hypervisor-overview" title="Permanent link">&para;</a></h2>
-<p>ESXi is a Type-1 (bare-metal) hypervisor built around the <strong>VMkernel</strong> — a purpose-built OS that directly manages CPU, memory, storage, and network resources on the physical host. ESXi has no general-purpose OS underneath it; the VMkernel communicates directly with hardware through drivers packaged as VIBs (vSphere Installation Bundles).</p>
-<p>Key design principles:</p>
-<ul>
-<li><strong>Thin footprint</strong>: ESXi runs from a USB/SD card or M.2 boot device (&lt; 1 GB image)</li>
-<li><strong>In-memory configuration</strong>: most host config is held in memory and persisted to a configuration store (<code>/etc/vmware/</code> and persistent scratch partition)</li>
-<li><strong>Direct hardware access</strong>: VMkernel drivers communicate directly with hardware via VIBs</li>
-</ul>
-<hr />
-<h2 id="management-interfaces">Management Interfaces<a class="headerlink" href="#management-interfaces" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Interface</th>
-<th>Access Method</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DCUI (Direct Console UI)</td>
-<td>Physical console or IPMI/iDRAC KVM</td>
-<td>Emergency management, IP config, lockdown mode</td>
-</tr>
-<tr>
-<td>ESXi Shell</td>
-<td>SSH or local console</td>
-<td>Advanced diagnostics; disable when not in use</td>
-</tr>
-<tr>
-<td>vSphere Client</td>
-<td>Via vCenter</td>
-<td>Primary day-to-day management</td>
-</tr>
-<tr>
-<td>ESXi Embedded Host Client</td>
-<td><code>https://&lt;host&gt;/ui</code></td>
-<td>Direct host management when vCenter unavailable</td>
-</tr>
-<tr>
-<td>ESXCLI</td>
-<td>SSH shell or remote via <code>esxcli -s</code></td>
-<td>Command-line host configuration and scripting</td>
-</tr>
-<tr>
-<td>REST API</td>
-<td><code>https://&lt;host&gt;/api</code></td>
-<td>Automation and programmatic access</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="vmkernel-processes">VMkernel Processes<a class="headerlink" href="#vmkernel-processes" title="Permanent link">&para;</a></h2>
-<p>The ESXi VMkernel schedules VMs and manages physical resources through a set of core internal processes:</p>
-<table>
-<thead>
-<tr>
-<th>Process</th>
-<th>Function</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>hostd</code></td>
-<td>Host management daemon — handles vSphere API calls</td>
-</tr>
-<tr>
-<td><code>vpxa</code></td>
-<td>vCenter agent — maintains vCenter connection</td>
-</tr>
-<tr>
-<td><code>fdm</code></td>
-<td>Fault Domain Manager — vSphere HA agent</td>
-</tr>
-<tr>
-<td><code>vmx</code></td>
-<td>Per-VM process — manages each powered-on VM</td>
-</tr>
-<tr>
-<td><code>ntpd</code></td>
-<td>NTP time synchronisation</td>
-</tr>
-<tr>
-<td><code>sfcbd</code></td>
-<td>CIM provider — hardware monitoring via CIM/IPMI</td>
-</tr>
-<tr>
-<td><code>vmkctl</code></td>
-<td>VMkernel control interface — creates/destroys VMs</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check management agent status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/etc/init.d/hostd<span class="w"> </span>status
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>/etc/init.d/vpxa<span class="w"> </span>status
+┌───────────────────────────────────────── ESXi — How It Works ─────────────────────────────────────────┐
+│                                                                                                       │
+│  Type-1 hypervisor running directly on hardware; vmkernel mediates all I/O.                           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           vmkernel (Kernel Layer)            │  │             VM Execution Engine             │   │
+│   │        Schedules CPUs across all VMs         │  │          VMX process per running VM         │   │
+│   │         Memory balloon / swap / TPS          │  │         vCPU mapped to pCPU threads         │   │
+│   │          VMkernel NIC (vmknic) mgmt          │  │          Guest OS in HW virt ring 0         │   │
+│   │          Storage I/O via PSA stack           │  │            VMDK on VMFS/NFS/vSAN            │   │
+│   │       Networking via vSwitch/dvSwitch        │  │            VMM, VMX, VCPU threads           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  vmkernel sends scheduled VM I/O to PSA (storage) and vSwitch (network).                              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Storage I/O Stack (PSA)            │  │              Network I/O Stack              │   │
+│   │            NMP → SATP → PSP path             │  │           vSwitch / dvSwitch ports          │   │
+│   │          iSCSI/FC/FCoE/NFS/NVMe-oF           │  │         Uplinks to physical switches        │   │
+│   │           VMFS datastores on LUNs            │  │           vmk0 mgmt / vmk1 vMotion          │   │
+│   │         vSAN uses local disk groups          │  │            vmk2 vSAN / vmk3 other           │   │
+│   │         APD/PDL handling per policy          │  │         NIOC bandwidth reservations         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 servers, NVMe/SSD/HDD, 10/25/100 GbE NICs, FC/iSCSI HBAs, ToR switches                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vmkernel  = ESXi micro-kernel; schedules CPU/mem/I/O for all VMs on host                             │
+│  VMX       = user-space process managing one running VM; I/O emulation                                │
+│  PSA       = Pluggable Storage Architecture; ESXi storage I/O framework                               │
+│  NMP       = Native Multipathing Plugin; default path selector in PSA                                 │
+│  SATP      = Storage Array Type Plugin; array-specific PSA plugin                                     │
+│  PSP       = Path Selection Policy; round-robin, fixed, or MRU per LUN                                │
+│  vmknic    = VMkernel NIC; carries mgmt/vMotion/vSAN/overlay traffic                                  │
+│  dvSwitch  = Distributed vSwitch; managed centrally by vCenter                                        │
+│  VMFS      = VMware File System; clustered FS shared across ESXi hosts                                │
+│  TPS       = Transparent Page Sharing; deduplicates identical guest mem pages                         │
+│  APD       = All Paths Down; storage path loss without PDL declared                                   │
+│  PDL       = Permanent Device Loss; device signals storage is gone permanently                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Networking Architecture
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Restart management agents (safe when VMs are running)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>/etc/init.d/hostd<span class="w"> </span>restart
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>/etc/init.d/vpxa<span class="w"> </span>restart
-</code></pre></div>
-<hr />
-<h2 id="networking-architecture">Networking Architecture<a class="headerlink" href="#networking-architecture" title="Permanent link">&para;</a></h2>
-<h3 id="standard-vswitch-vss">Standard vSwitch (vSS)<a class="headerlink" href="#standard-vswitch-vss" title="Permanent link">&para;</a></h3>
-<p>Per-host configuration; does not synchronise across hosts. Each host has its own vSS with port groups. Suitable for simple deployments or management isolation.</p>
-<h3 id="distributed-vswitch-vds">Distributed vSwitch (vDS)<a class="headerlink" href="#distributed-vswitch-vds" title="Permanent link">&para;</a></h3>
-<p>Managed at vCenter cluster level; consistent configuration across all hosts in the cluster. Required for vMotion reliability, NSX, NIOC, and LACP.</p>
-<h3 id="nioc-network-io-control">NIOC (Network I/O Control)<a class="headerlink" href="#nioc-network-io-control" title="Permanent link">&para;</a></h3>
-<p>NIOC enforces bandwidth allocation on a shared uplink across traffic types: VM traffic, vMotion, vSAN, management, iSCSI, NFS. Prevents one traffic type from starving others.</p>
-<h3 id="lacp-link-aggregation">LACP / Link Aggregation<a class="headerlink" href="#lacp-link-aggregation" title="Permanent link">&para;</a></h3>
-<p>ESXi supports 802.3ad LACP on vDS for bonded uplinks. Requires physical switch LACP configuration. Provides both redundancy and throughput aggregation.</p>
-<h2 id="vmkernel-adapters-vmk">VMkernel Adapters (vmk)<a class="headerlink" href="#vmkernel-adapters-vmk" title="Permanent link">&para;</a></h2>
-<p>Standard production layout:</p>
-<table>
-<thead>
-<tr>
-<th>Adapter</th>
-<th>Traffic Type</th>
-<th>MTU</th>
-<th>Typical VLAN</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vmk0</td>
-<td>Management</td>
-<td>1500</td>
-<td>Mgmt VLAN</td>
-</tr>
-<tr>
-<td>vmk1</td>
-<td>vMotion</td>
-<td>9000</td>
-<td>vMotion VLAN</td>
-</tr>
-<tr>
-<td>vmk2</td>
-<td>vSAN</td>
-<td>9000</td>
-<td>vSAN VLAN</td>
-</tr>
-<tr>
-<td>vmk3</td>
-<td>NFS or iSCSI</td>
-<td>9000</td>
-<td>Storage VLAN</td>
-</tr>
-</tbody>
-</table>
-<p>Each vmk is associated with a port group and a TCP/IP stack:
-- <strong>Default stack</strong>: management, NFS
-- <strong>vMotion stack</strong>: dedicated TCP/IP stack for vMotion traffic
-- <strong>Provisioning stack</strong>: NFC traffic for cold migration and clone
-- <strong>vSAN stack</strong>: not used; vSAN uses a vmk tagged with the vSAN service</p>
-<hr />
-<h2 id="storage-architecture">Storage Architecture<a class="headerlink" href="#storage-architecture" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Protocol</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VMFS6</td>
-<td>FC, iSCSI, FCoE, SAS</td>
-<td>Block; supports 64 TB LUNs, cluster locking</td>
-</tr>
-<tr>
-<td>NFS 3</td>
-<td>NFS over TCP</td>
-<td>Simple; no VAAI NAS for thin block</td>
-</tr>
-<tr>
-<td>NFS 4.1</td>
-<td>NFS over TCP</td>
-<td>Kerberos auth, session trunking</td>
-</tr>
-<tr>
-<td>iSCSI (SW)</td>
-<td>iSCSI over TCP</td>
-<td>Software initiator built into VMkernel</td>
-</tr>
-<tr>
-<td>FC / FCoE</td>
-<td>FC fabric</td>
-<td>Hardware HBA or CNA required</td>
-</tr>
-<tr>
-<td>NVMe/FC</td>
-<td>FC fabric</td>
-<td>NVMe over FC; low-latency block</td>
-</tr>
-<tr>
-<td>NVMe/TCP</td>
-<td>TCP/IP</td>
-<td>NVMe over TCP; supported vSphere 7.0 U3+</td>
-</tr>
-<tr>
-<td>vSAN</td>
-<td>Internal (vSAN network)</td>
-<td>HCI; managed from within vCenter</td>
-</tr>
-</tbody>
-</table>
-<h3 id="multipathing-psp">Multipathing (PSP)<a class="headerlink" href="#multipathing-psp" title="Permanent link">&para;</a></h3>
-<p>ESXi multipathing is managed by NMP (Native Multipathing Plugin):</p>
-<table>
-<thead>
-<tr>
-<th>Policy</th>
-<th>Description</th>
-<th>When to Use</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Most Recently Used (MRU)</td>
-<td>Uses last active path; fails over on failure</td>
-<td>Active/Passive arrays</td>
-</tr>
-<tr>
-<td>Fixed</td>
-<td>Always uses preferred path; returns after failover</td>
-<td>Active/Active arrays where path pinning is needed</td>
-</tr>
-<tr>
-<td>Round Robin (RR)</td>
-<td>Distributes I/O across active paths</td>
-<td>Active/Active arrays (Pure, NetApp AFF, etc.)</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View multipath policy for a device</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>&lt;device-naa&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Set Round Robin for a device</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>psp<span class="w"> </span>roundrobin<span class="w"> </span>deviceconfig<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-d<span class="w"> </span>&lt;device-naa&gt;<span class="w"> </span>--type<span class="o">=</span>iops<span class="w"> </span>--iops<span class="o">=</span><span class="m">1</span>
-</code></pre></div>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### Standard vSwitch (vSS)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Per-host configuration; does not synchronise across hosts. Each host has its own vSS with port groups. Suitable for simple deployments or management isolation.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>### Distributed vSwitch (vDS)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Managed at vCenter cluster level; consistent configuration across all hosts in the cluster. Required for vMotion reliability, NSX, NIOC, and LACP.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>### NIOC (Network I/O Control)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>NIOC enforces bandwidth allocation on a shared uplink across traffic types: VM traffic, vMotion, vSAN, management, iSCSI, NFS. Prevents one traffic type from starving others.
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>### LACP / Link Aggregation
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>ESXi supports 802.3ad LACP on vDS for bonded uplinks. Requires physical switch LACP configuration. Provides both redundancy and throughput aggregation.
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>## VMkernel Adapters (vmk)
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Standard production layout:
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>| Adapter | Traffic Type | MTU | Typical VLAN |
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>|---|---|---|---|
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>| vmk0 | Management | 1500 | Mgmt VLAN |
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>| vmk1 | vMotion | 9000 | vMotion VLAN |
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>| vmk2 | vSAN | 9000 | vSAN VLAN |
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>| vmk3 | NFS or iSCSI | 9000 | Storage VLAN |
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>Each vmk is associated with a port group and a TCP/IP stack:
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>- **Default stack**: management, NFS
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>- **vMotion stack**: dedicated TCP/IP stack for vMotion traffic
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>- **Provisioning stack**: NFC traffic for cold migration and clone
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>- **vSAN stack**: not used; vSAN uses a vmk tagged with the vSAN service
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>---
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>## Storage Architecture
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>| Type | Protocol | Notes |
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>|---|---|---|
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>| VMFS6 | FC, iSCSI, FCoE, SAS | Block; supports 64 TB LUNs, cluster locking |
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>| NFS 3 | NFS over TCP | Simple; no VAAI NAS for thin block |
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>| NFS 4.1 | NFS over TCP | Kerberos auth, session trunking |
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>| iSCSI (SW) | iSCSI over TCP | Software initiator built into VMkernel |
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>| FC / FCoE | FC fabric | Hardware HBA or CNA required |
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>| NVMe/FC | FC fabric | NVMe over FC; low-latency block |
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>| NVMe/TCP | TCP/IP | NVMe over TCP; supported vSphere 7.0 U3+ |
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>| vSAN | Internal (vSAN network) | HCI; managed from within vCenter |
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>### Multipathing (PSP)
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>ESXi multipathing is managed by NMP (Native Multipathing Plugin):
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>| Policy | Description | When to Use |
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>|---|---|---|
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>| Most Recently Used (MRU) | Uses last active path; fails over on failure | Active/Passive arrays |
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>| Fixed | Always uses preferred path; returns after failover | Active/Active arrays where path pinning is needed |
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>| Round Robin (RR) | Distributes I/O across active paths | Active/Active arrays (Pure, NetApp AFF, etc.) |
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>```bash
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a># View multipath policy for a device
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>esxcli storage nmp device list | grep -A5 &lt;device-naa&gt;
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a># Set Round Robin for a device
+<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>esxcli storage nmp psp roundrobin deviceconfig set -d &lt;device-naa&gt; --type=iops --iops=1
+</code></pre></div></p>
 <hr />
 <h2 id="cpu-and-memory-scheduling">CPU and Memory Scheduling<a class="headerlink" href="#cpu-and-memory-scheduling" title="Permanent link">&para;</a></h2>
 <h3 id="cpu-scheduling">CPU Scheduling<a class="headerlink" href="#cpu-scheduling" title="Permanent link">&para;</a></h3>
@@ -5033,10 +4774,10 @@
 <li><strong>Memory Compression</strong>: Compresses 4KB pages before swapping — faster than full swap</li>
 <li><strong>Host Swap</strong>: ESXi swaps VM memory to the <code>.vswp</code> file on a datastore — high latency</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check memory stats on a host</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxtop
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Press &#39;m&#39; for memory view</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Key columns: MCTLSZ (balloon), SWCUR (host swap), GRANT (memory given to VMs)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check memory stats on a host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxtop
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Press &#39;m&#39; for memory view</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Key columns: MCTLSZ (balloon), SWCUR (host swap), GRANT (memory given to VMs)</span>
 </code></pre></div>
 <hr />
 <h2 id="ha-and-drs">HA and DRS<a class="headerlink" href="#ha-and-drs" title="Permanent link">&para;</a></h2>
@@ -5093,11 +4834,11 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check DRS recommendations</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-DrsRecommendation</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Apply all pending recommendations</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-DrsRecommendation</span> <span class="p">|</span> <span class="n">Apply-DrsRecommendation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check DRS recommendations</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-DrsRecommendation</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Apply all pending recommendations</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-DrsRecommendation</span> <span class="p">|</span> <span class="n">Apply-DrsRecommendation</span>
 </code></pre></div>
 <hr />
 <h2 id="boot-architecture">Boot Architecture<a class="headerlink" href="#boot-architecture" title="Permanent link">&para;</a></h2>
@@ -5134,12 +4875,12 @@
 - HBA must be configured as boot initiator in BIOS
 - SAN zoning: each HBA initiator sees only its own boot LUN
 - LUN minimum 8 GB; 32 GB recommended</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify boot device</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>boot<span class="w"> </span>device<span class="w"> </span>get
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># View HBA boot configuration</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>get<span class="w"> </span>-A<span class="w"> </span>vmhba64
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify boot device</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>boot<span class="w"> </span>device<span class="w"> </span>get
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># View HBA boot configuration</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>get<span class="w"> </span>-A<span class="w"> </span>vmhba64
 </code></pre></div>
 <hr />
 <h2 id="host-profiles">Host Profiles<a class="headerlink" href="#host-profiles" title="Permanent link">&para;</a></h2>
@@ -5153,16 +4894,16 @@
 - SSH and ESXi Shell state
 - Syslog server
 - Advanced settings (security timeouts, etc.)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Extract a host profile from a reference host</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">New-VMHostProfile</span> <span class="n">-Name</span> <span class="s2">&quot;HP-Cluster-Profile&quot;</span> <span class="p">`</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">-ReferenceHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">-Description</span> <span class="s2">&quot;Cluster hardened baseline&quot;</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># Check compliance for all hosts</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="nb">Test-VMHostProfileCompliance</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="p">|</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        <span class="nb">Select-Object</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">ComplianceStatus</span><span class="p">,</span> <span class="n">IncomplianceDescription</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Extract a host profile from a reference host</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">New-VMHostProfile</span> <span class="n">-Name</span> <span class="s2">&quot;HP-Cluster-Profile&quot;</span> <span class="p">`</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">-ReferenceHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">-Description</span> <span class="s2">&quot;Cluster hardened baseline&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># Check compliance for all hosts</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="nb">Test-VMHostProfileCompliance</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="p">|</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        <span class="nb">Select-Object</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">ComplianceStatus</span><span class="p">,</span> <span class="n">IncomplianceDescription</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="ports-and-logs">Ports and Logs<a class="headerlink" href="#ports-and-logs" title="Permanent link">&para;</a></h2>

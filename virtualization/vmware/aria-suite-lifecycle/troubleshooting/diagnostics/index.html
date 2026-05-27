@@ -4280,28 +4280,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#service-status-verification" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Service Status Verification
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#certificate-expiry-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4534,7 +4512,7 @@
 
 
 <h1 id="aria-suite-lifecycle-diagnostics">Aria Suite Lifecycle — Diagnostics<a class="headerlink" href="#aria-suite-lifecycle-diagnostics" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  LCM Diagnostic Data Sources
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  LCM Diagnostic Data Sources
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  LCM Appliance (SSH as root)       LCM API                      │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌───────────────────────────┐     ┌──────────────────────────┐  │
@@ -4555,35 +4533,69 @@
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  └───────────────────────────┘                                   │
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└─────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Run LCM health checks before any upgrade, after any certificate rotation, and as part of routine quarterly verification. Health checks surface service status, certificate expiry, disk pressure, and NTP drift.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH into the LCM appliance</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>root@&lt;lcm-appliance-fqdn&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Run the built-in health check script</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>/usr/lib/vmware-vrlcm/scripts/lcmHealthCheck.sh
+┌───────────────────────────────────── Aria Suite LCM Diagnostics ──────────────────────────────────────┐
+│                                                                                                       │
+│  Logscraper, vlcm log analysis, and environment health checks for LCM.                                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               LCM Log Analysis               │  │            REST API Health Checks           │   │
+│   │            /var/log/vlcm/vlcm.log            │  │            GET /lcm/api/v1/health           │   │
+│   │         installer.log: deploy steps          │  │           GET /environments status          │   │
+│   │             grep ERROR vlcm.log              │  │           GET /products: versions           │   │
+│   │         Check failed request ID log          │  │          Compare expected vs actual         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  vlcm.log reveals LCM internal errors; REST health confirms product state externally.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Logscraper Usage               │  │                Support Bundle               │   │
+│   │          LCM UI: Tools &gt; Logscraper          │  │             SSH: lcm-support.sh             │   │
+│   │        Select environment + products         │  │             Bundle: all LCM logs            │   │
+│   │           Download log archive ZIP           │  │           Logscraper + bundle = SR          │   │
+│   │               Attach to GSS SR               │  │        VAMI: download support bundle        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM; SSH jump host; VAMI on port 5480; all managed product VMs accessible                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vlcm.log            = Primary LCM application log; first stop for any LCM issue                      │
+│  installer.log       = Records each step of product deploy or upgrade action                          │
+│  Logscraper          = LCM built-in tool collecting logs from all managed products                    │
+│  Logscraper Archive  = ZIP of all product logs; generated per environment                             │
+│  lcm-support.sh      = SSH script generating LCM-level support bundle                                 │
+│  GET /health         = REST API endpoint for LCM and product health JSON                              │
+│  GET /environments   = Lists environments with status for comparison                                  │
+│  GET /products       = Lists product versions; validate against expected                              │
+│  Request ID Log      = LCM writes per-request log for each action triggered                           │
+│  grep ERROR          = Quick scan of vlcm.log to find exception lines                                 │
+│  VAMI Support Bundle = Browser download of LCM support archive                                        │
+│  GSS SR Attachment   = Logscraper archive + support bundle required for P1/P2                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Service Status Verification
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Check all LCM-related services
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>systemctl list-units --type=service | grep -i &quot;vrlcm\|vmware&quot;
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># View last health check report</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>cat<span class="w"> </span>/var/log/vmware/vrlcm/lcm-health-check.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-200
-</code></pre></div>
-<h2 id="service-status-verification">Service Status Verification<a class="headerlink" href="#service-status-verification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check all LCM-related services</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--type<span class="o">=</span>service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;vrlcm\|vmware&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check individual services</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-vrlcm
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-vrlcm-db
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>nginx
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Restart a failed service</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>vmware-vrlcm
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># View service logs via journald</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>vmware-vrlcm<span class="w"> </span>-n<span class="w"> </span><span class="m">200</span><span class="w"> </span>--no-pager
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Check LCM API health endpoint</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://localhost/lcm/api/v1/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-</code></pre></div>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Check individual services
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>systemctl status vmware-vrlcm
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>systemctl status vmware-vrlcm-db
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>systemctl status nginx
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Restart a failed service
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>systemctl restart vmware-vrlcm
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># View service logs via journald
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>journalctl -u vmware-vrlcm -n 200 --no-pager
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Check LCM API health endpoint
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>curl -sk https://localhost/lcm/api/v1/health | python3 -m json.tool
+</code></pre></div></p>
 <p>Key services and expected states:</p>
 <table>
 <thead>
@@ -4622,25 +4634,25 @@
 </tbody>
 </table>
 <h2 id="certificate-expiry-checks">Certificate Expiry Checks<a class="headerlink" href="#certificate-expiry-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check LCM appliance certificate</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;lcm-fqdn&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># List all managed product certificates via LCM API</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>https://&lt;lcm-fqdn&gt;/lcm/api/v1/certificates<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Check certificate expiry for a specific product</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;lcm-fqdn&gt;/lcm/api/v1/certificates?productId=&lt;product-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Trigger certificate rotation via LCM API</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span>https://&lt;lcm-fqdn&gt;/lcm/api/v1/certificates/rotate<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;productId&quot;: &quot;&lt;product-id&gt;&quot;}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check LCM appliance certificate</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;lcm-fqdn&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># List all managed product certificates via LCM API</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>https://&lt;lcm-fqdn&gt;/lcm/api/v1/certificates<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check certificate expiry for a specific product</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;lcm-fqdn&gt;/lcm/api/v1/certificates?productId=&lt;product-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Trigger certificate rotation via LCM API</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>https://&lt;lcm-fqdn&gt;/lcm/api/v1/certificates/rotate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;productId&quot;: &quot;&lt;product-id&gt;&quot;}&#39;</span>
 </code></pre></div>
 <p>Certificate check thresholds:</p>
 <table>
@@ -4675,21 +4687,21 @@
 </tbody>
 </table>
 <h2 id="disk-space-verification">Disk Space Verification<a class="headerlink" href="#disk-space-verification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check all mount points</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>df<span class="w"> </span>-h
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check LCM-specific data directories</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>du<span class="w"> </span>-sh<span class="w"> </span>/data/vmware/vrlcm/*
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/log/vmware/vrlcm/
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check Postgres database size</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>du<span class="w"> </span>-sh<span class="w"> </span>/data/vmware/vrlcm/db/
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Clean old LCM logs older than 30 days</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>find<span class="w"> </span>/var/log/vmware/vrlcm/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.log.*&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-delete
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Check available inodes (often missed)</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>df<span class="w"> </span>-i
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check all mount points</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>df<span class="w"> </span>-h
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check LCM-specific data directories</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>du<span class="w"> </span>-sh<span class="w"> </span>/data/vmware/vrlcm/*
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/log/vmware/vrlcm/
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Check Postgres database size</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>du<span class="w"> </span>-sh<span class="w"> </span>/data/vmware/vrlcm/db/
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Clean old LCM logs older than 30 days</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>find<span class="w"> </span>/var/log/vmware/vrlcm/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.log.*&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-delete
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Check available inodes (often missed)</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>df<span class="w"> </span>-i
 </code></pre></div>
 <p>Disk space thresholds:</p>
 <table>
@@ -4723,39 +4735,39 @@
 </tbody>
 </table>
 <h2 id="ntp-and-time-sync">NTP and Time Sync<a class="headerlink" href="#ntp-and-time-sync" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check NTP sync status</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check chrony sources</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Check time offset (must be &lt; 5 seconds for SSO)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Force time sync</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>chronyc<span class="w"> </span>makestep
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Verify NTP config</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>cat<span class="w"> </span>/etc/chrony.conf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check NTP sync status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check chrony sources</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check time offset (must be &lt; 5 seconds for SSO)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Force time sync</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>chronyc<span class="w"> </span>makestep
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Verify NTP config</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>cat<span class="w"> </span>/etc/chrony.conf
 </code></pre></div>
 <h2 id="pre-operation-health-summary">Pre-Operation Health Summary<a class="headerlink" href="#pre-operation-health-summary" title="Permanent link">&para;</a></h2>
 <p>Before any LCM operation (upgrade, patch, certificate rotation), confirm all of the following pass:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. All services running</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>vmware-vrlcm<span class="w"> </span>vmware-vrlcm-db<span class="w"> </span>nginx
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># 2. Disk space adequate</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; $5+0 &gt; 70 {print &quot;WARNING:&quot;, $0}&#39;</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># 3. No active LCM operations in progress</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="s2">&quot;https://&lt;lcm-fqdn&gt;/lcm/api/v1/operations?status=RUNNING&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># 4. NTP in sync</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># 5. LCM API reachable and healthy</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;lcm-fqdn&gt;/lcm/api/v1/health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. All services running</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>vmware-vrlcm<span class="w"> </span>vmware-vrlcm-db<span class="w"> </span>nginx
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># 2. Disk space adequate</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; $5+0 &gt; 70 {print &quot;WARNING:&quot;, $0}&#39;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># 3. No active LCM operations in progress</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="s2">&quot;https://&lt;lcm-fqdn&gt;/lcm/api/v1/operations?status=RUNNING&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># 4. NTP in sync</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># 5. LCM API reachable and healthy</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;lcm-fqdn&gt;/lcm/api/v1/health
 </code></pre></div>
 
 

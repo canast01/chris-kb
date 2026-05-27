@@ -4313,39 +4313,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#single-node-vs-3-node-cluster" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Single Node vs. 3-Node Cluster
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#core-services" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Core Services
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#kubernetes-namespaces-diagnostics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Kubernetes Namespaces (Diagnostics)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#cloud-account-types" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4600,7 +4567,7 @@
 </tbody>
 </table>
 <h2 id="cluster-topology">Cluster Topology<a class="headerlink" href="#cluster-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
+<p><pre class="mermaid"><code>graph TB
   CAT["Service Catalog\n(consumer portal)"] --&gt; ORCH["Aria Automation Orchestrator\n(workflow engine)"]
   ORCH --&gt; IAAS["IaaS Service\n(compute engine)"]
   IAAS --&gt; VCTR["vCenter\n(VM provisioning)"]
@@ -4615,111 +4582,50 @@
   class VCTR,NSX_T mgmt
   class ADMIN host
   class CLOUDS cloud</code></pre>
-<h2 id="single-node-vs-3-node-cluster">Single Node vs. 3-Node Cluster<a class="headerlink" href="#single-node-vs-3-node-cluster" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Attribute</th>
-<th>Single Node</th>
-<th>3-Node Cluster</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>HA</td>
-<td>No — single point of failure</td>
-<td>Yes — quorum-based HA</td>
-</tr>
-<tr>
-<td>Use case</td>
-<td>Lab / non-prod</td>
-<td>Production</td>
-</tr>
-<tr>
-<td>Load balancer</td>
-<td>Not required</td>
-<td>Required (L4/L7 VIP in front of 3 nodes)</td>
-</tr>
-</tbody>
-</table>
-<h2 id="core-services">Core Services<a class="headerlink" href="#core-services" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Automation Assembler</td>
-<td>Cloud template (YAML IaC) authoring and resource provisioning</td>
-</tr>
-<tr>
-<td>Service Broker</td>
-<td>Self-service catalog — exposes templates to end users via projects</td>
-</tr>
-<tr>
-<td>Event Broker</td>
-<td>Internal event bus — routes lifecycle events to ABX/Orchestrator subscriptions</td>
-</tr>
-<tr>
-<td>Orchestrator (embedded vRO)</td>
-<td>Workflow engine for Day-2 operations and approval routing</td>
-</tr>
-<tr>
-<td>Automation Pipelines</td>
-<td>CI/CD pipeline engine triggered from Git events</td>
-</tr>
-<tr>
-<td>PostgreSQL</td>
-<td>Deployment state, catalog definitions, event log</td>
-</tr>
-<tr>
-<td>RabbitMQ</td>
-<td>Async messaging between microservices</td>
-</tr>
-<tr>
-<td>Kubernetes</td>
-<td>Container orchestration for all microservices (managed by appliance)</td>
-</tr>
-<tr>
-<td>Nginx / Envoy</td>
-<td>HTTPS ingress and load balancing between microservice endpoints</td>
-</tr>
-</tbody>
-</table>
-<h2 id="kubernetes-namespaces-diagnostics">Kubernetes Namespaces (Diagnostics)<a class="headerlink" href="#kubernetes-namespaces-diagnostics" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Namespace</th>
-<th>Services</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>prelude</code></td>
-<td>Core services: assembler, catalog, event-broker</td>
-</tr>
-<tr>
-<td><code>vro</code></td>
-<td>Embedded vRealize Orchestrator</td>
-</tr>
-<tr>
-<td><code>saltstack</code></td>
-<td>Automation Config (SaltStack)</td>
-</tr>
-<tr>
-<td><code>pipeline</code></td>
-<td>Automation Pipelines (Code Stream)</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>assembler<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;
-</code></pre></div>
+┌─────────────────────────────────── Aria Automation — How It Works ────────────────────────────────────┐
+│                                                                                                       │
+│  Cloud-agnostic self-service automation via blueprints, cloud templates, and resource orchestration.  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │       Service Portal (Consumer layer)        │  │            Designer / Admin layer           │   │
+│   │     Self-service catalog of deployments      │  │       Cloud templates (YAML/drag-drop)      │   │
+│   │      Request → approval → provisioning       │  │     Blueprints define topology + inputs     │   │
+│   │    Day-2 actions: resize/snapshot/delete     │  │       Policies: cost, network, storage      │   │
+│   │   Role: consumer sees only entitled items    │  │      Projects isolate teams and quotas      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Approved requests flow to the orchestration engine which calls cloud account APIs.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Orchestration Engine             │  │          Cloud Accounts / Endpoints         │   │
+│   │       Workflow runs: Aria Orchestrator       │  │      vSphere, AWS, Azure, GCP accounts      │   │
+│   │       ABX extensibility actions (FaaS)       │  │        NSX-T for network provisioning       │   │
+│   │       Resource lifecycle state machine       │  │       vCenter clusters and datastores       │   │
+│   │        Event broker for async events         │  │        Terraform provider integration       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Linux VMs (vRA appliances) · vCenter hosts · DNS · LDAP/AD · NTP · TLS certificates                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Cloud template    = YAML descriptor defining resources, inputs, and conditions for a deployment      │
+│  Blueprint         = Older term for cloud template; still used in vRA 8.x UI and docs                 │
+│  Project           = Tenant boundary in vRA; owns cloud accounts, members, and quotas                 │
+│  Catalog item      = Versioned cloud template published to the service catalog for consumers          │
+│  ABX action        = Action-Based Extensibility; serverless function triggered by vRA events          │
+│  Aria Orchestrator = Workflow engine embedded in vRA; executes complex multi-step automations         │
+│  Day-2 action      = Post-deployment operation (resize, snapshot, decommission) on a resource         │
+│  Cloud account     = vRA connection to an infrastructure endpoint (vCenter, AWS, Azure)               │
+│  Deployment        = Running instance of a provisioned cloud template with tracked lifecycle          │
+│  Approval policy   = Governance rule requiring human sign-off before provisioning proceeds            │
+│  Terraform config  = HCL workspace managed by vRA IaaC integration for Terraform providers            │
+│  Event subscription= vRA event broker rule mapping resource event to ABX action or workflow           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h2 id="cloud-account-types">Cloud Account Types<a class="headerlink" href="#cloud-account-types" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

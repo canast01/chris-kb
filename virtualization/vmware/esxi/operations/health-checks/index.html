@@ -4454,28 +4454,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#health-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4675,7 +4653,7 @@
 
 
 <h1 id="esxi-health-checks">ESXi — Health Checks<a class="headerlink" href="#esxi-health-checks" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ESXi Health Check — Decision Flow
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ESXi Health Check — Decision Flow
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  START: Daily / Pre-Change Health Sweep             │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└──────────────────────────┬──────────────────────────┘
@@ -4711,70 +4689,52 @@
 <a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>           │  PASS — host healthy │
 <a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>           └─────────────────────┘
 </code></pre></div>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Host connection state</td>
-<td><code>Get-VMHost \| Select Name,ConnectionState,PowerState</code></td>
-<td>Confirm all Connected and PoweredOn</td>
-</tr>
-<tr>
-<td>[ ] Hardware health alerts in vCenter</td>
-<td>—</td>
-<td>Flag any red or yellow alarms on ESXi host objects</td>
-</tr>
-<tr>
-<td>[ ] Dead storage paths</td>
-<td><code>esxcli storage core path list \| grep -c dead</code></td>
-<td>Result should be 0</td>
-</tr>
-<tr>
-<td>[ ] dvSwitch uplinks</td>
-<td><code>esxcli network vswitch dvs vmware list</code></td>
-<td>Verify expected active NICs</td>
-</tr>
-<tr>
-<td>[ ] vCenter alarms dashboard</td>
-<td>—</td>
-<td>Review any triggered host-level alarms</td>
-</tr>
-<tr>
-<td>[ ] NTP sync</td>
-<td><code>esxcli system ntp get</code></td>
-<td>Confirm <code>Running: true</code> and servers configured</td>
-</tr>
-<tr>
-<td>[ ] vmkernel log errors</td>
-<td><code>/var/log/vmkernel.log</code></td>
-<td>Check for NMP, SCSI, or network errors</td>
-</tr>
-<tr>
-<td>[ ] Maintenance mode</td>
-<td>—</td>
-<td>Confirm no hosts unexpectedly in maintenance mode</td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check-commands">Health Check Commands<a class="headerlink" href="#health-check-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># ESXi host health sweep (run per host via SSH or esxcli -s)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>health<span class="w"> </span>get
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dead
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># PowerCLI (run from management workstation)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,ConnectionState,PowerState
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Get-VMHostHardware<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>VMHost,Manufacturer,Model,CpuCount,MemorySize
-</code></pre></div>
+┌──────────────────────────────────────── ESXi — Health Checks ─────────────────────────────────────────┐
+│                                                                                                       │
+│  Daily/weekly health runbook: hardware sensors, alarms, capacity, and storage.                        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Hardware Health                │  │            vSphere Cluster Health           │   │
+│   │           IPMI/iDRAC sensor status           │  │          HA master elected &amp; green          │   │
+│   │            CPU/mem/fan/PSU alarms            │  │            DRS balance score &lt; 2            │   │
+│   │           esxcli hardware ipmi sdr           │  │          vMotion network reachable          │   │
+│   │            HBA/NIC link state up             │  │            No disconnected hosts            │   │
+│   │         Boot media health S.M.A.R.T.         │  │             EVC mode consistent             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Hardware sensors → vSphere alarms → storage health → capacity review.                                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Storage Health                │  │               Capacity Review               │   │
+│   │           All paths active per LUN           │  │           Host CPU util &lt; 70% avg           │   │
+│   │           No APD/PDL events today            │  │           Host mem util &lt; 80% avg           │   │
+│   │             Datastore free &gt; 20%             │  │             VM balloon/swap = 0             │   │
+│   │          VMFS no ATS heartbeat err           │  │           vSAN disk capacity &lt; 70%          │   │
+│   │            vSAN health: all green            │  │          Trend forecast 30/60 days          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts with IPMI/iDRAC BMC, SAN/NAS/vSAN storage, 10/25 GbE NICs                                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  IPMI     = Intelligent Platform Mgmt Interface; OOB hardware sensor access                           │
+│  iDRAC    = Dell Remote Access Controller; OOB management BMC                                         │
+│  S.M.A.R.T = Self-Monitoring Analysis; disk health from boot media                                    │
+│  APD      = All Paths Down; storage unreachable but PDL not declared                                  │
+│  PDL      = Permanent Device Loss; device signals loss is permanent                                   │
+│  ATS      = Atomic Test &amp; Set; VMFS locking primitive; heartbeat mechanism                            │
+│  DRS score= 1-5 imbalance rating; 1=balanced, 5=critical imbalance                                    │
+│  Balloon  = VMware memory mgmt; guest driver returns idle pages to host                               │
+│  EVC      = Enhanced vMotion Compat; consistent CPU flags across cluster                              │
+│  fdm      = Fault Domain Manager; HA agent; must run on all hosts                                     │
+│  vSAN health = Skyline Health dashboard in vCenter; 60+ automated checks                              │
+│  BMC      = Baseboard Management Controller; embedded OOB management chip                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h2 id="health-checklist">Health Checklist<a class="headerlink" href="#health-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All hosts Connected and PoweredOn</li>

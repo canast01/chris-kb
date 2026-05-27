@@ -4454,73 +4454,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#upgrade-sequence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Sequence
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-procedure-via-lcm" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Procedure via LCM
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#eol-tracking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        EOL Tracking
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lcm-upgrade-upgrading-lcm-itself" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LCM Upgrade (Upgrading LCM Itself)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#backup-and-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backup and Recovery
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Backup and Recovery">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#lcm-configuration-backup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LCM Configuration Backup
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#lcm-recovery" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4528,11 +4461,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -4941,7 +4869,7 @@
 
 
 <h1 id="aria-suite-lifecycle-install-upgrade">Aria Suite Lifecycle — Install &amp; Upgrade<a class="headerlink" href="#aria-suite-lifecycle-install-upgrade" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  LCM Upgrade Sequence (strict order)
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  LCM Upgrade Sequence (strict order)
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Step 1: LCM itself                                             │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Lifecycle Operations → System Upgrade → select bundle         │
@@ -4964,112 +4892,50 @@
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  └─────────────────────────────────────────────────────────┘    │
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└─────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="upgrade-sequence">Upgrade Sequence<a class="headerlink" href="#upgrade-sequence" title="Permanent link">&para;</a></h2>
-<p><strong>Critical: LCM must always be upgraded first, then VIDM, then all other products.</strong></p>
-<table>
-<thead>
-<tr>
-<th>Step</th>
-<th>Product</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>Aria Suite Lifecycle (LCM)</td>
-<td>Never skip — upgrading products with an older LCM is unsupported</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Workspace ONE Access (VIDM)</td>
-<td>Must precede all other product upgrades</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Aria Operations</td>
-<td>After VIDM</td>
-</tr>
-<tr>
-<td>4</td>
-<td>Aria Automation</td>
-<td>After Aria Operations</td>
-</tr>
-<tr>
-<td>5</td>
-<td>Aria Log Insight</td>
-<td>After VIDM</td>
-</tr>
-<tr>
-<td>6</td>
-<td>Aria Operations for Networks</td>
-<td>After VIDM</td>
-</tr>
-</tbody>
-</table>
-<p>Check compatibility: <a href="https://interopmatrix.vmware.com">VMware Product Interoperability Matrix</a></p>
-<h2 id="upgrade-procedure-via-lcm">Upgrade Procedure via LCM<a class="headerlink" href="#upgrade-procedure-via-lcm" title="Permanent link">&para;</a></h2>
-<ol>
-<li>
-<p><strong>Pre-upgrade snapshot</strong> — take a VM snapshot of LCM and all managed appliances before starting
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Via vCenter: right-click each appliance VM → Snapshot → Take Snapshot</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Name: pre-upgrade-$(date +%Y%m%d)</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Download product bundle</strong> — LCM → Lifecycle Operations → Settings → Binary Mapping → Check for Updates</p>
-</li>
-<li>
-<p>Or upload offline .pak files if no internet access</p>
-</li>
-<li>
-<p><strong>Trigger upgrade</strong> — LCM → Lifecycle Operations → Environments → select environment → Upgrade</p>
-</li>
-<li>
-<p>LCM presents a pre-check list; all items must pass before proceeding</p>
-</li>
-<li>
-<p><strong>Monitor progress</strong> — LCM shows upgrade task progress; SSH to LCM and tail logs if needed:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/lcm/lcm-app.log
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Post-upgrade validation</strong> — verify product health in LCM dashboard before deleting snapshots</p>
-</li>
-</ol>
-<h2 id="eol-tracking">EOL Tracking<a class="headerlink" href="#eol-tracking" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Product</th>
-<th>Lifecycle Reference</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>All Aria products</td>
-<td><a href="https://lifecycle.vmware.com">lifecycle.vmware.com</a> — check quarterly</td>
-</tr>
-</tbody>
-</table>
-<p>Key dates to track:
-- <strong>End of General Support</strong>: last date for patches and updates
-- <strong>End of Technical Guidance</strong>: last date for support calls</p>
-<p>Alert at 90 days before End of General Support.</p>
-<h2 id="lcm-upgrade-upgrading-lcm-itself">LCM Upgrade (Upgrading LCM Itself)<a class="headerlink" href="#lcm-upgrade-upgrading-lcm-itself" title="Permanent link">&para;</a></h2>
-<p>LCM can upgrade itself via the binary mapping workflow:</p>
-<ol>
-<li>LCM → Lifecycle Operations → Settings → System Upgrade</li>
-<li>Select the new LCM bundle</li>
-<li>Click Upgrade — LCM restarts after upgrade; takes 5–10 minutes</li>
-</ol>
-<p>LCM is unavailable during its own upgrade — plan during a maintenance window.</p>
-<h2 id="backup-and-recovery">Backup and Recovery<a class="headerlink" href="#backup-and-recovery" title="Permanent link">&para;</a></h2>
-<h3 id="lcm-configuration-backup">LCM Configuration Backup<a class="headerlink" href="#lcm-configuration-backup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From LCM UI: Settings → System Details → Backup and Restore</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Or via API:</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://lcm.example.local/lcm/lcops/api/v2/system/backup
-</code></pre></div>
+┌────────────────────────────────── Aria Suite LCM Install &amp; Upgrade ───────────────────────────────────┐
+│                                                                                                       │
+│  LCM OVA deployment, depot synchronisation, and product installation via LCM.                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Pre-Requisites                │  │             LCM OVA Deploy Steps            │   │
+│   │           vSphere 6.7+ environment           │  │             1. Download LCM OVA             │   │
+│   │          DNS FQDNs for all products          │  │         2. Deploy via vSphere client        │   │
+│   │             NTP server reachable             │  │        3. Complete VAMI setup wizard        │   │
+│   │          NFS or internet for depot           │  │           4. Configure depot in UI          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Deploy LCM first; configure depot; then deploy vIDM before any other product.                        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Product Install via LCM            │  │               LCM Self-Upgrade              │   │
+│   │            1. Sync depot binaries            │  │            Snapshot LCM VM first            │   │
+│   │            2. Create environment             │  │            Settings &gt; LCM Update            │   │
+│   │             3. Deploy vIDM first             │  │            Apply LCM PAK upgrade            │   │
+│   │            4. Add products to env            │  │            Validate after upgrade           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vSphere cluster; NFS for depot/backup; DNS for all product FQDNs; NTP server                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  LCM OVA             = Open Virtualization Appliance; LCM appliance package                           │
+│  Depot Configuration = LCM setting pointing to online or local content source                         │
+│  vIDM First          = Identity Manager must be deployed before any Aria product                      │
+│  Environment         = LCM logical grouping; created before products are added                        │
+│  Depot Sync          = Download of product catalog and PAK binaries from depot                        │
+│  VAMI Setup Wizard   = First-boot LCM config: IP, DNS, NTP, admin password                            │
+│  Pre-check           = LCM automated validation; runs before each deploy/upgrade                      │
+│  LCM Self-Upgrade    = LCM applies PAK to upgrade itself via Settings UI                              │
+│  Snapshot Before     = vSphere checkpoint of LCM VM before self-upgrade                               │
+│  Product Order       = vIDM, then vROps, vRLI, vRA in recommended sequence                            │
+│  DNS Pre-validation  = LCM checks FQDN resolution before deploying each product                       │
+│  NFS Depot Mount     = Local NFS share with PAK files; mounted on LCM VM                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <p>Store backup archives off the LCM appliance (NFS, S3, or external storage).</p>
 <h3 id="lcm-recovery">LCM Recovery<a class="headerlink" href="#lcm-recovery" title="Permanent link">&para;</a></h3>
 <p>If LCM appliance is lost:

@@ -4338,56 +4338,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#hardening-baseline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardening Baseline
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hardening-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardening Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lockdown-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Lockdown Mode
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Lockdown Mode">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#configure-lockdown-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configure Lockdown Mode
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#firewall-hardening" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4687,7 +4637,7 @@
 
 
 <h1 id="esxi-hardening">ESXi — Hardening<a class="headerlink" href="#esxi-hardening" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ESXi Host Hardening Layers
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ESXi Host Hardening Layers
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  1. Network Attack Surface Reduction                    │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ├── Lockdown Mode: Normal (blocks direct SSH/API)      │
@@ -4718,143 +4668,83 @@
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>└─────────────────────────────────────────────────────────┘
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>  Reference: VMware vSphere SCG → CIS → DISA STIG
 </code></pre></div>
-<h2 id="hardening-baseline">Hardening Baseline<a class="headerlink" href="#hardening-baseline" title="Permanent link">&para;</a></h2>
-<p>Follow the <strong>VMware vSphere Security Configuration Guide (SCG)</strong> for the specific ESXi version in use. Download from the Broadcom Knowledge Base (search "vSphere Security Configuration Guide"). The SCG maps to CIS Benchmarks and DISA STIG requirements.</p>
-<hr />
-<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
-<p>Apply the following controls to every ESXi host before placing it in production. Use host profiles to enforce these settings consistently across the cluster.</p>
-<table>
-<thead>
-<tr>
-<th>Control</th>
-<th>Command / Action</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Enable Lockdown Mode (Normal)</td>
-<td>vCenter → Host → Configure → Security Profile → Lockdown Mode</td>
-<td>Restricts direct host access; all management via vCenter</td>
-</tr>
-<tr>
-<td>Disable SSH when not in use</td>
-<td><code>vim-cmd hostsvc/disable_ssh</code></td>
-<td>Re-enable only for break-glass maintenance</td>
-</tr>
-<tr>
-<td>Disable ESXi Shell</td>
-<td><code>vim-cmd hostsvc/disable_esx_shell</code></td>
-<td>Re-enable only for break-glass</td>
-</tr>
-<tr>
-<td>Set shell timeout</td>
-<td><code>esxcli system settings advanced set -o /UserVars/ESXiShellTimeOut -i 600</code></td>
-<td>Auto-disables shell after 10 min</td>
-</tr>
-<tr>
-<td>Configure NTP</td>
-<td><code>esxcli system ntp set --server=ntp1.example.com --enabled=true</code></td>
-<td>Clock skew causes cert and auth failures</td>
-</tr>
-<tr>
-<td>Restrict SSH access by IP</td>
-<td><code>esxcli network firewall ruleset set --ruleset-id sshServer --allowed-all false</code></td>
-<td>Limit to admin subnet only</td>
-</tr>
-<tr>
-<td>Enable UEFI Secure Boot</td>
-<td>Set in BIOS/UEFI firmware before ESXi install</td>
-<td>Prevents unsigned bootloader</td>
-</tr>
-<tr>
-<td>Replace self-signed certificate</td>
-<td>Replace with VMCA or CA-signed cert via vCenter</td>
-<td>Required for production</td>
-</tr>
-<tr>
-<td>Set login banner</td>
-<td><code>esxcli system settings advanced set -o /Config/Etc/issue -s "..."</code></td>
-<td>Legal warning banner</td>
-</tr>
-<tr>
-<td>Disable unused services</td>
-<td>Review running services; disable FTP, telnet, CIM if unused</td>
-<td>Minimise attack surface</td>
-</tr>
-<tr>
-<td>Enable syslog forwarding</td>
-<td><code>esxcli system syslog config set --loghost=tcp://syslog.example.local:514</code></td>
-<td>All logs off-host before reboot</td>
-</tr>
-<tr>
-<td>Set password policy</td>
-<td>Advanced settings → <code>Security.AccountLockFailures = 5</code></td>
-<td>Prevent brute force</td>
-</tr>
-<tr>
-<td>Disable BPDU filter</td>
-<td>Leave at default (enabled on vDS)</td>
-<td>Prevent spanning tree manipulation</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="lockdown-mode">Lockdown Mode<a class="headerlink" href="#lockdown-mode" title="Permanent link">&para;</a></h2>
-<p>Lockdown mode prevents direct root access to ESXi hosts — all management must go through vCenter.</p>
-<p><strong>Normal Lockdown:</strong>
-- DCUI accessible for local console access
-- vCenter API access permitted
-- SSH disabled; can be temporarily re-enabled via DCUI for break-glass access</p>
-<p><strong>Strict Lockdown:</strong>
-- DCUI disabled entirely
-- All access must go through vCenter
-- Use only in environments where vCenter is highly available</p>
-<h3 id="configure-lockdown-mode">Configure Lockdown Mode<a class="headerlink" href="#configure-lockdown-mode" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Via PowerCLI — enable Normal Lockdown on all hosts in a cluster</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Get-Cluster<span class="w"> </span><span class="s2">&quot;CL-PROD&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nv">$_</span>.ExtensionData.EnterLockdownMode<span class="o">()</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>Write-Host<span class="w"> </span><span class="s2">&quot;Lockdown enabled: </span><span class="k">$(</span><span class="nv">$_</span>.Name<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">}</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check lockdown status</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s2">&quot;LockdownMode&quot;</span><span class="p">;</span><span class="w"> </span><span class="nv">E</span><span class="o">={</span><span class="nv">$_</span>.ExtensionData.Config.LockdownMode<span class="o">}}</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Disable lockdown (for maintenance — re-enable after)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Get-VMHost<span class="w"> </span><span class="s2">&quot;esxi-01.example.local&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="nv">$_</span>.ExtensionData.ExitLockdownMode<span class="o">()</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="o">}</span>
-</code></pre></div>
-<p><strong>Exception Users List:</strong></p>
-<p>Users in the exception list can still access the host directly even in Normal Lockdown. Keep minimal — typically one named break-glass local account:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View exception users (vSphere Client or via API)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vim-cmd<span class="w"> </span>hostsvc/advopt/view<span class="w"> </span>Config.HostAgent.plugins.hostsvc.esxAdminsGroup
-</code></pre></div>
+┌────────────────────────────────────────── ESXi — Hardening ───────────────────────────────────────────┐
+│                                                                                                       │
+│  CIS VMware benchmark, lockdown mode, host firewall, and hardening profile.                           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            CIS / STIG Benchmarks             │  │                Lockdown Mode                │   │
+│   │          CIS VMware ESXi benchmark           │  │           Normal: DCUI restricted           │   │
+│   │            DISA STIG for vSphere             │  │            Strict: no DCUI at all           │   │
+│   │          Disable SSH in production           │  │            Exception users config           │   │
+│   │             Disable MOB browser              │  │            All access via vCenter           │   │
+│   │           vSphere Assessment Tool            │  │           Enter/exit lockdown API           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  CIS/STIG baseline → lockdown mode → firewall rules → Host Profile enforce.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Host Firewall                 │  │              Hardening Controls             │   │
+│   │          Default: deny all inbound           │  │            NTP configured (ntpd)            │   │
+│   │          Allow: vCenter/vMotion IPs          │  │            Syslog to remote host            │   │
+│   │         esxcli network firewall rule         │  │              Banner / MOTD set              │   │
+│   │            Limit SSH to mgmt VLAN            │  │              Disable SNMP v1/v2             │   │
+│   │          Close unnecessary services          │  │            Host Profile enforced            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, management VLAN, dedicated OOB network, syslog collector                                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CIS         = Center for Internet Security; produces hardening benchmarks                            │
+│  STIG        = Security Technical Implementation Guide; DOD hardening                                 │
+│  DISA        = Defense Information Systems Agency; publishes STIGs                                    │
+│  MOB         = Managed Object Browser; web debug UI; disable in prod                                  │
+│  Lockdown    = ESXi mode blocking direct host admin; enforces vCenter                                 │
+│  Exception users = accounts exempt from lockdown for break-glass access                               │
+│  MOTD        = Message of the Day; banner displayed at ESXi login                                     │
+│  ntpd        = NTP daemon on ESXi; keeps host clock in sync                                           │
+│  Host Profile= vCenter desired-state enforcement; applied after reconfig                              │
+│  VAT         = vSphere Assessment Tool; checks ESXi against benchmark                                 │
+│  Firewall rule= ESXi kernel-level packet filter; allow/deny per service                               │
+│  SNMP v3     = secure SNMP version with auth+enc; v1/v2 must be disabled                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Exception Users List:**
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Users in the exception list can still access the host directly even in Normal Lockdown. Keep minimal — typically one named break-glass local account:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># View exception users (vSphere Client or via API)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>vim-cmd hostsvc/advopt/view Config.HostAgent.plugins.hostsvc.esxAdminsGroup
+</code></pre></div></p>
 <p>Configure via vCenter: <strong>Host → Configure → Security Profile → Lockdown Mode → Exception Users</strong></p>
 <hr />
 <h2 id="firewall-hardening">Firewall Hardening<a class="headerlink" href="#firewall-hardening" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check firewall is enabled</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>get
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Expected: Enabled: true, Default Action: DROP</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># List all rulesets and their state</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Show allowed IPs for a specific ruleset</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>list<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Restrict SSH access to admin subnet</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer<span class="w"> </span>--allowed-all<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>add<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer<span class="w"> </span>--ip-address<span class="w"> </span><span class="m">10</span>.0.1.0/24
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Restrict vSphere Client access</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--ruleset-id<span class="w"> </span>webAccess<span class="w"> </span>--allowed-all<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>add<span class="w"> </span>--ruleset-id<span class="w"> </span>webAccess<span class="w"> </span>--ip-address<span class="w"> </span><span class="m">10</span>.0.1.0/24
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Disable unused rulesets (examples)</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpClient
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpServer
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check firewall is enabled</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>get
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Expected: Enabled: true, Default Action: DROP</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># List all rulesets and their state</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Show allowed IPs for a specific ruleset</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>list<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Restrict SSH access to admin subnet</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer<span class="w"> </span>--allowed-all<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>add<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer<span class="w"> </span>--ip-address<span class="w"> </span><span class="m">10</span>.0.1.0/24
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Restrict vSphere Client access</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--ruleset-id<span class="w"> </span>webAccess<span class="w"> </span>--allowed-all<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>add<span class="w"> </span>--ruleset-id<span class="w"> </span>webAccess<span class="w"> </span>--ip-address<span class="w"> </span><span class="m">10</span>.0.1.0/24
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Disable unused rulesets (examples)</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpClient
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpServer
 </code></pre></div>
 <h3 id="minimum-required-rulesets">Minimum Required Rulesets<a class="headerlink" href="#minimum-required-rulesets" title="Permanent link">&para;</a></h3>
 <table>
@@ -4943,32 +4833,32 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Apply security settings</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">600</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellInteractiveTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">300</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Security/AccountLockFailures<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Security/AccountUnlockTime<span class="w"> </span>-i<span class="w"> </span><span class="m">900</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Config/Etc/issue<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-s<span class="w"> </span><span class="s2">&quot;AUTHORISED USERS ONLY. Unauthorised access to this system is prohibited.&quot;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Verify</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span>get<span class="w"> </span>-o<span class="w"> </span>/Security/AccountLockFailures
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span>get<span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellTimeOut
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Apply security settings</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">600</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellInteractiveTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">300</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Security/AccountLockFailures<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Security/AccountUnlockTime<span class="w"> </span>-i<span class="w"> </span><span class="m">900</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/Config/Etc/issue<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-s<span class="w"> </span><span class="s2">&quot;AUTHORISED USERS ONLY. Unauthorised access to this system is prohibited.&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Verify</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span>get<span class="w"> </span>-o<span class="w"> </span>/Security/AccountLockFailures
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span>get<span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellTimeOut
 </code></pre></div>
 <hr />
 <h2 id="secure-boot">Secure Boot<a class="headerlink" href="#secure-boot" title="Permanent link">&para;</a></h2>
 <p>UEFI Secure Boot verifies the bootloader and VIBs are signed by VMware before loading. It prevents unsigned kernel modules from running.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify Secure Boot is active</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/usr/lib/vmware/secureboot/bin/secureBoot.py<span class="w"> </span>-s
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Expected: Enabled</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Detailed check</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>/usr/lib/vmware/secureboot/bin/secureBoot.py<span class="w"> </span>--status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify Secure Boot is active</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/usr/lib/vmware/secureboot/bin/secureBoot.py<span class="w"> </span>-s
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Expected: Enabled</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Detailed check</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>/usr/lib/vmware/secureboot/bin/secureBoot.py<span class="w"> </span>--status
 </code></pre></div>
 <p>If Secure Boot reports <code>Disabled</code>, check the server BIOS/UEFI settings. Secure Boot must be enabled before installing ESXi — it cannot be turned on retroactively on a running host without a clean installation.</p>
 <p>VIB acceptance levels must be VMwareCertified or VMwareAccepted when Secure Boot is enabled — CommunitySupported and PartnerSupported VIBs are rejected:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span>get
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Must return: VMwareCertified or VMwareAccepted (not CommunitySupported)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span>get
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Must return: VMwareCertified or VMwareAccepted (not CommunitySupported)</span>
 </code></pre></div>
 <hr />
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
@@ -5005,18 +4895,18 @@
 </tbody>
 </table>
 <h3 id="configure-syslog-forwarding">Configure Syslog Forwarding<a class="headerlink" href="#configure-syslog-forwarding" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Configure syslog target</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span><span class="s2">&quot;tcp://syslog.example.local:514&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Multiple targets</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--loghost<span class="o">=</span><span class="s2">&quot;tcp://syslog1.example.local:514,udp://syslog2.example.local:514&quot;</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Apply config</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Verify</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Configure syslog target</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span><span class="s2">&quot;tcp://syslog.example.local:514&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Multiple targets</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--loghost<span class="o">=</span><span class="s2">&quot;tcp://syslog1.example.local:514,udp://syslog2.example.local:514&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Apply config</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Verify</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
 </code></pre></div>
 <p>Configure via Host Profile to apply uniformly across all cluster hosts.</p>
 <hr />
@@ -5030,22 +4920,22 @@
 - Syslog target
 - VIB acceptance level
 - Lockdown mode</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Create a host profile from the hardened reference host</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">New-VMHostProfile</span> <span class="n">-Name</span> <span class="s2">&quot;Cluster-Security-Profile&quot;</span> <span class="p">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="n">-ReferenceHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">)</span> <span class="p">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">-Description</span> <span class="s2">&quot;Production security baseline — v1.2&quot;</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c"># Attach profile to all hosts in cluster</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="n">-Profile</span> <span class="p">(</span><span class="nb">Get-VMHostProfile</span> <span class="s2">&quot;Cluster-Security-Profile&quot;</span><span class="p">)</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="p">}</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c"># Check compliance — identify drifted hosts</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="nb">Test-VMHostProfileCompliance</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="p">|</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>        <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ComplianceStatus</span> <span class="o">-ne</span> <span class="s2">&quot;Compliant&quot;</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>        <span class="nb">Select-Object</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">ComplianceStatus</span><span class="p">,</span> <span class="n">IncomplianceDescription</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Create a host profile from the hardened reference host</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">New-VMHostProfile</span> <span class="n">-Name</span> <span class="s2">&quot;Cluster-Security-Profile&quot;</span> <span class="p">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">-ReferenceHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">)</span> <span class="p">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">-Description</span> <span class="s2">&quot;Production security baseline — v1.2&quot;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c"># Attach profile to all hosts in cluster</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="n">-Profile</span> <span class="p">(</span><span class="nb">Get-VMHostProfile</span> <span class="s2">&quot;Cluster-Security-Profile&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="p">}</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c"># Check compliance — identify drifted hosts</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    <span class="nb">Test-VMHostProfileCompliance</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="p">|</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>        <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ComplianceStatus</span> <span class="o">-ne</span> <span class="s2">&quot;Compliant&quot;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>        <span class="nb">Select-Object</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">ComplianceStatus</span><span class="p">,</span> <span class="n">IncomplianceDescription</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="p">}</span>
 </code></pre></div>
 <p>Run <strong>Check Compliance</strong> after every change to a host. Non-compliant hosts should be remediated within the change window.</p>
 <hr />
@@ -5083,14 +4973,14 @@
 </tbody>
 </table>
 <p>Enforce minimum acceptance level:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check current acceptance level</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span>get
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Set minimum to VMwareAccepted</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--level<span class="o">=</span>VMwareAccepted
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># List all installed VIBs and their acceptance level</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1, $4}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check current acceptance level</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span>get
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Set minimum to VMwareAccepted</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--level<span class="o">=</span>VMwareAccepted
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># List all installed VIBs and their acceptance level</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1, $4}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
 </code></pre></div>
 <p>Any VIB with <code>CommunitySupported</code> acceptance level in production should be removed or replaced with a supported alternative.</p>
 <hr />
@@ -5100,11 +4990,11 @@
 - Physical TPM 2.0 chip in the server
 - UEFI Secure Boot enabled
 - vSphere Trust Authority (optional — adds attestation enforcement)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check TPM status from ESXi Shell</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span>get<span class="w"> </span>-o<span class="w"> </span>/UserVars/TpmBiosDeviceEnabled
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># View TPM details</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>cat<span class="w"> </span>/var/run/tpm/tpminfo.json<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check TPM status from ESXi Shell</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span>get<span class="w"> </span>-o<span class="w"> </span>/UserVars/TpmBiosDeviceEnabled
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># View TPM details</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>cat<span class="w"> </span>/var/run/tpm/tpminfo.json<span class="w"> </span><span class="m">2</span>&gt;/dev/null
 </code></pre></div>
 <p>View in vCenter: <strong>Host → Configure → System → TPM</strong></p>
 <p>If TPM attestation fails, investigate recent firmware or BIOS changes. A failed attestation indicates the host's boot chain has changed — investigate before trusting the host.</p>

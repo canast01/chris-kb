@@ -4360,17 +4360,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ad-group-based-role-assignment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AD Group-Based Role Assignment
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#local-user-accounts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4618,22 +4607,60 @@
 </table>
 <hr />
 <h2 id="configuring-active-directory-integration">Configuring Active Directory Integration<a class="headerlink" href="#configuring-active-directory-integration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Administration → Authentication → Active Directory → Configure
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Administration → Authentication → Active Directory → Configure
 </code></pre></div>
-<p>Provide:
-- <strong>Domain</strong>: <code>corp.local</code>
-- <strong>Domain controller</strong>: <code>dc01.example.local</code> (use multiple for HA)
-- <strong>Port</strong>: 636 (LDAPS) — required for production
-- <strong>Bind DN</strong>: <code>CN=svc-vrli-ldap,OU=Service Accounts,DC=corp,DC=local</code>
-- <strong>Bind password</strong>: stored in CyberArk or vault; retrieved during configuration</p>
-<p>Import the domain CA certificate before configuring LDAPS:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Administration → SSL → Import Certificate → paste the root CA PEM
+┌────────────────────────────── Aria Operations for Logs — Access Control ──────────────────────────────┐
+│                                                                                                       │
+│  vRLI access is controlled by built-in roles and AD group mappings via LDAP integration.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Built-in Roles                │  │              LDAP Group Mapping             │   │
+│   │       Super Admin: full configuration        │  │       AD group → vRLI role assignment       │   │
+│   │        User: view and query logs only        │  │      LDAP config: Administration → Auth     │   │
+│   │       Dashboard User: dashboards only        │  │      Group DN: full distinguished name      │   │
+│   │       API: programmatic ingest access        │  │      Test LDAP: verify bind and search      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Network access control limits which systems can push logs and access the UI.                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Network Access Control            │  │              API Access Control             │   │
+│   │      Firewall: restrict UI to mgmt nets      │  │      API key: separate from user login      │   │
+│   │     Syslog: allow from source CIDR only      │  │      Session token: 30 min default TTL      │   │
+│   │      Admin VAMI (:9543): jumphost only       │  │         Rotate API key periodically         │   │
+│   │      No direct DB access from prod nets      │  │         Audit: log all admin actions        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRLI appliance · AD/LDAP server · firewall rules · management VLAN · NTP                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Super Admin       = Full access to all vRLI configuration, sources, and users                        │
+│  User role         = Can search and view logs and dashboards; cannot change config                    │
+│  Dashboard User    = Restricted role; view dashboards only, no Explore or admin access                │
+│  LDAP integration  = AD connection in vRLI; maps AD groups to Super Admin or User role                │
+│  Group DN          = Distinguished Name of AD group used in LDAP group mapping                        │
+│  LDAP bind user    = Read-only service account vRLI uses to query AD for group membership             │
+│  API key           = vRLI static token for ingest API; does not expire unless rotated                 │
+│  Session token     = Short-lived bearer token returned by /api/v1/sessions login                      │
+│  VAMI access       = Port 9543; restrict to jump hosts or management network only                     │
+│  Syslog source ACL = Firewall rule limiting which source IPs can reach vRLI ports                     │
+│  Audit log         = vRLI logs all login, config change, and admin actions for review                 │
+│  MFA               = Not native to vRLI; enforce MFA via vIDM if SSO integrated                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## AD Group-Based Role Assignment
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>After AD is configured, map AD groups to Aria Ops for Logs roles:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```text
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Administration → Authentication → Active Directory → Group Access
 </code></pre></div></p>
-<hr />
-<h2 id="ad-group-based-role-assignment">AD Group-Based Role Assignment<a class="headerlink" href="#ad-group-based-role-assignment" title="Permanent link">&para;</a></h2>
-<p>After AD is configured, map AD groups to Aria Ops for Logs roles:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Administration → Authentication → Active Directory → Group Access
-</code></pre></div>
 <table>
 <thead>
 <tr>
@@ -4660,7 +4687,7 @@
 <hr />
 <h2 id="local-user-accounts">Local User Accounts<a class="headerlink" href="#local-user-accounts" title="Permanent link">&para;</a></h2>
 <p>Local accounts are used for break-glass access and service accounts. Manage via:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Administration → Authentication → Local Users → Add User
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Administration → Authentication → Local Users → Add User
 </code></pre></div>
 <table>
 <thead>
@@ -4694,29 +4721,29 @@
 - Store in enterprise vault — not shared documents</p>
 <hr />
 <h2 id="api-authentication-for-automation">API Authentication for Automation<a class="headerlink" href="#api-authentication-for-automation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Authenticate — Aria Ops for Logs uses HTTP Basic auth; no separate token endpoint</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># All API calls use: -u &#39;admin:&lt;password&gt;&#39; or -u &#39;svc-vrli-api:&lt;password&gt;&#39;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Test API authentication</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;svc-vrli-api:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/version&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Expected: {&quot;version&quot;: &quot;8.x.y.zzz&quot;, ...}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Authenticate — Aria Ops for Logs uses HTTP Basic auth; no separate token endpoint</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># All API calls use: -u &#39;admin:&lt;password&gt;&#39; or -u &#39;svc-vrli-api:&lt;password&gt;&#39;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Test API authentication</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;svc-vrli-api:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/version&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Expected: {&quot;version&quot;: &quot;8.x.y.zzz&quot;, ...}</span>
 </code></pre></div>
 <p>For service accounts: assign the minimum required role — use the <code>User</code> role for scripts that only query logs; use the <code>Admin</code> role for scripts that create or modify alert definitions.</p>
 <hr />
 <h2 id="session-and-access-logging">Session and Access Logging<a class="headerlink" href="#session-and-access-logging" title="Permanent link">&para;</a></h2>
 <p>All authentication events are logged to the runtime log:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># View login and authentication events</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;login\|authenticated\|logout\|failed&quot;</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># View admin operations (alert create/delete, user changes)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;admin\|user\|alert\|content&quot;</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;create\|update\|delete&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View login and authentication events</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;login\|authenticated\|logout\|failed&quot;</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># View admin operations (alert create/delete, user changes)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;admin\|user\|alert\|content&quot;</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;create\|update\|delete&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
 </code></pre></div>
 <p>Forward these logs to a SIEM or dedicated audit log store by configuring the appliance's syslog output:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Forward syslog from the Aria Ops for Logs appliance to an external SIEM</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;*.* @@siem.example.local:514&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/vrli-audit.conf
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Forward syslog from the Aria Ops for Logs appliance to an external SIEM</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;*.* @@siem.example.local:514&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/vrli-audit.conf
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
 </code></pre></div>
 
 

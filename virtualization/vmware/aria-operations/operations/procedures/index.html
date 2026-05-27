@@ -4454,45 +4454,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#alert-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alert Management
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Alert Management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#investigating-and-acknowledging-alerts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Investigating and Acknowledging Alerts
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#maintenance-windows" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Windows
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#capacity-reclamation-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4747,7 +4708,7 @@
 
 
 <h1 id="aria-operations-procedures">Aria Operations — Procedures<a class="headerlink" href="#aria-operations-procedures" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Aria Operations — Alert Lifecycle
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Aria Operations — Alert Lifecycle
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Alert Fires                                        │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  (symptom threshold breached for N wait cycles)     │
@@ -4784,30 +4745,58 @@
 <a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  select objects + time window → alerts suppressed   │
 <a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>└─────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="alert-management">Alert Management<a class="headerlink" href="#alert-management" title="Permanent link">&para;</a></h2>
-<h3 id="investigating-and-acknowledging-alerts">Investigating and Acknowledging Alerts<a class="headerlink" href="#investigating-and-acknowledging-alerts" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Navigate to <strong>Alerts → All Alerts</strong></li>
-<li>Filter by <strong>Criticality = Critical or Immediate</strong></li>
-<li>Click the alert to open the detail view — review the <strong>Symptoms</strong> tab to understand what triggered it</li>
-<li>Navigate to the affected object and review recent metric history</li>
-<li>Acknowledge the alert only after identifying root cause:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Acknowledge a specific alert via API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">TOKEN</span><span class="o">=</span>&lt;your-token&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">ALERT_ID</span><span class="o">=</span><span class="s2">&quot;&lt;alert-uuid&gt;&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/alerts/</span><span class="nv">$ALERT_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;status&quot;:&quot;ACKNOWLEDGED&quot;,&quot;cancelTimeUTC&quot;:0}&#39;</span>
-</code></pre></div>
-<ol>
-<li>Cancel alerts only after the underlying issue is fully resolved — not as a suppression mechanism</li>
-</ol>
-<h3 id="maintenance-windows">Maintenance Windows<a class="headerlink" href="#maintenance-windows" title="Permanent link">&para;</a></h3>
-<p>Create a maintenance schedule to suppress alerts for planned work:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Administration → Maintenance Schedules → Add Schedule
-</code></pre></div>
+┌───────────────────────────────────── Aria Operations Procedures ──────────────────────────────────────┐
+│                                                                                                       │
+│  Add adapter, certificate rotation, and policy management procedures for vROps.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Add Adapter Instance             │  │             Certificate Rotation            │   │
+│   │            1. Data Sources &gt; Add             │  │           1. Generate CSR in VAMI           │   │
+│   │            2. Choose adapter kind            │  │            2. Get CA-signed cert            │   │
+│   │         3. Enter host + credentials          │  │          3. Upload cert in VAMI SSL         │   │
+│   │         4. Test + Save; check green          │  │           4. Verify browser trust           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Adapter add and cert rotation are routine; policy management is ongoing governance.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Policy Management               │  │             Credential Rotation             │   │
+│   │            1. Policies &gt; Add/Edit            │  │         1. Update source account pw         │   │
+│   │          2. Set symptom thresholds           │  │           2. Edit adapter instance          │   │
+│   │          3. Assign to object groups          │  │           3. Enter new credential           │   │
+│   │           4. Validate alert firing           │  │                4. Test + Save               │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vROps cluster; vCenter/NSX as adapter targets; CA for cert signing; AD for accounts                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Adapter Instance    = Configured connection from vROps to a specific data source                     │
+│  Adapter Kind        = Type of adapter: vSphere, NSX, AWS, etc.                                       │
+│  Test Connection     = vROps built-in check validating credentials and reachability                   │
+│  CSR                 = Certificate Signing Request; sent to CA for signing                            │
+│  VAMI SSL            = Certificate upload page in VAMI for vROps web cert                             │
+│  Policy              = Named ruleset defining alert thresholds for an object group                    │
+│  Symptom             = Single condition (e.g. CPU &gt; 90%) contributing to an alert                     │
+│  Object Group        = Collection of objects sharing a policy assignment                              │
+│  Credential Rotation = Updating stored adapter credentials after password change                      │
+│  Adapter Green       = Status showing adapter collecting without errors                               │
+│  Alert Validation    = Test that a known condition triggers the expected alert                        │
+│  Policy Inheritance  = Child groups inherit parent policy; overridden at child level                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>6. Cancel alerts only after the underlying issue is fully resolved — not as a suppression mechanism
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Maintenance Windows
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Create a maintenance schedule to suppress alerts for planned work:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```text
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Administration → Maintenance Schedules → Add Schedule
+</code></pre></div></p>
 <ul>
 <li>Name: <code>ESXi-03 Maintenance 2026-05-10</code></li>
 <li>Objects: select specific hosts, clusters, or datastores</li>
@@ -4826,20 +4815,20 @@
 <li>Navigate to <strong>Optimize → Reclaim → Oversized VMs</strong> — repeat for right-sizing candidates</li>
 <li>After reclamation, run <strong>Capacity → Recalculate</strong> to update baselines</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Query idle VMs via API</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/resources/query&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">    &quot;resourceKind&quot;: [&quot;VirtualMachine&quot;],</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">    &quot;propertyConditions&quot;: {</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">      &quot;conditions&quot;: [</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">        {&quot;key&quot;: &quot;summary|guest|mks|connectionState&quot;, &quot;operator&quot;: &quot;EQ&quot;, &quot;stringValue&quot;: &quot;connected&quot;},</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">        {&quot;key&quot;: &quot;cpu|usage_average&quot;, &quot;operator&quot;: &quot;LT&quot;, &quot;doubleValue&quot;: 5.0}</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s1">      ]</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s1">    }</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.resourceList[] | {name: .resourceKey.name, cpuAvg: .properties[&quot;cpu|usage_average&quot;]}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Query idle VMs via API</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/resources/query&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;resourceKind&quot;: [&quot;VirtualMachine&quot;],</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">    &quot;propertyConditions&quot;: {</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">      &quot;conditions&quot;: [</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">        {&quot;key&quot;: &quot;summary|guest|mks|connectionState&quot;, &quot;operator&quot;: &quot;EQ&quot;, &quot;stringValue&quot;: &quot;connected&quot;},</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">        {&quot;key&quot;: &quot;cpu|usage_average&quot;, &quot;operator&quot;: &quot;LT&quot;, &quot;doubleValue&quot;: 5.0}</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s1">      ]</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s1">    }</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.resourceList[] | {name: .resourceKey.name, cpuAvg: .properties[&quot;cpu|usage_average&quot;]}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="common-maintenance-tasks">Common Maintenance Tasks<a class="headerlink" href="#common-maintenance-tasks" title="Permanent link">&para;</a></h2>
@@ -4896,7 +4885,7 @@
 <hr />
 <h2 id="creating-an-alert-definition">Creating an Alert Definition<a class="headerlink" href="#creating-an-alert-definition" title="Permanent link">&para;</a></h2>
 <p>Custom alert definitions trigger when specific metric thresholds are breached.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Administration → Alert Settings → Alert Definitions → Add
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Administration → Alert Settings → Alert Definitions → Add
 </code></pre></div>
 <ol>
 <li>Set alert name, description, and base object type (e.g., <code>VirtualMachine</code>)</li>
@@ -4911,12 +4900,12 @@
 <li>Assign to an alert policy</li>
 </ol>
 <p>Apply the alert policy to an object group:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Administration → Alert Settings → Alert Policies → select policy → Apply to Groups
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Administration → Alert Settings → Alert Policies → select policy → Apply to Groups
 </code></pre></div>
 <hr />
 <h2 id="configuring-notification-rules">Configuring Notification Rules<a class="headerlink" href="#configuring-notification-rules" title="Permanent link">&para;</a></h2>
 <p>Alert notifications route to email, ServiceNow, or webhook:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Alerts → Notifications → Add Notification Rule
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Alerts → Notifications → Add Notification Rule
 </code></pre></div>
 <ol>
 <li>Filter: apply to alerts with Criticality = Critical targeting the <code>Production VMs</code> object group</li>
@@ -4924,25 +4913,25 @@
 <li>Set notification frequency: alert triggers once (not on every collection cycle)</li>
 </ol>
 <p>Test the notification rule by manually triggering a test alert:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Trigger a test notification</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/notifications/test&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;notificationRuleId&quot;:&quot;&lt;rule-id&gt;&quot;}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Trigger a test notification</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/notifications/test&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;notificationRuleId&quot;:&quot;&lt;rule-id&gt;&quot;}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="support-bundle-generation">Support Bundle Generation<a class="headerlink" href="#support-bundle-generation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Via UI: Administration → Support → Generate Support Bundle</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Bundle is downloaded directly from the UI</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Via CLI</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>vracli<span class="w"> </span>support<span class="w"> </span>bundle<span class="w"> </span>generate
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># The bundle is placed at:</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/storage/log/support-bundle/
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Download to local machine</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>scp<span class="w"> </span>admin@vrops-prod-01.example.local:/storage/log/support-bundle/*.zip<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Via UI: Administration → Support → Generate Support Bundle</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Bundle is downloaded directly from the UI</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Via CLI</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>vracli<span class="w"> </span>support<span class="w"> </span>bundle<span class="w"> </span>generate
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># The bundle is placed at:</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/storage/log/support-bundle/
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Download to local machine</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>scp<span class="w"> </span>admin@vrops-prod-01.example.local:/storage/log/support-bundle/*.zip<span class="w"> </span>.
 </code></pre></div>
 <p>The support bundle includes: cluster configuration, application logs, adapter logs, alert history, and system diagnostics. Required when opening a Broadcom SR.</p>
 

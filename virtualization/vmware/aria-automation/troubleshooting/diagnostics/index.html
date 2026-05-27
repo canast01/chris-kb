@@ -4302,28 +4302,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#blueprint-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Blueprint Validation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#blueprint-versioning" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Blueprint Versioning
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -4621,7 +4599,7 @@
 <h2 id="blueprints-cloud-templates">Blueprints (Cloud Templates)<a class="headerlink" href="#blueprints-cloud-templates" title="Permanent link">&para;</a></h2>
 <h3 id="blueprint-structure">Blueprint Structure<a class="headerlink" href="#blueprint-structure" title="Permanent link">&para;</a></h3>
 <p>A Cloud Template YAML has three top-level sections:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">formatVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">formatVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">inputs</span><span class="p">:</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">vmName</span><span class="p">:</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
@@ -4655,32 +4633,67 @@
 <a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">      </span><span class="nt">networkType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">existing</span>
 <a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VLAN-100-Servers</span>
 </code></pre></div>
-<h3 id="blueprint-validation">Blueprint Validation<a class="headerlink" href="#blueprint-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Validate blueprint YAML locally (requires vRA CLI)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vra-cli<span class="w"> </span>blueprint<span class="w"> </span>validate<span class="w"> </span>--file<span class="w"> </span>./blueprint.yaml
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Validate via API</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>https://&lt;vra-fqdn&gt;/blueprint/api/blueprints/validate<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-d<span class="w"> </span>@blueprint.json
-</code></pre></div>
-<h3 id="blueprint-versioning">Blueprint Versioning<a class="headerlink" href="#blueprint-versioning" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List blueprints via vRA API</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>https://&lt;vra-fqdn&gt;/blueprint/api/blueprints<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Create a new blueprint version</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>https://&lt;vra-fqdn&gt;/blueprint/api/blueprints/&lt;blueprint-id&gt;/versions<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;version&quot;: &quot;1.2&quot;, &quot;description&quot;: &quot;Added NSX segment&quot;}&#39;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Publish a version to Service Catalog</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>https://&lt;vra-fqdn&gt;/blueprint/api/blueprints/&lt;blueprint-id&gt;/versions/&lt;version&gt;/actions/publish
-</code></pre></div>
+┌──────────────────────────────────── Aria Automation — Diagnostics ────────────────────────────────────┐
+│                                                                                                       │
+│  Collect vRA logs and support bundle before engaging VMware support for complex issues.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Log Collection                │  │                Support Bundle               │   │
+│   │        kubectl logs -n prelude --all         │  │           LCM: Logscraper utility           │   │
+│   │      /var/log/vmware/vra/ on appliance       │  │       VAMI → Support → Generate bundle      │   │
+│   │       journalctl -u vra-cluster -n 500       │  │        Includes k8s pod logs + config       │   │
+│   │          ABX run history in vRA UI           │  │       Upload to VMware SR for analysis      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  API-level diagnostics: check connectivity, auth, and response codes systematically.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               API Diagnostics                │  │                DB Diagnostics               │   │
+│   │      curl -k /csp/gateway/am/api/login       │  │        psql -U postgres vra DB access       │   │
+│   │       GET /deployment/api/deployments        │  │    Check replication: pg_stat_replication   │   │
+│   │       Check 401/403/500 response codes       │  │       Check bloat: pg_stat_user_tables      │   │
+│   │       Swagger UI /vco/api/docs testing       │  │       Vacuum: VACUUM ANALYZE public.*       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRA Linux appliances · k3s Kubernetes · Postgres · vIDM · LCM logscraper                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  LCM logscraper    = LCM utility collecting logs from all Aria products into one archive              │
+│  Support bundle    = vRA-generated diagnostic archive; includes pod logs, configs, DB state           │
+│  kubectl logs --all = Collect logs from all pods across the prelude namespace at once                 │
+│  journalctl        = Linux log viewer for systemd; captures vra-cluster startup messages              │
+│  ABX run history   = Per-action execution log in vRA UI showing inputs, outputs, and errors           │
+│  Swagger UI        = /vco/api/docs and /automation-ui/api/docs; test APIs interactively               │
+│  401/403 response  = Unauthorised/forbidden; check token expiry or role assignment                    │
+│  500 response      = Internal server error; look at pod logs for stack trace                          │
+│  pg_stat_replication= Postgres view showing standby lag; high lag indicates DB issue                  │
+│  VACUUM ANALYZE    = Postgres maintenance command; reclaims space and updates query stats             │
+│  psql access       = Direct Postgres client on vRA appliance; use only for diagnostics                │
+│  VMware SR         = Support Request; opened with support bundle attached for complex issues          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Blueprint Versioning
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># List blueprints via vRA API
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl -sk -H &quot;Authorization: Bearer $TOKEN&quot; \
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  https://&lt;vra-fqdn&gt;/blueprint/api/blueprints \
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  | python3 -m json.tool
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Create a new blueprint version
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>curl -sk -X POST -H &quot;Authorization: Bearer $TOKEN&quot; \
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  https://&lt;vra-fqdn&gt;/blueprint/api/blueprints/&lt;blueprint-id&gt;/versions \
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  -H &quot;Content-Type: application/json&quot; \
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  -d &#39;{&quot;version&quot;: &quot;1.2&quot;, &quot;description&quot;: &quot;Added NSX segment&quot;}&#39;
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Publish a version to Service Catalog
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>curl -sk -X POST -H &quot;Authorization: Bearer $TOKEN&quot; \
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  https://&lt;vra-fqdn&gt;/blueprint/api/blueprints/&lt;blueprint-id&gt;/versions/&lt;version&gt;/actions/publish
+</code></pre></div></p>
 <hr />
 <h2 id="deployments">Deployments<a class="headerlink" href="#deployments" title="Permanent link">&para;</a></h2>
 <h3 id="deployment-status-values">Deployment Status Values<a class="headerlink" href="#deployment-status-values" title="Permanent link">&para;</a></h3>
@@ -4726,41 +4739,41 @@
 </tbody>
 </table>
 <h3 id="deployment-lifecycle-commands">Deployment Lifecycle Commands<a class="headerlink" href="#deployment-lifecycle-commands" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all deployments</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>https://&lt;vra-fqdn&gt;/deployment/api/deployments<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Get a specific deployment</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>https://&lt;vra-fqdn&gt;/deployment/api/deployments/&lt;deployment-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Get deployment events (full audit trail)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments/&lt;deployment-id&gt;/events&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Filter events by type</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments/&lt;deployment-id&gt;/events?eventTypes=FAILED&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all deployments</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>https://&lt;vra-fqdn&gt;/deployment/api/deployments<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Get a specific deployment</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>https://&lt;vra-fqdn&gt;/deployment/api/deployments/&lt;deployment-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Get deployment events (full audit trail)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments/&lt;deployment-id&gt;/events&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Filter events by type</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments/&lt;deployment-id&gt;/events?eventTypes=FAILED&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <h3 id="day-2-actions">Day-2 Actions<a class="headerlink" href="#day-2-actions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List available day-2 actions for a deployment</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments/&lt;deployment-id&gt;/actions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Execute a day-2 action (e.g., PowerOff)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments/&lt;deployment-id&gt;/requests&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">    &quot;actionId&quot;: &quot;Cloud.vSphere.Machine.PowerOff&quot;,</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s1">    &quot;reason&quot;: &quot;Maintenance window&quot;,</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s1">    &quot;inputs&quot;: {}</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List available day-2 actions for a deployment</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments/&lt;deployment-id&gt;/actions&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Execute a day-2 action (e.g., PowerOff)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments/&lt;deployment-id&gt;/requests&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">    &quot;actionId&quot;: &quot;Cloud.vSphere.Machine.PowerOff&quot;,</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s1">    &quot;reason&quot;: &quot;Maintenance window&quot;,</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s1">    &quot;inputs&quot;: {}</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="requests-and-catalog">Requests and Catalog<a class="headerlink" href="#requests-and-catalog" title="Permanent link">&para;</a></h2>
@@ -4807,25 +4820,25 @@
 </tbody>
 </table>
 <h3 id="request-troubleshooting-commands">Request Troubleshooting Commands<a class="headerlink" href="#request-troubleshooting-commands" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all requests</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/catalog/api/requests?page=0&amp;size=20&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Get a specific request</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/catalog/api/requests/&lt;request-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Get request events/log</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/catalog/api/requests/&lt;request-id&gt;/events&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Filter requests by status</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/catalog/api/requests?requestState=FAILED&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all requests</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/catalog/api/requests?page=0&amp;size=20&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Get a specific request</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/catalog/api/requests/&lt;request-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Get request events/log</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/catalog/api/requests/&lt;request-id&gt;/events&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Filter requests by status</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/catalog/api/requests?requestState=FAILED&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <hr />
 <h2 id="related-sections">Related Sections<a class="headerlink" href="#related-sections" title="Permanent link">&para;</a></h2>

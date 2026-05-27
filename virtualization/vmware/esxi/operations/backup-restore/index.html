@@ -4454,100 +4454,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#host-maintenance-mode-process" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Host Maintenance Mode Process
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Host Maintenance Mode Process">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pre-Checks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#entering-maintenance-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entering Maintenance Mode
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#monitoring-the-process" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Monitoring the Process
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#completing-approved-work" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Completing Approved Work
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#exiting-maintenance-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Exiting Maintenance Mode
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#post-maintenance-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Maintenance Validation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#esxi-host-configuration-backup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ESXi Host Configuration Backup
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#vm-level-backup" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4747,7 +4653,7 @@
 
 
 <h1 id="esxi-backup-restore">ESXi Backup &amp; Restore<a class="headerlink" href="#esxi-backup-restore" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ESXi Backup &amp; Restore Flow
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ESXi Backup &amp; Restore Flow
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  ESXi Host Configuration Backup                        │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ├── PowerCLI: Get-VMHostFirmware -BackupConfiguration │
@@ -4774,56 +4680,55 @@
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  └── Exit Maintenance Mode → validate reconnect        │
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>└────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="host-maintenance-mode-process">Host Maintenance Mode Process<a class="headerlink" href="#host-maintenance-mode-process" title="Permanent link">&para;</a></h2>
-<h3 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Confirm cluster has sufficient capacity to absorb workload</li>
-<li>Confirm DRS is enabled and set to at least Partially Automated</li>
-<li>Check for VMs with DRS anti-affinity or must-run-on rules</li>
-<li>Confirm vSAN evacuation setting if vSAN is in use</li>
-</ul>
-<h3 id="entering-maintenance-mode">Entering Maintenance Mode<a class="headerlink" href="#entering-maintenance-mode" title="Permanent link">&para;</a></h3>
-<ol>
-<li>In vCenter, right-click the host → <strong>Maintenance Mode</strong> → <strong>Enter Maintenance Mode</strong></li>
-<li>Select evacuation option:</li>
-<li><strong>Move powered-off and suspended VMs</strong> (standard)</li>
-<li><strong>Ensure accessibility</strong> (vSAN — leaves data accessible but does not fully evacuate)</li>
-<li><strong>Full data migration</strong> (vSAN — migrates all data off the host)</li>
-<li>Click OK and monitor the task</li>
-</ol>
-<h3 id="monitoring-the-process">Monitoring the Process<a class="headerlink" href="#monitoring-the-process" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Watch DRS task progress in Recent Tasks</li>
-<li>Confirm VMs are migrating to other hosts</li>
-<li>Check vSAN resync if full migration was selected — wait for it to complete before proceeding</li>
-</ul>
-<h3 id="completing-approved-work">Completing Approved Work<a class="headerlink" href="#completing-approved-work" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Perform hardware, firmware, or patching work as planned</li>
-<li>Do not extend beyond the approved maintenance window without notification</li>
-</ul>
-<h3 id="exiting-maintenance-mode">Exiting Maintenance Mode<a class="headerlink" href="#exiting-maintenance-mode" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Right-click the host → <strong>Maintenance Mode</strong> → <strong>Exit Maintenance Mode</strong></li>
-<li>Confirm the host reconnects and shows as Connected</li>
-<li>Wait for vSAN to rebalance if applicable</li>
-</ol>
-<h3 id="post-maintenance-validation">Post-Maintenance Validation<a class="headerlink" href="#post-maintenance-validation" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Confirm host is Connected in vCenter</li>
-<li>Confirm no new alerts on the host</li>
-<li>Confirm vSAN health is green if vSAN is used</li>
-<li>Confirm VMs are distributed as expected by DRS</li>
-<li>Confirm host hardware health in iDRAC</li>
-</ul>
-<h2 id="esxi-host-configuration-backup">ESXi Host Configuration Backup<a class="headerlink" href="#esxi-host-configuration-backup" title="Permanent link">&para;</a></h2>
-<p>Export the ESXi host configuration before any major change or on a regular schedule:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Via PowerCLI — export host configuration bundle</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Get-VMHostFirmware<span class="w"> </span>-VMHost<span class="w"> </span>&lt;esxi-host&gt;<span class="w"> </span>-BackupConfiguration<span class="w"> </span>-DestinationPath<span class="w"> </span>C:<span class="se">\b</span>ackups<span class="se">\</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Via vSphere Client</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Host → Configure → System → Security Profile → Export</span>
-</code></pre></div>
+┌────────────────────────────────────── ESXi — Backup and Restore ──────────────────────────────────────┐
+│                                                                                                       │
+│  configBundle backup, Host Profiles, and full reinstall restore procedure.                            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Config Backup (configBundle)         │  │             Host Profile Backup             │   │
+│   │          vim-cmd hostsvc/firmware/           │  │         Export profile from vCenter         │   │
+│   │         sync_config → backup_config          │  │           Includes NIC/storage/dns          │   │
+│   │          Exports .tgz configBundle           │  │          Attach to host compliance          │   │
+│   │           Schedule via cron/script           │  │          vLCM image backup included         │   │
+│   │           Store off-host (NFS/NAS)           │  │          Compare with desired state         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Backup configBundle → store safely → restore via firmware/restore_config.                            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Restore Procedure               │  │              Verification Steps             │   │
+│   │         Reinstall ESXi same version          │  │            Check vmk0 IP restored           │   │
+│   │         Upload configBundle to host          │  │          Verify vCenter reconnects          │   │
+│   │           firmware/restore_config            │  │            Check datastore mounts           │   │
+│   │           Reboot → rejoin cluster            │  │             Validate VM power-on            │   │
+│   │          Apply Host Profile if used          │  │           Confirm HA agent running          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 host, local boot media (SD/M.2), management network, NAS backup store                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  configBundle = .tgz ESXi host config archive; firmware/backup_config cmd                             │
+│  vim-cmd     = ESXi CLI tool for host service and management tasks                                    │
+│  Host Profile = vCenter policy capturing desired ESXi configuration state                             │
+│  vLCM        = vSphere Lifecycle Mgr; manages ESXi image and firmware                                 │
+│  restore_config = vim-cmd call to apply a previously saved configBundle                               │
+│  HA agent    = fdm process on ESXi; communicates with vCenter HA master                               │
+│  sync_config = vim-cmd call to flush pending config before backup                                     │
+│  NAS         = Network Attached Storage; stores configBundle files                                    │
+│  Desired state = Host Profile compliance target; re-applied after restore                             │
+│  DCUI        = Direct Console UI; local console for host configuration                                │
+│  fdm         = Fault Domain Manager; ESXi HA agent process                                            │
+│  Cluster     = group of ESXi hosts sharing HA, DRS, and vSAN resources                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a># Via vSphere Client
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a># Host → Configure → System → Security Profile → Export
+</code></pre></div></p>
 <p>The configuration bundle includes network settings, storage policies, service state, and advanced settings. It does not include VMFS datastores or VM data.</p>
 <h2 id="vm-level-backup">VM-Level Backup<a class="headerlink" href="#vm-level-backup" title="Permanent link">&para;</a></h2>
 <p>VM backup is handled by the backup solution (e.g., Veeam Backup &amp; Replication) using VMware VADP. See the <a href="../../architecture/integrations/">integration page</a> for transport mode details.</p>

@@ -4280,39 +4280,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#host-naming" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Host Naming
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bios-uefi-baseline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BIOS / UEFI Baseline
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vmkernel-adapter-layout" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VMkernel Adapter Layout
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#ntp-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4567,7 +4534,7 @@
 
 
 <h1 id="esxi-design-standards">ESXi — Design Standards<a class="headerlink" href="#esxi-design-standards" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ESXi Host Design Checklist — Standard Layout
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ESXi Host Design Checklist — Standard Layout
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Naming &amp; DNS                                            │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  └── FQDN: esxi-&lt;nn&gt;.&lt;domain&gt;  (A + PTR records)         │
@@ -4595,125 +4562,101 @@
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  NTP: 2+ servers matching vCenter NTP sources            │
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>└──────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="host-naming">Host Naming<a class="headerlink" href="#host-naming" title="Permanent link">&para;</a></h2>
-<p>All ESXi hosts use fully qualified domain names (FQDN) and must have matching forward and reverse DNS records:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Format: esxi-&lt;nn&gt;.&lt;domain&gt;
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Example: esxi-01.corp.example.com
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>         esxi-02.corp.example.com
-</code></pre></div>
-<p>The hostname set in DCUI must match the DNS A record. DNS mismatch causes certificate errors and SSL thumbprint mismatches when adding hosts to vCenter.</p>
-<hr />
-<h2 id="bios-uefi-baseline">BIOS / UEFI Baseline<a class="headerlink" href="#bios-uefi-baseline" title="Permanent link">&para;</a></h2>
-<p>Configure the following on all physical hosts before installing ESXi:</p>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Required Value</th>
-<th>Reason</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Hyperthreading</td>
-<td>Enabled</td>
-<td>Required for NUMA-aware scheduling</td>
-</tr>
-<tr>
-<td>Power Policy</td>
-<td>High Performance</td>
-<td>Prevent CPU throttling under load</td>
-</tr>
-<tr>
-<td>C-States</td>
-<td>Disabled or C1 only</td>
-<td>Reduce latency jitter for VMs</td>
-</tr>
-<tr>
-<td>IOMMU (VT-d / AMD-Vi)</td>
-<td>Enabled</td>
-<td>Required for DirectPath I/O (SR-IOV, GPU passthrough)</td>
-</tr>
-<tr>
-<td>Secure Boot</td>
-<td>Enabled</td>
-<td>Required for TPM 2.0 attestation</td>
-</tr>
-<tr>
-<td>TPM 2.0</td>
-<td>Enabled</td>
-<td>Host attestation; vSphere 7.0+ feature</td>
-</tr>
-<tr>
-<td>Serial Port</td>
-<td>Disabled</td>
-<td>Reduce attack surface</td>
-</tr>
-<tr>
-<td>PXE Boot on management NIC</td>
-<td>Disabled (unless Auto Deploy)</td>
-<td>Prevent unintended re-provision</td>
-</tr>
-<tr>
-<td>IPMI / iDRAC / iLO</td>
-<td>Enabled, on dedicated OOB NIC</td>
-<td>Out-of-band management</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="vmkernel-adapter-layout">VMkernel Adapter Layout<a class="headerlink" href="#vmkernel-adapter-layout" title="Permanent link">&para;</a></h2>
-<p>Standard vmkernel layout for cluster hosts. All adapters are configured on the vDS:</p>
-<table>
-<thead>
-<tr>
-<th>Adapter</th>
-<th>Service</th>
-<th>MTU</th>
-<th>Subnet</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vmk0</td>
-<td>Management</td>
-<td>1500</td>
-<td>Mgmt VLAN /24</td>
-</tr>
-<tr>
-<td>vmk1</td>
-<td>vMotion</td>
-<td>9000</td>
-<td>vMotion VLAN /24</td>
-</tr>
-<tr>
-<td>vmk2</td>
-<td>vSAN</td>
-<td>9000</td>
-<td>vSAN VLAN /24</td>
-</tr>
-<tr>
-<td>vmk3</td>
-<td>NFS / iSCSI</td>
-<td>9000</td>
-<td>Storage VLAN /24</td>
-</tr>
-</tbody>
-</table>
-<p>Jumbo frames (MTU 9000) require matching configuration on physical switch ports and upstream switches for storage and vMotion traffic.</p>
-<p>Verify MTU end-to-end:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;target-IP&gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># -d = don&#39;t fragment, -s = payload size (8972 = 9000 - 28 byte IP+UDP header)</span>
-</code></pre></div>
+┌─────────────────────────────────────── ESXi — Design Standards ───────────────────────────────────────┐
+│                                                                                                       │
+│  Hardware sizing, HA cluster design, and build standards for ESXi deployments.                        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Hardware Requirements             │  │                Cluster Design               │   │
+│   │           Min 2 sockets / 16 cores           │  │            Min 3 hosts for HA N+1           │   │
+│   │           256 GB RAM per prod host           │  │           Max 96 hosts per cluster          │   │
+│   │          2x 10/25 GbE NICs mgmt+VM           │  │           EVC mode per CPU family           │   │
+│   │          2x 10/25 GbE vMotion/vSAN           │  │           DRS threshold: moderate           │   │
+│   │           Boot: SD/USB/M.2 or disk           │  │           HA admission ctrl: slots          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical sizing → cluster policy → HA/DRS tuning → network teaming standard.                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Networking Standards             │  │              Storage Standards              │   │
+│   │         dvSwitch for all prod hosts          │  │            VMFS-6 on shared LUNs            │   │
+│   │            vmk0 mgmt VLAN tagged             │  │           vSAN disk group: 1 cache          │   │
+│   │           vMotion on dedicated vmk           │  │          Datastore naming standard          │   │
+│   │          NIC teaming: LACP/failover          │  │           Multipathing: RR for SAN          │   │
+│   │            MTU 9000 vSAN/vMotion             │  │            VAAI enabled on arrays           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Rack servers (2U), ToR switches (25 GbE), SAN fabric, power redundancy (2N)                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  EVC     = Enhanced vMotion Compat; masks CPU features for live migration                             │
+│  HA      = High Availability; vSphere restarts VMs after host failure                                 │
+│  DRS     = Distributed Resource Scheduler; balances CPU/mem load via vMotion                          │
+│  LACP    = Link Aggregation Control Protocol; bonds NICs for bandwidth                                │
+│  MTU     = Maximum Transmission Unit; jumbo frames (9000) for vSAN/vMotion                            │
+│  RR      = Round Robin; PSA path policy across all active storage paths                               │
+│  vmk     = VMkernel adapter; carries system traffic (mgmt/vMotion/vSAN)                               │
+│  dvSwitch= Distributed vSwitch; enforces consistent port config across hosts                          │
+│  VAAI    = vStorage API Array Integration; array offload for clone/zeroing                            │
+│  Admission ctrl = HA policy reserving capacity to restart VMs on failure                              │
+│  N+1     = cluster design with capacity to lose 1 host without VM impact                              │
+│  Slot    = HA resource unit = worst-case VM CPU+mem in cluster                                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>The hostname set in DCUI must match the DNS A record. DNS mismatch causes certificate errors and SSL thumbprint mismatches when adding hosts to vCenter.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## BIOS / UEFI Baseline
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Configure the following on all physical hosts before installing ESXi:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Setting | Required Value | Reason |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|---|---|---|
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Hyperthreading | Enabled | Required for NUMA-aware scheduling |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Power Policy | High Performance | Prevent CPU throttling under load |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| C-States | Disabled or C1 only | Reduce latency jitter for VMs |
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| IOMMU (VT-d / AMD-Vi) | Enabled | Required for DirectPath I/O (SR-IOV, GPU passthrough) |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Secure Boot | Enabled | Required for TPM 2.0 attestation |
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| TPM 2.0 | Enabled | Host attestation; vSphere 7.0+ feature |
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| Serial Port | Disabled | Reduce attack surface |
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>| PXE Boot on management NIC | Disabled (unless Auto Deploy) | Prevent unintended re-provision |
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| IPMI / iDRAC / iLO | Enabled, on dedicated OOB NIC | Out-of-band management |
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>---
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>## VMkernel Adapter Layout
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Standard vmkernel layout for cluster hosts. All adapters are configured on the vDS:
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>| Adapter | Service | MTU | Subnet |
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>|---|---|---|---|
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>| vmk0 | Management | 1500 | Mgmt VLAN /24 |
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>| vmk1 | vMotion | 9000 | vMotion VLAN /24 |
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>| vmk2 | vSAN | 9000 | vSAN VLAN /24 |
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>| vmk3 | NFS / iSCSI | 9000 | Storage VLAN /24 |
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>Jumbo frames (MTU 9000) require matching configuration on physical switch ports and upstream switches for storage and vMotion traffic.
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>Verify MTU end-to-end:
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>```bash
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>vmkping -I vmk2 -d -s 8972 &lt;target-IP&gt;
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a># -d = don&#39;t fragment, -s = payload size (8972 = 9000 - 28 byte IP+UDP header)
+</code></pre></div></p>
 <hr />
 <h2 id="ntp-configuration">NTP Configuration<a class="headerlink" href="#ntp-configuration" title="Permanent link">&para;</a></h2>
 <p>All ESXi hosts must synchronise to the same NTP sources as vCenter. Clock skew &gt; 5 minutes causes authentication failures.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check NTP status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ntp<span class="w"> </span>get
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Set NTP servers</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="o">=</span>ntp1.example.com<span class="w"> </span>--server<span class="o">=</span>ntp2.example.com<span class="w"> </span>--enabled<span class="o">=</span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check NTP status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ntp<span class="w"> </span>get
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Set NTP servers</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="o">=</span>ntp1.example.com<span class="w"> </span>--server<span class="o">=</span>ntp2.example.com<span class="w"> </span>--enabled<span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 <hr />
 <h2 id="vib-acceptance-levels">VIB Acceptance Levels<a class="headerlink" href="#vib-acceptance-levels" title="Permanent link">&para;</a></h2>
@@ -4749,11 +4692,11 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check acceptance level</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span>get
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Set minimum to VMwareAccepted</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--level<span class="o">=</span>VMwareAccepted
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check acceptance level</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span>get
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Set minimum to VMwareAccepted</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--level<span class="o">=</span>VMwareAccepted
 </code></pre></div>
 <hr />
 <h2 id="storage-path-configuration">Storage Path Configuration<a class="headerlink" href="#storage-path-configuration" title="Permanent link">&para;</a></h2>
@@ -4793,8 +4736,8 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Configure Round Robin with I/O ops limit of 1</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>psp<span class="w"> </span>roundrobin<span class="w"> </span>deviceconfig<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-d<span class="w"> </span>&lt;device-naa&gt;<span class="w"> </span>--type<span class="o">=</span>iops<span class="w"> </span>--iops<span class="o">=</span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Configure Round Robin with I/O ops limit of 1</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>psp<span class="w"> </span>roundrobin<span class="w"> </span>deviceconfig<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-d<span class="w"> </span>&lt;device-naa&gt;<span class="w"> </span>--type<span class="o">=</span>iops<span class="w"> </span>--iops<span class="o">=</span><span class="m">1</span>
 </code></pre></div>
 <hr />
 <h2 id="host-profile-baseline">Host Profile Baseline<a class="headerlink" href="#host-profile-baseline" title="Permanent link">&para;</a></h2>
@@ -4839,8 +4782,8 @@
 </tbody>
 </table>
 <p>Set shell timeout to limit exposure if left enabled:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">600</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellInteractiveTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">300</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">600</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellInteractiveTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">300</span>
 </code></pre></div>
 <hr />
 <h2 id="cluster-sizing-reference">Cluster Sizing Reference<a class="headerlink" href="#cluster-sizing-reference" title="Permanent link">&para;</a></h2>

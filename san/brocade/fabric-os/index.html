@@ -3171,56 +3171,56 @@
 Brocade Fabric OS knowledge base covering switch architecture, zoning, ISLs, ports, firmware, CLI references, health checks, scripts, and troubleshooting guides for Fibre Channel SAN environments.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────── Brocade FabricOS — Switch Operating System ──────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Brocade Fabric OS — Overview ─────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │    FabricOS: embedded OS on Brocade FC switches — manages fabric, zones, ports, MAPS alerts   │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │           CLI via SSH (admin/root); web GUI via DCFM/SANnav; REST API from FOS 8.2+           │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │        Key services: Name Server, Fabric Shortest Path First (FSPF), Zone Server, MAPS        │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │         Supports ISL trunking, D-Port diagnostics, Virtual Fabrics, and FCIP gateways         │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Core subsystems of FabricOS on every Brocade FC switch:                                            │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │       Fabric Services       │  │        Port Services        │  │        Mgmt Services        │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │         Name Server         │  │         Port config         │  │          CLI (SSH)          │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │         Zone Server         │  │          Speed/mode         │  │           REST API          │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │         FSPF routing        │  │         D-Port diag         │  │          SNMP agent         │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │         ISL trunking        │  │        Port mirroring       │  │            Syslog           │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │       MAPS thresholds       │  │          QoS/Zoning         │  │          Audit log          │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│    Fabric-wide events (login, zone activate) propagate via SW_ILS frames to all switches              │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │    Subsystem     │   CLI command    │      Function     │      Scope       │      Notes       │   │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │   Zone Server    │     cfgshow      │    Zone db mgmt   │   Fabric-wide    │  Saved in flash  │   │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │   Name Server    │      nsshow      │     WWN lookup    │    Per-switch    │  Auto-populated  │   │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │       MAPS       │     mapsshow     │  Threshold alerts │    Per-switch    │    Email/SNMP    │   │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   │    ISL trunk     │    trunkshow     │   Aggregate ISLs  │   Inter-switch   │ ICL on directors │   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │          Fabric OS (FOS): Brocade switch OS for FC SAN — zoning, routing, management          │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │           Runs on all Brocade FC switches (G630, G720, G730, X7 director platforms)           │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │             Core services: FCNS (name server), FCSM, zone management, ISL trunking            │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │         Management interfaces: CLI (SSH), REST API (FOS 8.2+), SANnav GUI integration         │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │     Fabric-wide config distribution: zone DB, fabric parameters, principal switch election    │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    Core OS services -&gt; fabric-level functions -&gt; management and integration layer                     │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │         FC Services         │  │         Fabric Layer        │  │          Management         │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │       FCNS name server      │  │         Zone DB sync        │  │         CLI via SSH         │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │      Port login (FLOGI)     │  │         ISL trunking        │  │           REST API          │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │      FC routing (FSPF)      │  │       Principal switch      │  │          SANnav GUI         │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │        FCSM security        │  │        Fabric params        │  │         SNMP/syslog         │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │       RAS/diagnostics       │  │        Domain ID mgmt       │  │          LDAP auth          │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│    Zone changes replicated across fabric; principal switch coordinates domain IDs                     │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │    Component     │       Role       │      Protocol     │     Version      │      Notes       │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │       FCNS       │   Name server    │       FC-GS       │      FOS 6+      │  Per-fabric DB   │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │       FSPF       │    FC routing    │       FC-SW       │      FOS 6+      │ Least-cost path  │   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   │     REST API     │  Mgmt interface  │       HTTPS       │     FOS 8.2+     │     JSON/XML     │   │
 <a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 <a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Physical: Brocade FC switches · HBAs in hosts · SFPs · OM4 fibre · FC directors                    │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Physical: Brocade G630/G720/G730 switches · X7-8/X7-4 directors · FC SFP optics · ISL cables       │
 <a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    Key terms:                                                                                         │
 <a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    FabricOS (FOS)  = Brocade embedded switch OS; versions 7.x, 8.x, 9.x                               │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    FSPF            = Fabric Shortest Path First; FC routing protocol analogous to OSPF                │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    Zone Server     = Fabric service holding zone DB; active config enforced in hardware               │
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    Name Server     = Tracks WWN-to-FC-address mappings; queried on device login                       │
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    MAPS            = Monitoring and Alerting Policy Suite; threshold-based health alerts              │
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    ISL trunk       = Multiple ISLs bonded for higher bandwidth between two switches                   │
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    D-Port          = Diagnostic port mode; runs optical and cable tests end-to-end                    │
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    Virtual Fabric  = Logical switch partitioning; multiple logical switches on one chassis            │
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    cfgshow         = CLI command to display zone configuration database                               │
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    nsshow          = CLI command showing Name Server entries on local switch                          │
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│    SW_ILS          = Switch Internal Link Service; fabric-wide event propagation frames               │
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│    FCIP gateway    = Extends FC fabric over IP/WAN using TCP tunnels                                  │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    Fabric OS      = Brocade proprietary OS running on all Brocade FC switch hardware                  │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    FCNS           = Fibre Channel Name Server; maps WWN to N_Port ID within the fabric                │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    FSPF           = Fabric Shortest Path First; FC link-state routing protocol                        │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    FLOGI          = Fabric Login; HBA registers with fabric and obtains FC address (FCID)             │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    FCSM           = FC Security Manager; enforces DH-CHAP switch authentication                       │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    Zone DB        = Fabric-wide zone configuration replicated to all switches in fabric               │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    ISL trunk      = Multiple ISLs bundled for bandwidth aggregation between switches                  │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    Principal switch = Elected switch managing domain ID assignments for the fabric                    │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    Domain ID      = Unique numeric identifier for each switch in the fabric (1-239)                   │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    REST API       = FOS 8.2+ HTTP management interface; JSON/XML payloads over HTTPS                  │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│    MAPS           = Monitoring and Alerting Policy Suite; FOS threshold alert engine                  │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│    portcfg        = FOS CLI command to configure port speed, mode, and behaviour                      │
 <a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>

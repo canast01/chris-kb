@@ -4388,28 +4388,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Project Configuration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#content-sharing-service-broker" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Content Sharing (Service Broker)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#approval-policies" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4679,85 +4657,78 @@
 <h2 id="configuring-ad-group-role-assignments">Configuring AD Group Role Assignments<a class="headerlink" href="#configuring-ad-group-role-assignments" title="Permanent link">&para;</a></h2>
 <p>Roles are assigned to groups (AD groups synced via VIDM), not individuals.</p>
 <p><strong>Add a group to a project:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Infrastructure → Administration → Projects → select project → Members → Add Members
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Infrastructure → Administration → Projects → select project → Members → Add Members
 </code></pre></div>
-<p>Search for the AD group by name (synced from VIDM), select a role (Owner / Member / Viewer), and save.</p>
-<table>
-<thead>
-<tr>
-<th>AD Group</th>
-<th>Project</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>GG-VRA-Platform-Admins</code></td>
-<td>(Organisation level)</td>
-<td>Administrator</td>
-</tr>
-<tr>
-<td><code>GG-APP-TEAM-LON</code></td>
-<td><code>proj-app-lon-prod</code></td>
-<td>Owner</td>
-</tr>
-<tr>
-<td><code>GG-APP-TEAM-LON-DEV</code></td>
-<td><code>proj-app-lon-prod</code></td>
-<td>Member</td>
-</tr>
-<tr>
-<td><code>GG-OPS-READONLY</code></td>
-<td>All projects</td>
-<td>Viewer</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="project-configuration">Project Configuration<a class="headerlink" href="#project-configuration" title="Permanent link">&para;</a></h2>
-<p>Projects are the primary isolation boundary in Aria Automation.</p>
-<p><strong>Create a project:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Infrastructure → Administration → Projects → New Project
-</code></pre></div>
-<p>Configure:
-- Name: <code>proj-app-lon-prod</code>
-- Description: London production application team
-- Cloud zones: add target vCenter cloud zones and NSX zones
-- Cost limits: set monthly spend limit if integrated with Aria Cost
-- Quota: set CPU, memory, and VM count limits to prevent runaway provisioning</p>
-<p><strong>Cloud zone quota example:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Resource</th>
-<th>Limit</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VMs</td>
-<td>50</td>
-</tr>
-<tr>
-<td>vCPU</td>
-<td>200</td>
-</tr>
-<tr>
-<td>Memory</td>
-<td>800 GB</td>
-</tr>
-<tr>
-<td>Storage</td>
-<td>10 TB</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="content-sharing-service-broker">Content Sharing (Service Broker)<a class="headerlink" href="#content-sharing-service-broker" title="Permanent link">&para;</a></h2>
-<p>Catalog items are shared to projects — a template not shared to a project is not visible to that project's users.</p>
-<p><strong>Share a catalog item:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Service<span class="w"> </span>Broker<span class="w"> </span>→<span class="w"> </span>Content<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>Policies<span class="w"> </span>→<span class="w"> </span>Content<span class="w"> </span>Sharing<span class="w"> </span>→<span class="w"> </span>New<span class="w"> </span>Content<span class="w"> </span>Sharing<span class="w"> </span>Policy
-</code></pre></div>
+┌────────────────────────────────── Aria Automation — Access Control ───────────────────────────────────┐
+│                                                                                                       │
+│  vRA access is governed by project membership, catalog entitlements, and approval policies.           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Roles and Permissions             │  │             Project Access Model            │   │
+│   │        System Admin: full vRA access         │  │      Project member: request+manage own     │   │
+│   │      Project Admin: manage one project       │  │     Project Admin: manage members+quotas    │   │
+│   │        Member: request catalog items         │  │     Entitlement: catalog item → project     │   │
+│   │        Viewer: read-only deployments         │  │    No cross-project visibility by default   │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Entitlements and policies control which users can request and who must approve.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Catalog Entitlements             │  │              Approval Policies              │   │
+│   │      Entitle item → user/group/project       │  │        Policy: approver group + level       │   │
+│   │     Source: published catalog items only     │  │    Mandatory for prod-tier catalog items    │   │
+│   │     Sharing: item accessible across orgs     │  │     Auto-approve: dev/test environments     │   │
+│   │      Revoke: remove entitlement record       │  │       Audit: approval decisions logged      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRA appliance · vIDM (user/group source) · AD/LDAP · Postgres (policy store)                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  System Admin      = Global vRA admin role; full access to all projects and configurations            │
+│  Project Admin     = Role scoped to one project; manages members, quotas, and entitlements            │
+│  Project member    = Can request catalog items and manage own deployments within project              │
+│  Viewer role       = Read-only access to deployment status; cannot request or modify                  │
+│  Entitlement       = Record linking a catalog item (or source) to a project or user/group             │
+│  Catalog source    = Blueprint/Terraform/ABX library shared as catalog item collection                │
+│  Approval policy   = Named rule requiring human authorisation before vRA provisions resources         │
+│  Approval level    = Single or multi-level; e.g. manager then finance for expensive items             │
+│  Auto-approve      = Policy setting for non-prod items; request proceeds without human input          │
+│  vIDM group        = AD group synced to vIDM; mapped to vRA project role                              │
+│  Cross-project     = Sharing catalog items from one project to another via entitlement                │
+│  Audit log         = vRA records who requested, who approved, and timestamps for compliance           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Configure:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- Name: `proj-app-lon-prod`
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Description: London production application team
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Cloud zones: add target vCenter cloud zones and NSX zones
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Cost limits: set monthly spend limit if integrated with Aria Cost
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- Quota: set CPU, memory, and VM count limits to prevent runaway provisioning
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>**Cloud zone quota example:**
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Resource | Limit |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|---|---|
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| VMs | 50 |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| vCPU | 200 |
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| Memory | 800 GB |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Storage | 10 TB |
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>---
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>## Content Sharing (Service Broker)
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Catalog items are shared to projects — a template not shared to a project is not visible to that project&#39;s users.
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>**Share a catalog item:**
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>```bash
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>Service Broker → Content &amp; Policies → Content Sharing → New Content Sharing Policy
+</code></pre></div></p>
 <ul>
 <li>Source: select the Assembler content source (or a git-backed content source)</li>
 <li>Target: select the project(s) to share with</li>
@@ -4767,33 +4738,33 @@
 <h2 id="approval-policies">Approval Policies<a class="headerlink" href="#approval-policies" title="Permanent link">&para;</a></h2>
 <p>Approval policies add a human approval gate before provisioning.</p>
 <p><strong>Create and assign an approval policy:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Service<span class="w"> </span>Broker<span class="w"> </span>→<span class="w"> </span>Content<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>Policies<span class="w"> </span>→<span class="w"> </span>Policies<span class="w"> </span>→<span class="w"> </span>New<span class="w"> </span>Policy<span class="w"> </span>→<span class="w"> </span>Approval<span class="w"> </span>Policy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Service<span class="w"> </span>Broker<span class="w"> </span>→<span class="w"> </span>Content<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>Policies<span class="w"> </span>→<span class="w"> </span>Policies<span class="w"> </span>→<span class="w"> </span>New<span class="w"> </span>Policy<span class="w"> </span>→<span class="w"> </span>Approval<span class="w"> </span>Policy
 </code></pre></div>
 <p>Configuration:
 - Scope: project-level (all requests in the project) or catalog item-level (specific items)
 - Approver groups: AD groups (any member can approve)
 - Auto-reject if not approved within: 5 business days</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List approval policies via API</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/policy/api/policies?type=com.vmware.policy.approval&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name: .name, scope: .scope, approvers: .definition.approvers}&#39;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># List pending approvals</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/approval/api/requests?status=PENDING&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {id: .id, requester: .requestedBy, item: .catalogItemName}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List approval policies via API</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/policy/api/policies?type=com.vmware.policy.approval&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name: .name, scope: .scope, approvers: .definition.approvers}&#39;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># List pending approvals</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/approval/api/requests?status=PENDING&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {id: .id, requester: .requestedBy, item: .catalogItemName}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="reviewing-role-assignments-via-api">Reviewing Role Assignments via API<a class="headerlink" href="#reviewing-role-assignments-via-api" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all organisation-level role assignments</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/orgs/&lt;org-id&gt;/role-assignments&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.items[] | {principal: .principal, role: .role}&#39;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># List project membership</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/project-service/api/projects/&lt;project-id&gt;/members&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.members[] | {email: .email, role: .role}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all organisation-level role assignments</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/orgs/&lt;org-id&gt;/role-assignments&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.items[] | {principal: .principal, role: .role}&#39;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># List project membership</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/project-service/api/projects/&lt;project-id&gt;/members&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.members[] | {email: .email, role: .role}&#39;</span>
 </code></pre></div>
 <p>Audit role assignments monthly — remove access for team members who have changed roles or left the organisation.</p>
 <hr />

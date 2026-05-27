@@ -4280,39 +4280,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#support-portal" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Support Portal
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#opening-a-case" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Opening a Case
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#information-to-collect" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Information to Collect
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#sla-tiers" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4523,7 +4490,7 @@
 
 
 <h1 id="esxi-escalation">ESXi Escalation<a class="headerlink" href="#esxi-escalation" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ESXi Escalation Path — Broadcom Support
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ESXi Escalation Path — Broadcom Support
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Collect Before Calling                                 │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ├── esxcli system version get  (ESXi version + build)  │
@@ -4552,130 +4519,73 @@
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  HCL check: https://compatibilityguide.broadcom.com     │
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└─────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="support-portal">Support Portal<a class="headerlink" href="#support-portal" title="Permanent link">&para;</a></h2>
-<p>Broadcom acquired VMware in 2023. All VMware product support is now handled through the Broadcom Support Portal:</p>
-<p><strong>https://support.broadcom.com</strong></p>
-<p>Log in with your Broadcom Support account (formerly VMware Customer Connect). Support contracts are attached to your Broadcom account. If your organisation has a VCPP (VMware Cloud Provider Programme) partner agreement, support may be routed through your VCPP partner.</p>
-<h2 id="opening-a-case">Opening a Case<a class="headerlink" href="#opening-a-case" title="Permanent link">&para;</a></h2>
-<p>When opening a support case for an ESXi issue, collect and provide the following information upfront to avoid back-and-forth and reduce time to first response:</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>How to Retrieve</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ESXi version and build</td>
-<td><code>vmware -v</code> on the host shell</td>
-</tr>
-<tr>
-<td>Host hardware model and serial</td>
-<td><code>esxcli hardware platform get</code></td>
-</tr>
-<tr>
-<td>vCenter version and build</td>
-<td>vSphere Client &gt; Help &gt; About</td>
-</tr>
-<tr>
-<td>Symptom description</td>
-<td>Specific error message, affected operations, time of first occurrence</td>
-</tr>
-<tr>
-<td>Affected VMs</td>
-<td>VM names, guest OS, workload type</td>
-</tr>
-<tr>
-<td>Recent changes</td>
-<td>Patches, configuration changes, hardware replacements</td>
-</tr>
-<tr>
-<td>Reproducibility</td>
-<td>Intermittent vs. consistent; steps to reproduce</td>
-</tr>
-</tbody>
-</table>
-<p>Set the correct severity when opening the case:</p>
-<table>
-<thead>
-<tr>
-<th>Severity</th>
-<th>Criteria</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>P1 — Critical</td>
-<td>Production system down, data loss risk, no workaround</td>
-</tr>
-<tr>
-<td>P2 — Major</td>
-<td>Production degraded, workaround exists</td>
-</tr>
-<tr>
-<td>P3 — Minor</td>
-<td>Non-production affected or low-impact issue</td>
-</tr>
-<tr>
-<td>P4 — Informational</td>
-<td>Questions, how-to, documentation requests</td>
-</tr>
-</tbody>
-</table>
-<h2 id="information-to-collect">Information to Collect<a class="headerlink" href="#information-to-collect" title="Permanent link">&para;</a></h2>
-<p>Generate an ESXi support bundle before contacting support. The bundle includes vmkernel logs, hostd logs, network config, storage config, and system state.</p>
-<p><strong>From ESXi shell:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vm-support<span class="w"> </span>-w<span class="w"> </span>/tmp/
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Bundle is created at /tmp/esx-&lt;hostname&gt;-&lt;timestamp&gt;.tgz</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Copy to a datastore for retrieval:</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>cp<span class="w"> </span>/tmp/esx-*.tgz<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/
-</code></pre></div>
-<p><strong>From vSphere Client:</strong></p>
-<p>vSphere Client &gt; Host &gt; Monitor &gt; System &gt; Support &gt; Generate Support Bundle</p>
-<p><strong>Log files included in the bundle:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Log</th>
-<th>Content</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>vmkernel.log</code></td>
-<td>VMkernel events, storage, network, hardware errors</td>
-</tr>
-<tr>
-<td><code>hostd.log</code></td>
-<td>Host daemon API, VM operations, configuration changes</td>
-</tr>
-<tr>
-<td><code>vpxa.log</code></td>
-<td>vCenter agent communication</td>
-</tr>
-<tr>
-<td><code>fdm.log</code></td>
-<td>vSphere HA fault domain manager</td>
-</tr>
-<tr>
-<td><code>vobd.log</code></td>
-<td>VMkernel observations and hardware events</td>
-</tr>
-<tr>
-<td><code>auth.log</code></td>
-<td>Authentication events</td>
-</tr>
-<tr>
-<td><code>shell.log</code></td>
-<td>Shell commands</td>
-</tr>
-</tbody>
-</table>
-<p>For performance issues, also collect:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># esxtop snapshot (batch mode, 60 seconds, 2-second intervals)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span><span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/esxtop.csv
-</code></pre></div>
+┌────────────────────────────────────────── ESXi — Escalation ──────────────────────────────────────────┐
+│                                                                                                       │
+│  VMware GSS escalation, support bundle collection, and severity level matrix.                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Decision              │  │             Pre-Escalation Steps            │   │
+│   │            PSOD / data loss risk             │  │            Collect support bundle           │   │
+│   │           Unexplained host failure           │  │           Document symptoms + time          │   │
+│   │          Storage APD not resolving           │  │             Capture esxtop batch            │   │
+│   │          Cluster HA not recovering           │  │          Note ESXi/vCenter version          │   │
+│   │          Suspected driver/firmware           │  │           Verify HCL status first           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Internal diagnosis → pre-escalation bundle → VMware SR → severity match.                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Severity Levels                │  │           Support Bundle Contents           │   │
+│   │           S1: prod down, data loss           │  │             /var/log/* all logs             │   │
+│   │           S2: major feature broken           │  │              vmkernel PSOD dump             │   │
+│   │           S3: degraded, workaround           │  │            Hardware config + HCL            │   │
+│   │              S4: info/question               │  │           Network config (vmknic)           │   │
+│   │           S1 = 24x7 phone support            │  │          Storage path state output          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, SAN/NAS/vSAN, vCenter appliance, management network, OOB access                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  GSS         = Global Support Services; VMware support organisation                                   │
+│  SR          = Service Request; support ticket raised via my.vmware.com                               │
+│  S1          = Severity 1; production system down; 24x7 phone response                                │
+│  S2          = Severity 2; major impact but workaround possible                                       │
+│  Support bundle = vm-support archive; upload to SR for GSS analysis                                   │
+│  PSOD dump   = memory dump from kernel crash; captured at panic time                                  │
+│  HCL         = Hardware Compatibility List; confirm before escalating                                 │
+│  vmkernel.log= primary ESXi system log; first item GSS will review                                    │
+│  esxtop batch= esxtop -b output; shows performance at time of issue                                   │
+│  my.vmware.com= VMware customer portal; SR creation and file upload                                   │
+│  Workaround  = temporary fix; allows S2 to remain S2 not S1                                           │
+│  Phone bridge= S1 SR triggers phone call from VMware engineer                                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**From vSphere Client:**
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vSphere Client &gt; Host &gt; Monitor &gt; System &gt; Support &gt; Generate Support Bundle
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>**Log files included in the bundle:**
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Log | Content |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| `vmkernel.log` | VMkernel events, storage, network, hardware errors |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| `hostd.log` | Host daemon API, VM operations, configuration changes |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| `vpxa.log` | vCenter agent communication |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| `fdm.log` | vSphere HA fault domain manager |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| `vobd.log` | VMkernel observations and hardware events |
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| `auth.log` | Authentication events |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| `shell.log` | Shell commands |
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>For performance issues, also collect:
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>```bash
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># esxtop snapshot (batch mode, 60 seconds, 2-second intervals)
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>esxtop -b -d 2 -n 30 &gt; /tmp/esxtop.csv
+</code></pre></div></p>
 <h2 id="sla-tiers">SLA Tiers<a class="headerlink" href="#sla-tiers" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

@@ -3455,47 +3455,45 @@
 
     kernel --&gt; mac --&gt; auth --&gt; audit
     fs --&gt; audit</code></pre>
-┌────────────────────────────────────────── Linux — Hardening ──────────────────────────────────────────┐
+┌────────────────────────────────────── Linux — System Hardening ───────────────────────────────────────┐
 │                                                                                                       │
-│  Linux server hardening: CIS benchmark, kernel tuning, service reduction, and audit logging.          │
+│  CIS benchmark-aligned Linux hardening: kernel, network, packages, and auditing.                      │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 OS Baseline                  │  │              Network Hardening              │   │
-│   │       Patch: auto-update critical CVEs       │  │        Firewall: default-deny inbound       │   │
-│   │       Remove unused packages/services        │  │         sshd: port 22 → custom port         │   │
-│   │            Disable root SSH login            │  │        AllowUsers: restrict SSH users       │   │
-│   │          CIS-CAT or OpenSCAP: scan           │  │        TCP wrappers: hosts.allow/deny       │   │
+│   │               Kernel Hardening               │  │              Network Hardening              │   │
+│   │           sysctl: disable IPv6 fwd           │  │             firewalld / nftables            │   │
+│   │           kernel.dmesg_restrict=1            │  │           deny all inbound default          │   │
+│   │              fs.suid_dumpable=0              │  │              TCP SYN cookies on             │   │
+│   │             kernel.yama.ptrace=1             │  │              RP filter enabled              │   │
+│   │             randomize_va_space=2             │  │           No ICMP redirect accept           │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Patch first; reduce attack surface; enforce audit trail                                            │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Kernel Parameters (sysctl)          │  │              Audit and Logging              │   │
-│   │            net.ipv4.ip_forward=0             │  │            auditd: enable at boot           │   │
-│   │          net.ipv4.tcp_syncookies=1           │  │          auditctl: add watch rules          │   │
-│   │         kernel.randomize_va_space=2          │  │           rsyslog: forward to SIEM          │   │
-│   │              fs.suid_dumpable=0              │  │         logrotate: retention policy         │   │
+│   │              Package &amp; Service               │  │              Audit &amp; Monitoring             │   │
+│   │            Remove unused packages            │  │            auditd: syscall rules            │   │
+│   │           Disable unused services            │  │            AIDE: integrity checks           │   │
+│   │          Auto-patch: dnf-automatic           │  │             logwatch / journald             │   │
+│   │            RPM GPG verify always             │  │               oscap: CIS scan               │   │
+│   │           noexec on /tmp /var/tmp            │  │            fail2ban: brute force            │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical or virtual server · Secure Boot · TPM · SIEM log destination                                │
+│  x86-64 servers · hardware firewall · TPM 2.0 · NIC with port security · physical locks               │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  CIS benchmark= Center for Internet Security Linux hardening guide                                    │
-│  OpenSCAP     = open-source SCAP scanner; checks system against policy profiles                       │
-│  sysctl       = runtime kernel parameter adjustment; persist in /etc/sysctl.d/                        │
-│  ASLR         = Address Space Layout Randomisation; randomize_va_space=2                              │
-│  SYN cookies  = mitigate TCP SYN flood; tcp_syncookies=1                                              │
-│  ip_forward   = route packets between interfaces; disable on non-routers                              │
-│  auditd       = kernel audit daemon; logs file/syscall/network events                                 │
-│  auditctl     = add/remove audit rules at runtime                                                     │
-│  rsyslog      = syslog daemon; can forward events to SIEM over TCP/TLS                                │
-│  logrotate    = manages log file rotation, compression, and retention                                 │
-│  suid_dumpable= 0 disables core dumps for SUID programs                                               │
-│  AllowUsers   = sshd_config whitelist; only listed users can SSH in                                   │
+│  CIS Benchmark= Consensus security configuration standard for OS and apps                             │
+│  ASLR        = Address Space Layout Randomization; randomize_va_space=2                               │
+│  sysctl      = Kernel runtime parameters in /proc/sys; persisted via sysctl.conf                      │
+│  AIDE        = Advanced Intrusion Detection Environment; compares file hashes                         │
+│  auditd      = Records security-relevant syscalls; stores in /var/log/audit/                          │
+│  oscap       = OpenSCAP tool; applies and reports on SCAP/CIS benchmarks                              │
+│  noexec      = Mount option preventing execution of binaries from that filesystem                     │
+│  nftables    = Modern Linux firewall framework replacing iptables                                     │
+│  fail2ban    = Bans IPs after repeated failed auth attempts via iptables/nftables                     │
+│  ptrace      = Kernel syscall for process tracing; restrict to prevent privilege esc                  │
+│  RP filter   = Reverse path filter; drops packets with spoofed source addresses                       │
+│  SYN cookie  = Defense against SYN flood DoS by encoding state in SYN-ACK                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```bash

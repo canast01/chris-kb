@@ -4301,72 +4301,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#core-components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Core Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-sequencing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Sequencing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-workflow-per-product" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Workflow (per product)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deployment-pre-requisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Deployment Pre-Requisites
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#product-version-matrix" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Product Version Matrix
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lcm-api-quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LCM API Quick Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -4559,7 +4493,7 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Aria Suite Lifecycle (LCM) is a management appliance that deploys, upgrades, and manages the entire VMware Aria product suite from a single control plane. LCM eliminates per-product upgrade complexity by orchestrating pre-checks, snapshots, binary staging, sequential node upgrades, and post-checks as a single audited workflow. All credentials and certificates are stored in the integrated <strong>Locker</strong> vault.</p>
 <h2 id="product-management-topology">Product Management Topology<a class="headerlink" href="#product-management-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
+<p><pre class="mermaid"><code>graph TB
   LCM["Aria Suite Lifecycle\n(LCM appliance)"]
   LCM --&gt; VROPS["Aria Operations"]
   LCM --&gt; VRLI["Aria Ops for Logs"]
@@ -4573,161 +4507,50 @@
   class LCM mgmt
   class VROPS,VRLI,VRA,VRNI ctrl
   class ADMIN host</code></pre>
-<h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>LCM Appliance</td>
-<td>Central orchestration, UI, REST API, Locker vault</td>
-</tr>
-<tr>
-<td>Workspace ONE Access (VIDM)</td>
-<td>Identity provider and SSO for all Aria products</td>
-</tr>
-<tr>
-<td>vRealize Easy Installer</td>
-<td>Bootstrap ISO for initial multi-product deployment</td>
-</tr>
-<tr>
-<td>NFS Share</td>
-<td>Binary repository (<code>.pak</code> files) and snapshot storage</td>
-</tr>
-<tr>
-<td>NTP Server</td>
-<td>Time synchronisation — mandatory; certificate operations fail on &gt;5s skew</td>
-</tr>
-<tr>
-<td>DNS</td>
-<td>Forward + reverse resolution required for every node FQDN</td>
-</tr>
-</tbody>
-</table>
-<h2 id="upgrade-sequencing">Upgrade Sequencing<a class="headerlink" href="#upgrade-sequencing" title="Permanent link">&para;</a></h2>
-<p>Always upgrade in this order to avoid dependency conflicts:</p>
-<ol>
-<li>Aria Suite Lifecycle (LCM itself)</li>
-<li>Workspace ONE Access (VIDM) — identity provider must be upgraded first</li>
-<li>Aria Operations for Logs</li>
-<li>Aria Operations</li>
-<li>Aria Automation</li>
-</ol>
-<h2 id="upgrade-workflow-per-product">Upgrade Workflow (per product)<a class="headerlink" href="#upgrade-workflow-per-product" title="Permanent link">&para;</a></h2>
-<ol>
-<li><strong>Pre-check</strong> — validates DNS, NTP, disk space, NFS, vCenter reachability</li>
-<li><strong>Snapshot</strong> — takes VM snapshots of all product appliances (rollback point)</li>
-<li><strong>Binary stage</strong> — copies upgrade bundle from NFS to product appliances</li>
-<li><strong>Upgrade</strong> — runs in-product upgrade agent; clustered products upgrade node by node</li>
-<li><strong>Post-check</strong> — verifies services are running and health indicators are green</li>
-<li><strong>Rollback</strong> — if post-check fails, LCM reverts to pre-upgrade snapshots</li>
-</ol>
-<h2 id="deployment-pre-requisites">Deployment Pre-Requisites<a class="headerlink" href="#deployment-pre-requisites" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Prerequisite</th>
-<th>Why Required</th>
-<th>Verification</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DNS A + PTR records for every FQDN</td>
-<td>LCM agents communicate by FQDN; PTR required for SSO</td>
-<td><code>nslookup &lt;fqdn&gt;</code> from LCM appliance</td>
-</tr>
-<tr>
-<td>NTP delta &lt; 5 seconds</td>
-<td>Certificate operations fail on time skew</td>
-<td><code>chronyc tracking</code> on LCM</td>
-</tr>
-<tr>
-<td>NFS share at <code>/data</code></td>
-<td>Stores <code>.pak</code> binary files</td>
-<td><code>df -h /data &amp;&amp; touch /data/.test</code></td>
-</tr>
-<tr>
-<td>vCenter service account</td>
-<td>LCM deploys OVAs via vCenter API</td>
-<td>Test in LCM → Settings → vCenter</td>
-</tr>
-<tr>
-<td>CA-signed certificate with full chain</td>
-<td>Locker imports require full chain</td>
-<td><code>openssl verify -CAfile chain.pem leaf.pem</code></td>
-</tr>
-<tr>
-<td>VIDM registered or deployed</td>
-<td>All Aria products use VIDM for SSO</td>
-<td><code>curl -sk https://vidm.example.local/SAAS/API/1.0/REST/system/health</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="product-version-matrix">Product Version Matrix<a class="headerlink" href="#product-version-matrix" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Product</th>
-<th>Current Version</th>
-<th>Min LCM Version</th>
-<th>EOS Date</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Aria Suite Lifecycle</td>
-<td>8.16</td>
-<td>—</td>
-<td>Nov 2026</td>
-</tr>
-<tr>
-<td>Aria Operations</td>
-<td>8.17</td>
-<td>8.14</td>
-<td>Nov 2026</td>
-</tr>
-<tr>
-<td>Aria Operations for Logs</td>
-<td>8.16</td>
-<td>8.14</td>
-<td>Nov 2026</td>
-</tr>
-<tr>
-<td>Aria Automation</td>
-<td>8.17</td>
-<td>8.14</td>
-<td>Nov 2026</td>
-</tr>
-<tr>
-<td>Workspace ONE Access</td>
-<td>23.09</td>
-<td>8.12</td>
-<td>Sep 2025</td>
-</tr>
-</tbody>
-</table>
-<h2 id="lcm-api-quick-reference">LCM API Quick Reference<a class="headerlink" href="#lcm-api-quick-reference" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># List all environments</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {name: .environmentName, health: .environmentHealth}&#39;</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Trigger upgrade</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments/&lt;env-id&gt;/products/&lt;product-id&gt;/upgrade&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;targetVersion&quot;:&quot;8.17.0&quot;,&quot;snapshotBeforeUpgrade&quot;:true}&#39;</span>
-</code></pre></div>
+┌────────────────────────────────────── How Aria Suite LCM Works ───────────────────────────────────────┐
+│                                                                                                       │
+│  Depot sync, environment creation, product deployment, and cert management in LCM.                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Depot &amp; Content                │  │            Environment Lifecycle            │   │
+│   │          Depot: online or local NFS          │  │           Create environment in UI          │   │
+│   │          Sync PAK files from depot           │  │           Associate vCenter + vIDM          │   │
+│   │           Download: vROps/vRLI/vRA           │  │           Add products one by one           │   │
+│   │          Binary stored on LCM disk           │  │          LCM runs pre-checks first          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Depot provides binaries; environments group products; LCM orchestrates deployment.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Product Deployment Flow            │  │            Certificate Management           │   │
+│   │           1. Select PAK from depot           │  │           Import cert to LCM trust          │   │
+│   │        2. LCM deploys OVA to vSphere         │  │          Assign cert to environment         │   │
+│   │          3. LCM configures product           │  │          LCM pushes cert to product         │   │
+│   │         4. Product joins environment         │  │            Rotate cert via LCM UI           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM on vSphere; vCenter for product VM deployment; NFS/S3 for depot storage                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Depot               = Content source: VMware online or local NFS with PAK files                      │
+│  PAK File            = Product Activation Key; contains binaries for deploy/upgrade                   │
+│  Environment         = LCM grouping of related products sharing vCenter and vIDM                      │
+│  Pre-check           = LCM automated validation before deployment or upgrade                          │
+│  OVA Deploy          = LCM deploys product VM from OVA via vCenter API                                │
+│  Product Config      = LCM automates post-deploy config: IP, DNS, vIDM registration                   │
+│  Cert Trust Store    = LCM internal store of trusted CA certs and product certs                       │
+│  Cert Assignment     = Linking a TLS cert to a specific product in an environment                     │
+│  Cert Rotation       = LCM-orchestrated cert replacement across all product nodes                     │
+│  vIDM Registration   = Product registration with vIDM for SSO; done by LCM                            │
+│  Logscraper          = LCM diagnostic tool collecting logs from all products                          │
+│  Content Sync        = LCM downloads and caches PAK files from online depot                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <table>
 <thead>
 <tr>

@@ -4280,17 +4280,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#naming-convention" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Naming Convention
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#pre-deployment-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4534,7 +4523,7 @@
 
 
 <h1 id="aria-suite-lifecycle-standards">Aria Suite Lifecycle — Standards<a class="headerlink" href="#aria-suite-lifecycle-standards" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  LCM Design Standards at a Glance
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  LCM Design Standards at a Glance
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Upgrade Order (strict)          Sizing (per environment)       │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌─────────────────────────┐     ┌──────────────────────────┐   │
@@ -4555,10 +4544,50 @@
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  └─────────────────────────┘                                    │
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└─────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="naming-convention">Naming Convention<a class="headerlink" href="#naming-convention" title="Permanent link">&para;</a></h2>
-<p>All LCM-managed appliances follow:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&lt;product-short&gt;-&lt;env&gt;-&lt;node#&gt;.&lt;domain&gt;
-</code></pre></div>
+┌─────────────────────────────────── Aria Suite LCM Design Standards ───────────────────────────────────┐
+│                                                                                                       │
+│  Environment sizing, product grouping, and naming standards for Aria Suite Lifecycle Manager.         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             LCM Appliance Sizing             │  │              Environment Design             │   │
+│   │         Standard: 4 vCPU / 16 GB RAM         │  │         One environment per vCenter         │   │
+│   │             100 GB disk minimum              │  │          Group products by function         │   │
+│   │        Separate from managed products        │  │           Naming: site-env-product          │   │
+│   │              NTP + DNS required              │  │          vIDM in every environment          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  LCM appliance manages products grouped in environments; naming must be consistent.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Product Grouping Standards          │  │            Certificate Standards            │   │
+│   │          vIDM: always first product          │  │           CA-signed certs for all           │   │
+│   │         vROps: analytics environment         │  │           Wildcard or per-product           │   │
+│   │          vRLI: logging environment           │  │          LCM manages cert lifecycle         │   │
+│   │         vRA: automation environment          │  │            Cert SAN matches FQDN            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM on vSphere; NFS/S3 for content library; CA for cert issuance; NTP/DNS                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  LCM                 = Aria Suite Lifecycle Manager; deploys and upgrades Aria products               │
+│  Environment         = LCM logical grouping of products sharing a vCenter and vIDM                    │
+│  vIDM                = VMware Identity Manager; SSO hub; first product in environment                 │
+│  Product             = Managed Aria component: vROps, vRLI, vRA, vRNI, etc.                           │
+│  Depot               = LCM content source: VMware Customer Connect or local NFS                       │
+│  Naming Convention   = site-env-product; ensures FQDN and DNS consistency                             │
+│  Certificate         = TLS cert managed by LCM; must match product FQDN SAN                           │
+│  SAN                 = Subject Alternative Name; cert field listing valid hostnames                   │
+│  Wildcard Cert       = *.domain.com cert covering all products in an environment                      │
+│  NTP Sync            = All LCM and product VMs must sync to same NTP source                           │
+│  Content Library     = NFS or S3 store holding PAK and OVA files for LCM                              │
+│  Pre-check           = LCM validation before deploy/upgrade: disk, DNS, certs                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <table>
 <thead>
 <tr>

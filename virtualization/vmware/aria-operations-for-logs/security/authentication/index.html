@@ -4360,17 +4360,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workspace-one-access-vidm-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workspace ONE Access (VIDM) Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#verify-ldap-authentication-from-cli" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4645,24 +4634,70 @@
 <h2 id="active-directory-ldap-configuration">Active Directory / LDAP Configuration<a class="headerlink" href="#active-directory-ldap-configuration" title="Permanent link">&para;</a></h2>
 <p>Use LDAPS (port 636) for production — plain LDAP (port 389) is not acceptable as it transmits bind credentials in cleartext.</p>
 <p><strong>Import the domain CA certificate first:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Administration → SSL → Import Certificate → paste root CA PEM
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Administration → SSL → Import Certificate → paste root CA PEM
 </code></pre></div>
-<p><strong>Configure AD:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Administration → Authentication → Active Directory → Configure
-</code></pre></div>
-<p>Settings:
-- Domain: <code>corp.local</code>
-- Primary domain controller: <code>dc01.example.local:636</code>
-- Secondary domain controller: <code>dc02.example.local:636</code> (optional, for HA)
-- Use SSL: <strong>Yes</strong>
-- Bind DN: <code>CN=svc-vrli-ldap,OU=Service Accounts,DC=corp,DC=local</code>
-- Bind password: service account password</p>
-<p>Test the connection before saving — Aria Ops for Logs performs a test LDAP bind and group search.</p>
-<hr />
-<h2 id="workspace-one-access-vidm-integration">Workspace ONE Access (VIDM) Integration<a class="headerlink" href="#workspace-one-access-vidm-integration" title="Permanent link">&para;</a></h2>
-<p>When deployed via LCM, VIDM is available as an SSO provider. For standalone deployments, configure VIDM integration manually:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Administration → Authentication → VMware Identity Manager
-</code></pre></div>
+┌────────────────────────────── Aria Operations for Logs — Authentication ──────────────────────────────┐
+│                                                                                                       │
+│  vRLI supports local auth, LDAP/AD integration, and vIDM SSO for enterprise environments.             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Authentication Methods            │  │            LDAP/AD Configuration            │   │
+│   │        Local: built-in admin account         │  │     Admin → Authentication → Active Dir     │   │
+│   │       LDAP: AD groups mapped to roles        │  │     Bind DN: service account credentials    │   │
+│   │         vIDM SSO: SAML if in LCM env         │  │        Search base: DC=corp,DC=local        │   │
+│   │      API: session token from login POST      │  │       Group filter: memberOf attribute      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  vIDM SSO is preferred in Aria Suite deployments for centralised identity management.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                vIDM SSO Flow                 │  │              Session Management             │   │
+│   │        Browser → vRLI → redirect vIDM        │  │         Session TTL: 30 min default         │   │
+│   │          vIDM validates user + MFA           │  │        Idle timeout: re-auth required       │   │
+│   │      SAML assertion → vRLI grants role       │  │          Multiple sessions: allowed         │   │
+│   │     Role derived from AD group via vIDM      │  │         Lockout: handled by vIDM/AD         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRLI appliance · AD/LDAP server · vIDM (optional SSO) · NTP (SAML timestamp)                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Local admin       = Default vRLI built-in account; change password immediately after install         │
+│  LDAP bind DN      = Service account used by vRLI to search AD; read-only permissions                 │
+│  Search base       = AD OU or domain root where vRLI searches for users and groups                    │
+│  memberOf filter   = LDAP attribute used to check which group a user belongs to                       │
+│  vIDM SSO          = SAML-based SSO; configured when vRLI is part of Aria Suite LCM env               │
+│  SAML assertion    = XML token from vIDM confirming user identity and group membership                │
+│  Session token     = Short-lived bearer token for REST API; from POST /api/v1/sessions                │
+│  Session TTL       = 30-minute inactivity timeout; re-auth required after expiry                      │
+│  MFA via vIDM      = Multi-Factor Authentication enforced at vIDM level for all Aria products         │
+│  Role from group   = vRLI maps AD group to Super Admin or User; no fine-grained RBAC                  │
+│  Lockout policy    = AD account lockout applies; managed in AD not in vRLI                            │
+│  API session       = POST /api/v1/sessions {username, password}; returns sessionId                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Settings:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- Domain: `corp.local`
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Primary domain controller: `dc01.example.local:636`
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Secondary domain controller: `dc02.example.local:636` (optional, for HA)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Use SSL: **Yes**
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- Bind DN: `CN=svc-vrli-ldap,OU=Service Accounts,DC=corp,DC=local`
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- Bind password: service account password
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Test the connection before saving — Aria Ops for Logs performs a test LDAP bind and group search.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>---
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>## Workspace ONE Access (VIDM) Integration
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>When deployed via LCM, VIDM is available as an SSO provider. For standalone deployments, configure VIDM integration manually:
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>```text
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Administration → Authentication → VMware Identity Manager
+</code></pre></div></p>
 <ul>
 <li>VMware Identity Manager FQDN: <code>vidm.example.local</code></li>
 <li>Enable redirect to VIDM login page</li>
@@ -4670,18 +4705,18 @@
 <p>After configuration, the Aria Ops for Logs login page shows a "VMware Identity Manager" button. Users authenticate via VIDM and are assigned roles based on their AD group membership (mapped in the AD group configuration).</p>
 <hr />
 <h2 id="verify-ldap-authentication-from-cli">Verify LDAP Authentication from CLI<a class="headerlink" href="#verify-ldap-authentication-from-cli" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test LDAP bind from the Aria Ops for Logs appliance</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.example.local:636<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-vrli-ldap,OU=Service Accounts,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-w<span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>sAMAccountName<span class="w"> </span>mail<span class="w"> </span>memberOf
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Test SSL connection to domain controller</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.example.local:636<span class="w"> </span>-CAfile<span class="w"> </span>/tmp/corp-ca.pem<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Verify return code|subject=&quot;</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Expected: Verify return code: 0 (ok)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test LDAP bind from the Aria Ops for Logs appliance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.example.local:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-vrli-ldap,OU=Service Accounts,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-w<span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>sAMAccountName<span class="w"> </span>mail<span class="w"> </span>memberOf
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Test SSL connection to domain controller</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.example.local:636<span class="w"> </span>-CAfile<span class="w"> </span>/tmp/corp-ca.pem<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Verify return code|subject=&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Expected: Verify return code: 0 (ok)</span>
 </code></pre></div>
 <hr />
 <h2 id="session-policies">Session Policies<a class="headerlink" href="#session-policies" title="Permanent link">&para;</a></h2>
@@ -4719,8 +4754,8 @@
 <hr />
 <h2 id="forcing-https">Forcing HTTPS<a class="headerlink" href="#forcing-https" title="Permanent link">&para;</a></h2>
 <p>Aria Ops for Logs listens on port 80 (HTTP) and 443 (HTTPS). HTTP automatically redirects to HTTPS — this is the default behaviour and should not be changed. Verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-sI<span class="w"> </span>http://vrli-prod-01.example.local/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Location:&quot;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Expected: Location: https://vrli-prod-01.example.local/</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-sI<span class="w"> </span>http://vrli-prod-01.example.local/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Location:&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Expected: Location: https://vrli-prod-01.example.local/</span>
 </code></pre></div>
 <h2 id="ensure-the-firewall-permits-inbound-tcp-443-and-tcp-80-from-admin-workstations-block-all-other-inbound-ports-except-those-required-for-log-ingestion-514-1514-9543">Ensure the firewall permits inbound TCP 443 and TCP 80 from admin workstations. Block all other inbound ports except those required for log ingestion (514, 1514, 9543).<a class="headerlink" href="#ensure-the-firewall-permits-inbound-tcp-443-and-tcp-80-from-admin-workstations-block-all-other-inbound-ports-except-those-required-for-log-ingestion-514-1514-9543" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>

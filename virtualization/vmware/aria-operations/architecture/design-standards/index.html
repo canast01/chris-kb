@@ -4579,42 +4579,86 @@
 
 
 <h1 id="aria-operations-standards">Aria Operations — Standards<a class="headerlink" href="#aria-operations-standards" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Aria Operations — Sizing and Deployment Reference
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Cluster Size Selection                             │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                     │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Extra Small  Primary only    4 vCPU / 16 GB RAM    │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│               up to 500 VMs                         │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                     │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  Small        Primary only    8 vCPU / 32 GB RAM    │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│               up to 1,500 VMs                       │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                     │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  Medium       Primary         8 vCPU / 32 GB RAM    │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│               + Replica       8 vCPU / 32 GB RAM    │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│               up to 3,500 VMs                       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                     │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Large        Primary + Replica + 2 × Data          │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│               up to 10,000 VMs                      │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                     │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  XL           Primary + Replica + 4+ × Data         │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│               10,000+ VMs                           │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└──────────────────────────┬──────────────────────────┘
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                           │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                           ▼
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>┌─────────────────────────────────────────────────────┐
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Infrastructure Requirements                        │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  ┌─────────────────────────────────────────────┐    │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  │ DNS: A + PTR for every node                 │    │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  │ NTP: drift &lt; 1 second across all nodes      │    │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  │ TLS: CA-signed cert (not self-signed)        │   │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  │ SMTP: relay configured for alert email       │   │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  │ LDAP/AD: bind account + group DNs ready     │    │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  └─────────────────────────────────────────────┘    │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                     │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Remote Collector (per remote site):                │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  2 vCPU / 4 GB RAM · connects via 4505/4506         │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>└─────────────────────────────────────────────────────┘
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Aria Operations Design Standards ───────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Node sizing, cluster topology, and policy design standards for Aria Operations (vROps).              │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │                 Node Sizing                  │  │               Cluster Topology              │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │         Small: &lt;1500 objects, 4 vCPU         │  │            Master node: always 1            │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │         Medium: &lt;5000 objects, 8vCPU         │  │           Replica: HA standby node          │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │        Large: &lt;15000 objects, 16vCPU         │  │         Data nodes: scale analytics         │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │           RAM: 32-256 GB by sizing           │  │          Remote collector: per site         │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Sizing drives node count; topology drives HA; policy design drives alert quality.                    │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │           Policy Design Standards            │  │              Storage &amp; Network              │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │         Default policy: base alerts          │  │          SSD datastore recommended          │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │         Custom policy: per workload          │  │         1 GbE min; 10 GbE preferred         │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │         Alert criticality: 1-5 scale         │  │           NFS or vSAN shared store          │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │           Symptom + recommendation           │  │          Dedicated management VLAN          │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  vROps VMs on vSphere cluster; SSD-backed NFS or vSAN datastore; management VLAN                      │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Master Node         = Primary vROps node; hosts UI, analytics, and cluster management                │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Replica Node        = Standby master; takes over if master fails for HA                              │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Data Node           = Analytics scale-out node; adds capacity for more objects                       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Remote Collector    = Lightweight VM deployed per site; forwards data to cluster                     │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Object              = Any monitored entity: VM, host, datastore, application                         │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Policy              = Named set of alert thresholds and capacity model settings                      │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Symptom             = Single condition (e.g. CPU &gt; 90%) contributing to an alert                     │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Recommendation      = Action suggested by vROps when an alert fires                                  │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Alert Criticality   = Severity 1-5 scale; 1=info, 5=critical for vROps alerts                        │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  CaSA Store          = Configuration and Support Archive; vROps internal config DB                    │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Management Pack     = Plugin extending vROps with additional adapters and dashboards                 │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Adapter             = Collection plugin; connects vROps to a specific data source                    │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Aria Operations — Sizing and Deployment Reference
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Cluster Size Selection                             │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                     │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  Extra Small  Primary only    4 vCPU / 16 GB RAM    │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│               up to 500 VMs                         │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│                                                     │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│  Small        Primary only    8 vCPU / 32 GB RAM    │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│               up to 1,500 VMs                       │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                     │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│  Medium       Primary         8 vCPU / 32 GB RAM    │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│               + Replica       8 vCPU / 32 GB RAM    │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│               up to 3,500 VMs                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                     │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  Large        Primary + Replica + 2 × Data          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│               up to 10,000 VMs                      │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                     │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  XL           Primary + Replica + 4+ × Data         │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│               10,000+ VMs                           │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>└──────────────────────────┬──────────────────────────┘
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>                           │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>                           ▼
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  Infrastructure Requirements                        │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  ┌─────────────────────────────────────────────┐    │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  │ DNS: A + PTR for every node                 │    │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  │ NTP: drift &lt; 1 second across all nodes      │    │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  │ TLS: CA-signed cert (not self-signed)        │   │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  │ SMTP: relay configured for alert email       │   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  │ LDAP/AD: bind account + group DNs ready     │    │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  └─────────────────────────────────────────────┘    │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│                                                     │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Remote Collector (per remote site):                │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  2 vCPU / 4 GB RAM · connects via 4505/4506         │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>└─────────────────────────────────────────────────────┘
+</code></pre></div></p>
 <h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

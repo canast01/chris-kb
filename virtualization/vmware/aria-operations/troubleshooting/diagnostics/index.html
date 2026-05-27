@@ -4718,6 +4718,50 @@
 
 
 <h1 id="aria-operations-diagnostics">Aria Operations — Diagnostics<a class="headerlink" href="#aria-operations-diagnostics" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── Aria Operations Diagnostics ─────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Support bundle generation, log analysis, and REST API diagnostics for vROps.                         │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │             Log File Diagnostics             │  │          REST API Diagnostic Checks         │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │            /var/log/vmware/vcops/            │  │          GET /suite-api/api/health          │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │         analytics.log: engine issues         │  │          GET /api/resources: count          │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │        collector.log: adapter errors         │  │         GET /api/alerts: active list        │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │         grep ERROR | tail to narrow          │  │         Compare before/after counts         │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Logs reveal internal errors; REST API checks confirm cluster and collection health.                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │          Support Bundle Generation           │  │             Cluster Diagnostics             │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │            SSH: vcops-support gen            │  │          VAMI: Cluster status page          │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │            VAMI: Admin &gt; Support             │  │           cluster-mgmt-cli status           │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │          Download ZIP from VAMI UI           │  │           Check node role + state           │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │               Attach to GSS SR               │  │           Verify replica heartbeat          │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  vROps cluster nodes on vSphere; SSH jump host; VAMI browser access on port 5480                      │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  analytics.log       = Engine log; check for out-of-memory or processing errors                       │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  collector.log       = Adapter log; records collection attempts and failures                          │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  vcops-support       = CLI command to generate full support bundle ZIP                                │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Support Bundle      = Compressed log + config archive; mandatory for GSS SR                          │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  GET /health         = REST endpoint; returns cluster component health summary                        │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  GET /resources      = Returns monitored object count; drop indicates issue                           │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  GET /alerts         = Returns active alert list; useful for volume diagnosis                         │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  cluster-mgmt-cli    = SSH CLI tool showing node roles and cluster join state                         │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Replica Heartbeat   = Periodic signal from replica to master; loss = HA risk                         │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  VAMI Support Page   = Browser interface to download bundle without SSH                               │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  grep ERROR          = First-pass log scan to identify exceptions quickly                             │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  GSS SR              = Support case; attach bundle and describe issue timeline                        │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="alert-tuning">Alert Tuning<a class="headerlink" href="#alert-tuning" title="Permanent link">&para;</a></h2>
 <p>Alert tuning is important because too many low-value alerts create noise.</p>
 <h3 id="good-alert-tuning-should-include">Good Alert Tuning Should Include<a class="headerlink" href="#good-alert-tuning-should-include" title="Permanent link">&para;</a></h3>

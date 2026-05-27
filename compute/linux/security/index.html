@@ -3199,37 +3199,38 @@
 
 
 <h1 id="linux-security">Linux — Security<a class="headerlink" href="#linux-security" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────── Linux — Security ───────────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── Linux — Security Overview ──────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Linux security layers: access control, authentication, encryption, and hardening.                    │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Linux security spans access control, authentication, encryption, and system hardening.               │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │        Access Control       │  │        Authentication       │  │          Hardening          │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       DAC: chmod/chown      │  │      SSH key-based auth     │  │    Patch: yum/apt update    │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │    MAC: SELinux/AppArmor    │  │     PAM: pluggable auth     │  │    Firewall: iptables/nft   │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │  sudo: privilege escalation │  │      SSSD: AD/LDAP join     │  │   CIS benchmark: baseline   │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │    ACLs: getfacl/setfacl    │  │      MFA: TOTP via PAM      │  │   auditd: syscall logging   │   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Physical or virtual server · TPM chip · UEFI Secure Boot · HSM (optional)                            │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  DAC          = Discretionary Access Control; owner sets permissions (chmod/chown)                    │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  MAC          = Mandatory Access Control; kernel enforces labels (SELinux/AppArmor)                   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  SELinux      = Security-Enhanced Linux; type enforcement, context labels                             │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  AppArmor     = path-based MAC; simpler than SELinux; default on Ubuntu/Debian                        │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  PAM          = Pluggable Authentication Modules; auth pipeline for login/sudo                        │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  SSSD         = System Security Services Daemon; integrates with AD/LDAP                              │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  sudo         = run command as another user (usually root); logged in /var/log/secure                 │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  auditd       = kernel audit subsystem; logs file access, syscalls, user actions                      │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  ACL          = Access Control List; per-user/group permissions beyond owner/group                    │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  CIS          = Center for Internet Security; publishes Linux hardening benchmarks                    │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Secure Boot  = UEFI feature verifying bootloader signature before execution                          │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  TPM          = Trusted Platform Module; hardware for key storage and measured boot                   │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│                                                                                                       │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       DAC: chmod/chown      │  │          PAM stack          │  │        CIS Benchmarks       │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │         MAC: SELinux        │  │         SSH key auth        │  │       sysctl hardening      │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │        RBAC via sudo        │  │          MFA / OTP          │  │       Minimal packages      │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │      File capabilities      │  │       LDAP / Kerberos       │  │        Kernel params        │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │        ACLs (setfacl)       │  │        Audit logging        │  │        auditd / AIDE        │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  x86-64 servers · TPM chip · hardware HSM · NIC · locked server room                                  │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                                                                                                       │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  DAC         = Discretionary Access Control; owner sets permissions on resources                      │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  MAC         = Mandatory Access Control; policy enforced by OS, overrides DAC                         │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  SELinux     = Security-Enhanced Linux; label-based MAC built into the kernel                         │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  PAM         = Pluggable Authentication Modules; auth pipeline for Linux services                     │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  capability  = Fine-grained privilege subdivision; alternative to full root access                    │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  ACL         = Access Control List; per-user/group permissions beyond rwx triplet                     │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  sudo        = Delegated privilege escalation controlled by /etc/sudoers policy                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  TPM         = Trusted Platform Module; hardware root of trust for key storage                        │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  auditd      = Linux audit daemon; records system calls and security events                           │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  AIDE        = Advanced Intrusion Detection Environment; file integrity monitor                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  CIS         = Center for Internet Security; publishes OS hardening benchmarks                        │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  sysctl      = Runtime kernel parameter tuning; /etc/sysctl.conf persists settings                    │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│                                                                                                       │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <div class="kb-grid kb-grid-3">
 

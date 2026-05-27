@@ -4291,28 +4291,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cloud-account-connectivity-failure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cloud Account Connectivity Failure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deployment-stuck-in-creating-or-deleting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Deployment Stuck in "Creating" or "Deleting"
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#abx-action-failing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4535,7 +4513,7 @@
 
 <h1 id="aria-automation-common-issues">Aria Automation — Common Issues<a class="headerlink" href="#aria-automation-common-issues" title="Permanent link">&para;</a></h1>
 <h2 id="blueprint-validation-errors">Blueprint Validation Errors<a class="headerlink" href="#blueprint-validation-errors" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Validate a blueprint via API before publishing</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Validate a blueprint via API before publishing</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">TOKEN</span><span class="o">=</span>&lt;your-token&gt;
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -4546,98 +4524,82 @@
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import yaml,sys; yaml.safe_load(open(&#39;blueprint.yaml&#39;))&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;YAML OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;YAML syntax error&quot;</span>
 </code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Error</th>
-<th>Cause</th>
-<th>Fix</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Resource type not found</code></td>
-<td>Typo in resource type or cloud account not linked to project</td>
-<td>Verify resource type and cloud account → cloud zone → project association</td>
-</tr>
-<tr>
-<td><code>Required property missing</code></td>
-<td>Mandatory field omitted in the template</td>
-<td>Add the required property from the schema reference</td>
-</tr>
-<tr>
-<td><code>Circular dependency</code></td>
-<td>Resource A depends on B which depends on A</td>
-<td>Remove circular <code>${resource...}</code> binding</td>
-</tr>
-<tr>
-<td><code>Flavor not found</code></td>
-<td>Flavor mapping missing for the target cloud zone</td>
-<td>Add flavor mapping: <strong>Infrastructure → Configure → Flavor Mappings</strong></td>
-</tr>
-<tr>
-<td><code>Image not found</code></td>
-<td>Image mapping missing for cloud zone</td>
-<td>Add image mapping: <strong>Infrastructure → Configure → Image Mappings</strong></td>
-</tr>
-<tr>
-<td><code>Network profile not found</code></td>
-<td>No network profile matched to the cloud zone</td>
-<td>Create a network profile and associate it with the cloud zone</td>
-</tr>
-<tr>
-<td><code>Cloud zone quota exceeded</code></td>
-<td>Project CPU/memory/VM limit reached</td>
-<td>Increase project quota or delete unused deployments</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="cloud-account-connectivity-failure">Cloud Account Connectivity Failure<a class="headerlink" href="#cloud-account-connectivity-failure" title="Permanent link">&para;</a></h2>
-<p>Symptoms: cloud account shows a red/warning indicator; new deployments fail at the "Provisioning" stage.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test vCenter reachability from Aria Automation appliance</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>https://vcenter-prod.example.local/rest/com/vmware/cis/session
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># 401 = reachable but auth needed (expected)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># 000 = unreachable (DNS, firewall, or vCenter down)</span>
+┌─────────────────────────────────── Aria Automation — Common Issues ───────────────────────────────────┐
+│                                                                                                       │
+│  Common vRA issues: failed requests, data collection errors, SSO failures, Orchestrator faults.       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Provisioning Failures             │  │             Integration Failures            │   │
+│   │       Network: NSX segment not created       │  │       vIDM SSO: cert mismatch/expired       │   │
+│   │      Storage: no datastore match policy      │  │       Cloud acct: data collect failed       │   │
+│   │      Quota exceeded: project limit hit       │  │      Orchestrator: endpoint unreachable     │   │
+│   │      Template invalid: YAML syntax err       │  │       ABX timeout: action &gt;5 min fails      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Check deployment events tab and pod logs for root cause before escalating.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Diagnostic Steps               │  │                 Quick Fixes                 │   │
+│   │     Deployment events tab: error detail      │  │      YAML error: vRA template validator     │   │
+│   │      kubectl logs <pod>: service error       │  │       SSO: re-import vIDM cert in VAMI      │   │
+│   │      Cloud acct: check data collect log      │  │     Quota: increase or reassign project     │   │
+│   │      vracli status: find failed service      │  │       ABX: increase timeout in action       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRA appliance · kubectl (k3s) · Postgres · vIDM · NSX manager · vCenter                              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Deployment events = vRA timeline of provisioning steps; shows which step and why it failed           │
+│  Data collection   = vRA polling cloud endpoints; failure means stale or missing resource list        │
+│  NSX segment fail  = vRA cannot create network; check NSX account connection and permissions          │
+│  Storage policy    = Placement rule matching VM to datastore; fails if no datastore matches           │
+│  Quota exceeded    = Project hit CPU/mem/count limit; admin must raise quota or delete unused         │
+│  YAML validation   = vRA cloud template syntax check; run in template editor before publish           │
+│  ABX timeout       = Default 5-minute action limit; increase for long-running tasks                   │
+│  vIDM cert mismatch= TLS cert on vIDM does not match SAN expected by vRA; update VAMI                 │
+│  Orch endpoint     = Aria Orchestrator endpoint registered in vRA; must be reachable on 443           │
+│  Pod log           = kubectl logs <pod-name> -n prelude; per-microservice diagnostic output           │
+│  vracli status     = Summary health; find which service is failing before diving into pods            │
+│  Cloud acct log    = vRA data collection history; shows timestamps and errors per account             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Resolution:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>1. Reset the service account password in vCenter/NSX/AD
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2. **Infrastructure → Connections → Cloud Accounts → Edit → update credentials → Validate**
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>3. If validation fails still: check certificate trust — the Aria Automation appliance must trust the vCenter/NSX certificate CA
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>---
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Check for expired service account password</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>iaas-gateway<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;invalid credentials\|401\|authentication&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>## Deployment Stuck in &quot;Creating&quot; or &quot;Deleting&quot;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Symptoms: a deployment stays in `CREATE_INPROGRESS` or `DELETE_INPROGRESS` for more than 30 minutes.
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Test NSX connectivity</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>https://nsx-mgr-01.example.local/api/v1/transport-nodes
-</code></pre></div>
-<p>Resolution:
-1. Reset the service account password in vCenter/NSX/AD
-2. <strong>Infrastructure → Connections → Cloud Accounts → Edit → update credentials → Validate</strong>
-3. If validation fails still: check certificate trust — the Aria Automation appliance must trust the vCenter/NSX certificate CA</p>
-<hr />
-<h2 id="deployment-stuck-in-creating-or-deleting">Deployment Stuck in "Creating" or "Deleting"<a class="headerlink" href="#deployment-stuck-in-creating-or-deleting" title="Permanent link">&para;</a></h2>
-<p>Symptoms: a deployment stays in <code>CREATE_INPROGRESS</code> or <code>DELETE_INPROGRESS</code> for more than 30 minutes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check the deployment event log (UI)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Deployments → select deployment → History tab → review events</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check IaaS Gateway logs</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>iaas-gateway<span class="w"> </span>--tail<span class="o">=</span><span class="m">300</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|timeout\|fail&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check vCenter tasks (the deployment may have completed in vCenter but Aria Automation lost the callback)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># vCenter → Recent Tasks → filter by Aria Automation service account name</span>
-</code></pre></div>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>```bash
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Check the deployment event log (UI)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Deployments → select deployment → History tab → review events
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Check IaaS Gateway logs
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>kubectl logs -n prelude -l app=iaas-gateway --tail=300 | grep -i &quot;error\|timeout\|fail&quot;
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># Check vCenter tasks (the deployment may have completed in vCenter but Aria Automation lost the callback)
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># vCenter → Recent Tasks → filter by Aria Automation service account name
+</code></pre></div></p>
 <p>If the VM was created in vCenter but the deployment is stuck:
 - Do not delete the VM from vCenter directly — this orphans the deployment record
 - Use <strong>Deployments → select deployment → Actions → Force Delete</strong> to reconcile</p>
 <hr />
 <h2 id="abx-action-failing">ABX Action Failing<a class="headerlink" href="#abx-action-failing" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View ABX action execution logs via UI</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Extensibility → Actions → select action → Last Runs → view details</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Via API</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/abx/api/resources/action-runs?limit=10&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {id: .id, status: .status, error: .errorMessage}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View ABX action execution logs via UI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Extensibility → Actions → select action → Last Runs → view details</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Via API</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/abx/api/resources/action-runs?limit=10&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {id: .id, status: .status, error: .errorMessage}&#39;</span>
 </code></pre></div>
 <p>Common ABX failures:</p>
 <table>
@@ -4674,12 +4636,12 @@
 <hr />
 <h2 id="authentication-failures-vidm">Authentication Failures (VIDM)<a class="headerlink" href="#authentication-failures-vidm" title="Permanent link">&para;</a></h2>
 <p>When users cannot log into Aria Automation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify VIDM health from Aria Automation appliance</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vidm.example.local/SAAS/API/1.0/REST/system/health
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Expected: {&quot;status&quot;: &quot;UP&quot;}</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check VIDM integration in VAMI</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># VAMI (https://vra-prod-01.example.local:5480) → Services → Identity Provider</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify VIDM health from Aria Automation appliance</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vidm.example.local/SAAS/API/1.0/REST/system/health
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Expected: {&quot;status&quot;: &quot;UP&quot;}</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check VIDM integration in VAMI</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># VAMI (https://vra-prod-01.example.local:5480) → Services → Identity Provider</span>
 </code></pre></div>
 <p>Common causes:
 - VIDM certificate changed — update the trusted certificate in Aria Automation
@@ -4688,18 +4650,18 @@
 <hr />
 <h2 id="kubernetes-pod-failures">Kubernetes Pod Failures<a class="headerlink" href="#kubernetes-pod-failures" title="Permanent link">&para;</a></h2>
 <p>When a microservice pod is crash-looping:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Identify failing pods</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Get events for the failing pod</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">&quot;Events:&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># View pod logs (current and previous instance)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>--previous
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Restart a deployment (as last resort — pods should self-heal)</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/&lt;deployment-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Identify failing pods</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Get events for the failing pod</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">&quot;Events:&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># View pod logs (current and previous instance)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>--previous
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Restart a deployment (as last resort — pods should self-heal)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/&lt;deployment-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
 </code></pre></div>
 <p>Persistent pod failures are typically caused by:
 - Disk full on the appliance: <code>df -h</code> — check <code>/</code> and <code>/var</code>

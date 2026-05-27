@@ -4338,39 +4338,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#default-password-change" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Default Password Change
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#certificate-management-via-locker" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Management via Locker
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ssh-hardening-on-the-lcm-appliance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SSH Hardening on the LCM Appliance
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#tls-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4592,7 +4559,7 @@
 
 
 <h1 id="aria-suite-lifecycle-hardening">Aria Suite Lifecycle — Hardening<a class="headerlink" href="#aria-suite-lifecycle-hardening" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  LCM Hardening Controls
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  LCM Hardening Controls
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Credentials                 SSH                             │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌──────────────────────┐    ┌──────────────────────────┐    │
@@ -4613,50 +4580,82 @@
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  VIDM for all interactive users; no shared local accounts    │
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└──────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="default-password-change">Default Password Change<a class="headerlink" href="#default-password-change" title="Permanent link">&para;</a></h2>
-<p>Change the default <code>admin@local</code> password immediately after deployment:</p>
-<ol>
-<li>LCM → Settings → Local Users → admin → <strong>Change Password</strong></li>
-<li>Use a minimum 16-character password with mixed case, numbers, and symbols</li>
-<li>Store the new password in CyberArk or an enterprise vault — never in a shared document</li>
-</ol>
-<p><strong>Locker Master Password</strong>: set during initial LCM configuration wizard. If lost, all certificates and passwords stored in the Locker become inaccessible and require full re-import from source. Store this password in an offline vault (paper or HSM), not in the same digital system as other passwords.</p>
-<hr />
-<h2 id="certificate-management-via-locker">Certificate Management via Locker<a class="headerlink" href="#certificate-management-via-locker" title="Permanent link">&para;</a></h2>
-<p>All product certificates must be managed through the LCM Locker — not by direct file replacement on appliances. Direct file replacement bypasses LCM's tracking and breaks upgrade workflows.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>LCM → Locker → Certificates → Import Certificate
-</code></pre></div>
-<ul>
-<li>Import the full chain: leaf certificate + intermediate CA(s) + root CA</li>
-<li>Private key must be unencrypted (no passphrase) in PEM format</li>
-<li>Minimum key size: RSA 4096-bit for new certificates; RSA 2048-bit is the floor for existing</li>
-<li>Certificate must include SAN for all node FQDNs and the load balancer VIP</li>
-</ul>
-<hr />
-<h2 id="ssh-hardening-on-the-lcm-appliance">SSH Hardening on the LCM Appliance<a class="headerlink" href="#ssh-hardening-on-the-lcm-appliance" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Disable password authentication for root (prefer key-based)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Edit /etc/ssh/sshd_config</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>PermitRootLogin<span class="w"> </span>prohibit-password
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>PasswordAuthentication<span class="w"> </span>no<span class="w">   </span><span class="c1"># Only if SSH keys are pre-configured</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Restrict SSH to the management network</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>AllowUsers<span class="w"> </span>admin<span class="w"> </span>root
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># OR use /etc/hosts.allow:</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>sshd:<span class="w"> </span><span class="m">10</span>.0.1.0/24<span class="w">  </span><span class="c1"># management network CIDR only</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Restart SSH after changes</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
-</code></pre></div>
+┌────────────────────────────────── Aria Suite LCM Security Hardening ──────────────────────────────────┐
+│                                                                                                       │
+│  Firewall rules, MFA via vIDM, minimal SSH access, and audit hardening for LCM.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Network Hardening               │  │              Account Hardening              │   │
+│   │         Firewall: allow TCP 443 only         │  │          vIDM SSO: no local logins          │   │
+│   │           Port 5480: mgmt net only           │  │         admin@local: vault + rotate         │   │
+│   │           SSH: jump host CIDR only           │  │            MFA enforced via vIDM            │   │
+│   │          Block direct internet LCM           │  │          Locker: strong encryption          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Restrict LCM network access; enforce vIDM MFA; audit all LCM admin actions.                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Audit Logging                 │  │               Depot Hardening               │   │
+│   │             Enable LCM audit log             │  │          Offline depot: no internet         │   │
+│   │            Forward to SIEM syslog            │  │             Verify PAK checksums            │   │
+│   │          Log: all deploy + cert ops          │  │          NFS depot: restrict mount          │   │
+│   │             Retain logs 90+ days             │  │           No direct depot internet          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM on vSphere; NSX/physical firewall; vIDM for MFA; SIEM for audit logs                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Firewall Allow-list  = TCP 443 and 5480 only; deny all other inbound to LCM                          │
+│  MFA                  = Multi-Factor Auth at vIDM; all LCM logins go through vIDM                     │
+│  Minimal SSH          = SSH only from jump host CIDR; disable for all others                          │
+│  LCM Locker           = Encrypted credential store; restrict Locker admin access                      │
+│  admin@local          = Local break-glass account; rotate every 90 days                               │
+│  Audit Log            = LCM records all deployments, upgrades, cert operations                        │
+│  SIEM Forward         = Export LCM audit syslog to centralised security tool                          │
+│  Offline Depot        = Local NFS depot; no LCM internet access needed                                │
+│  PAK Checksum         = Verify SHA hash of PAK file before upload to depot                            │
+│  NFS Restrict         = Mount depot NFS read-only; restrict to LCM IP only                            │
+│  Port 5480 Restrict   = Allow VAMI only from management network CIDR                                  │
+│  Log Retention        = 90 days minimum; match compliance policy                                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>- Import the full chain: leaf certificate + intermediate CA(s) + root CA
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- Private key must be unencrypted (no passphrase) in PEM format
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Minimum key size: RSA 4096-bit for new certificates; RSA 2048-bit is the floor for existing
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Certificate must include SAN for all node FQDNs and the load balancer VIP
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>---
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>## SSH Hardening on the LCM Appliance
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>```bash
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Disable password authentication for root (prefer key-based)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Edit /etc/ssh/sshd_config
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>PermitRootLogin prohibit-password
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>PasswordAuthentication no   # Only if SSH keys are pre-configured
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Restrict SSH to the management network
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>AllowUsers admin root
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># OR use /etc/hosts.allow:
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>sshd: 10.0.1.0/24  # management network CIDR only
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># Restart SSH after changes
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>systemctl restart sshd
+</code></pre></div></p>
 <hr />
 <h2 id="tls-configuration">TLS Configuration<a class="headerlink" href="#tls-configuration" title="Permanent link">&para;</a></h2>
 <p>Ensure LCM does not expose weak TLS versions or cipher suites:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify TLS version from an external client</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm-prod-01.example.local:443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm-prod-01.example.local:443<span class="w"> </span>-tls1<span class="w">   </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;alert&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># TLS 1.0 and 1.1 should return an alert — not supported in hardened deployments</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Check the cipher suite negotiated</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm-prod-01.example.local:443<span class="w"> </span>-tls1_3<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Cipher&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify TLS version from an external client</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm-prod-01.example.local:443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm-prod-01.example.local:443<span class="w"> </span>-tls1<span class="w">   </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;alert&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># TLS 1.0 and 1.1 should return an alert — not supported in hardened deployments</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Check the cipher suite negotiated</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm-prod-01.example.local:443<span class="w"> </span>-tls1_3<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Cipher&quot;</span>
 </code></pre></div>
 <p>LCM 8.x ships with TLS 1.2+ enabled by default. Verify no legacy cipher suites are active using an external scanner such as <code>testssl.sh</code> or Qualys SSL Labs.</p>
 <hr />

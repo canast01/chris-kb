@@ -4515,28 +4515,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#upgrade-lcm-managed-deployments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade — LCM-Managed Deployments
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-standalone-deployment-pak-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade — Standalone Deployment (PAK File)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#post-upgrade-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4781,65 +4759,86 @@
 <li>Provide the master node IP and admin credentials</li>
 <li>The worker joins the cluster automatically — verify in <strong>Administration → Cluster</strong></li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From master node — confirm all cluster members</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From master node — confirm all cluster members</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {host: .hostname, state: .state, role: .role}&#39;</span>
 </code></pre></div>
-<hr />
-<h2 id="upgrade-lcm-managed-deployments">Upgrade — LCM-Managed Deployments<a class="headerlink" href="#upgrade-lcm-managed-deployments" title="Permanent link">&para;</a></h2>
-<p>When deployed via LCM:</p>
-<ol>
-<li>LCM → Lifecycle Operations → Environments → locate Aria Ops for Logs product card</li>
-<li>Click <strong>Upgrade</strong> — LCM shows compatible target versions</li>
-<li>Review and resolve any pre-check failures</li>
-<li>Take VM snapshots (LCM does this automatically as part of the workflow)</li>
-<li>Click <strong>Start Upgrade</strong> — monitor via <strong>Lifecycle Operations → Requests</strong></li>
-</ol>
-<p>LCM upgrades worker nodes sequentially after the master — the cluster remains available during the upgrade (rolling upgrade). Ingestion may briefly slow but should not stop.</p>
-<hr />
-<h2 id="upgrade-standalone-deployment-pak-file">Upgrade — Standalone Deployment (PAK File)<a class="headerlink" href="#upgrade-standalone-deployment-pak-file" title="Permanent link">&para;</a></h2>
-<p>For environments not managed by LCM, upgrades use a <code>.pak</code> upgrade bundle.</p>
-<p><strong>Pre-upgrade checklist:</strong></p>
-<ul>
-<li>[ ] Current version and target version compatibility confirmed in Broadcom Release Notes</li>
-<li>[ ] VM snapshot taken for all cluster nodes</li>
-<li>[ ] Disk usage on all nodes &lt; 70%</li>
-<li>[ ] All nodes ACTIVE in cluster view</li>
-<li>[ ] PAK file SHA256 verified against Broadcom portal</li>
-</ul>
-<p><strong>Upgrade via UI:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Administration → Cluster → Upgrade → Upload PAK file
-</code></pre></div>
-<p>Upload the PAK file. Aria Ops for Logs validates the file and presents a pre-upgrade compatibility check. If all checks pass, click <strong>Upgrade</strong>.</p>
-<p><strong>Upgrade via CLI (scripted):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Upload PAK file to master node</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>scp<span class="w"> </span>VMware-vRealize-Log-Insight-*.pak<span class="w"> </span>admin@vrli-prod-01.example.local:/tmp/
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Initiate upgrade via API</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/upgrade/upload&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;pakFile=@/tmp/VMware-vRealize-Log-Insight-*.pak&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Monitor upgrade status</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s1">&#39;curl -sk -u &quot;admin:&lt;password&gt;&quot; \</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">  &quot;https://vrli-prod-01.example.local/api/v2/upgrade/status&quot; | jq .&#39;</span>
-</code></pre></div>
+┌─────────────────────────── Aria Operations for Logs — Install and Upgrade ────────────────────────────┐
+│                                                                                                       │
+│  vRLI is installed via OVA in vCenter; upgrades use PAK file uploaded to VAMI or LCM.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Pre-Install Requirements           │  │                Install Steps                │   │
+│   │          DNS: FQDN fwd+rev for vRLI          │  │            Deploy OVA in vCenter            │   │
+│   │          NTP: appliance time synced          │  │       VAMI first-boot: set IP/FQDN/NTP      │   │
+│   │         Storage: 1 TB+ for log data          │  │          License: activate in VAMI          │   │
+│   │       Firewall: 514/6514/443/9543 open       │  │       vSphere integration: add vCenter      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Upgrade via PAK file in VAMI or managed by LCM; take VM snapshot before upgrading.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Upgrade Process                │  │           Post-Upgrade Validation           │   │
+│   │       1. Snapshot master (and workers)       │  │           Cluster: all nodes green          │   │
+│   │       2. Upload PAK to VAMI or use LCM       │  │        Ingestion: events/sec resumed        │   │
+│   │    3. Upgrade master first, then workers     │  │        Alerts: all enabled and firing       │   │
+│   │       4. Monitor VAMI upgrade progress       │  │       SSO and forwarding: verified OK       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRLI OVA/PAK · vCenter · datastore ≥1 TB · DNS/NTP · LCM (optional managed upgrade)                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OVA               = Open Virtual Appliance; initial install format for vRLI                          │
+│  PAK file          = vRLI upgrade package; upload to VAMI Administration → Upgrade                    │
+│  VAMI              = Virtual Appliance Management Interface; configure vRLI at :9543                  │
+│  LCM managed       = Aria Suite LCM can install and upgrade vRLI in managed environments              │
+│  vSphere integration= Add vCenter to vRLI; auto-deploys vSphere agent to ESXi hosts                   │
+│  Syslog ports      = UDP/TCP 514 (plaintext) and TCP 6514 (TLS); must be open in firewall             │
+│  Upgrade sequence  = Master upgraded first; workers must be on same version as master                 │
+│  VM snapshot       = Pre-upgrade rollback point; delete after 48h if upgrade successful               │
+│  License           = vRLI license activated in VAMI; free tier: 25 OSI included                       │
+│  Post-upgrade check= Verify cluster, ingestion, alerts, and forwarding all functional                 │
+│  Worker join       = Worker nodes re-join cluster automatically after upgrade                         │
+│  OSI               = Operationally Significant Instance; licensed unit in vRLI                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Upload the PAK file. Aria Ops for Logs validates the file and presents a pre-upgrade compatibility check. If all checks pass, click **Upgrade**.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>**Upgrade via CLI (scripted):**
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Upload PAK file to master node
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>scp VMware-vRealize-Log-Insight-*.pak admin@vrli-prod-01.example.local:/tmp/
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Initiate upgrade via API
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>curl -sk -u &#39;admin:&lt;password&gt;&#39; -X POST \
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;https://vrli-prod-01.example.local/api/v2/upgrade/upload&quot; \
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  -F &quot;pakFile=@/tmp/VMware-vRealize-Log-Insight-*.pak&quot;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Monitor upgrade status
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>watch -n 30 &#39;curl -sk -u &quot;admin:&lt;password&gt;&quot; \
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  &quot;https://vrli-prod-01.example.local/api/v2/upgrade/status&quot; | jq .&#39;
+</code></pre></div></p>
 <hr />
 <h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Confirm version</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/version&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.version&#39;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Confirm cluster health</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {host: .hostname, state: .state, version: .version}&#39;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Confirm ingestion is running</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/cluster/stats&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.eventsIngested&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm version</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/version&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.version&#39;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Confirm cluster health</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {host: .hostname, state: .state, version: .version}&#39;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Confirm ingestion is running</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/cluster/stats&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.eventsIngested&#39;</span>
 </code></pre></div>
 <p>Post-upgrade checks:
 - [ ] All nodes on the same version

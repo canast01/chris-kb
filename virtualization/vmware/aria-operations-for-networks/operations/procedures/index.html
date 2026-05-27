@@ -4465,28 +4465,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#add-nsx-t-manager-data-source" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Add NSX-T Manager Data Source
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configure-netflow-export-from-a-cisco-switch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configure NetFlow Export from a Cisco Switch
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#run-microsegmentation-analysis-for-an-application" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4846,7 +4824,7 @@
 - Settings → Accounts and Data Sources → select the new vCenter → check <strong>Last Sync</strong> timestamp
 - Search bar: <code>hosts where datasource = "vCenter-ProdDC"</code> — should return ESXi hosts</p>
 <p><strong>Via REST API:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;your-token&gt;&quot;</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;your-token&gt;&quot;</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">PLATFORM</span><span class="o">=</span><span class="s2">&quot;https://aon.example.local&quot;</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/datasources/vcenter&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -4863,72 +4841,90 @@
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="s1">    &quot;enabled&quot;: true</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
-<h2 id="add-nsx-t-manager-data-source">Add NSX-T Manager Data Source<a class="headerlink" href="#add-nsx-t-manager-data-source" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Settings → Accounts and Data Sources → Add Source → NSX-T Manager</li>
-<li>Fill in:</li>
-<li><strong>Nickname</strong>: <code>NSX-T-ProdDC</code></li>
-<li><strong>NSX-T Manager IP/FQDN</strong>: <code>nsxmgr.example.local</code></li>
-<li><strong>Username</strong>: <code>svc-aon</code> (Auditor role)</li>
-<li><strong>Password</strong>: —</li>
-<li><strong>Collector</strong>: same Collector as the associated vCenter</li>
-<li>Click <strong>Validate</strong> → <strong>Submit</strong></li>
-</ol>
-<p>Post-add verification:
-- Settings → Accounts and Data Sources → NSX-T-ProdDC → Last Sync should show &lt; 15 minutes ago
-- Search bar: <code>NSX-T Logical Switches</code> or <code>segments</code> — should return segment list</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/datasources/nsxt&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s1">    &quot;nickname&quot;: &quot;NSX-T-ProdDC&quot;,</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">    &quot;credentials&quot;: {</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">      &quot;ip&quot;: &quot;nsxmgr.example.local&quot;,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">      &quot;username&quot;: &quot;svc-aon&quot;,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">      &quot;password&quot;: &quot;PASSWORD&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">    },</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">    &quot;collector_id&quot;: &quot;collector-001&quot;,</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">    &quot;enabled&quot;: true</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-</code></pre></div>
-<h2 id="configure-netflow-export-from-a-cisco-switch">Configure NetFlow Export from a Cisco Switch<a class="headerlink" href="#configure-netflow-export-from-a-cisco-switch" title="Permanent link">&para;</a></h2>
-<p>This procedure targets Cisco IOS-XE. See the Integrations page for NX-OS and Arista.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>! On the Cisco switch — replace 10.10.10.51 with your Collector VM IP
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>flow exporter AON-EXPORTER
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a> destination 10.10.10.51
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a> source GigabitEthernet0/0/0
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a> transport udp 2055
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a> export-protocol netflow-v9
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a> template data timeout 60
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>flow record AON-RECORD
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a> match ipv4 source address
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a> match ipv4 destination address
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a> match transport source-port
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a> match transport destination-port
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a> match ip protocol
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a> collect counter bytes long
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a> collect counter packets long
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a> collect timestamp sys-uptime first
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a> collect timestamp sys-uptime last
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>flow monitor AON-MONITOR
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a> exporter AON-EXPORTER
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a> cache timeout active 60
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a> cache timeout inactive 15
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a> record AON-RECORD
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>interface GigabitEthernet1/0/1
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a> ip flow monitor AON-MONITOR input
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a> ip flow monitor AON-MONITOR output
-</code></pre></div>
+┌───────────────────────────────────── vRNI Operational Procedures ─────────────────────────────────────┐
+│                                                                                                       │
+│  Add data source, certificate rotation, and credential rotation procedures for vRNI.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Add Data Source                │  │             Certificate Rotation            │   │
+│   │          1. Settings &gt; Data Sources          │  │           1. Generate new cert/CSR          │   │
+│   │            2. Select source type             │  │           2. Upload cert via VAMI           │   │
+│   │          3. Enter IP + credentials           │  │            3. Restart UI service            │   │
+│   │         4. Test + Save; verify green         │  │          4. Validate browser trust          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Data source addition and cert rotation are common day-2 operational tasks.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Credential Rotation              │  │            Application Definition           │   │
+│   │         1. Update source account pw          │  │          1. Applications &gt; Add New          │   │
+│   │         2. Edit data source in vRNI          │  │          2. Define VM/IP membership         │   │
+│   │           3. Enter new credential            │  │           3. Name tiers and groups          │   │
+│   │         4. Test + Save; verify green         │  │           4. View app in Flow Map           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRNI platform VM; vCenter and NSX as credential targets; CA for cert signing                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Data Source         = vRNI connection object; requires valid credentials to collect                  │
+│  Credential Rotation = Updating stored API/service account password in vRNI source config             │
+│  Certificate         = TLS cert for vRNI web UI; uploaded via VAMI SSL settings                       │
+│  CSR                 = Certificate Signing Request; generated for CA-signed cert flow                 │
+│  VAMI                = Virtual Appliance Management Interface; used for cert upload                   │
+│  Application         = Logical grouping of VMs/IPs in vRNI for Flow Map filtering                     │
+│  Tier                = Sub-group within an Application; e.g. Web, App, DB layers                      │
+│  Flow Map            = Visual traffic graph; Applications appear as named nodes                       │
+│  Green Status        = Data source successfully syncing; last seen &lt; 15 minutes ago                   │
+│  Service Account     = Dedicated read-only account used by vRNI for API polling                       │
+│  LDAP Credential     = Directory service account for vRNI group-based auth mapping                    │
+│  Test Connection     = vRNI built-in check that validates API reachability + auth                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Configure NetFlow Export from a Cisco Switch
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>This procedure targets Cisco IOS-XE. See the Integrations page for NX-OS and Arista.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```ios
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>! On the Cisco switch — replace 10.10.10.51 with your Collector VM IP
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>flow exporter AON-EXPORTER
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a> destination 10.10.10.51
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a> source GigabitEthernet0/0/0
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a> transport udp 2055
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a> export-protocol netflow-v9
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a> template data timeout 60
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>flow record AON-RECORD
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a> match ipv4 source address
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a> match ipv4 destination address
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a> match transport source-port
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a> match transport destination-port
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a> match ip protocol
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a> collect counter bytes long
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a> collect counter packets long
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a> collect timestamp sys-uptime first
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a> collect timestamp sys-uptime last
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>flow monitor AON-MONITOR
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a> exporter AON-EXPORTER
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a> cache timeout active 60
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a> cache timeout inactive 15
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a> record AON-RECORD
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>interface GigabitEthernet1/0/1
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a> ip flow monitor AON-MONITOR input
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a> ip flow monitor AON-MONITOR output
+</code></pre></div></p>
 <p>Verify in AON within 5–10 minutes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># AON UI search</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>flows<span class="w"> </span>where<span class="w"> </span><span class="nb">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>physical<span class="w"> </span>and<span class="w"> </span><span class="nv">time_range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;last 15 minutes&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># AON UI search</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>flows<span class="w"> </span>where<span class="w"> </span><span class="nb">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>physical<span class="w"> </span>and<span class="w"> </span><span class="nv">time_range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;last 15 minutes&quot;</span>
 </code></pre></div>
 <p>On the Collector VM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-n<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">2055</span><span class="w"> </span>-c<span class="w"> </span><span class="m">20</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-n<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">2055</span><span class="w"> </span>-c<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h2 id="run-microsegmentation-analysis-for-an-application">Run Microsegmentation Analysis for an Application<a class="headerlink" href="#run-microsegmentation-analysis-for-an-application" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-define-the-application">Step 1: Define the Application<a class="headerlink" href="#step-1-define-the-application" title="Permanent link">&para;</a></h3>
@@ -4949,8 +4945,8 @@
 - <strong>Inter-tier flows</strong>: between tiers (e.g., web → app, app → db)
 - <strong>External flows</strong>: to/from IPs outside the application definition</p>
 <p>Filter flows:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>flows where destination application = &quot;CRM-App&quot; and destination port = 3306
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>flows where source application = &quot;CRM-App&quot; and destination = internet
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>flows where destination application = &quot;CRM-App&quot; and destination port = 3306
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>flows where source application = &quot;CRM-App&quot; and destination = internet
 </code></pre></div></p>
 <h3 id="step-4-generate-recommendations">Step 4: Generate Recommendations<a class="headerlink" href="#step-4-generate-recommendations" title="Permanent link">&para;</a></h3>
 <p>Plan &amp; Assess → Micro-Segmentation → select CRM-App → View Recommendations</p>
@@ -4968,46 +4964,46 @@ Recommendations tab → Export to NSX → Select target NSX-T Manager → Confir
 1. NSX security groups with the recommended VM membership
 2. DFW rules in a new policy section named <code>AON-&lt;AppName&gt;</code></p>
 <h2 id="export-security-group-recommendations-to-nsx">Export Security Group Recommendations to NSX<a class="headerlink" href="#export-security-group-recommendations-to-nsx" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;your-token&gt;&quot;</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">PLATFORM</span><span class="o">=</span><span class="s2">&quot;https://aon.example.local&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Get application ID</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">APP_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/groups/applications&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s2">import sys,json</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s2">for a in json.load(sys.stdin).get(&#39;results&#39;,[]):</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s2">    if a.get(&#39;name&#39;) == &#39;CRM-App&#39;:</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s2">        print(a[&#39;entity_id&#39;])</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s2">&quot;</span><span class="k">)</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;App ID: </span><span class="nv">$APP_ID</span><span class="s2">&quot;</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Get NSX-T data source ID</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="nv">NSX_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/datasources&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="s2">import sys,json</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="s2">for d in json.load(sys.stdin).get(&#39;results&#39;,[]):</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="s2">    if &#39;NSX&#39; in d.get(&#39;datasource_type&#39;,&#39;&#39;) and d.get(&#39;enabled&#39;):</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="s2">        print(d[&#39;entity_id&#39;])</span>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="s2">        break</span>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="s2">&quot;</span><span class="k">)</span>
-<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>
-<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;NSX DS ID: </span><span class="nv">$NSX_ID</span><span class="s2">&quot;</span>
-<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>
-<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="c1"># Push recommendations to NSX</span>
-<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/applications/</span><span class="si">${</span><span class="nv">APP_ID</span><span class="si">}</span><span class="s2">/security-groups/export&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;nsx_manager_id\&quot;: \&quot;</span><span class="si">${</span><span class="nv">NSX_ID</span><span class="si">}</span><span class="s2">\&quot;}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;your-token&gt;&quot;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">PLATFORM</span><span class="o">=</span><span class="s2">&quot;https://aon.example.local&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Get application ID</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nv">APP_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/groups/applications&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s2">import sys,json</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s2">for a in json.load(sys.stdin).get(&#39;results&#39;,[]):</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s2">    if a.get(&#39;name&#39;) == &#39;CRM-App&#39;:</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s2">        print(a[&#39;entity_id&#39;])</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s2">&quot;</span><span class="k">)</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;App ID: </span><span class="nv">$APP_ID</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Get NSX-T data source ID</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="nv">NSX_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/datasources&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="s2">import sys,json</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="s2">for d in json.load(sys.stdin).get(&#39;results&#39;,[]):</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="s2">    if &#39;NSX&#39; in d.get(&#39;datasource_type&#39;,&#39;&#39;) and d.get(&#39;enabled&#39;):</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="s2">        print(d[&#39;entity_id&#39;])</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="s2">        break</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="s2">&quot;</span><span class="k">)</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;NSX DS ID: </span><span class="nv">$NSX_ID</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="c1"># Push recommendations to NSX</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/applications/</span><span class="si">${</span><span class="nv">APP_ID</span><span class="si">}</span><span class="s2">/security-groups/export&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;nsx_manager_id\&quot;: \&quot;</span><span class="si">${</span><span class="nv">NSX_ID</span><span class="si">}</span><span class="s2">\&quot;}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <h2 id="create-a-saved-search-alert">Create a Saved Search / Alert<a class="headerlink" href="#create-a-saved-search-alert" title="Permanent link">&para;</a></h2>
 <h3 id="saved-search">Saved Search<a class="headerlink" href="#saved-search" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Enter a search query in the search bar:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>flows where destination port = 22 and flow type = North-South
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>flows where destination port = 22 and flow type = North-South
 </code></pre></div></li>
 <li>Click <strong>Save</strong> → enter a name: <code>External-SSH-Flows</code></li>
 <li>Saved searches appear under Home → Saved Searches</li>
@@ -5059,13 +5055,13 @@ Recommendations tab → Export to NSX → Select target NSX-T Manager → Confir
 - Recommended remediation actions</p>
 <p>Export the report: Reports → Download PDF or CSV.</p>
 <p><strong>Via API (compliance checks):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/compliance/check&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="s1">    &quot;compliance_template&quot;: &quot;PCI_DSS&quot;,</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s1">    &quot;scope&quot;: {&quot;application_id&quot;: &quot;application-12345&quot;}</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/compliance/check&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="s1">    &quot;compliance_template&quot;: &quot;PCI_DSS&quot;,</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="s1">    &quot;scope&quot;: {&quot;application_id&quot;: &quot;application-12345&quot;}</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <h2 id="decommission-a-collector">Decommission a Collector<a class="headerlink" href="#decommission-a-collector" title="Permanent link">&para;</a></h2>
 <p>When removing a site or replacing a Collector VM:</p>
@@ -5081,27 +5077,27 @@ Recommendations tab → Export to NSX → Select target NSX-T Manager → Confir
 <ol>
 <li><strong>Power off and delete the Collector VM</strong> from vCenter.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify no data sources remain assigned to the Collector being decommissioned</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">COLLECTOR_ID</span><span class="o">=</span><span class="s2">&quot;collector-001&quot;</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/datasources&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="s2">import sys,json</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="s2">for d in json.load(sys.stdin).get(&#39;results&#39;,[]):</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="s2">    if d.get(&#39;collector_id&#39;) == &#39;</span><span class="si">${</span><span class="nv">COLLECTOR_ID</span><span class="si">}</span><span class="s2">&#39;:</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="s2">        print(f\&quot;WARNING: {d.get(&#39;nickname&#39;)} still assigned to this collector\&quot;)</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify no data sources remain assigned to the Collector being decommissioned</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">COLLECTOR_ID</span><span class="o">=</span><span class="s2">&quot;collector-001&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/datasources&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s2">import sys,json</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s2">for d in json.load(sys.stdin).get(&#39;results&#39;,[]):</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s2">    if d.get(&#39;collector_id&#39;) == &#39;</span><span class="si">${</span><span class="nv">COLLECTOR_ID</span><span class="si">}</span><span class="s2">&#39;:</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s2">        print(f\&quot;WARNING: {d.get(&#39;nickname&#39;)} still assigned to this collector\&quot;)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="s2">&quot;</span>
 </code></pre></div>
 <h2 id="force-data-source-re-sync">Force Data Source Re-Sync<a class="headerlink" href="#force-data-source-re-sync" title="Permanent link">&para;</a></h2>
 <p>If a data source is stale and waiting for the next polling interval:</p>
 <p>Settings → Accounts and Data Sources → select source → Actions → Sync Now</p>
 <p>Via API:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">DS_ID</span><span class="o">=</span><span class="s2">&quot;datasource-vcenter-001&quot;</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/datasources/</span><span class="si">${</span><span class="nv">DS_ID</span><span class="si">}</span><span class="s2">/sync&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">DS_ID</span><span class="o">=</span><span class="s2">&quot;datasource-vcenter-001&quot;</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/datasources/</span><span class="si">${</span><span class="nv">DS_ID</span><span class="si">}</span><span class="s2">/sync&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 
 

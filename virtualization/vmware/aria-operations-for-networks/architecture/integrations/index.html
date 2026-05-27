@@ -4291,28 +4291,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#nsx-v-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NSX-V Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vcenter-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vCenter Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#physical-switch-integration-netflowipfix" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4674,7 +4652,7 @@
 - Username / Password (dedicated read-only account)
 - Nickname for display in AON UI</p>
 <p><strong>Minimum NSX-T role required:</strong> Assign the built-in <code>Auditor</code> role to the service account. This provides read-only access to DFW rules, security groups, segments, and transport nodes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify NSX-T API connectivity from Collector VM</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify NSX-T API connectivity from Collector VM</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;svc-aon:PASSWORD&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>https://nsxmgr.example.local/api/v1/cluster<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;HTTP %{http_code}\n&quot;</span>
@@ -4685,184 +4663,174 @@
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>https://nsxmgr.example.local/policy/api/v1/infra/tier-0s<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;HTTP %{http_code}\n&quot;</span>
 </code></pre></div>
-<h2 id="nsx-v-integration">NSX-V Integration<a class="headerlink" href="#nsx-v-integration" title="Permanent link">&para;</a></h2>
-<p>NSX-V 6.4 is supported via the NSX-V Manager REST API. Add NSX-V Manager as a separate data source.</p>
-<p>Data collected: logical switches, distributed logical routers, ESGs, DFW sections/rules, security groups, IP sets, MAC sets.</p>
-<p>NSX-V is end-of-life; AON support for NSX-V may not be included in AON 6.13+. Verify compatibility on the VMware Interoperability Matrix.</p>
-<h2 id="vcenter-integration">vCenter Integration<a class="headerlink" href="#vcenter-integration" title="Permanent link">&para;</a></h2>
-<p>The Collector polls vCenter via the vSphere SOAP/REST API every 10 minutes.</p>
-<p><strong>Data pulled from vCenter:</strong></p>
-<table>
-<thead>
-<tr>
-<th>vSphere Object</th>
-<th>Data Collected</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Datacenter</td>
-<td>Hierarchy/naming context</td>
-</tr>
-<tr>
-<td>Cluster</td>
-<td>HA/DRS membership, resource pool tree</td>
-</tr>
-<tr>
-<td>ESXi Host</td>
-<td>Version, vSwitch/vDS NIC config, pNIC adapters</td>
-</tr>
-<tr>
-<td>Virtual Machine</td>
-<td>Name, UUID, power state, guest OS, Tools IP</td>
-</tr>
-<tr>
-<td>Network Adapter (vNIC)</td>
-<td>MAC address, portgroup attachment, driver</td>
-</tr>
-<tr>
-<td>Distributed Virtual Switch</td>
-<td>vDS UUID, portgroup names, MTU, LACP</td>
-</tr>
-<tr>
-<td>Distributed Port Group</td>
-<td>VLAN ID, teaming policy, IPFIX enabled flag</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Minimum vCenter privileges</strong> for the AON service account:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>System.Anonymous
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>System.Read
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>System.View
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Global.Diagnostics
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Host.Config.NetFlow
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Network.Assign
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>VirtualMachine.Interact.GuestControl
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Datastore.Browse
-</code></pre></div>
-<p>The built-in <strong>Read-Only</strong> role at the vCenter root object covers most of these. Add <code>Host.Config.NetFlow</code> if AON will manage IPFIX configuration push to ESXi hosts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test vCenter API access from Collector</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://vcenter.example.local/rest/com/vmware/cis/session<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;svc-aon@vsphere.local:PASSWORD&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;HTTP %{http_code}\n&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Expected: HTTP 200 with session token in response body</span>
-</code></pre></div>
+┌────────────────────────────────────────── vRNI Integrations ──────────────────────────────────────────┐
+│                                                                                                       │
+│  NSX-T, vCenter, AWS/Azure, Splunk, and ServiceNow integrations for vRNI.                             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             VMware Integrations              │  │              Cloud Integrations             │   │
+│   │           NSX-T: IPFIX + DFW rules           │  │           AWS: VPC Flow Logs + IAM          │   │
+│   │         vCenter: VM inventory + tags         │  │             Azure: NSG flow logs            │   │
+│   │           vRNI API → vROps metrics           │  │            GCP: VPC flow support            │   │
+│   │           vIDM: SSO authentication           │  │          Cloud: read-only IAM role          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  VMware and cloud sources feed flows; 3rd-party tools consume vRNI alerts and data.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           SIEM / ITSM Integration            │  │           Physical Network Sources          │   │
+│   │          Splunk: syslog / REST push          │  │           Cisco: SNMP + NetFlow v9          │   │
+│   │          ServiceNow: alert webhook           │  │             Arista: IPFIX + eAPI            │   │
+│   │           Email: SMTP alert notify           │  │           Dell/Brocade: SNMP poll           │   │
+│   │          REST API: external queries          │  │          Palo Alto: firewall flows          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRNI platform + collectors on vSphere; physical switches and firewalls as flow sources               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  NSX-T Data Source   = vRNI connection using NSX API credentials for DFW rules + IPFIX                │
+│  vCenter Data Source = vRNI connection using vCenter API for VM inventory and tags                    │
+│  VPC Flow Logs       = AWS/Azure cloud flow records ingested via cloud data source type               │
+│  SNMP                = Protocol used to poll physical switch interface stats and topology             │
+│  NetFlow v9          = Cisco flow export protocol version; widely supported by switches               │
+│  IPFIX               = RFC 7011 standard flow export; used by NSX-T and modern hardware               │
+│  Splunk Integration  = vRNI pushes alerts via syslog or REST webhook to Splunk HEC                    │
+│  ServiceNow Webhook  = HTTP POST from vRNI alert to ServiceNow event intake endpoint                  │
+│  vIDM SSO            = VMware Identity Manager; federated login for vRNI web console                  │
+│  REST API            = vRNI northbound API for external tools to query flows and entities             │
+│  IAM Role            = Cloud read-only role allowing vRNI to fetch VPC/NSG flow logs                  │
+│  eAPI                = Arista EOS API used by vRNI for topology and flow collection                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>The built-in **Read-Only** role at the vCenter root object covers most of these. Add `Host.Config.NetFlow` if AON will manage IPFIX configuration push to ESXi hosts.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Test vCenter API access from Collector
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl -k https://vcenter.example.local/rest/com/vmware/cis/session \
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  -X POST -u &#39;svc-aon@vsphere.local:PASSWORD&#39; \
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  -o /dev/null -w &quot;HTTP %{http_code}\n&quot;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Expected: HTTP 200 with session token in response body
+</code></pre></div></p>
 <h2 id="physical-switch-integration-netflowipfix">Physical Switch Integration — NetFlow/IPFIX<a class="headerlink" href="#physical-switch-integration-netflowipfix" title="Permanent link">&para;</a></h2>
 <h3 id="cisco-ios-xe-netflow-v9">Cisco IOS-XE — NetFlow v9<a class="headerlink" href="#cisco-ios-xe-netflow-v9" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>! Step 1: Define the exporter
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>flow exporter AON-EXPORTER
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a> destination 10.10.10.50
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a> source GigabitEthernet0/0/0
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a> transport udp 2055
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a> export-protocol netflow-v9
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a> template data timeout 60
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a> option interface-table timeout 60
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a> option application-table timeout 60
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>!
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>! Step 2: Define a flow record
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>flow record AON-RECORD
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a> match ipv4 source address
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a> match ipv4 destination address
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a> match transport source-port
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a> match transport destination-port
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a> match ip protocol
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a> match ip tos
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a> match interface input
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a> collect counter bytes long
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a> collect counter packets long
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a> collect timestamp sys-uptime first
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a> collect timestamp sys-uptime last
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a> collect transport tcp flags
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>!
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>! Step 3: Define the flow monitor
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>flow monitor AON-MONITOR
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a> exporter AON-EXPORTER
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a> cache timeout active 60
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a> cache timeout inactive 15
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a> record AON-RECORD
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>!
-<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>! Step 4: Apply to uplink/access interfaces
-<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>interface GigabitEthernet1/0/1
-<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a> ip flow monitor AON-MONITOR input
-<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a> ip flow monitor AON-MONITOR output
-<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>!
-<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>! Verification
-<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>show flow exporter AON-EXPORTER statistics
-<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>show flow monitor AON-MONITOR cache
-<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>show flow monitor AON-MONITOR statistics
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>! Step 1: Define the exporter
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>flow exporter AON-EXPORTER
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a> destination 10.10.10.50
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a> source GigabitEthernet0/0/0
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a> transport udp 2055
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a> export-protocol netflow-v9
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a> template data timeout 60
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a> option interface-table timeout 60
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a> option application-table timeout 60
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>!
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>! Step 2: Define a flow record
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>flow record AON-RECORD
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a> match ipv4 source address
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a> match ipv4 destination address
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a> match transport source-port
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a> match transport destination-port
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a> match ip protocol
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a> match ip tos
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a> match interface input
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a> collect counter bytes long
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a> collect counter packets long
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a> collect timestamp sys-uptime first
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a> collect timestamp sys-uptime last
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a> collect transport tcp flags
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>!
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>! Step 3: Define the flow monitor
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>flow monitor AON-MONITOR
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a> exporter AON-EXPORTER
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a> cache timeout active 60
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a> cache timeout inactive 15
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a> record AON-RECORD
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>!
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>! Step 4: Apply to uplink/access interfaces
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>interface GigabitEthernet1/0/1
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a> ip flow monitor AON-MONITOR input
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a> ip flow monitor AON-MONITOR output
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>!
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>! Verification
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>show flow exporter AON-EXPORTER statistics
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>show flow monitor AON-MONITOR cache
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>show flow monitor AON-MONITOR statistics
 </code></pre></div>
 <h3 id="cisco-nx-os-netflow-v9">Cisco NX-OS — NetFlow v9<a class="headerlink" href="#cisco-nx-os-netflow-v9" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>feature netflow
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>flow exporter AON-EXPORTER
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  destination 10.10.10.50 use-vrf management
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  source mgmt0
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  transport udp 2055
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  version 9
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    template data timeout 60
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    option interface-table timeout 60
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>flow record AON-RECORD
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  match ipv4 source address
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  match ipv4 destination address
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  match transport source-port
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  match transport destination-port
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  match ip protocol
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>  collect counter bytes long
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>  collect counter packets long
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>  collect timestamp sys-uptime first
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>  collect timestamp sys-uptime last
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>flow monitor AON-MONITOR
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>  record AON-RECORD
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>  exporter AON-EXPORTER
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>  cache timeout active 60
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>  cache timeout inactive 15
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>interface Ethernet1/1
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>  ip flow monitor AON-MONITOR input
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>  ip flow monitor AON-MONITOR output
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>show flow exporter AON-EXPORTER
-<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>show flow monitor AON-MONITOR statistics
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>feature netflow
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>flow exporter AON-EXPORTER
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  destination 10.10.10.50 use-vrf management
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  source mgmt0
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  transport udp 2055
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  version 9
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    template data timeout 60
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    option interface-table timeout 60
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>flow record AON-RECORD
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  match ipv4 source address
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  match ipv4 destination address
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  match transport source-port
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  match transport destination-port
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  match ip protocol
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  collect counter bytes long
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  collect counter packets long
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  collect timestamp sys-uptime first
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  collect timestamp sys-uptime last
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>flow monitor AON-MONITOR
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  record AON-RECORD
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  exporter AON-EXPORTER
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>  cache timeout active 60
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>  cache timeout inactive 15
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>interface Ethernet1/1
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>  ip flow monitor AON-MONITOR input
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>  ip flow monitor AON-MONITOR output
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>show flow exporter AON-EXPORTER
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>show flow monitor AON-MONITOR statistics
 </code></pre></div>
 <h3 id="arista-eos-ipfix">Arista EOS — IPFIX<a class="headerlink" href="#arista-eos-ipfix" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>flow tracking hardware
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>   tracker AON-TRACKER
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>      record export on inactive timeout 15
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>      record export on active timeout 60
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>      exporter AON
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>         collector 10.10.10.50
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>         local interface Management1
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>         transport udp 2055
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>         export-protocol ipfix
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>         template interval 60
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>   !
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>   interface Ethernet1 tracked
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>   interface Ethernet2 tracked
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>   interface Ethernet3 tracked
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>!
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>show flow tracking hardware tracker AON-TRACKER
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>show flow tracking hardware detail
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>flow tracking hardware
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>   tracker AON-TRACKER
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>      record export on inactive timeout 15
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>      record export on active timeout 60
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>      exporter AON
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>         collector 10.10.10.50
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>         local interface Management1
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>         transport udp 2055
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>         export-protocol ipfix
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>         template interval 60
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>   !
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>   interface Ethernet1 tracked
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>   interface Ethernet2 tracked
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>   interface Ethernet3 tracked
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>!
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>show flow tracking hardware tracker AON-TRACKER
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>show flow tracking hardware detail
 </code></pre></div>
 <h3 id="juniper-junos-netflow-v9">Juniper Junos — NetFlow v9<a class="headerlink" href="#juniper-junos-netflow-v9" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a># Configure sampling
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>set forwarding-options sampling input rate 1
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>set forwarding-options sampling family inet output flow-server 10.10.10.50 port 2055
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>set forwarding-options sampling family inet output flow-server 10.10.10.50 version9 template ipv4
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>set forwarding-options sampling family inet output flow-inactive-timeout 15
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>set forwarding-options sampling family inet output flow-active-timeout 60
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>set forwarding-options sampling family inet output source-address 10.10.0.1
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a># Apply to interfaces
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>set interfaces ge-0/0/0 unit 0 family inet sampling input
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>set interfaces ge-0/0/0 unit 0 family inet sampling output
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>set interfaces ge-0/0/1 unit 0 family inet sampling input
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>set interfaces ge-0/0/1 unit 0 family inet sampling output
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a># Verify
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>show services flow-monitoring version9 template
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>show services flow-monitoring statistics
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># Configure sampling
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>set forwarding-options sampling input rate 1
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>set forwarding-options sampling family inet output flow-server 10.10.10.50 port 2055
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>set forwarding-options sampling family inet output flow-server 10.10.10.50 version9 template ipv4
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>set forwarding-options sampling family inet output flow-inactive-timeout 15
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>set forwarding-options sampling family inet output flow-active-timeout 60
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>set forwarding-options sampling family inet output source-address 10.10.0.1
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a># Apply to interfaces
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>set interfaces ge-0/0/0 unit 0 family inet sampling input
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>set interfaces ge-0/0/0 unit 0 family inet sampling output
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>set interfaces ge-0/0/1 unit 0 family inet sampling input
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>set interfaces ge-0/0/1 unit 0 family inet sampling output
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a># Verify
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>show services flow-monitoring version9 template
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>show services flow-monitoring statistics
 </code></pre></div>
 <h2 id="vds-ipfix-esxi-distributed-switch">vDS IPFIX (ESXi Distributed Switch)<a class="headerlink" href="#vds-ipfix-esxi-distributed-switch" title="Permanent link">&para;</a></h2>
 <p>Capturing east-west VM traffic within an ESXi cluster without physical switch changes requires IPFIX on the vDS.</p>
@@ -4906,73 +4874,73 @@
 </tbody>
 </table>
 <p>Via PowerCLI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">$vds</span> <span class="p">=</span> <span class="nb">Get-VDSwitch</span> <span class="n">-Name</span> <span class="s2">&quot;vDS-Production&quot;</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$configSpec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">VMwareDVSConfigSpec</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$configSpec</span><span class="p">.</span><span class="n">configVersion</span> <span class="p">=</span> <span class="nv">$vds</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">ConfigVersion</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nv">$ipfix</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">VMwareIpfixConfig</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nv">$ipfix</span><span class="p">.</span><span class="n">collectorIpAddress</span> <span class="p">=</span> <span class="s2">&quot;10.10.10.50&quot;</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nv">$ipfix</span><span class="p">.</span><span class="n">collectorPort</span>       <span class="p">=</span> <span class="n">2055</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nv">$ipfix</span><span class="p">.</span><span class="n">observationDomainId</span> <span class="p">=</span> <span class="n">0</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="nv">$ipfix</span><span class="p">.</span><span class="n">activeFlowTimeout</span>   <span class="p">=</span> <span class="n">60</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="nv">$ipfix</span><span class="p">.</span><span class="n">idleFlowTimeout</span>     <span class="p">=</span> <span class="n">15</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nv">$ipfix</span><span class="p">.</span><span class="n">samplingRate</span>        <span class="p">=</span> <span class="n">0</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="nv">$ipfix</span><span class="p">.</span><span class="n">internalFlowsOnly</span>   <span class="p">=</span> <span class="nv">$false</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="nv">$configSpec</span><span class="p">.</span><span class="n">ipfixConfig</span> <span class="p">=</span> <span class="nv">$ipfix</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="nv">$vds</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ReconfigureDvs</span><span class="p">(</span><span class="nv">$configSpec</span><span class="p">)</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c"># Enable IPFIX on specific portgroups</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="nb">Get-VDPortgroup</span> <span class="n">-VDSwitch</span> <span class="nv">$vds</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;^PG-(App|Web|DB)&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    <span class="nv">$pgSpec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">DVPortgroupConfigSpec</span>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>    <span class="nv">$pgSpec</span><span class="p">.</span><span class="n">configVersion</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">ConfigVersion</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>    <span class="nv">$pgSpec</span><span class="p">.</span><span class="n">defaultPortConfig</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">VMwareDVSPortSetting</span>
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    <span class="nv">$pgSpec</span><span class="p">.</span><span class="n">defaultPortConfig</span><span class="p">.</span><span class="n">ipfixEnabled</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">BoolPolicy</span>
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>    <span class="nv">$pgSpec</span><span class="p">.</span><span class="n">defaultPortConfig</span><span class="p">.</span><span class="n">ipfixEnabled</span><span class="p">.</span><span class="n">inherited</span> <span class="p">=</span> <span class="nv">$false</span>
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>    <span class="nv">$pgSpec</span><span class="p">.</span><span class="n">defaultPortConfig</span><span class="p">.</span><span class="n">ipfixEnabled</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> <span class="nv">$true</span>
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ReconfigureDVPortgroup</span><span class="p">(</span><span class="nv">$pgSpec</span><span class="p">)</span>
-<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Enabled IPFIX on </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">$vds</span> <span class="p">=</span> <span class="nb">Get-VDSwitch</span> <span class="n">-Name</span> <span class="s2">&quot;vDS-Production&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$configSpec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">VMwareDVSConfigSpec</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$configSpec</span><span class="p">.</span><span class="n">configVersion</span> <span class="p">=</span> <span class="nv">$vds</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">ConfigVersion</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">$ipfix</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">VMwareIpfixConfig</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nv">$ipfix</span><span class="p">.</span><span class="n">collectorIpAddress</span> <span class="p">=</span> <span class="s2">&quot;10.10.10.50&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nv">$ipfix</span><span class="p">.</span><span class="n">collectorPort</span>       <span class="p">=</span> <span class="n">2055</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nv">$ipfix</span><span class="p">.</span><span class="n">observationDomainId</span> <span class="p">=</span> <span class="n">0</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nv">$ipfix</span><span class="p">.</span><span class="n">activeFlowTimeout</span>   <span class="p">=</span> <span class="n">60</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nv">$ipfix</span><span class="p">.</span><span class="n">idleFlowTimeout</span>     <span class="p">=</span> <span class="n">15</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nv">$ipfix</span><span class="p">.</span><span class="n">samplingRate</span>        <span class="p">=</span> <span class="n">0</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nv">$ipfix</span><span class="p">.</span><span class="n">internalFlowsOnly</span>   <span class="p">=</span> <span class="nv">$false</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nv">$configSpec</span><span class="p">.</span><span class="n">ipfixConfig</span> <span class="p">=</span> <span class="nv">$ipfix</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nv">$vds</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ReconfigureDvs</span><span class="p">(</span><span class="nv">$configSpec</span><span class="p">)</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c"># Enable IPFIX on specific portgroups</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="nb">Get-VDPortgroup</span> <span class="n">-VDSwitch</span> <span class="nv">$vds</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;^PG-(App|Web|DB)&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    <span class="nv">$pgSpec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">DVPortgroupConfigSpec</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>    <span class="nv">$pgSpec</span><span class="p">.</span><span class="n">configVersion</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">ConfigVersion</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>    <span class="nv">$pgSpec</span><span class="p">.</span><span class="n">defaultPortConfig</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">VMwareDVSPortSetting</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>    <span class="nv">$pgSpec</span><span class="p">.</span><span class="n">defaultPortConfig</span><span class="p">.</span><span class="n">ipfixEnabled</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">BoolPolicy</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>    <span class="nv">$pgSpec</span><span class="p">.</span><span class="n">defaultPortConfig</span><span class="p">.</span><span class="n">ipfixEnabled</span><span class="p">.</span><span class="n">inherited</span> <span class="p">=</span> <span class="nv">$false</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>    <span class="nv">$pgSpec</span><span class="p">.</span><span class="n">defaultPortConfig</span><span class="p">.</span><span class="n">ipfixEnabled</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> <span class="nv">$true</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ReconfigureDVPortgroup</span><span class="p">(</span><span class="nv">$pgSpec</span><span class="p">)</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Enabled IPFIX on </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="nsx-t-built-in-ipfix">NSX-T Built-In IPFIX<a class="headerlink" href="#nsx-t-built-in-ipfix" title="Permanent link">&para;</a></h2>
 <p>NSX-T can export IPFIX directly from the nsx-vswitch on each transport node, capturing overlay traffic without any changes to the physical fabric.</p>
 <p><strong>NSX-T Policy UI:</strong> System → Fabric → Settings → IPFIX Collector Profiles → Add</p>
 <p>Or via NSX-T API:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:PASSWORD&#39;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>https://nsxmgr.example.local/policy/api/v1/infra/ipfix-l2-collector-profiles/AON-COLLECTOR<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="s1">    &quot;display_name&quot;: &quot;AON-Collector&quot;,</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s1">    &quot;ipfix_collector_profile_parameters&quot;: {</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s1">      &quot;ipfix_collector&quot;: [</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s1">        {&quot;ip_address&quot;: &quot;10.10.10.50&quot;, &quot;port&quot;: 2055}</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s1">      ]</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s1">    }</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Create IPFIX L2 profile</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:PASSWORD&#39;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span>https://nsxmgr.example.local/policy/api/v1/infra/ipfix-l2-profiles/AON-PROFILE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="s1">    &quot;display_name&quot;: &quot;AON-IPFIX-Profile&quot;,</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="s1">    &quot;ipfix_collector_profile_path&quot;: &quot;/infra/ipfix-l2-collector-profiles/AON-COLLECTOR&quot;,</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="s1">    &quot;active_timeout&quot;: 60,</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="s1">    &quot;idle_timeout&quot;: 15,</span>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="s1">    &quot;packet_sample_probability&quot;: 1.0</span>
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:PASSWORD&#39;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>https://nsxmgr.example.local/policy/api/v1/infra/ipfix-l2-collector-profiles/AON-COLLECTOR<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="s1">    &quot;display_name&quot;: &quot;AON-Collector&quot;,</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="s1">    &quot;ipfix_collector_profile_parameters&quot;: {</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="s1">      &quot;ipfix_collector&quot;: [</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="s1">        {&quot;ip_address&quot;: &quot;10.10.10.50&quot;, &quot;port&quot;: 2055}</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="s1">      ]</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="s1">    }</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Create IPFIX L2 profile</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:PASSWORD&#39;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">  </span>https://nsxmgr.example.local/policy/api/v1/infra/ipfix-l2-profiles/AON-PROFILE<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="s1">    &quot;display_name&quot;: &quot;AON-IPFIX-Profile&quot;,</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="s1">    &quot;ipfix_collector_profile_path&quot;: &quot;/infra/ipfix-l2-collector-profiles/AON-COLLECTOR&quot;,</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="s1">    &quot;active_timeout&quot;: 60,</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="s1">    &quot;idle_timeout&quot;: 15,</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="s1">    &quot;packet_sample_probability&quot;: 1.0</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
 <p>Assign the IPFIX profile to a segment, binding to transport nodes.</p>
 <h2 id="palo-alto-firewall-integration">Palo Alto Firewall Integration<a class="headerlink" href="#palo-alto-firewall-integration" title="Permanent link">&para;</a></h2>
 <p>AON ingests Palo Alto traffic logs via two methods:</p>
 <p><strong>Method 1: Syslog forwarding to Collector</strong></p>
 <p>PAN-OS: Device → Server Profiles → Syslog → Add</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">Name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AON-Syslog</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nt">Syslog Server IP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.10.10.50</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nt">Transport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UDP</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nt">Port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">514</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nt">Format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BSD</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nt">Facility</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LOG_USER</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">Name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AON-Syslog</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nt">Syslog Server IP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.10.10.50</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nt">Transport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UDP</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nt">Port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">514</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nt">Format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BSD</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nt">Facility</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LOG_USER</span>
 </code></pre></div>
 <p>Create a Log Forwarding Profile (Objects → Log Forwarding) referencing AON-Syslog for traffic logs, then attach to all Security policy rules.</p>
 <p><strong>Method 2: Panorama API</strong> — Add Panorama as a data source; AON queries traffic logs via the XML API. This avoids syslog and centralizes collection.</p>
@@ -5040,12 +5008,12 @@
 <p>Events forwarded: new problem detected, alert threshold crossed, data source sync failure, collector disconnected.</p>
 <p><strong>Webhook integration:</strong></p>
 <p>Settings → Notifications → Webhook → Add</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://hooks.slack.com/services/T000/B000/xxxx&quot;</span><span class="p">,</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;Content-Type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="p">},</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nt">&quot;body_template&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{\&quot;text\&quot;: \&quot;[AON] {{severity}}: {{alert_name}} — {{description}}\&quot;}&quot;</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://hooks.slack.com/services/T000/B000/xxxx&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;Content-Type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="p">},</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="nt">&quot;body_template&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{\&quot;text\&quot;: \&quot;[AON] {{severity}}: {{alert_name}} — {{description}}\&quot;}&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">}</span>
 </code></pre></div>
 <p>PagerDuty integration is available as a built-in notification type in AON 6.x+.</p>
 

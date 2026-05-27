@@ -4288,124 +4288,8 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-collection-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Collection Flow
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Data Collection Flow">
+    <nav class="md-nav" aria-label="Deployment Model">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#phase-1-topology-ingestion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 1: Topology Ingestion
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phase-2-flow-data-ingestion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 2: Flow Data Ingestion
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phase-3-analytics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 3: Analytics
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-plane-vs-management-plane-visibility" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Plane vs Management Plane Visibility
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#supported-data-sources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported Data Sources
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#micro-segmentation-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Micro-Segmentation Workflow
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Micro-Segmentation Workflow">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#stage-1-discover-flows" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stage 1: Discover Flows
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stage-2-map-application-dependencies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stage 2: Map Application Dependencies
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stage-3-generate-security-group-recommendations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stage 3: Generate Security Group Recommendations
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#stage-4-push-to-nsx" class="md-nav__link">
@@ -4669,201 +4553,85 @@
 </tbody>
 </table>
 <p>Collectors maintain a persistent TLS connection back to the Platform VM on TCP 443. All raw flow data, API-pulled topology, and parsed configs are shipped from Collector to Platform for indexing. The Platform VM is the sole persistent data store — Collectors hold no long-term state.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[ESXi hosts / vDS]   ──IPFIX/NetFlow──►  [Collector VM]  ──TLS 443──►  [Platform VM]
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[ESXi hosts / vDS]   ──IPFIX/NetFlow──►  [Collector VM]  ──TLS 443──►  [Platform VM]
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>[NSX-T Manager]      ──REST API──────►   [Collector VM]
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>[vCenter Server]     ──REST API──────►   [Collector VM]
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>[Physical switches]  ──NetFlow UDP 2055──► [Collector VM]
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>[Palo Alto firewall] ──Syslog/API──────►  [Collector VM]
 </code></pre></div>
-<h2 id="data-collection-flow">Data Collection Flow<a class="headerlink" href="#data-collection-flow" title="Permanent link">&para;</a></h2>
-<h3 id="phase-1-topology-ingestion">Phase 1: Topology Ingestion<a class="headerlink" href="#phase-1-topology-ingestion" title="Permanent link">&para;</a></h3>
-<p>On first pairing and on a polling interval (default: 10 minutes for vCenter, 10 minutes for NSX-T), the Collector polls:</p>
-<ul>
-<li><strong>vCenter API</strong> — VM inventory, NIC-to-portgroup mapping, host/cluster/datacenter hierarchy, vDS portgroup configs</li>
-<li><strong>NSX-T Manager API</strong> — logical switches, segments, T0/T1 routers, router interfaces, DFW rules, security groups, NSX tags, NSX-T transport nodes</li>
-<li><strong>Physical switch APIs</strong> (where applicable) — interface descriptions, VLAN assignments, routing table snapshots</li>
-</ul>
-<h3 id="phase-2-flow-data-ingestion">Phase 2: Flow Data Ingestion<a class="headerlink" href="#phase-2-flow-data-ingestion" title="Permanent link">&para;</a></h3>
-<p>Flow data arrives continuously on the Collector's UDP/TCP listeners:</p>
-<table>
-<thead>
-<tr>
-<th>Protocol</th>
-<th>Default Port</th>
-<th>Sources</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>NetFlow v5/v9</td>
-<td>UDP 2055</td>
-<td>Cisco IOS/IOS-XE/NX-OS, Juniper</td>
-</tr>
-<tr>
-<td>IPFIX</td>
-<td>UDP 2055</td>
-<td>Arista EOS, VMware vDS, NSX-T, Fortinet</td>
-</tr>
-<tr>
-<td>sFlow</td>
-<td>UDP 6343</td>
-<td>Arista, Brocade (limited support)</td>
-</tr>
-</tbody>
-</table>
-<p>The Collector correlates each flow record with its topology context: VM name, host, cluster, NSX segment, security group. Enriched records are batched and pushed to the Platform for indexing.</p>
-<h3 id="phase-3-analytics">Phase 3: Analytics<a class="headerlink" href="#phase-3-analytics" title="Permanent link">&para;</a></h3>
-<p>The Platform stores enriched flows in an internal time-series store (Cassandra). The analytics engine:
-1. Builds application dependency maps from observed flow patterns
-2. Scores security group recommendations using observed traffic
-3. Runs network assurance checks (MTU consistency, BGP session health, gateway reachability)
-4. Detects anomalies (new flows, policy violations, topology changes)</p>
-<h2 id="data-plane-vs-management-plane-visibility">Data Plane vs Management Plane Visibility<a class="headerlink" href="#data-plane-vs-management-plane-visibility" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Layer</th>
-<th>What AON Sees</th>
-<th>How</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Management plane</td>
-<td>NSX-T DFW rules, security groups, tags, segments, T0/T1 config</td>
-<td>NSX-T API polling</td>
-</tr>
-<tr>
-<td>Management plane</td>
-<td>VM inventory, portgroup membership, vDS config</td>
-<td>vCenter API polling</td>
-</tr>
-<tr>
-<td>Data plane</td>
-<td>Actual traffic flows between workloads (src IP, dst IP, port, protocol, bytes, packets)</td>
-<td>NetFlow/IPFIX from vDS or physical</td>
-</tr>
-<tr>
-<td>Data plane</td>
-<td>Micro-segmentation gap analysis (flows that cross DFW rules or would be blocked)</td>
-<td>Correlation of flow data + DFW rule set</td>
-</tr>
-</tbody>
-</table>
-<p>AON does <strong>not</strong> sit inline — it is 100% passive for data plane traffic. Flow data is sampled or exported by the fabric, not mirrored packet-by-packet (with default NetFlow sampling on physical switches, typically 1:1000 or 1:512).</p>
-<h2 id="supported-data-sources">Supported Data Sources<a class="headerlink" href="#supported-data-sources" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Data Source</th>
-<th>Integration Type</th>
-<th>Data Collected</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VMware NSX-T 3.x / 4.x</td>
-<td>REST API (read-only)</td>
-<td>Segments, DFW rules, groups, tags, T0/T1, transport nodes</td>
-</tr>
-<tr>
-<td>VMware NSX-V 6.4</td>
-<td>REST API (read-only)</td>
-<td>Logical switches, DFW, security groups, ESGs</td>
-</tr>
-<tr>
-<td>VMware vCenter 7.0 / 8.0</td>
-<td>REST API (read-only)</td>
-<td>VM inventory, NICs, hosts, clusters, vDS portgroups</td>
-</tr>
-<tr>
-<td>VMware vDS (ESXi)</td>
-<td>IPFIX</td>
-<td>Flow records per vNIC, per host</td>
-</tr>
-<tr>
-<td>NSX-T (built-in IPFIX)</td>
-<td>IPFIX</td>
-<td>East-west flows within NSX overlay</td>
-</tr>
-<tr>
-<td>Cisco IOS-XE</td>
-<td>NetFlow v9 export</td>
-<td>Physical switch flows, interface stats</td>
-</tr>
-<tr>
-<td>Cisco NX-OS</td>
-<td>NetFlow v9 export</td>
-<td>Data center fabric flows</td>
-</tr>
-<tr>
-<td>Arista EOS</td>
-<td>IPFIX export</td>
-<td>Spine/leaf fabric flows</td>
-</tr>
-<tr>
-<td>Juniper Junos</td>
-<td>NetFlow v5/v9</td>
-<td>Physical flows</td>
-</tr>
-<tr>
-<td>Palo Alto PAN-OS</td>
-<td>Traffic log syslog / API</td>
-<td>Firewall allow/deny logs</td>
-</tr>
-<tr>
-<td>Checkpoint (limited)</td>
-<td>Syslog</td>
-<td>Firewall logs</td>
-</tr>
-<tr>
-<td>AWS VPC</td>
-<td>VPC Flow Logs (S3)</td>
-<td>Cloud flow data</td>
-</tr>
-<tr>
-<td>Azure (limited)</td>
-<td>NSG Flow Logs</td>
-<td>Cloud flow data</td>
-</tr>
-<tr>
-<td>ServiceNow CMDB</td>
-<td>REST API</td>
-<td>CMDB asset correlation</td>
-</tr>
-</tbody>
-</table>
-<h2 id="micro-segmentation-workflow">Micro-Segmentation Workflow<a class="headerlink" href="#micro-segmentation-workflow" title="Permanent link">&para;</a></h2>
-<p>AON's microsegmentation planning workflow follows four stages:</p>
-<h3 id="stage-1-discover-flows">Stage 1: Discover Flows<a class="headerlink" href="#stage-1-discover-flows" title="Permanent link">&para;</a></h3>
-<p>AON collects flow data from all configured sources for a recommended <strong>30-day baseline period</strong> before generating recommendations. The discovery period ensures seasonal and weekly traffic patterns are captured.</p>
-<p>In the UI: <strong>Plan &amp; Assess → Micro-Segmentation → Applications → Select Application → Flows tab</strong></p>
-<p>Alternatively, query flows directly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>flows where destination port = 3306 and flow type = &#39;East-West&#39;
-</code></pre></div>
-<h3 id="stage-2-map-application-dependencies">Stage 2: Map Application Dependencies<a class="headerlink" href="#stage-2-map-application-dependencies" title="Permanent link">&para;</a></h3>
-<p>AON builds application tiers automatically by clustering VMs that communicate with each other. You can also define application boundaries manually:</p>
-<p><strong>UI</strong>: Plan &amp; Assess → Applications → Add Application → Define membership by:
-- NSX security group membership
-- VM name regex (<code>web-.*</code>, <code>db-.*</code>)
-- IP subnet
-- NSX tag</p>
-<h3 id="stage-3-generate-security-group-recommendations">Stage 3: Generate Security Group Recommendations<a class="headerlink" href="#stage-3-generate-security-group-recommendations" title="Permanent link">&para;</a></h3>
-<p>Once an application is defined, AON analyzes all observed flows and recommends:
-- Which VMs should be in which NSX security groups
-- Which DFW rules to create (source group, destination group, port, action)
-- Flows that will be <strong>allowed</strong> vs <strong>blocked</strong> by the recommended policy</p>
-<p><strong>UI</strong>: Plan &amp; Assess → Micro-Segmentation → Recommended Rules tab</p>
-<p>The recommendation output includes:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">Source Group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sg-web-tier</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">Destination Group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sg-db-tier</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">Port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP 3306</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">Action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Allow</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nt">Source Group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sg-web-tier</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nt">Destination Group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">any</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nt">Port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP 443</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nt">Action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Allow</span>
+┌─────────────────────────────────────────── How vRNI Works ────────────────────────────────────────────┐
+│                                                                                                       │
+│  Flow collection from NSX/switches/cloud, analytics processing, and flow map rendering.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Flow Collection Layer             │  │             Inventory Collection            │   │
+│   │           NSX-T IPFIX to collector           │  │           vCenter API: VMs + hosts          │   │
+│   │           Physical switch NetFlow            │  │          NSX API: segments + rules          │   │
+│   │             Cloud VPC flow logs              │  │             DNS: name resolution            │   │
+│   │        Collector forwards to platform        │  │           CMDB enrichment optional          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Collected flows and inventory feed the analytics engine for correlation and search.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Analytics Engine               │  │                Flow Map &amp; UI                │   │
+│   │          Correlates IPs to VM names          │  │        Flow Map: entity traffic view        │   │
+│   │         Detects micro-seg violations         │  │        Search: natural language query       │   │
+│   │          Anomaly detection on flows          │  │         Dashboards: predefined views        │   │
+│   │           Path tracing end-to-end            │  │           Export: CSV / API query           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRNI platform VM + collector VMs on vSphere; NSX-T and physical switches as sources                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Flow Record         = 5-tuple (src IP, dst IP, src port, dst port, proto) + byte/packet count        │
+│  IPFIX               = Standard flow export protocol; used by NSX-T and modern switches               │
+│  Collector           = Lightweight VM that receives IPFIX/NetFlow from data sources                   │
+│  Analytics Engine    = Platform component correlating flows with inventory for search                 │
+│  Flow Map            = Visual graph of traffic between application tiers and VMs                      │
+│  Path Tracing        = vRNI feature showing physical + logical path for a given flow                  │
+│  Micro-seg Violation = Flow allowed/denied differently than NSX DFW rule intent                       │
+│  Natural Language Search= vRNI query interface using plain English flow queries                       │
+│  Anomaly Detection   = Automatic flagging of unusual flow volume or new connections                   │
+│  Entity              = Any named object: VM, host, IP, application, security group                    │
+│  Inventory Sync      = Periodic API poll of vCenter/NSX to refresh entity metadata                    │
+│  VPC Flow Logs       = Cloud flow records from AWS/Azure ingested as a data source                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Stage 2: Map Application Dependencies
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>AON builds application tiers automatically by clustering VMs that communicate with each other. You can also define application boundaries manually:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>**UI**: Plan &amp; Assess → Applications → Add Application → Define membership by:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- NSX security group membership
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- VM name regex (`web-.*`, `db-.*`)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- IP subnet
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- NSX tag
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>### Stage 3: Generate Security Group Recommendations
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Once an application is defined, AON analyzes all observed flows and recommends:
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>- Which VMs should be in which NSX security groups
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>- Which DFW rules to create (source group, destination group, port, action)
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>- Flows that will be **allowed** vs **blocked** by the recommended policy
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>**UI**: Plan &amp; Assess → Micro-Segmentation → Recommended Rules tab
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>The recommendation output includes:
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>```yaml
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Source Group: sg-web-tier
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Destination Group: sg-db-tier
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Port: TCP 3306
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Action: Allow
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>Source Group: sg-web-tier
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Destination Group: any
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>Port: TCP 443
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>Action: Allow
 </code></pre></div></p>
 <h3 id="stage-4-push-to-nsx">Stage 4: Push to NSX<a class="headerlink" href="#stage-4-push-to-nsx" title="Permanent link">&para;</a></h3>
 <p>Recommendations can be exported or pushed directly:

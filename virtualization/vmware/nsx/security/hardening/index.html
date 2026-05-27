@@ -4432,28 +4432,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#emergency-category-rules" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Emergency Category Rules
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dfw-exclusion-list" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DFW Exclusion List
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -4789,7 +4767,7 @@
 <h2 id="dfw-hardening-configuration">DFW Hardening Configuration<a class="headerlink" href="#dfw-hardening-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="default-deny-rule">Default Deny Rule<a class="headerlink" href="#default-deny-rule" title="Permanent link">&para;</a></h3>
 <p>The built-in default rule (rule 65535) must be <code>any-any-drop</code>. Verify it has not been changed:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/domains/default/security-policies/default-layer3-section/rules&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="s2">import sys, json</span>
@@ -4800,136 +4778,141 @@
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s2">&quot;</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Expected: action=DROP</span>
 </code></pre></div>
-<p>If the default rule is ALLOW, the DFW is effectively disabled. Change it immediately:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;action&quot;: &quot;DROP&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/domains/default/security-policies/default-layer3-section/rules/default-rule&quot;</span>
-</code></pre></div>
-<h3 id="emergency-category-rules">Emergency Category Rules<a class="headerlink" href="#emergency-category-rules" title="Permanent link">&para;</a></h3>
-<p>Maintain at least these rules in the Emergency category (highest priority, evaluated first):</p>
-<table>
-<thead>
-<tr>
-<th>Rule Name</th>
-<th>Source</th>
-<th>Destination</th>
-<th>Service</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Allow-vCenter-to-ESXi</td>
-<td>vCenter IP</td>
-<td>All ESXi hosts</td>
-<td>TCP 443, 902</td>
-<td>Allow</td>
-</tr>
-<tr>
-<td>Allow-NSX-Manager</td>
-<td>NSX Manager VIPs</td>
-<td>All ESXi hosts</td>
-<td>TCP 443</td>
-<td>Allow</td>
-</tr>
-<tr>
-<td>Allow-NTP</td>
-<td>All</td>
-<td>NTP servers</td>
-<td>UDP 123</td>
-<td>Allow</td>
-</tr>
-<tr>
-<td>Allow-DNS</td>
-<td>All</td>
-<td>DNS servers</td>
-<td>TCP/UDP 53</td>
-<td>Allow</td>
-</tr>
-<tr>
-<td>Emergency-Block</td>
-<td>Specific threat IP</td>
-<td>Any</td>
-<td>Any</td>
-<td>Drop</td>
-</tr>
-</tbody>
-</table>
-<p>These rules prevent a misconfigured Application DFW policy from cutting off NSX management access to ESXi hosts.</p>
-<h3 id="dfw-exclusion-list">DFW Exclusion List<a class="headerlink" href="#dfw-exclusion-list" title="Permanent link">&para;</a></h3>
-<p>The DFW Exclusion List bypasses DFW enforcement for specific VMs. Keep this list minimal — it is a security bypass.</p>
-<p>Legitimate candidates for exclusion:
-- NSX Manager VMs (self-management)
-- Active Directory domain controllers (when the only authentication source)
-- Physical-to-virtual migration VMs during migration window only</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List current exclusion list</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/firewall/excludelist&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Add a VM to the exclusion list (use the VM&#39;s external-id from fabric)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;target_id&quot;: &quot;&lt;vm-moref&gt;&quot;, &quot;target_type&quot;: &quot;VirtualMachine&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/firewall/excludelist&quot;</span>
-</code></pre></div>
+┌─────────────────────────────────────────── NSX — Hardening ───────────────────────────────────────────┐
+│                                                                                                       │
+│  CIS NSX benchmark, API security, DFW default-deny, and lockdown posture.                             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             CIS / STIG Controls              │  │                 API Security                │   │
+│   │         Disable root SSH on manager          │  │                TLS 1.2+ only                │   │
+│   │          Change default admin pass           │  │             Disable TLS 1.0/1.1             │   │
+│   │         NTP configured on all nodes          │  │          Replace self-signed certs          │   │
+│   │          Syslog to SIEM/syslog host          │  │             Rate limit API calls            │   │
+│   │            FIPS mode if required             │  │         Named service accounts only         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Baseline hardening → DFW default-deny policy → regular audit reviews.                                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              DFW Default Policy              │  │               Hardening Review              │   │
+│   │          Default layer: deny + log           │  │           Review DFW rules monthly          │   │
+│   │        Emergency allow above default         │  │            Alert on new allow-all           │   │
+│   │           Micro-seg by app / zone            │  │           Check cert expiry &lt; 60d           │   │
+│   │           Log all blocked traffic            │  │           Verify FIPS if mandated           │   │
+│   │        Gateway firewall as perimeter         │  │            Audit role assignments           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  NSX Manager VMs, Edge VMs, ESXi hosts, syslog/SIEM, management network                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CIS         = Center for Internet Security; NSX hardening benchmark                                  │
+│  STIG        = Security Technical Implementation Guide; DOD hardening                                 │
+│  FIPS 140-2  = US crypto standard; NSX FIPS mode enforces compliant algos                             │
+│  DFW default = last DFW rule; set to deny+log to block unmatched traffic                              │
+│  Micro-seg   = per-VM/app firewall rules; east-west security enforcement                              │
+│  Gateway FW  = NSX Edge firewall; north-south perimeter rule enforcement                              │
+│  TLS 1.2     = minimum TLS for NSX API; 1.3 preferred                                                 │
+│  SIEM        = Security Info &amp; Event Mgmt; receives NSX syslog                                        │
+│  Rate limit  = API throttle; prevents brute force or runaway scripts                                  │
+│  Root SSH    = disabled on NSX Manager appliance in hardened config                                   │
+│  Named accts = automation uses dedicated named service accounts                                       │
+│  NTP         = time sync; required for cert validity and log correlation                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Emergency Category Rules
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Maintain at least these rules in the Emergency category (highest priority, evaluated first):
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Rule Name | Source | Destination | Service | Action |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|---|---|---|---|---|
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Allow-vCenter-to-ESXi | vCenter IP | All ESXi hosts | TCP 443, 902 | Allow |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Allow-NSX-Manager | NSX Manager VIPs | All ESXi hosts | TCP 443 | Allow |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Allow-NTP | All | NTP servers | UDP 123 | Allow |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Allow-DNS | All | DNS servers | TCP/UDP 53 | Allow |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Emergency-Block | Specific threat IP | Any | Any | Drop |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>These rules prevent a misconfigured Application DFW policy from cutting off NSX management access to ESXi hosts.
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>### DFW Exclusion List
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>The DFW Exclusion List bypasses DFW enforcement for specific VMs. Keep this list minimal — it is a security bypass.
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Legitimate candidates for exclusion:
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>- NSX Manager VMs (self-management)
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>- Active Directory domain controllers (when the only authentication source)
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>- Physical-to-virtual migration VMs during migration window only
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>```bash
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a># List current exclusion list
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>curl -sk -u &#39;admin:password&#39; \
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  &quot;https://&lt;nsx-manager&gt;/api/v1/firewall/excludelist&quot;
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a># Add a VM to the exclusion list (use the VM&#39;s external-id from fabric)
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>curl -sk -u &#39;admin:password&#39; \
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  -X POST \
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>  -H &quot;Content-Type: application/json&quot; \
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  -d &#39;{&quot;target_id&quot;: &quot;&lt;vm-moref&gt;&quot;, &quot;target_type&quot;: &quot;VirtualMachine&quot;}&#39; \
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  &quot;https://&lt;nsx-manager&gt;/api/v1/firewall/excludelist&quot;
+</code></pre></div></p>
 <hr />
 <h2 id="edge-node-hardening">Edge Node Hardening<a class="headerlink" href="#edge-node-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="remove-unused-services">Remove Unused Services<a class="headerlink" href="#remove-unused-services" title="Permanent link">&para;</a></h3>
 <p>Edge nodes run multiple services. Disable any not in use:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to Edge node — list services</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>get<span class="w"> </span>services
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Disable a specific service (example: LB if not using NSX load balancer)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">set</span><span class="w"> </span>service<span class="w"> </span>load-balancer<span class="w"> </span>stop
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Services that should always be running on production Edge:</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1">#   dataplane, router, manager (agent to NSX Manager)</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Services that may be stopped if unused:</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">#   load-balancer, dhcp, dns</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to Edge node — list services</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>get<span class="w"> </span>services
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Disable a specific service (example: LB if not using NSX load balancer)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">set</span><span class="w"> </span>service<span class="w"> </span>load-balancer<span class="w"> </span>stop
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Services that should always be running on production Edge:</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">#   dataplane, router, manager (agent to NSX Manager)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Services that may be stopped if unused:</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">#   load-balancer, dhcp, dns</span>
 </code></pre></div>
 <h3 id="edge-node-ha-verify-failover-works">Edge Node HA — Verify Failover Works<a class="headerlink" href="#edge-node-ha-verify-failover-works" title="Permanent link">&para;</a></h3>
 <p>Test failover in a maintenance window at least every 6 months:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to Active Edge</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">set</span><span class="w"> </span>edge-cluster<span class="w"> </span>failover
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># T0 gateway moves to Standby Edge — BGP reconverges</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Verify BGP on new Active Edge</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># All peers should be Established within 10–30 seconds</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Verify routing table intact</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>vrf<span class="w"> </span>&lt;tier0-vrf&gt;
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>get<span class="w"> </span>route
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to Active Edge</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">set</span><span class="w"> </span>edge-cluster<span class="w"> </span>failover
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># T0 gateway moves to Standby Edge — BGP reconverges</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Verify BGP on new Active Edge</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># All peers should be Established within 10–30 seconds</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Verify routing table intact</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>vrf<span class="w"> </span>&lt;tier0-vrf&gt;
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>get<span class="w"> </span>route
 </code></pre></div>
 <h3 id="bgp-authentication">BGP Authentication<a class="headerlink" href="#bgp-authentication" title="Permanent link">&para;</a></h3>
 <p>All BGP sessions must use MD5 authentication:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm BGP neighbor has password set</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/tier-0s/&lt;t0-id&gt;/locale-services/default/bgp/neighbors&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s2">d = json.load(sys.stdin)</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s2">for n in d.get(&#39;results&#39;, []):</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s2">    has_pwd = &#39;YES&#39; if n.get(&#39;password&#39;) else &#39;NO&#39;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s2">    print(f&#39;{n.get(\&quot;display_name\&quot;,\&quot;?\&quot;)}  {n.get(\&quot;neighbor_address\&quot;,\&quot;?\&quot;)}  password={has_pwd}&#39;)</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm BGP neighbor has password set</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/tier-0s/&lt;t0-id&gt;/locale-services/default/bgp/neighbors&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s2">for n in d.get(&#39;results&#39;, []):</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">    has_pwd = &#39;YES&#39; if n.get(&#39;password&#39;) else &#39;NO&#39;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">    print(f&#39;{n.get(\&quot;display_name\&quot;,\&quot;?\&quot;)}  {n.get(\&quot;neighbor_address\&quot;,\&quot;?\&quot;)}  password={has_pwd}&#39;)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="transport-node-security">Transport Node Security<a class="headerlink" href="#transport-node-security" title="Permanent link">&para;</a></h2>
 <h3 id="verify-nsx-vib-acceptance-level-on-esxi-hosts">Verify NSX VIB Acceptance Level on ESXi Hosts<a class="headerlink" href="#verify-nsx-vib-acceptance-level-on-esxi-hosts" title="Permanent link">&para;</a></h3>
 <p>NSX VIBs should be VMwareAccepted or VMwareCertified:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On ESXi host</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1, $4}&#39;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># The acceptance level column should show VMwareCertified or VMwareAccepted</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On ESXi host</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1, $4}&#39;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># The acceptance level column should show VMwareCertified or VMwareAccepted</span>
 </code></pre></div>
 <h3 id="confirm-dfw-is-enforcing-on-every-host">Confirm DFW is Enforcing on Every Host<a class="headerlink" href="#confirm-dfw-is-enforcing-on-every-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On each ESXi host — confirm DFW filters exist</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>summarize-dvfilter<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;vmware-sfw&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Count should equal the number of powered-on VM vNICs on this host</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># A count of 0 means DFW is not applying to VMs — escalate immediately</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On each ESXi host — confirm DFW filters exist</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>summarize-dvfilter<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;vmware-sfw&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Count should equal the number of powered-on VM vNICs on this host</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># A count of 0 means DFW is not applying to VMs — escalate immediately</span>
 </code></pre></div>
 <hr />
 <h2 id="hardening-quick-reference">Hardening Quick Reference<a class="headerlink" href="#hardening-quick-reference" title="Permanent link">&para;</a></h2>
