@@ -45,33 +45,41 @@ flowchart TD
     Q -- No --> R[See DNS Resolution guide]
     Q -- Yes --> S[Application-layer issue\nCheck service on destination\nopenssl s_client / curl -v]
 ```
-
----
-
-## Physical and Link Layer Checks
-
-### Linux
-
-```bash
-# Check interface state and link
-ip link show eth0
-# Expected: <BROADCAST,MULTICAST,UP,LOWER_UP>  ← LOWER_UP = physical link present
-# Problem:  <BROADCAST,MULTICAST,UP>           ← no LOWER_UP = cable/SFP down
-
-# Detailed physical link info
-ethtool eth0
-# Speed: 10000Mb/s
-# Duplex: Full
-# Link detected: yes    ← must be 'yes'
-
-# Check for errors on interface (input errors, CRC, drops)
-ethtool -S eth0 | grep -i "error\|drop\|miss"
-ip -s link show eth0
-
-# Example error output:
-# RX:   bytes  packets  errors  dropped  overrun   mcast
-#    1234567   98765       42        8        0   12345
-#                           ^-- errors = physical/CRC issues (bad cable/SFP)
+┌──────────────────────────────── Network Connectivity Troubleshooting ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               Network troubleshooting: isolate at which layer connectivity fails              │   │
+│   │             Methodology: ping gateway → trace route → check firewall → MTU → VLAN             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Diagnostic Steps               │  │                Common Causes                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │         1. ping 127.0.0.1 (loopback)         │  │         Firewall rule blocking port         │   │
+│   │           2. ping default gateway            │  │              Wrong VLAN tagging             │   │
+│   │         3. traceroute to destination         │  │         MTU mismatch (jumbo frames)         │   │
+│   │           4. Test on specific port           │  │              NIC or vmnic down              │   │
+│   │            5. Check firewall logs            │  │                Route missing                │   │
+│   │            6. Verify VLAN config             │  │               ARP table stale               │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Layer       │      Check       │      Command      │       Fix        │     Platform     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    L2 / VLAN     │   VLAN tagging   │   show int trunk  │     Fix VLAN     │ Switch / vSwitch │   │
+│   │    L3 / Route    │   Route table    │  ip route / route │    Add route     │     All OSes     │   │
+│   │     Firewall     │    Port block    │    Test-NetConn   │   Open FW rule   │     All OSes     │   │
+│   │       MTU        │   Jumbo frames   │ ping -s 8972 -M do│    Match MTU     │      Linux       │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    MTU mismatch  = Jumbo frame configured on one side but not other; packets silently dropped         │
+│    ARP stale     = ARP cache holds wrong MAC; clear with arp -d or wait for TTL expiry                │
+│    Test-NetConn  = PowerShell: tests TCP connectivity to specific host and port                       │
+│    traceroute    = Shows each hop to destination; identifies where path breaks                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### VMware ESXi

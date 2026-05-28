@@ -14,31 +14,39 @@ flowchart LR
     F -->|Go| G[Proceed with Upgrade]
     F -->|No-Go| H[Defer — remediate\nblocker first]
 ```
-
-## 1. Change Management
-
-| Check | Criteria | Verified By |
-|---|---|---|
-| Change ticket approved | CAB approval in ITSM | Change Manager |
-| Maintenance window scheduled | Communicated ≥48h in advance | Owner |
-| Stakeholders notified | Email / ticket sent | Owner |
-| Vendor support available | TAC case open if high-risk | Owner |
-| Rollback plan documented | Step-by-step with time estimate | Engineer |
-
-## 2. Backup Verification
-
-!!! warning "No upgrade without verified backup"
-    A backup that has not been tested is not a backup. Verify restore capability, not just job completion.
-
-```bash
-# Veeam — verify last backup job succeeded
-Get-VBRSession | Where-Object {$_.JobName -like "*HOSTNAME*"} | Select-Object -Last 5
-
-# NetBackup
-bperror -backstat -l -d "$(date -d '24 hours ago' +'%m/%d/%Y %H:%M:%S')"
-
-# Confirm VM snapshot exists pre-upgrade
-Get-VM -Name "HOSTNAME" | Get-Snapshot
+┌────────────────────────────────────────── Upgrade Readiness ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Upgrade readiness: verify compatibility, backup, backout plan, and test in lab first     │   │
+│   │      Never upgrade production without lab validation; always have a tested rollback path      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Pre-Upgrade Checks              │  │                Readiness Gate               │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │          Vendor release notes read           │  │               Lab test passed               │   │
+│   │        Compatibility matrix verified         │  │           Config backup confirmed           │   │
+│   │            Known issues reviewed             │  │           Backout plan documented           │   │
+│   │             Dependencies checked             │  │                 RFC approved                │   │
+│   │            Lab upgrade completed             │  │            Stakeholders notified            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Check       │      Source      │   Pass criteria   │   Fail action    │      Owner       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │  Compat matrix   │   Vendor docs    │    All deps OK    │  Defer upgrade   │    Infra lead    │   │
+│   │     Lab test     │     Lab env      │   No regressions  │    Fix first     │    Infra lead    │   │
+│   │  Config backup   │  Backup system   │  Verified restore │   Backup first   │   Backup team    │   │
+│   │   Backout plan   │     RFC doc      │    Steps tested   │  Document first  │    Infra lead    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Compatibility matrix= Vendor document; shows which versions of deps are supported together         │
+│    Lab upgrade    = Full upgrade rehearsal in non-production; validates procedure and time estimate   │
+│    Known issues   = Vendor-published list of bugs in release; check for impact on your environment    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 | Backup Type | Required Age | Verified |

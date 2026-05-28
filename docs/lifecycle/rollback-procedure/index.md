@@ -18,34 +18,41 @@ flowchart TD
     H --> I[Validate rollback]
     I --> J[Incident report\nand change re-plan]
 ```
-
-**Rollback trigger** — any one is sufficient:
-- Services fail to start after change
-- Application error rate increases > 5% vs baseline
-- Replication lag exceeds SLA
-- Application team reports user-facing failures
-- On-call engineer cannot identify root cause within agreed time
-
-## Method 1 — VM Snapshot Revert
-
-Fastest rollback for VM workloads. Requires a pre-change snapshot.
-
-```powershell
-# Find pre-change snapshot
-Get-VM -Name "HOSTNAME" | Get-Snapshot | Select-Object Name, Created, SizeMB
-
-# Revert (powers off VM and restores state)
-Set-VM -VM "HOSTNAME" \
-  -Snapshot (Get-Snapshot -VM "HOSTNAME" -Name "pre-upgrade-CHG-XXXX*") \
-  -Confirm:$false
-
-# Power on after revert
-Start-VM -VM "HOSTNAME"
-
-# Verify from host
-uname -r                         # should show old kernel version
-rpm -q <upgraded-package>        # should show old version
-systemctl is-active <service>
+┌───────────────────────────────────────── Rollback Procedure ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           Rollback: revert change to pre-change state when success criteria not met           │   │
+│   │              Trigger rollback at defined criteria; do not wait — sooner is safer              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Rollback Triggers               │  │              Rollback Execution             │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │             Service unavailable              │  │          Declare rollback on bridge         │   │
+│   │            Error rate > threshold            │  │            Execute backout steps            │   │
+│   │            Validation test fails             │  │          Restore from config backup         │   │
+│   │            Maintenance window end            │  │           Verify service restored           │   │
+│   │                Team consensus                │  │             Notify stakeholders             │   │
+│   │              Time overrun + P1               │  │            Raise P1 if unresolved           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │     Trigger      │     Decision     │       Action      │     Timeline     │   Escalate if    │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   Service down   │   Auto trigger   │  Execute backout  │    Immediate     │  Backout fails   │   │
+│   │    Test fails    │   Lead decides   │  Execute backout  │     < 15 min     │    P1 if down    │   │
+│   │    Window end    │   Team decides   │  Execute backout  │  At window end   │    P1 if down    │   │
+│   │   Partial fail   │   Lead decides   │    Assess risk    │   Context dep    │  If no backout   │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Auto trigger  = Pre-defined condition that initiates rollback without manual decision              │
+│    Config backup = Saved configuration state from before change; used to restore previous state       │
+│    Backout steps = Documented reversal steps from RFC; must be tested before change execution         │
+│    Partial fail  = Some components succeeded, others failed; assess risk vs completing rollback       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Expected time:** 5–15 minutes

@@ -36,22 +36,40 @@
            ▼
   Close change ticket + clear monitoring alert
 ```
-
-## Step 1 — Pre-Checks
-
-```bash
-# Who is logged in
-who
-w
-
-# System load and uptime
-uptime
-
-# Failed services
-systemctl --failed
-
-# Active backup agents or scheduled jobs
-ps aux | grep -E "backup|job|agent|oracle|sql"
+┌─────────────────────────────────────── Runbook — Server Reboot ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Safe server reboot: pre-checks → drain connections → shutdown → boot → validate        │   │
+│   │         Never reboot production without change ticket; notify stakeholders beforehand         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Pre-Reboot Checks               │  │              Post-Reboot Checks             │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │            No active backup jobs             │  │           Server responds to ping           │   │
+│   │            No running migrations             │  │             All services started            │   │
+│   │          Quiesce cluster resources           │  │          Filesystems mounted clean          │   │
+│   │             Notify stakeholders              │  │             No new alerts/errors            │   │
+│   │           Confirm IPMI/iLO access            │  │         Application health confirmed        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │       Step       │      Linux       │      Windows      │      VMware      │      Verify      │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │      Drain       │  Stop services   │   Stop services   │   vMotion VMs    │  Confirmed idle  │   │
+│   │      Reboot      │   shutdown -r    │  Restart-Computer │    Maint mode    │    Console OK    │   │
+│   │       Wait       │    Ping + SSH    │     Ping + RDP    │    Maint exit    │     Login OK     │   │
+│   │     Validate     │ systemctl status │   Services check  │   VMs running    │   App healthy    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    IPMI/iLO  = Out-of-band management; use for console if OS becomes unresponsive post-reboot         │
+│    Drain     = Gracefully remove load before shutdown; prevents in-flight request errors              │
+│    Maint mode= ESXi maintenance mode; vMotion VMs off host before hardware reboot                     │
+│    Quiesce   = Cluster: move resources to peer node; HA group: disable before reboot                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Stop here if:** critical jobs are running and cannot be deferred. Reschedule the reboot.

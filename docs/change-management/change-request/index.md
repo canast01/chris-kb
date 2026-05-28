@@ -53,32 +53,40 @@ Rollback Steps:
   3. Start postgresql-14
   4. Notify stakeholders
 ```
-
-## RFC Submission Process
-
-1. Create RFC in ITSM tool; link to relevant incident/problem if applicable
-2. Attach supporting documents (test evidence, architecture diagrams)
-3. Assign to service owner for review
-4. Service owner submits to CAB queue (5 business days before window for Normal)
-5. CAB reviews at weekly meeting; approves / rejects / requests changes
-6. Requester notified of decision
-7. On approval: schedule window; send stakeholder notifications
-
-## Standard Change Register
-
-Standard changes are pre-approved recurring activities that do not require individual RFC approval. Examples:
-
-| Standard Change | Approval Path |
-|---|---|
-| Monthly OS patching (approved template) | Automated via patch management |
-| SSL certificate renewal (automated) | No approval required |
-| DNS record update (low-risk) | Team lead self-service |
-| User access provisioning (IAM workflow) | HR-triggered workflow |
-
-## RFC Status Lifecycle
-
-```text
-Draft → Submitted → Under Review → Approved / Rejected / Deferred
-                                         ↓
-                                   Scheduled → In Progress → Completed / Rolled Back
+┌──────────────────────────────────────── Change Request (RFC) ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        RFC: formal document capturing all change details for CAB review and audit trail       │   │
+│   │        Incomplete RFCs returned by CAB; complete all mandatory fields before submission       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Mandatory Fields               │  │            Optional / Supporting            │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │          Title (short, descriptive)          │  │             Architecture diagram            │   │
+│   │              Change type: S/N/E              │  │                Test evidence                │   │
+│   │            Description and scope             │  │              Vendor runbook ref             │   │
+│   │            Business justification            │  │          Config backup confirmation         │   │
+│   │           Risk / impact assessment           │  │           Approval from app owner           │   │
+│   │             Implementation steps             │  │            Change dependency list           │   │
+│   │            Backout plan + trigger            │  │               Monitoring plan               │   │
+│   │              Maintenance window              │  │              Communication plan             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Field       │       Type       │      Example      │    Mandatory     │      Notes       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   Change type    │     Dropdown     │       Normal      │       Yes        │      S/N/E       │   │
+│   │       Risk       │     Dropdown     │       Medium      │       Yes        │     L/M/H/C      │   │
+│   │      Window      │     Datetime     │   Sat 02:00 UTC   │       Yes        │   Duration too   │   │
+│   │   Backout plan   │       Text       │    Step-by-step   │       Yes        │   With trigger   │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    S/N/E     = Standard / Normal / Emergency change type                                              │
+│    Backout trigger= Defined condition that automatically initiates rollback (e.g., service fails test)│
+│    Scope     = Exact systems, services, or components affected; used to notify correct teams          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

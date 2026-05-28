@@ -29,26 +29,40 @@ tar czf /root/pre-change-config-$(date +%Y%m%d).tar.gz /etc/<service>/
 systemctl status <service>
 curl -sf http://localhost:<port>/health
 ```
-
-## Phase 2 — Implementation
-
-```bash
-# For package-based deployments
-apt-get install --only-upgrade <package>=<version>
-# or
-yum update <package>-<version>
-
-# For file-based deployments
-rsync -avz --backup --suffix=".pre-$(date +%Y%m%d)" <source> <dest>
-
-# For systemd service config changes
-cp /etc/service.conf /etc/service.conf.pre-$(date +%Y%m%d)
-# apply change...
-systemctl daemon-reload
-systemctl restart <service>
-
-# For database schema changes (example: PostgreSQL)
-psql -U <user> -d <db> -f migration_XXXX_up.sql
+┌──────────────────────────────────────── Deployment Procedure ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          Deployment: execute change per approved RFC; document each step and outcome          │   │
+│   │         No deviation from approved steps without ECAB approval; call out any variance         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Deployment Steps               │  │                Documentation                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │          1. Go/No-Go decision call           │  │                Log start time               │   │
+│   │        2. Confirm attendees on bridge        │  │           Capture each step output          │   │
+│   │        3. Execute RFC steps in order         │  │             Note any deviations             │   │
+│   │        4. Checkpoint after each tier         │  │            Screenshot key states            │   │
+│   │           5. Run validation checks           │  │            Log end time + outcome           │   │
+│   │          6. Go/No-Go for next phase          │  │             Notify stakeholders             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │    Checkpoint    │     Trigger      │      Decision     │     If pass      │     If fail      │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │     Go/No-Go     │   Before exec    │     Team vote     │     Proceed      │   Defer change   │   │
+│   │    Mid-change    │ After each tier  │    Lead decides   │    Next step     │     Rollback     │   │
+│   │    Validation    │ After last step  │    Test results   │   Close change   │     Rollback     │   │
+│   │   Time overrun   │  Beyond window   │    Lead decides   │   Brief extend   │     Rollback     │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Go/No-Go   = Explicit decision call before proceeding; requires confirmation from lead             │
+│    Deviation   = Any step that differs from approved RFC; document and get verbal ECAB approval       │
+│    Time overrun= Execution exceeds approved window; decision: extend (if safe) or rollback            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Phase 3 — Validation

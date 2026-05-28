@@ -15,21 +15,39 @@ flowchart TD
     G -->|Yes| H[Ready — proceed\nwith onboarding]
     G -->|No| I[Remediate blockers\nbefore proceeding]
 ```
-
-## 1. Capacity Planning
-
-### Compute
-
-```bash
-# VMware — check cluster capacity before provisioning
-Get-Cluster | Select-Object Name,
-  @{N="CPU Free GHz";E={[math]::Round(($_.ExtensionData.Summary.EffectiveCpu - $_.ExtensionData.Summary.TotalCpuCapacity) / -1000, 1)}},
-  @{N="Mem Free GB";E={[math]::Round(($_.ExtensionData.Summary.EffectiveMemory - $_.ExtensionData.Summary.TotalMemoryCapacity) / -1MB, 0)}}
-
-# Linux host — available resources
-nproc                          # CPU cores
-free -g                        # available memory in GB
-df -h                          # available disk space
+┌──────────────────────────────────────── Environment Readiness ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Environment readiness: verify capacity, connectivity, dependencies, and credentials      │   │
+│   │           Complete readiness checklist before any deployment or major change starts           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Infrastructure Readiness           │  │             Dependency Readiness            │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │         Storage: capacity available          │  │            DNS resolves correctly           │   │
+│   │          Compute: CPU/RAM headroom           │  │            Network paths verified           │   │
+│   │          No active alarms on target          │  │            Auth/credentials ready           │   │
+│   │         Backup current before deploy         │  │           Downstream deps notified          │   │
+│   │            Monitoring configured             │  │           Firewall rules in place           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Check       │      Method      │        Pass       │   Fail action    │      Owner       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   Storage cap    │    Array GUI     │     > 20% free    │   Expand first   │      Infra       │   │
+│   │   Compute cap    │  vCenter/Hyp-V   │     > 20% free    │   Resize first   │      Infra       │   │
+│   │   Network conn   │   Ping + trace   │    All paths OK   │   Fix network    │   Network team   │   │
+│   │       Auth       │    Test login    │      Success      │    Fix creds     │      Infra       │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Headroom      = Free compute/storage capacity above the deployment requirement; 20% minimum        │
+│    Downstream deps= Services or systems that depend on the environment being deployed to              │
+│    Pre-deploy backup= Snapshot/config backup taken immediately before any change starts               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 | Resource | Required | Available | Headroom ≥ 20%? |

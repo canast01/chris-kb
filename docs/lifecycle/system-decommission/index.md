@@ -15,32 +15,40 @@ flowchart TD
     G --> H[Reclaim resources\nor delete VM]
     H --> I[CMDB and\ndocumentation update]
 ```
-
-## 1. Approval and Sign-Off
-
-| Required Approval | From |
-|---|---|
-| System owner sign-off | Application / business owner |
-| Data retention confirmation | Data owner / compliance team |
-| Security sign-off | Security team (certs, PAM accounts) |
-| Change ticket approved | Change Manager |
-
-## 2. Dependency Check
-
-```bash
-# Who connects to this system?
-ss -tnp                            # active outbound connections
-ss -tnlp                           # listening ports (inbound dependencies)
-
-# Check if other systems reference this hostname or IP
-grep -r "<hostname>\|<ip-address>" /etc/hosts /opt/*/config/ /etc/nginx/ 2>/dev/null
-
-# Check load balancer pool membership
-# F5: tmsh list ltm pool | grep -A5 <hostname>
-# HAProxy: grep <hostname> /etc/haproxy/haproxy.cfg
-
-# Check monitoring for dependencies
-curl -s "http://prometheus:9090/api/v1/series?match[]=up{instance=~'<hostname>.*'}"
+┌───────────────────────────────────────── System Decommission ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Decommission: retire system safely — migrate data, preserve backups, recover assets      │   │
+│   │          No system retired without sign-off from business owner and storage/data team         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Pre-Decommission      │  │          Execution          │  │          Close-out          │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │   Business owner sign-off   │  │         Migrate data        │  │     CMDB retired status     │   │
+│   │     Confirm no consumers    │  │         Final backup        │  │        Asset returned       │   │
+│   │   Identify data retention   │  │        DNS/IP removed       │  │      License recovered      │   │
+│   │  Data classification review │  │      Monitoring removed     │  │        Creds deleted        │   │
+│   │    Backup retention check   │  │          Power off          │  │      Secure erase data      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │       Step       │      Owner       │        Gate       │     Artefact     │      Notes       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   Biz sign-off   │    Biz owner     │   Email approval  │  Approval email  │    Mandatory     │   │
+│   │   Data migrate   │    Infra team    │ Transfer verified │  Migration log   │ Integrity check  │   │
+│   │   Secure erase   │    Infra team    │    Erasure cert   │   Certificate    │  Regulatory req  │   │
+│   │   CMDB retire    │    Infra team    │   Status updated  │   CMDB record    │  End of process  │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Secure erase   = DoD 7-pass or crypto erase of data before disposal; required by policy            │
+│    Erasure cert   = Certificate from erase tool documenting that secure wipe completed                │
+│    Consumer check = Confirm no active services, users, or applications depend on the system           │
+│    Asset recovery = Return hardware to vendor, send to spare pool, or dispose per WEEE                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## 3. Data Retention Review

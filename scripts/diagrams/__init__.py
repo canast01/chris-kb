@@ -15,5 +15,6 @@ from . import disaster_recovery_replication
 from . import monitoring
 from . import tools
 from . import automation
+from . import ops
 
 from ._core import DIAGRAMS

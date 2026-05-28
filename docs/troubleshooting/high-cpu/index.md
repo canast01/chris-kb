@@ -48,31 +48,40 @@ flowchart TD
     U -- Yes --> V[jstat -gcutil PID 1000\nAnalyze heap usage]
     U -- No --> W[Find CPU-burning thread\nCorrelate thread ID hex to jstack output]
 ```
-
----
-
-## Linux CPU Diagnosis
-
-### Identify Top Consumers
-
-```bash
-# Snapshot top CPU processes
-ps aux --sort=-%cpu | head -15
-
-# Example output:
-# USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-# tomcat   14321 98.2  8.4 4200000 695040 ?      Sl   08:00 124:03 java -Xmx4g -jar app.jar
-# root       812  3.1  0.1  65536  11264 ?        Ss   May07   8:21 /usr/sbin/rsyslogd
-
-# Live monitoring with pidstat (per-process, per-second)
-pidstat -u 2 5
-
-# Example output:
-# 08:14:03      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
-# 08:14:05        0     14321   97.50    0.50    0.00    0.00   98.00     2  java
-
-# Identify child threads of a process
-pidstat -t -p 14321 2 3
+┌────────────────────────────────────── High CPU Troubleshooting ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      High CPU: identify top consumers, check for CPU ready, investigate runaway processes     │   │
+│   │           ESXi: CPU ready > 5% indicates overcommit; vCPU wait for physical CPU time          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Linux            │  │           Windows           │  │        ESXi / VMware        │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │          top / htop         │  │         Task Manager        │  │         esxtop: CPU         │   │
+│   │     ps aux --sort=-%cpu     │  │       Get-Process sort      │  │         CPU ready %         │   │
+│   │           perf top          │  │        Perfmon: % CPU       │  │          Co-stop %          │   │
+│   │         sar -u 1 10         │  │         WPA profiler        │  │         VM CPU limit        │   │
+│   │       strace / ftrace       │  │         Process dump        │  │        NUMA topology        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │     Symptom      │       Tool       │     Indicator     │       Fix        │      Verify      │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   Runaway proc   │  top / Task Mgr  │   High PID CPU%   │  Kill/restrain   │  CPU normalises  │   │
+│   │    CPU ready     │   esxtop %RDY    │        > 5%       │   Reduce vCPU    │   Ready drops    │   │
+│   │    Steal time    │     top %st      │    > 0 in cloud   │ Upgrade VM type  │    Steal = 0     │   │
+│   │     IRQ load     │cat /proc/interrup│   One CPU pinned  │    irqbalance    │    IRQ spread    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    CPU ready  = ESXi: time vCPU waits for physical CPU; > 5% impacts VM performance                   │
+│    Co-stop    = ESXi SMP VMs wait for all vCPUs to be scheduled simultaneously                        │
+│    Steal time = In VMs: hypervisor withholding CPU from guest; indicates host overcommit              │
+│    irqbalance = Linux daemon; distributes hardware interrupts across CPUs for load balance            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Kernel vs User Space

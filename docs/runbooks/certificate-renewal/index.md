@@ -15,38 +15,43 @@
    7 days to expiry ──► Emergency change; on-call engineer engaged
    0 days           ──► Certificate expired — service unavailable to clients
 ```
-
-## Process Flow
-
-```text
-  Expiry alert triggered (30-day threshold)
-           │
-           ▼
-  Confirm cert details: CN, SANs, issuing CA, service
-           │
-           ▼
-  Generate new private key + CSR
-           │
-           ▼
-  Internal CA?  ──── Yes ──► Submit to ADCS / Venafi
-           │ No (external)
-           ▼
-  Submit CSR to public CA; complete domain validation
-           │
-           ▼
-  Download signed cert + full chain
-           │
-           ▼
-  Test new cert in staging (if available)
-           │
-           ▼
-  Install cert + reload service
-           │
-           ▼
-  Validate: new expiry date visible from browser / openssl
-           │
-           ▼
-  Update cert inventory; close ticket
+┌──────────────────────────────────── Runbook — Certificate Renewal ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          Renew SSL/TLS certificates before expiry; update all consumers; verify chain         │   │
+│   │       Timeline: start 30+ days before expiry; verify deployment before old cert expires       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                      Step 1 — Identify expiring certificates (< 30 days)                      │   │
+│   │                openssl s_client -connect <host>:443 | openssl x509 -noout -dates              │   │
+│   │                        Venafi / cert inventory report for < 30-day expiry                     │   │
+│   │                        Step 2 — Generate CSR (or use ACME/Venafi auto)                        │   │
+│   │               openssl req -new -key server.key -out server.csr -subj "/CN=<fqdn>"             │   │
+│   │                   Step 3 — Submit to CA; download signed certificate + chain                  │   │
+│   │             Step 4 — Install new certificate on service (nginx/IIS/appliance GUI)             │   │
+│   │                   Step 5 — Verify: openssl verify -CAfile chain.pem cert.pem                  │   │
+│   │               Step 6 — Test all consumers (browser, API clients, backup agents)               │   │
+│   │                Step 7 — Update Venafi/CMDB with new expiry; close change ticket               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                        # Check cert expiry on all hosts from inventory                        │   │
+│   │                                 for HOST in "${HOSTS[@]}"; do                                 │   │
+│   │                EXPIRY=$(echo | openssl s_client -connect $HOST:443 2>/dev/null \              │   │
+│   │                            | openssl x509 -noout -enddate 2>/dev/null)                        │   │
+│   │                                   echo "$HOST: $EXPIRY"; done                                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    CSR          = Certificate Signing Request; includes public key and subject; sent to CA            │
+│    Chain        = CA certificate chain (intermediate + root) required for full trust validation       │
+│    ACME         = Automated cert issuance protocol (Let's Encrypt, Venafi, etc.); 90-day auto-renew   │
+│    SAN          = Subject Alternative Name; include all FQDNs/IPs the cert covers                     │
+│    Venafi       = Enterprise cert lifecycle management; tracks expiry and automates renewal           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Step 1 — Confirm Current Certificate

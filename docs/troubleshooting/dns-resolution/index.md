@@ -47,34 +47,40 @@ flowchart TD
     U -- No --> V[Fix forwarder IP\nCheck connectivity to remote DNS]
     U -- Yes --> W[Check local forwarder config\nnslookup -type=SOA domain]
 ```
-
----
-
-## dig / nslookup Diagnostic Commands with Output Examples
-
-### Forward Resolution
-
-```bash
-# Basic forward lookup — using default resolver
-dig app01.corp.example.com
-
-# Expected output (success):
-# ;; ANSWER SECTION:
-# app01.corp.example.com. 3600 IN A 10.10.1.55
-
-# Query a specific DNS server
-dig @dc01.corp.example.com app01.corp.example.com
-
-# Check all record types
-dig app01.corp.example.com ANY
-
-# Query with full trace from root (bypasses cache)
-dig +trace app01.corp.example.com
-
-# NXDOMAIN response looks like:
-# ;; ->>HEADER<<- opcode: QUERY, status: NXDOMAIN, id: 12345
-# ;; AUTHORITY SECTION:
-# corp.example.com.   3600 IN SOA dc01.corp.example.com. hostmaster.corp.example.com. ...
+┌─────────────────────────────────── DNS Resolution Troubleshooting ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          DNS failures: forward lookup fail, reverse fail, forwarder down, stale cache         │   │
+│   │              Diagnose with: nslookup, dig, Resolve-DnsName, ipconfig /displaydns              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Diagnostic Commands              │  │                 Common Fixes                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           nslookup <host> <dns_ip>           │  │          Flush DNS cache on client          │   │
+│   │             dig @<dns_ip> <host>             │  │          Check/restart DNS service          │   │
+│   │              dig +trace <host>               │  │           Add missing A/PTR record          │   │
+│   │              ipconfig /flushdns              │  │             Fix forwarder config            │   │
+│   │             Resolve-DnsName (PS)             │  │          Replicate zone to all DCs          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │     Problem      │    Diagnosis     │     Root cause    │       Fix        │      Verify      │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │ Fwd lookup fail  │  nslookup fails  │    No A record    │   Add A record   │ nslookup passes  │   │
+│   │   Reverse fail   │ nslookup reverse │   No PTR record   │  Add PTR record  │   PTR resolves   │   │
+│   │   Stale cache    │Wrong IP returned │   Cached record   │ Flush client DNS │    Correct IP    │   │
+│   │  Forwarder fail  │  External fail   │   Forwarder down  │  Fix forwarder   │External resolves │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Forwarder   = DNS server passing unresolved queries to upstream server (e.g., ISP or 8.8.8.8)      │
+│    Split-brain = Internal and external DNS serving different records for same name                    │
+│    TTL         = Time To Live; cached record duration; lower TTL speeds propagation                   │
+│    PTR record  = Reverse DNS record; IP → hostname; required for many services and logs               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Reverse (PTR) Resolution

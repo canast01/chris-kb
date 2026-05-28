@@ -41,17 +41,40 @@
            ▼
   Confirm ConsolidationNeeded = False
 ```
-
-## Step 1 — Pre-Checks
-
-```powershell
-# Confirm no existing snapshots
-Get-VM <vmname> | Get-Snapshot
-
-# Check datastore free space (need ≥ 20%)
-Get-Datastore | Select Name,
-    @{N="FreePct";E={[math]::Round($_.FreeSpaceMB / $_.CapacityMB * 100, 1)}} |
-    Sort FreePct
+┌──────────────────────────────────────── Runbook — VM Snapshot ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           VM snapshots capture state for short-term rollback; NOT a backup solution           │   │
+│   │          Delete snapshots within 24–72 hours; older snapshots degrade VM performance          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Create Snapshot                │  │               Delete Snapshot               │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │          Confirm VM not in snapshot          │  │           Verify change succeeded           │   │
+│   │      Quiesce filesystem (VMware tools)       │  │           Delete via Snapshot Mgr           │   │
+│   │          Name: CHG-XXXXX-pre-change          │  │         "Delete All" commits deltas         │   │
+│   │              Note creation time              │  │           Monitor datastore space           │   │
+│   │           Max 1 snapshot in change           │  │           Confirm space reclaimed           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Action      │   vSphere GUI    │      PowerCLI     │      Limit       │       Risk       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │      Create      │Actions > Snapshot│    New-Snapshot   │   1 per change   │   Delta growth   │   │
+│   │       List       │   Snapshot Mgr   │    Get-Snapshot   │        —         │        —         │   │
+│   │      Delete      │  Delete in Mgr   │  Remove-Snapshot  │    Delete all    │  Consolidation   │   │
+│   │      Revert      │  Revert to snap  │  Set-VM -Snapshot │   Loss of data   │   Irreversible   │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Delta VMDK   = Snapshot child disk capturing writes after snapshot; grows until deleted            │
+│    Quiesce      = VMware Tools flushes guest FS buffers; ensures consistent snapshot state            │
+│    Consolidation= vCenter merges delta disks back into base on snapshot delete                        │
+│    Snapshot stun= Momentary IO pause during snapshot create/delete; worse with large VMs              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **ESXi CLI:**

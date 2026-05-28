@@ -35,47 +35,40 @@ Coordinates planning, scheduling, and execution of software and infrastructure r
 7. Release closure
    → RFC closed; release notes published; team briefed
 ```
-
-## Release Readiness Checklist
-
-- [ ] All in-scope tickets resolved and verified in non-prod
-- [ ] Regression test suite passed
-- [ ] UAT sign-off obtained from business/service owner
-- [ ] Release notes drafted (changes, known issues, rollback instructions)
-- [ ] Deployment runbook reviewed and updated
-- [ ] Rollback procedure tested in staging
-- [ ] Database migrations reviewed and backed out tested
-- [ ] Third-party dependency versions locked and verified
-- [ ] Security scan / DAST completed for application releases
-- [ ] Change window booked; stakeholders notified
-
-## Release Calendar — Blocked Periods
-
-Avoid scheduling releases during:
-- Month-end / quarter-end financial processing windows
-- Major public holidays or low-staffing periods
-- Active incidents or post-incident moratorium (72h after P1)
-- Code/change freeze periods (pre-announced)
-
-## Release Notes Template
-
-```markdown
-## Release vX.Y.Z — 2026-05-06
-
-### Changes
-- [Feature] Description of new capability (TICKET-123)
-- [Fix] Description of bug fix (TICKET-456)
-- [Security] CVE-YYYY-XXXXX patched in dependency X
-
-### Known Issues
-- [TICKET-789] Description — workaround: ...
-
-### Deployment Notes
-- Requires DB migration: run `migration_0042_up.sql` before service start
-- Config change required: add `NEW_SETTING=value` to `/etc/app/config`
-
-### Rollback
-- Stop service; revert package to vX.Y.Z-1; run `migration_0042_down.sql`
+┌───────────────────────────────────────── Release Management ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Release management: package, schedule, and coordinate multi-change deployments        │   │
+│   │         Release calendar: scheduled windows, freeze periods, and dependency sequencing        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Planning          │  │          Execution          │  │          Close-out          │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │      Release packaging      │  │       Sequenced deploy      │  │        Release review       │   │
+│   │        Dependency map       │  │         Gate checks         │  │       Lessons learned       │   │
+│   │      Go/No-Go criteria      │  │       Rollback trigger      │  │        Metrics review       │   │
+│   │        Freeze periods       │  │        Communication        │  │        Backlog update       │   │
+│   │      Stakeholder comms      │  │        Live dashboard       │  │         RFC closure         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │      Phase       │     Timeline     │        Gate       │      Owner       │     Artefact     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │     Planning     │      T-14d       │    Release plan   │   Release mgr    │   Release doc    │   │
+│   │      Freeze      │       T-7d       │    No new items   │    Change mgr    │  Freeze notice   │   │
+│   │     Go/No-Go     │       T-1h       │  All checks pass  │   Release mgr    │   Decision log   │   │
+│   │      Review      │       T+2d       │   Success verify  │   Release mgr    │  Review report   │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Release package= Group of related changes deployed together in a coordinated window                │
+│    Freeze period  = No new changes added to release after freeze date; scope locked                   │
+│    Dependency map = Which changes must complete before others can start; sequence critical            │
+│    Go/No-Go call  = Release decision meeting T-1h; all dependencies and pre-checks confirmed          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Go / No-Go Decision

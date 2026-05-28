@@ -48,36 +48,41 @@ flowchart TD
     U -- Yes --> V[Working set exceeds cache\nTiering or capacity expansion needed]
     U -- No --> W[Check for snapshot/replication I/O\nSchedule during maintenance window]
 ```
-
----
-
-## Linux iostat Analysis
-
-```bash
-# Extended iostat — 5 second intervals, 3 iterations
-iostat -x 5 3 /dev/sdb
-
-# Example output:
-# Device    r/s    w/s  rMB/s  wMB/s  avgrq-sz  avgqu-sz  await  r_await  w_await  svctm  %util
-# sdb      120.0   80.0   30.0   20.0      400.0      4.2   21.5     8.2     40.1    4.1   82.0
-
-# Field interpretation:
-# await   — average I/O wait time (ms): total latency seen by host
-#           await > threshold = problem (see threshold table above)
-# r_await — read latency
-# w_await — write latency (writes often higher; check if write-cache enabled on array)
-# svctm   — service time (deprecated in newer kernels; use await)
-# %util   — device utilisation percentage
-#           >80% = device is saturating; latency will increase non-linearly
-# avgqu-sz — average queue length; >1 = I/O queuing occurring
-
-# Monitor I/O by process (requires iotop)
-iotop -o -P -k -d 2
-
-# Example output:
-# TID    PRIO  USER       DISK READ  DISK WRITE  COMMAND
-# 14321  be/4  oracle      0.0 B/s    45.2 M/s   ora_dbwr_PROD
-# 14322  be/4  oracle      12.1 M/s    0.0 B/s   ora_lgwr_PROD
+┌─────────────────────────────────── Storage Latency Troubleshooting ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           High storage latency: check queue depth, path health, array load, and KAVG          │   │
+│   │            ESXi: KAVG > 5ms = host queue issue; DAVG = array latency; GAVG = total            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Host Layer         │  │          Path / HBA         │  │         Array Layer         │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │          KAVG > 5ms         │  │          Dead paths         │  │         DAVG > 10ms         │   │
+│   │      Queue depth limit      │  │        Degraded paths       │  │        Hot pool/tier        │   │
+│   │         ABPG (abort)        │  │          HBA errors         │  │       Array queue full      │   │
+│   │         IO scheduler        │  │        MPIO imbalance       │  │       Cache hit ratio       │   │
+│   │        VMware balloon       │  │       FC fabric errors      │  │        Drive rebuild        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │      Metric      │       Tool       │     Threshold     │      Cause       │       Fix        │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │       KAVG       │esxtop / vscsistat│       < 5ms       │    Host queue    │Reduce queue depth│   │
+│   │       DAVG       │esxtop / vscsistat│       < 10ms      │    Array perf    │Array QoS/tiering │   │
+│   │       GAVG       │      esxtop      │     KAVG+DAVG     │     Combined     │  Isolate layer   │   │
+│   │   Path health    │    esxcli nmp    │     All active    │    Dead path     │   Rescan HBAs    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    KAVG = Kernel Average latency; time I/O spends in ESXi storage stack (queue)                       │
+│    DAVG = Device Average latency; time I/O spends on storage array (wire + array)                     │
+│    GAVG = Guest Average; total latency seen by VM; KAVG + DAVG approximately                          │
+│    ABPG = Abort Per Second; commands timing out; indicates severe latency or path issue               │
+│    MPIO = Multipath I/O; balanced across paths; single active path = higher DAVG                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

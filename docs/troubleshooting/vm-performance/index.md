@@ -59,36 +59,40 @@ flowchart TD
     Q -- No --> S[Issue may be inside guest\nSSH into VM; check top/iostat/netstat]
     S --> T[Correlate with recent changes\nSnapshot? New workload? Config change?]
 ```
-
----
-
-## CPU Ready Time Investigation
-
-CPU Ready time (%RDY) is the percentage of time a VM's vCPU was ready to run but waiting for a physical CPU. It is the single most impactful hypervisor-level CPU metric.
-
-```bash
-# In esxtop — press 'c' for CPU view
-# Find VM by name (press 'G' to filter by group/world)
-# Key: %RDY column, per vCPU and aggregate
-
-# Convert esxtop %RDY to milliseconds:
-# %RDY of 10% on a 20000ms interval = 2000ms of ready time per CPU per 20s
-# Formula: Ready_ms = %RDY * 20000 / 100
-
-# Batch collect and analyse CPU ready via PowerCLI
-Get-VM | Get-Stat -Stat cpu.ready.summation -MaxSamples 10 -Realtime |
-    Group-Object {$_.Entity.Name} |
-    ForEach-Object {
-        $avgReady = ($_.Group | Measure-Object Value -Average).Average
-        $vcpu = ($_.Group[0].Entity | Get-VM).NumCpu
-        $readyPct = [math]::Round($avgReady / (20000 * $vcpu) * 100, 2)
-        [PSCustomObject]@{
-            VM          = $_.Name
-            vCPU_Count  = $vcpu
-            AvgReady_ms = [math]::Round($avgReady, 0)
-            ReadyPct    = "$readyPct%"
-        }
-    } | Sort-Object AvgReady_ms -Descending | Select-Object -First 10
+┌─────────────────────────────────── VM Performance Troubleshooting ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          Slow VM: check CPU ready, memory balloon/swap, disk DAVG, and network drops          │   │
+│   │                 Use esxtop to triage all four resource domains simultaneously                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │             CPU             │  │            Memory           │  │          Disk / Net         │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │        CPU ready > 5%       │  │         Balloon > 0         │  │         DAVG > 10ms         │   │
+│   │         Co-stop high        │  │           Swap > 0          │  │          Net drops          │   │
+│   │          Overcommit         │  │       Mem compression       │  │        IOPS saturate        │   │
+│   │        CPU limit set        │  │       Reservation miss      │  │         Rx/Tx drops         │   │
+│   │        NUMA mismatch        │  │          Guest leak         │  │       Snapshot present      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │     Symptom      │    esxtop key    │     Threshold     │    Root cause    │       Fix        │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │     CPU slow     │     c → %RDY     │        > 5%       │    Overcommit    │Reduce vCPU or DRS│   │
+│   │     Mem slow     │     m → MCTL     │       > 0 MB      │    Overcommit    │Add RAM or reserva│   │
+│   │    Disk slow     │     d → DAVG     │       > 10ms      │  Array latency   │See storage-latenc│   │
+│   │    Net drops     │    n → Drp/s     │        > 0        │   NIC saturate   │Increase vNIC or Q│   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    CPU ready  = vCPU waiting for physical CPU; reduce vCPU count or migrate VM to less loaded host    │
+│    Balloon    = VMware reclaiming guest RAM via balloon driver; guest must free its own memory        │
+│    Swap       = VMware swapping guest RAM to host swap file; causes severe performance impact         │
+│    NUMA miss  = vCPU accesses RAM from remote NUMA node; size VMs within physical NUMA boundary       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### CPU Ready — Common Causes and Fixes

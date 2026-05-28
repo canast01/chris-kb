@@ -46,31 +46,40 @@ flowchart TD
     C -- Authentication --> T[Check service account in job\nTest-ADServiceAccount]
     T --> U[Reset password\nVerify AD group membership]
 ```
-
----
-
-## Veeam Backup & Replication Troubleshooting
-
-### Job Status and History
-
-```powershell
-# Connect to VBR server (run from VBR console or remote PS session)
-Add-PSSnapin VeeamPSSnapIn
-
-# List all jobs with last result
-Get-VBRJob | Select-Object Name, JobType, IsScheduleEnabled,
-    @{N='LastResult';E={$_.GetLastResult()}},
-    @{N='LastRun';E={$_.ScheduleOptions.LatestRunLocal}} |
-    Format-Table -AutoSize
-
-# Get detailed session info for a failing job
-$job = Get-VBRJob -Name "Job-PROD-VMs"
-$session = Get-VBRBackupSession | Where-Object {$_.JobName -eq $job.Name} |
-    Sort-Object EndTime -Descending | Select-Object -First 1
-$session | Select-Object JobName, Result, Progress, EndTime
-
-# Get task-level results (individual VM status within job)
-$session.GetTaskSessions() | Select-Object Name, Status, Info | Format-Table
+┌─────────────────────────────────────────── Backup Failures ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Backup failures: job errors, proxy overload, repo full, snapshot stun, network        │   │
+│   │             First check: job log → error code → check proxy/repo/network → resolve            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Veeam            │  │          NetBackup          │  │          Commvault          │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │      Proxy agent error      │  │       Media server err      │  │        MA agent error       │   │
+│   │       Repository full       │  │           STU full          │  │      Disk library full      │   │
+│   │       Snapshot removal      │  │       Snapshot timeout      │  │         VSS failure         │   │
+│   │       VMware tools err      │  │        Client network       │  │        Subclient miss       │   │
+│   │        Transport mode       │  │        Expired certs        │  │         Job schedule        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │     Problem      │   First check    │        Fix        │      Verify      │   Escalate if    │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    Job failed    │  Job log error   │   Per error code  │   Job retry OK   │ Persistent fail  │   │
+│   │    Repo full     │  Repo capacity   │   Expire/expand   │   Space freed    │  No space avail  │   │
+│   │  Snapshot fail   │   VMware tools   │    Update tools   │   Snapshot OK    │  Datastore full  │   │
+│   │    Proxy err     │  Proxy CPU/RAM   │    Reduce tasks   │  Job completes   │ Agent reinstall  │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Transport mode= Veeam: HotAdd, NBD, Direct SAN; wrong mode causes snapshot or perf issues          │
+│    VSS           = Windows Volume Shadow Copy Service; required for consistent Windows backups        │
+│    STU           = NetBackup Storage Unit; target for backup data; check capacity and path            │
+│    Snapshot stun = ESXi: brief VM pause during snapshot create/commit; worse on large disks           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Log Locations

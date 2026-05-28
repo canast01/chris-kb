@@ -37,29 +37,41 @@ Emergency changes bypass the standard CAB cycle to address active outages or cri
 4. Confirm with stakeholders that service is restored
 5. Remove any temporary workarounds (firewall rules, bypasses)
 ```
-
-## Post-Implementation — Required Within 24 Hours
-
-- [ ] ITSM ticket updated with exact change made (commands run, files edited, config changed)
-- [ ] Rollback plan documented (even if not used)
-- [ ] Root cause identified and linked to problem ticket
-- [ ] Formal post-incident review scheduled (within 5 business days for P1)
-- [ ] Change closure approved by service owner
-
-## Post-Incident Review Template
-
-```markdown
-Emergency Change:    ITSM-XXXX
-Date/Time:           2026-05-06 02:14 UTC
-Duration:            47 minutes
-Approver:            Jane Smith (on-call manager) — approved via Slack 02:18 UTC
-
-Issue:               PostgreSQL replica fell behind; primary OOM-killed
-Change Made:         Restarted postgres with increased shared_buffers; promoted replica temporarily
-Rollback:            Revert shared_buffers to original value; redeploy replica from backup
-Outcome:             Service restored 02:57 UTC; RTO target met
-Prevention:          Memory alarm threshold lowered; auto-restart added to systemd unit
-Follow-up tickets:   PROB-4421 (root cause), TASK-8874 (memory tuning)
+┌────────────────────────────────────────── Emergency Change ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Emergency change: expedited process for P1/P2 incidents requiring immediate action      │   │
+│   │       ECAB approval: verbal/email from ECAB quorum; document before or immediately after      │   │
+│   │          Retrospective RFC required within 24 hours; post-change review within 5 days         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Emergency Change Criteria           │  │                 ECAB Process                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │            Active P1/P2 incident             │  │          Call ECAB members (min 2)          │   │
+│   │             Service unavailable              │  │            Explain risk + action            │   │
+│   │           Imminent security threat           │  │           Verbal or email approval          │   │
+│   │             Regulatory deadline              │  │             Execute immediately             │   │
+│   │            No time for normal CAB            │  │           Document retrospectively          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │     Timeline     │      Action      │       Owner       │     Artefact     │     Deadline     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │       T=0        │Incident declared │    Incident mgr   │    P1 ticket     │    Immediate     │   │
+│   │     T+30 min     │  ECAB approval   │     Change mgr    │   Approval log   │      30 min      │   │
+│   │     T+24 hr      │    RFC raised    │     Change mgr    │    Retro RFC     │     24 hours     │   │
+│   │     T+5 days     │       PIR        │     Change mgr    │    PIR report    │ 5 business days  │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    ECAB         = Emergency CAB; subset of CAB members available 24/7 for emergency approval          │
+│    Retrospective= RFC created after emergency change to formalise the record                          │
+│    PIR          = Post-Implementation Review; required after emergency changes within 5 days          │
+│    Quorum       = Minimum 2 ECAB members must approve; single approver insufficient                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Guardrails

@@ -52,29 +52,41 @@ flowchart TD
     U -- No --> V[Fix CDP / add OCSP proxy]
     U -- Yes --> W[Check EKU — Client Auth OID 1.3.6.1.5.5.7.3.2]
 ```
-
----
-
-## Kerberos Troubleshooting
-
-### 1. Verify KDC Reachability
-
-```powershell
-# Locate the DC for the domain
-nltest /dsgetdc:corp.example.com /kdc /force
-
-# Expected output:
-#           DC: \\dc01.corp.example.com
-#      Address: \\10.10.1.10
-#     Dom Guid: <GUID>
-#     Dom Name: corp.example.com
-#  Forest Name: corp.example.com
-# Dc Site Name: Site-London
-# Our Site Name: Site-London
-#        Flags: PDC KDC DS LDAP GC WRITABLE DNS_DC DNS_DOMAIN DNS_FOREST CLOSE_SITE
-
-# Test port 88 (Kerberos) directly
-Test-NetConnection -ComputerName dc01.corp.example.com -Port 88
+┌─────────────────────────────────────── Authentication Failures ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Auth failures: account lockout, expired password, Kerberos clock skew, SSO config       │   │
+│   │      First check: Is the user account locked? Is the service account credential expired?      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          AD / LDAP          │  │           Kerberos          │  │          SSO / SAML         │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │        Account locked       │  │      Clock skew > 5 min     │  │      Metadata mismatch      │   │
+│   │       Password expired      │  │         SPN missing         │  │     Certificate expired     │   │
+│   │      LDAP port blocked      │  │       Delegation issue      │  │       ACS URL mismatch      │   │
+│   │        DC unreachable       │  │        Realm mismatch       │  │        Claim mapping        │   │
+│   │      Group policy block     │  │       KDC unreachable       │  │       IdP unreachable       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │     Symptom      │   First check    │      Command      │       Fix        │      Verify      │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    Locked out    │   AD LockedOut   │     Get-ADUser    │ Unlock-ADAccount │     Login OK     │   │
+│   │  Kerberos fail   │    NTP clock     │    w32tm /query   │     Sync NTP     │ klist purge+test │   │
+│   │     SSO fail     │     IdP logs     │   Browser trace   │   Fix metadata   │    SAML trace    │   │
+│   │   LDAP blocked   │   Port 389/636   │    Test-NetConn   │     Open FW      │  ldapsearch OK   │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Clock skew     = Kerberos requires all participants within 5 min; verify NTP on all hosts          │
+│    SPN            = Service Principal Name; must exist and be unique for Kerberos auth to work        │
+│    SAML trace     = Browser extension (SAML Tracer) captures assertion for SP/IdP debugging           │
+│    ACS URL        = Assertion Consumer Service URL; SP endpoint; must match IdP configuration         │
+│    klist purge    = Clears cached Kerberos tickets; forces re-auth after fixing KDC issue             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 2. Inspect Current Tickets
