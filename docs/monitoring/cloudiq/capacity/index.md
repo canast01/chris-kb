@@ -20,7 +20,7 @@
 │                                                                                                       │
 │  Raw capacity = Total physical storage before RAID/parity overhead                                    │
 │  Usable capacity = Raw minus RAID overhead; available for data                                        │
-│  Thin provisioning = Allocating more logical capacity than physical; deduplication + compression expan│
+│  Thin provisioning = More logical capacity than physical; dedup + compression expand ratio            │
 │  Forecast = ML regression on historical consumption predicting when capacity will be exhausted        │
 │  Confidence band = Upper/lower bound on forecast based on variance in historical data                 │
 │  Add-capacity alert = CloudIQ alert when forecast horizon drops below threshold (e.g., 90 days)       │

@@ -37,7 +37,7 @@ foreach ($p in $ProfilePaths) {
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     Module lock    = document exact versions: Get-InstalledModule | Export-Csv modules.csv    │   │
-│   │JEA config     = session configuration .pssc file; register with Register-PSSessionConfiguratio│   │
+│   │     JEA config    = .pssc session configuration; Register-PSSessionConfiguration to apply     │   │
 │   │      Scheduled task = Export-ScheduledTask | Out-File; Import via Register-ScheduledTask      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘

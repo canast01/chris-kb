@@ -19,12 +19,12 @@
 │   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
 │   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
 │   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
-│   │Encryption enabled on all channels: SRM management TLS; replication encryption controlled by ar│   │
+│   │      Encryption: SRM management TLS; replication encryption controlled by array/SRA layer     │   │
 │   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure:                                                                             │
-│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+│  Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link            │
 │  Key terms:                                                                                           │
 │                                                                                                       │
 │  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │

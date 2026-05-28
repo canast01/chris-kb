@@ -24,7 +24,7 @@ graph LR
 ```
 ┌──────────────────────────────────────── Ansible — Encryption ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Ansible encryption layers: Vault (variable files), SSH transport (TLS), AWX credential encrypti│   │
+│   │     Ansible encryption: Vault (var files), SSH transport (TLS), AWX credential encryption     │   │
 │   │Ansible Vault: AES-256-CTR encryption; password protects vault files; vault ID for multiple PWs│   │
 │   │    AWX: credentials encrypted at rest using SECRET_KEY; rotated during AWX rekey procedure    │   │
 │   │    Transport: SSH always encrypted; WinRM must use HTTPS (TLS) — reject HTTP WinRM in prod    │   │

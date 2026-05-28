@@ -19,7 +19,7 @@
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │           $PSVersionTable = hash table with PS version, OS, runtime, and build info           │   │
 │   │     Test-WSMan      = validates WinRM connectivity and config on remote host; returns XML     │   │
-│   │ExecutionPolicy = check per scope: Process, CurrentUser, LocalMachine; Restricted blocks all .p│   │
+│   │      ExecutionPolicy = scope: Process, CurrentUser, LocalMachine; Restricted blocks .ps1      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

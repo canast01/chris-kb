@@ -4954,7 +4954,7 @@ def _cisco_mds_arch():
     lines.append(txt_row())
     lines.append(R(merge(bTop(L1, R1), bTop(L2, R2), bTop(L3, R3))))
     lines.append(R(merge(bMid(L1, R1, 'How It Works'), bMid(L2, R2, 'Integrations'), bMid(L3, R3, 'Design Standards'))))
-    lines.append(R(merge(bMid(L1, R1, 'VSAN: logical fabric partition'), bMid(L2, R2, 'DCNM: GUI management'), bMid(L3, R3, 'Dual ISL paths'))))
+    lines.append(R(merge(bMid(L1, R1, 'VSAN: fabric partition'), bMid(L2, R2, 'DCNM: GUI management'), bMid(L3, R3, 'Dual ISL paths'))))
     lines.append(R(merge(bMid(L1, R1, 'ISL E_Port for switch-switch'), bMid(L2, R2, 'ISE: TACACS+ auth'), bMid(L3, R3, 'VSAN per workload'))))
     lines.append(R(merge(bMid(L1, R1, 'FSPF: shortest path routing'), bMid(L2, R2, 'SIEM: syslog events'), bMid(L3, R3, 'PortChannel for trunk'))))
     lines.append(R(merge(bMid(L1, R1, 'CFS: config distribution'), bMid(L2, R2, 'NetApp/HPE: FC target'), bMid(L3, R3, 'Zone set per VSAN'))))

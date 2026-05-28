@@ -149,7 +149,7 @@ flowchart TD
 │   │     5. Redirect traffic     │  │       5. Re-enable CG       │  │    5. Validate & end test   │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: test copy VMs on bubble portgroup (no uplinks); failover requires DR network pre-configur│
+│    Physical: test VMs on bubble portgroup (no uplinks); DR network must be pre-configured             │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │

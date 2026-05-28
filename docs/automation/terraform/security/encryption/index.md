@@ -24,7 +24,7 @@ graph TD
 ```
 ┌─────────────────────────────────────── Terraform — Encryption ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Terraform encryption: state file encryption at rest (S3 SSE-KMS), transit TLS, sensitive output│   │
+│   │   TF encryption: state at rest (S3 SSE-KMS), transit TLS, mark secrets as sensitive outputs   │   │
 │   │   State encryption: server-side via S3 SSE-KMS; TF 1.7+ client-side: terraform encryption{}   │   │
 │   │      Sensitive outputs: never stored as plaintext in state; mark outputs sensitive = true     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

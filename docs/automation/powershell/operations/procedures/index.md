@@ -102,7 +102,7 @@ flowchart TD
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │-ThrottleLimit = max concurrent remote sessions in Invoke-Command; default 32; reduce for stabi│   │
+│   │         -ThrottleLimit = max concurrent remote sessions in Invoke-Command; default 32         │   │
 │   │    -WhatIf        = simulates what would happen; use before Remove-Item, Stop-Service, etc.   │   │
 │   │     Transcript     = Start-Transcript; logs all input/output to file; use for audit trail     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

@@ -34,7 +34,7 @@ VMware Site Recovery Manager DR orchestration — vCenter plugin automating stor
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure:                                                                             │
-│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+│  Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link            │
 │  Key terms:                                                                                           │
 │                                                                                                       │
 │  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │

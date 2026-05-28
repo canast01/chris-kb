@@ -21,7 +21,7 @@
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    terraform import = bring existing resource under Terraform management; writes state only   │   │
 │   │  terraform state rm= removes resource from state without destroying it; orphans the resource  │   │
-│   │-target          = apply/destroy specific resource; use sparingly; state can become inconsisten│   │
+│   │        -target       = apply/destroy specific resource; use sparingly; state can drift        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

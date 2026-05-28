@@ -75,7 +75,7 @@ Get-Service -Name "DellRASR" | Select-Object Name, Status, StartType
 │   │             OS: supported Linux or Windows Server (see vendor compatibility matrix)           │   │
 │   │          Network: 443 (PPDM REST API) · 2049 (NFS vault) — ensure firewall allows these       │   │
 │   │       Auth: Vault operator role; 2-person integrity for unlock; AD integration for PPDM UI    │   │
-│   │  Storage: Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-roo│   │
+│   │          Storage: Airgap switch · Vault PowerStore/DD appliance · Clean-room ESXi hosts       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │                                                   ▼                                                   │

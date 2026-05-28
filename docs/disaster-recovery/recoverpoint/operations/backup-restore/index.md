@@ -68,7 +68,7 @@ get_bookmarks --cg "CG_PROD_SQL"
 │   │         Failback (resync + cutback)          │  │              Test import on lab             │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: failover powers on replica VMs at DR site; requires pre-configured VM networks and IP poo│
+│    Physical: failover powers on replica VMs at DR site; requires pre-configured networks              │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │

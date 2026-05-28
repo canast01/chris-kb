@@ -2,9 +2,9 @@
 ```
 ┌──────────────────────────── Automation — Infrastructure Automation Tools ─────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Automation: codifying repeatable infrastructure operations into executable, version-controlled │   │
-│   │Goals: eliminate manual error, enforce consistency, accelerate change delivery, enable self-ser│   │
-│   │Tools covered: Ansible (config mgmt), Terraform (IaC), GitHub Actions (CI/CD), PowerShell, Pyth│   │
+│   │  Automation: codifying repeatable infra operations into executable, version-controlled logic  │   │
+│   │     Goals: eliminate manual error, enforce consistency, accelerate delivery, self-service     │   │
+│   │   Tools: Ansible (config mgmt), Terraform (IaC), GitHub Actions (CI/CD), PowerShell, Python   │   │
 │   │    Maturity path: manual → scripted → idempotent config mgmt → full IaC with pipeline gates   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │

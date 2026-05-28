@@ -40,7 +40,7 @@ flowchart TD
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Debug secrets   = ACTIONS_STEP_DEBUG and ACTIONS_RUNNER_DEBUG are set as repo/env secrets   │   │
 │   │     Log retention   = 90 days default; configurable per repo; ZIP downloadable for archive    │   │
-│   │run: env        = add as a step to print all environment variables; helps trace secret injectio│   │
+│   │       run: env      = add as a step to print all env vars; helps trace secret injection       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

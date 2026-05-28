@@ -11,7 +11,7 @@ Cisco MDS 9000 series FC switches running NX-OS. Core isolation mechanism is the
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │         How It Works        │  │         Integrations        │  │       Design Standards      │   │
-│   │VSAN: logical fabric partitio│  │     DCNM: GUI management    │  │        Dual ISL paths       │   │
+│   │    VSAN: fabric partition   │  │     DCNM: GUI management    │  │        Dual ISL paths       │   │
 │   │ ISL E_Port for switch-switch│  │      ISE: TACACS+ auth      │  │      VSAN per workload      │   │
 │   │ FSPF: shortest path routing │  │     SIEM: syslog events     │  │    PortChannel for trunk    │   │
 │   │   CFS: config distribution  │  │    NetApp/HPE: FC target    │  │      Zone set per VSAN      │   │

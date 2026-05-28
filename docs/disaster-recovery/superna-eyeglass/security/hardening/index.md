@@ -15,7 +15,7 @@
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │                                       Network Hardening                                       │   │
 │   │               [ ] Separate backup VLAN — no direct production host access to repo             │   │
-│   │  [ ] Firewall: allow only 443 (Eyeglass web UI) · 8080 (REST API) · 8116 (Isilon/PowerScale mg│   │
+│   │        [ ] Firewall: allow 443 (web UI) · 8080 (REST API) · 8116 (Isilon/PowerScale mgmt)     │   │
 │   │                  [ ] Disable unused ports and protocols on management interface               │   │
 │   │              [ ] Immutable repository: enable WORM or object lock on backup target            │   │
 │   │                 [ ] Encryption in transit: disable TLS 1.0/1.1; enforce TLS 1.2+              │   │

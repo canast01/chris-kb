@@ -8,7 +8,7 @@
 │   │             OS: supported Linux or Windows Server (see vendor compatibility matrix)           │   │
 │   │               Network: 443 (Web UI) · 1556 (vnetd) — ensure firewall allows these             │   │
 │   │             Auth: NBU CA host-ID certificates; AD/LDAP for web UI login; RBAC roles           │   │
-│   │  Storage: Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connec│   │
+│   │          Storage: Linux/Windows rack servers · SAN HBAs · 10 GbE NIC · SCSI tape robot        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │                                                   ▼                                                   │

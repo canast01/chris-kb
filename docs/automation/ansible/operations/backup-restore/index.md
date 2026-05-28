@@ -47,7 +47,7 @@ git push backup --mirror
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   awx CLI     = command-line client for AWX API; awx export --all dumps all objects to JSON   │   │
 │   │     AWX DB      = PostgreSQL database; stores job history, credentials (encrypted), config    │   │
-│   │Vault PW    = Ansible Vault encryption password; if lost, all vault-encrypted vars are unreadab│   │
+│   │     Vault PW    = Ansible Vault password; if lost, all vault-encrypted vars are unreadable    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

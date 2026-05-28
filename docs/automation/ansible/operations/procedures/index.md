@@ -85,9 +85,9 @@ graph LR
 ```
 ┌──────────────────────────────────────── Ansible — Procedures ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Common Ansible operational procedures: rolling OS patching, credential rotation, inventory clea│   │
+│   │        Common Ansible ops: rolling OS patching, credential rotation, inventory cleanup        │   │
 │   │    Pre-run: verify inventory is current, check mode first, confirm Vault password available   │   │
-│   │Post-run: review job output for warnings, verify application health, update runbook with outcom│   │
+│   │     Post-run: review output for warnings, verify app health, update runbook with outcomes     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

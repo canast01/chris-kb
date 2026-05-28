@@ -19,7 +19,7 @@
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Ansible Vault = AES-256 encryption for variable files and strings; password stored separately │   │
-│   │AWX RBAC      = Role-Based Access Control; roles: admin, execute, read per job template/invento│   │
+│   │       AWX RBAC     = Role-Based Access Control; roles: admin, execute, read per template      │   │
 │   │    no_log: true  = prevents task arguments and return values from appearing in AWX job logs   │   │
 │   │   become sudo   = privilege escalation; apply narrowly; log all sudo usage on managed nodes   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

@@ -4,7 +4,7 @@
 ```
 ┌───────────────────────────────── Windows Server — Security Overview ──────────────────────────────────┐
 │                                                                                                       │
-│  Security pillars: identity and access control, authentication hardening, encryption, and OS hardening│
+│  Security pillars: identity/access control, auth hardening, encryption, and OS hardening.             │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │        Access Control       │  │        Authentication       │  │          Encryption         │   │

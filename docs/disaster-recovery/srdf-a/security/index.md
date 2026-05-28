@@ -6,7 +6,7 @@
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │                                   SRDF/A — Security Posture                                   │   │
-│   │Authentication: Symmetrix/PowerMax admin credentials; Solutions Enabler (SYMAPI); role-based Un│   │
+│   │     Authentication: PowerMax admin creds; Solutions Enabler (SYMAPI); role-based Unisphere    │   │
 │   │      Encryption: SRDF encryption at the FA/RF port level; Unisphere HTTPS; SE service TLS     │   │
 │   │           Network: management VLAN separated; 9443 (Unisphere HTTPS) management port          │   │
 │   │                 Audit: all admin actions logged; log retention minimum 1 year                 │   │

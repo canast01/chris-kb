@@ -49,7 +49,7 @@ Examples:
 │   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
 │   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
 │   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
-│   │Encryption enabled on all channels: AES-256 at rest on vault; TLS 1.3 for all management; vault│   │
+│   │  Encryption: AES-256 at rest on vault; TLS 1.3 for all mgmt; vault lock enforces immutability │   │
 │   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │

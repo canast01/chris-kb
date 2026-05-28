@@ -10,7 +10,7 @@
 │   │       Merge Conflicts       │  │         Lost Commits        │  │         Push Errors         │   │
 │   │  git status: list conflicts │  │     git reflog: find SHA    │  │ non-fast-forward: pull first│   │
 │   │ Edit markers: <<<, ===, >>> │  │    git cherry-pick <sha>    │  │ rejected: check branch prot.│   │
-│   │git add + git commit to resol│  │    git reset --hard <sha>   │  │ permission denied: check key│   │
+│   │ git add + commit to resolve │  │    git reset --hard <sha>   │  │ permission denied: check key│   │
 │   │   git mergetool: 3-pane UI  │  │   git fsck: find dangling   │  │timeout: check proxy/firewall│   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │

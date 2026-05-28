@@ -19,7 +19,7 @@
 │   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
 │   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
 │   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
-│   │Encryption enabled on all channels: AES-256 backup encryption (key stored in Veeam config DB); │   │
+│   │    Encryption: AES-256 backup (key in Veeam DB); TLS on all management; WORM repo supported   │   │
 │   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │

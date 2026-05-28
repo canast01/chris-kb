@@ -29,18 +29,18 @@ Dell EMC RecoverPoint journal-based replication — RPA clusters intercept write
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │
-│    RPA cluster      = 2–8 RecoverPoint Appliance VMs per site; active/active; no single point of failu│
-│    ESXi splitter    = Kernel module installed on each ESXi host; intercepts VM disk writes non-disrupt│
-│    Local copy       = Protection within same site (same cluster); journal on same or separate datastor│
+│    RPA cluster      = 2–8 RecoverPoint Appliance VMs per site; active/active; no SPOF                 │
+│    ESXi splitter    = Kernel module on each ESXi host; intercepts VM disk writes non-disruptively     │
+│    Local copy       = Protection within same site (cluster); journal on same or separate DS           │
 │    Remote copy      = Cross-site replication; delta compressed over IP WAN; bandwidth-adaptive        │
 │    Journal volume   = Dedicated VMDK per copy; stores write deltas; sized for desired CDP window      │
 │    Replica volume   = Copy of production VMDK at target site; updated by journal apply process        │
 │    Delta set        = Unit of replication transfer between source and target RPA                      │
 │    WAN compression  = RPA compresses and deduplicates replication traffic before sending across WAN   │
-│    Active/active    = Both RPAs in cluster handle I/O simultaneously; failover is automatic on RPA los│
+│    Active/active    = Both RPAs handle I/O simultaneously; failover automatic on RPA loss             │
 │    CG ownership     = Each CG assigned to one RPA; redistributed automatically on RPA failure         │
 │    vSphere plugin   = RP4VM vCenter plugin; exposes CG management, failover, and image access in UI   │
-│    Bubble network   = Isolated portgroup for test failover VMs; no production traffic reaches test cop│
+│    Bubble network   = Isolated portgroup for test VMs; no production traffic reaches copies           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

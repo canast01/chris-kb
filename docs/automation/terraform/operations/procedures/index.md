@@ -24,7 +24,7 @@ graph LR
 ```
 ┌─────────────────────────────────────── Terraform — Procedures ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Terraform procedures: new module creation, import existing infra, state migration, workspace se│   │
+│   │     TF procedures: new module creation, import existing infra, state migration, workspaces    │   │
 │   │  New module: write main.tf, variables.tf, outputs.tf, versions.tf; add examples/; add tests/  │   │
 │   │    Import: terraform import resource.type.name <resource-id>; then terraform plan to verify   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
@@ -39,7 +39,7 @@ graph LR
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │terraform import  = adds existing resource to state; does not generate .tf code (use config gen│   │
+│   │         terraform import = adds existing resource to state; does not generate .tf code        │   │
 │   │         Config generation = terraform plan -generate-config-out=generated.tf (TF 1.5+)        │   │
 │   │        state migration   = moving state between backends; terraform init -migrate-state       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

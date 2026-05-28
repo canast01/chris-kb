@@ -42,7 +42,7 @@ flowchart TD
 │   │             OS: supported Linux or Windows Server (see vendor compatibility matrix)           │   │
 │   │         Network: 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) — ensure firewall allows these      │   │
 │   │      Auth: vCenter SSO / AD integration; SRM admin role; site-pairing certificate exchange    │   │
-│   │  Storage: Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Ar│   │
+│   │  Storage: Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │                                                   ▼                                                   │
@@ -66,7 +66,7 @@ flowchart TD
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure:                                                                             │
-│  Two vCenter instances (protected + recovery site) · SRA installed on SRM server · Array replication l│
+│  Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link            │
 │  Key terms:                                                                                           │
 │                                                                                                       │
 │  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │

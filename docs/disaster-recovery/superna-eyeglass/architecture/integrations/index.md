@@ -32,7 +32,7 @@ flowchart TB
 │   │ Auth: Eyeglass admin roles; PowerScale admin credentials; AD integration for DFS-N management │   │
 │   │                 Storage: connected via 443 (Eyeglass web UI) · 8080 (REST API)                │   │
 │   │            Monitoring: SNMP traps / syslog / REST API to ITSM and alerting systems            │   │
-│   │Encryption: HTTPS/TLS for all management; SyncIQ data replication encryption (AES-256 in transi│   │
+│   │        Encryption: HTTPS/TLS for all management; SyncIQ replication AES-256 in transit        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │                          ▼                        ▼                        ▼                          │

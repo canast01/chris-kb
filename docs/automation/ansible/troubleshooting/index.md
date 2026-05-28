@@ -19,7 +19,7 @@
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Variable precedence = 22 levels; host_vars > group_vars > defaults > role defaults (highest win│   │
+│   │       Variable precedence = 22 levels; host_vars > group_vars > defaults > role defaults      │   │
 │   │     UNREACHABLE        = host not reachable via SSH; check firewall, SSH service, key auth    │   │
 │   │    Python interpreter = set ansible_python_interpreter if /usr/bin/python3 differs on host    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

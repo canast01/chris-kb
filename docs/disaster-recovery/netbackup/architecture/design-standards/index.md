@@ -19,7 +19,7 @@
 │   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
 │   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
 │   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
-│   │Encryption enabled on all channels: AES-256 backup encryption; KMS key management; TLS 1.2+ on │   │
+│   │      Encryption: AES-256 backup encryption; KMS key management; TLS 1.2+ on all channels      │   │
 │   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │

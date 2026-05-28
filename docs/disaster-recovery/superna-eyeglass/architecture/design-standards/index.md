@@ -25,7 +25,7 @@ SyncIQ policy names must be consistent between primary and DR clusters and follo
 │   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
 │   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
 │   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
-│   │Encryption enabled on all channels: HTTPS/TLS for all management; SyncIQ data replication encry│   │
+│   │       Encryption: HTTPS/TLS for all management; SyncIQ replication encryption (AES-256)       │   │
 │   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │

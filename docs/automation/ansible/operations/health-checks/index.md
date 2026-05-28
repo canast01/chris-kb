@@ -18,7 +18,7 @@
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ansible all -m ping   = fastest connectivity check; returns pong on success, unreachable on fai│   │
+│   │     ansible all -m ping = fastest connectivity check; pong on success, unreachable on fail    │   │
 │   │      Job success rate      = AWX dashboard; alert if >5% failure rate over rolling 7 days     │   │
 │   │      EE freshness          = execution environment images; rebuild if base OS CVEs exist      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

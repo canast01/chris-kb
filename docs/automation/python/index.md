@@ -22,7 +22,7 @@ Python infrastructure automation knowledge base covering virtual environment man
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │venv          = built-in virtual environment; python3 -m venv .venv && source .venv/bin/activat│   │
+│   │     venv          = built-in virtual env; python3 -m venv .venv; source .venv/bin/activate    │   │
 │   │               pip           = package installer; pip install -r requirements.txt              │   │
 │   │    Poetry        = dependency management with lock file; pyproject.toml; poetry add/install   │   │
 │   │            boto3         = AWS SDK for Python; session, client, resource interfaces           │   │

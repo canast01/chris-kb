@@ -43,7 +43,7 @@ symrdf -g <dgname> -sid <r1_sid> query
 │   │             OS: supported Linux or Windows Server (see vendor compatibility matrix)           │   │
 │   │          Network: FC dark fiber / DWDM · FCIP (TCP 3225) — ensure firewall allows these       │   │
 │   │   Auth: Symmetrix/PowerMax admin credentials; Solutions Enabler (SYMAPI); role-based Unisphere│   │
-│   │  Storage: Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth)│   │
+│   │        Storage: Two PowerMax arrays (prod + DR) · FC/FCIP SRDF link (dedicated bandwidth)     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │                                                   ▼                                                   │

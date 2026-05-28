@@ -31,7 +31,7 @@ CG-<app>-<env>
 │   │       Mgmt IP per RPA       │  │      Alarm on >80% full     │  │       Latency <100 ms       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: RPA VMs pinned to dedicated ESXi hosts; journal datastores on separate LUNs from producti│
+│    Physical: RPA VMs pinned to dedicated ESXi hosts; journal on separate LUNs from prod               │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │

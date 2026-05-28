@@ -6,8 +6,8 @@
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │                              Superna Eyeglass — Security Posture                              │   │
-│   │Authentication: Eyeglass admin roles; PowerScale admin credentials; AD integration for DFS-N ma│   │
-│   │Encryption: HTTPS/TLS for all management; SyncIQ data replication encryption (AES-256 in transi│   │
+│   │     Authentication: Eyeglass admin roles; PowerScale creds; AD integration for DFS-N mgmt     │   │
+│   │        Encryption: HTTPS/TLS for all management; SyncIQ replication AES-256 in transit        │   │
 │   │       Network: management VLAN separated; 8116 (Isilon/PowerScale mgmt) management port       │   │
 │   │                 Audit: all admin actions logged; log retention minimum 1 year                 │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

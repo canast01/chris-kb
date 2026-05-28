@@ -28,7 +28,7 @@ ansible --version
 │   │ Ansible core: install via pip (recommended) or OS package manager; pin version in requirements│   │
 │   │   AWX: deployed on Kubernetes via the AWX Operator; upgrade by updating operator CRD version  │   │
 │   │ Collections: install via ansible-galaxy; pin in requirements.yml for reproducible environments│   │
-│   │Execution environments: built with ansible-builder; push to container registry; update AWX EE c│   │
+│   │       Execution envs: built with ansible-builder; push to registry; update AWX EE config      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

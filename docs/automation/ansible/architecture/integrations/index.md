@@ -28,7 +28,7 @@ pip install PyVmomi vsphere-automation-sdk-python
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Dynamic inventory = script or plugin that queries an external source for host lists at runtime│   │
 │   │ Webhook trigger   = AWX can receive HTTP webhooks from GitHub/GitLab to auto-run job templates│   │
-│   │Credential type   = AWX pluggable credential; stores SSH keys, API tokens, Vault tokens securel│   │
+│   │         Credential type = AWX pluggable credential; SSH keys, API tokens, Vault tokens        │   │
 │   │   Netbox            = open-source DCIM/IPAM; Ansible inventory plugin pulls live device list  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘

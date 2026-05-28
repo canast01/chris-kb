@@ -15,7 +15,7 @@ Dell EMC RecoverPoint journal-based continuous data protection — RPA clusters 
 │   │          Core objects: RPA cluster, splitter, consistency group, journal volume, copy         │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Protected Site ──splitter intercepts writes──► RPA Cluster ──journal replication──► Recovery Site R│
+│    Protected Site ──splitter intercepts──► RPA Cluster ──journal replication──► Recovery RPA          │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
 │                                                                                                       │
@@ -28,7 +28,7 @@ Dell EMC RecoverPoint journal-based continuous data protection — RPA clusters 
 │   │            vCenter + RP4VM plugin            │  │           Network replication link          │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: RPAs are VMs or physical appliances; journal vols on shared datastore; replication over I│
+│    Physical: RPAs are VMs or appliances; journal vols on shared datastore; replication IP             │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │

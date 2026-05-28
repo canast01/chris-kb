@@ -38,7 +38,7 @@ flowchart TD
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │GIL         = Global Interpreter Lock; prevents true thread parallelism in CPython; use multipr│   │
+│   │     GIL         = Global Interpreter Lock; no true thread parallelism; use multiprocessing    │   │
 │   │   asyncio     = stdlib event loop; use await with async-native libraries (aiohttp, aioboto3)  │   │
 │   │     concurrent.futures = ThreadPoolExecutor / ProcessPoolExecutor; simpler parallelism API    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

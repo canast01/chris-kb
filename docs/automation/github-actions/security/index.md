@@ -19,8 +19,8 @@
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Allowed actions policy = org setting restricting which actions can be used (own, verified, allo│   │
-│   │Script injection       = PR from fork can inject code into ${{ github.event.pull_request.title │   │
+│   │     Allowed actions = org setting; restrict to own, GitHub-verified, or allowed-list only     │   │
+│   │     Script injection = fork PR can inject code into ${{ github.event.pull_request.title }}    │   │
 │   │ pull_request_target    = runs with write perms even from forks — review carefully before using│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘

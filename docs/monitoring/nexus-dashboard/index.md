@@ -9,7 +9,7 @@ Cisco Nexus Dashboard unified operations platform — architecture, NDFC/NDI ser
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Nexus Dashboard: Cisco management platform for ACI, DCNM/NDFC, and NX-OS fabric operations  │   │
-│   │Hosts applications: Nexus Dashboard Insights (NDI), Fabric Controller (NDFC), Orchestrator (NDO│   │
+│   │      Hosts applications: ND Insights (NDI), Fabric Controller (NDFC), Orchestrator (NDO)      │   │
 │   │ NDI: real-time telemetry, anomaly detection, flow analytics, and infrastructure health scoring│   │
 │   │ Deployed as cluster (3 master nodes) on physical servers or VMware; connects to APIC/switches │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

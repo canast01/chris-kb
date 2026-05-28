@@ -13,7 +13,7 @@ Dell PowerMax SRDF/S synchronous replication — every host write committed to b
 │   │          R1 Volume (Source)  — production PowerMax; write holds until R2 acknowledges         │   │
 │   │        R2 Volume (Target)  — DR PowerMax; must confirm write before host I/O completes        │   │
 │   │        SRDF/S Engine       — synchronous write mirroring; adds WAN RTT to write latency       │   │
-│   │Management: Dark fiber FC (< 5 ms RTT) · Auth: Symmetrix admin credentials; Solutions Enabler; │   │
+│   │       Management: Dark fiber FC (< 5 ms RTT) · Auth: Symmetrix admin; Solutions Enabler       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │    Architecture: components work together to deliver SRDF/S capabilities                              │

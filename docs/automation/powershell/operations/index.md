@@ -4,8 +4,8 @@
 ```
 ┌─────────────────────────────────────── PowerShell — Operations ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │PowerShell operations: script deployment, module updates, remoting configuration, DSC managemen│   │
-│   │Module management: Install-Module, Update-Module, Get-InstalledModule; use -Scope AllUsers for │   │
+│   │       PowerShell ops: script deployment, module updates, remoting config, DSC management      │   │
+│   │  Module mgmt: Install-Module, Update-Module, Get-InstalledModule; -Scope AllUsers for shared  │   │
 │   │            Remoting: Enable-PSRemoting; configure WinRM HTTPS; test with Test-WSMan           │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
@@ -21,7 +21,7 @@
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │Enable-PSRemoting = configures WinRM listener and firewall rule; required before remoting works│   │
 │   │  PSRepository      = Register-PSRepository to add internal feed (Nexus, Artifactory, ProGet)  │   │
-│   │-AllowClobber     = Install-Module flag; overrides existing conflicting commands from other mod│   │
+│   │    -AllowClobber   = Install-Module flag; overrides conflicting commands from other modules   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

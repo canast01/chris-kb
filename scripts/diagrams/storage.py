@@ -1522,7 +1522,7 @@ def pure_flasharray_arch_int():
     lines.append(R(merge(
         bMid(B1_L, B1_R, 'vVols: per-VM volumes'),
         bMid(B2_L, B2_R, 'Portworx: data services layer'),
-        bMid(B3_L, B3_R, 'Ansible: purestorage.flasharray'),
+        bMid(B3_L, B3_R, 'purestorage.flasharray'),
     )))
     lines.append(R(merge(
         bMid(B1_L, B1_R, 'SPBM: QoS per datastore'),
@@ -1546,7 +1546,7 @@ def pure_flasharray_arch_int():
     lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
         ['VMware Setup', 'K8s Setup', 'Backup Config', 'REST API', 'Automation'])))
     lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
-        ['Install VASA plugin', 'Deploy PSO helm', 'Register array IP', 'GET /arrays', 'ansible-galaxy'])))
+        ['Install VASA plug', 'Deploy PSO helm', 'Register array IP', 'GET /arrays', 'ansible-galaxy'])))
     lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
         ['Create vVol store', 'Set storage class', 'API token creds', 'POST /volumes', 'terraform init'])))
     lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
@@ -1652,7 +1652,7 @@ def pure_flasharray_arch_design():
     lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
         ['Volume Design', 'Host Design', 'FC Zoning', 'PG Design', 'Monitoring'])))
     lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
-        ['512-byte aligned', 'One host one hgroup', 'SI-ST mandatory', '1 PG per app', 'Pure1 DR metric'])))
+        ['512-byte aligned', '1 host per hgroup', 'SI-ST mandatory', '1 PG per app', 'Pure1 DR metric'])))
     lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
         ['Thin: no reserve', 'WWNs per HBA port', 'Zone activation', 'Hourly schedule', 'Capacity alerts'])))
     lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],

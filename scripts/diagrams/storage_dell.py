@@ -8677,7 +8677,7 @@ def dell_dd_sec_hard():
     lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['TLS min 1.2', 'adminaccess set', 'Required', 'ssl show', 'Quarterly'])))
     lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Login banner', 'system banner set', 'Required', 'SSH test', 'Annual'])))
     lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Syslog/SIEM', 'log enable syslog', 'Required', 'SIEM verify', 'Quarterly'])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SNMP v3', 'snmp set version v3', 'Required', 'snmp show', 'Quarterly'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SNMP v3', 'snmp set v3', 'Required', 'snmp show', 'Quarterly'])))
     lines.append(txt_row())
     lines.append(txt_row('  Key terms:'))
     lines.append(txt_row())

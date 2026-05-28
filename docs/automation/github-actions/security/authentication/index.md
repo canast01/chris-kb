@@ -40,8 +40,8 @@ jobs:
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ GitHub App      = machine identity; fine-grained permissions; short-lived installation tokens │   │
-│   │PAT             = Personal Access Token; scoped to user; avoid for org automation (use App inst│   │
-│   │OIDC token      = JWT issued by GitHub; cloud trusts issuer; exchanged for short-lived cloud cr│   │
+│   │        PAT           = Personal Access Token; scoped to user; avoid for org automation        │   │
+│   │      OIDC token    = JWT issued by GitHub; cloud trusts issuer; exchanged for cloud cred      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

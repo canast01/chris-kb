@@ -36,7 +36,7 @@ flowchart TD
 │   │             OS: supported Linux or Windows Server (see vendor compatibility matrix)           │   │
 │   │        Network: 9419 (Veeam REST API) · 6160 (Veeam Agent) — ensure firewall allows these     │   │
 │   │  Auth: Windows/AD auth for Veeam console; service account with vSphere admin; repo credentials│   │
-│   │  Storage: Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Mana│   │
+│   │          Storage: Windows Backup Server · Proxy VMs on ESXi · Backup storage (NAS/SAN)        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │                                                   ▼                                                   │

@@ -36,7 +36,7 @@ cd /opt/actions-runner   # or wherever the runner is installed
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ARC             = Actions Runner Controller; Kubernetes operator managing ephemeral runner pods│   │
 │   │  Runner version  = must be within 30 days of latest; GitHub stops routing jobs to old runners │   │
-│   │Ephemeral       = --ephemeral flag: runner deregisters after each job; clean environment per ru│   │
+│   │     Ephemeral     = --ephemeral flag: runner deregisters after each job; clean env per run    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

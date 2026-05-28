@@ -37,7 +37,7 @@ graph LR
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │       Credential chain= Terraform AWS provider uses same chain as boto3/aws CLI for auth      │   │
-│   │TF_VAR_        = environment variable prefix; TF_VAR_vsphere_password maps to var.vsphere_passw│   │
+│   │      TF_VAR_       = env var prefix; TF_VAR_vsphere_password maps to var.vsphere_password     │   │
 │   │  Vault agent    = injects secrets into env before terraform runs; no secrets in process args  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘

@@ -21,7 +21,7 @@ graph TD
 ┌─────────────────────────────────────── Python — Access Control ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Python access control: who can run scripts, API auth, file permissions, repo branch protection│   │
-│   │Scripts with destructive capability: require explicit --confirm flag; prompt for prod environme│   │
+│   │      Destructive scripts: require explicit --confirm flag; prompt before prod environment     │   │
 │   │     API auth: use IAM roles (AWS), service principals (Azure), service accounts (GCP/k8s)     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │

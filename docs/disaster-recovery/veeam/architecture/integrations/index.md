@@ -8,7 +8,7 @@
 │   │ Auth: Windows/AD auth for Veeam console; service account with vSphere admin; repo credentials │   │
 │   │               Storage: connected via 9419 (Veeam REST API) · 6160 (Veeam Agent)               │   │
 │   │            Monitoring: SNMP traps / syslog / REST API to ITSM and alerting systems            │   │
-│   │Encryption: AES-256 backup encryption (key stored in Veeam config DB); TLS on all management; W│   │
+│   │     Encryption: AES-256 backup (key in Veeam config DB); TLS on all management; WORM repos    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │                          ▼                        ▼                        ▼                          │

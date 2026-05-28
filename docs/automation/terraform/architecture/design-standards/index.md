@@ -22,7 +22,7 @@ infra/
 ```
 ┌──────────────────────────────────── Terraform — Design Standards ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Terraform standards: consistent module structure, remote state, provider pinning, CI enforcemen│   │
+│   │   TF standards: consistent module structure, remote state, provider pinning, CI enforcement   │   │
 │   │ Directory layout: modules/ (reusable), environments/ (per-env root), shared/ (cross-env data) │   │
 │   │    CI: terraform fmt -check → validate → tflint → checkov → plan → manual approval → apply    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

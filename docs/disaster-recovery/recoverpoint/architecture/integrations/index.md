@@ -51,13 +51,13 @@ graph TD
 │   │           Test failover automation           │  │             XtremIO integration             │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: SRA plugin installed on SRM server; array splitter licence on PowerMax; VPLEX needs RP li│
+│    Physical: SRA plugin on SRM server; array splitter on PowerMax; VPLEX needs RP licence             │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │
-│    SRA              = Storage Replication Adapter; plugin on SRM server; translates SRM calls to RP AP│
-│    RP4VM plugin     = vCenter plugin; provides CG management, failover, and image access directly in U│
-│    Array splitter   = Intercepts writes inside the storage array firmware; higher performance than ESX│
+│    SRA              = Storage Replication Adapter; on SRM server; translates SRM → RP API             │
+│    RP4VM plugin     = vCenter plugin; CG management, failover, image access in UI                     │
+│    Array splitter   = Intercepts writes in array firmware; higher performance than ESXi               │
 │    VPLEX integration= RP journals VPLEX virtual volumes; enables CDP for geo-stretched metro clusters │
 │    Protection group = SRM construct; maps to RP4VM consistency group; defines what SRM protects       │
 │    Recovery plan    = SRM ordered script of steps for failover; calls RP4VM SRA at failover step      │

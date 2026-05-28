@@ -27,7 +27,7 @@ graph LR
 ```
 ┌────────────────────────────────────────── Ansible — Scripts ──────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Utility scripts for Ansible operations: inventory validation, bulk vault re-key, job report exp│   │
+│   │          Utility scripts: inventory validation, bulk vault re-key, job report export          │   │
 │   │   Scripts live in scripts/ at repo root; documented with usage header and example invocation  │   │
 │   │     AWX API scripts: list failed jobs, cancel stuck jobs, export all job templates to JSON    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

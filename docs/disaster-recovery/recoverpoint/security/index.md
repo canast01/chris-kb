@@ -7,7 +7,7 @@
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │                                RecoverPoint — Security Posture                                │   │
 │   │ Authentication: RPA admin / monitor roles; LDAP integration; certificate-based inter-RPA auth │   │
-│   │Encryption: AES-256 WAN compression+encryption; data at rest on journal volumes unencrypted by │   │
+│   │  Encryption: AES-256 WAN compression+encryption; journal vols at rest unencrypted by default  │   │
 │   │            Network: management VLAN separated; 8888 (splitter API) management port            │   │
 │   │                 Audit: all admin actions logged; log retention minimum 1 year                 │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

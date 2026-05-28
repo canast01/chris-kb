@@ -33,7 +33,7 @@ ssh-keygen -t rsa -b 4096 -C "ansible-control@prod" -f ~/.ssh/ansible_rsa -N ""
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ WinRM          = Windows Remote Management; Microsoft implementation of WS-Management protocol│   │
-│   │Kerberos       = network auth protocol; used for Windows domain auth; requires domain membershi│   │
+│   │      Kerberos    = network auth protocol; Windows domain auth; requires domain membership     │   │
 │   │   SSH agent      = key agent; AWX injects private key into SSH agent process at job runtime   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘

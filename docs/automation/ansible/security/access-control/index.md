@@ -19,7 +19,7 @@ graph TD
 ┌────────────────────────────────────── Ansible — Access Control ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Ansible access control: who can run which playbooks against which hosts — enforced via AWX  │   │
-│   │AWX RBAC model: organizations → teams → users; permissions per job template, inventory, credent│   │
+│   │      AWX RBAC: organizations → teams → users; permissions per job template and credential     │   │
 │   │     CLI access: limit SSH key distribution; service accounts only; no shared personal keys    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │

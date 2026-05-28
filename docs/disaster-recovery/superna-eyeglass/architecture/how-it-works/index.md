@@ -34,7 +34,7 @@ graph LR
 │   │                 Consistency ensured at quiesce point before data transfer begins              │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Changed data forwarded to the Superna Eyeglass engine — compression and encryption applied in trans│
+│    Changed data forwarded to Superna Eyeglass — compression and encryption in transit                 │
 │                                                                                                       │
 │                                                   ▼                                                   │
 │                                                                                                       │

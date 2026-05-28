@@ -53,7 +53,7 @@ flowchart TD
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │.terraform.lock.hcl = provider version lock file; commit to git for reproducible initialisation│   │
 │   │  plan file           = terraform plan -out=tfplan; apply: terraform apply tfplan (no re-diff) │   │
-│   │State lock          = prevents concurrent terraform apply; acquired on apply, released on finis│   │
+│   │    State lock    = prevents concurrent terraform apply; acquired on apply, released on done   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

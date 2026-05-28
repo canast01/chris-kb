@@ -7,7 +7,7 @@
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │                                    RASR — Security Posture                                    │   │
 │   │ Authentication: Vault operator role; 2-person integrity for unlock; AD integration for PPDM UI│   │
-│   │Encryption: AES-256 at rest on vault; TLS 1.3 for all management; vault lock enforces immutabil│   │
+│   │        Encryption: AES-256 at rest on vault; TLS 1.3; vault lock enforces immutability        │   │
 │   │             Network: management VLAN separated; 9080 (CyberSense) management port             │   │
 │   │                 Audit: all admin actions logged; log retention minimum 1 year                 │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

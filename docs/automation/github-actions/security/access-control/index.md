@@ -39,7 +39,7 @@ flowchart TD
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      CODEOWNERS     = file mapping code paths to review teams; auto-request review on PR      │   │
 │   │     Branch protection = require PR + CI pass + review before merge; enforces pipeline gate    │   │
-│   │Deployment review = env requires named team approval; reviewer sees context and approves/reject│   │
+│   │        Deployment review = env requires named team approval; reviewer approves/rejects        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

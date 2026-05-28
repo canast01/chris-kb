@@ -17,7 +17,7 @@ terraform state pull > terraform.tfstate.local-$(date +%Y%m%d)
 ```
 ┌──────────────────────────────────── Terraform — Backup & Restore ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Terraform backup: git repo for .tf code; S3 versioning for state file; .terraform.lock.hcl in g│   │
+│   │     TF backup: git repo for .tf; S3 versioning for state file; .terraform.lock.hcl in git     │   │
 │   │    Enable S3 versioning on state bucket; DynamoDB table for lock; enable S3 access logging    │   │
 │   │        State restore: download previous version from S3, push with terraform state push       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
@@ -34,7 +34,7 @@ terraform state pull > terraform.tfstate.local-$(date +%Y%m%d)
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   S3 versioning   = preserves all state file versions; restore from Version ID in S3 console  │   │
 │   │   state push       = terraform state push <file>; overwrites remote state; use with caution   │   │
-│   │State corruption = most common cause: concurrent apply or force-unlock; check state integrity f│   │
+│   │    State corruption = most common: concurrent apply or force-unlock; check integrity first    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

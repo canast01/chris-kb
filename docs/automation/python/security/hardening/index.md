@@ -42,7 +42,7 @@ flowchart TD
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │pickle        = Python serialisation; NEVER deserialise untrusted pickle data (code execution r│   │
+│   │   pickle        = Python serialisation; never deserialise untrusted pickle (code exec risk)   │   │
 │   │       gitleaks      = pre-commit hook scanning for secrets in staged code before commit       │   │
 │   │   SBOM          = Software Bill of Materials; list all deps + versions for compliance audit   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

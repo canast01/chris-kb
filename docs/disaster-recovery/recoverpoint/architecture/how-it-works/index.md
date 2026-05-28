@@ -52,7 +52,7 @@ graph LR
 │    Delta set           = Batch of compressed write deltas transferred from source to target RPA       │
 │    Journal apply       = Process of writing delta sets to journal VMDK in sequence on target side     │
 │    Journal pointer     = Current position in the journal; marks which deltas have been applied        │
-│    Bookmark            = Named timestamp in journal; enables recovery to a known-good application stat│
+│    Bookmark         = Named timestamp in journal; recovery to a known-good application state          │
 │    Crash-consistent    = All VMs in CG captured at the same write sequence; safe for OS-level recovery│
 │    App-consistent      = Quiesced snapshot of CG (VMware Tools quiesce); safe for DB-level recovery   │
 │    Image access        = Temporary mount of journal image; test without committing; auto rolls back   │

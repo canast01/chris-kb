@@ -6,8 +6,8 @@
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │                                    Veeam — Security Posture                                   │   │
-│   │Authentication: Windows/AD auth for Veeam console; service account with vSphere admin; repo cre│   │
-│   │Encryption: AES-256 backup encryption (key stored in Veeam config DB); TLS on all management; W│   │
+│   │      Authentication: Windows/AD for Veeam console; vSphere admin service acct; repo creds     │   │
+│   │     Encryption: AES-256 backup (key in Veeam config DB); TLS on all management; WORM repos    │   │
 │   │               Network: management VLAN separated; 443 (vCenter) management port               │   │
 │   │                 Audit: all admin actions logged; log retention minimum 1 year                 │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

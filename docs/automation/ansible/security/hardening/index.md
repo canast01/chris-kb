@@ -37,7 +37,7 @@ systemctl reload sshd
 ```
 ┌───────────────────────────────────────── Ansible — Hardening ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Harden Ansible control node and AWX to reduce attack surface and prevent unauthorised automatio│   │
+│   │    Harden Ansible control node and AWX to reduce attack surface and block unauthorised use    │   │
 │   │    Control node: restrict SSH access, pin package versions, run in isolated network segment   │   │
 │   │      AWX: HTTPS only, MFA, LDAP groups, session timeout, disable API browsable UI in prod     │   │
 │   │          Playbook hygiene: no_log on secrets, FQCN for all modules, lint before merge         │   │

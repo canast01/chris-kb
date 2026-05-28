@@ -81,9 +81,9 @@ flowchart TD
 │   │     Symptom      │    esxtop key    │     Threshold     │    Root cause    │       Fix        │   │
 │   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
 │   │     CPU slow     │     c → %RDY     │        > 5%       │    Overcommit    │Reduce vCPU or DRS│   │
-│   │     Mem slow     │     m → MCTL     │       > 0 MB      │    Overcommit    │Add RAM or reserva│   │
-│   │    Disk slow     │     d → DAVG     │       > 10ms      │  Array latency   │See storage-latenc│   │
-│   │    Net drops     │    n → Drp/s     │        > 0        │   NIC saturate   │Increase vNIC or Q│   │
+│   │     Mem slow     │     m → MCTL     │       > 0 MB      │    Overcommit    │ Add RAM/reserv.  │   │
+│   │    Disk slow     │     d → DAVG     │       > 10ms      │  Array latency   │→ storage-latency │   │
+│   │    Net drops     │    n → Drp/s     │        > 0        │   NIC saturate   │Increase vNIC/QoS │   │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │

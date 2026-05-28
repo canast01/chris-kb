@@ -28,7 +28,7 @@ Get-Service -Name "DellRASR" | Select-Object Status, StartType
 │   │      Auth: Vault operator role; 2-person integrity for unlock; AD integration for PPDM UI     │   │
 │   │                 Storage: connected via 443 (PPDM REST API) · 2049 (NFS vault)                 │   │
 │   │            Monitoring: SNMP traps / syslog / REST API to ITSM and alerting systems            │   │
-│   │Encryption: AES-256 at rest on vault; TLS 1.3 for all management; vault lock enforces immutabil│   │
+│   │        Encryption: AES-256 at rest on vault; TLS 1.3; vault lock enforces immutability        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │                          ▼                        ▼                        ▼                          │

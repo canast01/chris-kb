@@ -72,7 +72,7 @@ flowchart TD
 │   │   Runaway proc   │  top / Task Mgr  │   High PID CPU%   │  Kill/restrain   │  CPU normalises  │   │
 │   │    CPU ready     │   esxtop %RDY    │        > 5%       │   Reduce vCPU    │   Ready drops    │   │
 │   │    Steal time    │     top %st      │    > 0 in cloud   │ Upgrade VM type  │    Steal = 0     │   │
-│   │     IRQ load     │cat /proc/interrup│   One CPU pinned  │    irqbalance    │    IRQ spread    │   │
+│   │     IRQ load     │  cat /proc/intr  │   One CPU pinned  │    irqbalance    │    IRQ spread    │   │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │

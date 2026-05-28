@@ -60,7 +60,7 @@ graph TD
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │terraform graph = exports dependency graph in DOT format; pipe to graphviz dot for visualisatio│   │
+│   │     terraform graph = exports dependency graph (DOT format); pipe to graphviz for diagram     │   │
 │   │      terraform refresh= updates state to match real-world without applying config changes     │   │
 │   │  providers lock   = regenerates .terraform.lock.hcl with all platforms; use before committing │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

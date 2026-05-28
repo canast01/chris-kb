@@ -36,7 +36,7 @@ symrdf -g <rdfg> query -v | grep "Minimum Cycle Time"
 │   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
 │   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
 │   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
-│   │Encryption enabled on all channels: SRDF encryption at the FA/RF port level; Unisphere HTTPS; S│   │
+│   │          Encryption: SRDF at FA/RF port level; Unisphere HTTPS; Solutions Enabler TLS         │   │
 │   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │

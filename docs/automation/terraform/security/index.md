@@ -4,7 +4,7 @@
 ```
 ┌──────────────────────────────────────── Terraform — Security ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Terraform security: protect state, manage secrets, enforce least-privilege, scan IaC with check│   │
+│   │       TF security: protect state, manage secrets, least-privilege, scan IaC with checkov      │   │
 │   │   State file contains sensitive values; encrypt at rest (S3 SSE-KMS); restrict S3 bucket ACL  │   │
 │   │      Provider auth: OIDC (GitHub Actions → AWS) or IAM role; avoid long-lived access keys     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

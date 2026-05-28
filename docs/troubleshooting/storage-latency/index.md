@@ -69,8 +69,8 @@ flowchart TD
 │                                                                                                       │
 │   │      Metric      │       Tool       │     Threshold     │      Cause       │       Fix        │   │
 │   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │       KAVG       │esxtop / vscsistat│       < 5ms       │    Host queue    │Reduce queue depth│   │
-│   │       DAVG       │esxtop / vscsistat│       < 10ms      │    Array perf    │Array QoS/tiering │   │
+│   │       KAVG       │esxtop/vscsistats │       < 5ms       │    Host queue    │Reduce queue depth│   │
+│   │       DAVG       │esxtop/vscsistats │       < 10ms      │    Array perf    │Array QoS/tiering │   │
 │   │       GAVG       │      esxtop      │     KAVG+DAVG     │     Combined     │  Isolate layer   │   │
 │   │   Path health    │    esxcli nmp    │     All active    │    Dead path     │   Rescan HBAs    │   │
 │                                                                                                       │

@@ -26,7 +26,7 @@ symcfg list -v | grep "Microcode"
 │   │             OS: supported Linux or Windows Server (see vendor compatibility matrix)           │   │
 │   │      Network: Dark fiber FC (< 5 ms RTT) · DWDM long-haul FC — ensure firewall allows these   │   │
 │   │        Auth: Symmetrix admin credentials; Solutions Enabler; Unisphere role-based access      │   │
-│   │  Storage: Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (< 200 km) · R│   │
+│   │        Storage: Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency (< 200 km)      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │                                                   ▼                                                   │

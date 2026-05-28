@@ -51,7 +51,7 @@ graph TD
 │   │   TLS min 1.2    │ adminaccess set  │      Required     │     ssl show     │    Quarterly     │   │
 │   │   Login banner   │system banner set │      Required     │     SSH test     │      Annual      │   │
 │   │   Syslog/SIEM    │log enable syslog │      Required     │   SIEM verify    │    Quarterly     │   │
-│   │     SNMP v3      │snmp set version v│      Required     │    snmp show     │    Quarterly     │   │
+│   │     SNMP v3      │   snmp set v3    │      Required     │    snmp show     │    Quarterly     │   │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │

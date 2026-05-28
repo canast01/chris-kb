@@ -52,7 +52,7 @@ curl -u user:token \
 │                                                                                                       │
 │  -Xmx         = JVM max heap flag; set in setenv.sh; controls Confluence memory ceiling               │
 │  Sticky session = LB routes same user to same node; needed for non-Hazelcast session stores           │
-│  autovacuum   = PostgreSQL background process; reclaims dead row storage (critical for Jira/Confluence│
+│  autovacuum   = PostgreSQL background process; reclaims dead row storage (critical for Jira)          │
 │  Streaming replica = PostgreSQL standby receiving WAL stream for hot-standby reads and failover       │
 │  DB pool      = JDBC connection pool; Confluence default uses c3p0; tune maxPoolSize                  │
 │  Tomcat threads = max simultaneous HTTP request handlers; tune based on concurrent users              │

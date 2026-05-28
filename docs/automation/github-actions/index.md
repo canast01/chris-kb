@@ -31,7 +31,7 @@ GitHub Actions knowledge base covering event-driven workflow architecture, runne
 │   │   Matrix         = strategy to run a job across multiple variable combinations (OS, version)  │   │
 │   │    Artifact       = file uploaded from a job and available for download or subsequent jobs    │   │
 │   │    Cache          = store and restore dependencies across runs; keyed by hash of lock file    │   │
-│   │OIDC           = OpenID Connect; GitHub Actions can request short-lived cloud tokens without se│   │
+│   │     OIDC          = OpenID Connect; GHA requests short-lived cloud tokens without secrets     │   │
 │   │      workflow_dispatch= manual trigger with optional input parameters; run from UI or API     │   │
 │   │    Concurrency    = group/cancel-in-progress setting to avoid duplicate runs on same branch   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │

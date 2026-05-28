@@ -44,7 +44,7 @@ flowchart LR
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    PowerShell execution: script parsed to AST → pipeline stages → cmdlet execution → output   │   │
 │   │      Pipeline stages: BeginProcessing → ProcessRecord (per input object) → EndProcessing      │   │
-│   │Error streams: terminating (throw/exception) vs non-terminating (Write-Error); $ErrorActionPref│   │
+│   │     Error streams: terminating (throw) vs non-terminating (Write-Error); $ErrorActionPref     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
@@ -56,7 +56,7 @@ flowchart LR
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │AST             = Abstract Syntax Tree; PS parses script before executing; enables static analy│   │
+│   │   AST           = Abstract Syntax Tree; PS parses before executing; enables static analysis   │   │
 │   │    $ErrorActionPreference = Stop causes all errors to be terminating; catches via try/catch   │   │
 │   │ Runspace        = isolated execution context; enables parallel processing via Start-ThreadJob │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
